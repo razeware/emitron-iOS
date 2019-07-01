@@ -26,6 +26,20 @@
 		B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */; };
 		B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6DF2F8722C9F5070081A3A3 /* Main.storyboard */; };
 		B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */; };
+		B6DF2F8D22CA00500081A3A3 /* EmitronAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8C22CA00500081A3A3 /* EmitronAPI.swift */; };
+		B6DF2F8F22CA006D0081A3A3 /* EmitronEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8E22CA006D0081A3A3 /* EmitronEnvironment.swift */; };
+		B6DF2F9122CA00820081A3A3 /* EmitronRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9022CA00820081A3A3 /* EmitronRequest.swift */; };
+		B6DF2F9622CA05140081A3A3 /* Attachment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9522CA05140081A3A3 /* Attachment.swift */; };
+		B6DF2F9822CA051B0081A3A3 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9722CA051B0081A3A3 /* Bookmark.swift */; };
+		B6DF2F9A22CA05230081A3A3 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9922CA05230081A3A3 /* Category.swift */; };
+		B6DF2F9C22CA052B0081A3A3 /* ContentSummary.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9B22CA052B0081A3A3 /* ContentSummary.swift */; };
+		B6DF2F9E22CA05320081A3A3 /* ContentDetail.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9D22CA05320081A3A3 /* ContentDetail.swift */; };
+		B6DF2FA022CA05390081A3A3 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9F22CA05390081A3A3 /* Domain.swift */; };
+		B6DF2FA222CA05460081A3A3 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FA122CA05460081A3A3 /* Group.swift */; };
+		B6DF2FA422CA05530081A3A3 /* Progression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FA322CA05530081A3A3 /* Progression.swift */; };
+		B6DF2FA622CA055A0081A3A3 /* Video.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FA522CA055A0081A3A3 /* Video.swift */; };
+		B6DF2FA822CA06550081A3A3 /* RWAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FA722CA06550081A3A3 /* RWAPI.swift */; };
+		B6DF2FAA22CA0AF20081A3A3 /* RWRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FA922CA0AF20081A3A3 /* RWRequest.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -51,6 +65,20 @@
 		B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B6DF2F8722C9F5070081A3A3 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCWrapperView.swift; sourceTree = "<group>"; };
+		B6DF2F8C22CA00500081A3A3 /* EmitronAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronAPI.swift; sourceTree = "<group>"; };
+		B6DF2F8E22CA006D0081A3A3 /* EmitronEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronEnvironment.swift; sourceTree = "<group>"; };
+		B6DF2F9022CA00820081A3A3 /* EmitronRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronRequest.swift; sourceTree = "<group>"; };
+		B6DF2F9522CA05140081A3A3 /* Attachment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Attachment.swift; sourceTree = "<group>"; };
+		B6DF2F9722CA051B0081A3A3 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		B6DF2F9922CA05230081A3A3 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		B6DF2F9B22CA052B0081A3A3 /* ContentSummary.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSummary.swift; sourceTree = "<group>"; };
+		B6DF2F9D22CA05320081A3A3 /* ContentDetail.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetail.swift; sourceTree = "<group>"; };
+		B6DF2F9F22CA05390081A3A3 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
+		B6DF2FA122CA05460081A3A3 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		B6DF2FA322CA05530081A3A3 /* Progression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progression.swift; sourceTree = "<group>"; };
+		B6DF2FA522CA055A0081A3A3 /* Video.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Video.swift; sourceTree = "<group>"; };
+		B6DF2FA722CA06550081A3A3 /* RWAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWAPI.swift; sourceTree = "<group>"; };
+		B6DF2FA922CA0AF20081A3A3 /* RWRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWRequest.swift; sourceTree = "<group>"; };
 		C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Emitron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
@@ -104,6 +132,7 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
+				B6DF2F9222CA012C0081A3A3 /* Services */,
 				B6D7DC5622C7B4A0006DD325 /* UI */,
 				B6D7DC4422C7AF44006DD325 /* Styleguide */,
 				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
@@ -158,6 +187,51 @@
 				B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */,
 			);
 			path = UI;
+			sourceTree = "<group>";
+		};
+		B6DF2F8B22CA002E0081A3A3 /* Network */ = {
+			isa = PBXGroup;
+			children = (
+				B6DF2F8C22CA00500081A3A3 /* EmitronAPI.swift */,
+				B6DF2F8E22CA006D0081A3A3 /* EmitronEnvironment.swift */,
+				B6DF2F9022CA00820081A3A3 /* EmitronRequest.swift */,
+				B6DF2FA722CA06550081A3A3 /* RWAPI.swift */,
+				B6DF2FA922CA0AF20081A3A3 /* RWRequest.swift */,
+			);
+			path = Network;
+			sourceTree = "<group>";
+		};
+		B6DF2F9222CA012C0081A3A3 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				B6DF2F9422CA01440081A3A3 /* Requests */,
+				B6DF2F9322CA01400081A3A3 /* Models */,
+				B6DF2F8B22CA002E0081A3A3 /* Network */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		B6DF2F9322CA01400081A3A3 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				B6DF2F9522CA05140081A3A3 /* Attachment.swift */,
+				B6DF2F9722CA051B0081A3A3 /* Bookmark.swift */,
+				B6DF2F9922CA05230081A3A3 /* Category.swift */,
+				B6DF2F9B22CA052B0081A3A3 /* ContentSummary.swift */,
+				B6DF2F9D22CA05320081A3A3 /* ContentDetail.swift */,
+				B6DF2F9F22CA05390081A3A3 /* Domain.swift */,
+				B6DF2FA122CA05460081A3A3 /* Group.swift */,
+				B6DF2FA322CA05530081A3A3 /* Progression.swift */,
+				B6DF2FA522CA055A0081A3A3 /* Video.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
+		B6DF2F9422CA01440081A3A3 /* Requests */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = Requests;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -302,14 +376,28 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
+				B6DF2F8F22CA006D0081A3A3 /* EmitronEnvironment.swift in Sources */,
+				B6DF2F9122CA00820081A3A3 /* EmitronRequest.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */,
+				B6DF2F9822CA051B0081A3A3 /* Bookmark.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
+				B6DF2F9622CA05140081A3A3 /* Attachment.swift in Sources */,
+				B6DF2F9C22CA052B0081A3A3 /* ContentSummary.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
+				B6DF2FA222CA05460081A3A3 /* Group.swift in Sources */,
 				B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
+				B6DF2FAA22CA0AF20081A3A3 /* RWRequest.swift in Sources */,
+				B6DF2F9E22CA05320081A3A3 /* ContentDetail.swift in Sources */,
+				B6DF2FA822CA06550081A3A3 /* RWAPI.swift in Sources */,
+				B6DF2F9A22CA05230081A3A3 /* Category.swift in Sources */,
+				B6DF2FA422CA05530081A3A3 /* Progression.swift in Sources */,
+				B6DF2F8D22CA00500081A3A3 /* EmitronAPI.swift in Sources */,
 				B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */,
 				B6D7DC7822C7C6BE006DD325 /* CardView.swift in Sources */,
+				B6DF2FA622CA055A0081A3A3 /* Video.swift in Sources */,
+				B6DF2FA022CA05390081A3A3 /* Domain.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
