@@ -7,8 +7,20 @@
 //
 
 import Foundation
-import SwiftyJSON
 
 class Bookmark {
-  let createdAt: Date? = nil
+  let bookmarkId: String
+  let createdAt: Date?
+  
+  init?(resource: JSONAPIResource, metadata: [String: Any]?) {
+    self.bookmarkId = resource.id
+    
+    if let createdAtStr = resource["created_at"] as? String {
+      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
+    } else {
+      self.createdAt = Date()
+    }
+  }
 }
+
+

@@ -7,4 +7,26 @@
 //
 
 import Foundation
-import SwiftyJSON
+
+enum AttachmentKind: String {
+  case stream = "stream"
+  case sdVideoFile = "sd_video_file"
+  case hdVideoFile = "hd_video_file"
+}
+
+class Attachment {
+  
+  var id: String?
+  var url: URL?
+  var kind: AttachmentKind?
+  
+  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+    
+    self.id = jsonResource.id
+    self.url = URL(string: (jsonResource["name"] as? String) ?? "")
+    
+    if let attachmentKind = AttachmentKind(rawValue: jsonResource["kind"] as? String ?? "") {
+      self.kind = attachmentKind
+    }
+  }
+}
