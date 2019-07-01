@@ -3,13 +3,13 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 50;
+	objectVersion = 51;
 	objects = {
 
 /* Begin PBXBuildFile section */
+		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC2E22C79743006DD325 /* AppDelegate.swift */; };
 		B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC3022C79743006DD325 /* SceneDelegate.swift */; };
-		B6D7DC3322C79743006DD325 /* RGBullsEyeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC3222C79743006DD325 /* RGBullsEyeView.swift */; };
 		B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3422C79745006DD325 /* Assets.xcassets */; };
 		B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */; };
 		B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */; };
@@ -21,28 +21,19 @@
 		B6D7DC4F22C7AFEC006DD325 /* Bitter-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */; };
 		B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */; };
 		B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC5422C7B408006DD325 /* Font+Extensions.swift */; };
-		B6D7DC5822C7B638006DD325 /* StaticListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC5722C7B638006DD325 /* StaticListView.swift */; };
-		B6D7DC6522C7B80D006DD325 /* nssl0049.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC5B22C7B80D006DD325 /* nssl0049.jpg */; };
-		B6D7DC6622C7B80D006DD325 /* nssl0046.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC5C22C7B80D006DD325 /* nssl0046.jpg */; };
-		B6D7DC6722C7B80D006DD325 /* nssl0091.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC5D22C7B80D006DD325 /* nssl0091.jpg */; };
-		B6D7DC6822C7B80D006DD325 /* nssl0045.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC5E22C7B80D006DD325 /* nssl0045.jpg */; };
-		B6D7DC6922C7B80D006DD325 /* nssl0051.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC5F22C7B80D006DD325 /* nssl0051.jpg */; };
-		B6D7DC6A22C7B80D006DD325 /* nssl0041.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC6022C7B80D006DD325 /* nssl0041.jpg */; };
-		B6D7DC6B22C7B80D006DD325 /* nssl0042.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC6122C7B80D006DD325 /* nssl0042.jpg */; };
-		B6D7DC6C22C7B80D006DD325 /* nssl0043.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC6222C7B80D006DD325 /* nssl0043.jpg */; };
-		B6D7DC6D22C7B80D006DD325 /* nssl0033.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC6322C7B80D006DD325 /* nssl0033.jpg */; };
-		B6D7DC6E22C7B80D006DD325 /* nssl0034.jpg in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC6422C7B80D006DD325 /* nssl0034.jpg */; };
-		B6D7DC7222C7C098006DD325 /* BlueView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC7122C7C098006DD325 /* BlueView.swift */; };
-		B6D7DC7422C7C0C3006DD325 /* OrangeView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC7322C7C0C3006DD325 /* OrangeView.swift */; };
-		B6D7DC7622C7C20A006DD325 /* TabBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC7522C7C20A006DD325 /* TabBarView.swift */; };
 		B6D7DC7822C7C6BE006DD325 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC7722C7C6BE006DD325 /* CardView.swift */; };
+		B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6DF2F8322C9F3FA0081A3A3 /* GoogleService-Info.plist */; };
+		B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */; };
+		B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6DF2F8722C9F5070081A3A3 /* Main.storyboard */; };
+		B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.release.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.release.xcconfig"; sourceTree = "<group>"; };
+		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B6D7DC2B22C79743006DD325 /* Emitron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emitron.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D7DC2E22C79743006DD325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3022C79743006DD325 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
-		B6D7DC3222C79743006DD325 /* RGBullsEyeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RGBullsEyeView.swift; sourceTree = "<group>"; };
 		B6D7DC3422C79745006DD325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B6D7DC3A22C79745006DD325 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -55,21 +46,12 @@
 		B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bitter-Italic.ttf"; sourceTree = "<group>"; };
 		B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC5422C7B408006DD325 /* Font+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extensions.swift"; sourceTree = "<group>"; };
-		B6D7DC5722C7B638006DD325 /* StaticListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = StaticListView.swift; sourceTree = "<group>"; };
-		B6D7DC5B22C7B80D006DD325 /* nssl0049.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0049.jpg; sourceTree = "<group>"; };
-		B6D7DC5C22C7B80D006DD325 /* nssl0046.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0046.jpg; sourceTree = "<group>"; };
-		B6D7DC5D22C7B80D006DD325 /* nssl0091.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0091.jpg; sourceTree = "<group>"; };
-		B6D7DC5E22C7B80D006DD325 /* nssl0045.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0045.jpg; sourceTree = "<group>"; };
-		B6D7DC5F22C7B80D006DD325 /* nssl0051.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0051.jpg; sourceTree = "<group>"; };
-		B6D7DC6022C7B80D006DD325 /* nssl0041.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0041.jpg; sourceTree = "<group>"; };
-		B6D7DC6122C7B80D006DD325 /* nssl0042.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0042.jpg; sourceTree = "<group>"; };
-		B6D7DC6222C7B80D006DD325 /* nssl0043.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0043.jpg; sourceTree = "<group>"; };
-		B6D7DC6322C7B80D006DD325 /* nssl0033.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0033.jpg; sourceTree = "<group>"; };
-		B6D7DC6422C7B80D006DD325 /* nssl0034.jpg */ = {isa = PBXFileReference; lastKnownFileType = image.jpeg; path = nssl0034.jpg; sourceTree = "<group>"; };
-		B6D7DC7122C7C098006DD325 /* BlueView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BlueView.swift; sourceTree = "<group>"; };
-		B6D7DC7322C7C0C3006DD325 /* OrangeView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OrangeView.swift; sourceTree = "<group>"; };
-		B6D7DC7522C7C20A006DD325 /* TabBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarView.swift; sourceTree = "<group>"; };
 		B6D7DC7722C7C6BE006DD325 /* CardView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
+		B6DF2F8322C9F3FA0081A3A3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
+		B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		B6DF2F8722C9F5070081A3A3 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCWrapperView.swift; sourceTree = "<group>"; };
+		C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Emitron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,17 +59,37 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		893818B538C1669690768381 /* Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */,
+				45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */,
+			);
+			path = Pods;
+			sourceTree = "<group>";
+		};
+		A331F97F98E99A372BB92C47 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */,
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
 		B6D7DC2222C79743006DD325 = {
 			isa = PBXGroup;
 			children = (
 				B6D7DC2D22C79743006DD325 /* Emitron */,
 				B6D7DC2C22C79743006DD325 /* Products */,
+				893818B538C1669690768381 /* Pods */,
+				A331F97F98E99A372BB92C47 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -108,6 +110,7 @@
 				B6D7DC3422C79745006DD325 /* Assets.xcassets */,
 				B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */,
 				B6D7DC3C22C79745006DD325 /* Info.plist */,
+				B6DF2F8322C9F3FA0081A3A3 /* GoogleService-Info.plist */,
 				B6D7DC3622C79745006DD325 /* Preview Content */,
 			);
 			path = Emitron;
@@ -148,33 +151,13 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				B6D7DC5922C7B80D006DD325 /* project1-files */,
+				B6DF2F8722C9F5070081A3A3 /* Main.storyboard */,
+				B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
-				B6D7DC3222C79743006DD325 /* RGBullsEyeView.swift */,
-				B6D7DC5722C7B638006DD325 /* StaticListView.swift */,
-				B6D7DC7122C7C098006DD325 /* BlueView.swift */,
-				B6D7DC7322C7C0C3006DD325 /* OrangeView.swift */,
-				B6D7DC7522C7C20A006DD325 /* TabBarView.swift */,
 				B6D7DC7722C7C6BE006DD325 /* CardView.swift */,
+				B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */,
 			);
 			path = UI;
-			sourceTree = "<group>";
-		};
-		B6D7DC5922C7B80D006DD325 /* project1-files */ = {
-			isa = PBXGroup;
-			children = (
-				B6D7DC5B22C7B80D006DD325 /* nssl0049.jpg */,
-				B6D7DC5C22C7B80D006DD325 /* nssl0046.jpg */,
-				B6D7DC5D22C7B80D006DD325 /* nssl0091.jpg */,
-				B6D7DC5E22C7B80D006DD325 /* nssl0045.jpg */,
-				B6D7DC5F22C7B80D006DD325 /* nssl0051.jpg */,
-				B6D7DC6022C7B80D006DD325 /* nssl0041.jpg */,
-				B6D7DC6122C7B80D006DD325 /* nssl0042.jpg */,
-				B6D7DC6222C7B80D006DD325 /* nssl0043.jpg */,
-				B6D7DC6322C7B80D006DD325 /* nssl0033.jpg */,
-				B6D7DC6422C7B80D006DD325 /* nssl0034.jpg */,
-			);
-			path = "project1-files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -184,9 +167,12 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "Emitron" */;
 			buildPhases = (
+				C9CEA336BF2F8C7E45AC687C /* [CP] Check Pods Manifest.lock */,
 				B6D7DC2722C79743006DD325 /* Sources */,
 				B6D7DC2822C79743006DD325 /* Frameworks */,
 				B6D7DC2922C79743006DD325 /* Resources */,
+				56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */,
+				B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */,
 			);
 			buildRules = (
 			);
@@ -235,27 +221,80 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6D7DC6522C7B80D006DD325 /* nssl0049.jpg in Resources */,
-				B6D7DC6D22C7B80D006DD325 /* nssl0033.jpg in Resources */,
-				B6D7DC6922C7B80D006DD325 /* nssl0051.jpg in Resources */,
 				B6D7DC4D22C7AFEC006DD325 /* OFL.txt in Resources */,
-				B6D7DC6B22C7B80D006DD325 /* nssl0042.jpg in Resources */,
+				B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */,
-				B6D7DC6822C7B80D006DD325 /* nssl0045.jpg in Resources */,
-				B6D7DC6622C7B80D006DD325 /* nssl0046.jpg in Resources */,
-				B6D7DC6722C7B80D006DD325 /* nssl0091.jpg in Resources */,
 				B6D7DC4E22C7AFEC006DD325 /* Bitter-Regular.ttf in Resources */,
-				B6D7DC6C22C7B80D006DD325 /* nssl0043.jpg in Resources */,
-				B6D7DC6E22C7B80D006DD325 /* nssl0034.jpg in Resources */,
 				B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */,
+				B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */,
 				B6D7DC4C22C7AFEC006DD325 /* Bitter-Bold.ttf in Resources */,
 				B6D7DC4F22C7AFEC006DD325 /* Bitter-Italic.ttf in Resources */,
-				B6D7DC6A22C7B80D006DD325 /* nssl0041.jpg in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Emitron/Pods-Emitron-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+			);
+			name = "[CP] Embed Pods Frameworks";
+			outputFileListPaths = (
+				"${PODS_ROOT}/Target Support Files/Pods-Emitron/Pods-Emitron-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Emitron/Pods-Emitron-frameworks.sh\"\n";
+			showEnvVarsInLog = 0;
+		};
+		B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
+			);
+			name = "Crashlytics Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
+		};
+		C9CEA336BF2F8C7E45AC687C /* [CP] Check Pods Manifest.lock */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
+				"${PODS_ROOT}/Manifest.lock",
+			);
+			name = "[CP] Check Pods Manifest.lock";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+				"$(DERIVED_FILE_DIR)/Pods-Emitron-checkManifestLockResult.txt",
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
+			showEnvVarsInLog = 0;
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		B6D7DC2722C79743006DD325 /* Sources */ = {
@@ -264,16 +303,13 @@
 			files = (
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
-				B6D7DC5822C7B638006DD325 /* StaticListView.swift in Sources */,
 				B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */,
-				B6D7DC7222C7C098006DD325 /* BlueView.swift in Sources */,
-				B6D7DC3322C79743006DD325 /* RGBullsEyeView.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
+				B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
-				B6D7DC7622C7C20A006DD325 /* TabBarView.swift in Sources */,
+				B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */,
 				B6D7DC7822C7C6BE006DD325 /* CardView.swift in Sources */,
-				B6D7DC7422C7C0C3006DD325 /* OrangeView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -407,9 +443,11 @@
 		};
 		B6D7DC4022C79745006DD325 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
 				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
@@ -427,6 +465,7 @@
 		};
 		B6D7DC4122C79745006DD325 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
