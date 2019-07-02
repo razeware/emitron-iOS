@@ -16,7 +16,7 @@ class ViewController: UIViewController {
 
   let guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
                             urlScheme: "com.razeware.emitron://",
-                            ssoSecret: "3c62ef6384b3becef0261f4b612278d45e46618127194cfc380497997a7150e8083afe8e950f54801adfc25d9af7f949b01656ea0543943a6145ffc1ae013115")
+                            ssoSecret: "<SSO_SECRET>")
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -49,18 +49,6 @@ class ViewController: UIViewController {
   }
   
   private func performRequest(_ user: User) {
-//    let bookmarksRequest = GetBookmarksRequest(additionalHeaders: ["Authorization" : "Token \(user.token)"])
-//
-//    let client = RWAPI()
-//    client.perform(request: bookmarksRequest) { [weak self] (result) in
-//
-//      switch result {
-//      case .failure(let error):
-//        print(error.localizedDescription)
-//      case .success(let response):
-//        print(response.description)
-//      }
-//    }
     
     let client = RWAPI(authToken: "\(user.token)")
     let bookmarkService =  BookmarksService(client: client)
