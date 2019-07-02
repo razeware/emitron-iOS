@@ -21,6 +21,7 @@
  */
 
 import Foundation
+import KeychainSwift
 
 fileprivate let SSO_USER_KEY = "com.razeware.guardpostkit.sso_user"
 

@@ -46,7 +46,6 @@
 		B6DF2FAF22CA498B0081A3A3 /* User.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FAE22CA498B0081A3A3 /* User.swift */; };
 		B6DF2FB122CA4B140081A3A3 /* BookmarkRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FB022CA4B140081A3A3 /* BookmarkRequest.swift */; };
 		B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FB522CA62E50081A3A3 /* JSONAPIDocument.swift */; };
-		B6DF2FBB22CA86120081A3A3 /* KeychainSwiftDistrib.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FBA22CA86120081A3A3 /* KeychainSwiftDistrib.swift */; };
 		B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FBC22CA861B0081A3A3 /* String+Base64.swift */; };
 		B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FBD22CA861B0081A3A3 /* RandomString.swift */; };
 		B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FBE22CA861C0081A3A3 /* Data+Hex.swift */; };
@@ -101,7 +100,6 @@
 		B6DF2FAE22CA498B0081A3A3 /* User.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = User.swift; sourceTree = "<group>"; };
 		B6DF2FB022CA4B140081A3A3 /* BookmarkRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRequest.swift; sourceTree = "<group>"; };
 		B6DF2FB522CA62E50081A3A3 /* JSONAPIDocument.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIDocument.swift; sourceTree = "<group>"; };
-		B6DF2FBA22CA86120081A3A3 /* KeychainSwiftDistrib.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = KeychainSwiftDistrib.swift; sourceTree = "<group>"; };
 		B6DF2FBC22CA861B0081A3A3 /* String+Base64.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "String+Base64.swift"; sourceTree = "<group>"; };
 		B6DF2FBD22CA861B0081A3A3 /* RandomString.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RandomString.swift; sourceTree = "<group>"; };
 		B6DF2FBE22CA861C0081A3A3 /* Data+Hex.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Data+Hex.swift"; sourceTree = "<group>"; };
@@ -286,7 +284,6 @@
 		B6DF2FAD22CA435A0081A3A3 /* Guardpost */ = {
 			isa = PBXGroup;
 			children = (
-				B6DF2FB922CA85C90081A3A3 /* 3rd Party */,
 				B6DF2FB822CA844A0081A3A3 /* Utils */,
 				B6DF2FB722CA84410081A3A3 /* SSO */,
 			);
@@ -320,14 +317,6 @@
 				B6DF2FCE22CA89660081A3A3 /* Constants.swift */,
 			);
 			path = Utils;
-			sourceTree = "<group>";
-		};
-		B6DF2FB922CA85C90081A3A3 /* 3rd Party */ = {
-			isa = PBXGroup;
-			children = (
-				B6DF2FBA22CA86120081A3A3 /* KeychainSwiftDistrib.swift */,
-			);
-			path = "3rd Party";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -478,7 +467,6 @@
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
 				B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
-				B6DF2FBB22CA86120081A3A3 /* KeychainSwiftDistrib.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B6DF2F9822CA051B0081A3A3 /* Bookmark.swift in Sources */,
