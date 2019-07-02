@@ -23,7 +23,7 @@
 import Foundation
 import KeychainSwift
 
-fileprivate let SSO_USER_KEY = "com.razeware.guardpostkit.sso_user"
+fileprivate let SSO_USER_KEY = "com.razeware.emitron.sso_user"
 
 internal extension User {
   @discardableResult
