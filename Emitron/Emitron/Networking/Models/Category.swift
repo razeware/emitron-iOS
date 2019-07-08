@@ -11,13 +11,15 @@ import Foundation
 class Category {
   
   var id: String?
-  var url: URL?
+  var name: String?
+  var uri: String?
   var ordinal: Double?
   
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
     
     self.id = jsonResource.id
-    self.url = URL(string: (jsonResource["name"] as? String) ?? "")
+    self.name = jsonResource["name"] as? String
+    self.uri = jsonResource["uri"] as? String
     self.ordinal = jsonResource["ordinal"] as? Double
   }
 }

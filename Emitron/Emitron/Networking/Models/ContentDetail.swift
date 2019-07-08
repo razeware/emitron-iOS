@@ -57,12 +57,34 @@ class ContentDetail {
     
     self.duration = jsonResource["duration"] as? Double
     self.popularity = jsonResource["popularity"] as? Double
-    self.bookmarked = jsonResource["bookmarked"] as? Bool
+    self.bookmarked = jsonResource["bookmarked?"] as? Bool
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String
     self.contributorString = jsonResource["contributor_string"] as? String
     
-    // Need to implement the relationships here ~
-    
+    for relationship in jsonResource.relationships {
+      switch relationship.type {
+      case "domains":
+        let ids = relationship.data.compactMap{ $0.id }
+        let included = jsonResource.parent?.included.filter{ ids.contains($0.id) }
+        let domains = included?.compactMap{ Domain($0, metadata: $0.meta) }
+        self.domains = domains
+      case "child_contents":
+        let childContents = relationship.data.compactMap{ ContentSummary($0, metadata: $0.meta) }
+        self.childContents = childContents
+      case "progressions":
+        let ids = relationship.data.compactMap{ $0.id }
+        let included = jsonResource.parent?.included.filter{ ids.contains($0.id) }
+        let progressions = included?.compactMap{ Progression($0, metadata: $0.meta) }
+        self.progression = progressions?.first
+      case "bookmark":
+        let ids = relationship.data.compactMap{ $0.id }
+        let included = jsonResource.parent?.included.filter{ ids.contains($0.id) }
+        let bookmarks = included?.compactMap{ Bookmark(resource: $0, metadata: $0.meta) }
+        self.bookmark = bookmarks?.first
+      default:
+        break
+      }
+    }
   }
 }

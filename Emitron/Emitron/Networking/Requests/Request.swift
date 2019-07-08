@@ -16,8 +16,6 @@ enum HTTPMethod: String {
   case PATCH
 }
 
-typealias Parameters = [String: String]
-
 protocol Request {
   associatedtype Response
   
@@ -25,7 +23,6 @@ protocol Request {
   var path: String { get }
   var additionalHeaders: [String: String]? { get }
   var body: Data? { get }
-  var parameters: Parameters? { get }
   
   func handle(response: Data) throws -> Response
 }

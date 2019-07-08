@@ -18,7 +18,7 @@ class Service {
     self.session = URLSession(configuration: .default)
   }
   
-  func makeAndProcessRequest<R: Request>(request: R, completion: @escaping (Result<R.Response, RWAPIError>) -> Void) {
+  func makeAndProcessRequest<R: Request>(request: R, parameters: [Parameter]? = nil, completion: @escaping (Result<R.Response, RWAPIError>) -> Void) {
     
     let handleResponse: (Result<R.Response, RWAPIError>) -> Void = { result in
       DispatchQueue.main.async {
@@ -26,7 +26,8 @@ class Service {
       }
     }
     
-    let urlRequest = prepare(request: request)
+    guard let urlRequest = prepare(request: request, parameters: parameters) else { return }
+    
     let task = session.dataTask(with: urlRequest) { data, response, error in
       
       guard let httpResponse = response as? HTTPURLResponse, 200..<300 ~= httpResponse.statusCode else {
@@ -46,12 +47,26 @@ class Service {
     task.resume()
   }
   
-  func prepare<R: Request>(request: R) -> URLRequest {
-    let url = networkClient.environment.baseUrl.appendingPathComponent(request.path)
+  func prepare<R: Request>(request: R, parameters: [Parameter]?) -> URLRequest? {
+    let pathURL = networkClient.environment.baseUrl.appendingPathComponent(request.path)
+    
+    var components = URLComponents(url: pathURL, resolvingAgainstBaseURL: false)
+    
+    if let parames = parameters {
+      let queryItems = parames.map { parameter -> URLQueryItem in
+        let queryItem = URLQueryItem(name: parameter.key, value: parameter.value)
+        return queryItem
+      }
+
+      components?.queryItems = queryItems
+    }
+    
+    guard let url = components?.url else { return nil }
     
     var urlRequest = URLRequest(url: url)
-    urlRequest.httpBody = request.body
     urlRequest.httpMethod = request.method.rawValue
+    // body *needs* to be the last property that we set, because of this bug: https://bugs.swift.org/browse/SR-6687
+    urlRequest.httpBody = request.body
     
     let authTokenHeader: HTTPHeaders = ["Authorization": "Token \(networkClient.authToken)"]
     let headers = networkClient.contentTypeHeader.merged(networkClient.additionalHeaders,

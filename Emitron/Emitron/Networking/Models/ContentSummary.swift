@@ -8,20 +8,6 @@
 
 import Foundation
 
-enum ContentDifficulty: String {
-  case beginner
-  case intermediate
-  case advanced
-}
-
-enum ContentType: String {
-  case collection
-  case episode
-  case screencast
-  case article
-  case product
-}
-
 class ContentSummary {
   
   var id: String?

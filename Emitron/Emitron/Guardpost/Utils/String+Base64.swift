@@ -24,9 +24,7 @@ import Foundation
 
 extension String {
   func fromBase64() -> String? {
-    guard let data = Data(base64Encoded: self) else {
-      return nil
-    }
+    let data = Data(self.utf8)
     return String(data: data, encoding: .utf8)
   }
   
