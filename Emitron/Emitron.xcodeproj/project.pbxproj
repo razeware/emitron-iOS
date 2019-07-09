@@ -23,10 +23,6 @@
 		B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */; };
 		B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC4222C7ADDC006DD325 /* UIColor+Extensions.swift */; };
 		B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC4522C7AF60006DD325 /* UIFont+Extensions.swift */; };
-		B6D7DC4C22C7AFEC006DD325 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
-		B6D7DC4D22C7AFEC006DD325 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4922C7AFEC006DD325 /* OFL.txt */; };
-		B6D7DC4E22C7AFEC006DD325 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
-		B6D7DC4F22C7AFEC006DD325 /* Bitter-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */; };
 		B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */; };
 		B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC5422C7B408006DD325 /* Font+Extensions.swift */; };
 		B6D7DC7822C7C6BE006DD325 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC7722C7C6BE006DD325 /* CardView.swift */; };
@@ -238,7 +234,9 @@
 				893818B538C1669690768381 /* Pods */,
 				A331F97F98E99A372BB92C47 /* Frameworks */,
 			);
+			indentWidth = 2;
 			sourceTree = "<group>";
+			tabWidth = 2;
 		};
 		B6D7DC2C22C79743006DD325 /* Products */ = {
 			isa = PBXGroup;
@@ -505,6 +503,7 @@
 				B6D7DC2922C79743006DD325 /* Resources */,
 				56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */,
 				B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */,
+				958699B722D48F3E00E33625 /* SwiftLint Run Script */,
 			);
 			buildRules = (
 			);
@@ -553,15 +552,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B6D7DC4D22C7AFEC006DD325 /* OFL.txt in Resources */,
 				B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */,
-				B6D7DC4E22C7AFEC006DD325 /* Bitter-Regular.ttf in Resources */,
 				B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */,
 				B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */,
-				B6D7DC4C22C7AFEC006DD325 /* Bitter-Bold.ttf in Resources */,
-				B6D7DC4F22C7AFEC006DD325 /* Bitter-Italic.ttf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -584,6 +579,24 @@
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Emitron/Pods-Emitron-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
+		};
+		958699B722D48F3E00E33625 /* SwiftLint Run Script */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "SwiftLint Run Script";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint --no-cache\nelse\n    echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
 		B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */ = {
 			isa = PBXShellScriptBuildPhase;

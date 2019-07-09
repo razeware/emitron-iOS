@@ -1,0 +1,104 @@
+opt_in_rules:
+  - anyobject_protocol
+  - array_init
+  - closure_body_length
+  - closure_spacing
+  - closure_end_indentation
+  - collection_alignment
+  - conditional_returns_on_newline
+  - contains_over_first_not_nil
+  - convenience_type
+  - empty_count
+  - empty_xctest_method
+  - explicit_init
+  - explicit_self
+  - extension_access_modifier
+  - empty_string
+  - fallthrough
+  - fatal_error_message
+  - first_where
+  - implicit_return
+  - joined_default_parameter
+  - last_where
+  - legacy_multiple
+  - legacy_random
+  - let_var_whitespace
+  - literal_expression_end_indentation
+  - lower_acl_than_parent
+  - modifier_order
+  - multiline_arguments
+  - multiline_function_chains
+  - multiline_parameters
+  - nimble_operator
+  - operator_usage_whitespace
+  - overridden_super_call
+  - prefixed_toplevel_constant
+  - private_action
+  - prohibited_super_call
+  - quick_discouraged_call
+  - quick_discouraged_focused_test
+  - quick_discouraged_pending_test
+  - reduce_into
+  - redundant_nil_coalescing
+  - redundant_type_annotation
+  - required_enum_case
+  - single_test_class
+  - sorted_first_last
+  - sorted_imports
+  - strict_fileprivate
+  - strong_iboutlet
+  - switch_case_on_newline
+  - toggle_bool
+  - trailing_closure
+  - unneeded_parentheses_in_closure_argument
+  - unowned_variable_capture
+  - untyped_error_in_catch
+  - unused_import
+  - unused_private_declaration
+  - vertical_parameter_alignment_on_call
+  - vertical_whitespace_closing_braces
+  - xct_specific_matcher
+  - yoda_condition
+
+disabled_rules: # rule identifiers to exclude from running
+  - force_cast
+  - large_tuple
+  - function_parameter_count
+  - line_length
+  - nsobject_prefer_isequal
+  - type_name
+
+excluded: # paths to ignore during linting. overridden by `included`
+  - Carthage
+  - Pods
+
+closure_body_length:
+  - 100 # warning
+  - 200 # error
+
+cyclomatic_complexity:
+  - 20 # warning
+  - 25 # error
+
+line_length:
+  - 150 # warning
+  - 200 # error
+
+file_length:
+  - 1200 # warning
+  - 1500 # error
+
+function_body_length:
+  - 200 # warning
+  - 300 # error
+
+type_body_length:
+  - 1000 # warning
+  - 1500 # error
+
+identifier_name:
+  min_length: 3
+  max_length: 75
+  excluded:
+    - by
+    - id

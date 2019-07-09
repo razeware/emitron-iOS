@@ -1,35 +1,42 @@
-/*
- * Copyright (c) 2017 Razeware LLC
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
- */
+/// Copyright (c) 2019 Razeware LLC
+///
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+///
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+///
+/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+/// distribute, sublicense, create a derivative work, and/or sell copies of the
+/// Software in any work that is designed, intended, or marketed for pedagogical or
+/// instructional purposes related to programming, coding, application development,
+/// or information technology.  Permission for such use, copying, modification,
+/// merger, publication, distribution, sublicensing, creation of derivative works,
+/// or sale is expressly withheld.
+///
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
 
-import Foundation
 import CryptoKit
+import Foundation
 
-internal struct SingleSignOnResponse {
+struct SingleSignOnResponse {
+
   private let request: SingleSignOnRequest
   private let signature: String
   private let payload: String
   private let decodedPayload: [URLQueryItem]?
-  
-  internal init?(request: SingleSignOnRequest, responseUrl: URL) {
+
+  init?(request: SingleSignOnRequest, responseUrl: URL) {
     let responseCmpts = URLComponents(url: responseUrl, resolvingAgainstBaseURL: false)
     var cmpts = URLComponents()
     guard
@@ -39,52 +46,54 @@ internal struct SingleSignOnResponse {
       else {
         return nil
     }
-    
+
     cmpts.query = urlString
-    
+
     self.request = request
     self.signature = sig
     self.payload = sso
     self.decodedPayload = cmpts.queryItems
   }
-  
-  internal var isValid: Bool {
+
+  var isValid: Bool {
     return isSignatureValid && isNonceValid
   }
-  
-  internal var user: User? {
+
+  var user: User? {
     if !isValid {
-      return .none
+      return nil
     }
-    guard let decodedPayload = decodedPayload else { return .none }
+    guard let decodedPayload = decodedPayload else {
+      return nil
+    }
+
     let dictionary = queryItemsToDictionary(decodedPayload)
     return User(dictionary: dictionary)
   }
-  
+
   private var isSignatureValid: Bool {
     let symmetricKey = SymmetricKey(data: Data(request.secret.utf8))
-    let hmac = HMAC<SHA256>.authenticationCode(for: Data(payload.utf8), using: symmetricKey).description.replacingOccurrences(of: String.hmacToRemove, with: "")
-    
+    let hmac = HMAC<SHA256>.authenticationCode(for: Data(payload.utf8),
+                                               using: symmetricKey)
+      .description
+      .replacingOccurrences(of: String.hmacToRemove, with: "")
+
     return hmac == signature
   }
-  
+
   private var isNonceValid: Bool {
     return decodedPayloadEntry(name: "nonce") == request.nonce
   }
-  
+
   private func decodedPayloadEntry(name: String) -> String? {
-    return decodedPayload?.first(where: { $0.name == name })?.value
+    return decodedPayload?.first { $0.name == name }?.value
   }
-  
-  private func queryItemsToDictionary(_ queryItems: [URLQueryItem]) -> [String : String] {
-    var dictionary = [String : String]()
+
+  private func queryItemsToDictionary(_ queryItems: [URLQueryItem]) -> [String: String] {
+    var dictionary = [String: String]()
     for item in queryItems {
       dictionary[item.name] = item.value?.removingPercentEncoding
     }
     return dictionary
   }
 }
-
-
-
-
