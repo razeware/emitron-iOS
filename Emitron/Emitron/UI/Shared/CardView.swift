@@ -46,7 +46,7 @@ struct CardView: View {
             .lineLimit(1)
             .foregroundColor(.battleshipGrey)
         }
-        Image("SwiftSquare")
+        Image("loading5")
           .resizable()
           .frame(width: 60, height: 60, alignment: .topTrailing)
           .cornerRadius(6)

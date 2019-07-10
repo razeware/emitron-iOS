@@ -51,6 +51,7 @@ class ContentDetail {
   var bookmark: Bookmark?
   var groups: String?
   var categories: [Category]?
+  var url: URL?
   
   init() { }
 
@@ -108,5 +109,7 @@ class ContentDetail {
         break
       }
     }
+    
+    self.url = jsonResource.links["self"]
   }
 }

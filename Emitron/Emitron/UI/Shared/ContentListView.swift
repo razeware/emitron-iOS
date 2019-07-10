@@ -28,25 +28,35 @@
 
 import SwiftUI
 
-struct Restaurant {
-  let name: String
-  let num: Int
-  
-  init(name: String, num: Int) {
-    self.name = name
-    self.num = num
-  }
-}
-
 struct ContentListView: View {
   
   var contents: [ContentDetail] = []
   
   var body: some View {
     
-    List(contents.identified(by: \.id)) { content in
-      CardView(content: content)
+    NavigationView {
+      makePresentationList()
     }
+  }
+  
+  func makeNavigationList() -> AnyView {
+    let list = List(contents.identified(by: \.id)) { content in
+      NavigationLink(destination: VideoView(url: content.url!)) {
+        CardView(content: content)
+      }
+    }
+    
+    return AnyView(list)
+  }
+  
+  func makePresentationList() -> AnyView {
+    let list = List(contents.identified(by: \.id)) { content in
+      PresentationLink(destination: VideoView(url: content.url!)) {
+        CardView(content: content)
+      }.accentColor(Color.white)
+    }
+    
+    return AnyView(list)
   }
 }
 
