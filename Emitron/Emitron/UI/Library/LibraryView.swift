@@ -28,16 +28,16 @@
 
 import SwiftUI
 
-struct MainView: View {
+struct LibraryView: View {
     var body: some View {
         Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
     }
 }
 
 #if DEBUG
-struct MainView_Previews: PreviewProvider {
+struct LibraryView_Previews: PreviewProvider {
     static var previews: some View {
-        MainView()
+        LibraryView()
     }
 }
 #endif
