@@ -40,16 +40,15 @@ struct LibraryView: View {
     switch emitron.emitronState {
     case .hasData:
       return AnyView(ContentListView(contents: emitron.libraryContent))
-    case .noData, .loading:
+    case .noData,
+         .loading:
       return AnyView(
         VStack {
           Text("Library!")
-          Button(action: {
+          Button("Login") {
             self.emitron.guardpostCheck()
-          }) {
-            Text("Login")
           }
-      })
+        })
     }
   }
 }
