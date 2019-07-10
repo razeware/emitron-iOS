@@ -44,3 +44,29 @@ struct ContentsRequest: Request {
     return contents
   }
 }
+
+struct ContentDetailRequest: Request {
+  typealias Response = ContentDetail
+  
+  var method: HTTPMethod { return .GET }
+  var path: String { return "/contents\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  private var id: Int
+  
+  init(id: Int) {
+    self.id = id
+  }
+  
+  func handle(response: Data) throws -> ContentDetail {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let contentDetails = doc.data.compactMap { ContentDetail($0, metadata: nil) }
+    guard let contentDetail = contentDetails.first,
+      contentDetails.count == 1 else {
+      throw RWAPIError.processingError(nil)
+    }
+    
+    return contentDetail
+  }
+}

@@ -144,3 +144,29 @@ struct DeleteBookmarkRequest: Request {
     return bookmarks
   }
 }
+
+struct BookmarkRequest: Request {
+  typealias Response = Bookmark
+  
+  var method: HTTPMethod { return .GET }
+  var path: String { return "/bookmarks\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  private var id: Int
+  
+  init(id: Int) {
+    self.id = id
+  }
+  
+  func handle(response: Data) throws -> Bookmark {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let bookmarks = doc.data.compactMap { Bookmark(resource: $0, metadata: nil) }
+    guard let bookmark = bookmarks.first,
+      bookmarks.count == 1 else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return bookmark
+  }
+}
