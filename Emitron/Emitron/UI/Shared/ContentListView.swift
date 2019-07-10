@@ -28,16 +28,32 @@
 
 import SwiftUI
 
+struct Restaurant {
+  let name: String
+  let num: Int
+  
+  init(name: String, num: Int) {
+    self.name = name
+    self.num = num
+  }
+}
+
 struct ContentListView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+  
+  var contents: [ContentDetail] = []
+  
+  var body: some View {
+    
+    List(contents.identified(by: \.id)) { content in
+      CardView(content: content)
     }
+  }
 }
 
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
-    static var previews: some View {
-        ContentListView()
-    }
+  static var previews: some View {
+    ContentListView(contents: [])
+  }
 }
 #endif

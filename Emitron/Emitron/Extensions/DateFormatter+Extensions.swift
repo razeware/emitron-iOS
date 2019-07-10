@@ -31,8 +31,16 @@ import Foundation
 extension DateFormatter {
 
   static let apiDateFormatter: DateFormatter = {
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = .apiDateString
-    return dateFormatter
+    return DateFormatter.formatter(for: .apiDateString)
   }()
+  
+  static let cardDateFormatter: DateFormatter = {
+    return DateFormatter.formatter(for: .cardDateString)
+  }()
+  
+  static func formatter(for dateString: String) -> DateFormatter {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = dateString
+    return dateFormatter
+  }
 }

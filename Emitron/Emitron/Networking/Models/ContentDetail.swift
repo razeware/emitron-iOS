@@ -51,6 +51,8 @@ class ContentDetail {
   var bookmark: Bookmark?
   var groups: String?
   var categories: [Category]?
+  
+  init() { }
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 

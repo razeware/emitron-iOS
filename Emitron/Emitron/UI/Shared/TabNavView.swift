@@ -35,29 +35,36 @@ struct TabNavView: View {
   var body: some View {
     let tabs = TabbedView(selection: $selection) {
 
-      LibraryView()
+      libraryView()
         .tabItem {
           Text("Library")
           Image("materialIconLibrary")
         }
-      .tag(0)
+        .tag(0)
 
       DownloadsView()
         .tabItem {
           Text("Downloads")
           Image("materialIconDownload")
         }
-      .tag(1)
+        .tag(1)
 
       MyTutorialsView()
         .tabItem {
           Text("My Tutorials")
           Image("materialIconMyTutorials")
         }
-      .tag(2)
+        .tag(2)
     }
 
     return tabs
+  }
+  
+  func libraryView() -> LibraryView {
+    let scene = UIApplication.shared.connectedScenes.first!
+    let sceneDelegate = scene.delegate! as! SceneDelegate
+        
+    return LibraryView(emitron: sceneDelegate.emitron)
   }
 }
 

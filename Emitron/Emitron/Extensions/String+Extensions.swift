@@ -30,4 +30,5 @@ import Foundation
 
 extension String {
   static let apiDateString: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
+  static let cardDateString: String = "MMM dd yyyy"
 }

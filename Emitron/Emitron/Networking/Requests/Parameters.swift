@@ -41,6 +41,17 @@ enum ContentType: String {
   case screencast
   case article
   case product
+  
+  var displayString: String {
+    switch self {
+    case .collection:
+      return "Video Course"
+    case .episode, .screencast, .article:
+      return self.rawValue.uppercased()
+    case .product:
+      return "Book" // Probably other types of stuff
+    }
+  }
 }
 
 extension Int {

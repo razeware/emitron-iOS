@@ -26,76 +26,30 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import AuthenticationServices
 import SwiftUI
 
-let sso = "3c62ef6384b3becef0261f4b612278d45e46618127194cfc380497997a7150e8083afe8e950f54801adfc25d9af7f949b01656ea0543943a6145ffc1ae013115"
-
-class AuthDelegateWrapper: NSObject {}
-extension AuthDelegateWrapper: ASWebAuthenticationPresentationContextProviding {
-  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    return UIApplication.shared.windows.first!
-  }
-}
-
 struct LibraryView: View {
-
-  let guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
-                            urlScheme: "com.razeware.emitron://",
-                            ssoSecret: sso)
-  let authWrapper = AuthDelegateWrapper()
+  
+  @ObjectBinding var emitron: Emitron
 
   var body: some View {
-    VStack {
-      Text("Library!")
-      Button(action: {
-        self.guardpostLogin()
-      }) {
-        Text("Login")
-      }
-    }
+    VStack(content: contentView)
   }
-
-  func guardpostLogin() {
-    guardpost.presentationContextDelegate = authWrapper
-    
-    guardpost.login { result in
-      switch result {
-      case .failure(let error):
-        print(error.localizedDescription)
-      case .success(let user):
-        self.performRequest(user)
-      }
-    }
-  }
-
-  func performRequest(_ user: User) {
-
-    let client = RWAPI(authToken: "\(user.token)")
-    //let service =  ProgressionsService(client: client)
-    let contentsService = ContentsService(client: client)
-
-    let filterParams = Param.filter(by: [.contentTypes(types: [.collection])])
-    let sortParam = Param.sort(by: .releasedAt, descending: true)
-    let completionParam = ParameterKey.completionStatus(status: .completed).param
-    let pageSizeParam = ParameterKey.pageSize(size: 21).param
-    let params = filterParams + [sortParam] + [pageSizeParam]
-
-    //    service.progressions(parameters: params) { result in
-    //      switch result {
-    //      case .failure(let error):
-    //        print(error.localizedDescription)
-    //      case .success(let progressions):
-    //        print(progressions.count)
-    //      }
-    //    }
-    contentsService.allContents(parameters: params) { result in
-      switch result {
-      case .failure(let error):
-        print(error.localizedDescription)
-      case .success(let contents):
-        print(contents.count)
-      }
+  
+  func contentView() -> AnyView {
+    switch emitron.emitronState {
+    case .hasData:
+      return AnyView(ContentListView(contents: emitron.libraryContent))
+    case .noData, .loading:
+      return AnyView(
+        VStack {
+          Text("Library!")
+          Button(action: {
+            self.emitron.guardpostCheck()
+          }) {
+            Text("Login")
+          }
+      })
     }
   }
 }
@@ -103,7 +57,7 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    LibraryView()
+    LibraryView(emitron: Emitron())
   }
 }
 #endif

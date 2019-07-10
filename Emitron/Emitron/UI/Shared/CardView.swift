@@ -29,15 +29,18 @@
 import SwiftUI
 
 struct CardView: View {
+  
+  let content: ContentDetail?
+  
   var body: some View {
     VStack(alignment: .leading) {
       HStack {
         VStack {
-          Text("Advanced Swift: Values and References")
+          Text(content?.name ?? "")
             .frame(width: 214, height: 48, alignment: .topLeading)
             .font(.uiTitle4)
             .lineLimit(2)
-          Text("iOS & Swift")
+          Text(content?.domains?.first?.name ?? "")
             .frame(width: 214, height: 16, alignment: .leading)
             .font(.uiCaption)
             .lineLimit(1)
@@ -48,18 +51,18 @@ struct CardView: View {
           .frame(width: 60, height: 60, alignment: .topTrailing)
           .cornerRadius(6)
       }
-      Text("Get up and running fast with the recently announced and pre-alpha Jetpack Compose toolkit.")
+      Text(content?.description ?? "")
         .frame(width: 214, height: 75, alignment: .topLeading)
         .font(.uiCaption)
         .lineLimit(4)
         .foregroundColor(.battleshipGrey)
       HStack {
-        Text("Today * Screencast (49 min)")
+        Text(content?.dateAndTimeString ?? "")
           .frame(width: 214, height: 16, alignment: .leading)
           .font(.uiCaption)
           .lineLimit(1)
           .foregroundColor(.battleshipGrey)
-        Image("download")
+        Image("materialIconDownload")
       }
     }
       .frame(width: 340, height: 185, alignment: .center)
@@ -73,7 +76,7 @@ struct CardView: View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
-    CardView()
+    CardView(content: ContentDetail())
   }
 }
 #endif

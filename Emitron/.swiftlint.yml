@@ -43,12 +43,10 @@ opt_in_rules:
   - required_enum_case
   - single_test_class
   - sorted_first_last
-  - sorted_imports
   - strict_fileprivate
   - strong_iboutlet
   - switch_case_on_newline
   - toggle_bool
-  - trailing_closure
   - unneeded_parentheses_in_closure_argument
   - unowned_variable_capture
   - untyped_error_in_catch
@@ -67,6 +65,9 @@ disabled_rules: # rule identifiers to exclude from running
   - nsobject_prefer_isequal
   - type_name
   - prefixed_toplevel_constant
+  - trailing_closure
+  - trailing_whitespace
+  - sorted_imports
 
 excluded: # paths to ignore during linting. overridden by `included`
   - Carthage
