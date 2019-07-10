@@ -29,15 +29,39 @@
 import SwiftUI
 
 struct MainView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+
+  @State private var selection = 0
+
+  var body: some View {
+    let tabs = TabbedView(selection: $selection) {
+
+      LibraryView()
+        .tabItem {
+          Text("Library")
+        }
+      .tag(0)
+
+      DownloadsView()
+        .tabItem {
+          Text("Downloads")
+        }
+      .tag(1)
+
+      MyTutorialsView()
+        .tabItem {
+          Text("My Tutorials")
+        }
+      .tag(2)
     }
+
+    return tabs
+  }
 }
 
 #if DEBUG
 struct MainView_Previews: PreviewProvider {
-    static var previews: some View {
-        MainView()
-    }
+  static var previews: some View {
+    MainView()
+  }
 }
 #endif
