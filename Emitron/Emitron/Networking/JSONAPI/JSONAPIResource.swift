@@ -77,7 +77,7 @@ public class JSONAPIResource {
 }
 
 extension JSONAPIResource {
-  public subscript<K: CustomStringConvertible, T>(key: K) -> T? {
+  subscript<K: CustomStringConvertible, T>(key: K) -> T? {
     return self[key.description] as? T
   }
 }

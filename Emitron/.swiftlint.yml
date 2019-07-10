@@ -32,7 +32,6 @@ opt_in_rules:
   - nimble_operator
   - operator_usage_whitespace
   - overridden_super_call
-  - prefixed_toplevel_constant
   - private_action
   - prohibited_super_call
   - quick_discouraged_call
@@ -67,6 +66,7 @@ disabled_rules: # rule identifiers to exclude from running
   - line_length
   - nsobject_prefer_isequal
   - type_name
+  - prefixed_toplevel_constant
 
 excluded: # paths to ignore during linting. overridden by `included`
   - Carthage

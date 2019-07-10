@@ -53,17 +53,3 @@ class JSONAPIDocument {
     }
   }
 }
-
-public protocol JSONPrinter {
-  func toDict() -> [String: Any]
-}
-
-public extension JSONPrinter {
-  func toJSONData(_ prettyPrinted: Bool = false) -> Data {
-    if prettyPrinted {
-      return try! JSONSerialization.data(withJSONObject: toDict(), options: .prettyPrinted)
-    }
-
-    return try! JSONSerialization.data(withJSONObject: toDict(), options: JSONSerialization.WritingOptions(rawValue: 0))
-  }
-}

@@ -23,7 +23,7 @@
 import Foundation
 import KeychainSwift
 
-private let SSO_USER_KEY = "com.razeware.emitron.sso_user"
+private let SSOUserKey = "com.razeware.emitron.sso_user"
 
 internal extension User {
   @discardableResult
@@ -34,12 +34,12 @@ internal extension User {
     }
 
     let keychain = KeychainSwift()
-    return keychain.set(encoded, forKey: SSO_USER_KEY, withAccess: .accessibleAfterFirstUnlock)
+    return keychain.set(encoded, forKey: SSOUserKey, withAccess: .accessibleAfterFirstUnlock)
   }
 
   static func restoreFromKeychain() -> User? {
     let keychain = KeychainSwift()
-    guard let encoded = keychain.getData(SSO_USER_KEY) else {
+    guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
     }
 
@@ -50,6 +50,6 @@ internal extension User {
   @discardableResult
   static func removeUserFromKeychain() -> Bool {
     let keychain = KeychainSwift()
-    return keychain.delete(SSO_USER_KEY)
+    return keychain.delete(SSOUserKey)
   }
 }

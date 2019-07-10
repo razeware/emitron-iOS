@@ -9,8 +9,6 @@
 /* Begin PBXBuildFile section */
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
-		B60612BE22CDE3B7007FC852 /* ContentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612BD22CDE3B7007FC852 /* ContentView.swift */; };
-		B60612C022CDE453007FC852 /* RemoteEndpoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612BF22CDE453007FC852 /* RemoteEndpoint.swift */; };
 		B60612C222CDF682007FC852 /* SwiftUIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612C122CDF682007FC852 /* SwiftUIVC.swift */; };
 		B60612C422CDF769007FC852 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612C322CDF769007FC852 /* SwiftUIView.swift */; };
 		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
@@ -100,8 +98,6 @@
 		45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.release.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.release.xcconfig"; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
-		B60612BD22CDE3B7007FC852 /* ContentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentView.swift; sourceTree = "<group>"; };
-		B60612BF22CDE453007FC852 /* RemoteEndpoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RemoteEndpoint.swift; sourceTree = "<group>"; };
 		B60612C122CDF682007FC852 /* SwiftUIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVC.swift; sourceTree = "<group>"; };
 		B60612C322CDF769007FC852 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
@@ -462,8 +458,6 @@
 			children = (
 				B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */,
 				B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */,
-				B60612BD22CDE3B7007FC852 /* ContentView.swift */,
-				B60612BF22CDE453007FC852 /* RemoteEndpoint.swift */,
 				B60612C122CDF682007FC852 /* SwiftUIVC.swift */,
 				B60612C322CDF769007FC852 /* SwiftUIView.swift */,
 			);
@@ -683,7 +677,6 @@
 				B6FC15B922CB54940078CEDB /* ContentPartsList.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* Attachment.swift in Sources */,
 				B6DF2F9C22CA052B0081A3A3 /* ContentSummary.swift in Sources */,
-				B60612C022CDE453007FC852 /* RemoteEndpoint.swift in Sources */,
 				B60612C222CDF682007FC852 /* SwiftUIVC.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
@@ -704,7 +697,6 @@
 				B6DF2F9E22CA05320081A3A3 /* ContentDetail.swift in Sources */,
 				B60612B922CCE352007FC852 /* Parameters.swift in Sources */,
 				B6DF2FCF22CA89670081A3A3 /* Constants.swift in Sources */,
-				B60612BE22CDE3B7007FC852 /* ContentView.swift in Sources */,
 				B6FC15B722CB54890078CEDB /* ContentPartListItem.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				B6FC159E22CB51670078CEDB /* FilterView.swift in Sources */,
