@@ -32,7 +32,7 @@ class BookmarksService: Service {
 
   func bookmarks(parameters: [Parameter]? = nil,
                  completion: @escaping (_ response: Result<GetBookmarksRequest.Response, RWAPIError>) -> Void) {
-    let request = BookmarksRequest.getAll
+    let request = GetBookmarksRequest()
     makeAndProcessRequest(request: request,
                           parameters: parameters,
                           completion: completion)
@@ -40,7 +40,7 @@ class BookmarksService: Service {
 
   func deleteBookmark(for id: Int,
                       completion: @escaping (_ response: Result<DeleteBookmarkRequest.Response, RWAPIError>) -> Void) {
-    let request = BookmarksRequest.deleteBookmark(id: id)
+    let request = DeleteBookmarkRequest(id: id)
     makeAndProcessRequest(request: request,
                           completion: completion)
   }

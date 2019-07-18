@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-struct ContentSummaryView: View {
+struct ContentListingView: View {
   
   @ObjectBinding var contentDetailsMC: ContentDetailsMC
   @State var isPresented = false
@@ -37,30 +37,7 @@ struct ContentSummaryView: View {
   
   var body: some View {
     
-    //TODO: Loading workaround til I find something better
-    if contentDetailsMC.data.groups.isEmpty {
-      fetchList()
-    }
-    
-    return VStack {
-      
-      mainView()
-      
-      //TODO: Loading workaround til I find something better
-      if !contentDetailsMC.data.groups.isEmpty {
-        buildList()
-        .padding([.leading], 5)
-      }
-    }
-      .background(Color.paleGrey)
-  }
-  
-  func mainView() -> AnyView {
-    // IMAGE: Background blurred photo
-    
-    // ISSUE: Embedding into a scrollview seems to get rid of multiline text
-    // .frame(.infinity) seems like a hack
-    return AnyView(ScrollView(.vertical, showsIndicators: false) {
+    List {
       VStack {
         Button("PLAY") {
           self.playVideo()
@@ -68,63 +45,40 @@ struct ContentSummaryView: View {
         .frame(minHeight: 285)
         
         VStack(alignment: .leading) {
-          TopSummaryView(details: contentDetailsMC.data)
+          ContentSummaryView(details: contentDetailsMC.data)
           
           // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
           Text("Courses") // TITLE
             .font(.uiTitle2)
-            .lineLimit(nil)
             .padding([.top], -5)
         }
       }
-      .padding([.leading], 18)
-        .padding([.trailing], 30)
-        .frame(maxWidth: UIScreen.main.bounds.width)
-    })
+      .frame(maxWidth: UIScreen.main.bounds.width)
+        .background(Color.paleGrey)
+      
+      ForEach(contentDetailsMC.data.groups, id: \.id) { group in
+        Section(header:
+          CourseHeaderView(name: group.name, color: .paleGrey)
+            .background(Color.paleGrey)
+        ) {
+          ForEach(group.childContents, id: \.id) { summary in
+            
+            TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
+              // Download
+            })
+              .tapAction {
+                self.isPresented = true
+            }
+            .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
+          }
+        }
+      }
+    }
   }
   
   func playVideo() {
-    fetchList()
     print("Play video...")
   }
-  
-  private func fetchList() {
-    
-    guard contentDetailsMC.data.groups.isEmpty else { return }
-    contentDetailsMC.getContentDetails(for: contentDetailsMC.data.id)
-  }
-  
-  private func buildList() -> AnyView {
-      
-      let list =
-        List {
-          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
-            Section(header:
-              CourseHeaderView(name: group.name, color: .paleGrey)
-                .background(Color.paleGrey)
-            ) {
-              ForEach(group.childContents, id: \.id) { summary in
-
-                TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
-                  print("Making my list...")
-                })
-                  .listRowBackground(Color.paleGrey)
-                  .background(Color.paleGrey)
-                  .tapAction {
-                    self.isPresented = true
-                  }
-                  .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
-              }
-            }
-          }
-            .listRowBackground(Color.paleGrey)
-            .background(Color.paleGrey)
-        }
-          .background(Color.paleGrey)
-          .listRowBackground(Color.paleGrey)
-      
-      return AnyView(list)
-    }
 }
 
 struct CourseHeaderView: View {
@@ -144,7 +98,7 @@ struct CourseHeaderView: View {
   }
 }
 
-struct TopSummaryView: View {
+struct ContentSummaryView: View {
   var details: ContentDetail
   var body: some View {
     VStack(alignment: .leading) {
@@ -208,3 +162,4 @@ struct TopSummaryView: View {
   private func download() { }
   private func bookmark() { }
 }
+

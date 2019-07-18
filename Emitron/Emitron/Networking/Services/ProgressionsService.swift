@@ -32,7 +32,7 @@ class ProgressionsService: Service {
 
   func progressions(parameters: [Parameter]? = nil,
                     completion: @escaping (_ response: Result<ProgressionsRequest.Response, RWAPIError>) -> Void) {
-    let request = ProgressionsRequest.getAll
+    let request = ProgressionsRequest()
     makeAndProcessRequest(request: request,
                           parameters: parameters,
                           completion: completion)

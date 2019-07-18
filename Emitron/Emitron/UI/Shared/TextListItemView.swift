@@ -33,8 +33,9 @@ struct TextListItemView: View {
   var timeStamp: String?
   var buttonAction: () -> ()
   
+  //TODO: This should be coming from the BE eventually, but for now we're doing some magic transformation to get the correct title
   private var titleString: String {
-    guard let name = contentSummary?.name else { return "Introduction" }
+    guard let name = contentSummary?.name else { return "No name :(" }
     
     let realTitle = name.split(separator: "·", maxSplits: 1, omittingEmptySubsequences: true)
     let str = "\(realTitle.last!)"
@@ -42,12 +43,12 @@ struct TextListItemView: View {
   }
   
   var body: some View {
-    HStack {
+    HStack(alignment: .center, spacing: 15) {
       ZStack {
         Rectangle()
           .frame(width: 30, height: 30, alignment: .center)
           .foregroundColor(.brightGrey)
-          .cornerRadius(3)
+          .cornerRadius(6)
         
         Text("\(contentSummary?.index ?? 0)")
           .font(.uiButtonLabelSmall)
@@ -57,11 +58,10 @@ struct TextListItemView: View {
       VStack(alignment: .leading) {
         Text(titleString)
           .font(.uiHeadline)
+          .lineLimit(nil)
         Text(timeStamp ?? "1:31")
           .font(.uiCaption)
-        Rectangle()
       }
-        .frame(minWidth: 300)
       
       Spacer()
       

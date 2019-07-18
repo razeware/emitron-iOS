@@ -55,7 +55,7 @@ struct ContentListView: View {
       }
     }
         .sheet(isPresented: self.$isPresenting) {
-          ContentSummaryView(contentDetailsMC: self.selectedMC!, video: nil)
+          ContentListingView(contentDetailsMC: self.selectedMC!, video: nil)
         }
     
     return AnyView(list)

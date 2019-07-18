@@ -49,6 +49,10 @@ class ContentDetailsMC: NSObject, BindableObject {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
+    
+    super.init()
+    
+    getContentDetails()
   }
   
   private func getContentDetails() {
@@ -70,24 +74,4 @@ class ContentDetailsMC: NSObject, BindableObject {
         }
       }
     }
-  
-  func getContentDetails(for id: Int) {
-    guard state != .loading else { return }
-    
-    state = .loading
-    
-    contentsService.contentDetail(for: id) { [weak self] result in
-      
-      guard let `self` = self else { return }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        fatalError(error.localizedDescription)
-      case .success(let contentDetails):
-        self.data = contentDetails
-        self.state = .hasData
-      }
-    }
-  }
 }

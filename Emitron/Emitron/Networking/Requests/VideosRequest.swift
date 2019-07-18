@@ -29,23 +29,6 @@
 import Foundation
 import SwiftyJSON
 
-// Might never be constructing video requests
-
-enum VideoRequest {
-
-  static func showVideo(id: Int) -> ShowVideoRequest {
-    return ShowVideoRequest(id: id)
-  }
-
-  static func getVideoStream(id: Int) -> StreamVideoRequest {
-    return StreamVideoRequest(id: id)
-  }
-
-  static func getVideoDownload(id: Int) -> DownloadVideoRequest {
-    return DownloadVideoRequest(id: id)
-  }
-}
-
 struct ShowVideoRequest: Request {
   typealias Response = Video
 

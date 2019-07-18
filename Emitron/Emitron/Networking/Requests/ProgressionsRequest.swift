@@ -29,48 +29,43 @@
 import Foundation
 import SwiftyJSON
 
-enum ProgressionsRequest: Request {
-
+struct ProgressionsRequest: Request {
   typealias Response = [Progression]
-
-  case getAll
-  case show(id: String)
-
-  var method: HTTPMethod {
-    switch self {
-    case .getAll:
-      return .GET
-    case .show(id: _):
-      return .GET
-    }
-  }
-
-  var path: String {
-    switch self {
-    case .getAll:
-      return "/progressions"
-    case .show(id: let id):
-      return "/progressions/\(id)"
-    }
-  }
-
-  var additionalHeaders: [String: String]? {
-    return nil
-  }
-
+  
+  var method: HTTPMethod { return .GET }
+  var path: String { return "/progressions" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  
   func handle(response: Data) throws -> [Progression] {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
+    return progressions
+  }
+}
 
-    switch self {
-    case .getAll:
-      let json = try JSON(data: response)
-      let doc = JSONAPIDocument(json)
-      let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
-      return progressions
-    case .show(id: _):
-      let json = try JSON(data: response)
-      let doc = JSONAPIDocument(json)
-      let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
-      return progressions
+struct ShowProgressionsRequest: Request {
+  typealias Response = Progression
+  
+  var method: HTTPMethod { return .GET }
+  var path: String { return "/progressions/\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  
+  private var id: Int
+  
+  init(id: Int) {
+    self.id = id
+  }
+  
+  func handle(response: Data) throws -> Progression {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
+    guard let progression = progressions.first else {
+      throw RWAPIError.processingError(nil)
     }
+    return progression
   }
 }

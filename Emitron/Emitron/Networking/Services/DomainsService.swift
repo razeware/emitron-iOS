@@ -31,7 +31,7 @@ import Foundation
 class DomainsService: Service {
 
   func allDomains(completion: @escaping (_ response: Result<DomainsRequest.Response, RWAPIError>) -> Void) {
-    let request = DomainsRequest.getAll
+    let request = DomainsRequest()
     makeAndProcessRequest(request: request, completion: completion)
   }
 }

@@ -102,17 +102,15 @@ class ContentDetail {
         var groups: [Group] = []
         if let included = maybeIncluded {
           for resource in included {
-            for relationship in resource.relationships {
-              if relationship.type == "contents" {
-                let contentIds = relationship.data.compactMap { $0.id }
-                let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
-                // This is an ugly hack for now
-                let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummary? in
-                  ContentSummary(summary, metadata: summary.meta, index: index)
-                })
-                if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
-                  groups.append(group)
-                }
+            for relationship in resource.relationships where relationship.type == "contents" {
+              let contentIds = relationship.data.compactMap { $0.id }
+              let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
+              // This is an ugly hack for now
+              let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummary? in
+                ContentSummary(summary, metadata: summary.meta, index: index)
+              })
+              if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
+                groups.append(group)
               }
             }
           }

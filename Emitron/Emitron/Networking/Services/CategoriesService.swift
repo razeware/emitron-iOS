@@ -31,7 +31,7 @@ import Foundation
 class CategoriesService: Service {
 
   func allCategories(completion: @escaping (_ response: Result<CategoriesRequest.Response, RWAPIError>) -> Void) {
-    let request = CategoriesRequest.getAll
+    let request = CategoriesRequest()
     makeAndProcessRequest(request: request,
                           completion: completion)
   }

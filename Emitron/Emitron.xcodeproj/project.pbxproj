@@ -89,7 +89,7 @@
 		B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15AD22CB529E0078CEDB /* SettingsView.swift */; };
 		B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B022CB53220078CEDB /* TextListItemView.swift */; };
 		B6FC15B322CB53310078CEDB /* TextListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B222CB53310078CEDB /* TextListView.swift */; };
-		B6FC15B522CB53730078CEDB /* ContentSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentSummaryView.swift */; };
+		B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentListingView.swift */; };
 		B6FC15B722CB54890078CEDB /* ContentPartListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */; };
 		B6FC15B922CB54940078CEDB /* ContentPartsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B822CB54940078CEDB /* ContentPartsList.swift */; };
 		B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BA22CB55160078CEDB /* VideoView.swift */; };
@@ -194,7 +194,7 @@
 		B6FC15AD22CB529E0078CEDB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B6FC15B022CB53220078CEDB /* TextListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListItemView.swift; sourceTree = "<group>"; };
 		B6FC15B222CB53310078CEDB /* TextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListView.swift; sourceTree = "<group>"; };
-		B6FC15B422CB53730078CEDB /* ContentSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSummaryView.swift; sourceTree = "<group>"; };
+		B6FC15B422CB53730078CEDB /* ContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListingView.swift; sourceTree = "<group>"; };
 		B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPartListItem.swift; sourceTree = "<group>"; };
 		B6FC15B822CB54940078CEDB /* ContentPartsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPartsList.swift; sourceTree = "<group>"; };
 		B6FC15BA22CB55160078CEDB /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
@@ -470,7 +470,7 @@
 			children = (
 				B6FC15A122CB51960078CEDB /* FilterSectionView.swift */,
 				B6FC159D22CB51670078CEDB /* FilterView.swift */,
-				B6FC15B422CB53730078CEDB /* ContentSummaryView.swift */,
+				B6FC15B422CB53730078CEDB /* ContentListingView.swift */,
 				B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */,
 				B6FC15B822CB54940078CEDB /* ContentPartsList.swift */,
 				B6FC15BA22CB55160078CEDB /* VideoView.swift */,
@@ -790,7 +790,7 @@
 				B6FC15BD22CB551F0078CEDB /* VideoSettingsView.swift in Sources */,
 				B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */,
 				B6DF2FA422CA05530081A3A3 /* Progression.swift in Sources */,
-				B6FC15B522CB53730078CEDB /* ContentSummaryView.swift in Sources */,
+				B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */,
 				B6FC15D222CB65880078CEDB /* Download.swift in Sources */,
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,
 				B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */,
