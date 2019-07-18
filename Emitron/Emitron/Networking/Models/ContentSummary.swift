@@ -28,6 +28,13 @@
 
 import Foundation
 
+extension String {
+  var digits: String {
+    return components(separatedBy: CharacterSet.decimalDigits.inverted)
+      .joined()
+  }
+}
+
 class ContentSummary {
 
   var id: String?
@@ -44,11 +51,19 @@ class ContentSummary {
   var cardArtworkURL: URL?
   var technologyTripleString: String?
   var contributorString: String?
+  var index: Int = 0
+  var videoID: Int = 0
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?, index: Int) {
 
     self.id = jsonResource.id
+    self.index = index
+    
     self.uri = jsonResource["uri"] as? String
+    
+    //let strVideoID = "\(self.uri?.split(separator: "/", maxSplits: 5, omittingEmptySubsequences: true).last!)"
+    self.videoID = Int(self.uri!.digits) ?? 0
+    
     self.name = jsonResource["name"] as? String
     self.description = jsonResource["description"] as? String
 

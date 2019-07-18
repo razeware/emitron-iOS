@@ -32,7 +32,6 @@ import UIKit
 class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   var window: UIWindow?
-  let emitron = Emitron()
 
   func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
     // Use this method to optionally configure and attach the UIWindow `window` to the provided UIWindowScene `scene`.
@@ -42,7 +41,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // Use a UIHostingController as window root view controller
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
-      window.rootViewController = UIHostingController(rootView: TabNavView())
+      
+      let guardpost = AppDelegate.guardpost
+      let userMC = UserMC(guardpost: guardpost)
+      let loginView = LoginView(userMC: userMC)
+      
+      window.rootViewController = UIHostingController(rootView: loginView)
       self.window = window
       window.makeKeyAndVisible()
     }

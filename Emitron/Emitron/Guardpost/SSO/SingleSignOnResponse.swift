@@ -56,8 +56,7 @@ struct SingleSignOnResponse {
   }
 
   var isValid: Bool {
-    //return isSignatureValid && isNonceValid
-    return isSignatureValid
+    return isSignatureValid && isNonceValid
   }
 
   var user: User? {

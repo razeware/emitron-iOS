@@ -50,7 +50,7 @@ enum ProgressionsRequest: Request {
     case .getAll:
       return "/progressions"
     case .show(id: let id):
-      return "/progressions\(id)"
+      return "/progressions/\(id)"
     }
   }
 

@@ -28,6 +28,17 @@
 
 import Foundation
 
+struct VideoFile {
+  let kind: VideoKind
+  let url: URL
+}
+
+enum VideoKind: String {
+  case stream
+  case sdVideo
+  case hdVideo
+}
+
 class Video {
 
   var id: String?
@@ -39,6 +50,9 @@ class Video {
   var releasedAt: Date?
   var createdAt: Date?
   var updatedAt: Date?
+  var streamFile: VideoFile?
+  var sdVideoFile: VideoFile?
+  var hdVideoFile: VideoFile?
 
   init(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 

@@ -26,37 +26,49 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import Foundation
 import SwiftUI
+import Combine
 
-extension Color {
-  static var darkSeaGreen: Color {
-    return Color(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0)
+class ContentsMC: NSObject, BindableObject {
+  
+  private(set) var didChange = PassthroughSubject<Void, Never>()
+  private(set) var state = DataState.initial {
+    didSet {
+      didChange.send(())
+    }
   }
-  static var brightGrey: Color {
-    return Color(red: 59.0 / 255.0, green: 64.0 / 255.0, blue: 72.0 / 255.0)
+  
+  private let client: RWAPI
+  private let guardpost: Guardpost
+  private let contentsService: ContentsService
+  private(set) var data: [ContentDetail] = []
+  private(set) var numTutorials: Int = 0
+  
+  init(guardpost: Guardpost) {
+    self.guardpost = guardpost
+    
+    //TODO: Probably need to handle this better
+    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+    self.contentsService = ContentsService(client: self.client)
   }
-  static var battleshipGrey: Color {
-    return Color(red: 110.0 / 255.0, green: 118.0 / 255.0, blue: 135.0 / 255.0)
-  }
-  static var blueGrey: Color {
-    return Color(red: 115.0 / 255.0, green: 133.0 / 255.0, blue: 159.0 / 255.0)
-  }
-  static var lightGreyBlue: Color {
-    return Color(red: 167.0 / 255.0, green: 173.0 / 255.0, blue: 180.0 / 255.0)
-  }
-  static var paleBlue: Color {
-    return Color(red: 223.0 / 255.0, green: 231.0 / 255.0, blue: 240.0 / 255.0)
-  }
-  static var paleGrey: Color {
-    return Color(red: 242.0 / 255.0, green: 246.0 / 255.0, blue: 250.0 / 255.0)
-  }
-  static var copper: Color {
-    return Color(red: 207.0 / 255.0, green: 59.0 / 255.0, blue: 43.0 / 255.0)
-  }
-  static var pumpkinOrange: Color {
-    return Color(red: 253.0 / 255.0, green: 116.0 / 255.0, blue: 1.0 / 255.0)
-  }
-  static var coolGrey: Color {
-    return Color(red: 167.0 / 255.0, green: 173.0 / 255.0, blue: 180.0 / 255.0)
+  
+  func loadContents(with parameters: [Parameter], pageSize: Int, offset: Int) {
+    state = .loading
+    
+    contentsService.allContents(parameters: parameters) { [weak self] result in
+      
+      guard let `self` = self else { return }
+      
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        fatalError(error.localizedDescription)
+      case .success(let contentsTuple):
+        self.data = contentsTuple.contents
+        self.numTutorials = contentsTuple.totalNumber
+        self.state = .hasData
+      }
+    }
   }
 }

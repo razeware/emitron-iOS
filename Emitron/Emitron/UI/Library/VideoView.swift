@@ -32,14 +32,14 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   
   typealias UIViewControllerType = VideoPlayerController
   
-  let url: URL
+  let videoID: Int
   
-  init(with url: URL) {
-    self.url = url
+  init(with videoID: Int) {
+    self.videoID = videoID
   }
   
   func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerControllerRepresentable.UIViewControllerType {
-    return VideoPlayerController(with: url)
+    return VideoPlayerController(with: videoID)
   }
   
   func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {
@@ -49,18 +49,17 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 
 struct VideoView: View {
   
-  let url: URL
+  let videoID: Int
   
   var body: some View {
-    VideoPlayerControllerRepresentable(with: url)
+    VideoPlayerControllerRepresentable(with: videoID)
   }
 }
 
 #if DEBUG
 struct VideoView_Previews: PreviewProvider {
   static var previews: some View {
-    let url = URL(string: "https://wolverine.raywenderlich.com/content/ios/tutorials/video_streaming/foxVillage.m3u8")!
-    return VideoView(url: url)
+    return VideoView(videoID: 2292)
   }
 }
 #endif

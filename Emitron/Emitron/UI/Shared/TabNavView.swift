@@ -35,23 +35,23 @@ struct TabNavView: View {
   var body: some View {
     let tabs = TabbedView(selection: $selection) {
 
-      libraryView()
+      libraryView() //TODO: This is somehow making the tabbar crash
         .tabItem {
-          Text("Library")
+          Text(Constants.library)
           Image("materialIconLibrary")
         }
         .tag(0)
 
       DownloadsView()
         .tabItem {
-          Text("Downloads")
+          Text(Constants.downloads)
           Image("materialIconDownload")
         }
         .tag(1)
 
       MyTutorialsView()
         .tabItem {
-          Text("My Tutorials")
+          Text(Constants.myTutorials)
           Image("materialIconMyTutorials")
         }
         .tag(2)
@@ -61,10 +61,11 @@ struct TabNavView: View {
   }
   
   func libraryView() -> LibraryView {
-    let scene = UIApplication.shared.connectedScenes.first!
-    let sceneDelegate = scene.delegate! as! SceneDelegate
-        
-    return LibraryView(emitron: sceneDelegate.emitron)
+    
+    let guardpost = AppDelegate.guardpost
+    let contentsMC = ContentsMC(guardpost: guardpost)
+    
+    return LibraryView(contentsMC: contentsMC)
   }
 }
 

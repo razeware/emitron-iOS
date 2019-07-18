@@ -38,7 +38,7 @@ class BookmarksService: Service {
                           completion: completion)
   }
 
-  func deleteBookmark(for id: String,
+  func deleteBookmark(for id: Int,
                       completion: @escaping (_ response: Result<DeleteBookmarkRequest.Response, RWAPIError>) -> Void) {
     let request = BookmarksRequest.deleteBookmark(id: id)
     makeAndProcessRequest(request: request,

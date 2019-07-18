@@ -71,4 +71,7 @@ extension Font {
   static var uiCaption: Font {
     return Font.system(size: 12.0)
   }
+  static var uiUppercase: Font {
+    return Font.system(size: 11.0).weight(.bold)
+  }
 }

@@ -33,15 +33,15 @@ import SwiftyJSON
 
 enum VideoRequest {
 
-  static func showVideo(id: String) -> ShowVideoRequest {
+  static func showVideo(id: Int) -> ShowVideoRequest {
     return ShowVideoRequest(id: id)
   }
 
-  static func getVideoStream(id: String) -> StreamVideoRequest {
+  static func getVideoStream(id: Int) -> StreamVideoRequest {
     return StreamVideoRequest(id: id)
   }
 
-  static func getVideoDownload(id: String) -> DownloadVideoRequest {
+  static func getVideoDownload(id: Int) -> DownloadVideoRequest {
     return DownloadVideoRequest(id: id)
   }
 }
@@ -50,13 +50,13 @@ struct ShowVideoRequest: Request {
   typealias Response = Video
 
   var method: HTTPMethod { return .GET }
-  var path: String { return "/videos\(id)" }
+  var path: String { return "/videos/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  private var id: String
+  private var id: Int
 
-  init(id: String) {
+  init(id: Int) {
     self.id = id
   }
 
@@ -72,13 +72,13 @@ struct StreamVideoRequest: Request {
   typealias Response = Attachment
 
   var method: HTTPMethod { return .GET }
-  var path: String { return "/videos\(id)/stream" }
+  var path: String { return "/videos/\(id)/stream" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  private var id: String
+  private var id: Int
 
-  init(id: String) {
+  init(id: Int) {
     self.id = id
   }
 
@@ -95,13 +95,13 @@ struct DownloadVideoRequest: Request {
   typealias Response = [Attachment]
 
   var method: HTTPMethod { return .GET }
-  var path: String { return "/videos\(id)/download" }
+  var path: String { return "/videos/\(id)/download" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  private var id: String
+  private var id: Int
 
-  init(id: String) {
+  init(id: Int) {
     self.id = id
   }
 

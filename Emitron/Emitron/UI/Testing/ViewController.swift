@@ -87,14 +87,14 @@ class ViewController: UIViewController {
 //        print(progressions.count)
 //      }
 //    }
-    contentsService.allContents(parameters: params) { result in
-      switch result {
-      case .failure(let error):
-        print(error.localizedDescription)
-      case .success(let contents):
-        print(contents.count)
-      }
-    }
+//    contentsService.allContents(parameters: params) { result in
+//      switch result {
+//      case .failure(let error):
+//        print(error.localizedDescription)
+//      case .success(let contents):
+//        print(contents.count)
+//      }
+//    }
   }
 
   @IBAction private func crashButtonTapped(_ sender: AnyObject) {

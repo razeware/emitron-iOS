@@ -27,50 +27,75 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Kingfisher
+import UIKit
 
 struct CardView: View {
   
+//  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading5")
   let content: ContentDetail?
+//  public let imageURL: URL?
+//  public let animation: Animation = .basic()
   
+  //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
+  // results in truncating the text
   var body: some View {
     VStack(alignment: .leading) {
-      HStack {
-        VStack {
+      HStack(alignment: .top) {
+        VStack(alignment: .leading, spacing: 5) {
+          
           Text(content?.name ?? "")
-            .frame(width: 214, height: 48, alignment: .topLeading)
+            .lineLimit(nil)
             .font(.uiTitle4)
-            .lineLimit(2)
+          
           Text(content?.domains?.first?.name ?? "")
-            .frame(width: 214, height: 16, alignment: .leading)
             .font(.uiCaption)
-            .lineLimit(1)
+            .lineLimit(nil)
             .foregroundColor(.battleshipGrey)
         }
-        Image("loading5")
-          .resizable()
-          .frame(width: 60, height: 60, alignment: .topTrailing)
-          .cornerRadius(6)
+        
+        Spacer()
+        
+//        Image(uiImage: uiImage)
+//          .resizable()
+//          .onAppear(perform: loadImage)
+//          .transition(.opacity)
+//          .id(uiImage)
       }
+      
       Text(content?.description ?? "")
-        .frame(width: 214, height: 75, alignment: .topLeading)
         .font(.uiCaption)
-        .lineLimit(4)
+        .lineLimit(nil)
         .foregroundColor(.battleshipGrey)
+      
+      Spacer()
+      
       HStack {
         Text(content?.dateAndTimeString ?? "")
-          .frame(width: 214, height: 16, alignment: .leading)
           .font(.uiCaption)
           .lineLimit(1)
           .foregroundColor(.battleshipGrey)
-        Image("materialIconDownload")
+        
+        Spacer()
+        
+        Image("download")
+          .resizable()
+          .frame(width: 19, height: 19)
+          .foregroundColor(.darkSeaGreen)
+          .tapAction {
+            self.download()
+          }
       }
     }
-      .frame(width: 340, height: 185, alignment: .center)
-      .padding()
-      .background(Color.paleBlue)
+      .padding([.leading, .trailing, .top], 15)
+      .padding([.bottom], 22)
+      .frame(minWidth: 339, minHeight: 184)
+      .background(Color.white)
       .cornerRadius(6)
       .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
   }
+  
+  private func download() { }
 }
 
 #if DEBUG

@@ -43,7 +43,7 @@ class Attachment {
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
-    self.url = URL(string: (jsonResource["name"] as? String) ?? "")
+    self.url = URL(string: (jsonResource["url"] as? String) ?? "")
 
     if let attachmentKind = AttachmentKind(rawValue: jsonResource["kind"] as? String ?? "") {
       self.kind = attachmentKind

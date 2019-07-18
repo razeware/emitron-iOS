@@ -44,12 +44,13 @@ class ContentDetail {
   var cardArtworkURL: URL?
   var technologyTripleString: String?
   var contributorString: String?
+  var videoID: Int?
 
   var domains: [Domain]?
   var childContents: [ContentSummary]?
+  var groups: [Group]?
   var progression: Progression?
   var bookmark: Bookmark?
-  var groups: String?
   var categories: [Category]?
   var url: URL?
   
@@ -84,6 +85,7 @@ class ContentDetail {
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String
     self.contributorString = jsonResource["contributor_string"] as? String
+    self.videoID = jsonResource["video_identifier"] as? Int
 
     for relationship in jsonResource.relationships {
       switch relationship.type {
@@ -92,9 +94,30 @@ class ContentDetail {
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let domains = included?.compactMap { Domain($0, metadata: $0.meta) }
         self.domains = domains
-      case "child_contents":
-        let childContents = relationship.data.compactMap { ContentSummary($0, metadata: $0.meta) }
-        self.childContents = childContents
+      case "groups": // this is where we get our video list
+        let ids = relationship.data.compactMap { $0.id }
+        let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
+        
+        var groups: [Group] = []
+        if let included = maybeIncluded {
+          for resource in included {
+            for relationship in resource.relationships {
+              if relationship.type == "contents" {
+                let contentIds = relationship.data.compactMap { $0.id }
+                let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
+                // This is an ugly hack for now
+                let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummary? in
+                  ContentSummary(summary, metadata: summary.meta, index: index)
+                })
+                if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries) {
+                  groups.append(group)
+                }
+              }
+            }
+          }
+        }
+
+        self.groups = groups
       case "progressions":
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }

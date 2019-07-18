@@ -28,27 +28,97 @@
 
 import SwiftUI
 
+private extension Length {
+  static let filterButtonSide: Length = 27
+  static let sidePadding: Length = 18
+  static let searchFilterPadding: Length = 42
+  static let filterSpacing: Length = 6
+  static let filtersPaddingTop: Length = 12
+}
+
+private enum Filter {
+  struct Padding {
+    let overall: Length = 12
+    let textTrailing: Length = 2
+  }
+
+  static let padding = Padding()
+  static let cornerRadius: Length = 9
+  static let imageSize: Length = 15
+}
+
 struct LibraryView: View {
   
-  @ObjectBinding var emitron: Emitron
-
+  @ObjectBinding var contentsMC: ContentsMC
+  
   var body: some View {
-    VStack(content: contentView)
+    VStack {
+      VStack {
+        
+        HStack {
+          SearchView()
+          Button(action: { }, label: {
+            Image("filter")
+              .foregroundColor(.battleshipGrey)
+              .frame(width: .filterButtonSide, height: .filterButtonSide)
+          })
+            .padding([.leading], .searchFilterPadding)
+        }
+        
+        HStack {
+          Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
+            .font(.uiLabel)
+            .color(.battleshipGrey)
+          Spacer()
+          
+          Button(action: {
+            // Change sort
+            self.changeSort()
+          }) {
+            HStack {
+              Image("sortIcon")
+                .foregroundColor(.battleshipGrey)
+              
+              Text(Constants.newest)
+                .font(.uiLabel)
+                .color(.battleshipGrey)
+            }
+          }
+        }
+          .padding([.top], .sidePadding)
+        
+        ScrollView(.horizontal, showsIndicators: false) {
+          HStack(alignment: .top, spacing: .filterSpacing) {
+            FilterView(type: .destructive, name: "Clear All")
+            FilterView(type: .default, name: "Xcode")
+            FilterView(type: .default, name: "AR/VR")
+            FilterView(type: .default, name: "Algorithms")
+            FilterView(type: .default, name: "Architecture")
+            FilterView(type: .default, name: "Beginner")
+          }
+        }
+          .padding([.top], .filtersPaddingTop)
+      }
+        .padding([.leading, .trailing, .top], .sidePadding)
+      
+      contentView()
+        .padding([.top], .sidePadding)
+        .background(Color.paleGrey)
+    }
+      .background(Color.paleGrey)
   }
   
-  func contentView() -> AnyView {
-    switch emitron.emitronState {
+  private func changeSort() { }
+  
+  private func contentView() -> AnyView {
+    switch contentsMC.state {
+    case .initial, .loading, .failed:
+      //TODO: Need a better pipeline for this
+      let filterParams = Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
+      contentsMC.loadContents(with: filterParams, pageSize: 20, offset: 0)
+      return AnyView(Text(Constants.loading))
     case .hasData:
-      return AnyView(ContentListView(contents: emitron.libraryContent))
-    case .noData,
-         .loading:
-      return AnyView(
-        VStack {
-          Text("Library!")
-          Button("Login") {
-            self.emitron.guardpostCheck()
-          }
-        })
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
     }
   }
 }
@@ -56,7 +126,55 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    LibraryView(emitron: Emitron())
+    let guardpost = AppDelegate.guardpost
+    return LibraryView(contentsMC: ContentsMC(guardpost: guardpost))
   }
 }
 #endif
+
+struct SearchView: View {
+  @State private var searchText = ""
+  
+  var body: some View {
+    
+    TextField(Constants.search, text: $searchText)
+      .textFieldStyle(.roundedBorder)
+  }
+}
+
+enum FilterType {
+  case `default`
+  case destructive
+  
+  var color: Color {
+    switch self {
+    case .default:
+      return .brightGrey
+    case .destructive:
+      return .copper
+    }
+  }
+}
+
+struct FilterView: View {
+  
+  var type: FilterType
+  var name: String
+  
+  var body: some View {
+    HStack {
+      Text(name)
+        .foregroundColor(.white)
+        .font(.uiButtonLabelSmall)
+        .padding([.trailing], Filter.padding.textTrailing)
+      Image("whiteX")
+        .resizable()
+        .frame(width: Filter.imageSize, height: Filter.imageSize)
+        .foregroundColor(.white)
+    }
+      .padding(.all, Filter.padding.overall)
+      .background(type.color)
+      .cornerRadius(Filter.cornerRadius)
+      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+  }
+}

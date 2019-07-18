@@ -31,7 +31,7 @@ import Foundation
 extension String {
 
   func fromBase64() -> String? {
-    let data = Data(self.utf8)
+    guard let data = Data(base64Encoded: self) else { return nil }
     return String(data: data, encoding: .utf8)
   }
 

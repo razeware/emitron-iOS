@@ -29,15 +29,67 @@
 import SwiftUI
 
 struct TextListItemView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+  var contentSummary: ContentSummary?
+  var timeStamp: String?
+  var buttonAction: () -> ()
+  
+  private var titleString: String {
+    guard let name = contentSummary?.name else { return "Introduction" }
+    
+    let realTitle = name.split(separator: "·", maxSplits: 1, omittingEmptySubsequences: true)
+    let str = "\(realTitle.last!)"
+    return str.trimmingCharacters(in: .whitespaces)
+  }
+  
+  var body: some View {
+    HStack {
+      ZStack {
+        Rectangle()
+          .frame(width: 30, height: 30, alignment: .center)
+          .foregroundColor(.brightGrey)
+          .cornerRadius(3)
+        
+        Text("\(contentSummary?.index ?? 0)")
+          .font(.uiButtonLabelSmall)
+          .color(.white)
+      }
+      
+      VStack(alignment: .leading) {
+        Text(titleString)
+          .font(.uiHeadline)
+        Text(timeStamp ?? "1:31")
+          .font(.uiCaption)
+        Rectangle()
+      }
+        .frame(minWidth: 300)
+      
+      Spacer()
+      
+      //TODO: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
+      // it just passes through; example below
+      Image("download")
+        .foregroundColor(.coolGrey)
+        .tapAction {
+          self.buttonAction()
+        }
+      
+//      Button(action: {
+//        self.buttonAction()
+//      }) {
+//        Image("download")
+//          .foregroundColor(.coolGrey)
+//        }
+//      }
     }
+  }
 }
 
 #if DEBUG
 struct TextListItemView_Previews: PreviewProvider {
-    static var previews: some View {
-        TextListItemView()
-    }
+  static var previews: some View {
+    TextListItemView(contentSummary: nil, timeStamp: nil, buttonAction: {
+      print("Testing")
+    })
+  }
 }
 #endif

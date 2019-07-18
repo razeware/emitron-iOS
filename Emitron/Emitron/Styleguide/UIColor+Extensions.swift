@@ -57,4 +57,7 @@ extension UIColor {
   static var pumpkinOrange: UIColor {
     return UIColor(red: 253.0 / 255.0, green: 116.0 / 255.0, blue: 1.0 / 255.0, alpha: 1.0)
   }
+  static var coolGrey: UIColor {
+    return UIColor(red: 167.0 / 255.0, green: 173.0 / 255.0, blue: 180.0 / 255.0, alpha: 1.0)
+  }
 }

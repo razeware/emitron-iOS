@@ -34,12 +34,14 @@ class Group {
   var name: String?
   var description: String?
   var ordinal: Double?
+  var childContents: [ContentSummary]?
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]) {
+  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any], childContents: [ContentSummary]? = nil) {
 
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String
     self.description = jsonResource["description"] as? String
     self.ordinal = jsonResource["ordinal"] as? Double
+    self.childContents = childContents
   }
 }

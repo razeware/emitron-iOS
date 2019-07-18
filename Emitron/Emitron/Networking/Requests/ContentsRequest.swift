@@ -30,18 +30,19 @@ import Foundation
 import SwiftyJSON
 
 struct ContentsRequest: Request {
-  typealias Response = [ContentDetail]
+  typealias Response = (contents: [ContentDetail], totalNumber: Int)
 
   var method: HTTPMethod { return .GET }
   var path: String { return "/contents" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  func handle(response: Data) throws -> [ContentDetail] {
+  func handle(response: Data) throws -> (contents: [ContentDetail], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let contents = doc.data.compactMap { ContentDetail($0, metadata: nil) }
-    return contents
+    let contentsTuple = (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
+    return contentsTuple
   }
 }
 
@@ -49,7 +50,7 @@ struct ContentDetailRequest: Request {
   typealias Response = ContentDetail
   
   var method: HTTPMethod { return .GET }
-  var path: String { return "/contents\(id)" }
+  var path: String { return "/contents/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   private var id: Int

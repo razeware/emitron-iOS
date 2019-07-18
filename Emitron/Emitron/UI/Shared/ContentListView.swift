@@ -31,29 +31,27 @@ import SwiftUI
 struct ContentListView: View {
   
   var contents: [ContentDetail] = []
+  var bgColor: Color
   
   var body: some View {
-    
-    NavigationView {
-      makePresentationList()
-    }
+    cardsList()
   }
   
-  func makeNavigationList() -> AnyView {
-    let list = List(contents.identified(by: \.id)) { content in
-      NavigationLink(destination: VideoView(url: content.url!)) {
-        CardView(content: content)
+  func cardsList() -> AnyView {
+    let guardpost = AppDelegate.guardpost
+    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+    let mcs = contents.compactMap{ ContentDetailsMC(guardpost: guardpost, partialContentDetail: $0) }
+    
+    let list =  List {
+      ForEach(mcs.identified(by: \.self)) { mc in
+        PresentationLink(destination: ContentSummaryView(contentDetailsMC: mc, video: nil)) {
+          CardView(content: mc.data)
+            .listRowBackground(self.bgColor)
+            .background(self.bgColor)
+        }
+        .listRowBackground(self.bgColor)
+        .background(self.bgColor)
       }
-    }
-    
-    return AnyView(list)
-  }
-  
-  func makePresentationList() -> AnyView {
-    let list = List(contents.identified(by: \.id)) { content in
-      PresentationLink(destination: VideoView(url: content.url!)) {
-        CardView(content: content)
-      }.accentColor(Color.white)
     }
     
     return AnyView(list)
@@ -63,7 +61,7 @@ struct ContentListView: View {
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    ContentListView(contents: [])
+    ContentListView(contents: [], bgColor: .paleGrey)
   }
 }
 #endif

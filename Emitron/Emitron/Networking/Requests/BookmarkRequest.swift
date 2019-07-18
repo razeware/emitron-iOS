@@ -33,7 +33,7 @@ import SwiftyJSON
 
 enum BRequest {
   case getAll
-  case deleteBookmark(id: String)
+  case deleteBookmark(id: Int)
 
   var request: Any {
     switch self {
@@ -49,7 +49,7 @@ enum BookmarksRequest: Request {
   typealias Response = [Bookmark]
 
   case getAll
-  case deleteBookmark(id: String)
+  case deleteBookmark(id: Int)
 
   func filter(by: ParameterFilterValue, values: [ContentType]) -> BookmarksRequest? {
     return nil
@@ -127,13 +127,13 @@ struct DeleteBookmarkRequest: Request {
   typealias Response = [Bookmark]
 
   var method: HTTPMethod { return .DELETE }
-  var path: String { return "/bookmarks\(id)" }
+  var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  private var id: String
+  private var id: Int
 
-  init(id: String) {
+  init(id: Int) {
     self.id = id
   }
 
@@ -149,7 +149,7 @@ struct BookmarkRequest: Request {
   typealias Response = Bookmark
   
   var method: HTTPMethod { return .GET }
-  var path: String { return "/bookmarks\(id)" }
+  var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   private var id: Int

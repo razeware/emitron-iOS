@@ -68,4 +68,7 @@ extension UIFont {
   static var uiCaption: UIFont {
     return UIFont.systemFont(ofSize: 12.0, weight: .regular)
   }
+  static var uiUppercase: UIFont {
+    return UIFont.systemFont(ofSize: 11.0, weight: .medium)
+  }
 }
