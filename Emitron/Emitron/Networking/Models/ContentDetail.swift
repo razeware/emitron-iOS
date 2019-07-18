@@ -83,7 +83,9 @@ class ContentDetail {
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
-    self.videoID = jsonResource["video_identifier"] as? Int ?? 0
+    
+    //TODO: Get the actual videoIdentifier
+    self.videoID = Int(self.uri.digits) ?? 0
 
     for relationship in jsonResource.relationships {
       switch relationship.type {

@@ -48,35 +48,49 @@ struct ContentListingView: View {
           .onAppear(perform: loadImage)
           .transition(.opacity)
         
-        VStack(alignment: .leading) {
-          ContentSummaryView(details: contentDetailsMC.data)
-          
-          // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-          Text("Courses") // TITLE
+        ContentSummaryView(details: contentDetailsMC.data)
+      }
+        .frame(maxWidth: UIScreen.main.bounds.width)
+        .background(Color.white)
+      
+      if contentDetailsMC.data.contentType == .collection {
+        // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
+        
+        VStack {
+          Text("Course Episodes")
             .font(.uiTitle2)
             .padding([.top], -5)
-        }
-      }
-      .frame(maxWidth: UIScreen.main.bounds.width)
-        .background(Color.paleGrey)
-      
-      ForEach(contentDetailsMC.data.groups, id: \.id) { group in
-        Section(header:
-          CourseHeaderView(name: group.name, color: .paleGrey)
-            .background(Color.paleGrey)
-        ) {
-          ForEach(group.childContents, id: \.id) { summary in
-            
-            TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
-              // Download
-            })
-              .tapAction {
-                self.isPresented = true
+          
+          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
+            Section(header:
+              CourseHeaderView(name: group.name, color: .white)
+                .background(Color.white)
+            ) {
+              ForEach(group.childContents, id: \.id) { summary in
+                
+                TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
+                  // Download
+                })
+                  .tapAction {
+                    self.isPresented = true
+                  }
+                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
               }
-            .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
+            }
           }
         }
+      } else {
+        Button(action: {
+          self.isPresented = true
+        }) {
+          Text("Play Video!")
+            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID) }
+        }
       }
+    }
+    .onAppear {
+      //TODO: Kind of hack to force data-reload while this modal-presentation with List issue goes on
+      self.contentDetailsMC.getContentDetails()
     }
   }
   

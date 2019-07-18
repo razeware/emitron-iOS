@@ -55,7 +55,7 @@ class ContentDetailsMC: NSObject, BindableObject {
     getContentDetails()
   }
   
-  private func getContentDetails() {
+  func getContentDetails() {
       guard state != .loading else { return }
       
       state = .loading
