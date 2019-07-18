@@ -30,38 +30,36 @@ import Foundation
 
 class ContentDetail {
 
-  var id: String?
-  var uri: String?
-  var name: String?
-  var description: String?
-  var releasedAt: Date?
-  var free: Bool?
-  var difficulty: ContentDifficulty?
-  var contentType: ContentType?
-  var duration: Double?
-  var popularity: Double?
-  var bookmarked: Bool?
-  var cardArtworkURL: URL?
-  var technologyTripleString: String?
-  var contributorString: String?
-  var videoID: Int?
+  private(set) var id: Int = 0
+  private(set) var uri: String = ""
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var releasedAt: Date
+  private(set) var free: Bool = false
+  private(set) var difficulty: ContentDifficulty = .none
+  private(set) var contentType: ContentType = .none
+  private(set) var duration: Int = 0
+  private(set) var popularity: Double = 0.0
+  private(set) var bookmarked: Bool = false
+  private(set) var cardArtworkURL: URL?
+  private(set) var technologyTripleString: String = ""
+  private(set) var contributorString: String = ""
+  private(set) var videoID: Int = 0
 
-  var domains: [Domain]?
-  var childContents: [ContentSummary]?
-  var groups: [Group]?
-  var progression: Progression?
-  var bookmark: Bookmark?
-  var categories: [Category]?
-  var url: URL?
-  
-  init() { }
+  private(set) var domains: [Domain] = []
+  private(set) var childContents: [ContentSummary] = []
+  private(set) var groups: [Group] = []
+  private(set) var progression: Progression?
+  private(set) var bookmark: Bookmark?
+  private(set) var categories: [Category] = []
+  private(set) var url: URL?
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
-    self.uri = jsonResource["uri"] as? String
-    self.name = jsonResource["name"] as? String
-    self.description = jsonResource["description"] as? String
+    self.uri = jsonResource["uri"] as? String ?? ""
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
 
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
@@ -69,7 +67,7 @@ class ContentDetail {
       self.releasedAt = Date()
     }
 
-    self.free = jsonResource["free"] as? Bool
+    self.free = jsonResource["free"] as? Bool ?? false
 
     if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? "") {
       self.difficulty = difficulty
@@ -79,13 +77,13 @@ class ContentDetail {
       self.contentType = type
     }
 
-    self.duration = jsonResource["duration"] as? Double
-    self.popularity = jsonResource["popularity"] as? Double
-    self.bookmarked = jsonResource["bookmarked?"] as? Bool
+    self.duration = jsonResource["duration"] as? Int ?? 0
+    self.popularity = jsonResource["popularity"] as? Double ?? 0.0
+    self.bookmarked = jsonResource["bookmarked?"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
-    self.technologyTripleString = jsonResource["technology_triple_string"] as? String
-    self.contributorString = jsonResource["contributor_string"] as? String
-    self.videoID = jsonResource["video_identifier"] as? Int
+    self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
+    self.contributorString = jsonResource["contributor_string"] as? String ?? ""
+    self.videoID = jsonResource["video_identifier"] as? Int ?? 0
 
     for relationship in jsonResource.relationships {
       switch relationship.type {
@@ -93,7 +91,10 @@ class ContentDetail {
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let domains = included?.compactMap { Domain($0, metadata: $0.meta) }
-        self.domains = domains
+        self.domains = domains ?? []
+      
+      //TODO: This will be improved when the API returns enough info to render the video listing, currently
+      // picking up the bits and pieces of info from separate parts
       case "groups": // this is where we get our video list
         let ids = relationship.data.compactMap { $0.id }
         let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
@@ -109,7 +110,7 @@ class ContentDetail {
                 let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummary? in
                   ContentSummary(summary, metadata: summary.meta, index: index)
                 })
-                if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries) {
+                if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
                   groups.append(group)
                 }
               }

@@ -39,7 +39,9 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   }
   
   func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerControllerRepresentable.UIViewControllerType {
-    return VideoPlayerController(with: videoID)
+    let guardpost = AppDelegate.guardpost
+    let videosMC = VideosMC(guardpost: guardpost)
+    return VideoPlayerController(with: videoID, videosMC: videosMC)
   }
   
   func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {

@@ -30,23 +30,22 @@ import Foundation
 
 class Progression {
 
-  var id: String?
-  var target: Int?
-  var progress: Int?
-  var finished: Bool?
-  var percentComplete: Double?
+  private(set) var id: Int = 0
+  private(set) var target: Int = 0
+  private(set) var progress: Int = 0
+  private(set) var finished: Bool = false
+  private(set) var percentComplete: Double = 0.0
   // There's something funky going on with Date's in Xcode 11
-  var createdAt: Date?
-  var updatedAt: Date?
+  private(set) var createdAt: Date
+  private(set) var updatedAt: Date
 
   init(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
-    self.target = jsonResource["target"] as? Int
-    self.progress = jsonResource["progress"] as? Int
-    self.finished = jsonResource["finished"] as? Bool
-    self.percentComplete = jsonResource["percent_complete"] as? Double
-    self.finished = jsonResource["finished"] as? Bool
+    self.target = jsonResource["target"] as? Int ?? 0
+    self.progress = jsonResource["progress"] as? Int ?? 0
+    self.finished = jsonResource["finished"] as? Bool ?? false
+    self.percentComplete = jsonResource["percent_complete"] as? Double ?? 0.0
 
     if let createdAtStr = jsonResource["created_at"] as? String {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()

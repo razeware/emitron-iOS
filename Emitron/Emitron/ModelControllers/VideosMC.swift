@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentDetailsMC: NSObject, BindableObject {  
+class VideosMC: NSObject, BindableObject {
   
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -41,42 +41,44 @@ class ContentDetailsMC: NSObject, BindableObject {
   
   private let client: RWAPI
   private let guardpost: Guardpost
-  private let contentsService: ContentsService
-  private(set) var data: ContentDetail
+  private let service: VideosService
+  private(set) var data: Attachment?
+  private(set) var streamURL: URL?
   
-  init(guardpost: Guardpost, partialContentDetail: ContentDetail) {
+  init(guardpost: Guardpost) {
     self.guardpost = guardpost
+    
+    //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
-    self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
+    self.service = VideosService(client: self.client)
   }
   
-  private func getContentDetails() {
-      guard state != .loading else { return }
-      
-      state = .loading
-      
-      contentsService.contentDetail(for: data.id) { [weak self] result in
-        
-        guard let `self` = self else { return }
-        
-        switch result {
-        case .failure(let error):
-          self.state = .failed
-          fatalError(error.localizedDescription)
-        case .success(let contentDetails):
-          self.data = contentDetails
-          self.state = .hasData
-        }
-      }
-    }
-  
-  func getContentDetails(for id: Int) {
+  func loadVideoStream(for id: Int) {
     guard state != .loading else { return }
     
     state = .loading
     
-    contentsService.contentDetail(for: id) { [weak self] result in
+    service.getVideoStream(for: id) { [weak self] result in
+      guard let `self` = self else { return }
+            
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        fatalError(error.localizedDescription)
+      case .success(let attachment):
+        self.data = attachment
+        self.streamURL = attachment.url
+        self.state = .hasData
+      }
+    }
+  }
+  
+  func getVideoStream(for id: Int, completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
+    guard state != .loading else { return }
+          
+    state = .loading
+    service.getVideoStream(for: id) { [weak self] result in
+      completion(result)
       
       guard let `self` = self else { return }
       
@@ -84,8 +86,9 @@ class ContentDetailsMC: NSObject, BindableObject {
       case .failure(let error):
         self.state = .failed
         fatalError(error.localizedDescription)
-      case .success(let contentDetails):
-        self.data = contentDetails
+      case .success(let attachment):
+        self.data = attachment
+        self.streamURL = attachment.url
         self.state = .hasData
       }
     }

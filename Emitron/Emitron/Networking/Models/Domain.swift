@@ -29,6 +29,7 @@
 import Foundation
 
 enum DomainLevel: String {
+  case none
   case production
   case beta
   case blog
@@ -38,19 +39,19 @@ enum DomainLevel: String {
 
 class Domain {
 
-  var id: String
-  var name: String?
-  var slug: String?
-  var description: String?
-  var level: DomainLevel?
+  private(set) var id: Int = 0
+  private(set) var name: String = ""
+  private(set) var slug: String = ""
+  private(set) var description: String = ""
+  private(set) var level: DomainLevel = .none
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
     self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String
-    self.slug = jsonResource["slug"] as? String
-    self.description = jsonResource["description"] as? String
+    self.name = jsonResource["name"] as? String ?? ""
+    self.slug = jsonResource["slug"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
 
-    if let domainLevel = DomainLevel(rawValue: jsonResource["level"] as? String ?? "") {
+    if let domainLevel = DomainLevel(rawValue: jsonResource["level"] as? String ?? DomainLevel.none.rawValue) {
       self.level = domainLevel
     }
   }

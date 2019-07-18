@@ -30,18 +30,18 @@ import Foundation
 
 class Group {
 
-  var id: String?
-  var name: String?
-  var description: String?
-  var ordinal: Double?
-  var childContents: [ContentSummary]?
+  private(set) var id: Int = 0
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var ordinal: Int = 0
+  private(set) var childContents: [ContentSummary] = []
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any], childContents: [ContentSummary]? = nil) {
+  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any], childContents: [ContentSummary] = []) {
 
     self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String
-    self.description = jsonResource["description"] as? String
-    self.ordinal = jsonResource["ordinal"] as? Double
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
+    self.ordinal = jsonResource["ordinal"] as? Int ?? 0
     self.childContents = childContents
   }
 }

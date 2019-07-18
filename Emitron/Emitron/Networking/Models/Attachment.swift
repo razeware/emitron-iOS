@@ -29,6 +29,7 @@
 import Foundation
 
 enum AttachmentKind: String {
+  case none
   case stream
   case sdVideoFile = "sd_video_file"
   case hdVideoFile = "hd_video_file"
@@ -36,16 +37,16 @@ enum AttachmentKind: String {
 
 class Attachment {
 
-  var id: String?
-  var url: URL?
-  var kind: AttachmentKind?
+  private(set) var id: Int = 0
+  private(set) var url: URL?
+  private(set) var kind: AttachmentKind = .none
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.url = URL(string: (jsonResource["url"] as? String) ?? "")
 
-    if let attachmentKind = AttachmentKind(rawValue: jsonResource["kind"] as? String ?? "") {
+    if let attachmentKind = AttachmentKind(rawValue: jsonResource["kind"] as? String ?? AttachmentKind.none.rawValue) {
       self.kind = attachmentKind
     }
   }

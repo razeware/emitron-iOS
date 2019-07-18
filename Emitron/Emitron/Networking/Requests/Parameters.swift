@@ -30,12 +30,14 @@ import Foundation
 
 // Parameter Values
 enum ContentDifficulty: String {
+  case none
   case beginner
   case intermediate
   case advanced
 }
 
 enum ContentType: String {
+  case none
   case collection
   case episode
   case screencast
@@ -46,8 +48,8 @@ enum ContentType: String {
     switch self {
     case .collection:
       return "Video Course"
-    case .episode, .screencast, .article:
-      return self.rawValue.uppercased()
+    case .episode, .screencast, .article, .none:
+      return self.rawValue.capitalized
     case .product:
       return "Book" // Probably other types of stuff
     }

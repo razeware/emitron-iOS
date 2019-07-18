@@ -33,6 +33,7 @@ struct ContentListView: View {
   @State var isPresenting: Bool = false
   var contents: [ContentDetail] = []
   var bgColor: Color
+  @State var selectedMC: ContentDetailsMC?
   
   var body: some View {
     cardsList()
@@ -41,16 +42,21 @@ struct ContentListView: View {
   func cardsList() -> AnyView {
     let guardpost = AppDelegate.guardpost
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    let mcs = contents.compactMap{ ContentDetailsMC(guardpost: guardpost, partialContentDetail: $0) }
     
     let list =  List {
-      ForEach(mcs, id: \.self) { mc in
-        CardView(content: mc.data)
+      ForEach(contents, id: \.id) { partialContent in
+        CardView(content: partialContent)
           .listRowBackground(self.bgColor)
           .background(self.bgColor)
-          .sheet(isPresented: self.$isPresenting) { ContentSummaryView(contentDetailsMC: mc, video: nil) }
+          .tapAction {
+            self.isPresenting = true
+            self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
+          }
       }
     }
+        .sheet(isPresented: self.$isPresenting) {
+          ContentSummaryView(contentDetailsMC: self.selectedMC!, video: nil)
+        }
     
     return AnyView(list)
   }

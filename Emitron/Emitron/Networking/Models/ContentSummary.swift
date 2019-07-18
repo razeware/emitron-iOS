@@ -37,35 +37,35 @@ extension String {
 
 class ContentSummary {
 
-  var id: String?
-  var uri: String?
-  var name: String?
-  var description: String?
-  var releasedAt: Date?
-  var free: Bool?
-  var difficulty: ContentDifficulty?
-  var contentType: ContentType?
-  var duration: Double?
-  var popularity: Double?
-  var bookmarked: Bool?
-  var cardArtworkURL: URL?
-  var technologyTripleString: String?
-  var contributorString: String?
-  var index: Int = 0
-  var videoID: Int = 0
+  private(set) var id: Int = 0
+  private(set) var uri: String = ""
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var releasedAt: Date
+  private(set) var free: Bool = false
+  private(set) var difficulty: ContentDifficulty = .none
+  private(set) var contentType: ContentType = .none
+  private(set) var duration: Int = 0
+  private(set) var popularity: Double = 0.0
+  private(set) var bookmarked: Bool = false
+  private(set) var cardArtworkURL: URL?
+  private(set) var technologyTripleString: String = ""
+  private(set) var contributorString: String = ""
+  private(set) var index: Int = 0
+  private(set) var videoID: Int = 0
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?, index: Int) {
 
     self.id = jsonResource.id
     self.index = index
     
-    self.uri = jsonResource["uri"] as? String
+    self.uri = jsonResource["uri"] as? String ?? ""
     
-    //let strVideoID = "\(self.uri?.split(separator: "/", maxSplits: 5, omittingEmptySubsequences: true).last!)"
-    self.videoID = Int(self.uri!.digits) ?? 0
+    //TODO: This should be coming from the API rather than me parsing it here, so will be removed in the future
+    self.videoID = Int(self.uri.digits) ?? 0
     
-    self.name = jsonResource["name"] as? String
-    self.description = jsonResource["description"] as? String
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
 
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
@@ -73,21 +73,21 @@ class ContentSummary {
       self.releasedAt = Date()
     }
 
-    self.free = jsonResource["free"] as? Bool
+    self.free = jsonResource["free"] as? Bool ?? false
 
-    if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? "") {
+    if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? ContentDifficulty.none.rawValue) {
       self.difficulty = difficulty
     }
 
-    if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? "") {
+    if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? ContentType.none.rawValue) {
       self.contentType = type
     }
 
-    self.duration = jsonResource["duration"] as? Double
-    self.popularity = jsonResource["popularity"] as? Double
-    self.bookmarked = jsonResource["bookmarked"] as? Bool
+    self.duration = jsonResource["duration"] as? Int ?? 0
+    self.popularity = jsonResource["popularity"] as? Double ?? 0.0
+    self.bookmarked = jsonResource["bookmarked"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
-    self.technologyTripleString = jsonResource["technology_triple_string"] as? String
-    self.contributorString = jsonResource["contributor_string"] as? String
+    self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
+    self.contributorString = jsonResource["contributor_string"] as? String ?? ""
   }
 }

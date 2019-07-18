@@ -34,6 +34,7 @@ struct VideoFile {
 }
 
 enum VideoKind: String {
+  case none
   case stream
   case sdVideo
   case hdVideo
@@ -41,25 +42,25 @@ enum VideoKind: String {
 
 class Video {
 
-  var id: String?
-  var name: String?
-  var description: String?
-  var free: Bool?
+  private(set) var id: Int = 0
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var free: Bool = false
 
-  // There's something funky going on with Date's in Xcode 11
-  var releasedAt: Date?
-  var createdAt: Date?
-  var updatedAt: Date?
-  var streamFile: VideoFile?
-  var sdVideoFile: VideoFile?
-  var hdVideoFile: VideoFile?
+  //TODO There's something funky going on with Date's in Xcode 11
+  private(set) var releasedAt: Date
+  private(set) var createdAt: Date
+  private(set) var updatedAt: Date
+  private(set) var streamFile: VideoFile?
+  private(set) var sdVideoFile: VideoFile?
+  private(set) var hdVideoFile: VideoFile?
 
   init(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String
-    self.description = jsonResource["description"] as? String
-    self.free = jsonResource["free"] as? Bool
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
+    self.free = jsonResource["free"] as? Bool ?? false
 
     if let releasedAt = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAt) ?? Date()

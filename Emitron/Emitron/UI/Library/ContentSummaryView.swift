@@ -31,14 +31,14 @@ import SwiftUI
 struct ContentSummaryView: View {
   
   @ObjectBinding var contentDetailsMC: ContentDetailsMC
-  @State var presentingVideoScreen = false
+  @State var isPresented = false
   
   var video: Video?
   
   var body: some View {
     
     //TODO: Loading workaround til I find something better
-    if contentDetailsMC.data.groups == nil {
+    if contentDetailsMC.data.groups.isEmpty {
       fetchList()
     }
     
@@ -47,7 +47,7 @@ struct ContentSummaryView: View {
       mainView()
       
       //TODO: Loading workaround til I find something better
-      if contentDetailsMC.data.groups != nil {
+      if !contentDetailsMC.data.groups.isEmpty {
         buildList()
         .padding([.leading], 5)
       }
@@ -90,56 +90,42 @@ struct ContentSummaryView: View {
   
   private func fetchList() {
     
-    guard let id = contentDetailsMC.data.id,
-      let idInt = Int(id),
-      contentDetailsMC.data.groups == nil else {
-        return
-    }
-    
-    contentDetailsMC.getContentDetails(for: idInt)
+    guard contentDetailsMC.data.groups.isEmpty else { return }
+    contentDetailsMC.getContentDetails(for: contentDetailsMC.data.id)
   }
   
   private func buildList() -> AnyView {
       
       let list =
         List {
-          ForEach(contentDetailsMC.data.groups!, id:\.id) { group in
+          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
             Section(header:
-              CourseHeaderView(name: group.name!, color: .paleGrey)
+              CourseHeaderView(name: group.name, color: .paleGrey)
                 .background(Color.paleGrey)
             ) {
-              ForEach(group.childContents!, id: \.id) { summary in
+              ForEach(group.childContents, id: \.id) { summary in
 
                 TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
                   print("Making my list...")
                 })
                   .listRowBackground(Color.paleGrey)
                   .background(Color.paleGrey)
-                  .sheet(isPresented: self.$presentingVideoScreen) { VideoView(videoID: summary.videoID) }
-                }
+                  .tapAction {
+                    self.isPresented = true
+                  }
+                  .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
               }
             }
+          }
             .listRowBackground(Color.paleGrey)
             .background(Color.paleGrey)
-          }
+        }
           .background(Color.paleGrey)
           .listRowBackground(Color.paleGrey)
       
       return AnyView(list)
     }
 }
-
-#if DEBUG
-struct ContentSummaryView_Previews: PreviewProvider {
-  static var previews: some View {
-    let guardpost = AppDelegate.guardpost
-    let contentDetail = ContentDetail()
-    let mc = ContentDetailsMC(guardpost: guardpost, partialContentDetail: contentDetail)
-    
-    return ContentSummaryView(contentDetailsMC: mc, video: nil)
-  }
-}
-#endif
 
 struct CourseHeaderView: View {
   let name: String
@@ -163,20 +149,20 @@ struct TopSummaryView: View {
   var body: some View {
     VStack(alignment: .leading) {
       
-      Text(details.technologyTripleString?.uppercased() ?? "SWIFT 5, IOS 12, XCODE 10")
+      Text(details.technologyTripleString.uppercased())
         .font(.uiUppercase)
         .foregroundColor(.coolGrey)
         .kerning(0.5)
       // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
       
-      Text(details.name ?? "Advanced Swift: Values and References") // TITLE
+      Text(details.name) // TITLE
         .font(.uiTitle1)
         .lineLimit(nil)
         .frame(idealHeight: .infinity)
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .padding([.top], -5)
       
-      Text(details.dateAndTimeString ?? "11 Apr · Beginner · Video Course (56 min)")
+      Text(details.dateAndTimeString)
         .font(.uiFootnote)
         .foregroundColor(.coolGrey)
       
@@ -202,7 +188,7 @@ struct TopSummaryView: View {
       }
       .padding([.top], 20)
       
-      Text(details.description ?? "Swift mutation model uses values and references to improve local reasoning and maintain performance. Find out the details in this course.")
+      Text(details.description)
         .font(.uiFootnote)
         .foregroundColor(.coolGrey)
         .lineLimit(nil)
@@ -211,7 +197,7 @@ struct TopSummaryView: View {
         //.frame(idealHeight: .infinity)
         .padding([.top], 20)
       
-      Text(details.contributorString != nil ? "By \(details.contributorString!)" : "By Ray Fix, Jorge R. Moukel & Katie Collins")
+      Text("By \(details.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.coolGrey)
         .lineLimit(2)

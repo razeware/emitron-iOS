@@ -55,13 +55,15 @@ class VideoViewUIKit: UIView {
 class VideoPlayerController: AVPlayerViewController {
   
   let videoID: Int
+  private var videosMC: VideosMC
   
   override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
     return .landscapeLeft
   }
   
-  init(with videoID: Int) {
+  init(with videoID: Int, videosMC: VideosMC) {
     self.videoID = videoID
+    self.videosMC = videosMC
     super.init(nibName: nil, bundle: nil)
   }
   
@@ -77,19 +79,20 @@ class VideoPlayerController: AVPlayerViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    let webURL = URL(string: "https://wolverine.raywenderlich.com/content/ios/tutorials/video_streaming/foxVillage.m3u8")!
 
-//    sceneDelegate.emitron.requestVideoStream(for: videoID, completion: { response in
-//      switch response {
-//      case .failure(let error):
-//        print(error.localizedDescription)
-//      case .success(let videoStream):
-//        print(videoStream)
-//        guard let url = videoStream.url else { return }
-//        self.player = AVPlayer(url: url)
-//        self.player?.play()
-//      }
-//    })
+    videosMC.getVideoStream(for: videoID) { [weak self] result in
+      guard let `self` = self else { return }
+      
+      switch result {
+      case .failure(let error):
+        print(error.localizedDescription)
+      case .success(let videoStream):
+        print(videoStream)
+        guard let url = videoStream.url else { return }
+        self.player = AVPlayer(url: url)
+        self.player?.play()
+      }
+    }
+
   }
 }

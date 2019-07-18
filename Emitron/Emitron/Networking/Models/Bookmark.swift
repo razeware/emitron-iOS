@@ -30,14 +30,14 @@ import Foundation
 
 class Bookmark {
 
-  let bookmarkId: String
+  private(set) var id: Int = 0
 
-  // Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
+  //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
   // Does not happen in Xcode 10
-  let createdAt: Date
+  private(set) var createdAt: Date
 
   init?(resource: JSONAPIResource, metadata: [String: Any]?) {
-    self.bookmarkId = resource.id
+    self.id = resource.id
 
     if let createdAtStr = resource["created_at"] as? String {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()

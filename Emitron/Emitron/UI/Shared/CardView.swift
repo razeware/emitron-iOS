@@ -30,7 +30,7 @@ import SwiftUI
 
 struct CardView: View {
   
-//  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading5")
+  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading5")
   let content: ContentDetail?
 //  public let imageURL: URL?
 //  public let animation: Animation = .basic()
@@ -46,7 +46,7 @@ struct CardView: View {
             .lineLimit(nil)
             .font(.uiTitle4)
 
-          Text(content?.domains?.first?.name ?? "")
+          Text(content?.domains.first?.name ?? "")
             .font(.uiCaption)
             .lineLimit(nil)
             .foregroundColor(.battleshipGrey)
@@ -54,11 +54,13 @@ struct CardView: View {
 
         Spacer()
 
-//        Image(uiImage: uiImage)
-//          .resizable()
-//          .onAppear(perform: loadImage)
-//          .transition(.opacity)
-//          .id(uiImage)
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: 60, height: 60)
+          .onAppear(perform: loadImage)
+          .transition(.opacity)
+          .id(uiImage)
+          .cornerRadius(6)
       }
 
       Text(content?.description ?? "")
@@ -94,12 +96,16 @@ struct CardView: View {
   }
   
   private func download() { }
+  
+  private func loadImage() {
+    
+  }
 }
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
-    CardView(content: ContentDetail())
+    CardView(content: nil)
   }
 }
 #endif

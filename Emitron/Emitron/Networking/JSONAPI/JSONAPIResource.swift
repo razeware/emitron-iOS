@@ -32,7 +32,7 @@ import SwiftyJSON
 public class JSONAPIResource {
 
   var parent: JSONAPIDocument?
-  var id: String = ""
+  var id: Int = 0
   var type: String = ""
   var relationships: [JSONAPIRelationship] = []
   var attributes: [String: Any] = [:]
@@ -55,7 +55,7 @@ public class JSONAPIResource {
       self.parent = doc
     }
 
-    id = json["id"].stringValue
+    id = json["id"].intValue
     type = json["type"].stringValue
 
     for relationship in json["relationships"].dictionaryValue {

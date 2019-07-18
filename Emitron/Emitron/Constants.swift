@@ -32,12 +32,16 @@ enum Constants {
   static let filters = "Filters"
   static let search = "Search"
   static let loading = "Loading..."
-  static let library =  "Library"
-  static let myTutorials =  "My Tutorials"
-  static let downloads =  "Downloads"
+  static let library = "Library"
+  static let myTutorials = "My Tutorials"
+  static let downloads = "Downloads"
   static let newest =  "Newest"
-  static let tutorials =  "Tutorials"
+  static let tutorials = "Tutorials"
   
   // Onboarding
-  static let login =  "Login"
+  static let login = "Login"
+  
+  // Other
+  static let today = "Today"
+  static let by = "By"
 }

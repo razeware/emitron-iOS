@@ -30,15 +30,15 @@ import Foundation
 
 class Category {
 
-  var id: String?
-  var name: String?
-  var uri: String?
-  var ordinal: Double?
+  private(set) var id: Int = 0
+  private(set) var name: String = ""
+  private(set) var uri: String = ""
+  private(set) var ordinal: Int = 0
 
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
     self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String
-    self.uri = jsonResource["uri"] as? String
-    self.ordinal = jsonResource["ordinal"] as? Double
+    self.name = jsonResource["name"] as? String ?? ""
+    self.uri = jsonResource["uri"] as? String ??  ""
+    self.ordinal = jsonResource["ordinal"] as? Int ?? 0
   }
 }

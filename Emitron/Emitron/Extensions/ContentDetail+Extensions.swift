@@ -29,16 +29,12 @@
 import Foundation
 
 extension ContentDetail {
-  var dateAndTimeString: String? {
-    guard let releaseDate = releasedAt
-      else { return nil }
-    
-    var start = releaseDate.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releaseDate) {
-      start = "Today"
+  var dateAndTimeString: String {
+    var start = releasedAt.cardString
+    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+      start = Constants.today
     }
     
-    start = "\(start) • \(contentType?.displayString ?? "") (\(duration?.timeFromSeconds ?? ""))"
-    return start
+    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
   }
 }
