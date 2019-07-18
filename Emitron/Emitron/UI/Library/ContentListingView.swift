@@ -32,6 +32,7 @@ struct ContentListingView: View {
   
   @ObjectBinding var contentDetailsMC: ContentDetailsMC
   @State var isPresented = false
+  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
   var video: Video?
   
@@ -39,10 +40,13 @@ struct ContentListingView: View {
     
     List {
       VStack {
-        Button("PLAY") {
-          self.playVideo()
-        }
-        .frame(minHeight: 285)
+        
+        //TODO: This is probably not the correct image...
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: 375, height: 283)
+          .onAppear(perform: loadImage)
+          .transition(.opacity)
         
         VStack(alignment: .leading) {
           ContentSummaryView(details: contentDetailsMC.data)
@@ -68,7 +72,7 @@ struct ContentListingView: View {
             })
               .tapAction {
                 self.isPresented = true
-            }
+              }
             .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
           }
         }
@@ -76,9 +80,21 @@ struct ContentListingView: View {
     }
   }
   
-  func playVideo() {
-    print("Play video...")
-  }
+  private func loadImage() {
+      //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+      // is causing this file to not compile
+          
+      guard let url = contentDetailsMC.data.cardArtworkURL else { return }
+
+      DispatchQueue.global().async {
+          let data = try? Data(contentsOf: url)
+          DispatchQueue.main.async {
+            if let img = UIImage(data: data!) {
+              self.uiImage = img
+            }
+          }
+      }
+    }
 }
 
 struct CourseHeaderView: View {

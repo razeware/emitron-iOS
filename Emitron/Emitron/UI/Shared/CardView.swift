@@ -30,10 +30,8 @@ import SwiftUI
 
 struct CardView: View {
   
-  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading5")
+  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   let content: ContentDetail?
-//  public let imageURL: URL?
-//  public let animation: Animation = .basic()
   
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
@@ -41,53 +39,51 @@ struct CardView: View {
     VStack(alignment: .leading) {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: 5) {
-
+          
           Text(content?.name ?? "")
             .lineLimit(nil)
             .font(.uiTitle4)
-
+          
           Text(content?.domains.first?.name ?? "")
             .font(.uiCaption)
             .lineLimit(nil)
             .foregroundColor(.battleshipGrey)
         }
-
+        
         Spacer()
-
+        
         Image(uiImage: uiImage)
           .resizable()
           .frame(width: 60, height: 60)
           .onAppear(perform: loadImage)
           .transition(.opacity)
-          .id(uiImage)
           .cornerRadius(6)
       }
-
+      
       Text(content?.description ?? "")
         .font(.uiCaption)
         .lineLimit(nil)
         .foregroundColor(.battleshipGrey)
-
+      
       Spacer()
-
+      
       HStack {
         Text(content?.dateAndTimeString ?? "")
           .font(.uiCaption)
           .lineLimit(1)
           .foregroundColor(.battleshipGrey)
-
+        
         Spacer()
-
+        
         Image("download")
           .resizable()
           .frame(width: 19, height: 19)
-          .foregroundColor(.darkSeaGreen)
           .tapAction {
             self.download()
-          }
+        }
       }
     }
-      .padding([.leading, .trailing, .top], 15)
+    .padding([.leading, .trailing, .top], 15)
       .padding([.bottom], 22)
       .frame(minWidth: 339, minHeight: 184)
       .background(Color.white)
@@ -98,7 +94,19 @@ struct CardView: View {
   private func download() { }
   
   private func loadImage() {
+    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+    // is causing this file to not compile
     
+    guard let url = content?.cardArtworkURL else { return }
+    
+    DispatchQueue.global().async {
+      let data = try? Data(contentsOf: url)
+      DispatchQueue.main.async {
+        if let img = UIImage(data: data!) {
+          self.uiImage = img
+        }
+      }
+    }
   }
 }
 
