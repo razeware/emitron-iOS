@@ -27,8 +27,6 @@
 /// THE SOFTWARE.
 
 import SwiftUI
-import Kingfisher
-import UIKit
 
 struct CardView: View {
   
@@ -43,41 +41,41 @@ struct CardView: View {
     VStack(alignment: .leading) {
       HStack(alignment: .top) {
         VStack(alignment: .leading, spacing: 5) {
-          
+
           Text(content?.name ?? "")
             .lineLimit(nil)
             .font(.uiTitle4)
-          
+
           Text(content?.domains?.first?.name ?? "")
             .font(.uiCaption)
             .lineLimit(nil)
             .foregroundColor(.battleshipGrey)
         }
-        
+
         Spacer()
-        
+
 //        Image(uiImage: uiImage)
 //          .resizable()
 //          .onAppear(perform: loadImage)
 //          .transition(.opacity)
 //          .id(uiImage)
       }
-      
+
       Text(content?.description ?? "")
         .font(.uiCaption)
         .lineLimit(nil)
         .foregroundColor(.battleshipGrey)
-      
+
       Spacer()
-      
+
       HStack {
         Text(content?.dateAndTimeString ?? "")
           .font(.uiCaption)
           .lineLimit(1)
           .foregroundColor(.battleshipGrey)
-        
+
         Spacer()
-        
+
         Image("download")
           .resizable()
           .frame(width: 19, height: 19)

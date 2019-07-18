@@ -68,7 +68,7 @@ struct LibraryView: View {
         HStack {
           Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
             .font(.uiLabel)
-            .color(.battleshipGrey)
+            .foregroundColor(.battleshipGrey)
           Spacer()
           
           Button(action: {
@@ -81,7 +81,7 @@ struct LibraryView: View {
               
               Text(Constants.newest)
                 .font(.uiLabel)
-                .color(.battleshipGrey)
+                .foregroundColor(.battleshipGrey)
             }
           }
         }

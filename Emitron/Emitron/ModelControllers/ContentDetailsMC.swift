@@ -32,10 +32,10 @@ import Combine
 
 class ContentDetailsMC: NSObject, BindableObject {  
   
-  private(set) var didChange = PassthroughSubject<Void, Never>()
+  private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      didChange.send(())
+      willChange.send(())
     }
   }
   

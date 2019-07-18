@@ -51,7 +51,7 @@ struct TextListItemView: View {
         
         Text("\(contentSummary?.index ?? 0)")
           .font(.uiButtonLabelSmall)
-          .color(.white)
+          .foregroundColor(.white)
       }
       
       VStack(alignment: .leading) {

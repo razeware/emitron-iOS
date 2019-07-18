@@ -34,12 +34,12 @@ import Combine
 class UserMC: NSObject, BindableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
-  private(set) var didChange = PassthroughSubject<Void, Never>()
+  private(set) var willChange = PassthroughSubject<Void, Never>()
   
   /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
   private(set) var state = DataState.initial {
     didSet {
-      didChange.send(())
+      willChange.send(())
     }
   }
   

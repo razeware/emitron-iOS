@@ -31,6 +31,7 @@ import SwiftUI
 struct ContentSummaryView: View {
   
   @ObjectBinding var contentDetailsMC: ContentDetailsMC
+  @State var presentingVideoScreen = false
   
   var video: Video?
   
@@ -99,34 +100,33 @@ struct ContentSummaryView: View {
   }
   
   private func buildList() -> AnyView {
-    
-    let list =
-      List {
-        ForEach(contentDetailsMC.data.groups!.identified(by: \.id)) { group in
-          Section(header:
-            CourseHeaderView(name: group.name!, color: .paleGrey)
-              .background(Color.paleGrey)
-          ) {
-            ForEach(group.childContents!.identified(by: \.id)) { summary in
-              PresentationLink(destination: VideoView(videoID: summary.videoID)) {
-                
+      
+      let list =
+        List {
+          ForEach(contentDetailsMC.data.groups!, id:\.id) { group in
+            Section(header:
+              CourseHeaderView(name: group.name!, color: .paleGrey)
+                .background(Color.paleGrey)
+            ) {
+              ForEach(group.childContents!, id: \.id) { summary in
+
                 TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
                   print("Making my list...")
                 })
-                  .background(Color.paleGrey)
                   .listRowBackground(Color.paleGrey)
+                  .background(Color.paleGrey)
+                  .sheet(isPresented: self.$presentingVideoScreen) { VideoView(videoID: summary.videoID) }
+                }
               }
             }
+            .listRowBackground(Color.paleGrey)
+            .background(Color.paleGrey)
           }
-          .listRowBackground(Color.paleGrey)
           .background(Color.paleGrey)
-        }
-        .background(Color.paleGrey)
-        .listRowBackground(Color.paleGrey)
-      }
-    
-    return AnyView(list)
-  }
+          .listRowBackground(Color.paleGrey)
+      
+      return AnyView(list)
+    }
 }
 
 #if DEBUG
@@ -154,7 +154,7 @@ struct CourseHeaderView: View {
         Spacer()
       }
       Spacer()
-    }.padding(0).background(color.relativeWidth(1.3))
+    }.padding(0).background(color)
   }
 }
 
@@ -165,7 +165,7 @@ struct TopSummaryView: View {
       
       Text(details.technologyTripleString?.uppercased() ?? "SWIFT 5, IOS 12, XCODE 10")
         .font(.uiUppercase)
-        .color(.coolGrey)
+        .foregroundColor(.coolGrey)
         .kerning(0.5)
       // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
       
@@ -178,7 +178,7 @@ struct TopSummaryView: View {
       
       Text(details.dateAndTimeString ?? "11 Apr · Beginner · Video Course (56 min)")
         .font(.uiFootnote)
-        .color(.coolGrey)
+        .foregroundColor(.coolGrey)
       
       HStack {
         Button(action: {
@@ -204,7 +204,7 @@ struct TopSummaryView: View {
       
       Text(details.description ?? "Swift mutation model uses values and references to improve local reasoning and maintain performance. Find out the details in this course.")
         .font(.uiFootnote)
-        .color(.coolGrey)
+        .foregroundColor(.coolGrey)
         .lineLimit(nil)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
@@ -213,7 +213,7 @@ struct TopSummaryView: View {
       
       Text(details.contributorString != nil ? "By \(details.contributorString!)" : "By Ray Fix, Jorge R. Moukel & Katie Collins")
         .font(.uiFootnote)
-        .color(.coolGrey)
+        .foregroundColor(.coolGrey)
         .lineLimit(2)
         .padding([.top], 5)
     }

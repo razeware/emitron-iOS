@@ -32,10 +32,10 @@ import Combine
 
 class ContentsMC: NSObject, BindableObject {
   
-  private(set) var didChange = PassthroughSubject<Void, Never>()
+  private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      didChange.send(())
+      willChange.send(())
     }
   }
   
@@ -54,6 +54,8 @@ class ContentsMC: NSObject, BindableObject {
   }
   
   func loadContents(with parameters: [Parameter], pageSize: Int, offset: Int) {
+    guard state != .loading else { return }
+    
     state = .loading
     
     contentsService.allContents(parameters: parameters) { [weak self] result in

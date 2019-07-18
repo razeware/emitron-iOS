@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ContentListView: View {
   
+  @State var isPresenting: Bool = false
   var contents: [ContentDetail] = []
   var bgColor: Color
   
@@ -43,14 +44,11 @@ struct ContentListView: View {
     let mcs = contents.compactMap{ ContentDetailsMC(guardpost: guardpost, partialContentDetail: $0) }
     
     let list =  List {
-      ForEach(mcs.identified(by: \.self)) { mc in
-        PresentationLink(destination: ContentSummaryView(contentDetailsMC: mc, video: nil)) {
-          CardView(content: mc.data)
-            .listRowBackground(self.bgColor)
-            .background(self.bgColor)
-        }
-        .listRowBackground(self.bgColor)
-        .background(self.bgColor)
+      ForEach(mcs, id: \.self) { mc in
+        CardView(content: mc.data)
+          .listRowBackground(self.bgColor)
+          .background(self.bgColor)
+          .sheet(isPresented: self.$isPresenting) { ContentSummaryView(contentDetailsMC: mc, video: nil) }
       }
     }
     
