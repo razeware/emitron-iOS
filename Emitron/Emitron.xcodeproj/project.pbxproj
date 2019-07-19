@@ -14,7 +14,8 @@
 		B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7F22DF76A500122CE8 /* LoginView.swift */; };
 		B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A8322DF771200122CE8 /* ModelController.swift */; };
 		B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */; };
-		B663FA6A22E0BFA50002CDF4 /* VideosMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B663FA6922E0BFA50002CDF4 /* VideosMC.swift */; };
+		B663FA6A22E0BFA50002CDF4 /* UserMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B663FA6922E0BFA50002CDF4 /* UserMC.swift */; };
+		B68D471F22E21E2F003187E2 /* VideosMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B68D471E22E21E2F003187E2 /* VideosMC.swift */; };
 		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
 		B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
 		B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */; };
@@ -23,7 +24,6 @@
 		B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */; };
 		B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D222D5D46D00012839 /* DownloadsView.swift */; };
 		B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D422D5D47600012839 /* LibraryView.swift */; };
-		B6C0F0D722D5DC2800012839 /* UserMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D622D5DC2800012839 /* UserMC.swift */; };
 		B6C0F0DB22D5E65900012839 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */; };
 		B6C0F0DD22D5FA1C00012839 /* ContentDetail+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0DC22D5FA1C00012839 /* ContentDetail+Extensions.swift */; };
 		B6C0F0DF22D5FD4C00012839 /* TimeInterval+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */; };
@@ -102,12 +102,12 @@
 		B62B9A7F22DF76A500122CE8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B62B9A8322DF771200122CE8 /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
 		B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailsMC.swift; sourceTree = "<group>"; };
-		B663FA6922E0BFA50002CDF4 /* VideosMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VideosMC.swift; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/ModelControllers/VideosMC.swift"; sourceTree = "<group>"; };
+		B663FA6922E0BFA50002CDF4 /* UserMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = UserMC.swift; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/ModelControllers/UserMC.swift"; sourceTree = "<group>"; };
+		B68D471E22E21E2F003187E2 /* VideosMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = VideosMC.swift; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/ModelControllers/VideosMC.swift"; sourceTree = "<group>"; };
 		B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
 		B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTutorialsView.swift; sourceTree = "<group>"; };
 		B6C0F0D222D5D46D00012839 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
 		B6C0F0D422D5D47600012839 /* LibraryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryView.swift; sourceTree = "<group>"; };
-		B6C0F0D622D5DC2800012839 /* UserMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMC.swift; sourceTree = "<group>"; };
 		B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		B6C0F0DC22D5FA1C00012839 /* ContentDetail+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentDetail+Extensions.swift"; sourceTree = "<group>"; };
 		B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "TimeInterval+Extensions.swift"; sourceTree = "<group>"; };
@@ -477,11 +477,11 @@
 		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
-				B6C0F0D622D5DC2800012839 /* UserMC.swift */,
 				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
 				B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */,
 				B62B9A8322DF771200122CE8 /* ModelController.swift */,
-				B663FA6922E0BFA50002CDF4 /* VideosMC.swift */,
+				B663FA6922E0BFA50002CDF4 /* UserMC.swift */,
+				B68D471E22E21E2F003187E2 /* VideosMC.swift */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -686,7 +686,8 @@
 				B6DF2F9822CA051B0081A3A3 /* Bookmark.swift in Sources */,
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
-				B663FA6A22E0BFA50002CDF4 /* VideosMC.swift in Sources */,
+				B663FA6A22E0BFA50002CDF4 /* UserMC.swift in Sources */,
+				B68D471F22E21E2F003187E2 /* VideosMC.swift in Sources */,
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
@@ -711,7 +712,6 @@
 				B6DF2F9E22CA05320081A3A3 /* ContentDetail.swift in Sources */,
 				B60612B922CCE352007FC852 /* Parameters.swift in Sources */,
 				B6DF2FCF22CA89670081A3A3 /* GuardpostConstants.swift in Sources */,
-				B6C0F0D722D5DC2800012839 /* UserMC.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				B6FC15A622CB51C80078CEDB /* ToggleControlView.swift in Sources */,
 				B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */,
