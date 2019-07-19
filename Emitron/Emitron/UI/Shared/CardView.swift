@@ -83,7 +83,7 @@ struct CardView: View {
         }
       }
     }
-    .padding([.leading, .trailing, .top], 15)
+      .padding([.leading, .trailing, .top], 15)
       .padding([.bottom], 22)
       .frame(minWidth: 339, minHeight: 184)
       .background(Color.white)

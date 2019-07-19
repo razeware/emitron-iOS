@@ -10,8 +10,6 @@
 		9535A50122D657C6000DA861 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9535A50022D657C6000DA861 /* CoreDataStack.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
-		B60612C222CDF682007FC852 /* SwiftUIVC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612C122CDF682007FC852 /* SwiftUIVC.swift */; };
-		B60612C422CDF769007FC852 /* SwiftUIView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612C322CDF769007FC852 /* SwiftUIView.swift */; };
 		B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7D22DF769000122CE8 /* Constants.swift */; };
 		B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7F22DF76A500122CE8 /* LoginView.swift */; };
 		B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A8322DF771200122CE8 /* ModelController.swift */; };
@@ -54,9 +52,7 @@
 		B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D8EB2A22CBA94700DE29AF /* VideosRequest.swift */; };
 		B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D8EB2C22CBCC8800DE29AF /* ContentsRequest.swift */; };
 		B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = B6DF2F8322C9F3FA0081A3A3 /* GoogleService-Info.plist */; };
-		B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */; };
 		B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6DF2F8722C9F5070081A3A3 /* Main.storyboard */; };
-		B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */; };
 		B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8C22CA00500081A3A3 /* RWAPI.swift */; };
 		B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F8E22CA006D0081A3A3 /* RWEnvironment.swift */; };
 		B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2F9022CA00820081A3A3 /* Request.swift */; };
@@ -80,28 +76,17 @@
 		B6DF2FC922CA862C0081A3A3 /* SingleSignOnUser+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FC522CA862C0081A3A3 /* SingleSignOnUser+Keychain.swift */; };
 		B6DF2FCB22CA863D0081A3A3 /* Guardpost.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FCA22CA863D0081A3A3 /* Guardpost.swift */; };
 		B6DF2FCF22CA89670081A3A3 /* GuardpostConstants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6DF2FCE22CA89660081A3A3 /* GuardpostConstants.swift */; };
-		B6FC159E22CB51670078CEDB /* FilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC159D22CB51670078CEDB /* FilterView.swift */; };
-		B6FC15A022CB517F0078CEDB /* NoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC159F22CB517F0078CEDB /* NoResultsView.swift */; };
-		B6FC15A222CB51960078CEDB /* FilterSectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15A122CB51960078CEDB /* FilterSectionView.swift */; };
-		B6FC15A422CB51B50078CEDB /* ButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15A322CB51B50078CEDB /* ButtonView.swift */; };
 		B6FC15A622CB51C80078CEDB /* ToggleControlView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15A522CB51C80078CEDB /* ToggleControlView.swift */; };
 		B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15A722CB51D60078CEDB /* ContentListView.swift */; };
 		B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15AD22CB529E0078CEDB /* SettingsView.swift */; };
 		B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B022CB53220078CEDB /* TextListItemView.swift */; };
-		B6FC15B322CB53310078CEDB /* TextListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B222CB53310078CEDB /* TextListView.swift */; };
 		B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentListingView.swift */; };
-		B6FC15B722CB54890078CEDB /* ContentPartListItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */; };
-		B6FC15B922CB54940078CEDB /* ContentPartsList.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B822CB54940078CEDB /* ContentPartsList.swift */; };
 		B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BA22CB55160078CEDB /* VideoView.swift */; };
-		B6FC15BD22CB551F0078CEDB /* VideoSettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BC22CB551F0078CEDB /* VideoSettingsView.swift */; };
-		B6FC15BF22CB552E0078CEDB /* AlertView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BE22CB552E0078CEDB /* AlertView.swift */; };
 		B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */; };
 		B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */; };
 		B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */; };
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
-		B6FC15CA22CB5DB80078CEDB /* MyTutorialsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C922CB5DB80078CEDB /* MyTutorialsMC.swift */; };
 		B6FC15CC22CB5DC00078CEDB /* ContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */; };
-		B6FC15CE22CB5DD60078CEDB /* DownloadsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CD22CB5DD60078CEDB /* DownloadsMC.swift */; };
 		B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */; };
 		B6FC15D222CB65880078CEDB /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D122CB65880078CEDB /* Download.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
@@ -113,8 +98,6 @@
 		9535A50022D657C6000DA861 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
-		B60612C122CDF682007FC852 /* SwiftUIVC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIVC.swift; sourceTree = "<group>"; };
-		B60612C322CDF769007FC852 /* SwiftUIView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SwiftUIView.swift; sourceTree = "<group>"; };
 		B62B9A7D22DF769000122CE8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B62B9A7F22DF76A500122CE8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B62B9A8322DF771200122CE8 /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
@@ -159,9 +142,7 @@
 		B6D8EB2A22CBA94700DE29AF /* VideosRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosRequest.swift; sourceTree = "<group>"; };
 		B6D8EB2C22CBCC8800DE29AF /* ContentsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsRequest.swift; sourceTree = "<group>"; };
 		B6DF2F8322C9F3FA0081A3A3 /* GoogleService-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "GoogleService-Info.plist"; sourceTree = "<group>"; };
-		B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		B6DF2F8722C9F5070081A3A3 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
-		B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VCWrapperView.swift; sourceTree = "<group>"; };
 		B6DF2F8C22CA00500081A3A3 /* RWAPI.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWAPI.swift; sourceTree = "<group>"; };
 		B6DF2F8E22CA006D0081A3A3 /* RWEnvironment.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RWEnvironment.swift; sourceTree = "<group>"; };
 		B6DF2F9022CA00820081A3A3 /* Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Request.swift; sourceTree = "<group>"; };
@@ -185,28 +166,17 @@
 		B6DF2FC522CA862C0081A3A3 /* SingleSignOnUser+Keychain.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "SingleSignOnUser+Keychain.swift"; sourceTree = "<group>"; };
 		B6DF2FCA22CA863D0081A3A3 /* Guardpost.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Guardpost.swift; sourceTree = "<group>"; };
 		B6DF2FCE22CA89660081A3A3 /* GuardpostConstants.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = GuardpostConstants.swift; sourceTree = "<group>"; };
-		B6FC159D22CB51670078CEDB /* FilterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterView.swift; sourceTree = "<group>"; };
-		B6FC159F22CB517F0078CEDB /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
-		B6FC15A122CB51960078CEDB /* FilterSectionView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterSectionView.swift; sourceTree = "<group>"; };
-		B6FC15A322CB51B50078CEDB /* ButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ButtonView.swift; sourceTree = "<group>"; };
 		B6FC15A522CB51C80078CEDB /* ToggleControlView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ToggleControlView.swift; sourceTree = "<group>"; };
 		B6FC15A722CB51D60078CEDB /* ContentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListView.swift; sourceTree = "<group>"; };
 		B6FC15AD22CB529E0078CEDB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B6FC15B022CB53220078CEDB /* TextListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListItemView.swift; sourceTree = "<group>"; };
-		B6FC15B222CB53310078CEDB /* TextListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListView.swift; sourceTree = "<group>"; };
 		B6FC15B422CB53730078CEDB /* ContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListingView.swift; sourceTree = "<group>"; };
-		B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPartListItem.swift; sourceTree = "<group>"; };
-		B6FC15B822CB54940078CEDB /* ContentPartsList.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPartsList.swift; sourceTree = "<group>"; };
 		B6FC15BA22CB55160078CEDB /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
-		B6FC15BC22CB551F0078CEDB /* VideoSettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoSettingsView.swift; sourceTree = "<group>"; };
-		B6FC15BE22CB552E0078CEDB /* AlertView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AlertView.swift; sourceTree = "<group>"; };
 		B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIResource.swift; sourceTree = "<group>"; };
 		B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIRelationship.swift; sourceTree = "<group>"; };
 		B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIError.swift; sourceTree = "<group>"; };
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
-		B6FC15C922CB5DB80078CEDB /* MyTutorialsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTutorialsMC.swift; sourceTree = "<group>"; };
 		B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsMC.swift; sourceTree = "<group>"; };
-		B6FC15CD22CB5DD60078CEDB /* DownloadsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsMC.swift; sourceTree = "<group>"; };
 		B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		B6FC15D122CB65880078CEDB /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
@@ -361,7 +331,6 @@
 				B6FC15A922CB523C0078CEDB /* Library */,
 				B6FC15AB22CB52480078CEDB /* My Tutorials */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
-				B6FC15AF22CB52B00078CEDB /* Testing */,
 				B6DF2F8722C9F5070081A3A3 /* Main.storyboard */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 			);
@@ -468,13 +437,8 @@
 		B6FC15A922CB523C0078CEDB /* Library */ = {
 			isa = PBXGroup;
 			children = (
-				B6FC15A122CB51960078CEDB /* FilterSectionView.swift */,
-				B6FC159D22CB51670078CEDB /* FilterView.swift */,
 				B6FC15B422CB53730078CEDB /* ContentListingView.swift */,
-				B6FC15B622CB54890078CEDB /* ContentPartListItem.swift */,
-				B6FC15B822CB54940078CEDB /* ContentPartsList.swift */,
 				B6FC15BA22CB55160078CEDB /* VideoView.swift */,
-				B6FC15BC22CB551F0078CEDB /* VideoSettingsView.swift */,
 				B6C0F0D422D5D47600012839 /* LibraryView.swift */,
 			);
 			path = Library;
@@ -502,37 +466,20 @@
 			isa = PBXGroup;
 			children = (
 				B6D7DC7722C7C6BE006DD325 /* CardView.swift */,
-				B6FC159F22CB517F0078CEDB /* NoResultsView.swift */,
-				B6FC15A322CB51B50078CEDB /* ButtonView.swift */,
 				B6FC15A722CB51D60078CEDB /* ContentListView.swift */,
 				B6FC15B022CB53220078CEDB /* TextListItemView.swift */,
-				B6FC15B222CB53310078CEDB /* TextListView.swift */,
-				B6FC15BE22CB552E0078CEDB /* AlertView.swift */,
 				B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */,
 				B6C0F0E022D624D400012839 /* VideoPlayerController.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		B6FC15AF22CB52B00078CEDB /* Testing */ = {
-			isa = PBXGroup;
-			children = (
-				B6DF2F8522C9F4F20081A3A3 /* ViewController.swift */,
-				B6DF2F8922C9F62F0081A3A3 /* VCWrapperView.swift */,
-				B60612C122CDF682007FC852 /* SwiftUIVC.swift */,
-				B60612C322CDF769007FC852 /* SwiftUIView.swift */,
-			);
-			path = Testing;
-			sourceTree = "<group>";
-		};
 		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
 				B6C0F0D622D5DC2800012839 /* UserMC.swift */,
-				B6FC15C922CB5DB80078CEDB /* MyTutorialsMC.swift */,
 				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
 				B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */,
-				B6FC15CD22CB5DD60078CEDB /* DownloadsMC.swift */,
 				B62B9A8322DF771200122CE8 /* ModelController.swift */,
 				B663FA6922E0BFA50002CDF4 /* VideosMC.swift */,
 			);
@@ -714,9 +661,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
-				B6FC15A422CB51B50078CEDB /* ButtonView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
-				B6FC15A222CB51960078CEDB /* FilterSectionView.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
 				B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
@@ -745,11 +690,9 @@
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
-				B6FC15B922CB54940078CEDB /* ContentPartsList.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* Attachment.swift in Sources */,
 				B6DF2F9C22CA052B0081A3A3 /* ContentSummary.swift in Sources */,
 				B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */,
-				B60612C222CDF682007FC852 /* SwiftUIVC.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
@@ -759,35 +702,25 @@
 				B6DF2FA222CA05460081A3A3 /* Group.swift in Sources */,
 				B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */,
 				B6DF2FC922CA862C0081A3A3 /* SingleSignOnUser+Keychain.swift in Sources */,
-				B6FC15CA22CB5DB80078CEDB /* MyTutorialsMC.swift in Sources */,
 				B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */,
-				B6FC15A022CB517F0078CEDB /* NoResultsView.swift in Sources */,
-				B6DF2F8A22C9F62F0081A3A3 /* VCWrapperView.swift in Sources */,
-				B6FC15B322CB53310078CEDB /* TextListView.swift in Sources */,
 				B6DF2FCB22CA863D0081A3A3 /* Guardpost.swift in Sources */,
 				B6C0F0E122D624D400012839 /* VideoPlayerController.swift in Sources */,
 				B6D8EB1922CB9FFE00DE29AF /* CategoriesRequest.swift in Sources */,
-				B6FC15BF22CB552E0078CEDB /* AlertView.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
 				B6DF2FB122CA4B140081A3A3 /* BookmarkRequest.swift in Sources */,
 				B6DF2F9E22CA05320081A3A3 /* ContentDetail.swift in Sources */,
 				B60612B922CCE352007FC852 /* Parameters.swift in Sources */,
 				B6DF2FCF22CA89670081A3A3 /* GuardpostConstants.swift in Sources */,
-				B6FC15B722CB54890078CEDB /* ContentPartListItem.swift in Sources */,
 				B6C0F0D722D5DC2800012839 /* UserMC.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
-				B6FC159E22CB51670078CEDB /* FilterView.swift in Sources */,
 				B6FC15A622CB51C80078CEDB /* ToggleControlView.swift in Sources */,
 				B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */,
 				B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */,
 				9535A50122D657C6000DA861 /* CoreDataStack.swift in Sources */,
-				B60612C422CDF769007FC852 /* SwiftUIView.swift in Sources */,
 				B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */,
-				B6FC15CE22CB5DD60078CEDB /* DownloadsMC.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
 				B6DF2F9A22CA05230081A3A3 /* Category.swift in Sources */,
 				B6FC15CC22CB5DC00078CEDB /* ContentsMC.swift in Sources */,
-				B6FC15BD22CB551F0078CEDB /* VideoSettingsView.swift in Sources */,
 				B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */,
 				B6DF2FA422CA05530081A3A3 /* Progression.swift in Sources */,
 				B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */,
@@ -797,7 +730,6 @@
 				B6D4529A22CAB3FF00BFB812 /* String+Extensions.swift in Sources */,
 				B6C0F0DF22D5FD4C00012839 /* TimeInterval+Extensions.swift in Sources */,
 				B6FC15D522CB68E20078CEDB /* Service.swift in Sources */,
-				B6DF2F8622C9F4F20081A3A3 /* ViewController.swift in Sources */,
 				B6DF2FAF22CA498B0081A3A3 /* User.swift in Sources */,
 				B6D7DC7822C7C6BE006DD325 /* CardView.swift in Sources */,
 				B6DF2FA622CA055A0081A3A3 /* Video.swift in Sources */,

@@ -34,26 +34,10 @@ struct LoginView: View {
   @State var showModal: Bool = false
   
   var body: some View {
-    
-//    List {
-//      ForEach(0..<10) { index in
-//        HStack {
-//          Text("Hello")
-//          Spacer()
-//          Text("\(index)")
-//        }
-//        .tapAction {
-//          self.showModal = true
-//        }
-//      }
-//    }.sheet(isPresented: $showModal) {
-//      Text("World!")
-//    }
-    
     return contentView()
   }
   
-  func contentView() -> AnyView {
+  private func contentView() -> AnyView {
     guard userMC.user == nil else {
       return AnyView(TabNavView())
     }
