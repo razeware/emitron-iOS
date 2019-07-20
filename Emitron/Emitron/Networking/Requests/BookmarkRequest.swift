@@ -32,12 +32,14 @@ import SwiftyJSON
 struct GetBookmarksRequest: Request {
   typealias Response = [Bookmark]
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/bookmarks" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   var parameters: [Parameter]? { return nil }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> [Bookmark] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -49,6 +51,7 @@ struct GetBookmarksRequest: Request {
 struct DeleteBookmarkRequest: Request {
   typealias Response = [Bookmark]
 
+  // MARK: - Properties
   var method: HTTPMethod { return .DELETE }
   var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
@@ -56,10 +59,12 @@ struct DeleteBookmarkRequest: Request {
 
   private var id: Int
 
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> [Bookmark] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -70,17 +75,20 @@ struct DeleteBookmarkRequest: Request {
 
 struct BookmarkRequest: Request {
   typealias Response = Bookmark
-  
+
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   private var id: Int
-  
+
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
-  
+
+  // MARK: - Internal
   func handle(response: Data) throws -> Bookmark {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)

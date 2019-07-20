@@ -31,7 +31,8 @@ import SwiftUI
 import Combine
 
 class VideosMC: NSObject, BindableObject {
-  
+
+  // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
@@ -44,7 +45,8 @@ class VideosMC: NSObject, BindableObject {
   private let service: VideosService
   private(set) var data: Attachment?
   private(set) var streamURL: URL?
-  
+
+  // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
     
@@ -52,14 +54,19 @@ class VideosMC: NSObject, BindableObject {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.service = VideosService(client: self.client)
   }
-  
+
+  // MARK: - Internal
   func loadVideoStream(for id: Int) {
-    guard state != .loading else { return }
+    guard state != .loading else {
+      return
+    }
     
     state = .loading
     
     service.getVideoStream(for: id) { [weak self] result in
-      guard let `self` = self else { return }
+      guard let self = self else {
+        return
+      }
       
       switch result {
       case .failure(let error):
@@ -73,14 +80,19 @@ class VideosMC: NSObject, BindableObject {
     }
   }
   
-  func getVideoStream(for id: Int, completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
-    guard state != .loading else { return }
+  func getVideoStream(for id: Int,
+                      completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
+    guard state != .loading else {
+      return
+    }
     
     state = .loading
     service.getVideoStream(for: id) { [weak self] result in
       completion(result)
       
-      guard let `self` = self else { return }
+      guard let self = self else {
+        return
+      }
       
       switch result {
       case .failure(let error):

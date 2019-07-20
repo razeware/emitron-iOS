@@ -30,10 +30,14 @@ import Foundation
 import SwiftyJSON
 
 public class JSONAPIErrorSource {
+
+  // MARK: - Properties
   var pointer: String = ""
   var parameter: String = ""
 
-  init() {}
+  // MARK: - Initializers
+  init() {
+  }
 
   convenience init(_ json: JSON) {
     self.init()

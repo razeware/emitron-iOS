@@ -30,6 +30,8 @@ import Foundation
 import SwiftyJSON
 
 public class JSONAPIError {
+
+  // MARK: - Properties
   var id: String = ""
   var links: [String: URL] = [:]
   var status: String = ""
@@ -39,7 +41,9 @@ public class JSONAPIError {
   var source: JSONAPIErrorSource?
   var meta: [String: Any] = [:]
 
-  init() {}
+  // MARK: - Initializers
+  init() {
+  }
 
   convenience init(_ json: JSON) {
     self.init()
@@ -48,8 +52,9 @@ public class JSONAPIError {
 
     if let linksDict = json["links"].dictionaryObject {
       for link in linksDict {
-        if let strValue = link.value as? String, let url = URL(string: strValue) {
-          links[link.key] = url
+        if let strValue = link.value as? String,
+          let url = URL(string: strValue) {
+            links[link.key] = url
         }
       }
     }

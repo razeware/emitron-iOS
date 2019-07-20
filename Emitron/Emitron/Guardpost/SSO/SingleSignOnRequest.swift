@@ -31,32 +31,40 @@ import Foundation
 
 struct SingleSignOnRequest {
 
+  // MARK: - Properties
   private let callbackUrl: String
   let secret: String
   let nonce: String
   private let endpoint: String
+  var url: URL? {
+    var components = URLComponents(string: endpoint)
+    components?.queryItems = payload
+    return components?.url
+  }
 
-  init(endpoint: String, secret: String, callbackUrl: String) {
+  // MARK: - Initializers
+  init(endpoint: String,
+       secret: String,
+       callbackUrl: String) {
     self.endpoint = endpoint
     self.secret = secret
     self.callbackUrl = callbackUrl
     self.nonce = randomHexString(length: 40)
   }
+}
 
-  var url: URL? {
-    var cmpts = URLComponents(string: endpoint)
-    cmpts?.queryItems = payload
-    return cmpts?.url
-  }
+// MARK: - Private
+private extension SingleSignOnRequest {
 
-  private var payload: [URLQueryItem]? {
+  var payload: [URLQueryItem]? {
     guard let unsignedPayload = unsignedPayload else {
       return nil
     }
 
     let contents = unsignedPayload.toBase64()
     let symmetricKey = SymmetricKey(data: Data(secret.utf8))
-    let signature = HMAC<SHA256>.authenticationCode(for: Data(contents.utf8), using: symmetricKey)
+    let signature = HMAC<SHA256>.authenticationCode(for: Data(contents.utf8),
+                                                    using: symmetricKey)
       .description
       .replacingOccurrences(of: String.hmacToRemove, with: "")
 
@@ -66,12 +74,12 @@ struct SingleSignOnRequest {
     ]
   }
 
-  private var unsignedPayload: String? {
-    var cmpts = URLComponents()
-    cmpts.queryItems = [
+  var unsignedPayload: String? {
+    var components = URLComponents()
+    components.queryItems = [
       URLQueryItem(name: "callback_url", value: callbackUrl),
       URLQueryItem(name: "nonce", value: nonce)
     ]
-    return cmpts.query
+    return components.query
   }
 }

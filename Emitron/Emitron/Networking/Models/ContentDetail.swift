@@ -30,6 +30,7 @@ import Foundation
 
 class ContentDetail {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
@@ -54,7 +55,9 @@ class ContentDetail {
   private(set) var categories: [Category] = []
   private(set) var url: URL?
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  // MARK: - Initializers
+  init?(_ jsonResource: JSONAPIResource,
+        metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.uri = jsonResource["uri"] as? String ?? ""

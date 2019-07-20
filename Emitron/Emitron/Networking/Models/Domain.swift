@@ -39,12 +39,14 @@ enum DomainLevel: String {
 
 class Domain {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var name: String = ""
   private(set) var slug: String = ""
   private(set) var description: String = ""
   private(set) var level: DomainLevel = .none
 
+  // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""

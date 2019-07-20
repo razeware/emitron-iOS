@@ -98,7 +98,9 @@ struct ContentListingView: View {
       //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
       // is causing this file to not compile
           
-      guard let url = contentDetailsMC.data.cardArtworkURL else { return }
+      guard let url = contentDetailsMC.data.cardArtworkURL else {
+        return
+      }
 
       DispatchQueue.global().async {
           let data = try? Data(contentsOf: url)
@@ -192,4 +194,3 @@ struct ContentSummaryView: View {
   private func download() { }
   private func bookmark() { }
 }
-

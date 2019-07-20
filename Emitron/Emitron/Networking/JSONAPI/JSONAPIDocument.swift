@@ -30,12 +30,15 @@ import Foundation
 import SwiftyJSON
 
 class JSONAPIDocument {
+
+  // MARK: - Properties
   var meta: [String: Any] = [:]
   var included: [JSONAPIResource] = []
   var data: [JSONAPIResource] =  []
   var errors: [JSONAPIError] = []
   var links: [String: URL] = [:]
 
+  // MARK: - Initializers
   convenience init(_ json: JSON) {
     self.init()
 
@@ -58,16 +61,18 @@ class JSONAPIDocument {
     
     if let linksDict = json["links"].dictionaryObject {
       for link in linksDict {
-        if let strValue = link.value as? String, let url = URL(string: strValue) {
-          links[link.key] = url
+        if let strValue = link.value as? String,
+          let url = URL(string: strValue) {
+            links[link.key] = url
         }
       }
     }
 
     if let linksDict = json["links"].dictionaryObject {
       for link in linksDict {
-        if let strValue = link.value as? String, let url = URL(string: strValue) {
-          links[link.key] = url
+        if let strValue = link.value as? String,
+          let url = URL(string: strValue) {
+            links[link.key] = url
         }
       }
     }

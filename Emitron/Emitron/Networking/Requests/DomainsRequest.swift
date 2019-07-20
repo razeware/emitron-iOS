@@ -32,11 +32,13 @@ import SwiftyJSON
 struct DomainsRequest: Request {
   typealias Response = [Domain]
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/domains" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> [Domain] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)

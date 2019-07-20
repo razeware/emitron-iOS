@@ -46,18 +46,17 @@ class UserMC: NSObject, BindableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private(set) var user: User?
-  
+
+  // MARK: - Initializers
   init(guardpost: Guardpost) {
-    
     self.guardpost = guardpost
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
   }
-  
+
+  // MARK: - Internal
   func login() {
-    
     state = .loading
-    
     guardpost.presentationContextDelegate = self
     
     if user != nil {
@@ -65,7 +64,9 @@ class UserMC: NSObject, BindableObject {
     } else {
       guardpost.login { [weak self] result in
         
-        guard let `self` = self else { return }
+        guard let self = self else {
+          return
+        }
         
         switch result {
         case .failure(let error):
@@ -81,6 +82,7 @@ class UserMC: NSObject, BindableObject {
 }
 
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
+
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
     return UIApplication.shared.windows.first!
   }

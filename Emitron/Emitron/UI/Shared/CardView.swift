@@ -80,7 +80,7 @@ struct CardView: View {
           .frame(width: 19, height: 19)
           .tapAction {
             self.download()
-        }
+          }
       }
     }
       .padding([.leading, .trailing, .top], 15)
@@ -97,7 +97,9 @@ struct CardView: View {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
     
-    guard let url = content?.cardArtworkURL else { return }
+    guard let url = content?.cardArtworkURL else {
+      return
+    }
     
     DispatchQueue.global().async {
       let data = try? Data(contentsOf: url)
@@ -112,6 +114,7 @@ struct CardView: View {
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
+
   static var previews: some View {
     CardView(content: nil)
   }

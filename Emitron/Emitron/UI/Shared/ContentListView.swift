@@ -43,7 +43,7 @@ struct ContentListView: View {
     let guardpost = AppDelegate.guardpost
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
-    let list =  List {
+    let list = List {
       ForEach(contents, id: \.id) { partialContent in
         CardView(content: partialContent)
           .listRowBackground(self.bgColor)
@@ -64,6 +64,7 @@ struct ContentListView: View {
 
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
+
   static var previews: some View {
     ContentListView(contents: [], bgColor: .paleGrey)
   }

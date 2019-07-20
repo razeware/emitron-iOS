@@ -28,11 +28,14 @@
 
 import Foundation
 
+// MARK: - Base64
 extension String {
 
   func fromBase64() -> String? {
-    guard let data = Data(base64Encoded: self) else { return nil }
-    return String(data: data, encoding: .utf8)
+    if let data = Data(base64Encoded: self) {
+      return String(data: data, encoding: .utf8)
+    }
+    return nil
   }
 
   func toBase64() -> String {

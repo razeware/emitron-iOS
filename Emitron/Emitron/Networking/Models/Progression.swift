@@ -30,6 +30,7 @@ import Foundation
 
 class Progression {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var target: Int = 0
   private(set) var progress: Int = 0
@@ -39,7 +40,9 @@ class Progression {
   private(set) var createdAt: Date
   private(set) var updatedAt: Date
 
-  init(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  // MARK: - Initializers
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.target = jsonResource["target"] as? Int ?? 0

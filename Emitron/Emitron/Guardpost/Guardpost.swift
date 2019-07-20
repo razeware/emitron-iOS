@@ -38,6 +38,8 @@ public enum LoginError: Error {
 }
 
 public class Guardpost {
+
+  // MARK: - Properties
   private let baseUrl: String
   private let urlScheme: String
   private let ssoSecret: String
@@ -45,17 +47,20 @@ public class Guardpost {
   private var authSession: ASWebAuthenticationSession?
   public weak var presentationContextDelegate: ASWebAuthenticationPresentationContextProviding?
 
-  public init(baseUrl: String, urlScheme: String, ssoSecret: String) {
-    self.baseUrl = baseUrl
-    self.urlScheme = urlScheme
-    self.ssoSecret = ssoSecret
-  }
-
   public var currentUser: User? {
     if _currentUser == .none {
       _currentUser = User.restoreFromKeychain()
     }
     return _currentUser
+  }
+
+  // MARK: - Initializers
+  public init(baseUrl: String,
+              urlScheme: String,
+              ssoSecret: String) {
+    self.baseUrl = baseUrl
+    self.urlScheme = urlScheme
+    self.ssoSecret = ssoSecret
   }
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {

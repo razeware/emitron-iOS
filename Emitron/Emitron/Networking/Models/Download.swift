@@ -30,12 +30,14 @@ import Foundation
 
 class Download {
 
+  // MARK: - Properties
   var video: Video
   var task: URLSessionDownloadTask?
   var isDownloading: Bool = false
   var resumeData: Data?
   var progress: Double = 0
 
+  // MARK: - Initializers
   init(video: Video) {
     self.video = video
   }

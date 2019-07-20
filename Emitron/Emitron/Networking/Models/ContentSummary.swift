@@ -29,6 +29,7 @@
 import Foundation
 
 extension String {
+
   var digits: String {
     return components(separatedBy: CharacterSet.decimalDigits.inverted)
       .joined()
@@ -37,6 +38,7 @@ extension String {
 
 class ContentSummary {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
@@ -54,7 +56,10 @@ class ContentSummary {
   private(set) var index: Int = 0
   private(set) var videoID: Int = 0
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?, index: Int) {
+  // MARK: - Initializers
+  init?(_ jsonResource: JSONAPIResource,
+        metadata: [String: Any]?,
+        index: Int) {
 
     self.id = jsonResource.id
     self.index = index

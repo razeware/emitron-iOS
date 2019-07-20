@@ -30,6 +30,7 @@ import Foundation
 
 class DomainsService: Service {
 
+  // MARK: - Internal
   func allDomains(completion: @escaping (_ response: Result<DomainsRequest.Response, RWAPIError>) -> Void) {
     let request = DomainsRequest()
     makeAndProcessRequest(request: request, completion: completion)

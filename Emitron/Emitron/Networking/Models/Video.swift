@@ -42,6 +42,7 @@ enum VideoKind: String {
 
 class Video {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var name: String = ""
   private(set) var description: String = ""
@@ -55,7 +56,9 @@ class Video {
   private(set) var sdVideoFile: VideoFile?
   private(set) var hdVideoFile: VideoFile?
 
-  init(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  // MARK: - Initializers
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""

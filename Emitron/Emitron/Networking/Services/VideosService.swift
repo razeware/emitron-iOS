@@ -30,6 +30,7 @@ import Foundation
 
 class VideosService: Service {
 
+  // MARK: - Internal
   func video(for id: Int,
              completion: @escaping (_ response: Result<ShowVideoRequest.Response, RWAPIError>) -> Void) {
     let request = ShowVideoRequest(id: id)

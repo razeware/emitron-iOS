@@ -31,13 +31,17 @@ import SwiftUI
 struct TextListItemView: View {
   var contentSummary: ContentSummary?
   var timeStamp: String?
-  var buttonAction: () -> ()
+  var buttonAction: () -> Void
   
   //TODO: This should be coming from the BE eventually, but for now we're doing some magic transformation to get the correct title
   private var titleString: String {
-    guard let name = contentSummary?.name else { return "No name :(" }
+    guard let name = contentSummary?.name else {
+      return "No name :("
+    }
     
-    let realTitle = name.split(separator: "·", maxSplits: 1, omittingEmptySubsequences: true)
+    let realTitle = name.split(separator: "·",
+                               maxSplits: 1,
+                               omittingEmptySubsequences: true)
     let str = "\(realTitle.last!)"
     return str.trimmingCharacters(in: .whitespaces)
   }

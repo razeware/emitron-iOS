@@ -31,6 +31,7 @@ import SwiftyJSON
 
 public class JSONAPIResource {
 
+  // MARK: - Properties
   var parent: JSONAPIDocument?
   var id: Int = 0
   var type: String = ""
@@ -39,15 +40,18 @@ public class JSONAPIResource {
   var links: [String: URL] = [:]
   var meta: [String: Any] = [:]
 
-  init() {}
-
   public subscript(key: String) -> Any? {
     let value = attributes[key]
 
     return value
   }
 
-  convenience init(_ json: JSON, parent: JSONAPIDocument?) {
+  // MARK: - Initializers
+  init() {
+  }
+
+  convenience init(_ json: JSON,
+                   parent: JSONAPIDocument?) {
 
     self.init()
 
@@ -59,15 +63,18 @@ public class JSONAPIResource {
     type = json["type"].stringValue
 
     for relationship in json["relationships"].dictionaryValue {
-      relationships.append(JSONAPIRelationship(relationship.value, type: relationship.key, parent: nil))
+      relationships.append(JSONAPIRelationship(relationship.value,
+                                               type: relationship.key,
+                                               parent: nil))
     }
 
     attributes = json["attributes"].dictionaryObject ?? [:]
 
     if let linksDict = json["links"].dictionaryObject {
       for link in linksDict {
-        if let strValue = link.value as? String, let url = URL(string: strValue) {
-          links[link.key] = url
+        if let strValue = link.value as? String,
+          let url = URL(string: strValue) {
+            links[link.key] = url
         }
       }
     }
@@ -77,6 +84,7 @@ public class JSONAPIResource {
 }
 
 extension JSONAPIResource {
+
   subscript<K: CustomStringConvertible, T>(key: K) -> T? {
     return self[key.description] as? T
   }

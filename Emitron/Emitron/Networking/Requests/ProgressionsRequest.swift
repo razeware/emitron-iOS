@@ -31,12 +31,14 @@ import SwiftyJSON
 
 struct ProgressionsRequest: Request {
   typealias Response = [Progression]
-  
+
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/progressions" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
-  
+
+  // MARK: - Internal
   func handle(response: Data) throws -> [Progression] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -47,18 +49,21 @@ struct ProgressionsRequest: Request {
 
 struct ShowProgressionsRequest: Request {
   typealias Response = Progression
-  
+
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/progressions/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
-  
+
   private var id: Int
-  
+
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
-  
+
+  // MARK: - Internal
   func handle(response: Data) throws -> Progression {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)

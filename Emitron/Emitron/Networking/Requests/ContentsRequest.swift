@@ -32,11 +32,13 @@ import SwiftyJSON
 struct ContentsRequest: Request {
   typealias Response = (contents: [ContentDetail], totalNumber: Int)
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/contents" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> (contents: [ContentDetail], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -48,24 +50,27 @@ struct ContentsRequest: Request {
 
 struct ContentDetailRequest: Request {
   typealias Response = ContentDetail
-  
+
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/contents/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   private var id: Int
-  
+
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
-  
+
+  // MARK: - Internal
   func handle(response: Data) throws -> ContentDetail {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let contentDetails = doc.data.compactMap { ContentDetail($0, metadata: nil) }
     guard let contentDetail = contentDetails.first,
       contentDetails.count == 1 else {
-      throw RWAPIError.processingError(nil)
+        throw RWAPIError.processingError(nil)
     }
     
     return contentDetail

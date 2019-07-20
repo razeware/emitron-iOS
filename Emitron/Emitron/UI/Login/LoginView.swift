@@ -52,7 +52,8 @@ struct LoginView: View {
 }
 
 #if DEBUG
-struct LoginView_Previews : PreviewProvider {
+struct LoginView_Previews: PreviewProvider {
+
   static var previews: some View {
     let guardpost = AppDelegate.guardpost
     let userMC = UserMC(guardpost: guardpost)

@@ -32,6 +32,7 @@ import SwiftyJSON
 struct ShowVideoRequest: Request {
   typealias Response = Video
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/videos/\(id)" }
   var additionalHeaders: [String: String]?
@@ -39,10 +40,12 @@ struct ShowVideoRequest: Request {
 
   private var id: Int
 
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> Video {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -54,6 +57,7 @@ struct ShowVideoRequest: Request {
 struct StreamVideoRequest: Request {
   typealias Response = Attachment
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/videos/\(id)/stream" }
   var additionalHeaders: [String: String]?
@@ -61,10 +65,12 @@ struct StreamVideoRequest: Request {
 
   private var id: Int
 
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> Attachment {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
@@ -77,6 +83,7 @@ struct DownloadVideoRequest: Request {
   // It contains two Attachment objects, one for the HD file and one for the SD file.
   typealias Response = [Attachment]
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/videos/\(id)/download" }
   var additionalHeaders: [String: String]?
@@ -84,10 +91,12 @@ struct DownloadVideoRequest: Request {
 
   private var id: Int
 
+  // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> [Attachment] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)

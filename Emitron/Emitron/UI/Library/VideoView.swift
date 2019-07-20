@@ -60,6 +60,7 @@ struct VideoView: View {
 
 #if DEBUG
 struct VideoView_Previews: PreviewProvider {
+
   static var previews: some View {
     return VideoView(videoID: 2292)
   }

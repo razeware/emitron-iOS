@@ -30,6 +30,7 @@ import Foundation
 
 public struct User: Codable {
 
+  // MARK: - Properties
   public let externalId: String
   public let email: String
   public let username: String
@@ -37,7 +38,8 @@ public struct User: Codable {
   public let name: String
   public let token: String
 
-  internal init?(dictionary: [String: String]) {
+  // MARK: - Initializers
+  init?(dictionary: [String: String]) {
     guard
       let externalId = dictionary["external_id"],
       let email = dictionary["email"],
@@ -59,6 +61,7 @@ public struct User: Codable {
 }
 
 extension User: Equatable {
+
   public static func == (lhs: User, rhs: User) -> Bool {
     return lhs.externalId == rhs.externalId &&
       lhs.email == rhs.email &&

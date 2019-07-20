@@ -25,25 +25,26 @@ import KeychainSwift
 
 private let SSOUserKey = "com.razeware.emitron.sso_user"
 
-internal extension User {
+extension User {
+
   @discardableResult
-  func persistToKeychain() -> Bool {
-    let encoder = JSONEncoder()
+  func persistToKeychain(_ encoder: JSONEncoder = JSONEncoder()) -> Bool {
     guard let encoded = try? encoder.encode(self) else {
       return false
     }
 
     let keychain = KeychainSwift()
-    return keychain.set(encoded, forKey: SSOUserKey, withAccess: .accessibleAfterFirstUnlock)
+    return keychain.set(encoded,
+                        forKey: SSOUserKey,
+                        withAccess: .accessibleAfterFirstUnlock)
   }
 
-  static func restoreFromKeychain() -> User? {
+  static func restoreFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
     let keychain = KeychainSwift()
     guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
     }
 
-    let decoder = JSONDecoder()
     return try? decoder.decode(self, from: encoded)
   }
 

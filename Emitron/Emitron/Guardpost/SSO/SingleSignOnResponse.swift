@@ -31,28 +31,31 @@ import Foundation
 
 struct SingleSignOnResponse {
 
+  // MARK: - Properties
   private let request: SingleSignOnRequest
   private let signature: String
   private let payload: String
   private let decodedPayload: [URLQueryItem]?
 
+  // MARK: - Initializers
   init?(request: SingleSignOnRequest, responseUrl: URL) {
-    let responseCmpts = URLComponents(url: responseUrl, resolvingAgainstBaseURL: false)
-    var cmpts = URLComponents()
+    let responseComponents = URLComponents(url: responseUrl,
+                                           resolvingAgainstBaseURL: false)
+    var components = URLComponents()
     guard
-      let sso = responseCmpts?.queryItems?.first(where: { $0.name == "sso" })?.value,
-      let sig = responseCmpts?.queryItems?.first(where: { $0.name == "sig" })?.value,
+      let sso = responseComponents?.queryItems?.first(where: { $0.name == "sso" })?.value,
+      let sig = responseComponents?.queryItems?.first(where: { $0.name == "sig" })?.value,
       let urlString = sso.fromBase64()
       else {
         return nil
     }
 
-    cmpts.query = urlString
+    components.query = urlString
 
     self.request = request
     self.signature = sig
     self.payload = sso
-    self.decodedPayload = cmpts.queryItems
+    self.decodedPayload = components.queryItems
   }
 
   var isValid: Bool {
@@ -70,8 +73,12 @@ struct SingleSignOnResponse {
     let dictionary = queryItemsToDictionary(decodedPayload)
     return User(dictionary: dictionary)
   }
+}
 
-  private var isSignatureValid: Bool {
+// MARK: - Private
+private extension SingleSignOnResponse {
+
+  var isSignatureValid: Bool {
     let symmetricKey = SymmetricKey(data: Data(request.secret.utf8))
     let hmac = HMAC<SHA256>.authenticationCode(for: Data(payload.utf8),
                                                using: symmetricKey)
@@ -81,19 +88,17 @@ struct SingleSignOnResponse {
     return hmac == signature
   }
 
-  private var isNonceValid: Bool {
+  var isNonceValid: Bool {
     return decodedPayloadEntry(name: "nonce") == request.nonce
   }
 
-  private func decodedPayloadEntry(name: String) -> String? {
+  func decodedPayloadEntry(name: String) -> String? {
     return decodedPayload?.first { $0.name == name }?.value
   }
 
-  private func queryItemsToDictionary(_ queryItems: [URLQueryItem]) -> [String: String] {
-    var dictionary = [String: String]()
-    for item in queryItems {
-      dictionary[item.name] = item.value?.removingPercentEncoding
+  func queryItemsToDictionary(_ queryItems: [URLQueryItem]) -> [String: String] {
+    return queryItems.reduce(into: [:]) { result, item in
+      result[item.name] = item.value?.removingPercentEncoding
     }
-    return dictionary
   }
 }

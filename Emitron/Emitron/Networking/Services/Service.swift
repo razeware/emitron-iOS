@@ -30,17 +30,21 @@ import Foundation
 
 class Service {
 
+  // MARK: - Properties
   let networkClient: RWAPI
   let session: URLSession
 
+  // MARK: - Initializers
   init(client: RWAPI) {
     self.networkClient = client
     self.session = URLSession(configuration: .default)
   }
 
-  func makeAndProcessRequest<R: Request>(request: R,
-                                         parameters: [Parameter]? = nil,
-                                         completion: @escaping (Result<R.Response, RWAPIError>) -> Void) {
+  // MARK: - Internal
+  func makeAndProcessRequest<R: Request>(
+    request: R,
+    parameters: [Parameter]? = nil,
+    completion: @escaping (Result<R.Response, RWAPIError>) -> Void) {
 
     let handleResponse: (Result<R.Response, RWAPIError>) -> Void = { result in
       DispatchQueue.main.async {
@@ -71,15 +75,16 @@ class Service {
     task.resume()
   }
 
-  func prepare<R: Request>(request: R, parameters: [Parameter]?) -> URLRequest? {
+  func prepare<R: Request>(request: R,
+                           parameters: [Parameter]?) -> URLRequest? {
     let pathURL = networkClient.environment.baseUrl.appendingPathComponent(request.path)
 
-    var components = URLComponents(url: pathURL, resolvingAgainstBaseURL: false)
+    var components = URLComponents(url: pathURL,
+                                   resolvingAgainstBaseURL: false)
 
-    if let parames = parameters {
-      let queryItems = parames.map { parameter -> URLQueryItem in
-        let queryItem = URLQueryItem(name: parameter.key, value: parameter.value)
-        return queryItem
+    if let parameters = parameters {
+      let queryItems = parameters.map { parameter in
+        URLQueryItem(name: parameter.key, value: parameter.value)
       }
 
       components?.queryItems = queryItems

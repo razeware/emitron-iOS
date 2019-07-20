@@ -31,7 +31,8 @@ import SwiftUI
 import Combine
 
 class ContentDetailsMC: NSObject, BindableObject {  
-  
+
+  // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
@@ -43,8 +44,10 @@ class ContentDetailsMC: NSObject, BindableObject {
   private let guardpost: Guardpost
   private let contentsService: ContentsService
   private(set) var data: ContentDetail
-  
-  init(guardpost: Guardpost, partialContentDetail: ContentDetail) {
+
+  // MARK: - Initializers
+  init(guardpost: Guardpost,
+       partialContentDetail: ContentDetail) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
@@ -54,15 +57,20 @@ class ContentDetailsMC: NSObject, BindableObject {
     
     getContentDetails()
   }
-  
+
+  // MARK: - Internal
   func getContentDetails() {
-      guard state != .loading else { return }
+      guard state != .loading else {
+        return
+      }
       
       state = .loading
       
       contentsService.contentDetail(for: data.id) { [weak self] result in
         
-        guard let `self` = self else { return }
+        guard let self = self else {
+          return
+        }
         
         switch result {
         case .failure(let error):

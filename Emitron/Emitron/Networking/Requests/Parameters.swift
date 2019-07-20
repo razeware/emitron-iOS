@@ -48,7 +48,10 @@ enum ContentType: String {
     switch self {
     case .collection:
       return "Video Course"
-    case .episode, .screencast, .article, .none:
+    case .episode,
+         .screencast,
+         .article,
+         .none:
       return self.rawValue.capitalized
     case .product:
       return "Book" // Probably other types of stuff
@@ -95,7 +98,8 @@ enum ParameterKey {
   }
 
   var param: Parameter {
-    return Parameter(key: self.strKey, value: self.value)
+    return Parameter(key: self.strKey,
+                     value: self.value)
   }
 }
 
@@ -152,7 +156,6 @@ enum Param {
     var allParams: [Parameter] = []
 
     values.forEach { value in
-
       let key = "filter[\(value.strKey)][]"
       let values = value.values
       let all = values.map { Parameter(key: key, value: $0) }
@@ -163,7 +166,8 @@ enum Param {
     return allParams
   }
 
-  static func sort(by value: ParameterSortValue, descending: Bool) -> Parameter {
+  static func sort(by value: ParameterSortValue,
+                   descending: Bool) -> Parameter {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
 

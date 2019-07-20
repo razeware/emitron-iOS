@@ -30,6 +30,7 @@ import Foundation
 
 class ProgressionsService: Service {
 
+  // MARK: - Internal
   func progressions(parameters: [Parameter]? = nil,
                     completion: @escaping (_ response: Result<ProgressionsRequest.Response, RWAPIError>) -> Void) {
     let request = ProgressionsRequest()

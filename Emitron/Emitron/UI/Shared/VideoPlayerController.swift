@@ -66,7 +66,8 @@ class VideoPlayerController: AVPlayerViewController {
     self.videosMC = videosMC
     super.init(nibName: nil, bundle: nil)
   }
-  
+
+  @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
   }
@@ -81,18 +82,20 @@ class VideoPlayerController: AVPlayerViewController {
     super.viewDidLoad()
 
     videosMC.getVideoStream(for: videoID) { [weak self] result in
-      guard let `self` = self else { return }
+      guard let self = self else {
+        return
+      }
       
       switch result {
       case .failure(let error):
         print(error.localizedDescription)
       case .success(let videoStream):
         print(videoStream)
-        guard let url = videoStream.url else { return }
-        self.player = AVPlayer(url: url)
-        self.player?.play()
+        if let url = videoStream.url {
+          self.player = AVPlayer(url: url)
+          self.player?.play()
+        }
       }
     }
-
   }
 }

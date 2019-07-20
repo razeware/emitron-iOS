@@ -32,11 +32,13 @@ import SwiftyJSON
 struct CategoriesRequest: Request {
   typealias Response = [Category]
 
+  // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/categories" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
+  // MARK: - Internal
   func handle(response: Data) throws -> [Category] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)

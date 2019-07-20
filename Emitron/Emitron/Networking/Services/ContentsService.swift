@@ -30,6 +30,7 @@ import Foundation
 
 class ContentsService: Service {
 
+  // MARK: - Internal
   func allContents(parameters: [Parameter],
                    completion: @escaping (_ response: Result<ContentsRequest.Response, RWAPIError>) -> Void) {
     let request = ContentsRequest()

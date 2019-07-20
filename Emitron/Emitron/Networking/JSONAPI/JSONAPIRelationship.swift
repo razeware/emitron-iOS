@@ -31,14 +31,19 @@ import SwiftyJSON
 
 public class JSONAPIRelationship {
 
+  // MARK: - Properties
   var meta: [String: Any] = [:]
   var data: [JSONAPIResource] =  []
   var links: [String: URL] = [:]
   var type: String = ""
 
-  init() {}
+  // MARK: - Initializers
+  init() {
+  }
 
-  convenience init(_ json: JSON, type: String, parent: JSONAPIDocument?) {
+  convenience init(_ json: JSON,
+                   type: String,
+                   parent: JSONAPIDocument?) {
     self.init()
 
     self.type = type

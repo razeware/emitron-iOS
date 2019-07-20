@@ -36,14 +36,17 @@ enum RWAPIError: Error {
 }
 
 struct RWAPI {
+
+  // MARK: - Properties
   let environment: RWEnvironment
   let session: URLSession
   let authToken: String
 
-  // HTTP Headers
+  // MARK: - HTTP Headers
   let contentTypeHeader: HTTPHeaders = ["Content-Type": "application/vnd.api+json; charset=utf-8"]
   var additionalHeaders: HTTPHeaders?
 
+  // MARK: - Initializers
   init(session: URLSession = URLSession(configuration: .default),
        environment: RWEnvironment = .prod,
        authToken: String) {

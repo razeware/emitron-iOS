@@ -31,7 +31,8 @@ import SwiftUI
 import Combine
 
 class ContentsMC: NSObject, BindableObject {
-  
+
+  // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
@@ -44,7 +45,8 @@ class ContentsMC: NSObject, BindableObject {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetail] = []
   private(set) var numTutorials: Int = 0
-  
+
+  // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
     
@@ -53,14 +55,20 @@ class ContentsMC: NSObject, BindableObject {
     self.contentsService = ContentsService(client: self.client)
   }
   
-  func loadContents(with parameters: [Parameter], pageSize: Int, offset: Int) {
-    guard state != .loading else { return }
+  func loadContents(with parameters: [Parameter],
+                    pageSize: Int,
+                    offset: Int) {
+    guard state != .loading else {
+      return
+    }
     
     state = .loading
     
     contentsService.allContents(parameters: parameters) { [weak self] result in
       
-      guard let `self` = self else { return }
+      guard let self = self else {
+        return
+      }
       
       switch result {
       case .failure(let error):

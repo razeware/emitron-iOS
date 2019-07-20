@@ -37,11 +37,14 @@ enum AttachmentKind: String {
 
 class Attachment {
 
+  // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var url: URL?
   private(set) var kind: AttachmentKind = .none
 
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  // MARK: - Initializets
+  init?(_ jsonResource: JSONAPIResource,
+        metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.url = URL(string: (jsonResource["url"] as? String) ?? "")

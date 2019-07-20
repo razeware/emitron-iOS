@@ -29,6 +29,10 @@
 import Foundation
 import Security
 
+/// Globally available method to generate a random hex string of provided length
+///
+/// - parameters:
+///   - length: the length of the hex string to generate
 func randomHexString(length: Int) -> String {
   let byteCount = length * 2
   var randomBytes = [UInt8](repeating: 0, count: byteCount)

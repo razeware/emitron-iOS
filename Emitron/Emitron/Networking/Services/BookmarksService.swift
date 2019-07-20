@@ -30,6 +30,7 @@ import Foundation
 
 class BookmarksService: Service {
 
+  // MARK: - Internal
   func bookmarks(parameters: [Parameter]? = nil,
                  completion: @escaping (_ response: Result<GetBookmarksRequest.Response, RWAPIError>) -> Void) {
     let request = GetBookmarksRequest()

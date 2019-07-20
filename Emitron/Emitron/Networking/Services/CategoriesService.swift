@@ -30,6 +30,7 @@ import Foundation
 
 class CategoriesService: Service {
 
+  // MARK: - Internal
   func allCategories(completion: @escaping (_ response: Result<CategoriesRequest.Response, RWAPIError>) -> Void) {
     let request = CategoriesRequest()
     makeAndProcessRequest(request: request,
