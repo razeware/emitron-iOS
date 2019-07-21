@@ -26,64 +26,29 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
 import SwiftUI
-import Combine
-import Firebase
 
-class ContentDetailsMC: NSObject, BindableObject {  
+struct CourseHeaderView: View {
+  let name: String
+  let color: Color
   
-  // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    didSet {
-      willChange.send(())
-    }
-  }
-  
-  private let client: RWAPI
-  private let guardpost: Guardpost
-  private let contentsService: ContentsService
-  private(set) var data: ContentDetail
-  
-  // MARK: - Initializers
-  init(guardpost: Guardpost,
-       partialContentDetail: ContentDetail) {
-    self.guardpost = guardpost
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
-    self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
-    
-    super.init()
-    
-    getContentDetails()
-  }
-  
-  // MARK: - Internal
-  func getContentDetails() {
-    guard state != .loading else {
-      return
-    }
-    
-    state = .loading
-    
-    contentsService.contentDetail(for: data.id) { [weak self] result in
-      
-      guard let self = self else {
-        return
+  var body: some View {
+    VStack(alignment: .leading) {
+      Spacer()
+      HStack {
+        Text(name)
+          .font(.uiTitle4)
+        Spacer()
       }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-          Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to get content details!",
-          "description": error.localizedDescription
-        ])
-      case .success(let contentDetails):
-        self.data = contentDetails
-        self.state = .hasData
-      }
-    }
+      Spacer()
+    }.padding(0).background(color)
   }
 }
+
+#if DEBUG
+struct CourseHeaderView_Previews: PreviewProvider {
+    static var previews: some View {
+        CourseHeaderView(name: "Introduction", color: .red)
+    }
+}
+#endif

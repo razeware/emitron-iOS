@@ -16,6 +16,9 @@
 		B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7F22DF76A500122CE8 /* LoginView.swift */; };
 		B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A8322DF771200122CE8 /* ModelController.swift */; };
 		B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */; };
+		B647595A22E4BBEC00968303 /* ContentSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647595922E4BBEC00968303 /* ContentSummaryView.swift */; };
+		B647595D22E4BD4000968303 /* ContentDetailTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B647595C22E4BD4000968303 /* ContentDetailTest.json */; };
+		B647596122E4BEED00968303 /* CourseHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B647596022E4BEED00968303 /* CourseHeaderView.swift */; };
 		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
 		B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
 		B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */; };
@@ -103,6 +106,9 @@
 		B62B9A7F22DF76A500122CE8 /* LoginView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginView.swift; sourceTree = "<group>"; };
 		B62B9A8322DF771200122CE8 /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
 		B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailsMC.swift; sourceTree = "<group>"; };
+		B647595922E4BBEC00968303 /* ContentSummaryView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ContentSummaryView.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/UI/Shared/ContentSummaryView.swift"; sourceTree = "<group>"; };
+		B647595C22E4BD4000968303 /* ContentDetailTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = ContentDetailTest.json; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Test/ContentDetailTest.json"; sourceTree = "<group>"; };
+		B647596022E4BEED00968303 /* CourseHeaderView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = CourseHeaderView.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/UI/Shared/CourseHeaderView.swift"; sourceTree = "<group>"; };
 		B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
 		B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTutorialsView.swift; sourceTree = "<group>"; };
 		B6C0F0D222D5D46D00012839 /* DownloadsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsView.swift; sourceTree = "<group>"; };
@@ -237,6 +243,14 @@
 			path = Login;
 			sourceTree = "<group>";
 		};
+		B647595B22E4BD1E00968303 /* Test */ = {
+			isa = PBXGroup;
+			children = (
+				B647595C22E4BD4000968303 /* ContentDetailTest.json */,
+			);
+			path = Test;
+			sourceTree = "<group>";
+		};
 		B6D4529622CAB3E700BFB812 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -273,6 +287,7 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
+				B647595B22E4BD1E00968303 /* Test */,
 				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
 				B6D7DC3422C79745006DD325 /* Assets.xcassets */,
 				B62B9A7D22DF769000122CE8 /* Constants.swift */,
@@ -467,6 +482,8 @@
 				B6FC15B022CB53220078CEDB /* TextListItemView.swift */,
 				B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */,
 				B6C0F0E022D624D400012839 /* VideoPlayerController.swift */,
+				B647595922E4BBEC00968303 /* ContentSummaryView.swift */,
+				B647596022E4BEED00968303 /* CourseHeaderView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -561,6 +578,7 @@
 			files = (
 				B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
+				B647595D22E4BD4000968303 /* ContentDetailTest.json in Resources */,
 				B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */,
 				B695033822D4BED700CE0391 /* OFL.txt in Resources */,
 				B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */,
@@ -657,6 +675,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				B647595A22E4BBEC00968303 /* ContentSummaryView.swift in Sources */,
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
@@ -689,6 +708,7 @@
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* Attachment.swift in Sources */,
+				B647596122E4BEED00968303 /* CourseHeaderView.swift in Sources */,
 				B6DF2F9C22CA052B0081A3A3 /* ContentSummary.swift in Sources */,
 				B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,

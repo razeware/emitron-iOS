@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 class ContentDetail {
 
@@ -138,5 +139,22 @@ class ContentDetail {
     }
     
     self.url = jsonResource.links["self"]
+  }
+}
+
+extension ContentDetail {
+  static var test: ContentDetail {
+    do {
+      let fileURL = Bundle.main.url(forResource: "ContentDetailTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let resource = JSONAPIResource(json, parent: document)
+      return ContentDetail(resource, metadata: nil)!
+    } catch {
+      let resource = JSONAPIResource()
+      return ContentDetail(resource, metadata: nil)!
+    }
   }
 }
