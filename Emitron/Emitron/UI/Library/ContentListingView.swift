@@ -34,8 +34,8 @@ struct ContentListingView: View {
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
-  var video: Video?
-  
+  var user: User
+    
   var body: some View {
     
     List {
@@ -74,7 +74,7 @@ struct ContentListingView: View {
                   .tapAction {
                     self.isPresented = true
                   }
-                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID) }
+                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
               }
             }
           }
@@ -84,7 +84,7 @@ struct ContentListingView: View {
           self.isPresented = true
         }) {
           Text("Play Video!")
-            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID) }
+            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID, user: self.user) }
         }
       }
     }

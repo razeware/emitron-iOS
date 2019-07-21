@@ -29,9 +29,10 @@
 import Foundation
 import SwiftUI
 import Combine
+import Firebase
 
 class ContentDetailsMC: NSObject, BindableObject {  
-
+  
   // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -44,7 +45,7 @@ class ContentDetailsMC: NSObject, BindableObject {
   private let guardpost: Guardpost
   private let contentsService: ContentsService
   private(set) var data: ContentDetail
-
+  
   // MARK: - Initializers
   init(guardpost: Guardpost,
        partialContentDetail: ContentDetail) {
@@ -57,29 +58,33 @@ class ContentDetailsMC: NSObject, BindableObject {
     
     getContentDetails()
   }
-
+  
   // MARK: - Internal
   func getContentDetails() {
-      guard state != .loading else {
+    guard state != .loading else {
+      return
+    }
+    
+    state = .loading
+    
+    contentsService.contentDetail(for: data.id) { [weak self] result in
+      
+      guard let self = self else {
         return
       }
       
-      state = .loading
-      
-      contentsService.contentDetail(for: data.id) { [weak self] result in
-        
-        guard let self = self else {
-          return
-        }
-        
-        switch result {
-        case .failure(let error):
-          self.state = .failed
-          fatalError(error.localizedDescription)
-        case .success(let contentDetails):
-          self.data = contentDetails
-          self.state = .hasData
-        }
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        fatalError(error.localizedDescription)
+        Analytics.logEvent("error", parameters: [
+          AnalyticsParameterItemName: "Failed to get content details!",
+          "description": error.localizedDescription,
+        ])
+      case .success(let contentDetails):
+        self.data = contentDetails
+        self.state = .hasData
       }
     }
+  }
 }

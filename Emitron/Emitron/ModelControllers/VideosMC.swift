@@ -29,9 +29,10 @@
 import Foundation
 import SwiftUI
 import Combine
+import Firebase
 
 class VideosMC: NSObject, BindableObject {
-
+  
   // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -41,20 +42,19 @@ class VideosMC: NSObject, BindableObject {
   }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
+  private let user: User
   private let service: VideosService
   private(set) var data: Attachment?
   private(set) var streamURL: URL?
-
+  
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    
+  init(user: User) {
+    self.user = user
     //TODO: Probably need to handle this better
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+    self.client = RWAPI(authToken: user.token)
     self.service = VideosService(client: self.client)
   }
-
+  
   // MARK: - Internal
   func loadVideoStream(for id: Int) {
     guard state != .loading else {
@@ -71,7 +71,11 @@ class VideosMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        fatalError(error.localizedDescription)
+        Analytics.logEvent("error", parameters: [
+          AnalyticsParameterItemName: "Failed to get video stream!",
+          AnalyticsParameterContent: "For id: \(id)!",
+          "description": error.localizedDescription,
+        ])
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url
@@ -97,7 +101,11 @@ class VideosMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        fatalError(error.localizedDescription)
+        Analytics.logEvent("error", parameters: [
+          AnalyticsParameterItemName: "Failed to get video stream!",
+          AnalyticsParameterContent: "For id: \(id)!",
+          "description": error.localizedDescription,
+        ])
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url

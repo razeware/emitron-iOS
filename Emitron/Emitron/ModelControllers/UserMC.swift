@@ -30,6 +30,7 @@ import AuthenticationServices
 import Foundation
 import SwiftUI
 import Combine
+import Firebase
 
 class UserMC: NSObject, BindableObject {
   
@@ -46,14 +47,14 @@ class UserMC: NSObject, BindableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private(set) var user: User?
-
+  
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
   }
-
+  
   // MARK: - Internal
   func login() {
     state = .loading
@@ -71,7 +72,12 @@ class UserMC: NSObject, BindableObject {
         switch result {
         case .failure(let error):
           self.state = .failed
-          fatalError(error.localizedDescription)
+          
+          Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
+            AnalyticsParameterItemName: "Failed to login!",
+            AnalyticsParameterContent: error.localizedDescription,
+          ])
+          
         case .success(let user):
           self.user = user
           self.state = .hasData
@@ -82,7 +88,7 @@ class UserMC: NSObject, BindableObject {
 }
 
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
-
+  
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
     return UIApplication.shared.windows.first!
   }

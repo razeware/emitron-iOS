@@ -71,7 +71,7 @@ public class Guardpost {
                                          callbackUrl: returnUrl)
 
     guard let loginUrl = ssoRequest.url else {
-      let result = Result<User, LoginError>.failure(LoginError.unableToCreateLoginUrl)
+      let result: Result<User, LoginError> = .failure(.unableToCreateLoginUrl)
       return asyncResponse(callback: callback, result: result)
     }
 

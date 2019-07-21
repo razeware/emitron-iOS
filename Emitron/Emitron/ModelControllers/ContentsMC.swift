@@ -29,9 +29,10 @@
 import Foundation
 import SwiftUI
 import Combine
+import Firebase
 
 class ContentsMC: NSObject, BindableObject {
-
+  
   // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -45,7 +46,7 @@ class ContentsMC: NSObject, BindableObject {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetail] = []
   private(set) var numTutorials: Int = 0
-
+  
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
@@ -73,7 +74,11 @@ class ContentsMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        fatalError(error.localizedDescription)
+        Analytics.logEvent("error", parameters: [
+          AnalyticsParameterItemName: "Failed to load contents!",
+          AnalyticsParameterContent: "Parameters: \(parameters), pageSize: \(pageSize), offset \(offset)",
+          "description": error.localizedDescription,
+        ])
       case .success(let contentsTuple):
         self.data = contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber

@@ -41,6 +41,7 @@ struct ContentListView: View {
   
   func cardsList() -> AnyView {
     let guardpost = AppDelegate.guardpost
+    let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
     let list = List {
@@ -55,7 +56,7 @@ struct ContentListView: View {
       }
     }
         .sheet(isPresented: self.$isPresenting) {
-          ContentListingView(contentDetailsMC: self.selectedMC!, video: nil)
+          return user != nil ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!)) : AnyView(Text("Unable to show video..."))
         }
     
     return AnyView(list)
