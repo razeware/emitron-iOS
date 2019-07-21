@@ -60,14 +60,4 @@ public struct User: Codable {
   }
 }
 
-extension User: Equatable {
-
-  public static func == (lhs: User, rhs: User) -> Bool {
-    return lhs.externalId == rhs.externalId &&
-      lhs.email == rhs.email &&
-      lhs.username == rhs.username &&
-      lhs.avatarUrl == rhs.avatarUrl &&
-      lhs.name == rhs.name &&
-      lhs.token == rhs.token
-  }
-}
+extension User: Equatable { }

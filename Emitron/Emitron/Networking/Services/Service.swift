@@ -66,8 +66,12 @@ class Service {
       }
 
       do {
-        let value = try request.handle(response: data ?? Data())
-        handleResponse(.success(value))
+        if let data = data {
+          let value = try request.handle(response: data)
+          handleResponse(.success(value))
+        } else {
+          handleResponse(.failure(.noData))
+        }
       } catch let handleError as NSError {
         handleResponse(.failure(.processingError(handleError)))
       }
@@ -83,11 +87,7 @@ class Service {
                                    resolvingAgainstBaseURL: false)
 
     if let parameters = parameters {
-      let queryItems = parameters.map { parameter in
-        URLQueryItem(name: parameter.key, value: parameter.value)
-      }
-
-      components?.queryItems = queryItems
+      components?.queryItems = parameters.map{ URLQueryItem(name: $0.key, value: $0.value) }
     }
 
     guard let url = components?.url else {

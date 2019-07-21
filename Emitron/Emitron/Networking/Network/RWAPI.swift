@@ -33,6 +33,7 @@ typealias HTTPHeaders = [String: String]
 enum RWAPIError: Error {
   case requestFailed(Error?, Int)
   case processingError(Error?)
+  case noData
 }
 
 struct RWAPI {
