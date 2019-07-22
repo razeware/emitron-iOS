@@ -48,7 +48,7 @@ struct CourseHeaderView: View {
 #if DEBUG
 struct CourseHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        CourseHeaderView(name: "Introduction", color: .red)
+        CourseHeaderView(name: "Intro", color: .red)
     }
 }
 #endif
