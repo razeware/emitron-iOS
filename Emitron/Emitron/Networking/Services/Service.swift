@@ -87,7 +87,7 @@ class Service {
                                    resolvingAgainstBaseURL: false)
 
     if let parameters = parameters {
-      components?.queryItems = parameters.map{ URLQueryItem(name: $0.key, value: $0.value) }
+      components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
     }
 
     guard let url = components?.url else {

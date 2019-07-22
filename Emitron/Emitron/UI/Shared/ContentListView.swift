@@ -34,6 +34,7 @@ struct ContentListView: View {
   var contents: [ContentDetail] = []
   var bgColor: Color
   @State var selectedMC: ContentDetailsMC?
+  @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
     cardsList()
@@ -54,12 +55,21 @@ struct ContentListView: View {
             self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
           }
       }
+      Text("Should load more stuff...")
+        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+        .onAppear { self.loadMoreContents() }
     }
         .sheet(isPresented: self.$isPresenting) {
           return user != nil ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!)) : AnyView(Text("Unable to show video..."))
         }
     
     return AnyView(list)
+  }
+  
+  func loadMoreContents() {
+    let filterParams = Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
+    contentsMC.loadContents(with: filterParams)
   }
 }
 

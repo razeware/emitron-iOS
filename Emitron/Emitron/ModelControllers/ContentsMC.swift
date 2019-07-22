@@ -46,6 +46,8 @@ class ContentsMC: NSObject, BindableObject {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetail] = []
   private(set) var numTutorials: Int = 0
+  private(set) var currentPage: Int = 1
+  private(set) var defaultOffset: Int = 20
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -54,18 +56,25 @@ class ContentsMC: NSObject, BindableObject {
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
+    super.init()
+    
+    loadContents()
   }
   
-  func loadContents(with parameters: [Parameter],
-                    pageSize: Int,
-                    offset: Int) {
+  func loadContents(with parameters: [Parameter] = Param.filter(by: [.contentTypes(types: [.collection, .screencast])]),
+                    pageSize: Int? = nil,
+                    offset: Int? = nil) {
     guard state != .loading else {
       return
     }
     
     state = .loading
     
-    contentsService.allContents(parameters: parameters) { [weak self] result in
+    let pageParam = ParameterKey.pageNumber(number: currentPage).param
+    var allParams = parameters
+    allParams.append(pageParam)
+    
+    contentsService.allContents(parameters: allParams) { [weak self] result in
       
       guard let self = self else {
         return
@@ -76,12 +85,14 @@ class ContentsMC: NSObject, BindableObject {
         self.state = .failed
         Analytics.logEvent("error", parameters: [
           AnalyticsParameterItemName: "Failed to load contents!",
-          AnalyticsParameterContent: "Parameters: \(parameters), pageSize: \(pageSize), offset \(offset)",
-          "description": error.localizedDescription,
+          AnalyticsParameterContent: "Parameters: \(parameters)",
+          "description": error.localizedDescription
         ])
       case .success(let contentsTuple):
-        self.data = contentsTuple.contents
+        let currentContents = self.data
+        self.data = currentContents + contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber
+        self.currentPage += 1
         self.state = .hasData
       }
     }

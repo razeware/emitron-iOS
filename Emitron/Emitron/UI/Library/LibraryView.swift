@@ -49,7 +49,7 @@ private enum Filter {
 
 struct LibraryView: View {
   
-  @ObjectBinding var contentsMC: ContentsMC
+  @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
     VStack {
@@ -112,13 +112,17 @@ struct LibraryView: View {
   
   private func contentView() -> AnyView {
     switch contentsMC.state {
-    case .initial, .loading, .failed:
-      //TODO: Need a better pipeline for this
-      let filterParams = Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
-      contentsMC.loadContents(with: filterParams, pageSize: 20, offset: 0)
+    case .initial,
+         .loading where contentsMC.data.isEmpty:
       return AnyView(Text(Constants.loading))
+    case .failed:
+      return AnyView(Text("Error"))
+    case .loading where !contentsMC.data.isEmpty:
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
     case .hasData:
       return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+    default:
+      return AnyView(Text("Default View"))
     }
   }
 }
@@ -127,7 +131,7 @@ struct LibraryView: View {
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
     let guardpost = AppDelegate.guardpost
-    return LibraryView(contentsMC: ContentsMC(guardpost: guardpost))
+    return LibraryView().environmentObject(ContentsMC(guardpost: guardpost))
   }
 }
 #endif

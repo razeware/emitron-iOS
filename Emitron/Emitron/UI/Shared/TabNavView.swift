@@ -60,12 +60,12 @@ struct TabNavView: View {
     return tabs
   }
   
-  func libraryView() -> LibraryView {
+  func libraryView() -> AnyView {
     
     let guardpost = AppDelegate.guardpost
     let contentsMC = ContentsMC(guardpost: guardpost)
     
-    return LibraryView(contentsMC: contentsMC)
+    return AnyView(LibraryView().environmentObject(contentsMC))
   }
 }
 

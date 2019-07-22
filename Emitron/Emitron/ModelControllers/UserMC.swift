@@ -75,7 +75,7 @@ class UserMC: NSObject, BindableObject {
           
           Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
             AnalyticsParameterItemName: "Failed to login!",
-            AnalyticsParameterContent: error.localizedDescription,
+            AnalyticsParameterContent: error.localizedDescription
           ])
           
         case .success(let user):

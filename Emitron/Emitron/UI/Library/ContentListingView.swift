@@ -105,7 +105,8 @@ struct ContentListingView: View {
       DispatchQueue.global().async {
           let data = try? Data(contentsOf: url)
           DispatchQueue.main.async {
-            if let img = UIImage(data: data!) {
+            if let data = data,
+              let img = UIImage(data: data) {
               self.uiImage = img
             }
           }
