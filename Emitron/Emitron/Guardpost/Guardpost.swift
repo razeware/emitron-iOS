@@ -45,22 +45,25 @@ public class Guardpost {
   private let ssoSecret: String
   private var _currentUser: User?
   private var authSession: ASWebAuthenticationSession?
+  private let persistentStore: PersistenceStore
   public weak var presentationContextDelegate: ASWebAuthenticationPresentationContextProviding?
 
   public var currentUser: User? {
     if _currentUser == .none {
-      _currentUser = PersistenceStore.userFromKeychain()
+      _currentUser = persistentStore.userFromKeychain()
     }
     return _currentUser
   }
 
   // MARK: - Initializers
-  public init(baseUrl: String,
+  init(baseUrl: String,
               urlScheme: String,
-              ssoSecret: String) {
+              ssoSecret: String,
+              persistentStore: PersistenceStore) {
     self.baseUrl = baseUrl
     self.urlScheme = urlScheme
     self.ssoSecret = ssoSecret
+    self.persistentStore = persistentStore
   }
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
@@ -100,7 +103,7 @@ public class Guardpost {
         return self.asyncResponse(callback: callback, result: result)
       }
 
-      PersistenceStore.persistUserToKeychain(user: user)
+      self.persistentStore.persistUserToKeychain(user: user)
       self._currentUser = user
 
       result = Result<User, LoginError>.success(user)
@@ -116,7 +119,7 @@ public class Guardpost {
   }
 
   public func logout() {
-    PersistenceStore.removeUserFromKeychain()
+    persistentStore.removeUserFromKeychain()
     _currentUser = .none
   }
 

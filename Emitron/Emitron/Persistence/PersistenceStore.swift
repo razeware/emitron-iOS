@@ -31,20 +31,44 @@ import KeychainSwift
 
 // The object responsible for managing and accessing cached content
 
-class PersistenceStore {
-  // USER DEFAULT
-  
-  // CORE DATA
-  
-  // KEYCHAIN
+class PersistenceStore { }
+
+// MARK: Documents Directory
+// For storing downloaded video files which expire after 7 days
+
+extension PersistenceStore { }
+
+// MARK: CoreData
+// For storing information that should not change that frequently
+// content (refresh daily)
+// categories (very infrequently)
+// domains (very infrequently)
+
+extension PersistenceStore {
+  // let storedContent = store.objects(CDContent)
+    // let content = storedContent.compactMap { $0.contentobjects() }
+    
+    func objects<T>(_ type: T.Type) -> [T] {
+      return []
+    }
 }
+
+// MARK: UserDefaults
+// For saving individual search/filter preferences
+// Progress for contentID
+// App Settings
+
+extension PersistenceStore { }
+
+// MARK: Keychain
+// User + Auth Token (refresh daily)
 
 private let SSOUserKey = "com.razeware.emitron.sso_user"
 
-//MARK: User + Keychain
 extension PersistenceStore {
+  
   @discardableResult
-  static func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+  func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
     guard let encoded = try? encoder.encode(user) else {
       return false
     }
@@ -55,7 +79,7 @@ extension PersistenceStore {
                         withAccess: .accessibleAfterFirstUnlock)
   }
   
-  static func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
+  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
     let keychain = KeychainSwift()
     guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
@@ -65,7 +89,7 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  static func removeUserFromKeychain() -> Bool {
+  func removeUserFromKeychain() -> Bool {
     let keychain = KeychainSwift()
     return keychain.delete(SSOUserKey)
   }
