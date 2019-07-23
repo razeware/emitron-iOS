@@ -48,6 +48,7 @@ class ContentsMC: NSObject, BindableObject {
   private(set) var numTutorials: Int = 0
   private(set) var currentPage: Int = 1
   private(set) var defaultOffset: Int = 20
+  private(set) var currentParameters: [Parameter] = []
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -74,6 +75,9 @@ class ContentsMC: NSObject, BindableObject {
     var allParams = parameters
     allParams.append(pageParam)
     
+    // Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= numTutorials  else { return }
+    
     contentsService.allContents(parameters: allParams) { [weak self] result in
       
       guard let self = self else {
@@ -89,8 +93,13 @@ class ContentsMC: NSObject, BindableObject {
           "description": error.localizedDescription
         ])
       case .success(let contentsTuple):
-        let currentContents = self.data
-        self.data = currentContents + contentsTuple.contents
+        // When filtering, do we just re-do the request, or append?
+        if allParams == self.currentParameters {
+          let currentContents = self.data
+          self.data = currentContents + contentsTuple.contents
+        } else {
+          self.data = contentsTuple.contents
+        }
         self.numTutorials = contentsTuple.totalNumber
         self.currentPage += 1
         self.state = .hasData

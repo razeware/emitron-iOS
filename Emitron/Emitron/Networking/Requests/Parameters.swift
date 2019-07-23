@@ -29,7 +29,7 @@
 import Foundation
 
 // Parameter Values
-enum ContentDifficulty: String {
+enum ContentDifficulty: String, CaseIterable {
   case none
   case beginner
   case intermediate
@@ -148,7 +148,13 @@ enum ParameterSortValue: String {
 }
 
 // filter[content_types][]=collection&filter[content_types][]=screencast
-typealias Parameter = (key: String, value: String)
+// typealias Parameter = (key: String, value: String)
+// Changing this to a struct, so that I can conform it to equatable
+
+struct Parameter: Equatable {
+  let key: String
+  let value: String
+}
 
 enum Param {
 
@@ -174,3 +180,5 @@ enum Param {
     return Parameter(key: key, value: value)
   }
 }
+
+

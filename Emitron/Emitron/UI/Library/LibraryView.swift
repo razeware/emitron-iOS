@@ -36,20 +36,10 @@ private extension Length {
   static let filtersPaddingTop: Length = 12
 }
 
-private enum Filter {
-  struct Padding {
-    let overall: Length = 12
-    let textTrailing: Length = 2
-  }
-
-  static let padding = Padding()
-  static let cornerRadius: Length = 9
-  static let imageSize: Length = 15
-}
-
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  @State var filtersPresented: Bool = false
   
   var body: some View {
     VStack {
@@ -57,10 +47,13 @@ struct LibraryView: View {
         
         HStack {
           SearchView()
-          Button(action: { }, label: {
+          Button(action: {
+            self.filtersPresented = true
+          }, label: {
             Image("filter")
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
+              .sheet(isPresented: self.$filtersPresented) { FiltersView() }
           })
             .padding([.leading], .searchFilterPadding)
         }
@@ -89,12 +82,12 @@ struct LibraryView: View {
         
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(alignment: .top, spacing: .filterSpacing) {
-            FilterView(type: .destructive, name: "Clear All")
-            FilterView(type: .default, name: "Xcode")
-            FilterView(type: .default, name: "AR/VR")
-            FilterView(type: .default, name: "Algorithms")
-            FilterView(type: .default, name: "Architecture")
-            FilterView(type: .default, name: "Beginner")
+            AppliedFilterView(type: .destructive, name: "Clear All")
+            AppliedFilterView(type: .default, name: "Xcode")
+            AppliedFilterView(type: .default, name: "AR/VR")
+            AppliedFilterView(type: .default, name: "Algorithms")
+            AppliedFilterView(type: .default, name: "Architecture")
+            AppliedFilterView(type: .default, name: "Beginner")
           }
         }
           .padding([.top], .filtersPaddingTop)
@@ -136,49 +129,3 @@ struct LibraryView_Previews: PreviewProvider {
 }
 #endif
 
-struct SearchView: View {
-  @State private var searchText = ""
-  
-  var body: some View {
-    
-    TextField(Constants.search, text: $searchText)
-      .textFieldStyle(.roundedBorder)
-  }
-}
-
-enum FilterType {
-  case `default`
-  case destructive
-  
-  var color: Color {
-    switch self {
-    case .default:
-      return .brightGrey
-    case .destructive:
-      return .copper
-    }
-  }
-}
-
-struct FilterView: View {
-  
-  var type: FilterType
-  var name: String
-  
-  var body: some View {
-    HStack {
-      Text(name)
-        .foregroundColor(.white)
-        .font(.uiButtonLabelSmall)
-        .padding([.trailing], Filter.padding.textTrailing)
-      Image("whiteX")
-        .resizable()
-        .frame(width: Filter.imageSize, height: Filter.imageSize)
-        .foregroundColor(.white)
-    }
-      .padding(.all, Filter.padding.overall)
-      .background(type.color)
-      .cornerRadius(Filter.cornerRadius)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-  }
-}
