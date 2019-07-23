@@ -41,7 +41,7 @@ private enum Layout {
 
 struct FiltersHeaderView: View {
   var groupName: String
-  var params: [Parameter]
+  var filters: [Filter]
   
   @State var isExpanded: Bool = false
   
@@ -79,7 +79,8 @@ struct FiltersHeaderView: View {
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
     let params: [Parameter] = Param.filter(by: [.domainIds(ids: [1, 2, 3, 4])])
-    return FiltersHeaderView(groupName: "Platforms", params: params)
+    let filters = params.map { Filter(param: $0, isOn: false) }
+    return FiltersHeaderView(groupName: "Platforms", filters: filters)
   }
 }
 #endif

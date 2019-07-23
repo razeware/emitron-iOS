@@ -34,7 +34,7 @@ class Category {
   private(set) var id: Int = 0
   private(set) var name: String = ""
   private(set) var uri: String = ""
-  private(set) var ordinal: Int = 0
+  private(set) var ordinal: Int = 0 //  Sort order for displaying categories
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,

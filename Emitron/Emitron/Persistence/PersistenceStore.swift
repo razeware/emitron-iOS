@@ -26,47 +26,47 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
+import KeychainSwift
 
-struct FiltersView: View {
+// The object responsible for managing and accessing cached content
+
+class PersistenceStore {
+  // USER DEFAULT
   
-  var filters: [Filter]
+  // CORE DATA
   
-  var body: some View {
-    VStack {
-      
-      Text("Filters")
-        .font(.uiHeadline)
-        .foregroundColor(.appBlack)
-      
-      ScrollView(.vertical, showsIndicators: false) {
-        VStack(alignment: .leading, spacing: 12) {
-          
-          constructFilterView(name: "Platforms", filters: Param.filter(by: [.domainIds(ids: [1, 2, 3, 4])]).map  { Filter(param: $0, isOn: false) })
-          
-          constructFilterView(name: "Content Type", filters: Param.filter(by: [.contentTypes(types: [.collection, .screencast])]).map  { Filter(param: $0, isOn: false) })
-          
-          constructFilterView(name: "Difficulties", filters: Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map  { Filter(param: $0, isOn: false) })
-          
-          constructFilterView(name: "Categories", filters: Param.filter(by: [.categoryIds(ids: [1, 2, 3, 4])]) .map  { Filter(param: $0, isOn: false) })
-        }
-      }
-      .padding([.leading, .trailing], 20)
+  // KEYCHAIN
+}
+
+private let SSOUserKey = "com.razeware.emitron.sso_user"
+
+//MARK: User + Keychain
+extension PersistenceStore {
+  @discardableResult
+  static func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+    guard let encoded = try? encoder.encode(user) else {
+      return false
     }
-    .background(Color.paleGrey)
+    
+    let keychain = KeychainSwift()
+    return keychain.set(encoded,
+                        forKey: SSOUserKey,
+                        withAccess: .accessibleAfterFirstUnlock)
   }
   
-  func constructFilterView(name: String, filters: [Filter])  -> AnyView {
-    let platformFilters = filters.map  { Filter(param: $0.parameter, isOn: $0.isOn) }
-    let filtersView = FiltersHeaderView(groupName: name, filters: platformFilters)
-    return AnyView(filtersView)
+  static func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
+    let keychain = KeychainSwift()
+    guard let encoded = keychain.getData(SSOUserKey) else {
+      return nil
+    }
+    
+    return try? decoder.decode(User.self, from: encoded)
+  }
+  
+  @discardableResult
+  static func removeUserFromKeychain() -> Bool {
+    let keychain = KeychainSwift()
+    return keychain.delete(SSOUserKey)
   }
 }
-
-#if DEBUG
-struct FiltersView_Previews: PreviewProvider {
-  static var previews: some View {
-    FiltersView(filters: [])
-  }
-}
-#endif

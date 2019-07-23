@@ -49,7 +49,7 @@ public class Guardpost {
 
   public var currentUser: User? {
     if _currentUser == .none {
-      _currentUser = User.restoreFromKeychain()
+      _currentUser = PersistenceStore.userFromKeychain()
     }
     return _currentUser
   }
@@ -100,7 +100,7 @@ public class Guardpost {
         return self.asyncResponse(callback: callback, result: result)
       }
 
-      user.persistToKeychain()
+      PersistenceStore.persistUserToKeychain(user: user)
       self._currentUser = user
 
       result = Result<User, LoginError>.success(user)
@@ -116,7 +116,7 @@ public class Guardpost {
   }
 
   public func logout() {
-    User.removeUserFromKeychain()
+    PersistenceStore.removeUserFromKeychain()
     _currentUser = .none
   }
 
