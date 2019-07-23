@@ -38,17 +38,18 @@ struct FiltersView: View {
       Text("Filters")
         .font(.uiHeadline)
         .foregroundColor(.appBlack)
+        .padding([.top], 20)
       
       ScrollView(.vertical, showsIndicators: false) {
         VStack(alignment: .leading, spacing: 12) {
           
-          constructFilterView(name: "Platforms", filters: Param.filter(by: [.domainIds(ids: [1, 2, 3, 4])]).map  { Filter(param: $0, isOn: false) })
+          constructFilterView(name: "Platforms", filters: Param.filter(by: [.domainIds(ids: [1, 2, 3, 4])]).map { Filter(param: $0, isOn: false) })
           
-          constructFilterView(name: "Content Type", filters: Param.filter(by: [.contentTypes(types: [.collection, .screencast])]).map  { Filter(param: $0, isOn: false) })
+          constructFilterView(name: "Content Type", filters: Param.filter(by: [.contentTypes(types: [.collection, .screencast])]).map { Filter(param: $0, isOn: false) })
           
-          constructFilterView(name: "Difficulties", filters: Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map  { Filter(param: $0, isOn: false) })
+          constructFilterView(name: "Difficulties", filters: Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(param: $0, isOn: false) })
           
-          constructFilterView(name: "Categories", filters: Param.filter(by: [.categoryIds(ids: [1, 2, 3, 4])]) .map  { Filter(param: $0, isOn: false) })
+          constructFilterView(name: "Categories", filters: Param.filter(by: [.categoryIds(ids: [1, 2, 3, 4])]) .map { Filter(param: $0, isOn: false) })
         }
       }
       .padding([.leading, .trailing], 20)
@@ -56,8 +57,8 @@ struct FiltersView: View {
     .background(Color.paleGrey)
   }
   
-  func constructFilterView(name: String, filters: [Filter])  -> AnyView {
-    let platformFilters = filters.map  { Filter(param: $0.parameter, isOn: $0.isOn) }
+  func constructFilterView(name: String, filters: [Filter]) -> AnyView {
+    let platformFilters = filters.map { Filter(param: $0.parameter, isOn: $0.isOn) }
     let filtersView = FiltersHeaderView(groupName: name, filters: platformFilters)
     return AnyView(filtersView)
   }

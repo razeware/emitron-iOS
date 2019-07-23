@@ -46,32 +46,44 @@ struct FiltersHeaderView: View {
   @State var isExpanded: Bool = false
   
   var body: some View {
-    HStack {
-      Text(groupName)
-        .foregroundColor(.appBlack)
-        .font(.uiLabel)
-        .padding([.trailing], Layout.padding.textTrailing)
-      
-      Spacer()
-      
-      Button(action: {
-        self.expand()
-      }) {
-        Text(isExpanded ? "Hide" : "Show")
-          .foregroundColor(.battleshipGrey)
+    VStack {
+      HStack {
+        Text(groupName)
+          .foregroundColor(.appBlack)
           .font(.uiLabel)
+          .padding([.trailing], Layout.padding.textTrailing)
+        
+        Spacer()
+        
+        Button(action: {
+          self.isExpanded.toggle()
+        }) {
+          Text(isExpanded ? "Hide" : "Show")
+            .foregroundColor(.battleshipGrey)
+            .font(.uiLabel)
+        }
+      }
+      .padding(.all, Layout.padding.overall)
+        .background(Color.white)
+        .cornerRadius(Layout.cornerRadius)
+        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+        .frame(minHeight: 50)
+      
+      if isExpanded {
+        expandedView()
       }
     }
-    .padding(.all, Layout.padding.overall)
-      .background(Color.white)
-      .cornerRadius(Layout.cornerRadius)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-      .frame(minHeight: 50)
   }
   
-  func expand() {
-    print(isExpanded ? "Contract" : "Expand")
-    isExpanded.toggle()
+  func expandedView() -> AnyView {
+    return AnyView(
+      VStack(alignment: .leading, spacing: 12) {
+        
+        FilterView(name: "All")
+        FilterView(name: "iOS & Swift")
+        FilterView(name: "Android & Kotlin")
+        FilterView(name: "Server Side Swift")
+    })
   }
 }
 

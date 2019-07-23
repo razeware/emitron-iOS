@@ -27,8 +27,20 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftUI
+import Combine
 
-class Filter {
+class Filter: BindableObject {
+  
+  // MARK: - Properties
+  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var state = DataState.initial {
+    didSet {
+      willChange.send(())
+    }
+  }
+  
+  // MARK: - Initializers
   var parameter: Parameter
   var isOn: Bool
   

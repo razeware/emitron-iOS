@@ -39,6 +39,7 @@ private extension Length {
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  //@EnvironmentObject var filters: [Filter]
   @State var filtersPresented: Bool = false
   
   var body: some View {
