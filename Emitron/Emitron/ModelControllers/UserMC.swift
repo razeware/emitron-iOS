@@ -30,7 +30,6 @@ import AuthenticationServices
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
 class UserMC: NSObject, BindableObject {
   
@@ -72,15 +71,11 @@ class UserMC: NSObject, BindableObject {
         switch result {
         case .failure(let error):
           self.state = .failed
-          
-          Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
-            AnalyticsParameterItemName: "Failed to login!",
-            AnalyticsParameterContent: error.localizedDescription
-          ])
-          
+          Failure.login(from: "UserMC", reason: error.localizedDescription).log(additionalParams: nil)
         case .success(let user):
           self.user = user
           self.state = .hasData
+          Event.login(from: "UserMC").log(additionalParams: nil)
         }
       }
     }

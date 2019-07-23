@@ -40,6 +40,7 @@
 		B6C4F3D722E6EE5B0087ED10 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3D622E6EE5B0087ED10 /* Filter.swift */; };
 		B6C4F3DB22E70F990087ED10 /* CategoriesTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B6C4F3DA22E70F990087ED10 /* CategoriesTest.json */; };
 		B6C4F3DF22E710640087ED10 /* PersistenceStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */; };
+		B6C4F3E222E72D2A0087ED10 /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3E122E72D2A0087ED10 /* Logger.swift */; };
 		B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */; };
 		B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */; };
 		B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC2E22C79743006DD325 /* AppDelegate.swift */; };
@@ -134,6 +135,7 @@
 		B6C4F3D622E6EE5B0087ED10 /* Filter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
 		B6C4F3DA22E70F990087ED10 /* CategoriesTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = CategoriesTest.json; sourceTree = "<group>"; };
 		B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
+		B6C4F3E122E72D2A0087ED10 /* Logger.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Logger.swift; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Logging/Logger.swift"; sourceTree = "<group>"; };
 		B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
 		B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC2B22C79743006DD325 /* Emitron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emitron.app; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -288,6 +290,14 @@
 			path = Features;
 			sourceTree = "<group>";
 		};
+		B6C4F3E022E72CED0087ED10 /* Logging */ = {
+			isa = PBXGroup;
+			children = (
+				B6C4F3E122E72D2A0087ED10 /* Logger.swift */,
+			);
+			path = Logging;
+			sourceTree = "<group>";
+		};
 		B6D4529622CAB3E700BFB812 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
@@ -324,6 +334,7 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
+				B6C4F3E022E72CED0087ED10 /* Logging */,
 				B6C4F3D322E6EE200087ED10 /* Features */,
 				B647595B22E4BD1E00968303 /* Test */,
 				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
@@ -727,6 +738,7 @@
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
+				B6C4F3E222E72D2A0087ED10 /* Logger.swift in Sources */,
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
 				B6C0F0DB22D5E65900012839 /* UIViewController+Extensions.swift in Sources */,
 				B6D8EB2722CBA86000DE29AF /* ProgressionsRequest.swift in Sources */,

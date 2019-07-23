@@ -27,59 +27,89 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
+import Firebase
 
-class ContentDetailsMC: NSObject, BindableObject {  
-  
-  // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    didSet {
-      willChange.send(())
-    }
-  }
-  
-  private let client: RWAPI
-  private let guardpost: Guardpost
-  private let contentsService: ContentsService
-  private(set) var data: ContentDetail
-  
-  // MARK: - Initializers
-  init(guardpost: Guardpost,
-       partialContentDetail: ContentDetail) {
-    self.guardpost = guardpost
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
-    self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
-    
-    super.init()
-    
-    getContentDetails()
-  }
-  
-  // MARK: - Internal
-  func getContentDetails() {
-    guard state != .loading else {
-      return
-    }
-    
-    state = .loading
-    
-    contentsService.contentDetail(for: data.id) { [weak self] result in
-      
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure.fetch(from: "ContentsMC", reason: error.localizedDescription).log(additionalParams: nil)
-      case .success(let contentDetails):
-        self.data = contentDetails
-        self.state = .hasData
-      }
-    }
+protocol Log {
+  var object: String { get }
+  var action: String { get }
+  var reason: String { get }
+  func log(additionalParams:[String: String]?)
+}
+
+// To make "reason" optional
+extension Log {
+  var reason: String {
+    return "N/A"
   }
 }
+
+enum Failure: Log {
+  
+  case login(from: String, reason: String)
+  case fetch(from: String, reason: String)
+  
+  private var failure: String {
+    return "Failed_"
+  }
+  
+  var object: String {
+    switch self {
+    case .login(from: let from, reason: _),
+         .fetch(from: let from, reason: _):
+      return from
+    }
+  }
+  
+  var action: String {
+    switch self {
+    case .login:
+      return failure + "login"
+    case .fetch:
+      return failure + "fetch"
+    }
+  }
+  
+  var reason: String {
+    switch self {
+    case .login(from: _, reason: let reason),
+         .fetch(from: _, reason: let reason):
+      return reason
+    }
+  }
+  
+  func log(additionalParams: [String: String]?) {
+    let params = [AnalyticsParameterItemName: self.object,
+                  "action": self.action,
+                  "reason": self.reason]
+    let allParams =  params.merged(additionalParams) as [String: Any]
+    Analytics.logEvent(action, parameters: allParams)
+  }
+}
+
+enum Event: Log {
+  
+  case login(from: String)
+  
+  var object: String {
+    switch self {
+    case .login(from: let from):
+      return from
+    }
+  }
+  
+  var action: String {
+    switch self {
+    case .login:
+      return "Login"
+    }
+  }
+  
+  func log(additionalParams: [String: String]?) {
+    let params = [AnalyticsParameterItemName: self.object]
+    let allParams =  params.merged(additionalParams) as [String: Any]
+    Analytics.logEvent(action, parameters: allParams)
+  }
+}
+
+
+

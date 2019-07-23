@@ -71,11 +71,7 @@ class VideosMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to get video stream!",
-          AnalyticsParameterContent: "For id: \(id)!",
-          "description": error.localizedDescription,
-        ])
+        Failure.fetch(from: "VideosMC", reason: error.localizedDescription).log(additionalParams: ["Id": "\(id)"])
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url
