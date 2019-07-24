@@ -36,11 +36,44 @@ private extension Length {
   static let filtersPaddingTop: Length = 12
 }
 
+enum SortSelection: Int {
+  case newest
+  case popularity
+  
+  var next: SortSelection {
+    switch self {
+    case .newest:
+      return .popularity
+    case .popularity:
+      return .newest
+    }
+  }
+  
+  var name: String {
+    switch self {
+    case .newest:
+      return Constants.newest
+    case .popularity:
+      return Constants.popularity
+    }
+  }
+  
+  func sorted(data: [ContentDetail]) -> [ContentDetail] {
+    switch self {
+    case .newest:
+      return data.sorted(by: { $0.releasedAt > $1.releasedAt })
+    case .popularity:
+      return data.sorted(by: { $0.popularity > $1.popularity })
+    }
+  }
+}
+
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
   //@EnvironmentObject var filters: [Filter]
   @State var filtersPresented: Bool = false
+  @State var sortSelection: SortSelection = .newest
   
   var body: some View {
     VStack {
@@ -73,13 +106,13 @@ struct LibraryView: View {
               Image("sortIcon")
                 .foregroundColor(.battleshipGrey)
               
-              Text(Constants.newest)
+              Text(sortSelection.name)
                 .font(.uiLabel)
                 .foregroundColor(.battleshipGrey)
             }
           }
         }
-          .padding([.top], .sidePadding)
+        .padding([.top], .sidePadding)
         
         ScrollView(.horizontal, showsIndicators: false) {
           HStack(alignment: .top, spacing: .filterSpacing) {
@@ -91,18 +124,20 @@ struct LibraryView: View {
             AppliedFilterView(type: .default, name: "Beginner")
           }
         }
-          .padding([.top], .filtersPaddingTop)
+        .padding([.top], .filtersPaddingTop)
       }
-        .padding([.leading, .trailing, .top], .sidePadding)
+      .padding([.leading, .trailing, .top], .sidePadding)
       
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
     }
-      .background(Color.paleGrey)
+    .background(Color.paleGrey)
   }
   
-  private func changeSort() { }
+  private func changeSort() {
+    sortSelection = sortSelection.next
+  }
   
   private func contentView() -> AnyView {
     switch contentsMC.state {
@@ -114,7 +149,8 @@ struct LibraryView: View {
     case .loading where !contentsMC.data.isEmpty:
       return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
     case .hasData:
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+      let sorted = sortSelection.sorted(data: contentsMC.data)
+      return AnyView(ContentListView(contents: sorted, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }
@@ -129,4 +165,3 @@ struct LibraryView_Previews: PreviewProvider {
   }
 }
 #endif
-

@@ -36,6 +36,7 @@ enum Constants {
   static let myTutorials = "My Tutorials"
   static let downloads = "Downloads"
   static let newest =  "Newest"
+  static let popularity = "Popularity"
   static let tutorials = "Tutorials"
   
   // Onboarding

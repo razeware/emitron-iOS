@@ -46,7 +46,7 @@ extension PersistenceStore { }
 
 extension PersistenceStore {
   // let storedContent = store.objects(CDContent)
-    // let content = storedContent.compactMap { $0.contentobjects() }
+  // let content = storedContent.compactMap { $0.contentobjects() }
     
     func objects<T>(_ type: T.Type) -> [T] {
       return []
