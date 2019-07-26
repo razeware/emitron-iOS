@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -40,15 +40,15 @@ private enum Layout {
 }
 
 struct FiltersHeaderView: View {
-  var groupName: String
-  var filters: [Filter]
+  var filter: FilterGroup
+  @EnvironmentObject var filters: Filters
   
   @State var isExpanded: Bool = false
   
   var body: some View {
     VStack {
       HStack {
-        Text(groupName)
+        Text(filter.type.name)
           .foregroundColor(.appBlack)
           .font(.uiLabel)
           .padding([.trailing], Layout.padding.textTrailing)
@@ -79,10 +79,10 @@ struct FiltersHeaderView: View {
     return AnyView(
       VStack(alignment: .leading, spacing: 12) {
         
-        FilterView(name: "All")
-        FilterView(name: "iOS & Swift")
-        FilterView(name: "Android & Kotlin")
-        FilterView(name: "Server Side Swift")
+        ForEach(filter.filters, id: \.self) { filter in
+          FilterView(filter: filter)
+        }
+
     })
   }
 }
@@ -90,9 +90,7 @@ struct FiltersHeaderView: View {
 #if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    let params: [Parameter] = Param.filter(by: [.domainIds(ids: [1, 2, 3, 4])])
-    let filters = params.map { Filter(param: $0, isOn: false) }
-    return FiltersHeaderView(groupName: "Platforms", filters: filters)
+    return FiltersHeaderView(filter: FilterGroup(type: .categories))
   }
 }
 #endif

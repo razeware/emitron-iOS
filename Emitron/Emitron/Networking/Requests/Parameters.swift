@@ -34,6 +34,10 @@ enum ContentDifficulty: String, CaseIterable {
   case beginner
   case intermediate
   case advanced
+  
+  var displayString: String {
+    return self.rawValue.capitalized
+  }
 }
 
 enum ContentType: String {
@@ -98,15 +102,17 @@ enum ParameterKey {
   }
 
   var param: Parameter {
+    // TODO: This might need to be re-implemented
     return Parameter(key: self.strKey,
-                     value: self.value)
+                     value: self.value,
+                     displayName: "", groupName: "")
   }
 }
 
 enum ParameterFilterValue {
   case contentTypes(types: [ContentType]) // An array containing ContentType strings
-  case domainIds(ids: [Int]) // An array of numerical IDs of the domains you are interested in.
-  case categoryIds(ids: [Int]) // An array of numberical IDs of the categories you are interested in.
+  case domainTypes(types: [(id: Int, name: String)]) // An array of numerical IDs of the domains you are interested in.
+  case categoryTypes(types: [(id: Int, name: String)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
 
@@ -114,9 +120,9 @@ enum ParameterFilterValue {
     switch self {
     case .contentTypes:
       return "content_types"
-    case .domainIds:
+    case .domainTypes:
       return "domain_ids"
-    case .categoryIds:
+    case .categoryTypes:
       return "category_ids"
     case .difficulties:
       return "difficulties"
@@ -125,18 +131,34 @@ enum ParameterFilterValue {
     }
   }
 
-  var values: [String] {
+  var values: [(displayName: String, requestValue: String)] {
     switch self {
     case .contentTypes(types: let types):
-      return types.map { $0.rawValue }
-    case .domainIds(ids: let ids):
-      return ids.map { "\($0)" }
-    case .categoryIds(ids: let ids):
-      return ids.map { "\($0)" }
+      return types.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
+    case .domainTypes(types: let types):
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
+    case .categoryTypes(types: let types):
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
     case .difficulties(difficulties: let difficulties):
-      return difficulties.map { $0.rawValue }
+      return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
     case .contentIds(ids: let ids):
-      return ids.map { "\($0)" }
+      return ids.map { (displayName: "\($0.id)", requestValue: "\($0.id)") }
+    }
+  }
+  
+  var groupName: String {
+    switch self {
+    case .contentTypes:
+      return "Content Type"
+    case .domainTypes:
+      return "Platforms"
+    case .categoryTypes:
+      return "Categories"
+    case .difficulties:
+      return "Difficulties"
+    case .contentIds:
+      // TODO: This is probably not required (or desired)
+      return "Contents"
     }
   }
 }
@@ -154,6 +176,8 @@ enum ParameterSortValue: String {
 struct Parameter: Equatable {
   let key: String
   let value: String
+  let displayName: String
+  let groupName: String
 }
 
 enum Param {
@@ -164,7 +188,8 @@ enum Param {
     values.forEach { value in
       let key = "filter[\(value.strKey)][]"
       let values = value.values
-      let all = values.map { Parameter(key: key, value: $0) }
+      let name = value.groupName
+      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName, groupName: name) }
 
       allParams.append(contentsOf: all)
     }
@@ -177,7 +202,7 @@ enum Param {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
 
-    return Parameter(key: key, value: value)
+    return Parameter(key: key, value: value, displayName: "Sort", groupName: "Sort")
   }
 }
 

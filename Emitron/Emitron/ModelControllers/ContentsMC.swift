@@ -47,8 +47,20 @@ class ContentsMC: NSObject, BindableObject {
   private(set) var data: [ContentDetail] = []
   private(set) var numTutorials: Int = 0
   private(set) var currentPage: Int = 1
-  private(set) var defaultOffset: Int = 20
-  private(set) var currentParameters: [Parameter] = []
+  private(set) var defaultPageSize: Int = 20
+  private(set) var currentParameters: [Parameter] = [] {
+    didSet {
+      loadContents(with: currentParameters)
+    }
+  }
+  
+  var filters: Filters {
+    didSet {
+      if oldValue.filters != filters.filters {
+        currentParameters = oldValue.applied
+      }
+    }
+  }
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -57,6 +69,7 @@ class ContentsMC: NSObject, BindableObject {
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
+    self.filters = Filters()
     super.init()
     
     loadContents()

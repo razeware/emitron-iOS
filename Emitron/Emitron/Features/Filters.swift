@@ -1,0 +1,182 @@
+/// Copyright (c) 2019 Razeware LLC
+/// 
+/// Permission is hereby granted, free of charge, to any person obtaining a copy
+/// of this software and associated documentation files (the "Software"), to deal
+/// in the Software without restriction, including without limitation the rights
+/// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+/// copies of the Software, and to permit persons to whom the Software is
+/// furnished to do so, subject to the following conditions:
+/// 
+/// The above copyright notice and this permission notice shall be included in
+/// all copies or substantial portions of the Software.
+/// 
+/// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
+/// distribute, sublicense, create a derivative work, and/or sell copies of the
+/// Software in any work that is designed, intended, or marketed for pedagogical or
+/// instructional purposes related to programming, coding, application development,
+/// or information technology.  Permission for such use, copying, modification,
+/// merger, publication, distribution, sublicensing, creation of derivative works,
+/// or sale is expressly withheld.
+/// 
+/// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+/// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+/// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+/// AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+/// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+/// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+/// THE SOFTWARE.
+
+import Foundation
+import SwiftUI
+import Combine
+
+enum Platform: Int, CaseIterable {
+  case iOSandSwift = 1
+  case androidAndKotlin
+  case serverSideSwift
+  case unity
+  case unrealEngine
+  case macOS
+  case archive
+  
+  //  var filter: Filter {
+  //    switch self {
+  //    case .iOSandSwift:
+  //      return Filter(param: Parameter(key: <#T##String#>, value: <#T##String#>), isOn: <#T##Bool#>)
+  //    case .androidAndKotlin:
+  //      <#code#>
+  //    case .serverSideSwift:
+  //      <#code#>
+  //    case .unity:
+  //      <#code#>
+  //    case .unrealEngine:
+  //      <#code#>
+  //    case .macOS:
+  //      <#code#>
+  //    case .archive:
+  //      <#code#>
+  //    }
+  //  }
+}
+
+struct FilterGroup: Hashable {
+  var type: FilterGroupType
+  var filters: [Filter]
+  
+  init(type: FilterGroupType) {
+    self.type = type
+    self.filters = type.initialFilters
+  }
+}
+
+enum FilterGroupType: CaseIterable {
+  case platforms
+  case categories
+  case contentTypes
+  case difficulties
+  
+  var initialFilters: [Filter] {
+    switch self {
+      
+    case .platforms:
+      let domainTypes = [(id: 1, name: "iOS & Swift"),
+                         (id: 2, name: "Android & Kotlin"),
+                         (id: 8, name: "Server-side Swift"),
+                         (id: 3, name: "Unity"),
+                         (id: 4, name: "Unreal Engine")]
+      
+      return Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(param: $0, isOn: false) }
+    case .categories:
+      let categoryTypes = [(id: 156, name: "Algorithms & Data Structures"),
+                           (id: 181, name: "Architecture"),
+                           (id: 159, name: "AR / VR"),
+                           (id: 157, name: "Audio / Video"),
+                           (id: 151, name: "Concurrency")]
+      
+      return Param.filter(by: [.categoryTypes(types: categoryTypes)]).map { Filter(param: $0, isOn: false) }
+    case .contentTypes:
+      return Param.filter(by: [.contentTypes(types: [.collection, .screencast])]).map { Filter(param: $0, isOn: false) }
+    case .difficulties:
+      return Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(param: $0, isOn: false) }
+    }
+  }
+  
+  var name: String {
+    switch self {
+    case .contentTypes:
+      return "Content Type"
+    case .platforms:
+      return "Platforms"
+    case .categories:
+      return "Categories"
+    case .difficulties:
+      return "Difficulties"
+    }
+  }
+}
+
+class Filters: BindableObject {
+  // MARK: - Properties
+  private(set) var willChange = PassthroughSubject<Void, Never>()
+  
+  subscript(filter: Filter) -> Filter {
+      get {
+        let existingFilter = filters.flatMap{ $0.filters }.filter { $0 == filter }.first!
+        willChange.send(())
+        return existingFilter
+      }
+      set(newValue) {
+          // Perform a suitable setting action here.
+        willChange.send(())
+      }
+  }
+  
+  var filters: [FilterGroup] {
+    return [platforms, categories, contentTypes, difficulties]
+  }
+  
+  var applied: [Parameter] {
+    return filters.flatMap { $0.filters }.filter { $0.isOn }.map { $0.parameter }
+  }
+  
+  // Platforms = Domains
+  var platforms: FilterGroup {
+    didSet {
+      willChange.send(())
+    }
+  }
+  
+  // Categories
+  var categories: FilterGroup {
+    didSet {
+      willChange.send(())
+    }
+  }
+  
+  // Content Types
+  var contentTypes: FilterGroup {
+    didSet {
+      willChange.send(())
+    }
+  }
+  
+  // Difficulties
+  var difficulties: FilterGroup {
+    didSet {
+      willChange.send(())
+    }
+  }
+  
+  init() {
+    self.platforms = FilterGroup(type: .platforms)
+    self.categories = FilterGroup(type: .categories)
+    self.contentTypes = FilterGroup(type: .contentTypes)
+    self.difficulties = FilterGroup(type: .difficulties)
+  }
+  
+  func modify() {
+    platforms.filters[0].isOn = true
+  }
+}
+
+//Filters.platforms.iOSandSwift.toggle()

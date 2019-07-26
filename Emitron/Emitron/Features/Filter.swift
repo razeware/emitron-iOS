@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -30,20 +30,27 @@ import Foundation
 import SwiftUI
 import Combine
 
-class Filter: BindableObject {
+class Filter: NSObject, BindableObject {
   
   // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
+  
+  var parameter: Parameter
+  var isOn: Bool {
     didSet {
-      willChange.send(())
+      willChange.send()
     }
   }
   
-  // MARK: - Initializers
-  var parameter: Parameter
-  var isOn: Bool
+  var groupName: String {
+    return parameter.groupName.capitalized
+  }
   
+  var filterName: String {
+    return parameter.displayName
+  }
+  
+  // MARK: - Initializers
   init(param: Parameter, isOn: Bool = false) {
     self.parameter = param
     self.isOn = isOn
