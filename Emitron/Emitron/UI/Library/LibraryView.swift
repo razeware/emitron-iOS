@@ -75,7 +75,7 @@ struct LibraryView: View {
   @EnvironmentObject var contentsMC: ContentsMC
   @State var filtersPresented: Bool = false
   @State var sortSelection: SortSelection = .newest
-  
+
   var body: some View {
     VStack {
       VStack {
@@ -119,9 +119,15 @@ struct LibraryView: View {
         if !contentsMC.filters.appliedFilters.isEmpty {
           ScrollView(.horizontal, showsIndicators: false) {
             HStack(alignment: .top, spacing: .filterSpacing) {
-              AppliedFilterView(type: .destructive, filter: nil, name: "Clear All")
+              
+              AppliedFilterView(filter: nil, type: .destructive, name: "Clear All", callback: { filters in
+                self.contentsMC.filters = filters
+              }).environmentObject(self.contentsMC.filters)
+              
               ForEach(contentsMC.filters.appliedFilters, id: \.self) { filter in
-                AppliedFilterView(type: .default, filter: filter)
+                AppliedFilterView(filter: filter, type: .default, callback: { filters in
+                  self.contentsMC.filters = filters
+                }).environmentObject(self.contentsMC.filters)
               }
               
             }

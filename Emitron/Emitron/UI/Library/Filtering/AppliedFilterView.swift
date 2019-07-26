@@ -47,7 +47,7 @@ private enum Layout {
     let overall: Length = 12
     let textTrailing: Length = 2
   }
-
+  
   static let padding = Padding()
   static let cornerRadius: Length = 9
   static let imageSize: Length = 15
@@ -56,32 +56,53 @@ private enum Layout {
 // TODO: Should make this more reuse-friendly
 struct AppliedFilterView: View {
   
-  var type: AppliedFilterType
+  @EnvironmentObject var filters: Filters
   var filter: Filter?
+  var type: AppliedFilterType
   var name: String?
+  var callback: ((Filters) -> Void)?
+  
+  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil, callback: ((Filters) -> Void)?) {
+    self.filter = filter
+    self.type = type
+    self.name = name
+    self.callback = callback
+  }
   
   var body: some View {
-    HStack {
-      Text(filter?.filterName ?? name ?? "None")
-        .foregroundColor(.white)
-        .font(.uiButtonLabelSmall)
-        .padding([.trailing], Layout.padding.textTrailing)
-      Image("closeWhite")
-        .resizable()
-        .frame(width: Layout.imageSize, height: Layout.imageSize)
-        .foregroundColor(.white)
-    }
+    Button(action: {
+      // If there's no filter passed through, it's a destructive one that should clear all, so we init a new Filters object
+      guard let filter = self.filter else {
+        self.callback?(Filters())
+        return
+      }
+      
+      filter.isOn.toggle()
+      self.filters.filters.update(with: filter)
+      self.callback?(self.filters)
+    }) {
+      HStack {
+        Text(filter?.filterName ?? name ?? "None")
+          .foregroundColor(.white)
+          .font(.uiButtonLabelSmall)
+          .padding([.trailing], Layout.padding.textTrailing)
+        Image("closeWhite")
+          .resizable()
+          .frame(width: Layout.imageSize, height: Layout.imageSize)
+          .foregroundColor(.white)
+      }
       .padding(.all, Layout.padding.overall)
-      .background(type.color)
-      .cornerRadius(Layout.cornerRadius)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+        .background(type.color)
+        .cornerRadius(Layout.cornerRadius)
+        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    }
   }
 }
 
 #if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
-    static var previews: some View {
-      AppliedFilterView(type: .default, filter: Filter.testFilter)
-    }
+  static var previews: some View {
+    AppliedFilterView(filter: Filter.testFilter, type: .default, callback: nil)
+  }
 }
 #endif

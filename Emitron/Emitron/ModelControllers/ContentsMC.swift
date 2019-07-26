@@ -64,9 +64,9 @@ class ContentsMC: NSObject, BindableObject {
   
   var filters: Filters {
     didSet {
-      if currentParameters != filters.appliedParameters {
+      if currentParameters != (filters.appliedParameters + defaultParameters) {
         currentPage = startingPage
-        currentParameters = defaultParameters + oldValue.appliedParameters
+        currentParameters = defaultParameters + filters.appliedParameters
       }
     }
   }

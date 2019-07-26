@@ -39,7 +39,6 @@ struct CheckmarkView: View {
       self.filter.isOn.toggle()
       self.isOn = self.filter.isOn
       self.filters.filters.update(with: self.filter)
-
     }) {
       if isOn {
         ZStack(alignment: .center) {
