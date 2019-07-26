@@ -55,7 +55,7 @@ struct ContentSummaryView: View {
           // Download Action
           self.download()
         }) {
-          Image("download")
+          Image("downloadInactive")
             .padding([.trailing], 30)
             .foregroundColor(.coolGrey)
         }
@@ -64,7 +64,7 @@ struct ContentSummaryView: View {
           // Bookmark Action
           self.bookmark()
         }) {
-          Image("bookmark")
+          Image("bookmarkInactive")
             .resizable()
             .frame(maxWidth: 20, maxHeight: 20)
             .foregroundColor(.coolGrey)

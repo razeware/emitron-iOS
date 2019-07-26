@@ -32,7 +32,7 @@ struct FiltersView: View {
   
   @EnvironmentObject var filters: Filters
   @EnvironmentObject var contentsMC: ContentsMC
-  @Environment(\.isPresented) private var isPresented
+  @Binding var isPresented: Bool
   
   var body: some View {
     VStack {
@@ -53,11 +53,14 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
-          self.isPresented?.value = false
+          self.isPresented = false
+          //TODO: This should probably definitely not be here in the end
+          self.contentsMC.filters = self.filters
         }) {
-          Image("materialIconClose")
+          Image("close")
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
+            .foregroundColor(.battleshipGrey)
         }
       }
       .padding(.top, 20)
@@ -65,29 +68,22 @@ struct FiltersView: View {
       ScrollView(.vertical, showsIndicators: false) {
         VStack(alignment: .leading, spacing: 12) {
           
-          ForEach(filters.filters, id: \.self) { filter in
-            self.constructFilterView(filter: filter)
+          ForEach(filters.filterGroups, id: \.self) { filterGroup in
+            self.constructFilterView(filterGroup: filterGroup)
           }
         }
       }
       .padding([.leading, .trailing, .top], 20)
     }
     .background(Color.paleGrey)
+      //TODO: In the current beta onDisappear() doesn’t seem to get called.
       .onDisappear {
         self.contentsMC.filters = self.filters
     }
   }
   
-  func constructFilterView(filter: FilterGroup) -> AnyView {
-    let filtersView = FiltersHeaderView(filter: filter)
+  func constructFilterView(filterGroup: FilterGroup) -> AnyView {
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup)
     return AnyView(filtersView)
   }
 }
-
-#if DEBUG
-struct FiltersView_Previews: PreviewProvider {
-  static var previews: some View {
-    FiltersView()
-  }
-}
-#endif

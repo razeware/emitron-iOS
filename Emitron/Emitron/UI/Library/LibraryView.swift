@@ -83,12 +83,13 @@ struct LibraryView: View {
         HStack {
           SearchView()
           Button(action: {
-            self.filtersPresented = true
+            self.filtersPresented.toggle()
           }, label: {
             Image("filter")
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
-              .sheet(isPresented: self.$filtersPresented) { FiltersView().environmentObject(Filters()).environmentObject(self.contentsMC) }
+              .sheet(isPresented: self.$filtersPresented) { FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC.filters).environmentObject(self.contentsMC)
+            }
           })
             .padding([.leading], .searchFilterPadding)
         }
@@ -104,7 +105,7 @@ struct LibraryView: View {
             self.changeSort()
           }) {
             HStack {
-              Image("sortIcon")
+              Image("sort")
                 .foregroundColor(.battleshipGrey)
               
               Text(sortSelection.name)
@@ -115,17 +116,18 @@ struct LibraryView: View {
         }
         .padding([.top], .sidePadding)
         
-        ScrollView(.horizontal, showsIndicators: false) {
-          HStack(alignment: .top, spacing: .filterSpacing) {
-            AppliedFilterView(type: .destructive, name: "Clear All")
-            AppliedFilterView(type: .default, name: "Xcode")
-            AppliedFilterView(type: .default, name: "AR/VR")
-            AppliedFilterView(type: .default, name: "Algorithms")
-            AppliedFilterView(type: .default, name: "Architecture")
-            AppliedFilterView(type: .default, name: "Beginner")
+        if !contentsMC.filters.appliedFilters.isEmpty {
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: .filterSpacing) {
+              AppliedFilterView(type: .destructive, filter: nil, name: "Clear All")
+              ForEach(contentsMC.filters.appliedFilters, id: \.self) { filter in
+                AppliedFilterView(type: .default, filter: filter)
+              }
+              
+            }
           }
+          .padding([.top], .filtersPaddingTop)
         }
-        .padding([.top], .filtersPaddingTop)
       }
       .padding([.leading, .trailing, .top], .sidePadding)
       
@@ -149,10 +151,10 @@ struct LibraryView: View {
       return AnyView(Text("Error"))
     case .hasData,
          .loading where !contentsMC.data.isEmpty:
-//      let sorted = sortSelection.sorted(data: contentsMC.data)
-//      let parameters = filters.applied
-//      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
-//
+      //      let sorted = sortSelection.sorted(data: contentsMC.data)
+      //      let parameters = filters.applied
+      //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
+      //
       
       return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
     default:

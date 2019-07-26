@@ -46,18 +46,27 @@ class ContentsMC: NSObject, BindableObject {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetail] = []
   private(set) var numTutorials: Int = 0
-  private(set) var currentPage: Int = 1
+  
+  // Pagination
+  private var currentPage: Int = 1
+  private let startingPage: Int = 1
   private(set) var defaultPageSize: Int = 20
+  
+  // Parameters
+  private var defaultParameters: [Parameter] {
+    return Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
+  }
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
-      loadContents(with: currentParameters)
+      loadContents()
     }
   }
   
   var filters: Filters {
     didSet {
-      if oldValue.filters != filters.filters {
-        currentParameters = oldValue.applied
+      if currentParameters != filters.appliedParameters {
+        currentPage = startingPage
+        currentParameters = defaultParameters + oldValue.appliedParameters
       }
     }
   }
@@ -69,15 +78,16 @@ class ContentsMC: NSObject, BindableObject {
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
+    
     self.filters = Filters()
+    
     super.init()
     
+    currentParameters = defaultParameters
     loadContents()
   }
   
-  func loadContents(with parameters: [Parameter] = Param.filter(by: [.contentTypes(types: [.collection, .screencast])]),
-                    pageSize: Int? = nil,
-                    offset: Int? = nil) {
+  func loadContents() {
     guard state != .loading else {
       return
     }
@@ -85,13 +95,13 @@ class ContentsMC: NSObject, BindableObject {
     state = .loading
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = parameters
+    var allParams = currentParameters
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
     guard data.isEmpty || data.count <= numTutorials  else { return }
     
-    contentsService.allContents(parameters: allParams) { [weak self] result in
+    contentsService.allContents(parameters: currentParameters) { [weak self] result in
       
       guard let self = self else {
         return
@@ -102,7 +112,7 @@ class ContentsMC: NSObject, BindableObject {
         self.state = .failed
         Analytics.logEvent("error", parameters: [
           AnalyticsParameterItemName: "Failed to load contents!",
-          AnalyticsParameterContent: "Parameters: \(parameters)",
+          AnalyticsParameterContent: "Parameters: \(self.currentParameters)",
           "description": error.localizedDescription
         ])
       case .success(let contentsTuple):
@@ -114,7 +124,6 @@ class ContentsMC: NSObject, BindableObject {
           self.data = contentsTuple.contents
         }
         self.numTutorials = contentsTuple.totalNumber
-        self.currentPage += 1
         self.state = .hasData
       }
     }

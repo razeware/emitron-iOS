@@ -53,18 +53,20 @@ private enum Layout {
   static let imageSize: Length = 15
 }
 
+// TODO: Should make this more reuse-friendly
 struct AppliedFilterView: View {
   
   var type: AppliedFilterType
-  var name: String
+  var filter: Filter?
+  var name: String?
   
   var body: some View {
     HStack {
-      Text(name)
+      Text(filter?.filterName ?? name ?? "None")
         .foregroundColor(.white)
         .font(.uiButtonLabelSmall)
         .padding([.trailing], Layout.padding.textTrailing)
-      Image("whiteX")
+      Image("closeWhite")
         .resizable()
         .frame(width: Layout.imageSize, height: Layout.imageSize)
         .foregroundColor(.white)
@@ -79,7 +81,7 @@ struct AppliedFilterView: View {
 #if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
     static var previews: some View {
-        AppliedFilterView(type: .default, name: "Filter")
+      AppliedFilterView(type: .default, filter: Filter.testFilter)
     }
 }
 #endif

@@ -29,6 +29,7 @@
 import Foundation
 
 enum DomainLevel: String {
+  // Production + Beta are the only user-facing ones
   case none
   case production
   case beta

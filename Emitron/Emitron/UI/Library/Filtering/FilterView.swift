@@ -62,7 +62,7 @@ struct FilterView: View {
 struct FilterView_Previews: PreviewProvider {
   static var previews: some View {
     // TODO: Give this a proper value
-    FilterView(filter: Filter(param: Parameter(key: "", value: "", displayName: "", groupName: "")))
+    FilterView(filter: Filter.testFilter)
   }
 }
 #endif

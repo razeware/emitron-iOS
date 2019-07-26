@@ -75,7 +75,7 @@ struct CardView: View {
         
         Spacer()
         
-        Image("download")
+        Image("downloadInactive")
           .resizable()
           .frame(width: 19, height: 19)
           .tapAction {

@@ -68,8 +68,7 @@ struct ContentListView: View {
   }
   
   func loadMoreContents() {
-    let filterParams = Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
-    contentsMC.loadContents(with: filterParams)
+    contentsMC.loadContents()
   }
 }
 

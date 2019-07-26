@@ -38,21 +38,24 @@ struct TabNavView: View {
       libraryView() //TODO: This is somehow making the tabbar crash
         .tabItem {
           Text(Constants.library)
-          Image("materialIconLibrary")
+          Image("library")
         }
         .tag(0)
 
       DownloadsView()
         .tabItem {
           Text(Constants.downloads)
-          Image("materialIconDownload")
+          Image("downloadInactive")
         }
         .tag(1)
+        .tapAction {
+          print("Tapped Downloads")
+      }
 
       MyTutorialsView()
         .tabItem {
           Text(Constants.myTutorials)
-          Image("materialIconMyTutorials")
+          Image("myTutorials")
         }
         .tag(2)
     }

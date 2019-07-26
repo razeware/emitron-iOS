@@ -38,7 +38,8 @@ struct CheckmarkView: View {
     Button(action: {
       self.filter.isOn.toggle()
       self.isOn = self.filter.isOn
-      self.filters[self.filter] = self.filter
+      self.filters.filters.update(with: self.filter)
+
     }) {
       if isOn {
         ZStack(alignment: .center) {
@@ -56,6 +57,7 @@ struct CheckmarkView: View {
         Rectangle()
           .frame(maxWidth: 20, maxHeight: 20)
           .foregroundColor(Color.white)
+          .cornerRadius(6)
           .border(Color.coolGrey, width: 2, cornerRadius: 6)
       }
     }
@@ -66,7 +68,7 @@ struct CheckmarkView: View {
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
     // TODO: No empty String
-    CheckmarkView(filter: Filter(param: Parameter(key: "bla", value: "bla", displayName: "", groupName: ""), isOn: false))
+    CheckmarkView(filter: Filter(groupType: .categories, param: Parameter(key: "bla", value: "bla", displayName: ""), isOn: false))
   }
 }
 #endif

@@ -27,23 +27,17 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
 
-class Filter: NSObject, BindableObject {
-  
+class Filter: NSObject {
+
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
-  
   var parameter: Parameter
-  var isOn: Bool {
-    didSet {
-      willChange.send()
-    }
-  }
+  var isOn: Bool
+  
+  var groupType: FilterGroupType
   
   var groupName: String {
-    return parameter.groupName.capitalized
+    return groupType.name
   }
   
   var filterName: String {
@@ -51,8 +45,16 @@ class Filter: NSObject, BindableObject {
   }
   
   // MARK: - Initializers
-  init(param: Parameter, isOn: Bool = false) {
+  init(groupType: FilterGroupType, param: Parameter, isOn: Bool = false) {
+    self.groupType = groupType
     self.parameter = param
     self.isOn = isOn
+  }
+}
+
+// For testing
+extension Filter {
+  static var testFilter: Filter {
+    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: ""))
   }
 }

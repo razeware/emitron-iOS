@@ -71,7 +71,7 @@ struct TextListItemView: View {
       
       //TODO: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
       // it just passes through; example below
-      Image("download")
+      Image("downloadInactive")
         .foregroundColor(.coolGrey)
         .tapAction {
           self.buttonAction()

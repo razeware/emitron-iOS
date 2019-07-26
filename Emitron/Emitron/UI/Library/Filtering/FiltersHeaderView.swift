@@ -40,7 +40,7 @@ private enum Layout {
 }
 
 struct FiltersHeaderView: View {
-  var filter: FilterGroup
+  var filterGroup: FilterGroup
   @EnvironmentObject var filters: Filters
   
   @State var isExpanded: Bool = false
@@ -48,7 +48,7 @@ struct FiltersHeaderView: View {
   var body: some View {
     VStack {
       HStack {
-        Text(filter.type.name)
+        Text(filterGroup.type.name)
           .foregroundColor(.appBlack)
           .font(.uiLabel)
           .padding([.trailing], Layout.padding.textTrailing)
@@ -79,7 +79,7 @@ struct FiltersHeaderView: View {
     return AnyView(
       VStack(alignment: .leading, spacing: 12) {
         
-        ForEach(filter.filters, id: \.self) { filter in
+        ForEach(Array(filterGroup.filters), id: \.self) { filter in
           FilterView(filter: filter)
         }
 
@@ -90,7 +90,7 @@ struct FiltersHeaderView: View {
 #if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    return FiltersHeaderView(filter: FilterGroup(type: .categories))
+    return FiltersHeaderView(filterGroup: FilterGroup(type: .categories))
   }
 }
 #endif

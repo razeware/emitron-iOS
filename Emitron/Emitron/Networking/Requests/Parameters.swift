@@ -78,7 +78,7 @@ enum ParameterKey {
   case completionStatus(status: CompletionStatus)
   case pageNumber(number: Int)
   case pageSize(size: Int)
-
+  
   var strKey: String {
     switch self {
     case .completionStatus:
@@ -89,7 +89,7 @@ enum ParameterKey {
       return "page[size]"
     }
   }
-
+  
   var value: String {
     switch self {
     case .completionStatus(status: let status):
@@ -100,12 +100,12 @@ enum ParameterKey {
       return "\(size)"
     }
   }
-
+  
   var param: Parameter {
     // TODO: This might need to be re-implemented
     return Parameter(key: self.strKey,
                      value: self.value,
-                     displayName: "", groupName: "")
+                     displayName: "")
   }
 }
 
@@ -115,7 +115,7 @@ enum ParameterFilterValue {
   case categoryTypes(types: [(id: Int, name: String)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
-
+  
   var strKey: String {
     switch self {
     case .contentTypes:
@@ -130,7 +130,7 @@ enum ParameterFilterValue {
       return "content_ids"
     }
   }
-
+  
   var values: [(displayName: String, requestValue: String)] {
     switch self {
     case .contentTypes(types: let types):
@@ -177,33 +177,29 @@ struct Parameter: Equatable {
   let key: String
   let value: String
   let displayName: String
-  let groupName: String
 }
 
 enum Param {
-
+  
   static func filter(by values: [ParameterFilterValue]) -> [Parameter] {
     var allParams: [Parameter] = []
-
+    
     values.forEach { value in
       let key = "filter[\(value.strKey)][]"
       let values = value.values
-      let name = value.groupName
-      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName, groupName: name) }
-
+      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName) }
+      
       allParams.append(contentsOf: all)
     }
-
+    
     return allParams
   }
-
+  
   static func sort(by value: ParameterSortValue,
                    descending: Bool) -> Parameter {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
-
-    return Parameter(key: key, value: value, displayName: "Sort", groupName: "Sort")
+    
+    return Parameter(key: key, value: value, displayName: "Sort")
   }
 }
-
-

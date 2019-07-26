@@ -61,7 +61,10 @@ enum Platform: Int, CaseIterable {
 
 struct FilterGroup: Hashable {
   var type: FilterGroupType
-  var filters: [Filter]
+  var filters: Set<Filter>
+  var numApplied: Int {
+    return filters.filter { $0.isOn }.count
+  }
   
   init(type: FilterGroupType) {
     self.type = type
@@ -75,7 +78,7 @@ enum FilterGroupType: CaseIterable {
   case contentTypes
   case difficulties
   
-  var initialFilters: [Filter] {
+  var initialFilters: Set<Filter> {
     switch self {
       
     case .platforms:
@@ -85,7 +88,7 @@ enum FilterGroupType: CaseIterable {
                          (id: 3, name: "Unity"),
                          (id: 4, name: "Unreal Engine")]
       
-      return Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(param: $0, isOn: false) }
+      return Set(Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .categories:
       let categoryTypes = [(id: 156, name: "Algorithms & Data Structures"),
                            (id: 181, name: "Architecture"),
@@ -93,11 +96,11 @@ enum FilterGroupType: CaseIterable {
                            (id: 157, name: "Audio / Video"),
                            (id: 151, name: "Concurrency")]
       
-      return Param.filter(by: [.categoryTypes(types: categoryTypes)]).map { Filter(param: $0, isOn: false) }
+      return Set(Param.filter(by: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .contentTypes:
-      return Param.filter(by: [.contentTypes(types: [.collection, .screencast])]).map { Filter(param: $0, isOn: false) }
+      return Set(Param.filter(by: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .difficulties:
-      return Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(param: $0, isOn: false) }
+      return Set(Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: self, param: $0, isOn: false ) })
     }
   }
   
@@ -119,64 +122,37 @@ class Filters: BindableObject {
   // MARK: - Properties
   private(set) var willChange = PassthroughSubject<Void, Never>()
   
-  subscript(filter: Filter) -> Filter {
-      get {
-        let existingFilter = filters.flatMap{ $0.filters }.filter { $0 == filter }.first!
-        willChange.send(())
-        return existingFilter
-      }
-      set(newValue) {
-          // Perform a suitable setting action here.
-        willChange.send(())
-      }
-  }
-  
-  var filters: [FilterGroup] {
-    return [platforms, categories, contentTypes, difficulties]
-  }
-  
-  var applied: [Parameter] {
-    return filters.flatMap { $0.filters }.filter { $0.isOn }.map { $0.parameter }
-  }
-  
-  // Platforms = Domains
-  var platforms: FilterGroup {
+  var filters: Set<Filter> {
     didSet {
-      willChange.send(())
+      platforms.filters = filters.filter { $0.groupType == .platforms }
+      categories.filters = filters.filter { $0.groupType == .categories }
+      contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
+      difficulties.filters = filters.filter { $0.groupType == .difficulties }
     }
   }
   
-  // Categories
-  var categories: FilterGroup {
-    didSet {
-      willChange.send(())
+  var filterGroups: [FilterGroup] {
+      return [platforms, categories, contentTypes, difficulties]
     }
+  
+  var appliedParameters: [Parameter] {
+    return appliedFilters.map { $0.parameter }
   }
   
-  // Content Types
-  var contentTypes: FilterGroup {
-    didSet {
-      willChange.send(())
-    }
+  var appliedFilters: [Filter] {
+    return filters.filter { $0.isOn }
   }
   
-  // Difficulties
-  var difficulties: FilterGroup {
-    didSet {
-      willChange.send(())
-    }
-  }
+  private var platforms: FilterGroup
+  private var categories: FilterGroup
+  private var contentTypes: FilterGroup
+  private var difficulties: FilterGroup
   
   init() {
     self.platforms = FilterGroup(type: .platforms)
     self.categories = FilterGroup(type: .categories)
     self.contentTypes = FilterGroup(type: .contentTypes)
     self.difficulties = FilterGroup(type: .difficulties)
-  }
-  
-  func modify() {
-    platforms.filters[0].isOn = true
+    self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
   }
 }
-
-//Filters.platforms.iOSandSwift.toggle()
