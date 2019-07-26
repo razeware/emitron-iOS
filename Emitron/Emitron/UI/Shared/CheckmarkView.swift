@@ -29,18 +29,17 @@
 import SwiftUI
 
 struct CheckmarkView: View {
-  @State private var isOn: Bool = false
   @EnvironmentObject var filters: Filters
   var filter: Filter
   
   var body: some View {
-    
+        
     Button(action: {
       self.filter.isOn.toggle()
-      self.isOn = self.filter.isOn
       self.filters.filters.update(with: self.filter)
     }) {
-      if isOn {
+      // TODO: Not sure how best to handle assigning the "state" initially as on/off while also maintaining the @State object
+      if filter.isOn {
         ZStack(alignment: .center) {
           Rectangle()
             .frame(maxWidth: 20, maxHeight: 20)

@@ -72,14 +72,13 @@ struct AppliedFilterView: View {
   var body: some View {
     Button(action: {
       // If there's no filter passed through, it's a destructive one that should clear all, so we init a new Filters object
-      guard let filter = self.filter else {
+      if let filter = self.filter {
+        filter.isOn.toggle()
+        self.filters.filters.update(with: filter)
+        self.callback?(self.filters)
+      } else {
         self.callback?(Filters())
-        return
       }
-      
-      filter.isOn.toggle()
-      self.filters.filters.update(with: filter)
-      self.callback?(self.filters)
     }) {
       HStack {
         Text(filter?.filterName ?? name ?? "None")

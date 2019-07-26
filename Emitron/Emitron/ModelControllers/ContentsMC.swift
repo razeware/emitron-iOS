@@ -62,7 +62,7 @@ class ContentsMC: NSObject, BindableObject {
     }
   }
   
-  var filters: Filters {
+  @ObjectBinding var filters: Filters {
     didSet {
       if currentParameters != (filters.appliedParameters + defaultParameters) {
         currentPage = startingPage

@@ -128,6 +128,7 @@ class Filters: BindableObject {
       categories.filters = filters.filter { $0.groupType == .categories }
       contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
       difficulties.filters = filters.filter { $0.groupType == .difficulties }
+      willChange.send(())
     }
   }
   

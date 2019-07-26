@@ -82,7 +82,6 @@ struct FiltersHeaderView: View {
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
           FilterView(filter: filter)
         }
-
     })
   }
 }
