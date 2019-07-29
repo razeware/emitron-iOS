@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
 class ContentsMC: NSObject, BindableObject {
   
@@ -110,11 +109,9 @@ class ContentsMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to load contents!",
-          AnalyticsParameterContent: "Parameters: \(self.currentParameters)",
-          "description": error.localizedDescription
-        ])
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
       case .success(let contentsTuple):
         // When filtering, do we just re-do the request, or append?
         if allParams == self.currentParameters {

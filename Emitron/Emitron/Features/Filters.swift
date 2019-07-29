@@ -38,25 +38,6 @@ enum Platform: Int, CaseIterable {
   case unrealEngine
   case macOS
   case archive
-  
-  //  var filter: Filter {
-  //    switch self {
-  //    case .iOSandSwift:
-  //      return Filter(param: Parameter(key: <#T##String#>, value: <#T##String#>), isOn: <#T##Bool#>)
-  //    case .androidAndKotlin:
-  //      <#code#>
-  //    case .serverSideSwift:
-  //      <#code#>
-  //    case .unity:
-  //      <#code#>
-  //    case .unrealEngine:
-  //      <#code#>
-  //    case .macOS:
-  //      <#code#>
-  //    case .archive:
-  //      <#code#>
-  //    }
-  //  }
 }
 
 struct FilterGroup: Hashable {
@@ -82,6 +63,7 @@ enum FilterGroupType: CaseIterable {
     switch self {
       
     case .platforms:
+      // TODO: These are hardcoded atm, but will come from the PersistenceStore cache, once that's there
       let domainTypes = [(id: 1, name: "iOS & Swift"),
                          (id: 2, name: "Android & Kotlin"),
                          (id: 8, name: "Server-side Swift"),
@@ -90,6 +72,7 @@ enum FilterGroupType: CaseIterable {
       
       return Set(Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .categories:
+      // TODO: These are hardcoded atm, but will come from the PersistenceStore cache, once that's there
       let categoryTypes = [(id: 156, name: "Algorithms & Data Structures"),
                            (id: 181, name: "Architecture"),
                            (id: 159, name: "AR / VR"),

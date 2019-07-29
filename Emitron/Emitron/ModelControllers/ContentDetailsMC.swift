@@ -75,7 +75,9 @@ class ContentDetailsMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Failure.fetch(from: "ContentsMC", reason: error.localizedDescription).log(additionalParams: nil)
+        Failure
+          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData

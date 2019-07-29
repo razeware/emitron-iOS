@@ -31,6 +31,8 @@ import Foundation
 import SwiftUI
 import Combine
 
+let SuccessfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+
 class UserMC: NSObject, BindableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
@@ -71,15 +73,25 @@ class UserMC: NSObject, BindableObject {
         switch result {
         case .failure(let error):
           self.state = .failed
-          Failure.login(from: "UserMC", reason: error.localizedDescription).log(additionalParams: nil)
+          Failure
+            .login(from: "UserMC", reason: error.localizedDescription)
+            .log(additionalParams: nil)
         case .success(let user):
           self.user = user
           self.state = .hasData
-          Event.login(from: "UserMC").log(additionalParams: nil)
+          
+          //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
+          //probably using Combine or Notifications
+          NotificationCenter.default.post(name: SuccessfulSignInNotification, object: nil)
+          
+          Event
+            .login(from: "UserMC")
+            .log(additionalParams: nil)
         }
       }
     }
   }
+  
 }
 
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
