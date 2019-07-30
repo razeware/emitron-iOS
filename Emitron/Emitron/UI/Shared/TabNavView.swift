@@ -45,7 +45,7 @@ struct TabNavView: View {
       DownloadsView()
         .tabItem {
           Text(Constants.downloads)
-          Image("downloadInactive")
+          Image("downloadInactiveTab")
         }
         .tag(1)
         .onTapGesture {
