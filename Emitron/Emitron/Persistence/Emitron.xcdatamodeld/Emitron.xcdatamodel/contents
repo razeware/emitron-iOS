@@ -9,6 +9,24 @@
         <attribute name="ordinal" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uri" attributeType="String"/>
     </entity>
+    <entity name="Contents" representedClassName="Contents" syncable="YES">
+        <attribute name="bookmarked" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="cardArtworkUrl" attributeType="URI"/>
+        <attribute name="contentType" attributeType="String"/>
+        <attribute name="contributorString" attributeType="String"/>
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="difficulty" attributeType="String"/>
+        <attribute name="duration" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="free" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="index" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="popularity" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="releasedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="technologyTripleString" attributeType="String"/>
+        <attribute name="uri" attributeType="String"/>
+        <attribute name="videoID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+    </entity>
     <entity name="Domain" representedClassName="Domain" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -20,5 +38,6 @@
         <element name="Bookmark" positionX="-54" positionY="27" width="128" height="73"/>
         <element name="Category" positionX="-54" positionY="27" width="128" height="88"/>
         <element name="Domain" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="Contents" positionX="-45" positionY="36" width="128" height="283"/>
     </elements>
 </model>
