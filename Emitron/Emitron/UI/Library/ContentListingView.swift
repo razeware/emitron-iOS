@@ -34,7 +34,7 @@ struct ContentListingView: View {
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
-  var user: User
+  var user: UserModel
     
   var body: some View {
     

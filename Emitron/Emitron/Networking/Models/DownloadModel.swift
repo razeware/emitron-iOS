@@ -28,36 +28,17 @@
 
 import Foundation
 
-public struct User: Codable {
+class DownloadModel {
 
   // MARK: - Properties
-  public let externalId: String
-  public let email: String
-  public let username: String
-  public let avatarUrl: URL
-  public let name: String
-  public let token: String
+  var video: VideoModel
+  var task: URLSessionDownloadTask?
+  var isDownloading: Bool = false
+  var resumeData: Data?
+  var progress: Double = 0
 
   // MARK: - Initializers
-  init?(dictionary: [String: String]) {
-    guard
-      let externalId = dictionary["external_id"],
-      let email = dictionary["email"],
-      let username = dictionary["username"],
-      let avatarUrlString = dictionary["avatar_url"],
-      let avatarUrl = URL(string: avatarUrlString),
-      let name = dictionary["name"]?.replacingOccurrences(of: "+", with: " "),
-      let token = dictionary["token"]
-      else
-    { return nil }
-
-    self.externalId = externalId
-    self.email = email
-    self.username = username
-    self.avatarUrl = avatarUrl
-    self.name = name
-    self.token = token
+  init(video: VideoModel) {
+    self.video = video
   }
 }
-
-extension User: Equatable { }

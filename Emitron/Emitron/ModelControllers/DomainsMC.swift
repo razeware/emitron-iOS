@@ -41,12 +41,12 @@ class DomainsMC: NSObject, ObservableObject {
   }
   
   private let client: RWAPI
-  private let user: User
+  private let user: UserModel
   private let service: DomainsService
-  private(set) var data: [Domain] = []
+  private(set) var data: [DomainModel] = []
   
   // MARK: - Initializers
-  init(guardpost: Guardpost, user: User) {
+  init(guardpost: Guardpost, user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)

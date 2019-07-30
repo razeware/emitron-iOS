@@ -29,7 +29,7 @@
 import Foundation
 import SwiftyJSON
 
-class ContentDetail {
+class ContentDetailModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
@@ -48,12 +48,12 @@ class ContentDetail {
   private(set) var contributorString: String = ""
   private(set) var videoID: Int = 0
 
-  private(set) var domains: [Domain] = []
-  private(set) var childContents: [ContentSummary] = []
-  private(set) var groups: [Group] = []
-  private(set) var progression: Progression?
-  private(set) var bookmark: Bookmark?
-  private(set) var categories: [Category] = []
+  private(set) var domains: [DomainModel] = []
+  private(set) var childContents: [ContentSummaryModel] = []
+  private(set) var groups: [GroupModel] = []
+  private(set) var progression: ProgressionModel?
+  private(set) var bookmark: BookmarkModel?
+  private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
 
   // MARK: - Initializers
@@ -96,7 +96,7 @@ class ContentDetail {
       case "domains":
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let domains = included?.compactMap { Domain($0, metadata: $0.meta) }
+        let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
         self.domains = domains ?? []
       
       //TODO: This will be improved when the API returns enough info to render the video listing, currently
@@ -105,17 +105,17 @@ class ContentDetail {
         let ids = relationship.data.compactMap { $0.id }
         let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
         
-        var groups: [Group] = []
+        var groups: [GroupModel] = []
         if let included = maybeIncluded {
           for resource in included {
             for relationship in resource.relationships where relationship.type == "contents" {
               let contentIds = relationship.data.compactMap { $0.id }
               let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
               // This is an ugly hack for now
-              let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummary? in
-                ContentSummary(summary, metadata: summary.meta, index: index)
+              let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummaryModel? in
+                ContentSummaryModel(summary, metadata: summary.meta, index: index)
               })
-              if let group = Group(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
+              if let group = GroupModel(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
                 groups.append(group)
               }
             }
@@ -126,12 +126,12 @@ class ContentDetail {
       case "progressions":
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let progressions = included?.compactMap { Progression($0, metadata: $0.meta) }
+        let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
       case "bookmark":
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let bookmarks = included?.compactMap { Bookmark(resource: $0, metadata: $0.meta) }
+        let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
         self.bookmark = bookmarks?.first
       default:
         break
@@ -142,8 +142,8 @@ class ContentDetail {
   }
 }
 
-extension ContentDetail {
-  static var test: ContentDetail {
+extension ContentDetailModel {
+  static var test: ContentDetailModel {
     do {
       let fileURL = Bundle.main.url(forResource: "ContentDetailTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
@@ -151,10 +151,10 @@ extension ContentDetail {
     
       let document = JSONAPIDocument(json)
       let resource = JSONAPIResource(json, parent: document)
-      return ContentDetail(resource, metadata: nil)!
+      return ContentDetailModel(resource, metadata: nil)!
     } catch {
       let resource = JSONAPIResource()
-      return ContentDetail(resource, metadata: nil)!
+      return ContentDetailModel(resource, metadata: nil)!
     }
   }
 }

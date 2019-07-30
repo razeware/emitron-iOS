@@ -33,9 +33,9 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   typealias UIViewControllerType = VideoPlayerController
   
   let videoID: Int
-  private let user: User
+  private let user: UserModel
   
-  init(with videoID: Int, user: User) {
+  init(with videoID: Int, user: UserModel) {
     self.videoID = videoID
     self.user = user
   }
@@ -53,7 +53,7 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 struct VideoView: View {
   
   let videoID: Int
-  let user: User
+  let user: UserModel
   
   var body: some View {
     VideoPlayerControllerRepresentable(with: videoID, user: user)

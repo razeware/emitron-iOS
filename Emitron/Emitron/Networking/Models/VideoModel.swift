@@ -28,29 +28,59 @@
 
 import Foundation
 
-enum AttachmentKind: String {
-  case none
-  case stream
-  case sdVideoFile = "sd_video_file"
-  case hdVideoFile = "hd_video_file"
+struct VideoFile {
+  let kind: VideoKind
+  let url: URL
 }
 
-class Attachment {
+enum VideoKind: String {
+  case none
+  case stream
+  case sdVideo
+  case hdVideo
+}
+
+class VideoModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
-  private(set) var url: URL?
-  private(set) var kind: AttachmentKind = .none
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var free: Bool = false
 
-  // MARK: - Initializets
-  init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any]?) {
+  //TODO There's something funky going on with Date's in Xcode 11
+  private(set) var releasedAt: Date
+  private(set) var createdAt: Date
+  private(set) var updatedAt: Date
+  private(set) var streamFile: VideoFile?
+  private(set) var sdVideoFile: VideoFile?
+  private(set) var hdVideoFile: VideoFile?
+
+  // MARK: - Initializers
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
 
     self.id = jsonResource.id
-    self.url = URL(string: (jsonResource["url"] as? String) ?? "")
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
+    self.free = jsonResource["free"] as? Bool ?? false
 
-    if let attachmentKind = AttachmentKind(rawValue: jsonResource["kind"] as? String ?? AttachmentKind.none.rawValue) {
-      self.kind = attachmentKind
+    if let releasedAt = jsonResource["released_at"] as? String {
+      self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAt) ?? Date()
+    } else {
+      self.releasedAt = Date()
+    }
+
+    if let createdAtStr = jsonResource["created_at"] as? String {
+      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
+    } else {
+      self.createdAt = Date()
+    }
+
+    if let updatedAtStr = jsonResource["updated_at"] as? String {
+      self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
+    } else {
+      self.updatedAt = Date()
     }
   }
 }

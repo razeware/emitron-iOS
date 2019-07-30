@@ -47,7 +47,7 @@ class UserMC: NSObject, ObservableObject {
   
   private let client: RWAPI
   private let guardpost: Guardpost
-  private(set) var user: User?
+  private(set) var user: UserModel?
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {

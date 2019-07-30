@@ -28,7 +28,7 @@
 
 import Foundation
 
-extension ContentDetail {
+extension ContentDetailModel {
   var dateAndTimeString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {

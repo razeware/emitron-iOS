@@ -27,22 +27,37 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftyJSON
 
-struct CategoriesRequest: Request {
-  typealias Response = [CategoryModel]
+public struct UserModel: Codable {
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/categories" }
-  var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  public let externalId: String
+  public let email: String
+  public let username: String
+  public let avatarUrl: URL
+  public let name: String
+  public let token: String
 
-  // MARK: - Internal
-  func handle(response: Data) throws -> [CategoryModel] {
-    let json = try JSON(data: response)
-    let doc = JSONAPIDocument(json)
-    let categories = doc.data.compactMap { CategoryModel($0, metadata: nil) }
-    return categories
+  // MARK: - Initializers
+  init?(dictionary: [String: String]) {
+    guard
+      let externalId = dictionary["external_id"],
+      let email = dictionary["email"],
+      let username = dictionary["username"],
+      let avatarUrlString = dictionary["avatar_url"],
+      let avatarUrl = URL(string: avatarUrlString),
+      let name = dictionary["name"]?.replacingOccurrences(of: "+", with: " "),
+      let token = dictionary["token"]
+      else
+    { return nil }
+
+    self.externalId = externalId
+    self.email = email
+    self.username = username
+    self.avatarUrl = avatarUrl
+    self.name = name
+    self.token = token
   }
 }
+
+extension UserModel: Equatable { }

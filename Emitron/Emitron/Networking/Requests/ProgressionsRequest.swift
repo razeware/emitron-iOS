@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ProgressionsRequest: Request {
-  typealias Response = [Progression]
+  typealias Response = [ProgressionModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,16 +39,16 @@ struct ProgressionsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [Progression] {
+  func handle(response: Data) throws -> [ProgressionModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
+    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
     return progressions
   }
 }
 
 struct ShowProgressionsRequest: Request {
-  typealias Response = Progression
+  typealias Response = ProgressionModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -64,10 +64,10 @@ struct ShowProgressionsRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> Progression {
+  func handle(response: Data) throws -> ProgressionModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { Progression($0, metadata: nil) }
+    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
     guard let progression = progressions.first else {
       throw RWAPIError.processingError(nil)
     }

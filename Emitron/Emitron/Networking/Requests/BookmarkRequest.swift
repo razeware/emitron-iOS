@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct GetBookmarksRequest: Request {
-  typealias Response = [Bookmark]
+  typealias Response = [BookmarkModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -40,16 +40,16 @@ struct GetBookmarksRequest: Request {
   var parameters: [Parameter]? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [Bookmark] {
+  func handle(response: Data) throws -> [BookmarkModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let bookmarks = doc.data.compactMap { Bookmark(resource: $0, metadata: nil) }
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
     return bookmarks
   }
 }
 
 struct DeleteBookmarkRequest: Request {
-  typealias Response = [Bookmark]
+  typealias Response = [BookmarkModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .DELETE }
@@ -65,16 +65,16 @@ struct DeleteBookmarkRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [Bookmark] {
+  func handle(response: Data) throws -> [BookmarkModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let bookmarks = doc.data.compactMap { Bookmark(resource: $0, metadata: nil) }
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
     return bookmarks
   }
 }
 
 struct BookmarkRequest: Request {
-  typealias Response = Bookmark
+  typealias Response = BookmarkModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -89,10 +89,10 @@ struct BookmarkRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> Bookmark {
+  func handle(response: Data) throws -> BookmarkModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let bookmarks = doc.data.compactMap { Bookmark(resource: $0, metadata: nil) }
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
     guard let bookmark = bookmarks.first,
       bookmarks.count == 1 else {
         throw RWAPIError.processingError(nil)

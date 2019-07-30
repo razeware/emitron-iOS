@@ -28,24 +28,38 @@
 
 import Foundation
 
-class Bookmark {
+class ProgressionModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
-
-  //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
-  // Does not happen in Xcode 10
+  private(set) var target: Int = 0
+  private(set) var progress: Int = 0
+  private(set) var finished: Bool = false
+  private(set) var percentComplete: Double = 0.0
+  // There's something funky going on with Date's in Xcode 11
   private(set) var createdAt: Date
+  private(set) var updatedAt: Date
 
   // MARK: - Initializers
-  init?(resource: JSONAPIResource,
-        metadata: [String: Any]?) {
-    self.id = resource.id
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
 
-    if let createdAtStr = resource["created_at"] as? String {
+    self.id = jsonResource.id
+    self.target = jsonResource["target"] as? Int ?? 0
+    self.progress = jsonResource["progress"] as? Int ?? 0
+    self.finished = jsonResource["finished"] as? Bool ?? false
+    self.percentComplete = jsonResource["percent_complete"] as? Double ?? 0.0
+
+    if let createdAtStr = jsonResource["created_at"] as? String {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
     } else {
       self.createdAt = Date()
+    }
+
+    if let updatedAtStr = jsonResource["updated_at"] as? String {
+      self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
+    } else {
+      self.updatedAt = Date()
     }
   }
 }

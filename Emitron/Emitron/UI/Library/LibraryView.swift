@@ -60,7 +60,7 @@ enum SortSelection: Int {
     }
   }
   
-  func sorted(data: [ContentDetail]) -> [ContentDetail] {
+  func sorted(data: [ContentDetailModel]) -> [ContentDetailModel] {
     switch self {
     case .newest:
       return data.sorted(by: { $0.releasedAt > $1.releasedAt })

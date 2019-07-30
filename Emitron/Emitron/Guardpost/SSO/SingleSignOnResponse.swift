@@ -62,7 +62,7 @@ struct SingleSignOnResponse {
     return isSignatureValid && isNonceValid
   }
 
-  var user: User? {
+  var user: UserModel? {
     if !isValid {
       return nil
     }
@@ -71,7 +71,7 @@ struct SingleSignOnResponse {
     }
 
     let dictionary = queryItemsToDictionary(decodedPayload)
-    return User(dictionary: dictionary)
+    return UserModel(dictionary: dictionary)
   }
 }
 

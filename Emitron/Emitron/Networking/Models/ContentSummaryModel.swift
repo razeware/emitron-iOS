@@ -36,7 +36,7 @@ extension String {
   }
 }
 
-class ContentSummary {
+class ContentSummaryModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
