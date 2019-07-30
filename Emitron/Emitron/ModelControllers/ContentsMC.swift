@@ -30,13 +30,13 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentsMC: NSObject, BindableObject {
+class ContentsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
@@ -61,7 +61,7 @@ class ContentsMC: NSObject, BindableObject {
     }
   }
   
-  @ObjectBinding var filters: Filters {
+  @ObservedObject var filters: Filters {
     didSet {
       if currentParameters != (filters.appliedParameters + defaultParameters) {
         currentPage = startingPage
@@ -98,7 +98,9 @@ class ContentsMC: NSObject, BindableObject {
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials  else { return }
+    guard data.isEmpty || data.count <= numTutorials else {
+      return
+    }
     
     contentsService.allContents(parameters: currentParameters) { [weak self] result in
       

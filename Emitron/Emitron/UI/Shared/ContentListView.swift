@@ -50,7 +50,7 @@ struct ContentListView: View {
         CardView(content: partialContent)
           .listRowBackground(self.bgColor)
           .background(self.bgColor)
-          .tapAction {
+          .onTapGesture {
             self.isPresenting = true
             self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
           }
@@ -61,7 +61,9 @@ struct ContentListView: View {
         .onAppear { self.loadMoreContents() }
     }
         .sheet(isPresented: self.$isPresenting) {
-          return user != nil ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!)) : AnyView(Text("Unable to show video..."))
+          user != nil
+            ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!))
+            : AnyView(Text("Unable to show video..."))
         }
     
     return AnyView(list)

@@ -30,7 +30,7 @@ import SwiftUI
 
 struct LoginView: View {
   
-  @ObjectBinding var userMC: UserMC
+  @ObservedObject var userMC: UserMC
   @State var showModal: Bool = false
   
   var body: some View {

@@ -30,13 +30,13 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentDetailsMC: NSObject, BindableObject {  
+class ContentDetailsMC: NSObject, ObservableObject {  
   
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   

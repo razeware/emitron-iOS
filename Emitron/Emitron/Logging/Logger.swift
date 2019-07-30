@@ -33,7 +33,8 @@ protocol Log {
   var object: String { get }
   var action: String { get }
   var reason: String { get }
-  func log(additionalParams:[String: String]?)
+
+  func log(additionalParams: [String: String]?)
 }
 
 // To make "reason" optional
@@ -81,7 +82,7 @@ enum Failure: Log {
     let params = [AnalyticsParameterItemName: self.object,
                   "action": self.action,
                   "reason": self.reason]
-    let allParams =  params.merged(additionalParams) as [String: Any]
+    let allParams = params.merged(additionalParams) as [String: Any]
     Analytics.logEvent(action, parameters: allParams)
   }
 }
@@ -106,10 +107,7 @@ enum Event: Log {
   
   func log(additionalParams: [String: String]?) {
     let params = [AnalyticsParameterItemName: self.object]
-    let allParams =  params.merged(additionalParams) as [String: Any]
+    let allParams = params.merged(additionalParams) as [String: Any]
     Analytics.logEvent(action, parameters: allParams)
   }
 }
-
-
-

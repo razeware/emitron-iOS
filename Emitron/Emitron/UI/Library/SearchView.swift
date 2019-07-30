@@ -32,9 +32,8 @@ struct SearchView: View {
   @State private var searchText = ""
   
   var body: some View {
-    
     TextField(Constants.search, text: $searchText)
-      .textFieldStyle(.roundedBorder)
+      .textFieldStyle(RoundedBorderTextFieldStyle())
   }
 }
 

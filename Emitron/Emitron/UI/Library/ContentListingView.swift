@@ -30,7 +30,7 @@ import SwiftUI
 
 struct ContentListingView: View {
   
-  @ObjectBinding var contentDetailsMC: ContentDetailsMC
+  @ObservedObject var contentDetailsMC: ContentDetailsMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
@@ -71,9 +71,9 @@ struct ContentListingView: View {
                 TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
                   // Download
                 })
-                  .tapAction {
-                    self.isPresented = true
-                  }
+                .onTapGesture {
+                  self.isPresented = true
+                }
                 .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
               }
             }
@@ -113,5 +113,3 @@ struct ContentListingView: View {
       }
     }
 }
-
-

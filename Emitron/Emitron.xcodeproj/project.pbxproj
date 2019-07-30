@@ -10,6 +10,9 @@
 		9535A50122D657C6000DA861 /* CoreDataStack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9535A50022D657C6000DA861 /* CoreDataStack.swift */; };
 		95A4513522E224B500D24E56 /* UserMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A4513322E224B500D24E56 /* UserMC.swift */; };
 		95A4513622E224B500D24E56 /* VideosMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A4513422E224B500D24E56 /* VideosMC.swift */; };
+		95BAF69722EF5FB200D17323 /* Emitron.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 95BAF69522EF5FB200D17323 /* Emitron.xcdatamodeld */; };
+		95BAF69A22EF612100D17323 /* DomainEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BAF69922EF612100D17323 /* DomainEntity.swift */; };
+		95BAF69C22EF628700D17323 /* CategoryEntity.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95BAF69B22EF628700D17323 /* CategoryEntity.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B629AB4A22E60BC00037F4D8 /* ContentSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629AB4922E60BC00037F4D8 /* ContentSummaryView.swift */; };
@@ -111,6 +114,9 @@
 		9535A50022D657C6000DA861 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		95A4513322E224B500D24E56 /* UserMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserMC.swift; sourceTree = "<group>"; };
 		95A4513422E224B500D24E56 /* VideosMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideosMC.swift; sourceTree = "<group>"; };
+		95BAF69622EF5FB200D17323 /* Emitron.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Emitron.xcdatamodel; sourceTree = "<group>"; };
+		95BAF69922EF612100D17323 /* DomainEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainEntity.swift; sourceTree = "<group>"; };
+		95BAF69B22EF628700D17323 /* CategoryEntity.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryEntity.swift; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B629AB4922E60BC00037F4D8 /* ContentSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentSummaryView.swift; sourceTree = "<group>"; };
@@ -235,6 +241,8 @@
 			isa = PBXGroup;
 			children = (
 				9535A50022D657C6000DA861 /* CoreDataStack.swift */,
+				95BAF69522EF5FB200D17323 /* Emitron.xcdatamodeld */,
+				95BAF69822EF610F00D17323 /* NSManagedObjects */,
 				B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */,
 			);
 			path = Persistence;
@@ -248,6 +256,15 @@
 				B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */,
 			);
 			path = "Support Files";
+			sourceTree = "<group>";
+		};
+		95BAF69822EF610F00D17323 /* NSManagedObjects */ = {
+			isa = PBXGroup;
+			children = (
+				95BAF69B22EF628700D17323 /* CategoryEntity.swift */,
+				95BAF69922EF612100D17323 /* DomainEntity.swift */,
+			);
+			path = NSManagedObjects;
 			sourceTree = "<group>";
 		};
 		A331F97F98E99A372BB92C47 /* Frameworks */ = {
@@ -735,6 +752,7 @@
 			files = (
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
+				95BAF69C22EF628700D17323 /* CategoryEntity.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
 				B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */,
 				95A4513522E224B500D24E56 /* UserMC.swift in Sources */,
@@ -764,6 +782,7 @@
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
 				95A4513622E224B500D24E56 /* VideosMC.swift in Sources */,
+				95BAF69A22EF612100D17323 /* DomainEntity.swift in Sources */,
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
@@ -801,6 +820,7 @@
 				B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */,
 				B6C4F3BD22E668FC0087ED10 /* FiltersView.swift in Sources */,
 				9535A50122D657C6000DA861 /* CoreDataStack.swift in Sources */,
+				95BAF69722EF5FB200D17323 /* Emitron.xcdatamodeld in Sources */,
 				B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
 				B6DF2F9A22CA05230081A3A3 /* Category.swift in Sources */,
@@ -1014,6 +1034,19 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCVersionGroup section */
+		95BAF69522EF5FB200D17323 /* Emitron.xcdatamodeld */ = {
+			isa = XCVersionGroup;
+			children = (
+				95BAF69622EF5FB200D17323 /* Emitron.xcdatamodel */,
+			);
+			currentVersion = 95BAF69622EF5FB200D17323 /* Emitron.xcdatamodel */;
+			path = Emitron.xcdatamodeld;
+			sourceTree = "<group>";
+			versionGroupType = wrapper.xcdatamodel;
+		};
+/* End XCVersionGroup section */
 	};
 	rootObject = B6D7DC2322C79743006DD325 /* Project object */;
 }

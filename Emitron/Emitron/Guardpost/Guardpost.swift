@@ -57,9 +57,9 @@ public class Guardpost {
 
   // MARK: - Initializers
   init(baseUrl: String,
-              urlScheme: String,
-              ssoSecret: String,
-              persistentStore: PersistenceStore) {
+       urlScheme: String,
+       ssoSecret: String,
+       persistentStore: PersistenceStore) {
     self.baseUrl = baseUrl
     self.urlScheme = urlScheme
     self.ssoSecret = ssoSecret

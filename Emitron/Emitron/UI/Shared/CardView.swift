@@ -78,7 +78,7 @@ struct CardView: View {
         Image("downloadInactive")
           .resizable()
           .frame(width: 19, height: 19)
-          .tapAction {
+          .onTapGesture {
             self.download()
           }
       }

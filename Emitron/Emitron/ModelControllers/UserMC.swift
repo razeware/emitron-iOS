@@ -31,17 +31,17 @@ import Foundation
 import SwiftUI
 import Combine
 
-let SuccessfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
 
-class UserMC: NSObject, BindableObject {
+class UserMC: NSObject, ObservableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
   /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
@@ -82,7 +82,7 @@ class UserMC: NSObject, BindableObject {
           
           //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
           //probably using Combine or Notifications
-          NotificationCenter.default.post(name: SuccessfulSignInNotification, object: nil)
+          NotificationCenter.default.post(name: successfulSignInNotification, object: nil)
           
           Event
             .login(from: "UserMC")
@@ -91,7 +91,6 @@ class UserMC: NSObject, BindableObject {
       }
     }
   }
-  
 }
 
 extension UserMC: ASWebAuthenticationPresentationContextProviding {

@@ -101,9 +101,9 @@ enum FilterGroupType: CaseIterable {
   }
 }
 
-class Filters: BindableObject {
+class Filters: ObservableObject {
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
   var filters: Set<Filter> {
     didSet {
@@ -111,7 +111,7 @@ class Filters: BindableObject {
       categories.filters = filters.filter { $0.groupType == .categories }
       contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
       difficulties.filters = filters.filter { $0.groupType == .difficulties }
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   

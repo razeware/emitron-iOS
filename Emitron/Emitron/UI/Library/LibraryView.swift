@@ -30,12 +30,12 @@
 
 import SwiftUI
 
-private extension Length {
-  static let filterButtonSide: Length = 27
-  static let sidePadding: Length = 18
-  static let searchFilterPadding: Length = 42
-  static let filterSpacing: Length = 6
-  static let filtersPaddingTop: Length = 12
+private extension CGFloat {
+  static let filterButtonSide: CGFloat = 27
+  static let sidePadding: CGFloat = 18
+  static let searchFilterPadding: CGFloat = 42
+  static let filterSpacing: CGFloat = 6
+  static let filtersPaddingTop: CGFloat = 12
 }
 
 enum SortSelection: Int {
@@ -90,7 +90,7 @@ struct LibraryView: View {
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
                 FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC.filters).environmentObject(self.contentsMC)
-            }
+              }
           })
             .padding([.leading], .searchFilterPadding)
         }
@@ -130,7 +130,6 @@ struct LibraryView: View {
                   self.contentsMC.filters = filters
                 }).environmentObject(self.contentsMC.filters)
               }
-              
             }
           }
           .padding([.top], .filtersPaddingTop)

@@ -44,13 +44,13 @@ enum AppliedFilterType {
 
 private enum Layout {
   struct Padding {
-    let overall: Length = 12
-    let textTrailing: Length = 2
+    let overall: CGFloat = 12
+    let textTrailing: CGFloat = 2
   }
   
   static let padding = Padding()
-  static let cornerRadius: Length = 9
-  static let imageSize: Length = 15
+  static let cornerRadius: CGFloat = 9
+  static let imageSize: CGFloat = 15
 }
 
 // TODO: Should make this more reuse-friendly

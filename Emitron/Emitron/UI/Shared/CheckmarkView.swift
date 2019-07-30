@@ -52,11 +52,11 @@ struct CheckmarkView: View {
         }
         .cornerRadius(6)
       } else {
-        Rectangle()
+        RoundedRectangle(cornerRadius: 6)
           .frame(maxWidth: 20, maxHeight: 20)
           .foregroundColor(Color.white)
           .cornerRadius(6)
-          .border(Color.coolGrey, width: 2, cornerRadius: 6)
+          .border(Color.coolGrey, width: 2)
       }
     }
   }

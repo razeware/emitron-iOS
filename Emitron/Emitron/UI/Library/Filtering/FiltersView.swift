@@ -79,7 +79,7 @@ struct FiltersView: View {
       //TODO: In the current beta onDisappear() doesn’t seem to get called.
       .onDisappear {
         self.contentsMC.filters = self.filters
-    }
+      }
   }
   
   func constructFilterView(filterGroup: FilterGroup) -> AnyView {

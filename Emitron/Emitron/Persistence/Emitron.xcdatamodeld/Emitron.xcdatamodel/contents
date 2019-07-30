@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14877.5" systemVersion="18G84" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="CategoryEntity" representedClassName="CategoryEntity" syncable="YES">
+        <attribute name="name" attributeType="String"/>
+        <attribute name="ordinal" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uri" attributeType="String"/>
+    </entity>
+    <entity name="DomainEntity" representedClassName="DomainEntity" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="slug" attributeType="String"/>
+    </entity>
+    <elements>
+        <element name="DomainEntity" positionX="-63" positionY="-18" width="128" height="118"/>
+        <element name="CategoryEntity" positionX="-54" positionY="27" width="128" height="88"/>
+    </elements>
+</model>

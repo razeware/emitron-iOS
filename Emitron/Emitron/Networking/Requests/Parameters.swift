@@ -142,7 +142,7 @@ enum ParameterFilterValue {
     case .difficulties(difficulties: let difficulties):
       return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
     case .contentIds(ids: let ids):
-      return ids.map { (displayName: "\($0.id)", requestValue: "\($0.id)") }
+      return ids.map { (displayName: "\($0)", requestValue: "\($0)") }
     }
   }
   

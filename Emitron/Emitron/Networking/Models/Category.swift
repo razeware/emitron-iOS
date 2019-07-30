@@ -44,4 +44,14 @@ class Category {
     self.uri = jsonResource["uri"] as? String ??  ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0
   }
+
+  /// Convenience initializer to transform core data **CategoryEntity** into a **Category** model
+  ///
+  /// - parameters:
+  ///   - category: core data entity to transform into category model
+  init(_ category: CategoryEntity) {
+    self.name = category.name
+    self.uri = category.uri
+    self.ordinal = category.ordinal.intValue
+  }
 }

@@ -26,6 +26,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import CoreData
 import Foundation
 
 enum DomainLevel: String {
@@ -56,6 +57,21 @@ class Domain {
 
     if let domainLevel = DomainLevel(rawValue: jsonResource["level"] as? String ?? DomainLevel.none.rawValue) {
       self.level = domainLevel
+    }
+  }
+
+
+  /// Convenience initializer to transform core data **DomainEntity** into a **Domain** model
+  ///
+  /// - parameters:
+  ///   - domain: core data entity to transform into domain model
+  init(_ domain: DomainEntity) {
+    self.id = domain.id.intValue
+    self.name = domain.name
+    self.slug = domain.slug
+    self.level = DomainLevel(rawValue: domain.level) ?? .none
+    if let description = domain.desc {
+      self.description = description
     }
   }
 }

@@ -73,7 +73,7 @@ struct TextListItemView: View {
       // it just passes through; example below
       Image("downloadInactive")
         .foregroundColor(.coolGrey)
-        .tapAction {
+        .onTapGesture {
           self.buttonAction()
         }
       

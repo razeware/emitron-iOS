@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,43 +26,19 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import CoreData
+import Foundation
 
-private enum Layout {
-  struct Padding {
-    let overall: CGFloat = 12
-    let textTrailing: CGFloat = 2
+@objc(DomainEntity)
+final class DomainEntity: NSManagedObject {
+
+  @nonobjc class func fetchRequest() -> NSFetchRequest<DomainEntity> {
+    return NSFetchRequest<DomainEntity>(entityName: "DomainEntity")
   }
 
-  static let padding = Padding()
-  static let cornerRadius: CGFloat = 9
-  static let imageSize: CGFloat = 15
+  @NSManaged var id: NSNumber
+  @NSManaged var name: String
+  @NSManaged var level: String
+  @NSManaged var slug: String
+  @NSManaged var desc: String?
 }
-
-struct FilterView: View {
-  @EnvironmentObject var filters: Filters
-  var filter: Filter
-  
-  var body: some View {
-    HStack {
-      Text(filter.filterName)
-        .foregroundColor(.appBlack)
-        .font(.uiBodyCustom)
-        .padding([.trailing], Layout.padding.textTrailing)
-      
-      Spacer()
-      
-      CheckmarkView(filter: filter)
-    }
-      .frame(minHeight: 46)
-  }
-}
-
-#if DEBUG
-struct FilterView_Previews: PreviewProvider {
-  static var previews: some View {
-    // TODO: Give this a proper value
-    FilterView(filter: Filter.testFilter)
-  }
-}
-#endif
