@@ -40,12 +40,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                    urlScheme: "com.razeware.emitron://",
                                    ssoSecret: AppDelegate.sso,
                                    persistentStore: persistentStore)
+  
+  var domainsMC: DomainsMC?
     
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     FirebaseApp.configure()
     //Fabric.with([Crashlytics.self])
+    
+    let store = AppDelegate.persistentStore
+    let guardpost = AppDelegate.guardpost
+    
+    if let user = store.userFromKeychain() {
+      domainsMC = DomainsMC(guardpost: guardpost, user: user)
+      domainsMC!.fetchDomains()
+    }
     
     return true
   }

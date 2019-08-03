@@ -31,7 +31,7 @@ import SwiftUI
 struct CardView: View {
   
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-  let content: ContentDetail?
+  let content: ContentDetailModel?
   
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text

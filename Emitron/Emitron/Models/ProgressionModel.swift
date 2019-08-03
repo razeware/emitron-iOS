@@ -26,52 +26,40 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import CoreData
 import Foundation
 
-enum DomainLevel: String {
-  // Production + Beta are the only user-facing ones
-  case none
-  case production
-  case beta
-  case blog
-  case archive
-  case retired
-}
-
-class Domain {
+class ProgressionModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
-  private(set) var name: String = ""
-  private(set) var slug: String = ""
-  private(set) var description: String = ""
-  private(set) var level: DomainLevel = .none
+  private(set) var target: Int = 0
+  private(set) var progress: Int = 0
+  private(set) var finished: Bool = false
+  private(set) var percentComplete: Double = 0.0
+  // There's something funky going on with Date's in Xcode 11
+  private(set) var createdAt: Date
+  private(set) var updatedAt: Date
 
   // MARK: - Initializers
-  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
+
     self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String ?? ""
-    self.slug = jsonResource["slug"] as? String ?? ""
-    self.description = jsonResource["description"] as? String ?? ""
+    self.target = jsonResource["target"] as? Int ?? 0
+    self.progress = jsonResource["progress"] as? Int ?? 0
+    self.finished = jsonResource["finished"] as? Bool ?? false
+    self.percentComplete = jsonResource["percent_complete"] as? Double ?? 0.0
 
-    if let domainLevel = DomainLevel(rawValue: jsonResource["level"] as? String ?? DomainLevel.none.rawValue) {
-      self.level = domainLevel
+    if let createdAtStr = jsonResource["created_at"] as? String {
+      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
+    } else {
+      self.createdAt = Date()
     }
-  }
 
-
-  /// Convenience initializer to transform core data **DomainEntity** into a **Domain** model
-  ///
-  /// - parameters:
-  ///   - domain: core data entity to transform into domain model
-  init(_ domain: DomainEntity) {
-    self.id = domain.id.intValue
-    self.name = domain.name
-    self.slug = domain.slug
-    self.level = DomainLevel(rawValue: domain.level) ?? .none
-    if let description = domain.desc {
-      self.description = description
+    if let updatedAtStr = jsonResource["updated_at"] as? String {
+      self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
+    } else {
+      self.updatedAt = Date()
     }
   }
 }

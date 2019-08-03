@@ -28,17 +28,24 @@
 
 import Foundation
 
-class Download {
+class BookmarkModel {
 
   // MARK: - Properties
-  var video: Video
-  var task: URLSessionDownloadTask?
-  var isDownloading: Bool = false
-  var resumeData: Data?
-  var progress: Double = 0
+  private(set) var id: Int = 0
+
+  //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
+  // Does not happen in Xcode 10
+  private(set) var createdAt: Date
 
   // MARK: - Initializers
-  init(video: Video) {
-    self.video = video
+  init?(resource: JSONAPIResource,
+        metadata: [String: Any]?) {
+    self.id = resource.id
+
+    if let createdAtStr = resource["created_at"] as? String {
+      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
+    } else {
+      self.createdAt = Date()
+    }
   }
 }

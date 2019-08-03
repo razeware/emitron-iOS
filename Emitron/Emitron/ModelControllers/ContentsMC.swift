@@ -43,7 +43,7 @@ class ContentsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: [ContentDetail] = []
+  private(set) var data: [ContentDetailModel] = []
   private(set) var numTutorials: Int = 0
   
   // Pagination

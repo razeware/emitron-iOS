@@ -43,11 +43,11 @@ class ContentDetailsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: ContentDetail
+  private(set) var data: ContentDetailModel
   
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentDetail) {
+       partialContentDetail: ContentDetailModel) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)

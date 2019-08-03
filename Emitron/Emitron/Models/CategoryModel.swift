@@ -28,24 +28,30 @@
 
 import Foundation
 
-class Bookmark {
+class CategoryModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
-
-  //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
-  // Does not happen in Xcode 10
-  private(set) var createdAt: Date
+  private(set) var name: String = ""
+  private(set) var uri: String = ""
+  private(set) var ordinal: Int = 0 //  Sort order for displaying categories
 
   // MARK: - Initializers
-  init?(resource: JSONAPIResource,
+  init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?) {
-    self.id = resource.id
+    self.id = jsonResource.id
+    self.name = jsonResource["name"] as? String ?? ""
+    self.uri = jsonResource["uri"] as? String ??  ""
+    self.ordinal = jsonResource["ordinal"] as? Int ?? 0
+  }
 
-    if let createdAtStr = resource["created_at"] as? String {
-      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
-    } else {
-      self.createdAt = Date()
-    }
+  /// Convenience initializer to transform core data **CategoryEntity** into a **Category** model
+  ///
+  /// - parameters:
+  ///   - category: core data entity to transform into category model
+  init(_ category: Category) {
+    self.name = category.name
+    self.uri = category.uri
+    self.ordinal = category.ordinal.intValue
   }
 }

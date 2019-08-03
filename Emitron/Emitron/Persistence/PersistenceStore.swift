@@ -68,7 +68,7 @@ private let SSOUserKey = "com.razeware.emitron.sso_user"
 extension PersistenceStore {
   
   @discardableResult
-  func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+  func persistUserToKeychain(user: UserModel, encoder: JSONEncoder = JSONEncoder()) -> Bool {
     guard let encoded = try? encoder.encode(user) else {
       return false
     }
@@ -79,13 +79,13 @@ extension PersistenceStore {
                         withAccess: .accessibleAfterFirstUnlock)
   }
   
-  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
+  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> UserModel? {
     let keychain = KeychainSwift()
     guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
     }
     
-    return try? decoder.decode(User.self, from: encoded)
+    return try? decoder.decode(UserModel.self, from: encoded)
   }
   
   @discardableResult

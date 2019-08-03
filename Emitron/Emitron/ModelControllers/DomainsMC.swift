@@ -29,6 +29,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import CoreData
 
 class DomainsMC: NSObject, ObservableObject {
   
@@ -41,12 +42,12 @@ class DomainsMC: NSObject, ObservableObject {
   }
   
   private let client: RWAPI
-  private let user: User
+  private let user: UserModel
   private let service: DomainsService
-  private(set) var data: [Domain] = []
+  private(set) var data: [DomainModel] = []
   
   // MARK: - Initializers
-  init(guardpost: Guardpost, user: User) {
+  init(guardpost: Guardpost, user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
@@ -55,6 +56,9 @@ class DomainsMC: NSObject, ObservableObject {
   
   // MARK: - Internal
   func fetchDomains() {
+    
+    fetchFromCoreData()
+    
     guard state != .loading else {
       return
     }
@@ -72,10 +76,39 @@ class DomainsMC: NSObject, ObservableObject {
         Failure
           .fetch(from: "DomainsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let attachment):
-        self.data = attachment
+      case .success(let domains):
+        self.data = domains
         self.state = .hasData
+        //self.saveToCoreData()
       }
+    }
+  }
+  
+  private func fetchFromCoreData() {
+    let domainModels = Domain.domains
+    print("Domains: \(domainModels.map { $0.name })")
+  }
+  
+  private func saveToCoreData() {
+    
+    let coreDataStack = CoreDataStack()
+    coreDataStack.setupPersistentContainer()
+    
+    let domainEntity = NSEntityDescription.entity(forEntityName: "Domain", in: coreDataStack.viewContext)!
+    
+    for entry in data {
+      let domain = NSManagedObject(entity: domainEntity, insertInto: coreDataStack.viewContext)
+      domain.setValue(entry.id, forKeyPath: "id")
+      domain.setValue(entry.name, forKeyPath: "name")
+      domain.setValue(entry.level.rawValue, forKeyPath: "level")
+      domain.setValue(entry.slug, forKeyPath: "slug")
+      domain.setValue(entry.description, forKeyPath: "desc")
+    }
+    
+    do {
+      try coreDataStack.viewContext.save()
+    } catch let error {
+      print("Failed saving...\(error.localizedDescription)")
     }
   }
 }

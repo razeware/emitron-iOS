@@ -31,7 +31,7 @@ import SwiftUI
 struct ContentListView: View {
   
   @State var isPresenting: Bool = false
-  var contents: [ContentDetail] = []
+  var contents: [ContentDetailModel] = []
   var bgColor: Color
   @State var selectedMC: ContentDetailsMC?
   @EnvironmentObject var contentsMC: ContentsMC

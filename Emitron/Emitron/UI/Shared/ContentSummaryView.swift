@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct ContentSummaryView: View {
-  var details: ContentDetail
+  var details: ContentDetailModel
   var body: some View {
     VStack(alignment: .leading) {
       
@@ -96,7 +96,7 @@ struct ContentSummaryView: View {
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      ContentSummaryView(details: ContentDetail.test)
+      ContentSummaryView(details: ContentDetailModel.test)
     }
 }
 #endif

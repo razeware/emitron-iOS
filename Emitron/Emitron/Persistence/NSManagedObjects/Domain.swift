@@ -29,11 +29,11 @@
 import CoreData
 import Foundation
 
-@objc(DomainEntity)
-final class DomainEntity: NSManagedObject {
+@objc(Domain)
+final class Domain: NSManagedObject {
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<DomainEntity> {
-    return NSFetchRequest<DomainEntity>(entityName: "DomainEntity")
+  @nonobjc class func domainFetchRequest() -> NSFetchRequest<Domain> {
+    return NSFetchRequest<Domain>(entityName: "Domain")
   }
 
   @NSManaged var id: NSNumber
@@ -41,4 +41,19 @@ final class DomainEntity: NSManagedObject {
   @NSManaged var level: String
   @NSManaged var slug: String
   @NSManaged var desc: String?
+  
+  static var domains: [DomainModel] {
+    let coreDataStack = CoreDataStack()
+    coreDataStack.setupPersistentContainer()
+    
+    do {
+      let fetchRequest = Domain.domainFetchRequest()
+      let result = try coreDataStack.viewContext.fetch(fetchRequest)
+      let domainModels = result.map(DomainModel.init)
+      return domainModels
+    } catch {
+      print("Failed...")
+      return []
+    }
+  }
 }

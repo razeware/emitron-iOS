@@ -28,30 +28,24 @@
 
 import Foundation
 
-class Category {
+class GroupModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var name: String = ""
-  private(set) var uri: String = ""
-  private(set) var ordinal: Int = 0 //  Sort order for displaying categories
+  private(set) var description: String = ""
+  private(set) var ordinal: Int = 0
+  private(set) var childContents: [ContentSummaryModel] = []
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any]?) {
+        metadata: [String: Any],
+        childContents: [ContentSummaryModel] = []) {
+
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""
-    self.uri = jsonResource["uri"] as? String ??  ""
+    self.description = jsonResource["description"] as? String ?? ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0
-  }
-
-  /// Convenience initializer to transform core data **CategoryEntity** into a **Category** model
-  ///
-  /// - parameters:
-  ///   - category: core data entity to transform into category model
-  init(_ category: CategoryEntity) {
-    self.name = category.name
-    self.uri = category.uri
-    self.ordinal = category.ordinal.intValue
+    self.childContents = childContents
   }
 }

@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct TextListItemView: View {
-  var contentSummary: ContentSummary?
+  var contentSummary: ContentSummaryModel?
   var timeStamp: String?
   var buttonAction: () -> Void
   

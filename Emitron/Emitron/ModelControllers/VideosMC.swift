@@ -41,13 +41,13 @@ class VideosMC: NSObject, ObservableObject {
   }
   
   private let client: RWAPI
-  private let user: User
+  private let user: UserModel
   private let service: VideosService
-  private(set) var data: Attachment?
+  private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
   
   // MARK: - Initializers
-  init(user: User) {
+  init(user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)

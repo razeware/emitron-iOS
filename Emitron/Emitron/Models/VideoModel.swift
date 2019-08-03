@@ -27,22 +27,60 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftyJSON
 
-struct CategoriesRequest: Request {
-  typealias Response = [CategoryModel]
+struct VideoFile {
+  let kind: VideoKind
+  let url: URL
+}
+
+enum VideoKind: String {
+  case none
+  case stream
+  case sdVideo
+  case hdVideo
+}
+
+class VideoModel {
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/categories" }
-  var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  private(set) var id: Int = 0
+  private(set) var name: String = ""
+  private(set) var description: String = ""
+  private(set) var free: Bool = false
 
-  // MARK: - Internal
-  func handle(response: Data) throws -> [CategoryModel] {
-    let json = try JSON(data: response)
-    let doc = JSONAPIDocument(json)
-    let categories = doc.data.compactMap { CategoryModel($0, metadata: nil) }
-    return categories
+  //TODO There's something funky going on with Date's in Xcode 11
+  private(set) var releasedAt: Date
+  private(set) var createdAt: Date
+  private(set) var updatedAt: Date
+  private(set) var streamFile: VideoFile?
+  private(set) var sdVideoFile: VideoFile?
+  private(set) var hdVideoFile: VideoFile?
+
+  // MARK: - Initializers
+  init(_ jsonResource: JSONAPIResource,
+       metadata: [String: Any]?) {
+
+    self.id = jsonResource.id
+    self.name = jsonResource["name"] as? String ?? ""
+    self.description = jsonResource["description"] as? String ?? ""
+    self.free = jsonResource["free"] as? Bool ?? false
+
+    if let releasedAt = jsonResource["released_at"] as? String {
+      self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAt) ?? Date()
+    } else {
+      self.releasedAt = Date()
+    }
+
+    if let createdAtStr = jsonResource["created_at"] as? String {
+      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
+    } else {
+      self.createdAt = Date()
+    }
+
+    if let updatedAtStr = jsonResource["updated_at"] as? String {
+      self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
+    } else {
+      self.updatedAt = Date()
+    }
   }
 }
