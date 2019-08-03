@@ -68,7 +68,7 @@ struct ContentListingView: View {
             ) {
               ForEach(group.childContents, id: \.id) { summary in
                 
-                TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
+                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
                   // Download
                 })
                 .onTapGesture {

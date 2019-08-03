@@ -42,7 +42,7 @@ struct ContentSummaryView: View {
       Text(details.name) // TITLE
         .font(.uiTitle1)
         .lineLimit(nil)
-        .frame(idealHeight: .infinity)
+        //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .padding([.top], -5)
       

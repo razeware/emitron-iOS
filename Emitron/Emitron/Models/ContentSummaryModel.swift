@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 extension String {
 
@@ -59,7 +60,7 @@ class ContentSummaryModel {
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?,
-        index: Int) {
+        index: Int = 0) {
 
     self.id = jsonResource.id
     self.index = index
@@ -94,5 +95,22 @@ class ContentSummaryModel {
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
+  }
+}
+
+extension ContentSummaryModel {
+  static var test: ContentSummaryModel {
+    do {
+      let fileURL = Bundle.main.url(forResource: "ContentSummaryModelTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let resource = JSONAPIResource(json, parent: document)
+      return ContentSummaryModel(resource, metadata: nil)!
+    } catch {
+      let resource = JSONAPIResource()
+      return ContentSummaryModel(resource, metadata: nil)!
+    }
   }
 }

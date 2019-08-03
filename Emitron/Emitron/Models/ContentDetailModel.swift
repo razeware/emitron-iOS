@@ -145,7 +145,7 @@ class ContentDetailModel {
 extension ContentDetailModel {
   static var test: ContentDetailModel {
     do {
-      let fileURL = Bundle.main.url(forResource: "ContentDetailTest", withExtension: "json")
+      let fileURL = Bundle.main.url(forResource: "ContentDetailsModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
       let json = try JSON(data: data)
     

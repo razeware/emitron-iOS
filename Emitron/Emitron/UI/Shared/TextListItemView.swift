@@ -29,22 +29,9 @@
 import SwiftUI
 
 struct TextListItemView: View {
-  var contentSummary: ContentSummaryModel?
-  var timeStamp: String?
+  var contentSummary: ContentSummaryModel
+  var timeStamp: String
   var buttonAction: () -> Void
-  
-  //TODO: This should be coming from the BE eventually, but for now we're doing some magic transformation to get the correct title
-  private var titleString: String {
-    guard let name = contentSummary?.name else {
-      return "No name :("
-    }
-    
-    let realTitle = name.split(separator: "·",
-                               maxSplits: 1,
-                               omittingEmptySubsequences: true)
-    let str = "\(realTitle.last!)"
-    return str.trimmingCharacters(in: .whitespaces)
-  }
   
   var body: some View {
     HStack(alignment: .center, spacing: 15) {
@@ -54,16 +41,16 @@ struct TextListItemView: View {
           .foregroundColor(.brightGrey)
           .cornerRadius(6)
         
-        Text("\(contentSummary?.index ?? 0)")
+        Text("\(contentSummary.index)")
           .font(.uiButtonLabelSmall)
           .foregroundColor(.white)
       }
       
       VStack(alignment: .leading) {
-        Text(titleString)
+        Text(contentSummary.name)
           .font(.uiHeadline)
           .lineLimit(nil)
-        Text(timeStamp ?? "1:31")
+        Text(timeStamp)
           .font(.uiCaption)
       }
       
@@ -91,7 +78,10 @@ struct TextListItemView: View {
 #if DEBUG
 struct TextListItemView_Previews: PreviewProvider {
   static var previews: some View {
-    TextListItemView(contentSummary: nil, timeStamp: nil, buttonAction: {
+    let contentSummary = ContentSummaryModel.test
+    let timeStamp = "1:31"
+    
+    return TextListItemView(contentSummary: contentSummary, timeStamp: timeStamp, buttonAction: {
       print("Testing")
     })
   }
