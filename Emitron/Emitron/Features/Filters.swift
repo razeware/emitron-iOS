@@ -63,12 +63,9 @@ enum FilterGroupType: CaseIterable {
     switch self {
       
     case .platforms:
-      // TODO: These are hardcoded atm, but will come from the PersistenceStore cache, once that's there
-      let domainTypes = [(id: 1, name: "iOS & Swift"),
-                         (id: 2, name: "Android & Kotlin"),
-                         (id: 8, name: "Server-side Swift"),
-                         (id: 3, name: "Unity"),
-                         (id: 4, name: "Unreal Engine")]
+      let domains = DataManager.current.domainsMC.data
+      let userFacingDomains = domains.filter { DomainLevel.userFacing.contains($0.level) }
+      let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
       
       return Set(Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .categories:

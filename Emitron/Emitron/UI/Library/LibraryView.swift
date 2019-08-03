@@ -172,7 +172,7 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     return LibraryView().environmentObject(ContentsMC(guardpost: guardpost))
   }
 }

@@ -32,10 +32,12 @@ import Foundation
 @objc(Domain)
 final class Domain: NSManagedObject {
 
-  @nonobjc class func domainFetchRequest() -> NSFetchRequest<Domain> {
+  @nonobjc class func fetchRequest() -> NSFetchRequest<Domain> {
     return NSFetchRequest<Domain>(entityName: "Domain")
   }
-
+  
+  let fetchRequest: NSFetchRequest<Domain> = Domain.fetchRequest()
+  
   @NSManaged var id: NSNumber
   @NSManaged var name: String
   @NSManaged var level: String

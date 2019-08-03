@@ -47,7 +47,7 @@ struct ContentListView: View {
   }
   
   private func cardsScrollView() -> AnyView {
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
@@ -76,7 +76,7 @@ struct ContentListView: View {
   }
   
   private func cardsTableView() -> AnyView {
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     

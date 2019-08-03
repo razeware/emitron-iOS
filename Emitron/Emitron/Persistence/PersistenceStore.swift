@@ -37,12 +37,15 @@ final class PersistenceStore {
     return (UIApplication.shared.delegate as! AppDelegate).persistentStore
   }
   
-  let categories: [CategoryModel] = []
-  let domains: [DomainModel] = []
-  let contents: [ContentSummaryModel] = []
-  let bookmarks: [BookmarkModel] = []
+  let coreDataStack = CoreDataStack()
   
-  init() { }
+  init() {
+    setupPersistentStore()
+  }
+  
+  private func setupPersistentStore() {
+    coreDataStack.setupPersistentContainer()
+  }
 }
 
 // MARK: Documents Directory

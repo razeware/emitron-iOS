@@ -65,7 +65,7 @@ struct TabNavView: View {
   
   func libraryView() -> AnyView {
     
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     let contentsMC = ContentsMC(guardpost: guardpost)
     
     return AnyView(LibraryView().environmentObject(contentsMC))

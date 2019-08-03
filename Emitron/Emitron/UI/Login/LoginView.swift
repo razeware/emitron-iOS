@@ -55,7 +55,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
 
   static var previews: some View {
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     let userMC = UserMC(guardpost: guardpost)
     
     return LoginView(userMC: userMC)

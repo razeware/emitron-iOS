@@ -27,14 +27,20 @@
 /// THE SOFTWARE.
 
 import Foundation
+import UIKit
 
 class DataManager {
   
+  static var current: DataManager {
+    return (UIApplication.shared.delegate as! AppDelegate).dataManager!
+  }
+  
   private let categoriesService: CategoriesService
-  private let domainsMC: DomainsMC
   private let domainsService: DomainsService
   private let contentsService: ContentsService
   private let bookmarksService: BookmarksService
+  
+  let domainsMC: DomainsMC
   
   init(guardpost: Guardpost, user: UserModel, persistenceStore: PersistenceStore) {
     let client = RWAPI(authToken: user.token)
@@ -44,14 +50,12 @@ class DataManager {
     self.bookmarksService = BookmarksService(client: client)
     self.contentsService = ContentsService(client: client)
     
-    self.domainsMC = DomainsMC(guardpost: guardpost, user: user)
+    self.domainsMC = DomainsMC(guardpost: guardpost, user: user, persistentStore: persistenceStore)
     
-    loadInitia()
+    loadInitial()
   }
   
-  private func loadInitia() {
-    
-    domainsMC.fetchDomains()
-    
+  private func loadInitial() {
+    domainsMC.populate()
   }
 }

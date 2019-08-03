@@ -38,6 +38,10 @@ public enum LoginError: Error {
 }
 
 public class Guardpost {
+  
+  static var current: Guardpost {
+    return (UIApplication.shared.delegate as! AppDelegate).guardpost!
+  }
 
   // MARK: - Properties
   private let baseUrl: String

@@ -64,7 +64,7 @@ struct VideoView: View {
 struct VideoView_Previews: PreviewProvider {
 
   static var previews: some View {
-    let user = AppDelegate.guardpost.currentUser!
+    let user = Guardpost.current.currentUser!
     return VideoView(videoID: 2292, user: user)
   }
 }

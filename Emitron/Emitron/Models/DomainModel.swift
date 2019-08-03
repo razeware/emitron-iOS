@@ -38,6 +38,10 @@ enum DomainLevel: String {
   case blog
   case archive
   case retired
+  
+  static var userFacing: [DomainLevel] {
+    return [DomainLevel.production, .beta]
+  }
 }
 
 class DomainModel {

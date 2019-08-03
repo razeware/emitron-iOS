@@ -44,7 +44,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
       
-      let guardpost = AppDelegate.guardpost
+      let guardpost = Guardpost.current
       let userMC = UserMC(guardpost: guardpost)
       let loginView = LoginView(userMC: userMC)
       
