@@ -35,6 +35,8 @@ final class Category: NSManagedObject {
   @nonobjc class func fetchRequest() -> NSFetchRequest<Category> {
     return NSFetchRequest<Category>(entityName: "Category")
   }
+  
+  let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
 
   @NSManaged var name: String
   @NSManaged var uri: String

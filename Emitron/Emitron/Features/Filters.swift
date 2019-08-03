@@ -69,12 +69,8 @@ enum FilterGroupType: CaseIterable {
       
       return Set(Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .categories:
-      // TODO: These are hardcoded atm, but will come from the PersistenceStore cache, once that's there
-      let categoryTypes = [(id: 156, name: "Algorithms & Data Structures"),
-                           (id: 181, name: "Architecture"),
-                           (id: 159, name: "AR / VR"),
-                           (id: 157, name: "Audio / Video"),
-                           (id: 151, name: "Concurrency")]
+      let categories = DataManager.current.categoriesMC.data
+      let categoryTypes = categories.map { (id: $0.id, name: $0.name) }
       
       return Set(Param.filter(by: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .contentTypes:
