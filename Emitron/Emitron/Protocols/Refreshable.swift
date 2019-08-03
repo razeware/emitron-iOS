@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,14 +28,33 @@
 
 import Foundation
 
-extension Date {
-  var cardString: String {
-    let formatter = DateFormatter.cardDateFormatter
-    return formatter.string(from: self)
+protocol Refreshable {
+  var refreshableUserDefaultsKey: String { get }
+  var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
+  var shouldRefresh: Bool { get }
+  func saveOrReplaceUpdateDate()
+}
+
+extension Refreshable {
+  var shouldRefresh: Bool {
+      let storedDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey)
+      if let lastUpdateDate = storedDate as? Date {
+        return lastUpdateDate < self.refreshableCheckTimeSpan.date
+      }
+      return true
   }
   
-  func dateByAddingNumberOfDays(_ days: Int) -> Date {
-      let timeInterval: TimeInterval = TimeInterval(60 * 60 * 24 * days)
-      return addingTimeInterval(timeInterval)
+  func saveOrReplaceUpdateDate() {
+    UserDefaults.standard.set(Date(), forKey: self.refreshableUserDefaultsKey)
+    UserDefaults.standard.synchronize()
+  }
+}
+
+enum RefreshableTimeSpan: Int {
+  case long = 30
+  case short = 1
+  
+  var date: Date {
+    return Date().dateByAddingNumberOfDays(-self.rawValue)
   }
 }

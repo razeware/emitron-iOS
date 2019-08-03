@@ -73,7 +73,9 @@ extension PersistenceStore {
 // Progress for contentID
 // App Settings
 
-extension PersistenceStore { }
+extension PersistenceStore {
+  
+}
 
 // MARK: Keychain
 // User + Auth Token (refresh daily)

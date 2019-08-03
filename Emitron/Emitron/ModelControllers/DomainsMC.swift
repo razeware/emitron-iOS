@@ -31,7 +31,10 @@ import SwiftUI
 import Combine
 import CoreData
 
-class DomainsMC: NSObject, ObservableObject {
+class DomainsMC: NSObject, ObservableObject, Refreshable {
+  
+  var refreshableUserDefaultsKey = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
+  var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -62,12 +65,12 @@ class DomainsMC: NSObject, ObservableObject {
   
   func populate() {
     // TODO: Add a timing refresh function
-    let timeToUpdate: Bool = true
     
     loadFromPersistentStore()
     
-    if timeToUpdate {
+    if shouldRefresh {
       fetchDomains()
+      saveOrReplaceUpdateDate()
     }
   }
   
