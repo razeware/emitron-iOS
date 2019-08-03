@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 struct VideoFile {
   let kind: VideoKind
@@ -81,6 +82,23 @@ class VideoModel {
       self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
     } else {
       self.updatedAt = Date()
+    }
+  }
+}
+
+extension VideoModel {
+  static var test: VideoModel {
+    do {
+      let fileURL = Bundle.main.url(forResource: "VideoModelTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let resource = JSONAPIResource(json, parent: document)
+      return VideoModel(resource, metadata: nil)
+    } catch {
+      let resource = JSONAPIResource()
+      return VideoModel(resource, metadata: nil)
     }
   }
 }

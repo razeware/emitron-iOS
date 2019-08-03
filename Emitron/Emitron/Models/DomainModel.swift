@@ -28,6 +28,7 @@
 
 import CoreData
 import Foundation
+import SwiftyJSON
 
 enum DomainLevel: String {
   // Production + Beta are the only user-facing ones
@@ -71,6 +72,22 @@ class DomainModel {
     self.level = DomainLevel(rawValue: domain.level) ?? .none
     if let description = domain.desc {
       self.description = description
+    }
+  }
+}
+
+extension DomainModel {
+  static var test: [DomainModel] {
+    do {
+      let fileURL = Bundle.main.url(forResource: "DomainsModelTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let domains = document.data.compactMap { DomainModel($0, metadata: nil) }
+      return domains
+    } catch {
+      return []
     }
   }
 }

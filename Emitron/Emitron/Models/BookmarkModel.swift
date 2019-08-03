@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 class BookmarkModel {
 
@@ -46,6 +47,22 @@ class BookmarkModel {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
     } else {
       self.createdAt = Date()
+    }
+  }
+}
+
+extension BookmarkModel {
+  static var test: [BookmarkModel] {
+    do {
+      let fileURL = Bundle.main.url(forResource: "BookmarksModelTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let bookmarks = document.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
+      return bookmarks
+    } catch {
+      return []
     }
   }
 }

@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 class ProgressionModel {
 
@@ -60,6 +61,22 @@ class ProgressionModel {
       self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
     } else {
       self.updatedAt = Date()
+    }
+  }
+}
+
+extension ProgressionModel {
+  static var test: [ProgressionModel] {
+    do {
+      let fileURL = Bundle.main.url(forResource: "ProgressionsModelTest", withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+    
+      let document = JSONAPIDocument(json)
+      let domains = document.data.compactMap { ProgressionModel($0, metadata: nil) }
+      return domains
+    } catch {
+      return []
     }
   }
 }
