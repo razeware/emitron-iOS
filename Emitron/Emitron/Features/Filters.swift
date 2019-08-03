@@ -30,16 +30,6 @@ import Foundation
 import SwiftUI
 import Combine
 
-enum Platform: Int, CaseIterable {
-  case iOSandSwift = 1
-  case androidAndKotlin
-  case serverSideSwift
-  case unity
-  case unrealEngine
-  case macOS
-  case archive
-}
-
 struct FilterGroup: Hashable {
   var type: FilterGroupType
   var filters: Set<Filter>
