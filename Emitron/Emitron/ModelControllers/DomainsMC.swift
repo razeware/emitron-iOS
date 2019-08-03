@@ -56,9 +56,7 @@ class DomainsMC: NSObject, ObservableObject {
   
   // MARK: - Internal
   func fetchDomains() {
-    
-    fetchFromCoreData()
-    
+        
     guard state != .loading else {
       return
     }
@@ -79,36 +77,7 @@ class DomainsMC: NSObject, ObservableObject {
       case .success(let domains):
         self.data = domains
         self.state = .hasData
-        //self.saveToCoreData()
       }
-    }
-  }
-  
-  private func fetchFromCoreData() {
-    let domainModels = Domain.domains
-    print("Domains: \(domainModels.map { $0.name })")
-  }
-  
-  private func saveToCoreData() {
-    
-    let coreDataStack = CoreDataStack()
-    coreDataStack.setupPersistentContainer()
-    
-    let domainEntity = NSEntityDescription.entity(forEntityName: "Domain", in: coreDataStack.viewContext)!
-    
-    for entry in data {
-      let domain = NSManagedObject(entity: domainEntity, insertInto: coreDataStack.viewContext)
-      domain.setValue(entry.id, forKeyPath: "id")
-      domain.setValue(entry.name, forKeyPath: "name")
-      domain.setValue(entry.level.rawValue, forKeyPath: "level")
-      domain.setValue(entry.slug, forKeyPath: "slug")
-      domain.setValue(entry.description, forKeyPath: "desc")
-    }
-    
-    do {
-      try coreDataStack.viewContext.save()
-    } catch let error {
-      print("Failed saving...\(error.localizedDescription)")
     }
   }
 }

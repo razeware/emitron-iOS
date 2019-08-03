@@ -41,19 +41,4 @@ final class Domain: NSManagedObject {
   @NSManaged var level: String
   @NSManaged var slug: String
   @NSManaged var desc: String?
-  
-  static var domains: [DomainModel] {
-    let coreDataStack = CoreDataStack()
-    coreDataStack.setupPersistentContainer()
-    
-    do {
-      let fetchRequest = Domain.domainFetchRequest()
-      let result = try coreDataStack.viewContext.fetch(fetchRequest)
-      let domainModels = result.map(DomainModel.init)
-      return domainModels
-    } catch {
-      print("Failed...")
-      return []
-    }
-  }
 }

@@ -1,0 +1,74 @@
+{
+  "data":[
+    {
+      "id":"1",
+      "type":"domains",
+      "attributes":{
+        "name":"iOS \u0026 Swift",
+        "slug":"ios",
+        "description":"Learn iOS development in Swift",
+        "level":"production"
+      }
+    },
+    {
+      "id":"2",
+      "type":"domains",
+      "attributes":{
+        "name":"Android \u0026 Kotlin",
+        "slug":"android",
+        "description":"Learn Android development in Kotlin",
+        "level":"production"
+      }
+    },
+    {
+      "id":"8",
+      "type":"domains",
+      "attributes":{
+        "name":"Server-Side Swift",
+        "slug":"server-side-swift",
+        "description":"Learn web development with Swift",
+        "level":"beta"
+      }
+    },
+    {
+      "id":"3",
+      "type":"domains",
+      "attributes":{
+        "name":"Unity",
+        "slug":"unity",
+        "description":"Learn how to create games in Unity, a powerful and popular game engine.",
+        "level":"beta"
+      }
+    },
+    {
+      "id":"4",
+      "type":"domains",
+      "attributes":{
+        "name":"Unreal Engine",
+        "slug":"unreal-engine",
+        "description":"Learn how to make games with Unreal Engine, using Blueprints and C++.",
+        "level":"archived"
+      }
+    },
+    {
+      "id":"5",
+      "type":"domains",
+      "attributes":{
+        "name":"macOS",
+        "slug":"macos",
+        "description":"Learn macOS development",
+        "level":"archived"
+      }
+    },
+    {
+      "id":"6",
+      "type":"domains",
+      "attributes":{
+        "name":"Archive",
+        "slug":"archive",
+        "description":"",
+        "level":"archived"
+      }
+    }
+  ]
+}

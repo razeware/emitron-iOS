@@ -19,7 +19,13 @@
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B621DD2D22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B621DD2C22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift */; };
-		B621DD2F22F5C5EB00A1F27A /* ContentSummaryModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD2E22F5C5EB00A1F27A /* ContentSummaryModelTest.json */; };
+		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
+		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
+		B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */; };
+		B621DD3D22F5CBB100A1F27A /* ContentSummaryModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */; };
+		B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */; };
+		B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */; };
+		B621DD4D22F5CDD500A1F27A /* DomainsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */; };
 		B629AB4A22E60BC00037F4D8 /* ContentSummaryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629AB4922E60BC00037F4D8 /* ContentSummaryView.swift */; };
 		B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B629AB4B22E60BD70037F4D8 /* CourseHeaderView.swift */; };
 		B629AB4E22E60F260037F4D8 /* ContentDetailsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */; };
@@ -127,7 +133,13 @@
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B621DD2C22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ContentSummaryModel+Extensions.swift"; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Extensions/ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
-		B621DD2E22F5C5EB00A1F27A /* ContentSummaryModelTest.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; name = ContentSummaryModelTest.json; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Test/ContentSummaryModelTest.json"; sourceTree = "<group>"; };
+		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
+		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
+		B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VideoModelTest.json; sourceTree = "<group>"; };
+		B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ContentSummaryModelTest.json; sourceTree = "<group>"; };
+		B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BookmarksModelTest.json; sourceTree = "<group>"; };
+		B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProgressionsModelTest.json; sourceTree = "<group>"; };
+		B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = DomainsModelTest.json; sourceTree = "<group>"; };
 		B629AB4922E60BC00037F4D8 /* ContentSummaryView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ContentSummaryView.swift; sourceTree = "<group>"; };
 		B629AB4B22E60BD70037F4D8 /* CourseHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CourseHeaderView.swift; sourceTree = "<group>"; };
 		B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ContentDetailsModelTest.json; sourceTree = "<group>"; };
@@ -316,7 +328,13 @@
 			children = (
 				B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */,
 				B6C4F3DA22E70F990087ED10 /* CategoriesModelTest.json */,
-				B621DD2E22F5C5EB00A1F27A /* ContentSummaryModelTest.json */,
+				B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */,
+				B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */,
+				B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */,
+				B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */,
+				B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */,
+				B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */,
+				B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */,
 			);
 			path = Test;
 			sourceTree = "<group>";
@@ -663,17 +681,23 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */,
+				B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */,
 				B6C4F3DB22E70F990087ED10 /* CategoriesModelTest.json in Resources */,
 				B629AB4E22E60F260037F4D8 /* ContentDetailsModelTest.json in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */,
 				B695033822D4BED700CE0391 /* OFL.txt in Resources */,
 				B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */,
+				B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */,
+				B621DD4D22F5CDD500A1F27A /* DomainsModelTest.json in Resources */,
 				B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */,
 				B6DF2F8822C9F5070081A3A3 /* Main.storyboard in Resources */,
 				B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */,
-				B621DD2F22F5C5EB00A1F27A /* ContentSummaryModelTest.json in Resources */,
+				B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */,
 				B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */,
+				B621DD3D22F5CBB100A1F27A /* ContentSummaryModelTest.json in Resources */,
+				B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */,
+				B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
