@@ -27,59 +27,31 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
-import CoreData
 
-class DomainsMC: NSObject, ObservableObject {
+class DataManager {
   
-  // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    didSet {
-      objectWillChange.send(())
-    }
+  private let categoriesService: CategoriesService
+  private let domainsMC: DomainsMC
+  private let domainsService: DomainsService
+  private let contentsService: ContentsService
+  private let bookmarksService: BookmarksService
+  
+  init(guardpost: Guardpost, user: UserModel, persistenceStore: PersistenceStore) {
+    let client = RWAPI(authToken: user.token)
+    
+    self.categoriesService = CategoriesService(client: client)
+    self.domainsService = DomainsService(client: client)
+    self.bookmarksService = BookmarksService(client: client)
+    self.contentsService = ContentsService(client: client)
+    
+    self.domainsMC = DomainsMC(guardpost: guardpost, user: user)
+    
+    loadInitia()
   }
   
-  private let client: RWAPI
-  private let user: UserModel
-  private let service: DomainsService
-  private(set) var data: [DomainModel] = []
-  private let persistentStore: PersistenceStore
-  
-  // MARK: - Initializers
-  init(guardpost: Guardpost, user: UserModel, persistentStore: PersistenceStore) {
-    self.user = user
-    //TODO: Probably need to handle this better
-    self.client = RWAPI(authToken: user.token)
-    self.service = DomainsService(client: self.client)
-    self.persistentStore = persistentStore
-  }
-  
-  // MARK: - Internal
-  func fetchDomains() {
-        
-    guard state != .loading else {
-      return
-    }
+  private func loadInitia() {
     
-    state = .loading
+    domainsMC.fetchDomains()
     
-    service.allDomains { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: "DomainsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let domains):
-        self.data = domains
-        self.state = .hasData
-      }
-    }
   }
 }

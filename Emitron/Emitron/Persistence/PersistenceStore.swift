@@ -31,7 +31,19 @@ import KeychainSwift
 
 // The object responsible for managing and accessing cached content
 
-class PersistenceStore { }
+final class PersistenceStore {
+  
+  static var current: PersistenceStore {
+    return (UIApplication.shared.delegate as! AppDelegate).persistentStore
+  }
+  
+  let categories: [CategoryModel] = []
+  let domains: [DomainModel] = []
+  let contents: [ContentSummaryModel] = []
+  let bookmarks: [BookmarkModel] = []
+  
+  init() { }
+}
 
 // MARK: Documents Directory
 // For storing downloaded video files which expire after 7 days

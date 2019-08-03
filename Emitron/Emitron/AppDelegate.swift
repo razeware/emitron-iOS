@@ -35,17 +35,22 @@ import UIKit
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
   static let sso = "26396abfea170b54f53df4549d60b7e405509e04aa62c26bd6acc0247fc21b8e71bcb0e94678d55e36133e44d47574bc58ac740c877cba293979ec4a38128936"
-  static let persistentStore = PersistenceStore()
-  static let guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
-                                   urlScheme: "com.razeware.emitron://",
-                                   ssoSecret: AppDelegate.sso,
-                                   persistentStore: persistentStore)
+  private (set) var persistentStore: PersistenceStore = PersistenceStore()
+  private (set) var guardpost: Guardpost?
+  private (set) var dataManager: DataManager?
     
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     FirebaseApp.configure()
     //Fabric.with([Crashlytics.self])
+    
+    
+    guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
+                          urlScheme: "com.razeware.emitron://",
+                          ssoSecret: AppDelegate.sso, persistentStore: persistentStore)
+    
+    dataManager = DataManager(guardpost: guardpost!, user: guardpost!.currentUser!, persistenceStore: persistentStore)
     
     return true
   }
