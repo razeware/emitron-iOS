@@ -61,6 +61,10 @@ struct MyTutorialsView: View {
       }
       .padding([.leading, .trailing, .top], .sidePadding)
       
+      ToggleControlView()
+        .padding([.top, .leading, .trailing], .sidePadding)
+        .background(Color.paleGrey)
+      
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)

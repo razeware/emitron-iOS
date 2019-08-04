@@ -31,7 +31,54 @@ import SwiftUI
 struct ToggleControlView: View {
   
     var body: some View {
-      Text("My Tutorials!")
+      HStack {
+        
+        VStack {
+          
+          Text("In Progress")
+          .lineLimit(1)
+          .font(.uiLabel)
+          .foregroundColor(Color.appGreen)
+          
+          Rectangle()
+          .frame(maxWidth: 113, maxHeight: 2)
+          .foregroundColor(Color.appGreen)
+          
+        }
+        
+        
+        Spacer()
+        
+        VStack {
+          
+          Text("Completed")
+          .lineLimit(1)
+          .font(.uiLabel)
+          .foregroundColor(Color.appGreen)
+          
+          Rectangle()
+          .frame(maxWidth: 113, maxHeight: 2)
+          .foregroundColor(Color.appGreen)
+          
+        }
+        
+        Spacer()
+        
+        VStack {
+          
+          Text("Bookmarks")
+          .lineLimit(1)
+          .font(.uiLabel)
+          .foregroundColor(Color.appGreen)
+          
+          Rectangle()
+          .frame(maxWidth: 113, maxHeight: 2)
+          .foregroundColor(Color.appGreen)
+          
+        }
+        
+      }
+      
     }
 }
 
