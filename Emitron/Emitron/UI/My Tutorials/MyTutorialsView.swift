@@ -28,16 +28,73 @@
 
 import SwiftUI
 
+private extension CGFloat {
+  static let sidePadding: CGFloat = 18
+}
+
 struct MyTutorialsView: View {
+  
+  // FJ TODO: Make sure data for my tutorials is from ContentsMC & find out requirements for sorting...
+  @EnvironmentObject var contentsMC: ContentsMC
+  
   var body: some View {
-    Text("My Tutorials!")
+    VStack {
+      VStack {
+        
+        HStack {
+          Text(Constants.myTutorials)
+            .font(.uiLargeTitle)
+            .foregroundColor(.appBlack)
+          Spacer()
+          
+          Button(action: {
+            // Select settings
+            self.selectSettings()
+          }) {
+            HStack {
+              Image("settings")
+                .foregroundColor(.battleshipGrey)
+            }
+          }
+        }
+        .padding([.top], .sidePadding)
+      }
+      .padding([.leading, .trailing, .top], .sidePadding)
+      
+      contentView()
+        .padding([.top], .sidePadding)
+        .background(Color.paleGrey)
+      
+    }
+    .background(Color.paleGrey)
+  }
+  
+  private func selectSettings() {
+    print("Settings tapped!")
+  }
+  
+  private func contentView() -> AnyView {
+    switch contentsMC.state {
+    case .initial,
+         .loading where contentsMC.data.isEmpty:
+      return AnyView(Text(Constants.loading))
+    case .failed:
+      return AnyView(Text("Error"))
+    case .hasData,
+         .loading where !contentsMC.data.isEmpty:
+
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+    default:
+      return AnyView(Text("Default View"))
+    }
   }
 }
 
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    MyTutorialsView()
+    let guardpost = Guardpost.current
+    return MyTutorialsView().environmentObject(ContentsMC(guardpost: guardpost))
   }
 }
 #endif

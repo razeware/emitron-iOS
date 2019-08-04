@@ -52,7 +52,7 @@ struct TabNavView: View {
           print("Tapped Downloads")
         }
 
-      MyTutorialsView()
+      myTutorialsView()
         .tabItem {
           Text(Constants.myTutorials)
           Image("myTutorials")
@@ -69,6 +69,14 @@ struct TabNavView: View {
     let contentsMC = ContentsMC(guardpost: guardpost)
     
     return AnyView(LibraryView().environmentObject(contentsMC))
+  }
+  
+  func myTutorialsView() -> AnyView {
+    
+    let guardpost = Guardpost.current
+    let contentsMC = ContentsMC(guardpost: guardpost)
+    
+    return AnyView(MyTutorialsView().environmentObject(contentsMC))
   }
 }
 
