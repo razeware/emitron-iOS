@@ -65,7 +65,7 @@ class DomainModel {
     }
   }
 
-  /// Convenience initializer to transform core data **DomainEntity** into a **Domain** model
+  /// Convenience initializer to transform core data **Domain** into a **DomainModel**
   ///
   /// - parameters:
   ///   - domain: core data entity to transform into domain model

@@ -93,6 +93,7 @@ class UserMC: NSObject, ObservableObject {
   }
 }
 
+// MARK: - ASWebAuthenticationPresentationContextProviding
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
   
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

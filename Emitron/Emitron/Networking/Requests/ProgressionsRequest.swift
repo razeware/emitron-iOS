@@ -42,8 +42,7 @@ struct ProgressionsRequest: Request {
   func handle(response: Data) throws -> [ProgressionModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
-    return progressions
+    return doc.data.compactMap { ProgressionModel($0, metadata: nil) }
   }
 }
 

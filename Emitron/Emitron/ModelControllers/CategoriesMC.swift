@@ -48,7 +48,9 @@ class CategoriesMC: NSObject, ObservableObject {
   private let persistentStore: PersistenceStore
   
   // MARK: - Initializers
-  init(guardpost: Guardpost, user: UserModel, persistentStore: PersistenceStore) {
+  init(guardpost: Guardpost,
+       user: UserModel,
+       persistentStore: PersistenceStore) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
@@ -70,11 +72,15 @@ class CategoriesMC: NSObject, ObservableObject {
       fetchCategories()
     }
   }
+}
+
+// MARK: - Private
+private extension CategoriesMC {
   
-  private func loadFromPersistentStore() {
+  func loadFromPersistentStore() {
     
     do {
-      let fetchRequest = Category().fetchRequest
+      let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let categoryModels = result.map(CategoryModel.init)
       data = categoryModels
@@ -86,26 +92,18 @@ class CategoriesMC: NSObject, ObservableObject {
     }
   }
   
-  private func saveToPersistentStore() {
-    let viewContext = persistentStore.coreDataStack.viewContext
-    
-    guard let categoryEntity = NSEntityDescription.entity(forEntityName: "Category", in: viewContext) else {
-      Failure
-      .saveToPersistentStore(from: "CategoriesMC", reason: "Couldn't create Category entity.")
-      .log(additionalParams: nil)
-      return
-    }
-    
+  func saveToPersistentStore() {
+    let viewContext = persistentStore.coreDataStack.viewContext    
     for entry in data {
-      let domain = NSManagedObject(entity: categoryEntity, insertInto: viewContext)
-      domain.setValue(entry.name, forKeyPath: "name")
-      domain.setValue(entry.uri, forKeyPath: "uri")
-      domain.setValue(entry.ordinal, forKeyPath: "ordinal")
+      let category = Category(context: viewContext)
+      category.name = entry.name
+      category.uri = entry.uri
+      category.ordinal = NSNumber(value: entry.ordinal)
     }
     
     // Delete old records first
-    let fetch = Category().fetchRequest
-    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetch as! NSFetchRequest<NSFetchRequestResult>)
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Category.fetchRequest()
+    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
     
     do {
       try viewContext.execute(deleteRequest)
@@ -124,15 +122,12 @@ class CategoriesMC: NSObject, ObservableObject {
     }
   }
   
-  // MARK: - Internal
-  private func fetchCategories() {
-        
-    guard state != .loading else {
+  func fetchCategories() {
+    if case(.loading) = state {
       return
     }
-    
-    state = .loading
-    
+
+    state = .loading    
     service.allCategories { [weak self] result in
       guard let self = self else {
         return

@@ -42,7 +42,6 @@ struct DomainsRequest: Request {
   func handle(response: Data) throws -> [DomainModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let domains = doc.data.compactMap { DomainModel($0, metadata: nil) }
-    return domains
+    return doc.data.compactMap { DomainModel($0, metadata: nil) }
   }
 }

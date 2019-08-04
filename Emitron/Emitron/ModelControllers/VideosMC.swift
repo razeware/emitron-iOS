@@ -56,12 +56,12 @@ class VideosMC: NSObject, ObservableObject {
   
   // MARK: - Internal
   func loadVideoStream(for id: Int) {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     
     state = .loading
-    
+
     service.getVideoStream(for: id) { [weak self] result in
       guard let self = self else {
         return
@@ -81,7 +81,7 @@ class VideosMC: NSObject, ObservableObject {
   
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     

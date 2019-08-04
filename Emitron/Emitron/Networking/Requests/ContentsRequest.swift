@@ -43,8 +43,7 @@ struct ContentsRequest: Request {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let contents = doc.data.compactMap { ContentDetailModel($0, metadata: nil) }
-    let contentsTuple = (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
-    return contentsTuple
+    return (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }
 

@@ -51,7 +51,9 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
   private let persistentStore: PersistenceStore
   
   // MARK: - Initializers
-  init(guardpost: Guardpost, user: UserModel, persistentStore: PersistenceStore) {
+  init(guardpost: Guardpost,
+       user: UserModel,
+       persistentStore: PersistenceStore) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
@@ -73,11 +75,15 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
       saveOrReplaceUpdateDate()
     }
   }
+}
+
+// MARK: - Private
+private extension DomainsMC {
   
-  private func loadFromPersistentStore() {
+  func loadFromPersistentStore() {
     
     do {
-      let fetchRequest = Domain().fetchRequest
+      let fetchRequest: NSFetchRequest<Domain> = Domain.fetchRequest()
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let domainModels = result.map(DomainModel.init)
       data = domainModels
@@ -89,28 +95,20 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
     }
   }
   
-  private func saveToPersistentStore() {
+  func saveToPersistentStore() {
     let viewContext = persistentStore.coreDataStack.viewContext
-    
-    guard let domainEntity = NSEntityDescription.entity(forEntityName: "Domain", in: viewContext) else {
-      Failure
-      .saveToPersistentStore(from: "DomainsMC", reason: "Couldn't create domain entity.")
-      .log(additionalParams: nil)
-      return
-    }
-    
     for entry in data {
-      let domain = NSManagedObject(entity: domainEntity, insertInto: viewContext)
-      domain.setValue(entry.id, forKeyPath: "id")
-      domain.setValue(entry.name, forKeyPath: "name")
-      domain.setValue(entry.level.rawValue, forKeyPath: "level")
-      domain.setValue(entry.slug, forKeyPath: "slug")
-      domain.setValue(entry.description, forKeyPath: "desc")
+      let domain = Domain(context: viewContext)
+      domain.id = NSNumber(value: entry.id)
+      domain.name = entry.name
+      domain.level = entry.level.rawValue
+      domain.slug = entry.slug
+      domain.desc = entry.description
     }
     
     // Delete old records first
-    let fetch = Domain().fetchRequest
-    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetch as! NSFetchRequest<NSFetchRequestResult>)
+    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Domain.fetchRequest()
+    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
     
     do {
       try viewContext.execute(deleteRequest)
@@ -129,13 +127,11 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
     }
   }
   
-  // MARK: - Internal
-  private func fetchDomains() {
-        
-    guard state != .loading else {
+  func fetchDomains() {
+    if case(.loading) = state {
       return
     }
-    
+
     state = .loading
     
     service.allDomains { [weak self] result in

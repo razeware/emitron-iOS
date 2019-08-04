@@ -30,19 +30,27 @@ import Foundation
 import UIKit
 
 class DataManager {
-  
+
+  // MARK: - Properties
   static var current: DataManager {
     return (UIApplication.shared.delegate as! AppDelegate).dataManager!
   }
   
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
-  
-  init(guardpost: Guardpost, user: UserModel, persistenceStore: PersistenceStore) {
+
+  // MARK: - Initializers
+  init(guardpost: Guardpost,
+       user: UserModel,
+       persistenceStore: PersistenceStore) {
     
-    self.domainsMC = DomainsMC(guardpost: guardpost, user: user, persistentStore: persistenceStore)
-    self.categoriesMC = CategoriesMC(guardpost: guardpost, user: user, persistentStore: persistenceStore)
-    
+    self.domainsMC = DomainsMC(guardpost: guardpost,
+                               user: user,
+                               persistentStore: persistenceStore)
+    self.categoriesMC = CategoriesMC(guardpost: guardpost,
+                                     user: user,
+                                     persistentStore: persistenceStore)
+
     loadInitial()
   }
   

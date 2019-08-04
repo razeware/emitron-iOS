@@ -16,9 +16,9 @@
 		95CD793622F0B6980080C407 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793522F0B6980080C407 /* Bookmark.swift */; };
 		95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793922F0B83A0080C407 /* DomainModel.swift */; };
 		95CD793C22F0BEF40080C407 /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793B22F0BEF40080C407 /* Contents.swift */; };
+		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
-		B621DD2D22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B621DD2C22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift */; };
 		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
 		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
 		B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */; };
@@ -133,9 +133,9 @@
 		95CD793522F0B6980080C407 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		95CD793922F0B83A0080C407 /* DomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModel.swift; sourceTree = "<group>"; };
 		95CD793B22F0BEF40080C407 /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
+		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
-		B621DD2C22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = "ContentSummaryModel+Extensions.swift"; path = "../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Extensions/ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
 		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
 		B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VideoModelTest.json; sourceTree = "<group>"; };
@@ -376,13 +376,13 @@
 		B6D4529622CAB3E700BFB812 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
-				B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */,
-				B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */,
-				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
-				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
 				B6C0F0DC22D5FA1C00012839 /* ContentDetailModel+Extensions.swift */,
+				95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */,
+				B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */,
+				B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */,
+				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
 				B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */,
-				B621DD2C22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift */,
+				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -610,13 +610,13 @@
 		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
+				B6E21A2C22F60AC5006CB22F /* CategoriesMC.swift */,
+				B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */,
+				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
+				B6419BB422EF59F5003AC14E /* DomainsMC.swift */,
+				B62B9A8322DF771200122CE8 /* ModelController.swift */,
 				95A4513322E224B500D24E56 /* UserMC.swift */,
 				95A4513422E224B500D24E56 /* VideosMC.swift */,
-				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
-				B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */,
-				B6419BB422EF59F5003AC14E /* DomainsMC.swift */,
-				B6E21A2C22F60AC5006CB22F /* CategoriesMC.swift */,
-				B62B9A8322DF771200122CE8 /* ModelController.swift */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -826,6 +826,7 @@
 				B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
+				95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */,
 				B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */,
 				B682F8C722EB096300CBF2CC /* Filters.swift in Sources */,
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
@@ -840,7 +841,6 @@
 				95BAF69A22EF612100D17323 /* Domain.swift in Sources */,
 				95CD793622F0B6980080C407 /* Bookmark.swift in Sources */,
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
-				B621DD2D22F5C4F800A1F27A /* ContentSummaryModel+Extensions.swift in Sources */,
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* AttachmentModel.swift in Sources */,

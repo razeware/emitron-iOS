@@ -60,7 +60,7 @@ class ContentDetailsMC: NSObject, ObservableObject {
   
   // MARK: - Internal
   func getContentDetails() {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     

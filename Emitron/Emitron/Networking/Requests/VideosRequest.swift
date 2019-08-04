@@ -49,8 +49,7 @@ struct ShowVideoRequest: Request {
   func handle(response: Data) throws -> VideoModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let videos = doc.data.compactMap { VideoModel($0, metadata: nil) }
-    return videos.first!
+    return doc.data.compactMap { VideoModel($0, metadata: nil) }.first!
   }
 }
 
@@ -74,8 +73,7 @@ struct StreamVideoRequest: Request {
   func handle(response: Data) throws -> AttachmentModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let attachments = doc.data.compactMap { AttachmentModel($0, metadata: nil) }
-    return attachments.first!
+    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }.first!
   }
 }
 
@@ -100,7 +98,6 @@ struct DownloadVideoRequest: Request {
   func handle(response: Data) throws -> [AttachmentModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let attachments = doc.data.compactMap { AttachmentModel($0, metadata: nil) }
-    return attachments
+    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }
   }
 }

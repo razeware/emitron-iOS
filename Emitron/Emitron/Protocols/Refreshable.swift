@@ -32,21 +32,22 @@ protocol Refreshable {
   var refreshableUserDefaultsKey: String { get }
   var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
   var shouldRefresh: Bool { get }
+
   func saveOrReplaceUpdateDate()
 }
 
 extension Refreshable {
+
   var shouldRefresh: Bool {
-      let storedDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey)
-      if let lastUpdateDate = storedDate as? Date {
-        return lastUpdateDate < self.refreshableCheckTimeSpan.date
-      }
-      return true
+    if let lastUpdateDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date {
+      return lastUpdateDate < self.refreshableCheckTimeSpan.date
+    }
+    return true
   }
   
   func saveOrReplaceUpdateDate() {
-    UserDefaults.standard.set(Date(), forKey: self.refreshableUserDefaultsKey)
-    UserDefaults.standard.synchronize()
+    UserDefaults.standard.set(Date(),
+                              forKey: self.refreshableUserDefaultsKey)
   }
 }
 

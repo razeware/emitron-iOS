@@ -42,7 +42,6 @@ struct CategoriesRequest: Request {
   func handle(response: Data) throws -> [CategoryModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let categories = doc.data.compactMap { CategoryModel($0, metadata: nil) }
-    return categories
+    return doc.data.compactMap { CategoryModel($0, metadata: nil) }
   }
 }

@@ -87,7 +87,7 @@ class ContentsMC: NSObject, ObservableObject {
   }
   
   func loadContents() {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     
