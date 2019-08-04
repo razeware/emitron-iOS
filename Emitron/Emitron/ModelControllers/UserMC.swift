@@ -30,23 +30,24 @@ import AuthenticationServices
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
-class UserMC: NSObject, BindableObject {
+let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+
+class UserMC: NSObject, ObservableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
   /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
   private let client: RWAPI
   private let guardpost: Guardpost
-  private(set) var user: User?
+  private(set) var user: UserModel?
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -72,21 +73,27 @@ class UserMC: NSObject, BindableObject {
         switch result {
         case .failure(let error):
           self.state = .failed
-          
-          Analytics.logEvent(AnalyticsEventSelectContent, parameters: [
-            AnalyticsParameterItemName: "Failed to login!",
-            AnalyticsParameterContent: error.localizedDescription,
-          ])
-          
+          Failure
+            .login(from: "UserMC", reason: error.localizedDescription)
+            .log(additionalParams: nil)
         case .success(let user):
           self.user = user
           self.state = .hasData
+          
+          //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
+          //probably using Combine or Notifications
+          NotificationCenter.default.post(name: successfulSignInNotification, object: nil)
+          
+          Event
+            .login(from: "UserMC")
+            .log(additionalParams: nil)
         }
       }
     }
   }
 }
 
+// MARK: - ASWebAuthenticationPresentationContextProviding
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
   
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {

@@ -29,26 +29,25 @@
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
-class VideosMC: NSObject, BindableObject {
+class VideosMC: NSObject, ObservableObject {
   
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
   private let client: RWAPI
-  private let user: User
+  private let user: UserModel
   private let service: VideosService
-  private(set) var data: Attachment?
+  private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
   
   // MARK: - Initializers
-  init(user: User) {
+  init(user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
@@ -57,12 +56,12 @@ class VideosMC: NSObject, BindableObject {
   
   // MARK: - Internal
   func loadVideoStream(for id: Int) {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     
     state = .loading
-    
+
     service.getVideoStream(for: id) { [weak self] result in
       guard let self = self else {
         return
@@ -71,11 +70,7 @@ class VideosMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to get video stream!",
-          AnalyticsParameterContent: "For id: \(id)!",
-          "description": error.localizedDescription,
-        ])
+        Failure.fetch(from: "VideosMC", reason: error.localizedDescription).log(additionalParams: ["Id": "\(id)"])
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url
@@ -86,7 +81,7 @@ class VideosMC: NSObject, BindableObject {
   
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     
@@ -101,11 +96,9 @@ class VideosMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to get video stream!",
-          AnalyticsParameterContent: "For id: \(id)!",
-          "description": error.localizedDescription,
-        ])
+        Failure
+          .fetch(from: "VideosMC", reason: error.localizedDescription)
+          .log(additionalParams: ["VideoID": "\(id)"])
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url

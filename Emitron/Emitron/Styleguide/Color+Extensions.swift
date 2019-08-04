@@ -29,7 +29,11 @@
 import SwiftUI
 
 extension Color {
-  static var darkSeaGreen: Color {
+  
+  static var appBlack: Color {
+      return Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
+    }
+  static var appGreen: Color {
     return Color(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0)
   }
   static var brightGrey: Color {

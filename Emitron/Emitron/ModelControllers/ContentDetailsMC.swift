@@ -29,26 +29,25 @@
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
-class ContentDetailsMC: NSObject, BindableObject {  
+class ContentDetailsMC: NSObject, ObservableObject {  
   
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: ContentDetail
+  private(set) var data: ContentDetailModel
   
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentDetail) {
+       partialContentDetail: ContentDetailModel) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
@@ -61,7 +60,7 @@ class ContentDetailsMC: NSObject, BindableObject {
   
   // MARK: - Internal
   func getContentDetails() {
-    guard state != .loading else {
+    if case(.loading) = state {
       return
     }
     
@@ -76,10 +75,9 @@ class ContentDetailsMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-          Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to get content details!",
-          "description": error.localizedDescription
-        ])
+        Failure
+          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData

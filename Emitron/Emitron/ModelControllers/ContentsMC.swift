@@ -29,23 +29,46 @@
 import Foundation
 import SwiftUI
 import Combine
-import Firebase
 
-class ContentsMC: NSObject, BindableObject {
+class ContentsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
-  private(set) var willChange = PassthroughSubject<Void, Never>()
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
-      willChange.send(())
+      objectWillChange.send(())
     }
   }
   
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: [ContentDetail] = []
+  private(set) var data: [ContentDetailModel] = []
   private(set) var numTutorials: Int = 0
+  
+  // Pagination
+  private var currentPage: Int = 1
+  private let startingPage: Int = 1
+  private(set) var defaultPageSize: Int = 20
+  
+  // Parameters
+  private var defaultParameters: [Parameter] {
+    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+  }
+  private(set) var currentParameters: [Parameter] = [] {
+    didSet {
+      loadContents()
+    }
+  }
+  
+  @ObservedObject var filters: Filters {
+    didSet {
+      if currentParameters != (filters.appliedParameters + defaultParameters) {
+        currentPage = startingPage
+        currentParameters = defaultParameters + filters.appliedParameters
+      }      
+    }
+  }
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -54,18 +77,32 @@ class ContentsMC: NSObject, BindableObject {
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
+    
+    self.filters = Filters()
+    
+    super.init()
+    
+    currentParameters = defaultParameters
+    loadContents()
   }
   
-  func loadContents(with parameters: [Parameter],
-                    pageSize: Int,
-                    offset: Int) {
-    guard state != .loading else {
+  func loadContents() {
+    if case(.loading) = state {
       return
     }
     
     state = .loading
     
-    contentsService.allContents(parameters: parameters) { [weak self] result in
+    let pageParam = ParameterKey.pageNumber(number: currentPage).param
+    var allParams = currentParameters
+    allParams.append(pageParam)
+    
+    // Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= numTutorials else {
+      return
+    }
+    
+    contentsService.allContents(parameters: currentParameters) { [weak self] result in
       
       guard let self = self else {
         return
@@ -74,13 +111,17 @@ class ContentsMC: NSObject, BindableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Analytics.logEvent("error", parameters: [
-          AnalyticsParameterItemName: "Failed to load contents!",
-          AnalyticsParameterContent: "Parameters: \(parameters), pageSize: \(pageSize), offset \(offset)",
-          "description": error.localizedDescription,
-        ])
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
       case .success(let contentsTuple):
-        self.data = contentsTuple.contents
+        // When filtering, do we just re-do the request, or append?
+        if allParams == self.currentParameters {
+          let currentContents = self.data
+          self.data = currentContents + contentsTuple.contents
+        } else {
+          self.data = contentsTuple.contents
+        }
         self.numTutorials = contentsTuple.totalNumber
         self.state = .hasData
       }

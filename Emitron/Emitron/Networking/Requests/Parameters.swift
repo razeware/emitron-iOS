@@ -29,11 +29,15 @@
 import Foundation
 
 // Parameter Values
-enum ContentDifficulty: String {
+enum ContentDifficulty: String, CaseIterable {
   case none
   case beginner
   case intermediate
   case advanced
+  
+  var displayString: String {
+    return self.rawValue.capitalized
+  }
 }
 
 enum ContentType: String {
@@ -74,7 +78,7 @@ enum ParameterKey {
   case completionStatus(status: CompletionStatus)
   case pageNumber(number: Int)
   case pageSize(size: Int)
-
+  
   var strKey: String {
     switch self {
     case .completionStatus:
@@ -85,7 +89,7 @@ enum ParameterKey {
       return "page[size]"
     }
   }
-
+  
   var value: String {
     switch self {
     case .completionStatus(status: let status):
@@ -96,47 +100,99 @@ enum ParameterKey {
       return "\(size)"
     }
   }
-
+  
   var param: Parameter {
+    // TODO: This might need to be re-implemented
     return Parameter(key: self.strKey,
-                     value: self.value)
+                     value: self.value,
+                     displayName: "")
   }
 }
 
 enum ParameterFilterValue {
   case contentTypes(types: [ContentType]) // An array containing ContentType strings
-  case domainIds(ids: [Int]) // An array of numerical IDs of the domains you are interested in.
-  case categoryIds(ids: [Int]) // An array of numberical IDs of the categories you are interested in.
+  case domainTypes(types: [(id: Int, name: String)]) // An array of numerical IDs of the domains you are interested in.
+  case categoryTypes(types: [(id: Int, name: String)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
-
+  case queryString(string: String)
+  
   var strKey: String {
     switch self {
     case .contentTypes:
       return "content_types"
-    case .domainIds:
+    case .domainTypes:
       return "domain_ids"
-    case .categoryIds:
+    case .categoryTypes:
       return "category_ids"
     case .difficulties:
       return "difficulties"
     case .contentIds:
       return "content_ids"
+    case .queryString:
+      return "q"
     }
   }
-
-  var values: [String] {
+  
+  var values: [(displayName: String, requestValue: String)] {
     switch self {
     case .contentTypes(types: let types):
-      return types.map { $0.rawValue }
-    case .domainIds(ids: let ids):
-      return ids.map { "\($0)" }
-    case .categoryIds(ids: let ids):
-      return ids.map { "\($0)" }
+      return types.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
+    case .domainTypes(types: let types):
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
+    case .categoryTypes(types: let types):
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
     case .difficulties(difficulties: let difficulties):
-      return difficulties.map { $0.rawValue }
+      return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
     case .contentIds(ids: let ids):
-      return ids.map { "\($0)" }
+      return ids.map { (displayName: "\($0)", requestValue: "\($0)") }
+    case .queryString(string: let str):
+      return [(displayName: str, requestValue: str)]
+    }
+  }
+  
+  var groupName: String {
+    switch self {
+    case .contentTypes:
+      return "Content Type"
+    case .domainTypes:
+      return "Platforms"
+    case .categoryTypes:
+      return "Categories"
+    case .difficulties:
+      return "Difficulties"
+    case .contentIds:
+      // TODO: This is probably not required (or desired)
+      return "Contents"
+    case .queryString:
+      // TODO: This is probably not required (or desired)
+      return "Query String"
+    }
+  }
+  
+  var isSearchQuery: Bool {
+    switch self {
+    case .queryString:
+      return true
+    case .contentIds,
+         .contentTypes,
+         .domainTypes,
+         .difficulties,
+         .categoryTypes:
+      return false
+    }
+  }
+  
+  var searchValue: String {
+    switch self {
+    case .queryString(let str):
+      return str
+    case .contentIds,
+         .contentTypes,
+         .domainTypes,
+         .difficulties,
+         .categoryTypes:
+      return ""
     }
   }
 }
@@ -148,29 +204,44 @@ enum ParameterSortValue: String {
 }
 
 // filter[content_types][]=collection&filter[content_types][]=screencast
-typealias Parameter = (key: String, value: String)
+// typealias Parameter = (key: String, value: String)
+// Changing this to a struct, so that I can conform it to equatable
+
+struct Parameter: Equatable {
+  let key: String
+  let value: String
+  let displayName: String
+}
 
 enum Param {
-
-  static func filter(by values: [ParameterFilterValue]) -> [Parameter] {
+  
+  // Not to be used for the search query filter
+  static func filters(for values: [ParameterFilterValue]) -> [Parameter] {
     var allParams: [Parameter] = []
-
+    
     values.forEach { value in
+      guard !value.isSearchQuery else { return }
+      
       let key = "filter[\(value.strKey)][]"
       let values = value.values
-      let all = values.map { Parameter(key: key, value: $0) }
-
+      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName) }
+      
       allParams.append(contentsOf: all)
     }
-
+    
     return allParams
   }
-
-  static func sort(by value: ParameterSortValue,
+  
+  // Only to be used for the search query filter
+  static func filter(for searchParam: ParameterFilterValue) -> Parameter {
+    return Parameter(key: "filter[\(searchParam.strKey)]", value: searchParam.searchValue, displayName: searchParam.searchValue)
+  }
+  
+  static func sort(for value: ParameterSortValue,
                    descending: Bool) -> Parameter {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
-
-    return Parameter(key: key, value: value)
+    
+    return Parameter(key: key, value: value, displayName: "Sort")
   }
 }

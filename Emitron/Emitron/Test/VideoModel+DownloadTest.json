@@ -1,0 +1,20 @@
+{
+  "data":[
+    {
+      "id":"30194",
+      "type":"attachments",
+      "attributes":{
+        "url":"https://player.vimeo.com/external/332761683.sd.mp4?s=263eeb3fa49a8e8a5fea81c267bec4071d08bc78\u0026profile_id=164\u0026oauth2_token_id=897711146",
+        "kind":"sd_video_file"
+      }
+    },
+    {
+      "id":"30195",
+      "type":"attachments",
+      "attributes":{
+        "url":"https://player.vimeo.com/external/332761683.hd.mp4?s=5a4f3bb437d05aa69aa2efc53ee37d9c02dd45af\u0026profile_id=174\u0026oauth2_token_id=897711146",
+        "kind":"hd_video_file"
+      }
+    }
+  ]
+}

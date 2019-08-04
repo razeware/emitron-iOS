@@ -33,4 +33,9 @@ extension Date {
     let formatter = DateFormatter.cardDateFormatter
     return formatter.string(from: self)
   }
+  
+  func dateByAddingNumberOfDays(_ days: Int) -> Date {
+      let timeInterval: TimeInterval = TimeInterval(60 * 60 * 24 * days)
+      return addingTimeInterval(timeInterval)
+  }
 }

@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,41 +26,77 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+// https://mecid.github.io/2019/06/12/understanding-property-wrappers-in-swiftui/
+
 import SwiftUI
 
-private extension Length {
-  static let filterButtonSide: Length = 27
-  static let sidePadding: Length = 18
-  static let searchFilterPadding: Length = 42
-  static let filterSpacing: Length = 6
-  static let filtersPaddingTop: Length = 12
+private extension CGFloat {
+  static let filterButtonSide: CGFloat = 27
+  static let sidePadding: CGFloat = 18
+  static let searchFilterPadding: CGFloat = 42
+  static let filterSpacing: CGFloat = 6
+  static let filtersPaddingTop: CGFloat = 12
 }
 
-private enum Filter {
-  struct Padding {
-    let overall: Length = 12
-    let textTrailing: Length = 2
+enum SortSelection: Int {
+  case newest
+  case popularity
+  
+  var next: SortSelection {
+    switch self {
+    case .newest:
+      return .popularity
+    case .popularity:
+      return .newest
+    }
   }
-
-  static let padding = Padding()
-  static let cornerRadius: Length = 9
-  static let imageSize: Length = 15
+  
+  var name: String {
+    switch self {
+    case .newest:
+      return Constants.newest
+    case .popularity:
+      return Constants.popularity
+    }
+  }
+  
+  func sorted(data: [ContentDetailModel]) -> [ContentDetailModel] {
+    switch self {
+    case .newest:
+      return data.sorted(by: { $0.releasedAt > $1.releasedAt })
+    case .popularity:
+      return data.sorted(by: { $0.popularity > $1.popularity })
+    }
+  }
 }
 
 struct LibraryView: View {
   
-  @ObjectBinding var contentsMC: ContentsMC
-  
+  @EnvironmentObject var contentsMC: ContentsMC
+  @State var filtersPresented: Bool = false
+  @State var sortSelection: SortSelection = .newest
+  @State private var searchText = ""
+
   var body: some View {
     VStack {
       VStack {
         
         HStack {
-          SearchView()
-          Button(action: { }, label: {
+          TextField(Constants.search, text: $searchText) {
+            UIApplication.shared.keyWindow?.endEditing(true)
+            self.contentsMC.filters.searchQuery = self.searchText
+            self.contentsMC.filters = self.contentsMC.filters //TODO; Hack to get this to re-render
+          }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
+          Button(action: {
+            self.filtersPresented.toggle()
+          }, label: {
             Image("filter")
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
+              .sheet(isPresented: self.$filtersPresented) {
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC.filters).environmentObject(self.contentsMC)
+              }
           })
             .padding([.leading], .searchFilterPadding)
         }
@@ -76,49 +112,65 @@ struct LibraryView: View {
             self.changeSort()
           }) {
             HStack {
-              Image("sortIcon")
+              Image("sort")
                 .foregroundColor(.battleshipGrey)
               
-              Text(Constants.newest)
+              Text(sortSelection.name)
                 .font(.uiLabel)
                 .foregroundColor(.battleshipGrey)
             }
           }
         }
-          .padding([.top], .sidePadding)
+        .padding([.top], .sidePadding)
         
-        ScrollView(.horizontal, showsIndicators: false) {
-          HStack(alignment: .top, spacing: .filterSpacing) {
-            FilterView(type: .destructive, name: "Clear All")
-            FilterView(type: .default, name: "Xcode")
-            FilterView(type: .default, name: "AR/VR")
-            FilterView(type: .default, name: "Algorithms")
-            FilterView(type: .default, name: "Architecture")
-            FilterView(type: .default, name: "Beginner")
+        if !contentsMC.filters.appliedFilters.isEmpty {
+          ScrollView(.horizontal, showsIndicators: false) {
+            HStack(alignment: .top, spacing: .filterSpacing) {
+              
+              AppliedFilterView(filter: nil, type: .destructive, name: "Clear All", callback: { filters in
+                self.contentsMC.filters = filters
+              }).environmentObject(self.contentsMC.filters)
+              
+              ForEach(contentsMC.filters.appliedFilters, id: \.self) { filter in
+                AppliedFilterView(filter: filter, type: .default, callback: { filters in
+                  self.contentsMC.filters = filters
+                }).environmentObject(self.contentsMC.filters)
+              }
+            }
           }
-        }
           .padding([.top], .filtersPaddingTop)
+        }
       }
-        .padding([.leading, .trailing, .top], .sidePadding)
+      .padding([.leading, .trailing, .top], .sidePadding)
       
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
     }
-      .background(Color.paleGrey)
+    .background(Color.paleGrey)
   }
   
-  private func changeSort() { }
+  private func changeSort() {
+    sortSelection = sortSelection.next
+  }
   
   private func contentView() -> AnyView {
     switch contentsMC.state {
-    case .initial, .loading, .failed:
-      //TODO: Need a better pipeline for this
-      let filterParams = Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
-      contentsMC.loadContents(with: filterParams, pageSize: 20, offset: 0)
+    case .initial,
+         .loading where contentsMC.data.isEmpty:
       return AnyView(Text(Constants.loading))
-    case .hasData:
+    case .failed:
+      return AnyView(Text("Error"))
+    case .hasData,
+         .loading where !contentsMC.data.isEmpty:
+      //      let sorted = sortSelection.sorted(data: contentsMC.data)
+      //      let parameters = filters.applied
+      //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
+      //
+      
       return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+    default:
+      return AnyView(Text("Default View"))
     }
   }
 }
@@ -126,55 +178,8 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = AppDelegate.guardpost
-    return LibraryView(contentsMC: ContentsMC(guardpost: guardpost))
+    let guardpost = Guardpost.current
+    return LibraryView().environmentObject(ContentsMC(guardpost: guardpost))
   }
 }
 #endif
-
-struct SearchView: View {
-  @State private var searchText = ""
-  
-  var body: some View {
-    
-    TextField(Constants.search, text: $searchText)
-      .textFieldStyle(.roundedBorder)
-  }
-}
-
-enum FilterType {
-  case `default`
-  case destructive
-  
-  var color: Color {
-    switch self {
-    case .default:
-      return .brightGrey
-    case .destructive:
-      return .copper
-    }
-  }
-}
-
-struct FilterView: View {
-  
-  var type: FilterType
-  var name: String
-  
-  var body: some View {
-    HStack {
-      Text(name)
-        .foregroundColor(.white)
-        .font(.uiButtonLabelSmall)
-        .padding([.trailing], Filter.padding.textTrailing)
-      Image("whiteX")
-        .resizable()
-        .frame(width: Filter.imageSize, height: Filter.imageSize)
-        .foregroundColor(.white)
-    }
-      .padding(.all, Filter.padding.overall)
-      .background(type.color)
-      .cornerRadius(Filter.cornerRadius)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-  }
-}

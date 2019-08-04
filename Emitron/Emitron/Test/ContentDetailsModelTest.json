@@ -1,0 +1,82 @@
+{
+  "data":{
+    "id":"1320588",
+    "type":"contents",
+    "attributes":{
+      "uri":"rw://betamax/videos/2546",
+      "name":"Machine Learning in iOS · Introduction",
+      "description":"Welcome to the Machine Learning in iOS video course! In this introduction, find out what the course will cover. ",
+      "released_at":"2019-07-16T13:00:00.000Z",
+      "free":true,
+      "difficulty":"advanced",
+      "content_type":"episode",
+      "duration":342,
+      "popularity":727.0,
+      "bookmarked?":false,
+      "card_artwork_url":"https://files.betamax.raywenderlich.com/attachments/collections/176/e1086f63-bc0f-4710-869a-2fca4e280463.png",
+      "technology_triple_string":"Swift 5, iOS 13.0 Beta, Xcode 11.0 Beta",
+      "contributor_string":"Katie Collins \u0026 Jessy Catterwaul",
+      "video_identifier":2546
+    },
+    "relationships":{
+      "domains":{
+        "data":[
+          {
+            "id":"1",
+            "type":"domains"
+          }
+        ]
+      },
+      "child_contents":{
+        "meta":{
+          "count":0
+        }
+      },
+      "progression":{
+        "data":null
+      },
+      "bookmark":{
+        "data":null
+      },
+      "groups":{
+        "data":[
+          
+        ]
+      },
+      "categories":{
+        "data":[
+          {
+            "id":"158",
+            "type":"categories"
+          }
+        ]
+      }
+    },
+    "links":{
+      "self":"http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
+      "video_stream":"http://api.raywenderlich.com/api/videos/2546/stream",
+      "video_download":"http://api.raywenderlich.com/api/videos/2546/download"
+    }
+  },
+  "included":[
+    {
+      "id":"1",
+      "type":"domains",
+      "attributes":{
+        "name":"iOS \u0026 Swift",
+        "slug":"ios",
+        "description":"Learn iOS development in Swift",
+        "level":"production"
+      }
+    },
+    {
+      "id":"158",
+      "type":"categories",
+      "attributes":{
+        "name":"Machine Learning",
+        "uri":"rw://carolus/categories/158",
+        "ordinal":16
+      }
+    }
+  ]
+}

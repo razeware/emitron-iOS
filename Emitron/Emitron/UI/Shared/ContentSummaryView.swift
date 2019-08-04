@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct ContentSummaryView: View {
-  var details: ContentDetail
+  var details: ContentDetailModel
   var body: some View {
     VStack(alignment: .leading) {
       
@@ -42,7 +42,7 @@ struct ContentSummaryView: View {
       Text(details.name) // TITLE
         .font(.uiTitle1)
         .lineLimit(nil)
-        .frame(idealHeight: .infinity)
+        //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .padding([.top], -5)
       
@@ -55,7 +55,7 @@ struct ContentSummaryView: View {
           // Download Action
           self.download()
         }) {
-          Image("download")
+          Image("downloadInactive")
             .padding([.trailing], 30)
             .foregroundColor(.coolGrey)
         }
@@ -64,7 +64,7 @@ struct ContentSummaryView: View {
           // Bookmark Action
           self.bookmark()
         }) {
-          Image("bookmark")
+          Image("bookmarkInactive")
             .resizable()
             .frame(maxWidth: 20, maxHeight: 20)
             .foregroundColor(.coolGrey)
@@ -96,7 +96,7 @@ struct ContentSummaryView: View {
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      ContentSummaryView(details: ContentDetail.test)
+      ContentSummaryView(details: ContentDetailModel.test)
     }
 }
 #endif

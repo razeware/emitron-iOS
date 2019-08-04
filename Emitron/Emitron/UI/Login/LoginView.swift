@@ -30,7 +30,7 @@ import SwiftUI
 
 struct LoginView: View {
   
-  @ObjectBinding var userMC: UserMC
+  @ObservedObject var userMC: UserMC
   @State var showModal: Bool = false
   
   var body: some View {
@@ -55,7 +55,7 @@ struct LoginView: View {
 struct LoginView_Previews: PreviewProvider {
 
   static var previews: some View {
-    let guardpost = AppDelegate.guardpost
+    let guardpost = Guardpost.current
     let userMC = UserMC(guardpost: guardpost)
     
     return LoginView(userMC: userMC)

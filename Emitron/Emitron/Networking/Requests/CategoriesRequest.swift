@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct CategoriesRequest: Request {
-  typealias Response = [Category]
+  typealias Response = [CategoryModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,10 +39,9 @@ struct CategoriesRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [Category] {
+  func handle(response: Data) throws -> [CategoryModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let categories = doc.data.compactMap { Category($0, metadata: nil) }
-    return categories
+    return doc.data.compactMap { CategoryModel($0, metadata: nil) }
   }
 }

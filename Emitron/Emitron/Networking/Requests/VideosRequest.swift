@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ShowVideoRequest: Request {
-  typealias Response = Video
+  typealias Response = VideoModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -46,16 +46,15 @@ struct ShowVideoRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> Video {
+  func handle(response: Data) throws -> VideoModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let videos = doc.data.compactMap { Video($0, metadata: nil) }
-    return videos.first!
+    return doc.data.compactMap { VideoModel($0, metadata: nil) }.first!
   }
 }
 
 struct StreamVideoRequest: Request {
-  typealias Response = Attachment
+  typealias Response = AttachmentModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -71,17 +70,16 @@ struct StreamVideoRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> Attachment {
+  func handle(response: Data) throws -> AttachmentModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let attachments = doc.data.compactMap { Attachment($0, metadata: nil) }
-    return attachments.first!
+    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }.first!
   }
 }
 
 struct DownloadVideoRequest: Request {
   // It contains two Attachment objects, one for the HD file and one for the SD file.
-  typealias Response = [Attachment]
+  typealias Response = [AttachmentModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -97,10 +95,9 @@ struct DownloadVideoRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [Attachment] {
+  func handle(response: Data) throws -> [AttachmentModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let attachments = doc.data.compactMap { Attachment($0, metadata: nil) }
-    return attachments
+    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }
   }
 }

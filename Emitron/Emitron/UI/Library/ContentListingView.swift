@@ -30,11 +30,11 @@ import SwiftUI
 
 struct ContentListingView: View {
   
-  @ObjectBinding var contentDetailsMC: ContentDetailsMC
+  @ObservedObject var contentDetailsMC: ContentDetailsMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
-  var user: User
+  var user: UserModel
     
   var body: some View {
     
@@ -68,12 +68,12 @@ struct ContentListingView: View {
             ) {
               ForEach(group.childContents, id: \.id) { summary in
                 
-                TextListItemView(contentSummary: summary, timeStamp: nil, buttonAction: {
+                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
                   // Download
                 })
-                  .tapAction {
-                    self.isPresented = true
-                  }
+                .onTapGesture {
+                  self.isPresented = true
+                }
                 .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
               }
             }
@@ -105,12 +105,11 @@ struct ContentListingView: View {
       DispatchQueue.global().async {
           let data = try? Data(contentsOf: url)
           DispatchQueue.main.async {
-            if let img = UIImage(data: data!) {
+            if let data = data,
+              let img = UIImage(data: data) {
               self.uiImage = img
             }
           }
       }
     }
 }
-
-

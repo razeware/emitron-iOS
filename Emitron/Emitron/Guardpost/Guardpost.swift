@@ -38,32 +38,39 @@ public enum LoginError: Error {
 }
 
 public class Guardpost {
+  
+  static var current: Guardpost {
+    return (UIApplication.shared.delegate as! AppDelegate).guardpost!
+  }
 
   // MARK: - Properties
   private let baseUrl: String
   private let urlScheme: String
   private let ssoSecret: String
-  private var _currentUser: User?
+  private var _currentUser: UserModel?
   private var authSession: ASWebAuthenticationSession?
+  private let persistentStore: PersistenceStore
   public weak var presentationContextDelegate: ASWebAuthenticationPresentationContextProviding?
 
-  public var currentUser: User? {
+  public var currentUser: UserModel? {
     if _currentUser == .none {
-      _currentUser = User.restoreFromKeychain()
+      _currentUser = persistentStore.userFromKeychain()
     }
     return _currentUser
   }
 
   // MARK: - Initializers
-  public init(baseUrl: String,
-              urlScheme: String,
-              ssoSecret: String) {
+  init(baseUrl: String,
+       urlScheme: String,
+       ssoSecret: String,
+       persistentStore: PersistenceStore) {
     self.baseUrl = baseUrl
     self.urlScheme = urlScheme
     self.ssoSecret = ssoSecret
+    self.persistentStore = persistentStore
   }
 
-  public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
+  public func login(callback: @escaping (Result<UserModel, LoginError>) -> Void) {
     let guardpostLogin = "\(baseUrl)/v2/sso/login"
     let returnUrl = "\(urlScheme)sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
@@ -71,14 +78,14 @@ public class Guardpost {
                                          callbackUrl: returnUrl)
 
     guard let loginUrl = ssoRequest.url else {
-      let result: Result<User, LoginError> = .failure(.unableToCreateLoginUrl)
+      let result: Result<UserModel, LoginError> = .failure(.unableToCreateLoginUrl)
       return asyncResponse(callback: callback, result: result)
     }
 
     authSession = ASWebAuthenticationSession(url: loginUrl,
                                              callbackURLScheme: urlScheme) { url, error in
 
-      var result: Result<User, LoginError>
+      var result: Result<UserModel, LoginError>
 
       guard let url = url else {
         result = .failure(LoginError.errorResponseFromGuardpost(error))
@@ -100,10 +107,10 @@ public class Guardpost {
         return self.asyncResponse(callback: callback, result: result)
       }
 
-      user.persistToKeychain()
+      self.persistentStore.persistUserToKeychain(user: user)
       self._currentUser = user
 
-      result = Result<User, LoginError>.success(user)
+      result = Result<UserModel, LoginError>.success(user)
       return self.asyncResponse(callback: callback, result: result)
     }
 
@@ -116,12 +123,12 @@ public class Guardpost {
   }
 
   public func logout() {
-    User.removeUserFromKeychain()
+    persistentStore.removeUserFromKeychain()
     _currentUser = .none
   }
 
-  private func asyncResponse(callback: @escaping (Result<User, LoginError>) -> Void,
-                             result: Result<User, LoginError>) {
+  private func asyncResponse(callback: @escaping (Result<UserModel, LoginError>) -> Void,
+                             result: Result<UserModel, LoginError>) {
     DispatchQueue.global(qos: .userInitiated).async {
       callback(result)
     }
