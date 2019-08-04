@@ -75,13 +75,19 @@ struct LibraryView: View {
   @EnvironmentObject var contentsMC: ContentsMC
   @State var filtersPresented: Bool = false
   @State var sortSelection: SortSelection = .newest
+  @State private var searchText = ""
 
   var body: some View {
     VStack {
       VStack {
         
         HStack {
-          SearchView()
+          TextField(Constants.search, text: $searchText) {
+            UIApplication.shared.keyWindow?.endEditing(true)
+            self.contentsMC.filters.searchQuery = self.searchText
+            self.contentsMC.filters = self.contentsMC.filters //TODO; Hack to get this to re-render
+          }
+            .textFieldStyle(RoundedBorderTextFieldStyle())
           Button(action: {
             self.filtersPresented.toggle()
           }, label: {
