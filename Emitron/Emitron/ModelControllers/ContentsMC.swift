@@ -53,7 +53,7 @@ class ContentsMC: NSObject, ObservableObject {
   
   // Parameters
   private var defaultParameters: [Parameter] {
-    return Param.filter(by: [.contentTypes(types: [.collection, .screencast])])
+    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
   }
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
@@ -66,7 +66,7 @@ class ContentsMC: NSObject, ObservableObject {
       if currentParameters != (filters.appliedParameters + defaultParameters) {
         currentPage = startingPage
         currentParameters = defaultParameters + filters.appliedParameters
-      }
+      }      
     }
   }
   

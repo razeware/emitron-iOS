@@ -48,6 +48,7 @@ enum FilterGroupType: CaseIterable {
   case categories
   case contentTypes
   case difficulties
+  case none // For filters whose values aren't an array, for example the search query
   
   var initialFilters: Set<Filter> {
     switch self {
@@ -57,16 +58,18 @@ enum FilterGroupType: CaseIterable {
       let userFacingDomains = domains.filter { DomainLevel.userFacing.contains($0.level) }
       let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
       
-      return Set(Param.filter(by: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
+      return Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .categories:
       let categories = DataManager.current.categoriesMC.data
       let categoryTypes = categories.map { (id: $0.id, name: $0.name) }
       
-      return Set(Param.filter(by: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
+      return Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .contentTypes:
-      return Set(Param.filter(by: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: self, param: $0, isOn: false ) })
+      return Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: self, param: $0, isOn: false ) })
     case .difficulties:
-      return Set(Param.filter(by: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: self, param: $0, isOn: false ) })
+      return Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: self, param: $0, isOn: false ) })
+    case .none:
+      return Set()
     }
   }
   
@@ -80,6 +83,8 @@ enum FilterGroupType: CaseIterable {
       return "Categories"
     case .difficulties:
       return "Difficulties"
+    case .none:
+      return ""
     }
   }
 }
@@ -94,6 +99,7 @@ class Filters: ObservableObject {
       categories.filters = filters.filter { $0.groupType == .categories }
       contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
       difficulties.filters = filters.filter { $0.groupType == .difficulties }
+      
       objectWillChange.send(())
     }
   }
@@ -107,13 +113,34 @@ class Filters: ObservableObject {
   }
   
   var appliedFilters: [Filter] {
+    // TODO: Check with Luke if we should have the Search filter here or not
+    // It is convenient to be able to clear it from the applied filters control
+    // But will also have to figure out how to connect the searchQuery + the AppliedFilter
     return filters.filter { $0.isOn }
+  }
+  
+  var searchQuery: String? {
+    didSet {
+      guard let query = searchQuery else {
+        // Remove search filter from filters
+        if let searchFilter = searchFilter {
+          filters.remove(searchFilter)
+        }
+        
+        searchFilter = nil
+        return
+      }
+      let filter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
+      searchFilter = filter
+      filters.update(with: filter)
+    }
   }
   
   private var platforms: FilterGroup
   private var categories: FilterGroup
   private var contentTypes: FilterGroup
   private var difficulties: FilterGroup
+  private var searchFilter: Filter?
   
   init() {
     self.platforms = FilterGroup(type: .platforms)

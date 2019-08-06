@@ -115,6 +115,7 @@ enum ParameterFilterValue {
   case categoryTypes(types: [(id: Int, name: String)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
+  case queryString(string: String)
   
   var strKey: String {
     switch self {
@@ -128,6 +129,8 @@ enum ParameterFilterValue {
       return "difficulties"
     case .contentIds:
       return "content_ids"
+    case .queryString:
+      return "q"
     }
   }
   
@@ -143,6 +146,8 @@ enum ParameterFilterValue {
       return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
     case .contentIds(ids: let ids):
       return ids.map { (displayName: "\($0)", requestValue: "\($0)") }
+    case .queryString(string: let str):
+      return [(displayName: str, requestValue: str)]
     }
   }
   
@@ -159,6 +164,35 @@ enum ParameterFilterValue {
     case .contentIds:
       // TODO: This is probably not required (or desired)
       return "Contents"
+    case .queryString:
+      // TODO: This is probably not required (or desired)
+      return "Query String"
+    }
+  }
+  
+  var isSearchQuery: Bool {
+    switch self {
+    case .queryString:
+      return true
+    case .contentIds,
+         .contentTypes,
+         .domainTypes,
+         .difficulties,
+         .categoryTypes:
+      return false
+    }
+  }
+  
+  var searchValue: String {
+    switch self {
+    case .queryString(let str):
+      return str
+    case .contentIds,
+         .contentTypes,
+         .domainTypes,
+         .difficulties,
+         .categoryTypes:
+      return ""
     }
   }
 }
@@ -181,10 +215,13 @@ struct Parameter: Equatable {
 
 enum Param {
   
-  static func filter(by values: [ParameterFilterValue]) -> [Parameter] {
+  // Not to be used for the search query filter
+  static func filters(for values: [ParameterFilterValue]) -> [Parameter] {
     var allParams: [Parameter] = []
     
     values.forEach { value in
+      guard !value.isSearchQuery else { return }
+      
       let key = "filter[\(value.strKey)][]"
       let values = value.values
       let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName) }
@@ -195,7 +232,12 @@ enum Param {
     return allParams
   }
   
-  static func sort(by value: ParameterSortValue,
+  // Only to be used for the search query filter
+  static func filter(for searchParam: ParameterFilterValue) -> Parameter {
+    return Parameter(key: "filter[\(searchParam.strKey)]", value: searchParam.searchValue, displayName: searchParam.searchValue)
+  }
+  
+  static func sort(for value: ParameterSortValue,
                    descending: Bool) -> Parameter {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
