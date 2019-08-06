@@ -43,8 +43,9 @@ struct MyTutorialsView: View {
         
         HStack {
           Text(Constants.myTutorials)
-            .font(.uiLargeTitle)
-            .foregroundColor(.appBlack)
+          .font(.uiLargeTitle)
+          .foregroundColor(.appBlack)
+          
           Spacer()
           
           Button(action: {

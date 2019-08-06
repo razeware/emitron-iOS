@@ -30,56 +30,156 @@ import SwiftUI
 
 struct ToggleControlView: View {
   
-    var body: some View {
-      HStack {
+  @State var inProgressSelected: Bool = true
+  @State var completedSelected: Bool = false
+  @State var bookmarkedSelected: Bool = false
+  
+  var body: some View {
+    HStack {
+      
+      Button(action: {
+        if self.inProgressSelected == false {
+          self.inProgressSelected.toggle()
+        }
+        
+        if self.completedSelected == true {
+          self.completedSelected.toggle()
+        }
+        
+        if self.bookmarkedSelected == true {
+          self.bookmarkedSelected.toggle()
+        }
+        
+        self.inProgress()
+      }) {
         
         VStack {
           
-          Text("In Progress")
-          .lineLimit(1)
-          .font(.uiLabel)
-          .foregroundColor(Color.appGreen)
-          
-          Rectangle()
-          .frame(maxWidth: 113, maxHeight: 2)
-          .foregroundColor(Color.appGreen)
-          
+          if self.inProgressSelected {
+            
+            Text("In Progress")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(Color.appGreen)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.appGreen)
+          } else {
+            
+            Text("In Progress")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+              .foregroundColor(Color.coolGrey)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.coolGrey)
+          }
         }
-        
-        
-        Spacer()
-        
-        VStack {
-          
-          Text("Completed")
-          .lineLimit(1)
-          .font(.uiLabel)
-          .foregroundColor(Color.appGreen)
-          
-          Rectangle()
-          .frame(maxWidth: 113, maxHeight: 2)
-          .foregroundColor(Color.appGreen)
-          
-        }
-        
-        Spacer()
-        
-        VStack {
-          
-          Text("Bookmarks")
-          .lineLimit(1)
-          .font(.uiLabel)
-          .foregroundColor(Color.appGreen)
-          
-          Rectangle()
-          .frame(maxWidth: 113, maxHeight: 2)
-          .foregroundColor(Color.appGreen)
-          
-        }
-        
       }
       
+      Spacer()
+      
+      Button(action: {
+        if self.inProgressSelected == true {
+          self.inProgressSelected.toggle()
+        }
+        
+        if self.completedSelected == false {
+          self.completedSelected.toggle()
+        }
+        
+        if self.bookmarkedSelected == true {
+          self.bookmarkedSelected.toggle()
+        }
+        
+        self.completed()
+      }, label: {
+        VStack {
+          
+          if self.completedSelected {
+            
+            Text("Completed")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(Color.appGreen)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.appGreen)
+          } else {
+            
+            Text("Completed")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(Color.coolGrey)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.coolGrey)
+          }
+        }
+      })
+      
+      Spacer()
+      
+      Button(action: {
+        if self.inProgressSelected == true {
+          self.inProgressSelected.toggle()
+        }
+        
+        if self.completedSelected == true {
+          self.completedSelected.toggle()
+        }
+        
+        if self.bookmarkedSelected == false {
+          self.bookmarkedSelected.toggle()
+        }
+        
+        self.bookmarked()
+      }, label: {
+        
+        VStack {
+          
+          if self.bookmarkedSelected {
+            
+            Text("Bookmarks")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(Color.appGreen)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.appGreen)
+          } else {
+            
+            Text("Bookmarks")
+            .lineLimit(1)
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(Color.coolGrey)
+            
+            Rectangle()
+            .frame(maxWidth: 113, maxHeight: 2)
+            .foregroundColor(Color.coolGrey)
+          }
+        }
+      })
+      
     }
+  }
+  
+  private func inProgress() {
+    print("In progress tapped!")
+  }
+  
+  private func completed() {
+    print("Completed tapped!")
+  }
+  
+  private func bookmarked() {
+    print("Bookmarked tapped!")
+  }
 }
 
 #if DEBUG
