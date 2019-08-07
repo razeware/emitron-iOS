@@ -34,8 +34,10 @@ private extension CGFloat {
 
 struct MyTutorialsView: View {
   
-  // FJ TODO: Make sure data for my tutorials is from ContentsMC & find out requirements for sorting...
+  // FJ TODO: Add in green progress bar once can tell if tutorial is in progress..
+  
   @EnvironmentObject var contentsMC: ContentsMC
+  @State var settingsPresented: Bool = false
   
   var body: some View {
     VStack {
@@ -49,12 +51,14 @@ struct MyTutorialsView: View {
           Spacer()
           
           Button(action: {
-            // Select settings
-            self.selectSettings()
+            self.settingsPresented.toggle()
           }) {
             HStack {
               Image("settings")
-                .foregroundColor(.battleshipGrey)
+              .foregroundColor(.battleshipGrey)
+              .sheet(isPresented: self.$settingsPresented) {
+                SettingsView()
+              }
             }
           }
         }
@@ -63,7 +67,7 @@ struct MyTutorialsView: View {
       .padding([.leading, .trailing, .top], .sidePadding)
       
       ToggleControlView()
-        .padding([.top, .leading, .trailing], .sidePadding)
+        .padding([.leading, .trailing, .top], .sidePadding)
         .background(Color.paleGrey)
       
       contentView()
@@ -72,10 +76,6 @@ struct MyTutorialsView: View {
       
     }
     .background(Color.paleGrey)
-  }
-  
-  private func selectSettings() {
-    print("Settings tapped!")
   }
   
   private func contentView() -> AnyView {

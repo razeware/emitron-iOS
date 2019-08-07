@@ -57,29 +57,13 @@ struct ToggleControlView: View {
           
           if self.inProgressSelected {
             
-            Text("In Progress")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(Color.appGreen)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.appGreen)
+            self.updateToggleToOn(with: "In Progress")
           } else {
             
-            Text("In Progress")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-              .foregroundColor(Color.coolGrey)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.coolGrey)
+            self.updateToggleToOff(with: "In Progress")
           }
         }
       }
-      
-      Spacer()
       
       Button(action: {
         if self.inProgressSelected == true {
@@ -100,29 +84,13 @@ struct ToggleControlView: View {
           
           if self.completedSelected {
             
-            Text("Completed")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(Color.appGreen)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.appGreen)
-          } else {
-            
-            Text("Completed")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(Color.coolGrey)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.coolGrey)
+            self.updateToggleToOn(with: "Completed")
+            } else {
+              
+              self.updateToggleToOff(with: "Completed")
           }
         }
       })
-      
-      Spacer()
       
       Button(action: {
         if self.inProgressSelected == true {
@@ -144,29 +112,48 @@ struct ToggleControlView: View {
           
           if self.bookmarkedSelected {
             
-            Text("Bookmarks")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(Color.appGreen)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.appGreen)
-          } else {
-            
-            Text("Bookmarks")
-            .lineLimit(1)
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(Color.coolGrey)
-            
-            Rectangle()
-            .frame(maxWidth: 113, maxHeight: 2)
-            .foregroundColor(Color.coolGrey)
+            self.updateToggleToOn(with: "Bookmarks")
+            } else {
+              
+              self.updateToggleToOff(with: "Bookmarks")
           }
         }
       })
-      
     }
+  }
+  
+  private func updateToggleToOn(with text: String) -> AnyView {
+    
+    let stackView = VStack {
+      Text(text)
+      .lineLimit(1)
+      .font(.uiButtonLabelSmall)
+      .foregroundColor(Color.appGreen)
+      .frame(width: 80, height: nil, alignment: .center)
+      
+      Rectangle()
+      .frame(maxWidth: 120, maxHeight: 2)
+      .foregroundColor(Color.appGreen)
+    }
+    
+    return AnyView(stackView)
+  }
+  
+  private func updateToggleToOff(with text: String) -> AnyView {
+    
+    let stackView = VStack {
+      Text(text)
+      .lineLimit(1)
+      .font(.uiButtonLabelSmall)
+      .foregroundColor(Color.coolGrey)
+      .frame(width: 80, height: nil, alignment: .center)
+      
+      Rectangle()
+      .frame(maxWidth: 120, maxHeight: 2)
+      .foregroundColor(Color.coolGrey)
+    }
+    
+    return AnyView(stackView)
   }
   
   private func inProgress() {
