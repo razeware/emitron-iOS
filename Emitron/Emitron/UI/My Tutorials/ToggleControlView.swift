@@ -56,10 +56,8 @@ struct ToggleControlView: View {
         VStack {
           
           if self.inProgressSelected {
-            
             self.updateToggleToOn(with: "In Progress")
           } else {
-            
             self.updateToggleToOff(with: "In Progress")
           }
         }
@@ -83,10 +81,8 @@ struct ToggleControlView: View {
         VStack {
           
           if self.completedSelected {
-            
             self.updateToggleToOn(with: "Completed")
             } else {
-              
               self.updateToggleToOff(with: "Completed")
           }
         }
@@ -111,10 +107,8 @@ struct ToggleControlView: View {
         VStack {
           
           if self.bookmarkedSelected {
-            
             self.updateToggleToOn(with: "Bookmarks")
             } else {
-              
               self.updateToggleToOff(with: "Bookmarks")
           }
         }
