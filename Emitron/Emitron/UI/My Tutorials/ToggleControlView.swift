@@ -38,18 +38,9 @@ struct ToggleControlView: View {
     HStack {
       
       Button(action: {
-        if self.inProgressSelected == false {
-          self.inProgressSelected.toggle()
-        }
-        
-        if self.completedSelected == true {
-          self.completedSelected.toggle()
-        }
-        
-        if self.bookmarkedSelected == true {
-          self.bookmarkedSelected.toggle()
-        }
-        
+        self.inProgressSelected = true
+        self.completedSelected = false
+        self.bookmarkedSelected = false
         self.inProgress()
       }) {
         
@@ -64,18 +55,9 @@ struct ToggleControlView: View {
       }
       
       Button(action: {
-        if self.inProgressSelected == true {
-          self.inProgressSelected.toggle()
-        }
-        
-        if self.completedSelected == false {
-          self.completedSelected.toggle()
-        }
-        
-        if self.bookmarkedSelected == true {
-          self.bookmarkedSelected.toggle()
-        }
-        
+        self.inProgressSelected = false
+        self.completedSelected = true
+        self.bookmarkedSelected = false
         self.completed()
       }, label: {
         VStack {
@@ -89,18 +71,9 @@ struct ToggleControlView: View {
       })
       
       Button(action: {
-        if self.inProgressSelected == true {
-          self.inProgressSelected.toggle()
-        }
-        
-        if self.completedSelected == true {
-          self.completedSelected.toggle()
-        }
-        
-        if self.bookmarkedSelected == false {
-          self.bookmarkedSelected.toggle()
-        }
-        
+        self.inProgressSelected = false
+        self.completedSelected = false
+        self.bookmarkedSelected = true
         self.bookmarked()
       }, label: {
         
