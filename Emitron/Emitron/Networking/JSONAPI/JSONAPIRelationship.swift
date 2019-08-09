@@ -49,5 +49,9 @@ public class JSONAPIRelationship {
     self.type = type
     meta = json["meta"].dictionaryObject ?? [:]
     data = json["data"].arrayValue.map { JSONAPIResource($0, parent: nil) }
+    
+    let nonArrayJSON = json["data"]
+    let nonArrayJSONAPIResource = JSONAPIResource(nonArrayJSON, parent: nil)
+    data.append(nonArrayJSONAPIResource)
   }
 }
