@@ -128,17 +128,14 @@ struct ToggleControlView: View {
   }
   
   private func inProgress() {
-    print("In progress tapped!")
     inProgressClosure?()
   }
   
   private func completed() {
-    print("Completed tapped!")
     completedClosure?()
   }
   
   private func bookmarked() {
-    print("Bookmarked tapped!")
     bookmarkedClosure?()
   }
 }

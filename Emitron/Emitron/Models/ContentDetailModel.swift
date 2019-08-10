@@ -125,8 +125,7 @@ class ContentDetailModel {
         self.groups = groups
       case "progression":
         let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
-        print("included: \(included)")
+        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
       case "bookmark":

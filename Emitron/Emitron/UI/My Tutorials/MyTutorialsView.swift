@@ -112,7 +112,7 @@ struct MyTutorialsView: View {
             return false
           }
           
-          return progression.percentComplete > 0
+          return progression.percentComplete > 0 && !progression.finished
         }
         
         dataToDisplay = inProgressData
