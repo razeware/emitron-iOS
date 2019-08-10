@@ -28,8 +28,13 @@
 
 import SwiftUI
 
+private struct Layout {
+  static let minCardWidth: CGFloat = 339
+}
+
 struct CardView: View {
   
+  @State var showProgressBar: Bool
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   let content: ContentDetailModel?
   
@@ -82,10 +87,14 @@ struct CardView: View {
             self.download()
           }
       }
+      
+      if showProgressBar {
+        self.showProgressBarView()
+      }
     }
       .padding([.leading, .trailing, .top], 15)
       .padding([.bottom], 22)
-      .frame(minWidth: 339, minHeight: 184)
+      .frame(minWidth: Layout.minCardWidth, minHeight: 184)
       .background(Color.white)
       .cornerRadius(6)
       .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
@@ -111,13 +120,29 @@ struct CardView: View {
       }
     }
   }
+  
+  private func showProgressBarView() -> AnyView {
+
+    let percentComplete = (content?.progression?.percentComplete ?? 0)/100.00
+    let width = Layout.minCardWidth * CGFloat(percentComplete)
+    
+    let stack = ZStack {
+      Spacer()
+      
+      Rectangle()
+        .frame(width: width, height: 2, alignment: .center)
+        .foregroundColor(.appGreen)
+    }
+
+    return AnyView(stack)
+  }
 }
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
 
   static var previews: some View {
-    CardView(content: nil)
+    CardView(showProgressBar: false, content: nil)
   }
 }
 #endif
