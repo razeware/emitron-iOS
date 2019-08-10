@@ -50,6 +50,7 @@ class ContentSummaryModel {
   private(set) var contentType: ContentType = .none
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
+  private(set) var bookmarked: Bool = false
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
@@ -92,27 +93,10 @@ class ContentSummaryModel {
 
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
+    self.bookmarked = jsonResource["bookmarked"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
-    
-    for relationship in jsonResource.relationships {
-      switch relationship.type {
-      case "progression":
-        let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
-        self.progression = progressions?.first
-      case "bookmark":
-        let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
-        let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
-        self.bookmark = bookmarks?.first
-      default:
-        break
-      }
-    }
-    
   }
 }
 

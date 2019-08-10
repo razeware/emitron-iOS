@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import SwiftUI
-import Combine
 
 private extension CGFloat {
   static let sidePadding: CGFloat = 18
@@ -61,7 +60,7 @@ struct MyTutorialsView: View {
             HStack {
               Image("settings")
               .foregroundColor(.battleshipGrey)
-                .sheet(isPresented: self.$settingsPresented) {
+              .sheet(isPresented: self.$settingsPresented) {
                 SettingsView()
               }
             }
