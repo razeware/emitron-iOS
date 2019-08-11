@@ -33,6 +33,7 @@ import CoreData
 
 class ContentsMC: NSObject, ObservableObject, Refreshable {
   
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: ContentsMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   // MARK: - Properties
@@ -85,7 +86,7 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
     
     if shouldRefresh {
       loadContents()
-      saveToPersistentStore()
+      saveOrReplaceUpdateDate()
     }
   }
   
@@ -127,6 +128,7 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
         }
         self.numTutorials = contentsTuple.totalNumber
         self.state = .hasData
+        self.saveToPersistentStore()
       }
     }
   }
@@ -142,11 +144,13 @@ extension ContentsMC {
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let contentModels = result.map(ContentDetailModel.init)
       data = contentModels
+      state = .hasData
     } catch {
       Failure
         .loadFromPersistentStore(from: "ContentsMC", reason: "Failed to load entities from core data.")
         .log(additionalParams: nil)
       data = []
+      state = .failed
     }
   }
   
@@ -165,7 +169,7 @@ extension ContentsMC {
       contents.duration = NSNumber(value: entry.duration)
       contents.bookmarked = entry.bookmarked
       contents.popularity = entry.popularity
-      contents.cardArtworkUrl = entry.cardArtworkURL?.absoluteString
+      contents.cardArtworkUrl = entry.cardArtworkURL
       contents.technologyTripleString = entry.technologyTripleString
       contents.contributorString = entry.contributorString
       contents.videoID = NSNumber(value: entry.videoID)
@@ -190,7 +194,5 @@ extension ContentsMC {
         .saveToPersistentStore(from: "ContentsMC", reason: "Failed to save entities to core data.")
         .log(additionalParams: nil)
     }
-    
-    saveOrReplaceUpdateDate()
   }
 }

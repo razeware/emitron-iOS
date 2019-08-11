@@ -55,8 +55,9 @@ extension CardViewModel {
     let subtitle = content.domains.map { $0.name }.commaSeparatedString
     let progress = CGFloat(content.progression?.percentComplete ?? 0)
     
-    guard !subtitle.isEmpty,
-      let imageURL = content.cardArtworkURL else { return nil }
+//    guard !subtitle.isEmpty,
+//      let imageURL = content.cardArtworkURL else { return nil }
+    guard let imageURL = content.cardArtworkURL else { return nil }
     
     let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: .url(imageURL), footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
     

@@ -157,7 +157,7 @@ class ContentDetailModel {
     self.duration = content.duration.intValue
     self.bookmarked = content.bookmarked
     self.popularity = content.popularity
-    self.cardArtworkURL = URL(string: content.cardArtworkUrl ?? "")
+    self.cardArtworkURL = content.cardArtworkUrl
     self.technologyTripleString = content.technologyTripleString
     self.contributorString = content.contributorString
     self.videoID = content.videoID.intValue

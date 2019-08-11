@@ -33,6 +33,7 @@ import CoreData
 
 class DomainsMC: NSObject, ObservableObject, Refreshable {
   
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   // MARK: - Properties
@@ -71,7 +72,7 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchDomains()
-      saveToPersistentStore()
+      saveOrReplaceUpdateDate()
     }
   }
 }

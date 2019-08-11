@@ -33,6 +33,7 @@ import CoreData
 
 class CategoriesMC: NSObject, ObservableObject, Refreshable {
   
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoriesMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   // MARK: - Properties
@@ -69,7 +70,7 @@ class CategoriesMC: NSObject, ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchCategories()
-      saveToPersistentStore()
+      saveOrReplaceUpdateDate()
     }
   }
 }

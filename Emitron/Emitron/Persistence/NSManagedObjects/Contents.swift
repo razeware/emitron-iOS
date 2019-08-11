@@ -47,7 +47,7 @@ final class Contents: NSManagedObject {
   @NSManaged var duration: NSNumber
   @NSManaged var popularity: Double
   @NSManaged var bookmarked: Bool
-  @NSManaged var cardArtworkUrl: String?
+  @NSManaged var cardArtworkUrl: URL?
   @NSManaged var technologyTripleString: String
   @NSManaged var contributorString: String
   @NSManaged var videoID: NSNumber
@@ -65,7 +65,7 @@ final class Contents: NSManagedObject {
     contents.duration = NSNumber(value: model.duration)
     contents.bookmarked = model.bookmarked
     contents.popularity = model.popularity
-    contents.cardArtworkUrl = model.cardArtworkURL?.absoluteString
+    contents.cardArtworkUrl = model.cardArtworkURL
     contents.technologyTripleString = model.technologyTripleString
     contents.contributorString = model.contributorString
     contents.videoID = NSNumber(value: model.videoID)
