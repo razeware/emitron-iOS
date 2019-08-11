@@ -28,62 +28,35 @@
 
 import SwiftUI
 
-struct TabNavView: View {
-
-  @State private var selection = 0
-
+struct ProgressBarView: View {
+  private var progress: CGFloat
+  private var height: CGFloat = 4
+  
+  init(progress: CGFloat) {
+    self.progress = progress
+  }
+  
   var body: some View {
-    let tabs = TabView(selection: $selection) {
-
-      libraryView() //TODO: This is somehow making the tabbar crash
-        .tabItem {
-          Text(Constants.library)
-          Image("library")
-        }
-        .tag(0)
-
-      DownloadsView()
-        .tabItem {
-          Text(Constants.downloads)
-          Image("downloadInactive")
-        }
-        .tag(1)
-        .onTapGesture {
-          print("Tapped Downloads")
-        }
-
-      myTutorialsView()
-        .tabItem {
-          Text(Constants.myTutorials)
-          Image("myTutorials")
-        }
-        .tag(2)
+    
+    ZStack(alignment: .leading) {
+      GeometryReader { geometry in
+        Rectangle()
+          .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+          .foregroundColor(.appGreen)
+        
+        Rectangle()
+          .frame(width: geometry.size.width * self.progress, height: self.height)
+          .foregroundColor(.appGreen)
+          .cornerRadius(self.height/2)
+      }
     }
-
-    return tabs
-  }
-  
-  func libraryView() -> AnyView {
-    
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
-    
-    return AnyView(LibraryView().environmentObject(contentsMC))
-  }
-  
-  func myTutorialsView() -> AnyView {
-    
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
-    
-    return AnyView(MyTutorialsView().environmentObject(contentsMC))
   }
 }
 
 #if DEBUG
-struct TabNavView_Previews: PreviewProvider {
+struct ProgressView_Previews: PreviewProvider {
   static var previews: some View {
-    TabNavView()
+    ProgressBarView(progress: 0.5)
   }
 }
 #endif

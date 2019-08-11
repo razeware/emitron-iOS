@@ -34,7 +34,6 @@ private struct Layout {
 
 struct ContentListView: View {
   
-  @State var showProgressBar: Bool
   @State var isPresenting: Bool = false
   var contents: [ContentDetailModel] = []
   var bgColor: Color
@@ -54,7 +53,7 @@ struct ContentListView: View {
     
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       ForEach(contents, id: \.id) { partialContent in
-        CardView(showProgressBar: self.showProgressBar, content: partialContent)
+        CardView(model: CardViewModel.transform(partialContent)!)
         .listRowBackground(self.bgColor)
         .background(self.bgColor)
         .onTapGesture {
@@ -83,7 +82,8 @@ struct ContentListView: View {
     
     let list = List {
       ForEach(contents, id: \.id) { partialContent in
-        CardView(showProgressBar: self.showProgressBar, content: partialContent)
+
+        CardView(model: CardViewModel.transform(partialContent)!)
           .listRowBackground(self.bgColor)
           .background(self.bgColor)
           .onTapGesture {
@@ -114,7 +114,7 @@ struct ContentListView: View {
 struct ContentListView_Previews: PreviewProvider {
 
   static var previews: some View {
-    ContentListView(showProgressBar: false, contents: [], bgColor: .paleGrey)
+    ContentListView(contents: [], bgColor: .paleGrey)
   }
 }
 #endif

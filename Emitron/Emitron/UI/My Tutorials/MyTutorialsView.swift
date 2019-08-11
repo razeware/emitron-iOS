@@ -124,7 +124,7 @@ struct MyTutorialsView: View {
         dataToDisplay = bookmarkedData
       }
       
-      return AnyView(ContentListView(showProgressBar: true, contents: dataToDisplay, bgColor: .paleGrey))
+      return AnyView(ContentListView(contents: dataToDisplay, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }
