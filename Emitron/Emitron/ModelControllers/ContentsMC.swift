@@ -31,10 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ContentsMC: NSObject, ObservableObject, Refreshable {
-  
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: ContentsMC.self))"
-  var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
+class ContentsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -49,7 +46,6 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetailModel] = []
   private(set) var numTutorials: Int = 0
-  private let persistentStore: PersistenceStore
   
   // Pagination
   private var currentPage: Int = 1
@@ -60,37 +56,41 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
   private var defaultParameters: [Parameter] {
     return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
   }
+  
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
-      loadContents()
+      if oldValue != currentParameters {
+        loadContents()
+      }
     }
   }
   
+  private var filters: Filters {
+    didSet {
+      currentParameters = filters.appliedParameters + defaultParameters
+    }
+  }
+    
   // MARK: - Initializers
-  init(guardpost: Guardpost,
-       persistentStore: PersistenceStore) {
+  init(guardpost: Guardpost, filters: Filters) {
     self.guardpost = guardpost
     
-    //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.persistentStore = persistentStore
+    self.filters = filters
     
     super.init()
 
     currentParameters = defaultParameters
+    loadContents()
   }
   
-  func populate() {
-    loadFromPersistentStore()
-    
-    if shouldRefresh {
-      loadContents()
-      saveOrReplaceUpdateDate()
-    }
+  func updateFilters(newFilters: Filters) {
+    self.filters = newFilters
   }
   
   private func loadContents() {
+    
     if case(.loading) = state {
       return
     }
@@ -128,71 +128,7 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
         }
         self.numTutorials = contentsTuple.totalNumber
         self.state = .hasData
-        self.saveToPersistentStore()
       }
-    }
-  }
-}
-
-//MARK: Persistence Store
-
-extension ContentsMC {
-  func loadFromPersistentStore() {
-    
-    do {
-      let fetchRequest: NSFetchRequest<Contents> = Contents.fetchRequest()
-      let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
-      let contentModels = result.map(ContentDetailModel.init)
-      data = contentModels
-      state = .hasData
-    } catch {
-      Failure
-        .loadFromPersistentStore(from: "ContentsMC", reason: "Failed to load entities from core data.")
-        .log(additionalParams: nil)
-      data = []
-      state = .failed
-    }
-  }
-  
-  func saveToPersistentStore() {
-    let viewContext = persistentStore.coreDataStack.viewContext
-    for entry in data {
-      let contents = Contents(context: viewContext)
-      contents.id = NSNumber(value: entry.id)
-      contents.name = entry.name
-      contents.uri = entry.uri
-      contents.desc = entry.description
-      contents.releasedAt = entry.releasedAt
-      contents.free = entry.free
-      contents.difficulty = entry.difficulty.rawValue
-      contents.contentType = entry.contentType.rawValue
-      contents.duration = NSNumber(value: entry.duration)
-      contents.bookmarked = entry.bookmarked
-      contents.popularity = entry.popularity
-      contents.cardArtworkUrl = entry.cardArtworkURL
-      contents.technologyTripleString = entry.technologyTripleString
-      contents.contributorString = entry.contributorString
-      contents.videoID = NSNumber(value: entry.videoID)
-    }
-    
-    // Delete old records first
-    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Contents.fetchRequest()
-    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
-    
-    do {
-      try viewContext.execute(deleteRequest)
-    } catch {
-      Failure
-        .deleteFromPersistentStore(from: "ContentsMC", reason: "Failed to delete entities from core data.")
-        .log(additionalParams: nil)
-    }
-    
-    do {
-      try viewContext.save()
-    } catch {
-      Failure
-        .saveToPersistentStore(from: "ContentsMC", reason: "Failed to save entities to core data.")
-        .log(additionalParams: nil)
     }
   }
 }

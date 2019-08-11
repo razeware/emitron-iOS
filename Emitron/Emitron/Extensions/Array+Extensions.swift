@@ -29,14 +29,5 @@
 import Foundation
 
 extension Array {
-  var commaSeparatedString: String {
-    switch count {
-    case 0:
-      return ""
-    case 1:
-      return "\(first!)"
-    default:
-      return reduce("") { $0 + ", \($1)" }
-    }
-  }
+
 }

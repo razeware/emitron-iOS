@@ -28,6 +28,7 @@
 
 import Foundation
 import UIKit
+import Combine
 
 class DataManager: NSObject {
 
@@ -40,6 +41,9 @@ class DataManager: NSObject {
   let categoriesMC: CategoriesMC
   let contentsMC: ContentsMC
   var filters: Filters
+  
+  private var domainsSubscriber: AnyCancellable?
+  private var categoriesSubsciber: AnyCancellable?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -54,18 +58,29 @@ class DataManager: NSObject {
                                      user: user,
                                      persistentStore: persistenceStore)
 
-    self.contentsMC = ContentsMC(guardpost: guardpost,
-                                 persistentStore: persistenceStore)
+    self.filters = Filters()
     
-    self.filters = Filters(domainsMC: domainsMC, categoriesMC: categoriesMC)
+    self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
     
     super.init()
+    createSubscribers()
     loadInitial()
+  }
+  
+  private func createSubscribers() {
+    domainsSubscriber = domainsMC.objectWillChange
+    .sink(receiveValue: { _ in
+      self.filters.updatePlatformFilters(for: self.domainsMC.data)
+    })
+    
+    categoriesSubsciber = categoriesMC.objectWillChange
+      .sink(receiveValue: { _ in
+        self.filters.updateCategoryFilters(for: self.categoriesMC.data)
+      })
   }
   
   private func loadInitial() {
     domainsMC.populate()
     categoriesMC.populate()
-    contentsMC.populate()
   }
 }

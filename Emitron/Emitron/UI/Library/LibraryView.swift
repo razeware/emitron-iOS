@@ -137,11 +137,15 @@ struct LibraryView: View {
     let view = ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
         
-        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll)
+        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
+          self.contentsMC.updateFilters(newFilters: self.filters)
+        }
         .environmentObject(self.filters)
 
         ForEach(filters.appliedFilters, id: \.self) { filter in
-          AppliedFilterView(filter: filter, type: .default)
+          AppliedFilterView(filter: filter, type: .default) {
+            self.contentsMC.updateFilters(newFilters: self.filters)
+          }
           .environmentObject(self.filters)
         }
       }
@@ -152,6 +156,7 @@ struct LibraryView: View {
   }
   
   private func searchField() -> AnyView {
+    //TODO: Need to figure out how to erase the textField
     let searchField = TextField(Constants.search,
                                 text: $searchText,
                                 onEditingChanged: { _ in
@@ -167,6 +172,7 @@ struct LibraryView: View {
   
   private func updateFilters() {
     filters.searchQuery = self.searchText
+    contentsMC.updateFilters(newFilters: filters)
   }
   
   private func changeSort() {
@@ -187,17 +193,7 @@ struct LibraryView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      let filteredData = contentsMC.data.filter { model -> Bool in
-        let domainsFiltersArr = Array(filters.platforms.filters.filter { $0.isOn })
-        let domainFiltersNames = Set(domainsFiltersArr.map { $0.filterName })
-        let domainNames = Set(model.domains.map { $0.name })
-        
-        // If applied filters and the corresponding model values have no values in common, we should filter them out
-        // Unless the filters are empty
-        return !domainFiltersNames.isDisjoint(with: domainNames) || domainFiltersNames.isEmpty
-      }
-      
-      return AnyView(ContentListView(contents: filteredData, bgColor: .paleGrey))
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }

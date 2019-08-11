@@ -30,16 +30,9 @@ import SwiftUI
 
 struct FiltersView: View {
   
-//  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var filters: Filters
   @Binding var isPresented: Bool
-  
-  //TODO: How do you initialize AND pass binding things through?
-  //  private var filters: Filters
-  //
-  //  init(with filters: Filters) {
-  //    self.filters = filters
-  //  }
   
   var body: some View {
     VStack {
@@ -62,8 +55,7 @@ struct FiltersView: View {
         Button(action: {
           self.isPresented = false
           //TODO: This should probably definitely not be here in the end
-          //TODO: Put this back
-          // self.contentsMC.filters = self.filters
+           self.contentsMC.updateFilters(newFilters: self.filters)
         }) {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
@@ -77,14 +69,13 @@ struct FiltersView: View {
       .padding([.leading, .trailing, .top], 20)
     }
     .background(Color.paleGrey)
-      //TODO: In the current beta onDisappear() doesn’t seem to get called.
+      //TODO: In the current beta onDisappear() doesn’t seem to get called, so we're doing this on the close button action instead
       .onDisappear {
-        //TODO: Put this back
-        // self.contentsMC.filters = self.filters
+         self.contentsMC.updateFilters(newFilters: self.filters)
       }
   }
   
-  func constructScrollView() -> AnyView? {    
+  func constructScrollView() -> AnyView? {
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         

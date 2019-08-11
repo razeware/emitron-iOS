@@ -28,18 +28,18 @@
 
 import SwiftUI
 
-enum CardViewType {
+enum CardViewType: Hashable {
   case `default`
   case bookmark
 }
 
-enum ImageType {
+enum ImageType: Hashable {
   case asset(UIImage)
   case url(URL)
 }
 
 // Shuold be data model independent, so that we can transform any type of data into the cardViewModel data
-struct CardViewModel {
+struct CardViewModel: Hashable {
   let title: String
   let subtitle: String
   let description: String
@@ -52,14 +52,18 @@ struct CardViewModel {
 // Transform data
 extension CardViewModel {
   static func transform(_ content: ContentDetailModel, cardViewType: CardViewType) -> CardViewModel? {
-    let subtitle = content.domains.map { $0.name }.commaSeparatedString
+    let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
     let progress = CGFloat(content.progression?.percentComplete ?? 0)
     
-//    guard !subtitle.isEmpty,
-//      let imageURL = content.cardArtworkURL else { return nil }
-    guard let imageURL = content.cardArtworkURL else { return nil }
+    var imageType: ImageType
     
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: .url(imageURL), footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
+    if let imageURL = content.cardArtworkURL {
+      imageType = ImageType.url(imageURL)
+    } else {
+      imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
+    }
+    
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
     
     return cardModel
   }
@@ -83,8 +87,8 @@ struct CardView: View {
           VStack(alignment: .leading, spacing: 5) {
             
             Text(model.title)
-              .lineLimit(nil)
               .font(.uiTitle4)
+              .lineLimit(nil)
             
             Text(model.subtitle)
               .font(.uiCaption)
@@ -93,7 +97,7 @@ struct CardView: View {
           }
           
           Spacer()
-          
+                    
           Image(uiImage: image)
             .resizable()
             .frame(width: 60, height: 60)

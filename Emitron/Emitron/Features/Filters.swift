@@ -37,7 +37,7 @@ struct FilterGroup: Hashable {
     return filters.filter { $0.isOn }.count
   }
   
-  init(type: FilterGroupType, filters: Set<Filter>) {
+  init(type: FilterGroupType, filters: Set<Filter> = []) {
     self.type = type
     self.filters = filters
   }
@@ -119,17 +119,10 @@ class Filters: ObservableObject {
   private(set) var difficulties: FilterGroup
   private(set) var searchFilter: Filter?
   
-  init(domainsMC: DomainsMC, categoriesMC: CategoriesMC) {
+  init() {
 
-    let userFacingDomains = domainsMC.data.filter { DomainLevel.userFacing.contains($0.level) }
-    let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
-    let platoformFilters = Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) })
-    self.platforms = FilterGroup(type: .platforms, filters: platoformFilters)
-    
-    let categoryTypes = categoriesMC.data.map { (id: $0.id, name: $0.name) }
-    let categoryFilters = Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) })
-    
-    self.categories = FilterGroup(type: .categories, filters: categoryFilters)
+    self.platforms = FilterGroup(type: .platforms)
+    self.categories = FilterGroup(type: .categories)
     
     let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) })
     self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
@@ -138,6 +131,21 @@ class Filters: ObservableObject {
     self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     
     self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
+  }
+  
+  func updatePlatformFilters(for domainModels: [DomainModel]) {
+    let userFacingDomains = domainModels.filter { DomainLevel.userFacing.contains($0.level) }
+    let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
+    let platformFilters = Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) })
+    platforms.filters = platformFilters
+    filters = filters.union(platforms.filters)
+  }
+  
+  func updateCategoryFilters(for categoryModels: [CategoryModel]) {
+    let categoryTypes = categoryModels.map { (id: $0.id, name: $0.name) }
+    let categoryFilters = Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) })
+    categories.filters = categoryFilters
+    filters = filters.union(categories.filters)
   }
   
   func removeAll() {

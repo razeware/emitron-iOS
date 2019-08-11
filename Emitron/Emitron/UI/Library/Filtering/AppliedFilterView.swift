@@ -60,11 +60,13 @@ struct AppliedFilterView: View {
   private var filter: Filter?
   private var type: AppliedFilterType
   private var name: String?
+  private var filtersUpdateCallback: () -> Void
   
-  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil) {
+  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil, filtersDidUpdate: @escaping () -> Void) {
     self.filter = filter
     self.type = type
     self.name = name
+    self.filtersUpdateCallback = filtersDidUpdate
   }
   
   var body: some View {
@@ -76,6 +78,7 @@ struct AppliedFilterView: View {
       } else {
         self.filters.removeAll()
       }
+      self.filtersUpdateCallback()
     }) {
       HStack {
         Text(filter?.filterName ?? name ?? "None")
@@ -98,7 +101,9 @@ struct AppliedFilterView: View {
 #if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
-    AppliedFilterView(filter: Filter.testFilter, type: .default)
+    AppliedFilterView(filter: Filter.testFilter, type: .default) {
+      print("This is just a test.")
+    }
   }
 }
 #endif

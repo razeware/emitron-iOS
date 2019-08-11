@@ -87,11 +87,13 @@ private extension DomainsMC {
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let domainModels = result.map(DomainModel.init)
       data = domainModels
+      state = .hasData
     } catch {
       Failure
         .loadFromPersistentStore(from: "DomainsMC", reason: "Failed to load entities from core data.")
         .log(additionalParams: nil)
       data = []
+      state = .failed
     }
   }
   

@@ -52,6 +52,7 @@ class CategoryModel: NSObject {
   /// - parameters:
   ///   - category: core data entity to transform into category model
   init(_ category: Category) {
+    self.id = category.id.intValue
     self.name = category.name
     self.uri = category.uri
     self.ordinal = category.ordinal.intValue

@@ -85,11 +85,13 @@ private extension CategoriesMC {
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let categoryModels = result.map(CategoryModel.init)
       data = categoryModels
+      state = .hasData
     } catch {
       Failure
         .loadFromPersistentStore(from: "CategoriesMC", reason: "Failed to load entities from core data.")
         .log(additionalParams: nil)
       data = []
+      state = .failed
     }
   }
   
@@ -97,6 +99,8 @@ private extension CategoriesMC {
     let viewContext = persistentStore.coreDataStack.viewContext    
     for entry in data {
       let category = Category(context: viewContext)
+
+      category.id = NSNumber(value: entry.id)
       category.name = entry.name
       category.uri = entry.uri
       category.ordinal = NSNumber(value: entry.ordinal)

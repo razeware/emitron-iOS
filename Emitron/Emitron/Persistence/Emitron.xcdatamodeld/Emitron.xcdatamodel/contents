@@ -5,6 +5,7 @@
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
     </entity>
     <entity name="Category" representedClassName="Category" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="ordinal" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
         <attribute name="uri" attributeType="String"/>
@@ -45,7 +46,7 @@
     </entity>
     <elements>
         <element name="Bookmark" positionX="-54" positionY="27" width="128" height="73"/>
-        <element name="Category" positionX="-54" positionY="27" width="128" height="88"/>
+        <element name="Category" positionX="-54" positionY="27" width="128" height="103"/>
         <element name="Contents" positionX="-45" positionY="36" width="128" height="283"/>
         <element name="Domain" positionX="-63" positionY="-18" width="128" height="118"/>
         <element name="Progression" positionX="-54" positionY="126" width="128" height="148"/>
