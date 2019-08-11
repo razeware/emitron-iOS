@@ -20,7 +20,6 @@
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7BD23000ABD00F36B32 /* CardView.swift */; };
-		B60FF7C42300123400F36B32 /* Array+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7C32300123400F36B32 /* Array+Extensions.swift */; };
 		B60FF7C62300143200F36B32 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7C52300143200F36B32 /* ProgressBarView.swift */; };
 		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
 		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
@@ -140,7 +139,6 @@
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B60FF7BD23000ABD00F36B32 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		B60FF7C32300123400F36B32 /* Array+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Array+Extensions.swift"; sourceTree = "<group>"; };
 		B60FF7C52300143200F36B32 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/UI/Shared/ProgressBarView.swift"; sourceTree = "<group>"; };
 		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
 		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
@@ -390,7 +388,6 @@
 				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
 				B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */,
 				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
-				B60FF7C32300123400F36B32 /* Array+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -857,7 +854,6 @@
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* AttachmentModel.swift in Sources */,
 				B6DF2F9C22CA052B0081A3A3 /* ContentSummaryModel.swift in Sources */,
-				B60FF7C42300123400F36B32 /* Array+Extensions.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
