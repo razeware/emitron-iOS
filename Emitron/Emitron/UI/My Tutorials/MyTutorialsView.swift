@@ -28,16 +28,78 @@
 
 import SwiftUI
 
+private extension CGFloat {
+  static let sidePadding: CGFloat = 18
+}
+
 struct MyTutorialsView: View {
+  
+  // FJ TODO: Add in green progress bar once can tell if tutorial is in progress..
+  
+  @EnvironmentObject var contentsMC: ContentsMC
+  @State var settingsPresented: Bool = false
+  
   var body: some View {
-    Text("My Tutorials!")
+    VStack {
+      VStack {
+        
+        HStack {
+          Text(Constants.myTutorials)
+          .font(.uiLargeTitle)
+          .foregroundColor(.appBlack)
+          
+          Spacer()
+          
+          Button(action: {
+            self.settingsPresented.toggle()
+          }) {
+            HStack {
+              Image("settings")
+              .foregroundColor(.battleshipGrey)
+              .sheet(isPresented: self.$settingsPresented) {
+                SettingsView()
+              }
+            }
+          }
+        }
+        .padding([.top], .sidePadding)
+      }
+      .padding([.leading, .trailing, .top], .sidePadding)
+      
+      ToggleControlView()
+        .padding([.leading, .trailing, .top], .sidePadding)
+        .background(Color.paleGrey)
+      
+      contentView()
+        .padding([.top], .sidePadding)
+        .background(Color.paleGrey)
+      
+    }
+    .background(Color.paleGrey)
+  }
+  
+  private func contentView() -> AnyView {
+    switch contentsMC.state {
+    case .initial,
+         .loading where contentsMC.data.isEmpty:
+      return AnyView(Text(Constants.loading))
+    case .failed:
+      return AnyView(Text("Error"))
+    case .hasData,
+         .loading where !contentsMC.data.isEmpty:
+
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+    default:
+      return AnyView(Text("Default View"))
+    }
   }
 }
 
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    MyTutorialsView()
+    let guardpost = Guardpost.current
+    return MyTutorialsView().environmentObject(ContentsMC(guardpost: guardpost))
   }
 }
 #endif

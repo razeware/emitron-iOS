@@ -29,9 +29,111 @@
 import SwiftUI
 
 struct ToggleControlView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+  
+  @State var inProgressSelected: Bool = true
+  @State var completedSelected: Bool = false
+  @State var bookmarkedSelected: Bool = false
+  
+  var body: some View {
+    HStack {
+      
+      Button(action: {
+        self.inProgressSelected = true
+        self.completedSelected = false
+        self.bookmarkedSelected = false
+        self.inProgress()
+      }) {
+        
+        VStack {
+          
+          if self.inProgressSelected {
+            self.updateToggleToOn(with: "In Progress")
+          } else {
+            self.updateToggleToOff(with: "In Progress")
+          }
+        }
+      }
+      
+      Button(action: {
+        self.inProgressSelected = false
+        self.completedSelected = true
+        self.bookmarkedSelected = false
+        self.completed()
+      }, label: {
+        VStack {
+          
+          if self.completedSelected {
+            self.updateToggleToOn(with: "Completed")
+            } else {
+              self.updateToggleToOff(with: "Completed")
+          }
+        }
+      })
+      
+      Button(action: {
+        self.inProgressSelected = false
+        self.completedSelected = false
+        self.bookmarkedSelected = true
+        self.bookmarked()
+      }, label: {
+        
+        VStack {
+          
+          if self.bookmarkedSelected {
+            self.updateToggleToOn(with: "Bookmarks")
+            } else {
+              self.updateToggleToOff(with: "Bookmarks")
+          }
+        }
+      })
     }
+  }
+  
+  private func updateToggleToOn(with text: String) -> AnyView {
+    
+    let stackView = VStack {
+      Text(text)
+      .lineLimit(1)
+      .font(.uiButtonLabelSmall)
+      .foregroundColor(Color.appGreen)
+      .frame(width: 80, height: nil, alignment: .center)
+      
+      Rectangle()
+      .frame(maxWidth: 120, maxHeight: 2)
+      .foregroundColor(Color.appGreen)
+    }
+    
+    return AnyView(stackView)
+  }
+  
+  private func updateToggleToOff(with text: String) -> AnyView {
+    
+    let stackView = VStack {
+      Text(text)
+      .lineLimit(1)
+      .font(.uiButtonLabelSmall)
+      .foregroundColor(Color.coolGrey)
+      .frame(width: 80, height: nil, alignment: .center)
+      
+      Rectangle()
+      .frame(maxWidth: 120, maxHeight: 2)
+      .foregroundColor(Color.coolGrey)
+    }
+    
+    return AnyView(stackView)
+  }
+  
+  private func inProgress() {
+    print("In progress tapped!")
+  }
+  
+  private func completed() {
+    print("Completed tapped!")
+  }
+  
+  private func bookmarked() {
+    print("Bookmarked tapped!")
+  }
 }
 
 #if DEBUG
