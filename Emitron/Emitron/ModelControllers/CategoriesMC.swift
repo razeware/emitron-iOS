@@ -31,7 +31,9 @@ import SwiftUI
 import Combine
 import CoreData
 
-class CategoriesMC: NSObject, ObservableObject {
+class CategoriesMC: NSObject, ObservableObject, Refreshable {
+  
+  var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -58,18 +60,16 @@ class CategoriesMC: NSObject, ObservableObject {
     self.persistentStore = persistentStore
     
     super.init()
-    
-    loadFromPersistentStore()
   }
   
   func populate() {
     // TODO: Add a timing refresh function
-    let timeToUpdate: Bool = true
     
     loadFromPersistentStore()
     
-    if timeToUpdate {
+    if shouldRefresh {
       fetchCategories()
+      saveToPersistentStore()
     }
   }
 }
@@ -120,6 +120,8 @@ private extension CategoriesMC {
         .saveToPersistentStore(from: "CategoriesMC", reason: "Failed to save entities to core data.")
         .log(additionalParams: nil)
     }
+    
+    saveOrReplaceUpdateDate()
   }
   
   func fetchCategories() {

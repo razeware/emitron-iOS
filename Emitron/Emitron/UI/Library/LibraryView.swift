@@ -81,10 +81,9 @@ struct LibraryView: View {
   var body: some View {
     VStack {
       VStack {
-        
-        searchField()
-        
+                
         HStack {
+          searchField()
           
           Button(action: {
             self.filtersPresented.toggle()
@@ -93,7 +92,7 @@ struct LibraryView: View {
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC)
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC).environmentObject(self.filters)
               }
           })
             .padding([.leading], .searchFilterPadding)
@@ -121,22 +120,8 @@ struct LibraryView: View {
         }
         .padding([.top], .sidePadding)
         
-        if !contentsMC.filters.appliedFilters.isEmpty {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: .filterSpacing) {
-              
-              AppliedFilterView(filter: nil, type: .destructive, name: "Clear All", callback: { filters in
-                self.contentsMC.filters = filters
-              }).environmentObject(self.contentsMC.filters)
-              
-              ForEach(contentsMC.filters.appliedFilters, id: \.self) { filter in
-                AppliedFilterView(filter: filter, type: .default, callback: { filters in
-                  self.contentsMC.filters = filters
-                }).environmentObject(self.contentsMC.filters)
-              }
-            }
-          }
-          .padding([.top], .filtersPaddingTop)
+        if !filters.appliedFilters.isEmpty {
+          filtersView()
         }
       }
       .padding([.leading, .trailing, .top], .sidePadding)
@@ -148,8 +133,28 @@ struct LibraryView: View {
     .background(Color.paleGrey)
   }
   
+  private func filtersView() -> AnyView {
+    let view = ScrollView(.horizontal, showsIndicators: false) {
+      HStack(alignment: .top, spacing: .filterSpacing) {
+        
+        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll)
+        .environmentObject(self.filters)
+
+        ForEach(filters.appliedFilters, id: \.self) { filter in
+          AppliedFilterView(filter: filter, type: .default)
+          .environmentObject(self.filters)
+        }
+      }
+    }
+    .padding([.top], .filtersPaddingTop)
+    
+    return AnyView(view)
+  }
+  
   private func searchField() -> AnyView {
-    let searchField = TextField(Constants.search, text: $searchText, onEditingChanged: { editingChanged in
+    let searchField = TextField(Constants.search,
+                                text: $searchText,
+                                onEditingChanged: { _ in
       print("Editing changed:  \(self.searchText)")
     }, onCommit: { () in
       UIApplication.shared.keyWindow?.endEditing(true)
@@ -161,9 +166,7 @@ struct LibraryView: View {
   }
   
   private func updateFilters() {
-    if let filters = DataManager.current.filters {
-      filters.searchQuery = self.searchText
-    }
+    filters.searchQuery = self.searchText
   }
   
   private func changeSort() {
@@ -184,7 +187,17 @@ struct LibraryView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+      let filteredData = contentsMC.data.filter { model -> Bool in
+        let domainsFiltersArr = Array(filters.platforms.filters.filter { $0.isOn })
+        let domainFiltersNames = Set(domainsFiltersArr.map { $0.filterName })
+        let domainNames = Set(model.domains.map { $0.name })
+        
+        // If applied filters and the corresponding model values have no values in common, we should filter them out
+        // Unless the filters are empty
+        return !domainFiltersNames.isDisjoint(with: domainNames) || domainFiltersNames.isEmpty
+      }
+      
+      return AnyView(ContentListView(contents: filteredData, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }
@@ -195,7 +208,7 @@ struct LibraryView: View {
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
     let contentsMC = DataManager.current.contentsMC
-    let filters = DataManager.current.filters!
+    let filters = DataManager.current.filters
     return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }
 }

@@ -30,6 +30,7 @@ import Foundation
 
 enum Constants {
   static let filters = "Filters"
+  static let clearAll = "Clear All"
   static let search = "Search"
   static let loading = "Loading..."
   static let library = "Library"

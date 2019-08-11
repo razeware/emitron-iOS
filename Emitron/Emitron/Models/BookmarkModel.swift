@@ -49,6 +49,15 @@ class BookmarkModel {
       self.createdAt = Date()
     }
   }
+  
+  /// Convenience initializer to transform core data **Domain** into a **DomainModel**
+  ///
+  /// - parameters:
+  ///   - domain: core data entity to transform into domain model
+  init(_ bookmark: Bookmark) {
+    self.id = bookmark.id.intValue
+    self.createdAt = bookmark.createdAt
+  }
 }
 
 extension BookmarkModel {

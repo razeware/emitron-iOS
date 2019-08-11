@@ -57,16 +57,14 @@ private enum Layout {
 struct AppliedFilterView: View {
   
   @EnvironmentObject var filters: Filters
-  var filter: Filter?
-  var type: AppliedFilterType
-  var name: String?
-  var callback: ((Filters) -> Void)?
+  private var filter: Filter?
+  private var type: AppliedFilterType
+  private var name: String?
   
-  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil, callback: ((Filters) -> Void)?) {
+  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil) {
     self.filter = filter
     self.type = type
     self.name = name
-    self.callback = callback
   }
   
   var body: some View {
@@ -75,9 +73,8 @@ struct AppliedFilterView: View {
       if let filter = self.filter {
         filter.isOn.toggle()
         self.filters.filters.update(with: filter)
-        self.callback?(self.filters)
       } else {
-        self.callback?(Filters())
+        self.filters.removeAll()
       }
     }) {
       HStack {
@@ -101,7 +98,7 @@ struct AppliedFilterView: View {
 #if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
-    AppliedFilterView(filter: Filter.testFilter, type: .default, callback: nil)
+    AppliedFilterView(filter: Filter.testFilter, type: .default)
   }
 }
 #endif

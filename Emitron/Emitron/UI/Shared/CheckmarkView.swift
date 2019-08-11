@@ -32,6 +32,13 @@ struct CheckmarkView: View {
   @EnvironmentObject var filters: Filters
   var filter: Filter
   
+  var outerSide: CGFloat = 20
+  var innerSide: CGFloat = 16
+  var outerRadius: CGFloat = 6
+  var radiusRatio: CGFloat {
+    return outerRadius / outerSide
+  }
+  
   var body: some View {
         
     Button(action: {
@@ -52,11 +59,15 @@ struct CheckmarkView: View {
         }
         .cornerRadius(6)
       } else {
-        RoundedRectangle(cornerRadius: 6)
-          .frame(maxWidth: 20, maxHeight: 20)
+        ZStack {
+          RoundedRectangle(cornerRadius: outerRadius)
+          .frame(maxWidth: outerSide, maxHeight: outerSide)
+          .foregroundColor(Color.coolGrey)
+          
+          RoundedRectangle(cornerRadius: radiusRatio * innerSide)
+          .frame(maxWidth: innerSide, maxHeight: innerSide)
           .foregroundColor(Color.white)
-          .cornerRadius(6)
-          .border(Color.coolGrey, width: 2)
+        }
       }
     }
   }

@@ -71,7 +71,7 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchDomains()
-      saveOrReplaceUpdateDate()
+      saveToPersistentStore()
     }
   }
 }
@@ -124,6 +124,8 @@ private extension DomainsMC {
         .saveToPersistentStore(from: "DomainsMC", reason: "Failed to save entities to core data.")
         .log(additionalParams: nil)
     }
+    
+    saveOrReplaceUpdateDate()
   }
   
   func fetchDomains() {

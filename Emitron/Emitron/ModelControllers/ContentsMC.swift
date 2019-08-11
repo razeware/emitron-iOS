@@ -65,15 +65,6 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
     }
   }
   
-//  @ObservedObject var filters: Filters {
-//    didSet {
-//      if currentParameters != (filters.appliedParameters + defaultParameters) {
-//        currentPage = startingPage
-//        currentParameters = defaultParameters + filters.appliedParameters
-//      }      
-//    }
-//  }
-  
   // MARK: - Initializers
   init(guardpost: Guardpost,
        persistentStore: PersistenceStore) {
@@ -85,13 +76,17 @@ class ContentsMC: NSObject, ObservableObject, Refreshable {
     self.persistentStore = persistentStore
     
     super.init()
-    
+
     currentParameters = defaultParameters
-    populate()
   }
   
   func populate() {
-    loadContents()
+    loadFromPersistentStore()
+    
+    if shouldRefresh {
+      loadContents()
+      saveToPersistentStore()
+    }
   }
   
   private func loadContents() {
@@ -184,7 +179,7 @@ extension ContentsMC {
       try viewContext.execute(deleteRequest)
     } catch {
       Failure
-        .deleteFromPersistentStore(from: "DomainsMC", reason: "Failed to delete entities from core data.")
+        .deleteFromPersistentStore(from: "ContentsMC", reason: "Failed to delete entities from core data.")
         .log(additionalParams: nil)
     }
     
@@ -192,8 +187,10 @@ extension ContentsMC {
       try viewContext.save()
     } catch {
       Failure
-        .saveToPersistentStore(from: "DomainsMC", reason: "Failed to save entities to core data.")
+        .saveToPersistentStore(from: "ContentsMC", reason: "Failed to save entities to core data.")
         .log(additionalParams: nil)
     }
+    
+    saveOrReplaceUpdateDate()
   }
 }

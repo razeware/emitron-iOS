@@ -31,6 +31,7 @@ import SwiftUI
 struct FiltersView: View {
   
 //  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var filters: Filters
   @Binding var isPresented: Bool
   
   //TODO: How do you initialize AND pass binding things through?
@@ -83,9 +84,7 @@ struct FiltersView: View {
       }
   }
   
-  func constructScrollView() -> AnyView {
-    let filters = DataManager.current.filters!
-    
+  func constructScrollView() -> AnyView? {    
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         
@@ -98,7 +97,7 @@ struct FiltersView: View {
   }
   
   func constructFilterView(filterGroup: FilterGroup) -> AnyView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup)
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup).environmentObject(filters)
     return AnyView(filtersView)
   }
 }

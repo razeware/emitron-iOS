@@ -37,9 +37,9 @@ struct FilterGroup: Hashable {
     return filters.filter { $0.isOn }.count
   }
   
-  init(type: FilterGroupType) {
+  init(type: FilterGroupType, filters: Set<Filter>) {
     self.type = type
-    self.filters = type.initialFilters
+    self.filters = filters
   }
 }
 
@@ -49,29 +49,6 @@ enum FilterGroupType: CaseIterable {
   case contentTypes
   case difficulties
   case none // For filters whose values aren't an array, for example the search query
-  
-  var initialFilters: Set<Filter> {
-    switch self {
-      
-    case .platforms:
-      let domains = DataManager.current.domainsMC.data
-      let userFacingDomains = domains.filter { DomainLevel.userFacing.contains($0.level) }
-      let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
-      
-      return Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
-    case .categories:
-      let categories = DataManager.current.categoriesMC.data
-      let categoryTypes = categories.map { (id: $0.id, name: $0.name) }
-      
-      return Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: self, param: $0, isOn: false ) })
-    case .contentTypes:
-      return Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: self, param: $0, isOn: false ) })
-    case .difficulties:
-      return Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: self, param: $0, isOn: false ) })
-    case .none:
-      return Set()
-    }
-  }
   
   var name: String {
     switch self {
@@ -136,17 +113,37 @@ class Filters: ObservableObject {
     }
   }
   
-  private var platforms: FilterGroup
-  private var categories: FilterGroup
-  private var contentTypes: FilterGroup
-  private var difficulties: FilterGroup
-  private var searchFilter: Filter?
+  private(set) var platforms: FilterGroup
+  private(set) var categories: FilterGroup
+  private(set) var contentTypes: FilterGroup
+  private(set) var difficulties: FilterGroup
+  private(set) var searchFilter: Filter?
   
-  init() {
-    self.platforms = FilterGroup(type: .contentTypes)
-    self.categories = FilterGroup(type: .contentTypes)
-    self.contentTypes = FilterGroup(type: .contentTypes)
-    self.difficulties = FilterGroup(type: .contentTypes)
+  init(domainsMC: DomainsMC, categoriesMC: CategoriesMC) {
+
+    let userFacingDomains = domainsMC.data.filter { DomainLevel.userFacing.contains($0.level) }
+    let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
+    let platoformFilters = Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) })
+    self.platforms = FilterGroup(type: .platforms, filters: platoformFilters)
+    
+    let categoryTypes = categoriesMC.data.map { (id: $0.id, name: $0.name) }
+    let categoryFilters = Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) })
+    
+    self.categories = FilterGroup(type: .categories, filters: categoryFilters)
+    
+    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) })
+    self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
+    
+    let difficultyFilters = Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) })
+    self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
+    
     self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
+  }
+  
+  func removeAll() {
+    appliedFilters.forEach {
+      $0.isOn = false
+      filters.update(with: $0)
+    }
   }
 }

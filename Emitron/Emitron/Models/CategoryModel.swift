@@ -29,7 +29,7 @@
 import Foundation
 import SwiftyJSON
 
-class CategoryModel {
+class CategoryModel: NSObject {
 
   // MARK: - Properties
   private(set) var id: Int = 0
@@ -44,6 +44,7 @@ class CategoryModel {
     self.name = jsonResource["name"] as? String ?? ""
     self.uri = jsonResource["uri"] as? String ??  ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0
+    super.init()
   }
 
   /// Convenience initializer to transform core data **CategoryEntity** into a **Category** model
@@ -54,6 +55,7 @@ class CategoryModel {
     self.name = category.name
     self.uri = category.uri
     self.ordinal = category.ordinal.intValue
+    super.init()
   }
 }
 
