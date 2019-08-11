@@ -26,64 +26,17 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct TabNavView: View {
-
-  @State private var selection = 0
-
-  var body: some View {
-    let tabs = TabView(selection: $selection) {
-
-      libraryView() //TODO: This is somehow making the tabbar crash
-        .tabItem {
-          Text(Constants.library)
-          Image("library")
-        }
-        .tag(0)
-
-      DownloadsView()
-        .tabItem {
-          Text(Constants.downloads)
-          Image("downloadInactive")
-        }
-        .tag(1)
-        .onTapGesture {
-          print("Tapped Downloads")
-        }
-
-      myTutorialsView()
-        .tabItem {
-          Text(Constants.myTutorials)
-          Image("myTutorials")
-        }
-        .tag(2)
+extension Array {
+  var commaSeparatedString: String {
+    switch count {
+    case 0:
+      return ""
+    case 1:
+      return "\(first!)"
+    default:
+      return reduce("") { $0 + ", \($1)" }
     }
-
-    return tabs
-  }
-  
-  func libraryView() -> AnyView {
-    
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
-    
-    return AnyView(LibraryView().environmentObject(contentsMC))
-  }
-  
-  func myTutorialsView() -> AnyView {
-    
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
-    
-    return AnyView(MyTutorialsView().environmentObject(contentsMC))
   }
 }
-
-#if DEBUG
-struct TabNavView_Previews: PreviewProvider {
-  static var previews: some View {
-    TabNavView()
-  }
-}
-#endif
