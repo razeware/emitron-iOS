@@ -38,6 +38,10 @@ protocol Refreshable {
 
 extension Refreshable {
 
+  var refreshableUserDefaultsKey: String {
+    return "UserDefaultsRefreshable\(String(describing: self))"
+  }
+  
   var shouldRefresh: Bool {
     if let lastUpdateDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date {
       return lastUpdateDate < self.refreshableCheckTimeSpan.date

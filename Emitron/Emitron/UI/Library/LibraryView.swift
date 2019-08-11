@@ -73,21 +73,19 @@ enum SortSelection: Int {
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State var sortSelection: SortSelection = .newest
   @State private var searchText = ""
-
+  
   var body: some View {
     VStack {
       VStack {
         
+        searchField()
+        
         HStack {
-          TextField(Constants.search, text: $searchText) {
-            UIApplication.shared.keyWindow?.endEditing(true)
-            self.contentsMC.filters.searchQuery = self.searchText
-            self.contentsMC.filters = self.contentsMC.filters //TODO; Hack to get this to re-render
-          }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
+          
           Button(action: {
             self.filtersPresented.toggle()
           }, label: {
@@ -95,7 +93,7 @@ struct LibraryView: View {
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC.filters).environmentObject(self.contentsMC)
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC)
               }
           })
             .padding([.leading], .searchFilterPadding)
@@ -150,6 +148,24 @@ struct LibraryView: View {
     .background(Color.paleGrey)
   }
   
+  private func searchField() -> AnyView {
+    let searchField = TextField(Constants.search, text: $searchText, onEditingChanged: { editingChanged in
+      print("Editing changed:  \(self.searchText)")
+    }, onCommit: { () in
+      UIApplication.shared.keyWindow?.endEditing(true)
+      self.updateFilters()
+    })
+      .textFieldStyle(RoundedBorderTextFieldStyle())
+    
+    return AnyView(searchField)
+  }
+  
+  private func updateFilters() {
+    if let filters = DataManager.current.filters {
+      filters.searchQuery = self.searchText
+    }
+  }
+  
   private func changeSort() {
     sortSelection = sortSelection.next
   }
@@ -178,8 +194,9 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    return LibraryView().environmentObject(ContentsMC(guardpost: guardpost))
+    let contentsMC = DataManager.current.contentsMC
+    let filters = DataManager.current.filters!
+    return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }
 }
 #endif

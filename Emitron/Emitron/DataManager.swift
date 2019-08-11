@@ -38,6 +38,8 @@ class DataManager {
   
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
+  let contentsMC: ContentsMC
+  var filters: Filters?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -47,15 +49,22 @@ class DataManager {
     self.domainsMC = DomainsMC(guardpost: guardpost,
                                user: user,
                                persistentStore: persistenceStore)
+    
     self.categoriesMC = CategoriesMC(guardpost: guardpost,
                                      user: user,
                                      persistentStore: persistenceStore)
 
+    self.contentsMC = ContentsMC(guardpost: guardpost,
+                                 persistentStore: persistenceStore)
+    
     loadInitial()
+    
   }
   
   private func loadInitial() {
     domainsMC.populate()
     categoriesMC.populate()
+    contentsMC.populate()
+    filters = Filters()
   }
 }

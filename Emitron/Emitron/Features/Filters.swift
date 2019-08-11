@@ -143,10 +143,10 @@ class Filters: ObservableObject {
   private var searchFilter: Filter?
   
   init() {
-    self.platforms = FilterGroup(type: .platforms)
-    self.categories = FilterGroup(type: .categories)
+    self.platforms = FilterGroup(type: .contentTypes)
+    self.categories = FilterGroup(type: .contentTypes)
     self.contentTypes = FilterGroup(type: .contentTypes)
-    self.difficulties = FilterGroup(type: .difficulties)
+    self.difficulties = FilterGroup(type: .contentTypes)
     self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
   }
 }

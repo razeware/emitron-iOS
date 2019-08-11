@@ -65,16 +65,13 @@ struct TabNavView: View {
   
   func libraryView() -> AnyView {
     
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
-    
+    let contentsMC = DataManager.current.contentsMC    
     return AnyView(LibraryView().environmentObject(contentsMC))
   }
   
   func myTutorialsView() -> AnyView {
     
-    let guardpost = Guardpost.current
-    let contentsMC = ContentsMC(guardpost: guardpost)
+    let contentsMC = DataManager.current.contentsMC
     
     return AnyView(MyTutorialsView().environmentObject(contentsMC))
   }

@@ -39,7 +39,7 @@ final class Contents: NSManagedObject {
   @NSManaged var id: NSNumber
   @NSManaged var name: String
   @NSManaged var uri: String
-  @NSManaged var desc: String?
+  @NSManaged var desc: String
   @NSManaged var releasedAt: Date
   @NSManaged var free: Bool
   @NSManaged var difficulty: String
@@ -47,9 +47,28 @@ final class Contents: NSManagedObject {
   @NSManaged var duration: NSNumber
   @NSManaged var popularity: Double
   @NSManaged var bookmarked: Bool
-  @NSManaged var cardArtworkUrl: String
+  @NSManaged var cardArtworkUrl: String?
   @NSManaged var technologyTripleString: String
   @NSManaged var contributorString: String
-  @NSManaged var index: NSNumber
   @NSManaged var videoID: NSNumber
+  
+  static func transform(from model: ContentDetailModel, viewContext: NSManagedObjectContext) -> Contents {
+    let contents = Contents(context: viewContext)
+    contents.id = NSNumber(value: model.id)
+    contents.name = model.name
+    contents.uri = model.uri
+    contents.desc = model.description
+    contents.releasedAt = model.releasedAt
+    contents.free = model.free
+    contents.difficulty = model.difficulty.rawValue
+    contents.contentType = model.contentType.rawValue
+    contents.duration = NSNumber(value: model.duration)
+    contents.bookmarked = model.bookmarked
+    contents.popularity = model.popularity
+    contents.cardArtworkUrl = model.cardArtworkURL?.absoluteString
+    contents.technologyTripleString = model.technologyTripleString
+    contents.contributorString = model.contributorString
+    contents.videoID = NSNumber(value: model.videoID)
+    return contents
+  }
 }

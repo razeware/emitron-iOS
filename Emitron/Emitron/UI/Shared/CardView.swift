@@ -51,14 +51,14 @@ struct CardViewModel {
 
 // Transform data
 extension CardViewModel {
-  static func transform(_ content: ContentDetailModel) -> CardViewModel? {
+  static func transform(_ content: ContentDetailModel, cardViewType: CardViewType) -> CardViewModel? {
     let subtitle = content.domains.map { $0.name }.commaSeparatedString
     let progress = CGFloat(content.progression?.percentComplete ?? 0)
     
     guard !subtitle.isEmpty,
       let imageURL = content.cardArtworkURL else { return nil }
     
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: .url(imageURL), footnote: content.dateAndTimeString, type: .default, progress: progress)
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: .url(imageURL), footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
     
     return cardModel
   }
@@ -164,7 +164,7 @@ struct CardView: View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
-    let cardModel = CardViewModel.transform(ContentDetailModel.test)!
+    let cardModel = CardViewModel.transform(ContentDetailModel.test, cardViewType: .default)!
     return CardView(model: cardModel)
   }
 }
