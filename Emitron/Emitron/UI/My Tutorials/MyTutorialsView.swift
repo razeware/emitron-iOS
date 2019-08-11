@@ -38,7 +38,6 @@ enum MyTutorialsState: String {
 
 struct MyTutorialsView: View {
   
-  // FJ TODO: Add in green progress bar once can tell if tutorial is in progress..
   @EnvironmentObject var contentsMC: ContentsMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress

@@ -56,8 +56,6 @@ class ContentSummaryModel {
   private(set) var contributorString: String = ""
   private(set) var index: Int = 0
   private(set) var videoID: Int = 0
-  private(set) var progression: ProgressionModel?
-  private(set) var bookmark: BookmarkModel?
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
