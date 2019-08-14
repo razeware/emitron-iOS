@@ -28,16 +28,131 @@
 
 import SwiftUI
 
-struct SettingsView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+enum SettingsOptions: Identifiable {
+  case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
+  
+  var id: Int {
+    switch self {
+      case .videoPlaybackSpeed: return 1
+      case .downloads: return 2
+      case .downloadsQuality: return 3
+      case .subtitles: return 4
     }
+  }
+  
+  var title: String {
+    switch self {
+      case .videoPlaybackSpeed: return "Video Playback Speed"
+      case .downloads: return "Downloads (Wifi only)"
+      case .downloadsQuality: return "Downloads Quality"
+      case .subtitles: return "Subtitles"
+    }
+  }
+  
+  var detail: [String] {
+    switch self {
+      case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
+      case .downloads: return ["Yes", "No"]
+      case .downloadsQuality: return ["HD", "SD"]
+      case .subtitles: return ["Yes", "No"]
+    }
+  }
 }
 
-#if DEBUG
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
+struct SettingsView: View {
+  
+  var rows: [SettingsOptions] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
+  
+  @Binding var isPresented: Bool
+  
+  var body: some View {
+    
+    GeometryReader { geometry in
+      
+      VStack {
+        
+        HStack() {
+          
+          Rectangle()
+            .frame(width: 27, height: 27, alignment: .center)
+            .foregroundColor(.clear)
+            .padding([.leading], 18)
+          
+          Spacer()
+          
+          Text("Settings")
+            .font(.uiHeadline)
+            .foregroundColor(.appBlack)
+            .padding([.top], 20)
+          
+          Spacer()
+          
+          Button(action: {
+            self.isPresented = false
+          }) {
+            Image("close")
+              .frame(width: 27, height: 27, alignment: .center)
+              .padding(.trailing, 18)
+              .padding([.top], 20)
+              .foregroundColor(.battleshipGrey)
+          }
+        }
+        
+        VStack {
+          ForEach(self.rows, id: \.id) { row in
+            TitleDetailView(callback: { row in
+              
+              print("SHOW VIEW")
+              
+            }, row: row)
+              .frame(height: 46)
+          }
+        }
+        
+        Spacer()
+        
+        Button(action: {
+          
+          print("SIGN OUT")
+          
+        }) {
+          
+          HStack {
+            
+            Rectangle()
+              .frame(width: 24, height: 46, alignment: .center)
+              .foregroundColor(Color.copper)
+            
+            Spacer()
+            
+            Text("Sign Out")
+              .font(.uiButtonLabel)
+              .background(Color.copper)
+              .foregroundColor(.white)
+              
+            Spacer()
+            
+            Image("arrowRed")
+              .frame(width: 24, height: 24, alignment: .center)
+              .background(Color.white)
+              .foregroundColor(.copper)
+              .cornerRadius(6)
+              .padding([.trailing], 10)
+          }
+          .background(Color.copper)
+          .cornerRadius(6)
+          .padding([.leading, .trailing], 18)
+          .frame(height: 46)
+        }
+          
+        .padding(.bottom, 42)
+        .frame(width: geometry.size.width - (2 * 18), height: 46, alignment: .center)
+        .padding([.leading, .trailing], 18)
+        
+      }
+      .frame(width: geometry.size.width, height: geometry.size.height,alignment: .center)
+      .background(Color.paleGrey)
+      .padding([.top], 20)
     }
+  }
 }
-#endif

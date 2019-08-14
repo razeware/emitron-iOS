@@ -28,78 +28,64 @@
 
 import SwiftUI
 
-private extension CGFloat {
-  static let sidePadding: CGFloat = 18
+private enum Layout {
+  static let padding: CGFloat = 20
+  static let smallPadding: CGFloat = 2
 }
 
-struct MyTutorialsView: View {
+struct TitleDetailView: View {
   
-  // FJ TODO: Add in green progress bar once can tell if tutorial is in progress..
-  
-  @EnvironmentObject var contentsMC: ContentsMC
-  @State var settingsPresented: Bool = false
+  var callback: ((SettingsOptions)->())?
+  var row: SettingsOptions
+//  var title: String = ""
+//  var detail: String = ""
   
   var body: some View {
-    VStack {
-      VStack {
+    
+    GeometryReader { geometry in
+      
+      Button(action: {
+        self.callback?(self.row)
+      }, label: {
         
-        HStack {
-          Text(Constants.myTutorials)
-          .font(.uiLargeTitle)
-          .foregroundColor(.appBlack)
+        VStack {
           
-          Spacer()
-          
-          Button(action: {
-            self.settingsPresented.toggle()
-          }) {
-            HStack {
-              Image("settings")
-              .foregroundColor(.battleshipGrey)
-              .sheet(isPresented: self.$settingsPresented) {
-                SettingsView(isPresented: self.$settingsPresented)
-              }
-            }
+          HStack {
+            Text(self.row.title)
+              .foregroundColor(.appBlack)
+              .font(.uiBodyCustom)
+              .padding([.leading,.trailing], Layout.padding)
+            
+            Spacer()
+            
+            // TODO fix this
+            Text(self.row.detail.first!)
+              .foregroundColor(.appBlack)
+              .font(.uiBodyCustom)
+              .padding([.leading], Layout.padding)
+              .padding([.trailing], Layout.smallPadding)
+            
+            // TODO: get the right chevron icon
+            Image("downloadInactive")
+              .padding([.trailing], Layout.padding)
+              .foregroundColor(.coolGrey)
           }
+          
+          Rectangle()
+            .frame(width: (geometry.size.width - (2*Layout.padding)), height: 1, alignment: .center)
+            .foregroundColor(Color.paleBlue)
+            .padding([.leading, .trailing], Layout.padding)
         }
-        .padding([.top], .sidePadding)
-      }
-      .padding([.leading, .trailing, .top], .sidePadding)
-      
-      ToggleControlView()
-        .padding([.leading, .trailing, .top], .sidePadding)
-        .background(Color.paleGrey)
-      
-      contentView()
-        .padding([.top], .sidePadding)
-        .background(Color.paleGrey)
-      
-    }
-    .background(Color.paleGrey)
-  }
-  
-  private func contentView() -> AnyView {
-    switch contentsMC.state {
-    case .initial,
-         .loading where contentsMC.data.isEmpty:
-      return AnyView(Text(Constants.loading))
-    case .failed:
-      return AnyView(Text("Error"))
-    case .hasData,
-         .loading where !contentsMC.data.isEmpty:
-
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
-    default:
-      return AnyView(Text("Default View"))
+      })
+      .background(Color.paleGrey)
     }
   }
 }
 
 #if DEBUG
-struct MyTutorialsView_Previews: PreviewProvider {
+struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    return MyTutorialsView().environmentObject(ContentsMC(guardpost: guardpost))
+    TitleDetailView(row: .videoPlaybackSpeed)
   }
 }
 #endif
