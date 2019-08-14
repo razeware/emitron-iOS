@@ -34,6 +34,10 @@ struct ToggleControlView: View {
   @State var completedSelected: Bool = false
   @State var bookmarkedSelected: Bool = false
   
+  var inProgressClosure: (()->())?
+  var completedClosure: (()->())?
+  var bookmarkedClosure: (()->())?
+  
   var body: some View {
     HStack {
       
@@ -124,15 +128,15 @@ struct ToggleControlView: View {
   }
   
   private func inProgress() {
-    print("In progress tapped!")
+    inProgressClosure?()
   }
   
   private func completed() {
-    print("Completed tapped!")
+    completedClosure?()
   }
   
   private func bookmarked() {
-    print("Bookmarked tapped!")
+    bookmarkedClosure?()
   }
 }
 

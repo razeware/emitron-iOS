@@ -28,6 +28,10 @@
 
 import SwiftUI
 
+private struct Layout {
+  static let minCardWidth: CGFloat = 339
+}
+
 struct CardView: View {
   
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
@@ -37,58 +41,64 @@ struct CardView: View {
   // results in truncating the text
   var body: some View {
     VStack(alignment: .leading) {
-      HStack(alignment: .top) {
-        VStack(alignment: .leading, spacing: 5) {
+      VStack(alignment: .leading) {
+        HStack(alignment: .top) {
+          VStack(alignment: .leading, spacing: 5) {
+            
+            Text(content?.name ?? "")
+              .lineLimit(nil)
+              .font(.uiTitle4)
+            
+            Text(content?.domains.first?.name ?? "")
+              .font(.uiCaption)
+              .lineLimit(nil)
+              .foregroundColor(.battleshipGrey)
+          }
           
-          Text(content?.name ?? "")
-            .lineLimit(nil)
-            .font(.uiTitle4)
+          Spacer()
           
-          Text(content?.domains.first?.name ?? "")
-            .font(.uiCaption)
-            .lineLimit(nil)
-            .foregroundColor(.battleshipGrey)
+          Image(uiImage: uiImage)
+            .resizable()
+            .frame(width: 60, height: 60)
+            .onAppear(perform: loadImage)
+            .transition(.opacity)
+            .cornerRadius(6)
         }
         
-        Spacer()
-        
-        Image(uiImage: uiImage)
-          .resizable()
-          .frame(width: 60, height: 60)
-          .onAppear(perform: loadImage)
-          .transition(.opacity)
-          .cornerRadius(6)
-      }
-      
-      Text(content?.description ?? "")
-        .font(.uiCaption)
-        .lineLimit(nil)
-        .foregroundColor(.battleshipGrey)
-      
-      Spacer()
-      
-      HStack {
-        Text(content?.dateAndTimeString ?? "")
+        Text(content?.description ?? "")
           .font(.uiCaption)
-          .lineLimit(1)
+          .lineLimit(nil)
           .foregroundColor(.battleshipGrey)
         
         Spacer()
         
-        Image("downloadInactive")
-          .resizable()
-          .frame(width: 19, height: 19)
-          .onTapGesture {
-            self.download()
+        HStack {
+          Text(content?.dateAndTimeString ?? "")
+            .font(.uiCaption)
+            .lineLimit(1)
+            .foregroundColor(.battleshipGrey)
+          
+          Spacer()
+          
+          Image("downloadInactive")
+            .resizable()
+            .frame(width: 19, height: 19)
+            .onTapGesture {
+              self.download()
           }
+        }
       }
+      .padding([.leading, .trailing, .top, .bottom], 15)
+      .frame(minHeight: 185)
+      
+      Spacer()
+      
+      showProgressBarView()
     }
-      .padding([.leading, .trailing, .top], 15)
-      .padding([.bottom], 22)
-      .frame(minWidth: 339, minHeight: 184)
-      .background(Color.white)
-      .cornerRadius(6)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    .frame(minWidth: 339, minHeight: 196)
+    .background(Color.white)
+    .cornerRadius(6)
+    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
   }
   
   private func download() { }
@@ -111,11 +121,23 @@ struct CardView: View {
       }
     }
   }
+  
+  private func showProgressBarView() -> AnyView {
+    
+    guard let progression = content?.progression else {
+      return AnyView(ProgressBarView(progress:0))
+    }
+    
+    let percentComplete = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
+    let progressBar = ProgressBarView(progress: percentComplete)
+    
+    return AnyView(progressBar)
+  }
 }
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
-
+  
   static var previews: some View {
     CardView(content: nil)
   }

@@ -26,32 +26,48 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
-import SwiftyJSON
+import SwiftUI
 
-public class JSONAPIRelationship {
-
-  // MARK: - Properties
-  var meta: [String: Any] = [:]
-  var data: [JSONAPIResource] =  []
-  var links: [String: URL] = [:]
-  var type: String = ""
-
-  // MARK: - Initializers
-  init() {
+struct ProgressBarView: View {
+  private var progress: CGFloat
+  private var height: CGFloat = 4
+  
+  init(progress: CGFloat) {
+    self.progress = progress
   }
-
-  convenience init(_ json: JSON,
-                   type: String,
-                   parent: JSONAPIDocument?) {
-    self.init()
-
-    self.type = type
-    meta = json["meta"].dictionaryObject ?? [:]
-    data = json["data"].arrayValue.map { JSONAPIResource($0, parent: nil) }
+  
+  var body: some View {
     
-    let nonArrayJSON = json["data"]
-    let nonArrayJSONAPIResource = JSONAPIResource(nonArrayJSON, parent: nil)
-    data.append(nonArrayJSONAPIResource)
+    ZStack(alignment: .leading) {
+      GeometryReader { geometry in
+        HStack(alignment: .center) {
+          Rectangle()
+            .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+            .foregroundColor(.appGreen)
+          
+          if self.progress >= 1 {
+            
+            Spacer()
+            
+            Rectangle()
+              .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+              .foregroundColor(.appGreen)
+          }
+        }
+        
+        Rectangle()
+          .frame(width: geometry.size.width * self.progress, height: self.height)
+          .foregroundColor(.appGreen)
+          .cornerRadius(self.height/2)
+      }
+    }
   }
 }
+
+#if DEBUG
+struct ProgressView_Previews: PreviewProvider {
+  static var previews: some View {
+    ProgressBarView(progress: 0.5)
+  }
+}
+#endif
