@@ -1,26 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-<<<<<<< HEAD
-/// 
-=======
 ///
->>>>>>> development
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-<<<<<<< HEAD
 /// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
-=======
 ///
-/// The above copyright notice and this permission notice shall be included in
-/// all copies or substantial portions of the Software.
-///
->>>>>>> development
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -28,11 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-<<<<<<< HEAD
-/// 
-=======
 ///
->>>>>>> development
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -55,11 +40,6 @@ struct ProgressBarView: View {
     
     ZStack(alignment: .leading) {
       GeometryReader { geometry in
-<<<<<<< HEAD
-        Rectangle()
-          .frame(width: geometry.size.width * (self.progress/2), height: self.height)
-          .foregroundColor(.appGreen)
-=======
         HStack(alignment: .center) {
           Rectangle()
             .frame(width: geometry.size.width * (self.progress/2), height: self.height)
@@ -74,7 +54,6 @@ struct ProgressBarView: View {
               .foregroundColor(.appGreen)
           }
         }
->>>>>>> development
         
         Rectangle()
           .frame(width: geometry.size.width * self.progress, height: self.height)
