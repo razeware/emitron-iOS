@@ -73,21 +73,18 @@ enum SortSelection: Int {
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State var sortSelection: SortSelection = .newest
   @State private var searchText = ""
-
+  
   var body: some View {
     VStack {
       VStack {
-        
+                
         HStack {
-          TextField(Constants.search, text: $searchText) {
-            UIApplication.shared.keyWindow?.endEditing(true)
-            self.contentsMC.filters.searchQuery = self.searchText
-            self.contentsMC.filters = self.contentsMC.filters //TODO; Hack to get this to re-render
-          }
-            .textFieldStyle(RoundedBorderTextFieldStyle())
+          searchField()
+          
           Button(action: {
             self.filtersPresented.toggle()
           }, label: {
@@ -95,7 +92,7 @@ struct LibraryView: View {
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC.filters).environmentObject(self.contentsMC)
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC).environmentObject(self.filters)
               }
           })
             .padding([.leading], .searchFilterPadding)
@@ -123,22 +120,8 @@ struct LibraryView: View {
         }
         .padding([.top], .sidePadding)
         
-        if !contentsMC.filters.appliedFilters.isEmpty {
-          ScrollView(.horizontal, showsIndicators: false) {
-            HStack(alignment: .top, spacing: .filterSpacing) {
-              
-              AppliedFilterView(filter: nil, type: .destructive, name: "Clear All", callback: { filters in
-                self.contentsMC.filters = filters
-              }).environmentObject(self.contentsMC.filters)
-              
-              ForEach(contentsMC.filters.appliedFilters, id: \.self) { filter in
-                AppliedFilterView(filter: filter, type: .default, callback: { filters in
-                  self.contentsMC.filters = filters
-                }).environmentObject(self.contentsMC.filters)
-              }
-            }
-          }
-          .padding([.top], .filtersPaddingTop)
+        if !filters.appliedFilters.isEmpty {
+          filtersView()
         }
       }
       .padding([.leading, .trailing, .top], .sidePadding)
@@ -148,6 +131,48 @@ struct LibraryView: View {
         .background(Color.paleGrey)
     }
     .background(Color.paleGrey)
+  }
+  
+  private func filtersView() -> AnyView {
+    let view = ScrollView(.horizontal, showsIndicators: false) {
+      HStack(alignment: .top, spacing: .filterSpacing) {
+        
+        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
+          self.contentsMC.updateFilters(newFilters: self.filters)
+        }
+        .environmentObject(self.filters)
+
+        ForEach(filters.appliedFilters, id: \.self) { filter in
+          AppliedFilterView(filter: filter, type: .default) {
+            self.contentsMC.updateFilters(newFilters: self.filters)
+          }
+          .environmentObject(self.filters)
+        }
+      }
+    }
+    .padding([.top], .filtersPaddingTop)
+    
+    return AnyView(view)
+  }
+  
+  private func searchField() -> AnyView {
+    //TODO: Need to figure out how to erase the textField
+    let searchField = TextField(Constants.search,
+                                text: $searchText,
+                                onEditingChanged: { _ in
+      print("Editing changed:  \(self.searchText)")
+    }, onCommit: { () in
+      UIApplication.shared.keyWindow?.endEditing(true)
+      self.updateFilters()
+    })
+      .textFieldStyle(RoundedBorderTextFieldStyle())
+    
+    return AnyView(searchField)
+  }
+  
+  private func updateFilters() {
+    filters.searchQuery = self.searchText
+    contentsMC.updateFilters(newFilters: filters)
   }
   
   private func changeSort() {
@@ -178,8 +203,9 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    return LibraryView().environmentObject(ContentsMC(guardpost: guardpost))
+    let contentsMC = DataManager.current.contentsMC
+    let filters = DataManager.current.filters
+    return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }
 }
 #endif

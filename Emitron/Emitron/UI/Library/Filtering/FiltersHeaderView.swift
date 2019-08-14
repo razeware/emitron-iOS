@@ -80,7 +80,7 @@ struct FiltersHeaderView: View {
       VStack(alignment: .leading, spacing: 12) {
         
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
-          FilterView(filter: filter)
+          FilterView(filter: filter).environmentObject(self.filters)
         }
       })
   }
@@ -89,7 +89,8 @@ struct FiltersHeaderView: View {
 #if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    return FiltersHeaderView(filterGroup: FilterGroup(type: .categories))
+    let filters = Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) })
+    return FiltersHeaderView(filterGroup: FilterGroup(type: .difficulties, filters: filters))
   }
 }
 #endif

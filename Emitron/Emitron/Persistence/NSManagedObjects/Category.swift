@@ -36,6 +36,7 @@ final class Category: NSManagedObject {
     return NSFetchRequest<Category>(entityName: "Category")
   }
 
+  @NSManaged var id: NSNumber
   @NSManaged var name: String
   @NSManaged var uri: String
   @NSManaged var ordinal: NSNumber

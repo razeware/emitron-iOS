@@ -26,10 +26,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
 import UIKit
+import Combine
 
-class DataManager {
+class DataManager: NSObject {
 
   // MARK: - Properties
   static var current: DataManager {
@@ -38,6 +38,11 @@ class DataManager {
   
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
+  let contentsMC: ContentsMC
+  var filters: Filters
+  
+  private var domainsSubscriber: AnyCancellable?
+  private var categoriesSubsciber: AnyCancellable?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -47,11 +52,30 @@ class DataManager {
     self.domainsMC = DomainsMC(guardpost: guardpost,
                                user: user,
                                persistentStore: persistenceStore)
+    
     self.categoriesMC = CategoriesMC(guardpost: guardpost,
                                      user: user,
                                      persistentStore: persistenceStore)
 
+    self.filters = Filters()
+    
+    self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
+    
+    super.init()
+    createSubscribers()
     loadInitial()
+  }
+  
+  private func createSubscribers() {
+    domainsSubscriber = domainsMC.objectWillChange
+    .sink(receiveValue: { _ in
+      self.filters.updatePlatformFilters(for: self.domainsMC.data)
+    })
+    
+    categoriesSubsciber = categoriesMC.objectWillChange
+      .sink(receiveValue: { _ in
+        self.filters.updateCategoryFilters(for: self.categoriesMC.data)
+      })
   }
   
   private func loadInitial() {

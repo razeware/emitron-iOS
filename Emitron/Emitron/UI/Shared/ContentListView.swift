@@ -53,7 +53,11 @@ struct ContentListView: View {
     
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       ForEach(contents, id: \.id) { partialContent in
+<<<<<<< HEAD
+        CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+=======
         CardView(content: partialContent)
+>>>>>>> development
         .listRowBackground(self.bgColor)
         .background(self.bgColor)
         .onTapGesture {
@@ -82,7 +86,12 @@ struct ContentListView: View {
     
     let list = List {
       ForEach(contents, id: \.id) { partialContent in
+<<<<<<< HEAD
+
+        CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+=======
         CardView(content: partialContent)
+>>>>>>> development
           .listRowBackground(self.bgColor)
           .background(self.bgColor)
           .onTapGesture {
@@ -105,7 +114,8 @@ struct ContentListView: View {
   }
   
   func loadMoreContents() {
-    contentsMC.loadContents()
+    //TODO: Load more contents
+    // contentsMC.loadContents()
   }
 }
 
