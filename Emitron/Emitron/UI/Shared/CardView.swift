@@ -155,9 +155,9 @@ struct CardView: View {
     case .url(let url):
       DispatchQueue.global().async {
         let data = try? Data(contentsOf: url)
-        DispatchQueue.main.async {
-          if let data = data,
-            let img = UIImage(data: data) {
+        if let data = data,
+          let img = UIImage(data: data) {
+          DispatchQueue.main.async {
             self.image = img
           }
         }
