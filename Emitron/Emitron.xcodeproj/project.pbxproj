@@ -38,7 +38,7 @@
 		B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */; };
 		B6419BB322EF5622003AC14E /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB222EF5622003AC14E /* Logger.swift */; };
 		B6419BB522EF59F5003AC14E /* DomainsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB422EF59F5003AC14E /* DomainsMC.swift */; };
-		B667789E2300705E003EEBAB /* Progression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B667789D2300705E003EEBAB /* Progression.swift */; };
+		B66778A223044BDF003EEBAB /* Progression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778A123044BDF003EEBAB /* Progression.swift */; };
 		B682F8C722EB096300CBF2CC /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B682F8C622EB096300CBF2CC /* Filters.swift */; };
 		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
 		B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
@@ -157,7 +157,7 @@
 		B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailsMC.swift; sourceTree = "<group>"; };
 		B6419BB222EF5622003AC14E /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6419BB422EF59F5003AC14E /* DomainsMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsMC.swift; sourceTree = "<group>"; };
-		B667789D2300705E003EEBAB /* Progression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = Progression.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/Persistence/NSManagedObjects/Progression.swift"; sourceTree = "<group>"; };
+		B66778A123044BDF003EEBAB /* Progression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Progression.swift; sourceTree = "<group>"; };
 		B682F8C622EB096300CBF2CC /* Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
 		B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTutorialsView.swift; sourceTree = "<group>"; };
@@ -291,11 +291,11 @@
 		95BAF69822EF610F00D17323 /* NSManagedObjects */ = {
 			isa = PBXGroup;
 			children = (
+				B66778A123044BDF003EEBAB /* Progression.swift */,
 				95CD793522F0B6980080C407 /* Bookmark.swift */,
 				95BAF69B22EF628700D17323 /* Category.swift */,
 				95CD793B22F0BEF40080C407 /* Contents.swift */,
 				95BAF69922EF612100D17323 /* Domain.swift */,
-				B667789D2300705E003EEBAB /* Progression.swift */,
 			);
 			path = NSManagedObjects;
 			sourceTree = "<group>";
@@ -819,7 +819,7 @@
 				95A4513522E224B500D24E56 /* UserMC.swift in Sources */,
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
-				B667789E2300705E003EEBAB /* Progression.swift in Sources */,
+				B66778A223044BDF003EEBAB /* Progression.swift in Sources */,
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,

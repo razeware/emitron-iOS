@@ -77,7 +77,7 @@ struct CardView: View {
   init(model: CardViewModel) {
     self.model = model
   }
-  
+
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some View {
