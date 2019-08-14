@@ -53,8 +53,12 @@ struct CardViewModel: Hashable {
 extension CardViewModel {
   static func transform(_ content: ContentDetailModel, cardViewType: CardViewType) -> CardViewModel? {
     let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
-    let progress = CGFloat(content.progression?.percentComplete ?? 0)
     
+    var progress: CGFloat = 0
+    if let progression = content.progression {
+      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
+    }
+        
     var imageType: ImageType
     
     if let imageURL = content.cardArtworkURL {
