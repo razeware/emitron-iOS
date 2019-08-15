@@ -61,7 +61,7 @@ class ContentsMC: NSObject, ObservableObject {
     }
   }
   
-  private var filters: Filters {
+  private(set) var filters: Filters {
     didSet {
       currentParameters = filters.appliedParameters
     }

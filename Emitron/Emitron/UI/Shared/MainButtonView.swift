@@ -28,36 +28,49 @@
 
 import SwiftUI
 
-enum PrimaryButtonType {
-  case `default`
-  case destructive
+enum MainButtonType {
+  case primary(withArrow: Bool)
+  case secondary(withArrow: Bool)
+  case destructive(withArrow: Bool)
   
   var color: Color {
     switch self {
-    case .default:
+    case .primary:
       return .appGreen
+    case .secondary:
+      return .appBlack
     case .destructive:
       return .copper
     }
   }
   
+  // TODO: Hopefully Luke gives us a white Image, so we don't have to switch here at all
   var arrowImage: UIImage {
     switch self {
-    case .default:
+    case .primary, .secondary:
       return #imageLiteral(resourceName: "arrowGreen")
     case .destructive:
       return #imageLiteral(resourceName: "arrowRed")
     }
   }
+  
+  var hasArrow: Bool {
+    switch self {
+    case .primary(let hasArrow),
+         .destructive(let hasArrow),
+         .secondary(let hasArrow):
+      return hasArrow
+    }
+  }
 }
 
-struct PrimaryButtonView: View {
+struct MainButtonView: View {
   
   private var title: String
-  private var type: PrimaryButtonType
+  private var type: MainButtonType
   private var callback: () -> Void
   
-  init(title: String, type: PrimaryButtonType, callback: @escaping () -> Void) {
+  init(title: String, type: MainButtonType, callback: @escaping () -> Void) {
     self.title = title
     self.type = type
     self.callback = callback
@@ -70,27 +83,35 @@ struct PrimaryButtonView: View {
       
       HStack {
         
+        if type.hasArrow {
         Rectangle()
           .frame(width: 24, height: 24, alignment: .center)
           .foregroundColor(type.color)
+        }
         
         Spacer()
         
         Text(title)
           .font(.uiButtonLabel)
-          .background(type.color)
           .foregroundColor(.white)
         
         Spacer()
         
-        Image(type.arrowImage)
-          .resizable()
-          .frame(width: 24, height: 24, alignment: .center)
-          .background(Color.white)
-          .foregroundColor(type.color)
-          .cornerRadius(9)
-          .padding([.trailing, .top, .bottom], 10)
+        if type.hasArrow {
+          ZStack {
+            Rectangle()
+              .frame(width: 24, height: 24, alignment: .center)
+              .cornerRadius(9)
+              .background(Color.white)
+            Image(uiImage: type.arrowImage)
+              .resizable()
+              .foregroundColor(type.color)
+              .frame(width: 24, height: 24, alignment: .center)
+            }
+            .padding([.trailing, .top, .bottom], 10)
+          }
       }
+      .frame(height: 46)
       .background(type.color)
       .cornerRadius(9)
     }
@@ -98,9 +119,11 @@ struct PrimaryButtonView: View {
 }
 
 #if DEBUG
-struct MainButtonView_Previews: PreviewProvider {
+struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    MainButtonView()
+    MainButtonView(title: "Got It!", type: .primary(withArrow: true)) {
+      print("Tapped!")
+    }
   }
 }
 #endif

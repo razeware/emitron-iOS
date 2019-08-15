@@ -39,7 +39,8 @@
 		B6419BB322EF5622003AC14E /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB222EF5622003AC14E /* Logger.swift */; };
 		B6419BB522EF59F5003AC14E /* DomainsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB422EF59F5003AC14E /* DomainsMC.swift */; };
 		B66778A223044BDF003EEBAB /* Progression.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778A123044BDF003EEBAB /* Progression.swift */; };
-		B66778AC2305D2D4003EEBAB /* PrimaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778AB2305D2D4003EEBAB /* PrimaryButtonView.swift */; };
+		B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778AB2305D2D4003EEBAB /* MainButtonView.swift */; };
+		B66778AE2305D2FF003EEBAB /* SecondaryButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778AD2305D2FF003EEBAB /* SecondaryButtonView.swift */; };
 		B682F8C722EB096300CBF2CC /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B682F8C622EB096300CBF2CC /* Filters.swift */; };
 		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
 		B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
@@ -159,7 +160,8 @@
 		B6419BB222EF5622003AC14E /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6419BB422EF59F5003AC14E /* DomainsMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsMC.swift; sourceTree = "<group>"; };
 		B66778A123044BDF003EEBAB /* Progression.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Progression.swift; sourceTree = "<group>"; };
-		B66778AB2305D2D4003EEBAB /* PrimaryButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrimaryButtonView.swift; sourceTree = "<group>"; };
+		B66778AB2305D2D4003EEBAB /* MainButtonView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainButtonView.swift; sourceTree = "<group>"; };
+		B66778AD2305D2FF003EEBAB /* SecondaryButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = SecondaryButtonView.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/UI/Shared/SecondaryButtonView.swift"; sourceTree = "<group>"; };
 		B682F8C622EB096300CBF2CC /* Filters.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Filters.swift; sourceTree = "<group>"; };
 		B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabNavView.swift; sourceTree = "<group>"; };
 		B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MyTutorialsView.swift; sourceTree = "<group>"; };
@@ -611,7 +613,8 @@
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
 				B60FF7C52300143200F36B32 /* ProgressBarView.swift */,
-				B66778AB2305D2D4003EEBAB /* PrimaryButtonView.swift */,
+				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
+				B66778AD2305D2FF003EEBAB /* SecondaryButtonView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -825,7 +828,7 @@
 				B66778A223044BDF003EEBAB /* Progression.swift in Sources */,
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */,
-				B66778AC2305D2D4003EEBAB /* PrimaryButtonView.swift in Sources */,
+				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
@@ -894,6 +897,7 @@
 				95BAF69722EF5FB200D17323 /* Emitron.xcdatamodeld in Sources */,
 				B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
+				B66778AE2305D2FF003EEBAB /* SecondaryButtonView.swift in Sources */,
 				B6DF2F9A22CA05230081A3A3 /* CategoryModel.swift in Sources */,
 				B6C4F3D722E6EE5B0087ED10 /* Filter.swift in Sources */,
 				B621DD5122F5EEC500A1F27A /* DataManager.swift in Sources */,

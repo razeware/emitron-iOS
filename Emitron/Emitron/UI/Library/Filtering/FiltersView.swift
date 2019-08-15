@@ -54,8 +54,6 @@ struct FiltersView: View {
         
         Button(action: {
           self.isPresented = false
-          //TODO: This should probably definitely not be here in the end
-           self.contentsMC.updateFilters(newFilters: self.filters)
         }) {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
@@ -66,13 +64,25 @@ struct FiltersView: View {
       .padding(.top, 20)
       
       constructScrollView()
-      .padding([.leading, .trailing, .top], 20)
+        .padding([.leading, .trailing, .top], 20)
+      
+      HStack {
+        
+        MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
+          print("Clear all!")
+        }
+        .padding([.trailing], 10)
+        
+        // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
+        // Which ones are currently being applied to the content listing
+        MainButtonView(title: contentsMC.filters.appliedFilters == filters.appliedFilters ? "Close" : "Apply", type: .primary(withArrow: false)) {
+          self.isPresented = false
+          self.contentsMC.updateFilters(newFilters: self.filters)
+        }
+      }
+      .padding([.leading, .trailing], 18)
     }
     .background(Color.paleGrey)
-      //TODO: In the current beta onDisappear() doesn’t seem to get called, so we're doing this on the close button action instead
-      .onDisappear {
-         self.contentsMC.updateFilters(newFilters: self.filters)
-      }
   }
   
   func constructScrollView() -> AnyView? {
