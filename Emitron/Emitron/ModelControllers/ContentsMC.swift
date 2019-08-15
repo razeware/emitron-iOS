@@ -53,10 +53,6 @@ class ContentsMC: NSObject, ObservableObject {
   private(set) var defaultPageSize: Int = 20
   
   // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
-  
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
       if oldValue != currentParameters {
@@ -67,7 +63,7 @@ class ContentsMC: NSObject, ObservableObject {
   
   private var filters: Filters {
     didSet {
-      currentParameters = filters.appliedParameters + defaultParameters
+      currentParameters = filters.appliedParameters
     }
   }
     
@@ -78,10 +74,10 @@ class ContentsMC: NSObject, ObservableObject {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.filters = filters
+    self.currentParameters = filters.appliedParameters
     
     super.init()
 
-    currentParameters = defaultParameters
     reloadContents()
   }
   

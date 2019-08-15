@@ -123,8 +123,20 @@ class Filters: ObservableObject {
   
   var appliedParameters: [Parameter] {
     var filterParameters = appliedFilters.map { $0.parameter }
-    filterParameters.append(sortFilter.parameter)
-    return filterParameters.isEmpty ? defaultParameters : filterParameters
+    let appliedContentFilters = contentTypes.filters.filter { $0.isOn }
+    
+    if appliedContentFilters.isEmpty {
+      // Add default filters
+      filterParameters.append(contentsOf: defaultFilters.map { $0.parameter })
+    }
+    
+    var appliedParameters = filterParameters + [sortFilter.parameter]
+    
+    if let searchFilter = searchFilter {
+      appliedParameters.append(searchFilter.parameter)
+    }
+    
+    return appliedParameters
   }
   
   var appliedFilters: [Filter] {
@@ -132,6 +144,15 @@ class Filters: ObservableObject {
     // It is convenient to be able to clear it from the applied filters control
     // But will also have to figure out how to connect the searchQuery + the AppliedFilter
     return filters.filter { $0.isOn }
+  }
+  
+  // The  default filters to always apply, unless the user selects them, are .collection and .screencast
+  // If the user makes a selection on ANY of them for the contentTypes group, only apply those
+  // They can only select between .collection, .screencast and .episode
+  var defaultFilters: [Filter] {
+    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) })
+    
+    return Array(contentFilters)
   }
   
   var searchQuery: String? {
@@ -147,7 +168,6 @@ class Filters: ObservableObject {
       }
       let filter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
       searchFilter = filter
-      filters.update(with: filter)
     }
   }
   
@@ -160,9 +180,11 @@ class Filters: ObservableObject {
   
   private var defaultParameters: [Parameter] {
     let sortParam = Param.sort(for: .releasedAt, descending: true)
-    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) })
+    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) })
+    
     var contentParams = FilterGroup(type: .contentTypes, filters: contentFilters).filters.map { $0.parameter }
     contentParams.append(sortParam)
+    
     return contentParams
   }
   
@@ -207,5 +229,15 @@ class Filters: ObservableObject {
   func changeSortFilter() {
     sortFilter = sortFilter.next
     objectWillChange.send(())
+  }
+}
+
+extension Filter {
+  func saveToUserDefaults() {
+    
+  }
+  
+  func restoreFromUserDefaults() {
+    
   }
 }

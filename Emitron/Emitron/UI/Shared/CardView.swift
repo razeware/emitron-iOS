@@ -79,6 +79,7 @@ struct CardView: SwiftUI.View {
   
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel
+  private let animation: Animation = .easeIn
   
   init(model: CardViewModel) {
     self.model = model
@@ -103,18 +104,13 @@ struct CardView: SwiftUI.View {
           }
           
           Spacer()
-                  
-          imageView()
+          
+          Image(uiImage: image)
+            .resizable()
             .frame(width: 60, height: 60)
+            .onAppear(perform: loadImage)
             .transition(.opacity)
             .cornerRadius(6)
-          
-//          Image(uiImage: image)
-//            .resizable()
-//            .frame(width: 60, height: 60)
-//            .onAppear(perform: loadImage)
-//            .transition(.opacity)
-//            .cornerRadius(6)
         }
         
         Text(model.description)
@@ -159,19 +155,6 @@ struct CardView: SwiftUI.View {
     print("Download button pressed.")
   }
   
-  private func imageView() -> ImageLoadingView {
-    var imageLoadingView: ImageLoadingView
-    
-    switch model.imageType {
-    case .asset(let img):
-      imageLoadingView = ImageLoadingView(image: img)
-    case .url(let url):
-      imageLoadingView = ImageLoadingView(image: url)
-    }
-    
-    return imageLoadingView
-  }
-  
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
@@ -196,7 +179,9 @@ struct CardView: SwiftUI.View {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
       case .success(let imageResult):
-        self.image = imageResult.image
+        withAnimation(self.animation) {
+          self.image = imageResult.image
+        }
       case .failure:
         break
       }
