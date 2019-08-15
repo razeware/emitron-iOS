@@ -60,7 +60,7 @@ class ContentsMC: NSObject, ObservableObject {
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
       if oldValue != currentParameters {
-        loadContents()
+        reloadContents()
       }
     }
   }
@@ -82,14 +82,14 @@ class ContentsMC: NSObject, ObservableObject {
     super.init()
 
     currentParameters = defaultParameters
-    loadContents()
+    reloadContents()
   }
   
   func updateFilters(newFilters: Filters) {
     self.filters = newFilters
   }
   
-  private func loadContents() {
+  func loadMore() {
     
     if case(.loading) = state {
       return
@@ -100,6 +100,36 @@ class ContentsMC: NSObject, ObservableObject {
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = currentParameters
     allParams.append(pageParam)
+    
+    contentsService.allContents(parameters: allParams) { [weak self] result in
+      
+      guard let self = self else {
+        return
+      }
+      
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let contentsTuple):
+        let currentContents = self.data
+        self.data = currentContents + contentsTuple.contents
+        self.numTutorials = contentsTuple.totalNumber
+        self.currentPage += 1
+        self.state = .hasData
+      }
+    }
+  }
+  
+  func reloadContents() {
+    
+    if case(.loading) = state {
+      return
+    }
+    
+    state = .loading
     
     // Don't load more contents if we've reached the end of the results
     guard data.isEmpty || data.count <= numTutorials else {
@@ -119,13 +149,7 @@ class ContentsMC: NSObject, ObservableObject {
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentsTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + contentsTuple.contents
-        } else {
-          self.data = contentsTuple.contents
-        }
+        self.data = contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber
         self.state = .hasData
       }

@@ -43,7 +43,7 @@ struct ContentListView: View {
   var body: some View {
     //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
     // because apparently using a List causes a crash...  in the tab bar navigation...
-    cardsScrollView()
+    cardsTableView()
   }
   
   private func cardsScrollView() -> AnyView {
@@ -93,7 +93,9 @@ struct ContentListView: View {
       Text("Should load more stuff...")
         // TODO: This is a hack to know when we've reached the end of the list, borrowed from
         // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-        .onAppear { self.loadMoreContents() }
+        .onAppear {
+          self.loadMoreContents()
+        }
     }
         .sheet(isPresented: self.$isPresenting) {
           user != nil
@@ -106,7 +108,7 @@ struct ContentListView: View {
   
   func loadMoreContents() {
     //TODO: Load more contents
-    // contentsMC.loadContents()
+    contentsMC.loadMore()
   }
 }
 

@@ -66,6 +66,42 @@ enum FilterGroupType: CaseIterable {
   }
 }
 
+enum SortFilter: Int {
+  case newest
+  case popularity
+  
+  var next: SortFilter {
+    switch self {
+    case .newest:
+      return .popularity
+    case .popularity:
+      return .newest
+    }
+  }
+  
+  var name: String {
+    switch self {
+    case .newest:
+      return Constants.newest
+    case .popularity:
+      return Constants.popularity
+    }
+  }
+  
+  var paramValue: ParameterSortValue {
+    switch self {
+    case .newest:
+      return .releasedAt
+    case .popularity:
+      return .popularity
+    }
+  }
+  
+  var parameter: Parameter {
+    return Param.sort(for: paramValue, descending: true)
+  }
+}
+
 class Filters: ObservableObject {
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -86,7 +122,9 @@ class Filters: ObservableObject {
     }
   
   var appliedParameters: [Parameter] {
-    return appliedFilters.map { $0.parameter }
+    var filterParameters = appliedFilters.map { $0.parameter }
+    filterParameters.append(sortFilter.parameter)
+    return filterParameters.isEmpty ? defaultParameters : filterParameters
   }
   
   var appliedFilters: [Filter] {
@@ -113,11 +151,20 @@ class Filters: ObservableObject {
     }
   }
   
+  private(set) var sortFilter: SortFilter
   private(set) var platforms: FilterGroup
   private(set) var categories: FilterGroup
   private(set) var contentTypes: FilterGroup
   private(set) var difficulties: FilterGroup
   private(set) var searchFilter: Filter?
+  
+  private var defaultParameters: [Parameter] {
+    let sortParam = Param.sort(for: .releasedAt, descending: true)
+    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) })
+    var contentParams = FilterGroup(type: .contentTypes, filters: contentFilters).filters.map { $0.parameter }
+    contentParams.append(sortParam)
+    return contentParams
+  }
   
   init() {
 
@@ -129,6 +176,8 @@ class Filters: ObservableObject {
     
     let difficultyFilters = Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) })
     self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
+    
+    self.sortFilter = SortFilter.newest
     
     self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
   }
@@ -153,5 +202,10 @@ class Filters: ObservableObject {
       $0.isOn = false
       filters.update(with: $0)
     }
+  }
+  
+  func changeSortFilter() {
+    sortFilter = sortFilter.next
+    objectWillChange.send(())
   }
 }
