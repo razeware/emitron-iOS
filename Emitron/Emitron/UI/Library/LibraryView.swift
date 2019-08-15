@@ -171,8 +171,9 @@ struct LibraryView: View {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let contentsMC = DataManager.current.contentsMC
+    let guardpost = Guardpost.current
     let filters = DataManager.current.filters
+    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }
 }

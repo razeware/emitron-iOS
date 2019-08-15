@@ -134,7 +134,9 @@ struct MyTutorialsView: View {
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    let contentsMC = DataManager.current.contentsMC
+    let guardpost = Guardpost.current
+    let filters = DataManager.current.filters
+    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     return MyTutorialsView().environmentObject(contentsMC)
   }
 }

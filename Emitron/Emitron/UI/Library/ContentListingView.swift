@@ -84,7 +84,7 @@ struct ContentListingView: View {
           self.isPresented = true
         }) {
           Text("Play Video!")
-            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID, user: self.user) }
+            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID!, user: self.user) }
         }
       }
     }

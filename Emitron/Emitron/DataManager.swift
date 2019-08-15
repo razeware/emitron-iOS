@@ -38,7 +38,6 @@ class DataManager: NSObject {
   
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
-  let contentsMC: ContentsMC
   var filters: Filters
   
   private var domainsSubscriber: AnyCancellable?
@@ -58,9 +57,7 @@ class DataManager: NSObject {
                                      persistentStore: persistenceStore)
 
     self.filters = Filters()
-    
-    self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
-    
+        
     super.init()
     createSubscribers()
     loadInitial()

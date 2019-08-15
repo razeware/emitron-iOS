@@ -26,49 +26,65 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import CoreData
-import Foundation
+// Inspiration from: https://osinski.dev/posts/swiftui-image-loading/
 
-@objc(Contents)
-final class Contents: NSManagedObject {
+import UIKit
+import Combine
+import SwiftUI
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Contents> {
-    return NSFetchRequest<Contents>(entityName: "Contents")
+protocol ImageLoadable {
+  func loadImage() -> AnyPublisher<UIImage, Error>
+  func equals(_ other: ImageLoadable) -> Bool
+}
+
+extension ImageLoadable where Self: Equatable {
+    func equals(_ other: ImageLoadable) -> Bool {
+        return other as? Self == self
+    }
+}
+
+struct AnyImageLoadable: ImageLoadable, Equatable {
+    private let loadable: ImageLoadable
+    
+    init(_ loadable: ImageLoadable) {
+        self.loadable = loadable
+    }
+    
+    func loadImage() -> AnyPublisher<UIImage, Error> {
+        return loadable.loadImage()
+    }
+    
+    static func ==(lhs: AnyImageLoadable, rhs: AnyImageLoadable) -> Bool {
+        return lhs.loadable.equals(rhs.loadable)
+    }
+}
+
+extension URL: ImageLoadable {
+  enum ImageLoadingError: Error {
+    case incorrectData
   }
-
-  @NSManaged var id: NSNumber
-  @NSManaged var name: String
-  @NSManaged var uri: String
-  @NSManaged var desc: String
-  @NSManaged var releasedAt: Date
-  @NSManaged var free: Bool
-  @NSManaged var difficulty: String
-  @NSManaged var contentType: String
-  @NSManaged var duration: NSNumber
-  @NSManaged var popularity: Double
-  @NSManaged var bookmarked: Bool
-  @NSManaged var cardArtworkUrl: URL?
-  @NSManaged var technologyTripleString: String
-  @NSManaged var contributorString: String
-  @NSManaged var videoID: NSNumber?
   
-  static func transform(from model: ContentDetailModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.id = NSNumber(value: model.id)
-    contents.name = model.name
-    contents.uri = model.uri
-    contents.desc = model.description
-    contents.releasedAt = model.releasedAt
-    contents.free = model.free
-    contents.difficulty = model.difficulty.rawValue
-    contents.contentType = model.contentType.rawValue
-    contents.duration = NSNumber(value: model.duration)
-    contents.bookmarked = model.bookmarked
-    contents.popularity = model.popularity
-    contents.cardArtworkUrl = model.cardArtworkURL
-    contents.technologyTripleString = model.technologyTripleString
-    contents.contributorString = model.contributorString
-    contents.videoID = model.videoID != nil ? NSNumber(value: model.videoID!) : nil
-    return contents
+  func loadImage() -> AnyPublisher<UIImage, Error> {
+    URLSession
+      .shared
+      .dataTaskPublisher(for: self)
+      .tryMap { data, _ in
+        guard let image = UIImage(data: data) else {
+          throw ImageLoadingError.incorrectData
+        }
+        
+        return image
+    }
+    .eraseToAnyPublisher()
+  }
+}
+
+extension UIImage: ImageLoadable {
+  func loadImage() -> AnyPublisher<UIImage, Error> {
+    return Just(self)
+      // Just's Failure type is Never
+      // Our protocol expect's it to be Error, so we need to `override` it
+      .setFailureType(to: Error.self)
+      .eraseToAnyPublisher()
   }
 }

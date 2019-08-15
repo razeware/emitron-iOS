@@ -97,6 +97,8 @@ class ContentsMC: NSObject, ObservableObject {
     
     state = .loading
     
+    currentPage += 1
+    
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = currentParameters
     allParams.append(pageParam)
@@ -110,6 +112,7 @@ class ContentsMC: NSObject, ObservableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
+        self.currentPage = -1
         Failure
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
@@ -117,7 +120,6 @@ class ContentsMC: NSObject, ObservableObject {
         let currentContents = self.data
         self.data = currentContents + contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber
-        self.currentPage += 1
         self.state = .hasData
       }
     }

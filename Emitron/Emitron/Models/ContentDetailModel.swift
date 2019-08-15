@@ -46,7 +46,7 @@ class ContentDetailModel {
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
-  private(set) var videoID: Int = 0
+  private(set) var videoID: Int?
 
   private(set) var domains: [DomainModel] = []
   private(set) var childContents: [ContentSummaryModel] = []
@@ -86,10 +86,8 @@ class ContentDetailModel {
     self.bookmarked = jsonResource["bookmarked?"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
-    self.contributorString = jsonResource["contributor_string"] as? String ?? ""
-    
-    //TODO: Get the actual videoIdentifier
-    self.videoID = Int(self.uri.digits) ?? 0
+    self.contributorString = jsonResource["contributor_string"] as? String ?? ""    
+    self.videoID = jsonResource["video_identifier"] as? Int
 
     for relationship in jsonResource.relationships {
       switch relationship.type {
@@ -97,6 +95,8 @@ class ContentDetailModel {
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
+        
+        // If a domain comes through that doesn't match any of the domains we have, make a new domain request.
         self.domains = domains ?? []
       
       //TODO: This will be improved when the API returns enough info to render the video listing, currently
@@ -160,7 +160,7 @@ class ContentDetailModel {
     self.cardArtworkURL = content.cardArtworkUrl
     self.technologyTripleString = content.technologyTripleString
     self.contributorString = content.contributorString
-    self.videoID = content.videoID.intValue
+    self.videoID = content.videoID?.intValue
   }
 }
 

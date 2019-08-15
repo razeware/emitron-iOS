@@ -43,7 +43,7 @@ struct ContentListView: View {
   var body: some View {
     //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
     // because apparently using a List causes a crash...  in the tab bar navigation...
-    cardsTableView()
+    cardsScrollView()
   }
   
   private func cardsScrollView() -> AnyView {

@@ -31,11 +31,12 @@ import SwiftUI
 struct TabNavView: View {
 
   @State private var selection = 0
+  @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
     let tabs = TabView(selection: $selection) {
 
-      libraryView() //TODO: This is somehow making the tabbar crash
+      libraryView()
         .tabItem {
           Text(Constants.library)
           Image("library")
@@ -64,16 +65,11 @@ struct TabNavView: View {
   }
   
   func libraryView() -> AnyView {
-    
-    let contentsMC = DataManager.current.contentsMC
     let filters = DataManager.current.filters
     return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(filters))
   }
   
   func myTutorialsView() -> AnyView {
-    
-    let contentsMC = DataManager.current.contentsMC
-    
     return AnyView(MyTutorialsView().environmentObject(contentsMC))
   }
 }

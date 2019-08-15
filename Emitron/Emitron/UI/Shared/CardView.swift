@@ -27,6 +27,8 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Kingfisher
+import UIKit
 
 enum CardViewType: Hashable {
   case `default`
@@ -73,7 +75,7 @@ extension CardViewModel {
   }
 }
 
-struct CardView: View {
+struct CardView: SwiftUI.View {
   
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel
@@ -84,7 +86,7 @@ struct CardView: View {
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
-  var body: some View {
+  var body: some SwiftUI.View {
     VStack(alignment: .leading) {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
@@ -101,13 +103,18 @@ struct CardView: View {
           }
           
           Spacer()
-                    
-          Image(uiImage: image)
-            .resizable()
+                  
+          imageView()
             .frame(width: 60, height: 60)
-            .onAppear(perform: loadImage)
             .transition(.opacity)
             .cornerRadius(6)
+          
+//          Image(uiImage: image)
+//            .resizable()
+//            .frame(width: 60, height: 60)
+//            .onAppear(perform: loadImage)
+//            .transition(.opacity)
+//            .cornerRadius(6)
         }
         
         Text(model.description)
@@ -126,7 +133,7 @@ struct CardView: View {
             .foregroundColor(.battleshipGrey)
           
           Spacer()
-          
+                    
           Image("downloadInactive")
             .resizable()
             .frame(width: 19, height: 19)
@@ -152,6 +159,19 @@ struct CardView: View {
     print("Download button pressed.")
   }
   
+  private func imageView() -> ImageLoadingView {
+    var imageLoadingView: ImageLoadingView
+    
+    switch model.imageType {
+    case .asset(let img):
+      imageLoadingView = ImageLoadingView(image: img)
+    case .url(let url):
+      imageLoadingView = ImageLoadingView(image: url)
+    }
+    
+    return imageLoadingView
+  }
+  
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
@@ -159,14 +179,26 @@ struct CardView: View {
     case .asset(let img):
       image = img
     case .url(let url):
-      DispatchQueue.global().async {
-        let data = try? Data(contentsOf: url)
-        if let data = data,
-          let img = UIImage(data: data) {
-          DispatchQueue.main.async {
-            self.image = img
-          }
-        }
+//      DispatchQueue.global().async {
+//        let data = try? Data(contentsOf: url)
+//        if let data = data,
+//          let img = UIImage(data: data) {
+//          DispatchQueue.main.async {
+//            self.image = img
+//          }
+//        }
+//      }
+      fishImage(url: url)
+    }
+  }
+  
+  private func fishImage(url: URL) {
+    KingfisherManager.shared.retrieveImage(with: url) { result in
+      switch result {
+      case .success(let imageResult):
+        self.image = imageResult.image
+      case .failure:
+        break
       }
     }
   }
@@ -174,7 +206,7 @@ struct CardView: View {
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
-  static var previews: some View {
+  static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentDetailModel.test, cardViewType: .default)!
     return CardView(model: cardModel)
   }

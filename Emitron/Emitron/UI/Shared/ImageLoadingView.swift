@@ -26,49 +26,64 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import CoreData
-import Foundation
+import SwiftUI
+import Combine
 
-@objc(Contents)
-final class Contents: NSManagedObject {
-
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Contents> {
-    return NSFetchRequest<Contents>(entityName: "Contents")
-  }
-
-  @NSManaged var id: NSNumber
-  @NSManaged var name: String
-  @NSManaged var uri: String
-  @NSManaged var desc: String
-  @NSManaged var releasedAt: Date
-  @NSManaged var free: Bool
-  @NSManaged var difficulty: String
-  @NSManaged var contentType: String
-  @NSManaged var duration: NSNumber
-  @NSManaged var popularity: Double
-  @NSManaged var bookmarked: Bool
-  @NSManaged var cardArtworkUrl: URL?
-  @NSManaged var technologyTripleString: String
-  @NSManaged var contributorString: String
-  @NSManaged var videoID: NSNumber?
+final class ImageLoader: ObservableObject {
+  @Published private(set) var image: UIImage? = nil
   
-  static func transform(from model: ContentDetailModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.id = NSNumber(value: model.id)
-    contents.name = model.name
-    contents.uri = model.uri
-    contents.desc = model.description
-    contents.releasedAt = model.releasedAt
-    contents.free = model.free
-    contents.difficulty = model.difficulty.rawValue
-    contents.contentType = model.contentType.rawValue
-    contents.duration = NSNumber(value: model.duration)
-    contents.bookmarked = model.bookmarked
-    contents.popularity = model.popularity
-    contents.cardArtworkUrl = model.cardArtworkURL
-    contents.technologyTripleString = model.technologyTripleString
-    contents.contributorString = model.contributorString
-    contents.videoID = model.videoID != nil ? NSNumber(value: model.videoID!) : nil
-    return contents
+  private let loadable: ImageLoadable
+  private var cancellable: AnyCancellable?
+  
+  init(loadable: ImageLoadable) {
+    self.loadable = loadable
+  }
+  
+  deinit {
+    cancellable?.cancel()
+  }
+  
+  func load() {
+    cancellable = loadable
+      .loadImage()
+      .receive(on: DispatchQueue.main)
+      .sink(
+        receiveCompletion: { _ in },
+        receiveValue: { [weak self] image in
+          self?.image = image
+        }
+    )
+  }
+  
+  func cancel() {
+    cancellable?.cancel()
   }
 }
+
+struct ImageLoadingView: View {
+  @ObservedObject var imageLoader: ImageLoader
+  
+  init(image: ImageLoadable) {
+    imageLoader = ImageLoader(loadable: image)
+  }
+  
+  var body: some View {
+    ZStack {
+      if imageLoader.image != nil {
+        Image(uiImage: imageLoader.image!)
+          .resizable()
+      }
+    }
+    .onAppear(perform: imageLoader.load)
+    .onDisappear(perform: imageLoader.cancel)
+  }
+}
+
+#if DEBUG
+struct ImageLoadingView_Previews: PreviewProvider {
+  static var previews: some View {
+    let imageLoadable = #imageLiteral(resourceName: "myTutorialsGreen")
+    return ImageLoadingView(image: imageLoadable)
+  }
+}
+#endif
