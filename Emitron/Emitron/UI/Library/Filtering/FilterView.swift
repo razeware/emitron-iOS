@@ -52,7 +52,7 @@ struct FilterView: View {
       
       Spacer()
       
-      CheckmarkView(filter: filter)
+      CheckmarkView(filter: filter).environmentObject(filters)
     }
       .frame(minHeight: 46)
   }

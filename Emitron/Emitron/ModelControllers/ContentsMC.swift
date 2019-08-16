@@ -29,6 +29,7 @@
 import Foundation
 import SwiftUI
 import Combine
+import CoreData
 
 class ContentsMC: NSObject, ObservableObject {
   
@@ -55,38 +56,41 @@ class ContentsMC: NSObject, ObservableObject {
   private var defaultParameters: [Parameter] {
     return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
   }
+  
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
-      loadContents()
+      if oldValue != currentParameters {
+        loadContents()
+      }
     }
   }
   
-  @ObservedObject var filters: Filters {
+  private var filters: Filters {
     didSet {
-      if currentParameters != (filters.appliedParameters + defaultParameters) {
-        currentPage = startingPage
-        currentParameters = defaultParameters + filters.appliedParameters
-      }      
+      currentParameters = filters.appliedParameters + defaultParameters
     }
   }
-  
+    
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
+  init(guardpost: Guardpost, filters: Filters) {
     self.guardpost = guardpost
     
-    //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    
-    self.filters = Filters()
+    self.filters = filters
     
     super.init()
-    
+
     currentParameters = defaultParameters
     loadContents()
   }
   
-  func loadContents() {
+  func updateFilters(newFilters: Filters) {
+    self.filters = newFilters
+  }
+  
+  private func loadContents() {
+    
     if case(.loading) = state {
       return
     }

@@ -123,14 +123,14 @@ class ContentDetailModel {
         }
 
         self.groups = groups
-      case "progressions":
+      case "progression":
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
       case "bookmark":
         let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+        let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
         let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
         self.bookmark = bookmarks?.first
       default:
@@ -139,6 +139,28 @@ class ContentDetailModel {
     }
     
     self.url = jsonResource.links["self"]
+  }
+  
+  /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
+  ///
+  /// - parameters:
+  ///   - content: core data entity to transform into domain model
+  init(_ content: Contents) {
+    self.id = content.id.intValue
+    self.name = content.name
+    self.uri = content.uri
+    self.description = content.desc
+    self.releasedAt = content.releasedAt
+    self.free = content.free
+    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
+    self.contentType = ContentType(rawValue: content.contentType) ?? .none
+    self.duration = content.duration.intValue
+    self.bookmarked = content.bookmarked
+    self.popularity = content.popularity
+    self.cardArtworkURL = content.cardArtworkUrl
+    self.technologyTripleString = content.technologyTripleString
+    self.contributorString = content.contributorString
+    self.videoID = content.videoID.intValue
   }
 }
 

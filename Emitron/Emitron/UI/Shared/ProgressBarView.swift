@@ -1,5 +1,5 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
@@ -9,7 +9,7 @@
 /// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,36 +26,48 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-protocol Refreshable {
-  var refreshableUserDefaultsKey: String { get }
-  var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
-  var shouldRefresh: Bool { get }
-
-  func saveOrReplaceUpdateDate()
-}
-
-extension Refreshable {
+struct ProgressBarView: View {
+  private var progress: CGFloat
+  private var height: CGFloat = 4
   
-  var shouldRefresh: Bool {
-    if let lastUpdateDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date {
-      return lastUpdateDate < self.refreshableCheckTimeSpan.date
+  init(progress: CGFloat) {
+    self.progress = progress
+  }
+  
+  var body: some View {
+    
+    ZStack(alignment: .leading) {
+      GeometryReader { geometry in
+        HStack(alignment: .center) {
+          Rectangle()
+            .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+            .foregroundColor(.appGreen)
+          
+          if self.progress >= 1 {
+            
+            Spacer()
+            
+            Rectangle()
+              .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+              .foregroundColor(.appGreen)
+          }
+        }
+        
+        Rectangle()
+          .frame(width: geometry.size.width * self.progress, height: self.height)
+          .foregroundColor(.appGreen)
+          .cornerRadius(self.height/2)
+      }
     }
-    return true
-  }
-  
-  func saveOrReplaceUpdateDate() {
-    UserDefaults.standard.set(Date(),
-                              forKey: self.refreshableUserDefaultsKey)
   }
 }
 
-enum RefreshableTimeSpan: Int {
-  case long = 30
-  case short = 1
-  
-  var date: Date {
-    return Date().dateByAddingNumberOfDays(-self.rawValue)
+#if DEBUG
+struct ProgressView_Previews: PreviewProvider {
+  static var previews: some View {
+    ProgressBarView(progress: 0.5)
   }
 }
+#endif

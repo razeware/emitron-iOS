@@ -32,12 +32,15 @@ private extension CGFloat {
   static let sidePadding: CGFloat = 18
 }
 
+enum MyTutorialsState: String {
+  case inProgress, completed, bookmarked
+}
+
 struct MyTutorialsView: View {
   
-  // FJ TODO: Add in green progress bar once can tell if tutorial is in progress..
-  
   @EnvironmentObject var contentsMC: ContentsMC
-  @State var settingsPresented: Bool = false
+  @State private var settingsPresented: Bool = false
+  @State private var state: MyTutorialsState = .inProgress
   
   var body: some View {
     VStack {
@@ -66,7 +69,16 @@ struct MyTutorialsView: View {
       }
       .padding([.leading, .trailing, .top], .sidePadding)
       
-      ToggleControlView()
+      ToggleControlView(inProgressClosure: {
+        self.state = .inProgress
+        
+      }, completedClosure: {
+        self.state = .completed
+        
+      }, bookmarkedClosure: {
+        self.state = .bookmarked
+        
+      })
         .padding([.leading, .trailing, .top], .sidePadding)
         .background(Color.paleGrey)
       
@@ -88,7 +100,31 @@ struct MyTutorialsView: View {
     case .hasData,
          .loading where !contentsMC.data.isEmpty:
 
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+      let allData = contentsMC.data
+      let dataToDisplay: [ContentDetailModel]
+      
+      switch state {
+      case .inProgress:
+        let inProgressData = allData.filter { model -> Bool in
+          guard let progression = model.progression else {
+            return false
+          }
+          
+          return progression.percentComplete > 0 && !progression.finished
+        }
+        
+        dataToDisplay = inProgressData
+      
+      case .completed:
+        let completedData = allData.filter { $0.progression?.finished == true }
+        dataToDisplay = completedData
+        
+      case .bookmarked:
+        let bookmarkedData = allData.filter { $0.bookmark != nil }
+        dataToDisplay = bookmarkedData
+      }
+      
+      return AnyView(ContentListView(contents: dataToDisplay, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }
@@ -98,8 +134,8 @@ struct MyTutorialsView: View {
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    return MyTutorialsView().environmentObject(ContentsMC(guardpost: guardpost))
+    let contentsMC = DataManager.current.contentsMC
+    return MyTutorialsView().environmentObject(contentsMC)
   }
 }
 #endif

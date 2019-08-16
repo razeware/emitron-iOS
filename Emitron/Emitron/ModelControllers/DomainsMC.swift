@@ -33,7 +33,7 @@ import CoreData
 
 class DomainsMC: NSObject, ObservableObject, Refreshable {
   
-  var refreshableUserDefaultsKey = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   // MARK: - Properties
@@ -87,11 +87,13 @@ private extension DomainsMC {
       let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
       let domainModels = result.map(DomainModel.init)
       data = domainModels
+      state = .hasData
     } catch {
       Failure
         .loadFromPersistentStore(from: "DomainsMC", reason: "Failed to load entities from core data.")
         .log(additionalParams: nil)
       data = []
+      state = .failed
     }
   }
   
@@ -125,6 +127,8 @@ private extension DomainsMC {
         .saveToPersistentStore(from: "DomainsMC", reason: "Failed to save entities to core data.")
         .log(additionalParams: nil)
     }
+    
+    saveOrReplaceUpdateDate()
   }
   
   func fetchDomains() {

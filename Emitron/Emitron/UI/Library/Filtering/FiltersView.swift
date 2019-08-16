@@ -30,8 +30,8 @@ import SwiftUI
 
 struct FiltersView: View {
   
-  @EnvironmentObject var filters: Filters
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var filters: Filters
   @Binding var isPresented: Bool
   
   var body: some View {
@@ -55,7 +55,7 @@ struct FiltersView: View {
         Button(action: {
           self.isPresented = false
           //TODO: This should probably definitely not be here in the end
-          self.contentsMC.filters = self.filters
+           self.contentsMC.updateFilters(newFilters: self.filters)
         }) {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
@@ -65,25 +65,30 @@ struct FiltersView: View {
       }
       .padding(.top, 20)
       
-      ScrollView(.vertical, showsIndicators: false) {
-        VStack(alignment: .leading, spacing: 12) {
-          
-          ForEach(filters.filterGroups, id: \.self) { filterGroup in
-            self.constructFilterView(filterGroup: filterGroup)
-          }
-        }
-      }
+      constructScrollView()
       .padding([.leading, .trailing, .top], 20)
     }
     .background(Color.paleGrey)
-      //TODO: In the current beta onDisappear() doesn’t seem to get called.
+      //TODO: In the current beta onDisappear() doesn’t seem to get called, so we're doing this on the close button action instead
       .onDisappear {
-        self.contentsMC.filters = self.filters
+         self.contentsMC.updateFilters(newFilters: self.filters)
       }
   }
   
+  func constructScrollView() -> AnyView? {
+    let scrollView = ScrollView(.vertical, showsIndicators: false) {
+      VStack(alignment: .leading, spacing: 12) {
+        
+        ForEach(filters.filterGroups, id: \.self) { filterGroup in
+          self.constructFilterView(filterGroup: filterGroup)
+        }
+      }
+    }
+    return AnyView(scrollView)
+  }
+  
   func constructFilterView(filterGroup: FilterGroup) -> AnyView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup)
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup).environmentObject(filters)
     return AnyView(filtersView)
   }
 }
