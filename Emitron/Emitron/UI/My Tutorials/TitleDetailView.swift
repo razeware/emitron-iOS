@@ -37,13 +37,9 @@ struct TitleDetailView: View {
   
   var callback: ((SettingsOptions)->())?
   var row: SettingsOptions
-//  var title: String = ""
-//  var detail: String = ""
-  
   var body: some View {
     
     GeometryReader { geometry in
-      
       Button(action: {
         self.callback?(self.row)
       }, label: {
@@ -53,22 +49,28 @@ struct TitleDetailView: View {
           HStack {
             Text(self.row.title)
               .foregroundColor(.appBlack)
-              .font(.uiBodyCustom)
+              .font(.uiBodyAppleDefault)
               .padding([.leading,.trailing], Layout.padding)
             
             Spacer()
             
-            // TODO fix this
-            Text(self.row.detail.first!)
-              .foregroundColor(.appBlack)
-              .font(.uiBodyCustom)
-              .padding([.leading], Layout.padding)
-              .padding([.trailing], Layout.smallPadding)
-            
-            // TODO: get the right chevron icon
-            Image("downloadInactive")
-              .padding([.trailing], Layout.padding)
-              .foregroundColor(.coolGrey)
+            if self.row.isToggle {
+              ToggleView()
+                .padding([.trailing], Layout.padding)
+            } else {
+              // TODO fix this
+              Text(self.row.detail.first!)
+                .foregroundColor(.appBlack)
+                .font(.uiBodyAppleDefault)
+                .padding([.leading], Layout.padding)
+                .padding([.trailing], Layout.smallPadding)
+              
+              Image("carrotRight")
+                .resizable()
+                .frame(maxWidth: 13, maxHeight: 13)
+                .padding([.trailing], Layout.padding)
+                .foregroundColor(.coolGrey)
+            }
           }
           
           Rectangle()
@@ -85,7 +87,30 @@ struct TitleDetailView: View {
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    TitleDetailView(row: .videoPlaybackSpeed)
+    TitleDetailView(callback: nil, row: .videoPlaybackSpeed)
   }
 }
 #endif
+
+
+// TODO move this
+struct CustomToggle : UIViewRepresentable {
+  
+  func makeUIView(context: Context) -> UISwitch {
+    UISwitch()
+  }
+
+  func updateUIView(_ uiView: UISwitch, context: Context) {
+    // This is appGreen
+    uiView.onTintColor = UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1)
+    
+    // TODO pull from userDefaults
+    uiView.isOn = true
+  }
+}
+
+struct ToggleView : View {
+  var body: some View {
+    CustomToggle()
+  }
+}

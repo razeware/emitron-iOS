@@ -57,6 +57,13 @@ enum SettingsOptions: Identifiable {
       case .subtitles: return ["Yes", "No"]
     }
   }
+  
+  var isToggle: Bool {
+    switch self {
+      case .downloads, .subtitles: return true
+      default: return false
+    }
+  }
 }
 
 struct SettingsView: View {
