@@ -19,9 +19,9 @@
 		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
+		B59565352306D86B00A3FF44 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59565342306D86A00A3FF44 /* ProgressBarView.swift */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7BD23000ABD00F36B32 /* CardView.swift */; };
-		B60FF7C62300143200F36B32 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7C52300143200F36B32 /* ProgressBarView.swift */; };
 		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
 		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
 		B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */; };
@@ -139,9 +139,9 @@
 		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
+		B59565342306D86A00A3FF44 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B60FF7BD23000ABD00F36B32 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		B60FF7C52300143200F36B32 /* ProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; name = ProgressBarView.swift; path = "../../../../../../../../../System/Volumes/Data/Users/leamaroltsonnenschein/Local/Github/emitron-iOS/Emitron/Emitron/UI/Shared/ProgressBarView.swift"; sourceTree = "<group>"; };
 		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
 		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
 		B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VideoModelTest.json; sourceTree = "<group>"; };
@@ -611,7 +611,7 @@
 				B629AB4B22E60BD70037F4D8 /* CourseHeaderView.swift */,
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
-				B60FF7C52300143200F36B32 /* ProgressBarView.swift */,
+				B59565342306D86A00A3FF44 /* ProgressBarView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -826,6 +826,7 @@
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
+				B59565352306D86B00A3FF44 /* ProgressBarView.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
@@ -843,7 +844,6 @@
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
-				B60FF7C62300143200F36B32 /* ProgressBarView.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B6DF2F9822CA051B0081A3A3 /* BookmarkModel.swift in Sources */,
