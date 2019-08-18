@@ -56,11 +56,14 @@ class ContentSummaryModel {
   private(set) var contributorString: String = ""
   private(set) var index: Int = 0
   private(set) var videoID: Int = 0
+  
+  private(set) var progression: ProgressionModel?
+  private(set) var bookmark: BookmarkModel?
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?,
-        index: Int = 0) {
+        index: Int = 0, progression: ProgressionModel? = nil) {
 
     self.id = jsonResource.id
     self.index = index
@@ -95,6 +98,7 @@ class ContentSummaryModel {
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
+    self.progression = progression
   }
 }
 

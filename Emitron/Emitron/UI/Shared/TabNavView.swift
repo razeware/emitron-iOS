@@ -71,10 +71,11 @@ struct TabNavView: View {
   }
   
   func myTutorialsView() -> AnyView {
-    
     let contentsMC = DataManager.current.contentsMC
+    let progressionsMC = DataManager.current.progressionsMC
+    let bookmarksMC = DataManager.current.bookmarksMC
     
-    return AnyView(MyTutorialsView().environmentObject(contentsMC))
+    return AnyView(MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC))
   }
 }
 

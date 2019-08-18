@@ -51,8 +51,9 @@ struct CardViewModel: Hashable {
 
 // Transform data
 extension CardViewModel {
-  static func transform(_ content: ContentDetailModel, cardViewType: CardViewType) -> CardViewModel? {
-    let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
+  static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
+    // TODO need to include this once Sam has added it to the /contents call
+//    let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
     
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -67,7 +68,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
+    let cardModel = CardViewModel(title: content.name, subtitle: "subtitle", description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
     
     return cardModel
   }
@@ -173,7 +174,7 @@ struct CardView: View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
-    let cardModel = CardViewModel.transform(ContentDetailModel.test, cardViewType: .default)!
+    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
     return CardView(model: cardModel)
   }
 }

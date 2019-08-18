@@ -37,6 +37,7 @@ class BookmarkModel {
   //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
   // Does not happen in Xcode 10
   private(set) var createdAt: Date
+  private(set) var content: ContentSummaryModel?
 
   // MARK: - Initializers
   init?(resource: JSONAPIResource,
@@ -47,6 +48,21 @@ class BookmarkModel {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
     } else {
       self.createdAt = Date()
+    }
+    
+    for relationship in resource.relationships {
+      switch relationship.type {
+      case "content":
+        let ids = relationship.data.compactMap { $0.id }
+        let included = resource.parent?.included.filter { ids.contains($0.id) }
+        let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta) }
+        if let content = includedContent?.first {
+          self.content = content
+        }
+        
+      default:
+        break
+      }
     }
   }
   

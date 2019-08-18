@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ContentsMC: NSObject, ObservableObject {
+class BookmarksMC: NSObject, ObservableObject {
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -43,8 +43,8 @@ class ContentsMC: NSObject, ObservableObject {
   
   private let client: RWAPI
   private let guardpost: Guardpost
-  private let contentsService: ContentsService
-  private(set) var data: [ContentSummaryModel] = []
+  private let bookmarksService: BookmarksService
+  private(set) var data: [BookmarkModel] = []
   private(set) var numTutorials: Int = 0
   
   // Pagination
@@ -64,29 +64,18 @@ class ContentsMC: NSObject, ObservableObject {
       }
     }
   }
-  
-  private var filters: Filters {
-    didSet {
-      currentParameters = filters.appliedParameters + defaultParameters
-    }
-  }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost, filters: Filters) {
+  init(guardpost: Guardpost) {
     self.guardpost = guardpost
     
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
-    self.contentsService = ContentsService(client: self.client)
-    self.filters = filters
+    self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
 
     currentParameters = defaultParameters
     loadContents()
-  }
-  
-  func updateFilters(newFilters: Filters) {
-    self.filters = newFilters
   }
   
   private func loadContents() {
@@ -106,8 +95,7 @@ class ContentsMC: NSObject, ObservableObject {
       return
     }
     
-    contentsService.allContents(parameters: currentParameters) { [weak self] result in
-      
+    bookmarksService.bookmarks { [weak self] result in
       guard let self = self else {
         return
       }
@@ -116,19 +104,20 @@ class ContentsMC: NSObject, ObservableObject {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let contentsTuple):
+      case .success(let bookmarksTuple):
         // When filtering, do we just re-do the request, or append?
         if allParams == self.currentParameters {
           let currentContents = self.data
-          self.data = currentContents + contentsTuple.contents
+          self.data = currentContents + bookmarksTuple
         } else {
-          self.data = contentsTuple.contents
+          self.data = bookmarksTuple
         }
-        self.numTutorials = contentsTuple.totalNumber
+        self.numTutorials = bookmarksTuple.count
         self.state = .hasData
       }
     }
   }
 }
+
