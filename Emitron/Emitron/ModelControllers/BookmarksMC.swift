@@ -91,7 +91,7 @@ class BookmarksMC: NSObject, ObservableObject {
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
+    guard data.isEmpty || data.count < numTutorials else {
       return
     }
     

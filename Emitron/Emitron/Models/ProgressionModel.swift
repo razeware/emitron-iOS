@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 class ProgressionModel {
-
+  
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var target: Int = 0
@@ -41,41 +41,35 @@ class ProgressionModel {
   private(set) var createdAt: Date
   private(set) var updatedAt: Date
   private(set) var content: ContentSummaryModel?
-
+  
   // MARK: - Initializers
   init(_ jsonResource: JSONAPIResource,
        metadata: [String: Any]?) {
-
+    
     self.id = jsonResource.id
     self.target = jsonResource["target"] as? Int ?? 0
     self.progress = jsonResource["progress"] as? Int ?? 0
     self.finished = jsonResource["finished"] as? Bool ?? false
     self.percentComplete = jsonResource["percent_complete"] as? Double ?? 0.0
-
+    
     if let createdAtStr = jsonResource["created_at"] as? String {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
     } else {
       self.createdAt = Date()
     }
-
+    
     if let updatedAtStr = jsonResource["updated_at"] as? String {
       self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
     } else {
       self.updatedAt = Date()
     }
-
-    for relationship in jsonResource.relationships {
-      switch relationship.type {
-      case "content":
-        let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, progression: self) }
-        if let content = includedContent?.first {
-          self.content = content
-        }
-        
-      default:
-        break
+    
+    for relationship in jsonResource.relationships where relationship.type == "content" {
+      let ids = relationship.data.compactMap { $0.id }
+      let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+      let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, progression: self) }
+      if let content = includedContent?.first {
+        self.content = content
       }
     }
   }
@@ -87,7 +81,7 @@ extension ProgressionModel {
       let fileURL = Bundle.main.url(forResource: "ProgressionsModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
       let json = try JSON(data: data)
-    
+      
       let document = JSONAPIDocument(json)
       let domains = document.data.compactMap { ProgressionModel($0, metadata: nil) }
       return domains
