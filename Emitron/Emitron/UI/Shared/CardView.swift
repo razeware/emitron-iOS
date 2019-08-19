@@ -52,8 +52,10 @@ struct CardViewModel: Hashable {
 // Transform data
 extension CardViewModel {
   static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
-    // TODO need to include this once Sam has added it to the /contents call
-//    let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
+    let domainData = DataManager.current.domainsMC.data
+    let ids = content.domainIDs
+    let contentDomains = domainData.filter { ids.contains($0.id) }
+    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -68,7 +70,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let cardModel = CardViewModel(title: content.name, subtitle: "subtitle", description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
     
     return cardModel
   }

@@ -59,11 +59,13 @@ class ContentSummaryModel {
   
   private(set) var progression: ProgressionModel?
   private(set) var bookmark: BookmarkModel?
+  private(set) var domainIDs: [Int] = []
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?,
-        index: Int = 0, progression: ProgressionModel? = nil) {
+        index: Int = 0,
+        progression: ProgressionModel? = nil) {
 
     self.id = jsonResource.id
     self.index = index
@@ -99,6 +101,19 @@ class ContentSummaryModel {
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.progression = progression
+    
+    for relationship in jsonResource.relationships {
+    switch relationship.type {
+    case "domains":
+      let ids = relationship.data.compactMap { $0.id }
+//      let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+//      let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
+      self.domainIDs = ids
+      
+    default:
+      break
+      }
+    }
   }
 }
 
