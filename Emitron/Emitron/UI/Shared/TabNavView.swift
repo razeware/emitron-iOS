@@ -43,15 +43,14 @@ struct TabNavView: View {
         }
         .tag(0)
 
-      DownloadsView()
+      NavigationView {
+        DownloadsView()
+      }
         .tabItem {
           Text(Constants.downloads)
           Image("downloadInactive")
         }
         .tag(1)
-        .onTapGesture {
-          print("Tapped Downloads")
-        }
 
       myTutorialsView()
         .tabItem {

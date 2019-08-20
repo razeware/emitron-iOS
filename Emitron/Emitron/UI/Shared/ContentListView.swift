@@ -44,6 +44,9 @@ struct ContentListView: View {
   var body: some View {
     //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
     // because apparently using a List causes a crash...  in the tab bar navigation...
+//    NavigationView {
+//      cardTableViewWithNav()
+//    }
     cardsTableView()
   }
   
@@ -104,6 +107,30 @@ struct ContentListView: View {
             ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, imageLoaded: self.$imageLoaded, user: user!))
             : AnyView(Text("Unable to show video..."))
         }
+    
+    return AnyView(list)
+  }
+  
+  func cardTableViewWithNav() -> AnyView {
+    let guardpost = Guardpost.current
+    let user = guardpost.currentUser
+    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+    
+    let list = List {
+      ForEach(contents, id: \.id) { partialContent in
+        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
+          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+          .listRowBackground(self.bgColor)
+          .background(self.bgColor)
+        }
+      }
+      Text("Should load more stuff...")
+        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+        .onAppear {
+          self.loadMoreContents()
+        }
+    }
     
     return AnyView(list)
   }
