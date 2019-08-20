@@ -42,7 +42,10 @@ struct ContentListingView: View {
     List {
       VStack {
   
-        loadImage()
+        Image("loading")
+          .fetchingRemoteImage(from: contentDetailsMC.data.cardArtworkURL!)
+          .frame(width: 375, height: 283)
+        
         ContentSummaryView(details: contentDetailsMC.data)
       }
       .frame(maxWidth: UIScreen.main.bounds.width)
@@ -86,6 +89,9 @@ struct ContentListingView: View {
     .onAppear {
       //TODO: Kind of hack to force data-reload while this modal-presentation with List issue goes on
       self.contentDetailsMC.getContentDetails()
+    }
+    .onDisappear {
+      print("I'm gone...")
     }
   }
   

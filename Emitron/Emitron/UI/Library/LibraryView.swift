@@ -133,6 +133,7 @@ struct LibraryView: View {
       self.updateFilters()
     })
       .textFieldStyle(RoundedBorderTextFieldStyle())
+      .modifier(ClearButton(text: $searchText))
     
     return AnyView(searchField)
   }
@@ -166,6 +167,22 @@ struct LibraryView: View {
       return AnyView(Text("Default View"))
     }
   }
+}
+
+struct ClearButton: ViewModifier {
+    @Binding var text: String
+     
+    public func body(content: Content) -> some View {
+        HStack {
+            content
+            Button(action: {
+                self.text = ""
+            }) {
+                Image(systemName: "multiply.circle.fill")
+                    .foregroundColor(.secondary)
+            }
+        }
+    }
 }
 
 #if DEBUG
