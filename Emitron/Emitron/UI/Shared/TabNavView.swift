@@ -66,11 +66,11 @@ struct TabNavView: View {
   
   func libraryView() -> AnyView {
     let filters = DataManager.current.filters
-    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(filters))
+    return AnyView(LibraryView().environmentObject(filters))
   }
   
   func myTutorialsView() -> AnyView {
-    return AnyView(MyTutorialsView().environmentObject(contentsMC))
+    return AnyView(MyTutorialsView())
   }
 }
 

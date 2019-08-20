@@ -59,7 +59,7 @@ struct LibraryView: View {
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC).environmentObject(self.filters)
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.filters)
               }
           })
             .padding([.leading], .searchFilterPadding)
