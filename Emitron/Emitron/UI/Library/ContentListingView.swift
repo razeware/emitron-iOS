@@ -33,25 +33,20 @@ struct ContentListingView: View {
   @ObservedObject var contentDetailsMC: ContentDetailsMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
+  @Binding var imageLoaded: Bool
   
   var user: UserModel
-    
+  
   var body: some View {
     
     List {
       VStack {
-        
-        //TODO: This is probably not the correct image...
-        Image(uiImage: uiImage)
-          .resizable()
-          .frame(width: 375, height: 283)
-          .onAppear(perform: loadImage)
-          .transition(.opacity)
-        
+  
+        loadImage()
         ContentSummaryView(details: contentDetailsMC.data)
       }
-        .frame(maxWidth: UIScreen.main.bounds.width)
-        .background(Color.white)
+      .frame(maxWidth: UIScreen.main.bounds.width)
+      .background(Color.white)
       
       if contentDetailsMC.data.contentType == .collection {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
@@ -71,8 +66,8 @@ struct ContentListingView: View {
                 TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
                   // Download
                 })
-                .onTapGesture {
-                  self.isPresented = true
+                  .onTapGesture {
+                    self.isPresented = true
                 }
                 .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
               }
@@ -94,22 +89,31 @@ struct ContentListingView: View {
     }
   }
   
-  private func loadImage() {
-      //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-      // is causing this file to not compile
-          
-      guard let url = contentDetailsMC.data.cardArtworkURL else {
-        return
-      }
-
+  private func loadImage() -> AnyView {
+    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+    // is causing this file to not compile
+    
+    //TODO: This is probably not the right way tohandle image change, only doing this because the .onAppear trigger doesn't work for modals...
+    let image = Image(uiImage: uiImage)
+      .resizable()
+      .frame(width: 375, height: 283)
+    
+    guard let url = contentDetailsMC.data.cardArtworkURL else {
+      return AnyView(image)
+    }
+    
+    if !imageLoaded {
       DispatchQueue.global().async {
-          let data = try? Data(contentsOf: url)
-          DispatchQueue.main.async {
-            if let data = data,
-              let img = UIImage(data: data) {
-              self.uiImage = img
-            }
+        let data = try? Data(contentsOf: url)
+        DispatchQueue.main.async {
+          if let data = data,
+            let img = UIImage(data: data) {
+            self.uiImage = img
+            self.imageLoaded.toggle()
           }
+        }
       }
     }
+    return AnyView(image)
+  }
 }

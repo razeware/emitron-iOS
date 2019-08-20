@@ -39,11 +39,12 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentDetailsMC?
   @EnvironmentObject var contentsMC: ContentsMC
+  @State var imageLoaded: Bool = false
   
   var body: some View {
     //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
     // because apparently using a List causes a crash...  in the tab bar navigation...
-    cardsScrollView()
+    cardsTableView()
   }
   
   private func cardsScrollView() -> AnyView {
@@ -57,6 +58,7 @@ struct ContentListView: View {
         .listRowBackground(self.bgColor)
         .background(self.bgColor)
         .onTapGesture {
+          self.imageLoaded = false
           self.isPresenting = true
           self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
         }
@@ -68,7 +70,7 @@ struct ContentListView: View {
     }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
-          ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!))
+          ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, imageLoaded: self.$imageLoaded, user: user!))
           : AnyView(Text("Unable to show video..."))
       }
       .padding([.leading, .trailing], Layout.sidePadding)
@@ -99,7 +101,7 @@ struct ContentListView: View {
     }
         .sheet(isPresented: self.$isPresenting) {
           user != nil
-            ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!))
+            ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, imageLoaded: self.$imageLoaded, user: user!))
             : AnyView(Text("Unable to show video..."))
         }
     

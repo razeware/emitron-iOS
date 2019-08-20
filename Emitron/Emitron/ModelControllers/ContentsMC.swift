@@ -134,6 +134,9 @@ class ContentsMC: NSObject, ObservableObject {
       return
     }
     
+    // Reset current page to 1
+    currentPage = startingPage
+    
     contentsService.allContents(parameters: currentParameters) { [weak self] result in
       
       guard let self = self else {

@@ -69,13 +69,15 @@ struct FiltersView: View {
       HStack {
         
         MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
-          print("Clear all!")
+          self.isPresented = false
+          self.filters.removeAll()
+          self.contentsMC.updateFilters(newFilters: self.filters)
         }
         .padding([.trailing], 10)
         
         // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
         // Which ones are currently being applied to the content listing
-        MainButtonView(title: contentsMC.filters.appliedFilters == filters.appliedFilters ? "Close" : "Apply", type: .primary(withArrow: false)) {
+        MainButtonView(title: Set(contentsMC.currentParameters).intersection(Set(filters.appliedParameters)) == Set(filters.appliedParameters) ? "Close" : "Apply", type: .primary(withArrow: false)) {
           self.isPresented = false
           self.contentsMC.updateFilters(newFilters: self.filters)
         }
@@ -98,7 +100,7 @@ struct FiltersView: View {
   }
   
   func constructFilterView(filterGroup: FilterGroup) -> AnyView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup).environmentObject(filters)
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup)
     return AnyView(filtersView)
   }
 }
