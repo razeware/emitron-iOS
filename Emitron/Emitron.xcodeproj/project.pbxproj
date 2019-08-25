@@ -21,8 +21,9 @@
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
 		B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653C23094E3100A3FF44 /* ProgressionsMC.swift */; };
 		B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653E230953EF00A3FF44 /* BookmarksMC.swift */; };
-		B59565422312DD4B00A3FF44 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59565342306D86A00A3FF44 /* ProgressBarView.swift */; };
 		B5956541230A88E100A3FF44 /* SettingsOptionsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5956540230A88E100A3FF44 /* SettingsOptionsView.swift */; };
+		B59565422312DD4B00A3FF44 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B59565342306D86A00A3FF44 /* ProgressBarView.swift */; };
+		B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595654323130E4C00A3FF44 /* CustomToggleView.swift */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7BD23000ABD00F36B32 /* CardView.swift */; };
 		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
@@ -146,6 +147,7 @@
 		B595653C23094E3100A3FF44 /* ProgressionsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsMC.swift; sourceTree = "<group>"; };
 		B595653E230953EF00A3FF44 /* BookmarksMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksMC.swift; sourceTree = "<group>"; };
 		B5956540230A88E100A3FF44 /* SettingsOptionsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsOptionsView.swift; sourceTree = "<group>"; };
+		B595654323130E4C00A3FF44 /* CustomToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToggleView.swift; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B60FF7BD23000ABD00F36B32 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
@@ -619,6 +621,7 @@
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
 				B59565342306D86A00A3FF44 /* ProgressBarView.swift */,
+				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -859,6 +862,7 @@
 				B6DF2F9822CA051B0081A3A3 /* BookmarkModel.swift in Sources */,
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
+				B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */,
 				95A4513622E224B500D24E56 /* VideosMC.swift in Sources */,
 				95BAF69A22EF612100D17323 /* Domain.swift in Sources */,
 				95CD793622F0B6980080C407 /* Bookmark.swift in Sources */,

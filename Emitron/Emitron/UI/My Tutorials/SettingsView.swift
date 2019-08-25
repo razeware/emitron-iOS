@@ -53,6 +53,7 @@ enum SettingsOption: Identifiable {
     switch self {
       case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
       case .downloads: return ["Yes", "No"]
+      // The number of rows needs to be the same, so added "" as a hack...
       case .downloadsQuality: return ["HD", "SD", ""]
       case .subtitles: return ["Yes", "No"]
     }
@@ -72,16 +73,12 @@ struct SettingsView: View {
   
   @Binding var isPresented: Bool
   @State private var settingsOptionsPresented: Bool = false
-  @State var selectedOption: SettingsOption = .videoPlaybackSpeed
+  @State var selectedOption: SettingsOption?
   
   var body: some View {
-    
     GeometryReader { geometry in
-      
       VStack {
-        
         HStack() {
-          
           Rectangle()
             .frame(width: 27, height: 27, alignment: .center)
             .foregroundColor(.clear)
@@ -89,7 +86,7 @@ struct SettingsView: View {
           
           Spacer()
           
-          Text("Settings")
+          Text(Constants.settings)
             .font(.uiHeadline)
             .foregroundColor(.appBlack)
             .padding([.top], 20)
@@ -115,35 +112,25 @@ struct SettingsView: View {
               // Only navigate to SettingsOptionsView if view isn't a toggle 
               if !self.rows[index].isToggle {
                 self.settingsOptionsPresented.toggle()
+              } else {
+                // Update user defaults for toggle 
+                let previousState = self.setToggleState(at: index)
+                UserDefaults.standard.set(!previousState,
+                                          forKey: self.rows[index].title)
               }
               
-            }, title: self.rows[index].title, detail: self.rows[index].detail.first!, isToggle: self.rows[index].isToggle, showCarrot: true)
-            .frame(height: 46)
-            .sheet(isPresented: self.$settingsOptionsPresented) {
-              SettingsOptionsView(isPresented: self.$settingsOptionsPresented, selectedSettingsOption: self.selectedOption)
+            }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), showCarrot: true)
+              .frame(height: 46)
+              .sheet(isPresented: self.$settingsOptionsPresented) {
+                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.selectedOption ?? .videoPlaybackSpeed)
             }
           }
-          
-          
-          
-          // TODO get detail from user defaults if exist
-//          ForEach(self.rows, id: \.id) { row in
-//            TitleDetailView(callback: {
-//              self.settingsOptionsPresented.toggle()
-//            }, title: row.title, detail: row.detail.last!, isToggle: row.isToggle)
-//              .frame(height: 46)
-//              .sheet(isPresented: self.$settingsOptionsPresented) {
-//                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, selectedSettingsOption: row)
-//              }
-//          }
         }
         
         Spacer()
         
         Button(action: {
-          
-          print("SIGN OUT")
-          
+          Guardpost.current.logout()
         }) {
           
           HStack {
@@ -158,7 +145,7 @@ struct SettingsView: View {
               .font(.uiButtonLabel)
               .background(Color.copper)
               .foregroundColor(.white)
-              
+            
             Spacer()
             
             Image("arrowRed")
@@ -173,7 +160,6 @@ struct SettingsView: View {
           .padding([.leading, .trailing], 18)
           .frame(height: 46)
         }
-          
         .padding(.bottom, 42)
         .frame(width: geometry.size.width - (2 * 18), height: 46, alignment: .center)
         .padding([.leading, .trailing], 18)
@@ -183,5 +169,22 @@ struct SettingsView: View {
       .background(Color.paleGrey)
       .padding([.top], 20)
     }
+  }
+  
+  private func populateDetail(at index: Int) -> String {
+    guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].title) as? String else {
+      if let detail = self.rows[index].detail.first {
+        return detail
+      } else {
+        return ""
+      }
+    }
+    
+    return selectedDetail
+  }
+  
+  private func setToggleState(at index: Int) -> Bool {
+    guard let toggleIsOn = UserDefaults.standard.object(forKey: rows[index].title) as? Bool else { return false }
+    return toggleIsOn
   }
 }

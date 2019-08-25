@@ -28,62 +28,49 @@
 
 import SwiftUI
 
-struct SettingsOptionsView: View {
+struct CustomToggle: UIViewRepresentable {
   
-  @Binding var isPresented: Bool
   var isOn: Bool
-  var selectedSettingsOption: SettingsOption
+  var callback: (()->())?
   
-  var body: some View {
+  func makeUIView(context: Context) -> UISwitch {
+    let uiView = UISwitch()
+    uiView.addTarget(
+        context.coordinator,
+        action: #selector(Coordinator.didChange(sender:)),
+        for: .valueChanged)
+
+    return uiView
+  }
+
+  func updateUIView(_ uiView: UISwitch, context: Context) {
+    // This is appGreen
+    uiView.onTintColor = UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1)
+    uiView.isOn = isOn
+  }
+  
+  func makeCoordinator() -> CustomToggle.Coordinator {
+      return Coordinator(self)
+  }
+  
+  class Coordinator: NSObject {
+    var control: CustomToggle
     
-    GeometryReader { geometry in
-      
-      VStack {
-        
-        HStack() {
-
-          Rectangle()
-            .frame(width: 27, height: 27, alignment: .center)
-            .foregroundColor(.clear)
-            .padding([.leading], 18)
-
-          Spacer()
-
-          Text(self.selectedSettingsOption.title)
-            .font(.uiHeadline)
-            .foregroundColor(.appBlack)
-            .padding([.top], 20)
-
-          Spacer()
-
-          Button(action: {
-            self.isPresented = false
-          }) {
-            Image("close")
-              .frame(width: 27, height: 27, alignment: .center)
-              .padding(.trailing, 18)
-              .padding([.top], 20)
-              .foregroundColor(.battleshipGrey)
-          }
-        }
-        
-        VStack {
-          ForEach(0..<self.selectedSettingsOption.detail.count) { index in
-            TitleDetailView(callback: {
-              // Update user defaults
-              UserDefaults.standard.set(self.selectedSettingsOption.detail[index],
-                                        forKey: self.selectedSettingsOption.title)
-              self.isPresented = false
-            }, title: self.selectedSettingsOption.detail[index], detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, showCarrot: false)
-            .frame(height: 46)
-          }
-        }
-        .padding([.leading, .trailing], 18)
-        
-      }
-      .frame(width: geometry.size.width, height: geometry.size.height,alignment: .top)
-      .background(Color.paleGrey)
-      .padding([.top], 20)
+    init(_ control: CustomToggle) {
+      self.control = control
     }
+    
+    @objc func didChange(sender: UISwitch) {
+      control.isOn = sender.isOn
+      control.callback?()
+    }
+  }
+}
+
+struct CustomToggleView: View {
+  var isOn: Bool
+  var callback: (()->())?
+  var body: some View {
+    CustomToggle(isOn: isOn, callback: callback)
   }
 }

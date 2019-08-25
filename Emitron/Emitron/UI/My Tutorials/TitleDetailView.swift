@@ -39,6 +39,7 @@ struct TitleDetailView: View {
   var title: String
   var detail: String?
   var isToggle: Bool
+  var isOn: Bool
   var showCarrot: Bool
   var body: some View {
     self.contentView()
@@ -62,7 +63,7 @@ struct TitleDetailView: View {
             
             Spacer()
             
-            self.detailOrToggleView()
+            self.textOrToggleView()
             
             if self.showCarrot && !self.isToggle {
                 Image("carrotRight")
@@ -85,7 +86,7 @@ struct TitleDetailView: View {
     return AnyView(view)
   }
   
-  private func detailOrToggleView() -> AnyView? {
+  private func textOrToggleView() -> AnyView? {
     if let detail = detail, !isToggle {
       let textView = Text(detail)
         .foregroundColor(.appBlack)
@@ -96,7 +97,9 @@ struct TitleDetailView: View {
       return AnyView(textView)
 
     } else if self.isToggle {
-      let toggle = ToggleView()
+      let toggle = CustomToggleView(isOn: self.isOn) {
+        self.callback?()
+      }
       .padding([.trailing], Layout.padding)
       return AnyView(toggle)
     }
@@ -108,30 +111,7 @@ struct TitleDetailView: View {
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, showCarrot: true)
+    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, isOn: false, showCarrot: true)
   }
 }
 #endif
-
-
-// TODO move this
-struct CustomToggle : UIViewRepresentable {
-  
-  func makeUIView(context: Context) -> UISwitch {
-    UISwitch()
-  }
-
-  func updateUIView(_ uiView: UISwitch, context: Context) {
-    // This is appGreen
-    uiView.onTintColor = UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1)
-    
-    // TODO pull from userDefaults
-    uiView.isOn = true
-  }
-}
-
-struct ToggleView : View {
-  var body: some View {
-    CustomToggle()
-  }
-}

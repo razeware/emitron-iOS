@@ -39,6 +39,7 @@ enum Constants {
   static let newest =  "Newest"
   static let popularity = "Popularity"
   static let tutorials = "Tutorials"
+  static let settings = "Settings"
   
   // Onboarding
   static let login = "Login"
@@ -46,4 +47,6 @@ enum Constants {
   // Other
   static let today = "Today"
   static let by = "By"
+  static let yes = "Yes"
+  static let no = "No"
 }
