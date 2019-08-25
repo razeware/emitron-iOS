@@ -35,9 +35,9 @@ private struct Layout {
 struct ContentListView: View {
   
   @State var isPresenting: Bool = false
-  var contents: [ContentDetailModel] = []
+  var contents: [ContentSummaryModel] = []
   var bgColor: Color
-  @State var selectedMC: ContentDetailsMC?
+  @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
@@ -58,7 +58,7 @@ struct ContentListView: View {
         .background(self.bgColor)
         .onTapGesture {
           self.isPresenting = true
-          self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
+          self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
         }
       }
       Text("Should load more stuff...")
@@ -68,7 +68,7 @@ struct ContentListView: View {
     }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
-          ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!))
+          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
           : AnyView(Text("Unable to show video..."))
       }
       .padding([.leading, .trailing], Layout.sidePadding)
@@ -87,7 +87,7 @@ struct ContentListView: View {
           .background(self.bgColor)
           .onTapGesture {
             self.isPresenting = true
-            self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
+            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
           }
       }
       Text("Should load more stuff...")
@@ -97,7 +97,7 @@ struct ContentListView: View {
     }
         .sheet(isPresented: self.$isPresenting) {
           user != nil
-            ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, user: user!))
+            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
             : AnyView(Text("Unable to show video..."))
         }
     

@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentDetailsMC: NSObject, ObservableObject {  
+class ContentSummaryMC: NSObject, ObservableObject {
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -43,11 +43,11 @@ class ContentDetailsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: ContentDetailModel
+  private(set) var data: ContentSummaryModel
   
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentDetailModel) {
+       partialContentDetail: ContentSummaryModel) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
@@ -66,7 +66,7 @@ class ContentDetailsMC: NSObject, ObservableObject {
     
     state = .loading
     
-    contentsService.contentDetail(for: data.id) { [weak self] result in
+    contentsService.contentSummary(for: data.id) { [weak self] result in
       
       guard let self = self else {
         return
@@ -76,7 +76,7 @@ class ContentDetailsMC: NSObject, ObservableObject {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
+          .fetch(from: "ContentSummaryMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
