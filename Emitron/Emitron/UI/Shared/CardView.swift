@@ -51,8 +51,11 @@ struct CardViewModel: Hashable {
 
 // Transform data
 extension CardViewModel {
-  static func transform(_ content: ContentDetailModel, cardViewType: CardViewType) -> CardViewModel? {
-    let subtitle = content.domains.map { $0.name }.joined(separator: ", ")
+  static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
+    let domainData = DataManager.current.domainsMC.data
+    let ids = content.domainIDs
+    let contentDomains = domainData.filter { ids.contains($0.id) }
+    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -173,7 +176,7 @@ struct CardView: View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
-    let cardModel = CardViewModel.transform(ContentDetailModel.test, cardViewType: .default)!
+    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
     return CardView(model: cardModel)
   }
 }

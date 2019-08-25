@@ -30,7 +30,7 @@ import SwiftUI
 
 struct ContentListingView: View {
   
-  @ObservedObject var contentDetailsMC: ContentDetailsMC
+  @ObservedObject var contentSummaryMC: ContentSummaryMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   
@@ -41,19 +41,19 @@ struct ContentListingView: View {
     List {
       VStack {
         
-        //TODO: This is probably not the correct image...
+        // TODO: This is probably not the correct image...
         Image(uiImage: uiImage)
           .resizable()
           .frame(width: 375, height: 283)
           .onAppear(perform: loadImage)
           .transition(.opacity)
-        
-        ContentSummaryView(details: contentDetailsMC.data)
+
+        ContentSummaryView(details: contentSummaryMC.data)
       }
         .frame(maxWidth: UIScreen.main.bounds.width)
         .background(Color.white)
       
-      if contentDetailsMC.data.contentType == .collection {
+      if contentSummaryMC.data.contentType == .collection {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         
         VStack {
@@ -61,36 +61,37 @@ struct ContentListingView: View {
             .font(.uiTitle2)
             .padding([.top], -5)
           
-          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
-            Section(header:
-              CourseHeaderView(name: group.name, color: .white)
-                .background(Color.white)
-            ) {
-              ForEach(group.childContents, id: \.id) { summary in
-                
-                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
-                  // Download
-                })
-                .onTapGesture {
-                  self.isPresented = true
-                }
-                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
-              }
-            }
-          }
+          // TODO: Ask Lea & Sam about this... 
+//          ForEach(contentSummaryMC.data.groups, id: \.id) { group in
+//            Section(header:
+//              CourseHeaderView(name: group.name, color: .white)
+//                .background(Color.white)
+//            ) {
+//              ForEach(group.childContents, id: \.id) { summary in
+//
+//                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
+//                  // Download
+//                })
+//                .onTapGesture {
+//                  self.isPresented = true
+//                }
+//                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
+//              }
+//            }
+//          }
         }
       } else {
         Button(action: {
           self.isPresented = true
         }) {
           Text("Play Video!")
-            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentDetailsMC.data.videoID, user: self.user) }
+            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID, user: self.user) }
         }
       }
     }
     .onAppear {
       //TODO: Kind of hack to force data-reload while this modal-presentation with List issue goes on
-      self.contentDetailsMC.getContentDetails()
+      self.contentSummaryMC.getContentDetails()
     }
   }
   
@@ -98,7 +99,7 @@ struct ContentListingView: View {
       //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
       // is causing this file to not compile
           
-      guard let url = contentDetailsMC.data.cardArtworkURL else {
+      guard let url = contentSummaryMC.data.cardArtworkURL else {
         return
       }
 

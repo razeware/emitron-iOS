@@ -39,6 +39,8 @@ enum MyTutorialsState: String {
 struct MyTutorialsView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var progressionsMC: ProgressionsMC
+  @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
   
@@ -91,43 +93,50 @@ struct MyTutorialsView: View {
   }
   
   private func contentView() -> AnyView {
-    switch contentsMC.state {
-    case .initial,
-         .loading where contentsMC.data.isEmpty:
-      return AnyView(Text(Constants.loading))
-    case .failed:
-      return AnyView(Text("Error"))
-    case .hasData,
-         .loading where !contentsMC.data.isEmpty:
-
-      let allData = contentsMC.data
-      let dataToDisplay: [ContentDetailModel]
-      
-      switch state {
-      case .inProgress:
-        let inProgressData = allData.filter { model -> Bool in
-          guard let progression = model.progression else {
-            return false
-          }
-          
-          return progression.percentComplete > 0 && !progression.finished
+    let dataToDisplay: [ContentSummaryModel]
+    
+    switch state {
+    case .inProgress, .completed:
+      switch progressionsMC.state {
+      case .initial,
+           .loading where progressionsMC.data.isEmpty:
+        return AnyView(Text(Constants.loading))
+      case .failed:
+        return AnyView(Text("Error"))
+      case .hasData,
+           .loading where !progressionsMC.data.isEmpty:
+        if state == .inProgress {
+          let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
+          let contents = inProgressData.compactMap { $0.content }
+          dataToDisplay = contents
+        } else {
+          let completedData = progressionsMC.data.filter { $0.finished == true }
+          let contents = completedData.compactMap { $0.content }
+          dataToDisplay = contents
         }
         
-        dataToDisplay = inProgressData
-      
-      case .completed:
-        let completedData = allData.filter { $0.progression?.finished == true }
-        dataToDisplay = completedData
-        
-      case .bookmarked:
-        let bookmarkedData = allData.filter { $0.bookmark != nil }
-        dataToDisplay = bookmarkedData
+      default:
+        return AnyView(Text("Default View"))
       }
       
-      return AnyView(ContentListView(contents: dataToDisplay, bgColor: .paleGrey))
-    default:
-      return AnyView(Text("Default View"))
+    case .bookmarked:
+      switch bookmarksMC.state {
+      case .initial,
+           .loading where bookmarksMC.data.isEmpty:
+        return AnyView(Text(Constants.loading))
+      case .failed:
+        return AnyView(Text("Error"))
+      case .hasData,
+           .loading where !bookmarksMC.data.isEmpty:
+        let content = bookmarksMC.data.compactMap { $0.content }
+        dataToDisplay = content
+        
+      default:
+        return AnyView(Text("Default View"))
+      }
     }
+    
+    return AnyView(ContentListView(contents: dataToDisplay, bgColor: .paleGrey))
   }
 }
 
@@ -135,7 +144,9 @@ struct MyTutorialsView: View {
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
     let contentsMC = DataManager.current.contentsMC
-    return MyTutorialsView().environmentObject(contentsMC)
+    let progressionsMC = DataManager.current.progressionsMC
+    let bookmarksMC = DataManager.current.bookmarksMC
+    return MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
 }
 #endif
