@@ -35,41 +35,41 @@ private enum Layout {
 
 struct TitleDetailView: View {
   
-  var callback: ((SettingsOptions)->())?
-  var row: SettingsOptions
+  var callback: (()->())?
+  var title: String
+  var detail: String?
+  var isToggle: Bool
+  var showCarrot: Bool
   var body: some View {
+    self.contentView()
+  }
+  
+  private func contentView() -> AnyView? {
+    guard title != "" else { return nil }
     
-    GeometryReader { geometry in
+    let view = GeometryReader { geometry in
       Button(action: {
-        self.callback?(self.row)
+        self.callback?()
       }, label: {
         
         VStack {
           
           HStack {
-            Text(self.row.title)
+            Text(self.title)
               .foregroundColor(.appBlack)
               .font(.uiBodyAppleDefault)
               .padding([.leading,.trailing], Layout.padding)
             
             Spacer()
             
-            if self.row.isToggle {
-              ToggleView()
-                .padding([.trailing], Layout.padding)
-            } else {
-              // TODO fix this
-              Text(self.row.detail.first!)
-                .foregroundColor(.appBlack)
-                .font(.uiBodyAppleDefault)
-                .padding([.leading], Layout.padding)
-                .padding([.trailing], Layout.smallPadding)
-              
-              Image("carrotRight")
-                .resizable()
-                .frame(maxWidth: 13, maxHeight: 13)
-                .padding([.trailing], Layout.padding)
-                .foregroundColor(.coolGrey)
+            self.detailOrToggleView()
+            
+            if self.showCarrot && !self.isToggle {
+                Image("carrotRight")
+                    .resizable()
+                    .frame(maxWidth: 13, maxHeight: 13)
+                    .padding([.trailing], Layout.padding)
+                    .foregroundColor(.coolGrey)
             }
           }
           
@@ -81,13 +81,34 @@ struct TitleDetailView: View {
       })
       .background(Color.paleGrey)
     }
+    
+    return AnyView(view)
+  }
+  
+  private func detailOrToggleView() -> AnyView? {
+    if let detail = detail, !isToggle {
+      let textView = Text(detail)
+        .foregroundColor(.appBlack)
+        .font(.uiBodyAppleDefault)
+        .padding([.leading], Layout.padding)
+        .padding([.trailing], Layout.smallPadding)
+      
+      return AnyView(textView)
+
+    } else if self.isToggle {
+      let toggle = ToggleView()
+      .padding([.trailing], Layout.padding)
+      return AnyView(toggle)
+    }
+    
+    return nil
   }
 }
 
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    TitleDetailView(callback: nil, row: .videoPlaybackSpeed)
+    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, showCarrot: true)
   }
 }
 #endif

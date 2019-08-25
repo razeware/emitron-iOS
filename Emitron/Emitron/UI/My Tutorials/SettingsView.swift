@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-enum SettingsOptions: Identifiable {
+enum SettingsOption: Identifiable {
   case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
   
   var id: Int {
@@ -53,7 +53,7 @@ enum SettingsOptions: Identifiable {
     switch self {
       case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
       case .downloads: return ["Yes", "No"]
-      case .downloadsQuality: return ["HD", "SD"]
+      case .downloadsQuality: return ["HD", "SD", ""]
       case .subtitles: return ["Yes", "No"]
     }
   }
@@ -68,9 +68,11 @@ enum SettingsOptions: Identifiable {
 
 struct SettingsView: View {
   
-  var rows: [SettingsOptions] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
+  var rows: [SettingsOption] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
   
   @Binding var isPresented: Bool
+  @State private var settingsOptionsPresented: Bool = false
+  @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   
   var body: some View {
     
@@ -106,14 +108,34 @@ struct SettingsView: View {
         }
         
         VStack {
-          ForEach(self.rows, id: \.id) { row in
-            TitleDetailView(callback: { row in
+          ForEach(0..<self.rows.count) { index in
+            TitleDetailView(callback: {
+              self.selectedOption = self.rows[index]
               
-              print("SHOW VIEW")
+              // Only navigate to SettingsOptionsView if view isn't a toggle 
+              if !self.rows[index].isToggle {
+                self.settingsOptionsPresented.toggle()
+              }
               
-            }, row: row)
-              .frame(height: 46)
+            }, title: self.rows[index].title, detail: self.rows[index].detail.first!, isToggle: self.rows[index].isToggle, showCarrot: true)
+            .frame(height: 46)
+            .sheet(isPresented: self.$settingsOptionsPresented) {
+              SettingsOptionsView(isPresented: self.$settingsOptionsPresented, selectedSettingsOption: self.selectedOption)
+            }
           }
+          
+          
+          
+          // TODO get detail from user defaults if exist
+//          ForEach(self.rows, id: \.id) { row in
+//            TitleDetailView(callback: {
+//              self.settingsOptionsPresented.toggle()
+//            }, title: row.title, detail: row.detail.last!, isToggle: row.isToggle)
+//              .frame(height: 46)
+//              .sheet(isPresented: self.$settingsOptionsPresented) {
+//                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, selectedSettingsOption: row)
+//              }
+//          }
         }
         
         Spacer()
