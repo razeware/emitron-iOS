@@ -44,7 +44,9 @@ struct TitleDetailView: View {
   var body: some View {
     GeometryReader { geometry in
       Button(action: {
-        self.callback?()
+        if !self.isToggle {
+          self.callback?()
+        }
       }, label: {
         
         VStack {
