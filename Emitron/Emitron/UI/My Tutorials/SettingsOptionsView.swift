@@ -37,11 +37,8 @@ struct SettingsOptionsView: View {
   var body: some View {
     
     GeometryReader { geometry in
-      
       VStack {
-        
         HStack() {
-
           Rectangle()
             .frame(width: 27, height: 27, alignment: .center)
             .foregroundColor(.clear)

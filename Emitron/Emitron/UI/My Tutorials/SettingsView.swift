@@ -132,9 +132,7 @@ struct SettingsView: View {
         Button(action: {
           Guardpost.current.logout()
         }) {
-          
           HStack {
-            
             Rectangle()
               .frame(width: 24, height: 46, alignment: .center)
               .foregroundColor(Color.copper)
