@@ -49,20 +49,41 @@ enum SettingsOption: Identifiable {
     }
   }
   
-  var detail: [String] {
-    switch self {
-      case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
-      case .downloads: return ["Yes", "No"]
-      // The number of rows needs to be the same, so added "" as a hack...
-      case .downloadsQuality: return ["HD", "SD", ""]
-      case .subtitles: return ["Yes", "No"]
-    }
+  var detail: Detail {
+    return Detail(option: self)
   }
   
   var isToggle: Bool {
     switch self {
       case .downloads, .subtitles: return true
       default: return false
+    }
+  }
+  
+  // In order to iterate through detailOptions, this needs to be a class that conforms to identifiable
+  class Detail: Identifiable {
+    var option: SettingsOption
+    
+    var detailOptions: [String] {
+      switch option {
+        case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
+        case .downloads: return ["Yes", "No"]
+        case .downloadsQuality: return ["HD", "SD"]
+        case .subtitles: return ["Yes", "No"]
+      }
+    }
+    
+    var id: Int {
+      switch option {
+        case .videoPlaybackSpeed: return 1
+        case .downloads: return 2
+        case .downloadsQuality: return 3
+        case .subtitles: return 4
+      }
+    }
+    
+    init(option: SettingsOption) {
+      self.option = option
     }
   }
 }
@@ -73,7 +94,7 @@ struct SettingsView: View {
   
   @Binding var isPresented: Bool
   @State private var settingsOptionsPresented: Bool = false
-  @State var selectedOption: SettingsOption?
+  @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   
   var body: some View {
     GeometryReader { geometry in
@@ -122,7 +143,7 @@ struct SettingsView: View {
             }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), showCarrot: true)
               .frame(height: 46)
               .sheet(isPresented: self.$settingsOptionsPresented) {
-                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.selectedOption ?? .videoPlaybackSpeed)
+                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
             }
           }
         }
@@ -171,7 +192,7 @@ struct SettingsView: View {
   
   private func populateDetail(at index: Int) -> String {
     guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].title) as? String else {
-      if let detail = self.rows[index].detail.first {
+      if let detail = self.rows[index].detail.detailOptions.first {
         return detail
       } else {
         return ""

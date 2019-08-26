@@ -42,13 +42,7 @@ struct TitleDetailView: View {
   var isOn: Bool
   var showCarrot: Bool
   var body: some View {
-    self.contentView()
-  }
-  
-  private func contentView() -> AnyView? {
-    guard title != "" else { return nil }
-    
-    let view = GeometryReader { geometry in
+    GeometryReader { geometry in
       Button(action: {
         self.callback?()
       }, label: {
@@ -82,8 +76,6 @@ struct TitleDetailView: View {
       })
       .background(Color.paleGrey)
     }
-    
-    return AnyView(view)
   }
   
   private func textOrToggleView() -> AnyView? {

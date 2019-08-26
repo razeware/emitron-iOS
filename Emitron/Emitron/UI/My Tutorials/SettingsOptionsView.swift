@@ -32,7 +32,7 @@ struct SettingsOptionsView: View {
   
   @Binding var isPresented: Bool
   var isOn: Bool
-  var selectedSettingsOption: SettingsOption
+  @Binding var selectedSettingsOption: SettingsOption
   
   var body: some View {
     
@@ -65,13 +65,13 @@ struct SettingsOptionsView: View {
         }
         
         VStack {
-          ForEach(0..<self.selectedSettingsOption.detail.count) { index in
+          ForEach(self.selectedSettingsOption.detail.detailOptions, id: \.self) { detail in
             TitleDetailView(callback: {
               // Update user defaults
-              UserDefaults.standard.set(self.selectedSettingsOption.detail[index],
+              UserDefaults.standard.set(detail,
                                         forKey: self.selectedSettingsOption.title)
               self.isPresented = false
-            }, title: self.selectedSettingsOption.detail[index], detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, showCarrot: false)
+            }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, showCarrot: false)
             .frame(height: 46)
           }
         }
