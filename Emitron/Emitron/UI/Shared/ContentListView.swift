@@ -30,49 +30,20 @@ import SwiftUI
 
 private struct Layout {
   static let sidePadding: CGFloat = 18
+  static let heightDivisor: CGFloat = 3
 }
 
 struct ContentListView: View {
   
   @State var isPresenting: Bool = false
-  var contents: [ContentSummaryModel] = []
+  @State var contents: [ContentSummaryModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
+  var callback: (()->())?
   
   var body: some View {
-    //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
-    // because apparently using a List causes a crash...  in the tab bar navigation...
-    cardsScrollView()
-  }
-  
-  private func cardsScrollView() -> AnyView {
-    let guardpost = Guardpost.current
-    let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    
-    let scrollView = ScrollView(.vertical, showsIndicators: false) {
-      ForEach(contents, id: \.id) { partialContent in
-        CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
-        .listRowBackground(self.bgColor)
-        .background(self.bgColor)
-        .onTapGesture {
-          self.isPresenting = true
-          self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-        }
-      }
-      Text("Should load more stuff...")
-      // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-      // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-      .onAppear { self.loadMoreContents() }
-    }
-      .sheet(isPresented: self.$isPresenting) {
-        user != nil
-          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
-          : AnyView(Text("Unable to show video..."))
-      }
-      .padding([.leading, .trailing], Layout.sidePadding)
-    return AnyView(scrollView)
+    cardsTableView()
   }
   
   private func cardsTableView() -> AnyView {
@@ -80,26 +51,31 @@ struct ContentListView: View {
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
-    let list = List {
-      ForEach(contents, id: \.id) { partialContent in
-        CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
-          .listRowBackground(self.bgColor)
-          .background(self.bgColor)
-          .onTapGesture {
-            self.isPresenting = true
-            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
+    let list = GeometryReader {  geometry in
+      List {
+        ForEach(self.contents, id: \.id) { partialContent in
+          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+            .listRowBackground(self.bgColor)
+            .background(self.bgColor)
+            .onTapGesture {
+              self.isPresenting = true
+              self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
           }
-      }
-      Text("Should load more stuff...")
-        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-        .onAppear { self.loadMoreContents() }
-    }
-        .sheet(isPresented: self.$isPresenting) {
-          user != nil
-            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
-            : AnyView(Text("Unable to show video..."))
         }
+        .onDelete(perform: self.delete)
+        .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
+        
+        Text("Should load more stuff...")
+          // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+          // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+          .onAppear { self.loadMoreContents() }
+      }
+      .sheet(isPresented: self.$isPresenting) {
+        user != nil
+          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
+          : AnyView(Text("Unable to show video..."))
+      }
+    }
     
     return AnyView(list)
   }
@@ -107,6 +83,11 @@ struct ContentListView: View {
   func loadMoreContents() {
     //TODO: Load more contents
     // contentsMC.loadContents()
+  }
+  
+  func delete(at offsets: IndexSet) {
+    contents.remove(atOffsets: offsets)
+    callback?()
   }
 }
 

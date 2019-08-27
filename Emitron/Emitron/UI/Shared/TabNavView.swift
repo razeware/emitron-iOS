@@ -42,15 +42,12 @@ struct TabNavView: View {
         }
         .tag(0)
 
-      DownloadsView()
+      downloadsView()
         .tabItem {
           Text(Constants.downloads)
           Image("downloadInactive")
         }
         .tag(1)
-        .onTapGesture {
-          print("Tapped Downloads")
-        }
 
       myTutorialsView()
         .tabItem {
@@ -76,6 +73,12 @@ struct TabNavView: View {
     let bookmarksMC = DataManager.current.bookmarksMC
     
     return AnyView(MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC))
+  }
+  
+  func downloadsView() -> AnyView {
+    let contentsMC = DataManager.current.contentsMC
+    
+    return AnyView(DownloadsView().environmentObject(contentsMC))
   }
 }
 

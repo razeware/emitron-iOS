@@ -28,16 +28,59 @@
 
 import SwiftUI
 
+private extension CGFloat {
+  static let sidePadding: CGFloat = 18
+}
+
 struct DownloadsView: View {
+  @EnvironmentObject var contentsMC: ContentsMC
+  
   var body: some View {
-    Text("My Downloads!")
+    VStack {
+      HStack {
+        Text(Constants.downloads)
+          .multilineTextAlignment(.leading)
+          .font(.uiLargeTitle)
+          .foregroundColor(.appBlack)
+          .padding([.top, .leading], .sidePadding)
+        
+        Spacer()
+      }
+      
+      contentView()
+        .padding([.top], .sidePadding)
+        .background(Color.paleGrey)
+      
+    }
+    .background(Color.paleGrey)
+  }
+  
+  private func contentView() -> AnyView {
+    switch contentsMC.state {
+    case .initial,
+         .loading where contentsMC.data.isEmpty:
+      return AnyView(Text(Constants.loading))
+    case .failed:
+      return AnyView(Text("Error"))
+    case .hasData,
+         .loading where !contentsMC.data.isEmpty:
+      //      let sorted = sortSelection.sorted(data: contentsMC.data)
+      //      let parameters = filters.applied
+      //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
+      //
+      
+      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+    default:
+      return AnyView(Text("Default View"))
+    }
   }
 }
 
 #if DEBUG
 struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
-    DownloadsView()
+    let contentsMC = DataManager.current.contentsMC
+    return DownloadsView().environmentObject(contentsMC)
   }
 }
 #endif
