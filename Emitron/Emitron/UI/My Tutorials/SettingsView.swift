@@ -28,16 +28,11 @@
 
 import SwiftUI
 
-enum SettingsOption: Identifiable {
+enum SettingsOption: Int, Identifiable {
   case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
   
   var id: Int {
-    switch self {
-      case .videoPlaybackSpeed: return 1
-      case .downloads: return 2
-      case .downloadsQuality: return 3
-      case .subtitles: return 4
-    }
+    return self.rawValue
   }
   
   var title: String {
@@ -61,8 +56,8 @@ enum SettingsOption: Identifiable {
   }
   
   // In order to iterate through detailOptions, this needs to be a class that conforms to identifiable
-  class Detail: Identifiable {
-    var option: SettingsOption
+  struct Detail: Identifiable {
+    let option: SettingsOption
     
     var detailOptions: [String] {
       switch option {
@@ -74,16 +69,7 @@ enum SettingsOption: Identifiable {
     }
     
     var id: Int {
-      switch option {
-        case .videoPlaybackSpeed: return 1
-        case .downloads: return 2
-        case .downloadsQuality: return 3
-        case .subtitles: return 4
-      }
-    }
-    
-    init(option: SettingsOption) {
-      self.option = option
+      return option.id
     }
   }
 }
