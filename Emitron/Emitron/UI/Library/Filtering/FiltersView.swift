@@ -77,17 +77,70 @@ struct FiltersView: View {
         
         // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
         // Which ones are currently being applied to the content listing
-        MainButtonView(title: Set(contentsMC.currentParameters).intersection(Set(filters.appliedParameters)) == Set(filters.appliedParameters) ? "Close" : "Apply", type: .primary(withArrow: false)) {
-          self.isPresented = false
-          self.contentsMC.updateFilters(newFilters: self.filters)
-        }
+        applyOrCloseButton()
+        emptyView()
       }
       .padding([.leading, .trailing], 18)
     }
     .background(Color.paleGrey)
   }
   
-  func constructScrollView() -> AnyView? {
+  @discardableResult
+  func measure<A>(name: String = "", _ block: () -> A) -> A {
+      let startTime = CACurrentMediaTime()
+      let result = block()
+      let timeElapsed = CACurrentMediaTime() - startTime
+      print("\(timeElapsed)")
+      return result
+  }
+  
+  func emptyView() -> AnyView {
+    
+    for _ in 0...100 {
+      measure {
+        textView()
+      }
+    }
+    
+    return AnyView(Text("Lalala"))
+  }
+  
+  
+  
+  private func textView() -> Text {
+    return Text("Lea")
+  }
+  
+  private func anyTextView() -> AnyView {
+    return AnyView(Text("Lea"))
+  }
+  
+  private func groupTextView() -> Group<Text> {
+    let group = Group { Text("Lea") }
+    return group
+  }
+  
+  private func someView() -> some View {
+    let group = Group { Text("Lea") }
+    return group
+  }
+  
+  // Is ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> actually more performance than AnyView?
+  private func constructScrollView() -> ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> {
+
+    let scrollView = ScrollView(.vertical, showsIndicators: false) {
+      VStack(alignment: .leading, spacing: 12) {
+        
+        ForEach(filters.filterGroups, id: \.self) { filterGroup in
+          self.constructFilterView(filterGroup: filterGroup)
+        }
+      }
+    }
+    return scrollView
+  }
+  
+  private func constructAnyScrollView() -> AnyView {
+    
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         
@@ -99,8 +152,21 @@ struct FiltersView: View {
     return AnyView(scrollView)
   }
   
-  func constructFilterView(filterGroup: FilterGroup) -> AnyView {
+  private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
     let filtersView = FiltersHeaderView(filterGroup: filterGroup)
-    return AnyView(filtersView)
+    return filtersView
+  }
+  
+  private func applyOrCloseButton() -> MainButtonView {
+    
+    let equalSets = Set(contentsMC.currentParameters) == Set(filters.appliedParameters)
+    let title = equalSets ? "Close" : "Apply"
+    
+    let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
+      self.isPresented = false
+      self.contentsMC.updateFilters(newFilters: self.filters)
+    }
+    
+    return buttonView
   }
 }
