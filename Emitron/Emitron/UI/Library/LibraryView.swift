@@ -133,7 +133,10 @@ struct LibraryView: View {
       self.updateFilters()
     })
       .textFieldStyle(RoundedBorderTextFieldStyle())
-      .modifier(ClearButton(text: $searchText))
+      .modifier(ClearButton(text: $searchText, action: {
+        UIApplication.shared.keyWindow?.endEditing(true)
+        self.updateFilters()
+      }))
     
     return AnyView(searchField)
   }
@@ -169,20 +172,25 @@ struct LibraryView: View {
   }
 }
 
+// Inspired by: https://forums.developer.apple.com/thread/121162
 struct ClearButton: ViewModifier {
-    @Binding var text: String
-     
-    public func body(content: Content) -> some View {
-        HStack {
-            content
-            Button(action: {
-                self.text = ""
-            }) {
-                Image(systemName: "multiply.circle.fill")
-                    .foregroundColor(.secondary) 
-            }
-        }
+  @Binding var text: String
+  var action: () -> Void
+  
+  public func body(content: Content) -> some View {
+    HStack {
+      content
+      Button(action: {
+        self.text = ""
+        self.action()
+      }) {
+        Image(systemName: "multiply.circle.fill")
+          // If we don't enforce a frame, the button doesn't register the tap action
+          .frame(width: 25, height: 25, alignment: .center)
+          .foregroundColor(.secondary)
+      }
     }
+  }
 }
 
 #if DEBUG
