@@ -227,11 +227,10 @@ class Filters: ObservableObject {
   
   func removeAll() {
     appliedFilters.forEach {
-      var filter = $0 // Creating an intermediary var, because we can't mutate $0 (immutable)
-      filter.toggle(to: false)
-      filters.remove($0)
-      filters.update(with: filter)
+      $0.isOn = false
+      filters.update(with: $0)
     }
+    commitUpdates()
   }
   
   func changeSortFilter() {

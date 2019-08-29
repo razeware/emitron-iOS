@@ -28,8 +28,12 @@
 
 import Foundation
 
-struct Filter: Hashable, Codable {
-
+class Filter: NSObject, Codable {
+  
+  static func == (lhs: Filter, rhs: Filter) -> Bool {
+    return lhs.filterName == rhs.filterName
+  }
+  
   // MARK: - Properties
   var parameter: Parameter
   var isOn: Bool
@@ -49,14 +53,6 @@ struct Filter: Hashable, Codable {
     self.groupType = groupType
     self.parameter = param
     self.isOn = isOn
-  }
-  
-  mutating func toggle(to: Bool? = nil) {
-    guard let on = to else {
-      isOn.toggle()
-      return
-    }
-    isOn = on
   }
 }
 

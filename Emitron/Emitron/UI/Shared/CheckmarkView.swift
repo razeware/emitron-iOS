@@ -42,10 +42,9 @@ struct CheckmarkView: View {
   var body: some View {
         
     Button(action: {
-      var newFilter = self.filter
-      newFilter.toggle()
-      
-      self.filters.filters.update(with: newFilter)
+      self.filter.isOn.toggle()
+      self.filters.filters.update(with: self.filter)
+      self.filters.commitUpdates()
     }) {
       // TODO: Not sure how best to handle assigning the "state" initially as on/off while also maintaining the @State object
       if filter.isOn {
