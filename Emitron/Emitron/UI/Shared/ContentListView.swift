@@ -35,9 +35,9 @@ private struct Layout {
 struct ContentListView: View {
   
   @State var isPresenting: Bool = false
-  var contents: [ContentDetailModel] = []
+  var contents: [ContentSummaryModel] = []
   var bgColor: Color
-  @State var selectedMC: ContentDetailsMC?
+  @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   @State var imageLoaded: Bool = false
   
@@ -48,6 +48,7 @@ struct ContentListView: View {
 //      cardTableViewWithNav()
 //    }
     cardsTableView()
+    // cardsScrollView()
   }
   
   private func cardsScrollView() -> AnyView {
@@ -63,7 +64,7 @@ struct ContentListView: View {
         .onTapGesture {
           self.imageLoaded = false
           self.isPresenting = true
-          self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
+          self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
         }
       }
       Text("Should load more stuff...")
@@ -73,7 +74,7 @@ struct ContentListView: View {
     }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
-          ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, imageLoaded: self.$imageLoaded, user: user!))
+          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
           : AnyView(Text("Unable to show video..."))
       }
       .padding([.leading, .trailing], Layout.sidePadding)
@@ -92,7 +93,7 @@ struct ContentListView: View {
           .background(self.bgColor)
           .onTapGesture {
             self.isPresenting = true
-            self.selectedMC = ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent)
+            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
           }
       }
       Text("Should load more stuff...")
@@ -104,36 +105,36 @@ struct ContentListView: View {
     }
         .sheet(isPresented: self.$isPresenting) {
           user != nil
-            ? AnyView(ContentListingView(contentDetailsMC: self.selectedMC!, imageLoaded: self.$imageLoaded, user: user!))
+            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
             : AnyView(Text("Unable to show video..."))
         }
     
     return AnyView(list)
   }
   
-  func cardTableViewWithNav() -> AnyView {
-    let guardpost = Guardpost.current
-    let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    
-    let list = List {
-      ForEach(contents, id: \.id) { partialContent in
-        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
-          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
-          .listRowBackground(self.bgColor)
-          .background(self.bgColor)
-        }
-      }
-      Text("Should load more stuff...")
-        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-        .onAppear {
-          self.loadMoreContents()
-        }
-    }
-    
-    return AnyView(list)
-  }
+//  func cardTableViewWithNav() -> AnyView {
+//    let guardpost = Guardpost.current
+//    let user = guardpost.currentUser
+//    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+//    
+//    let list = List {
+//      ForEach(contents, id: \.id) { partialContent in
+//        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
+//          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+//          .listRowBackground(self.bgColor)
+//          .background(self.bgColor)
+//        }
+//      }
+//      Text("Should load more stuff...")
+//        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+//        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+//        .onAppear {
+//          self.loadMoreContents()
+//        }
+//    }
+//    
+//    return AnyView(list)
+//  }
   
   func loadMoreContents() {
     //TODO: Load more contents

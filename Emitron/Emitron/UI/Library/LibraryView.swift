@@ -179,7 +179,7 @@ struct ClearButton: ViewModifier {
                 self.text = ""
             }) {
                 Image(systemName: "multiply.circle.fill")
-                    .foregroundColor(.secondary)
+                    .foregroundColor(.secondary) 
             }
         }
     }

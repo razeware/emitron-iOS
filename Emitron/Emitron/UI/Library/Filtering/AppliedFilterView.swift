@@ -73,8 +73,10 @@ struct AppliedFilterView: View {
     Button(action: {
       // If there's no filter passed through, it's a destructive one that should clear all, so we init a new Filters object
       if let filter = self.filter {
-        filter.isOn.toggle()
-        self.filters.filters.update(with: filter)
+        var newFilter = filter
+        newFilter.toggle()
+        self.filters.filters.remove(filter)
+        self.filters.filters.update(with: newFilter)
       } else {
         self.filters.removeAll()
       }

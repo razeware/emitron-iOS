@@ -56,12 +56,17 @@ class ContentSummaryModel {
   private(set) var contributorString: String = ""
   private(set) var index: Int = 0
   private(set) var videoID: Int = 0
+  
+  private(set) var progression: ProgressionModel?
+  private(set) var bookmark: BookmarkModel?
+  private(set) var domainIDs: [Int] = []
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?,
-        index: Int = 0) {
-
+        index: Int = 0,
+        progression: ProgressionModel? = nil) {
+    
     self.id = jsonResource.id
     self.index = index
     
@@ -72,29 +77,35 @@ class ContentSummaryModel {
     
     self.name = jsonResource["name"] as? String ?? ""
     self.description = jsonResource["description"] as? String ?? ""
-
+    
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
     } else {
       self.releasedAt = Date()
     }
-
+    
     self.free = jsonResource["free"] as? Bool ?? false
-
+    
     if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? ContentDifficulty.none.rawValue) {
       self.difficulty = difficulty
     }
-
+    
     if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? ContentType.none.rawValue) {
       self.contentType = type
     }
-
+    
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
     self.bookmarked = jsonResource["bookmarked"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
+    self.progression = progression
+    
+    for relationship in jsonResource.relationships where relationship.type == "domains" {
+      let ids = relationship.data.compactMap { $0.id }
+      self.domainIDs = ids
+    }
   }
 }
 

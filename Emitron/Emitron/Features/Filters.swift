@@ -43,30 +43,19 @@ struct FilterGroup: Hashable {
   }
 }
 
-enum FilterGroupType: CaseIterable {
-  case platforms
-  case categories
-  case contentTypes
-  case difficulties
-  case none // For filters whose values aren't an array, for example the search query
+enum FilterGroupType: String, Hashable, CaseIterable, Codable {
+  case platforms = "Platforms"
+  case categories = "Categories"
+  case contentTypes = "Content Type"
+  case difficulties = "Difficulties"
+  case none = "" // For filters whose values aren't an array, for example the search query
   
   var name: String {
-    switch self {
-    case .contentTypes:
-      return "Content Type"
-    case .platforms:
-      return "Platforms"
-    case .categories:
-      return "Categories"
-    case .difficulties:
-      return "Difficulties"
-    case .none:
-      return ""
-    }
+    return self.rawValue
   }
 }
 
-enum SortFilter: Int {
+enum SortFilter: Int, Codable {
   case newest
   case popularity
   
@@ -112,8 +101,6 @@ class Filters: ObservableObject {
       categories.filters = filters.filter { $0.groupType == .categories }
       contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
       difficulties.filters = filters.filter { $0.groupType == .difficulties }
-      
-      objectWillChange.send(())
     }
   }
   
@@ -201,7 +188,25 @@ class Filters: ObservableObject {
     
     self.sortFilter = SortFilter.newest
     
-    self.filters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters)
+    // 1. Check if there are filters in UserDefaults
+    let savedFilters = UserDefaults.standard.filters
+    // 2. Check whether the types of filters in UserDefaults still match the types of filters possible on the BE and sync them
+    // 3. Dissementae userfilters into the appropriate filter categories
+    if !savedFilters.isEmpty {
+      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }
+      self.categories.filters = savedFilters.filter { $0.groupType == .categories }
+      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }
+      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }
+    }
+    // 3. If there are filters stored in UserDefaults, use those
+    // 4. If there are no filters stores in UserDefaults, use the default filters and parameters
+    
+    let freshFilters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters).union(platforms.filters)
+    self.filters = freshFilters
+    
+    // 1. Check if there is a sort in UserDefaults and use that
+    let savedSort = UserDefaults.standard.sort
+    self.sortFilter = savedSort
   }
   
   func updatePlatformFilters(for domainModels: [DomainModel]) {
@@ -209,6 +214,7 @@ class Filters: ObservableObject {
     let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
     let platformFilters = Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) })
     platforms.filters = platformFilters
+    
     filters = filters.union(platforms.filters)
   }
   
@@ -221,20 +227,28 @@ class Filters: ObservableObject {
   
   func removeAll() {
     appliedFilters.forEach {
-      $0.isOn = false
-      filters.update(with: $0)
+      var filter = $0 // Creating an intermediary var, because we can't mutate $0 (immutable)
+      filter.toggle(to: false)
+      filters.remove($0)
+      filters.update(with: filter)
     }
   }
   
   func changeSortFilter() {
     sortFilter = sortFilter.next
+    UserDefaults.standard.updateSort(with: sortFilter)
+    objectWillChange.send(())
+  }
+  
+  func commitUpdates() {
+    UserDefaults.standard.updateFilters(with: self)
     objectWillChange.send(())
   }
 }
 
 extension Filter {
   func saveToUserDefaults() {
-    
+    //UserDefaults.standard.updateFilters(with: self)
   }
   
   func restoreFromUserDefaults() {

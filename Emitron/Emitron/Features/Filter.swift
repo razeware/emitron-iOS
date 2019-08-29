@@ -28,7 +28,7 @@
 
 import Foundation
 
-class Filter: NSObject {
+struct Filter: Hashable, Codable {
 
   // MARK: - Properties
   var parameter: Parameter
@@ -49,6 +49,14 @@ class Filter: NSObject {
     self.groupType = groupType
     self.parameter = param
     self.isOn = isOn
+  }
+  
+  mutating func toggle(to: Bool? = nil) {
+    guard let on = to else {
+      isOn.toggle()
+      return
+    }
+    isOn = on
   }
 }
 

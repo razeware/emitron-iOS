@@ -29,8 +29,9 @@
 import Foundation
 import SwiftUI
 import Combine
+import CoreData
 
-class ContentSummaryMC: NSObject, ObservableObject {
+class BookmarksMC: NSObject, ObservableObject {
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -42,32 +43,59 @@ class ContentSummaryMC: NSObject, ObservableObject {
   
   private let client: RWAPI
   private let guardpost: Guardpost
-  private let contentsService: ContentsService
-  private(set) var data: ContentSummaryModel
+  private let bookmarksService: BookmarksService
+  private(set) var data: [BookmarkModel] = []
+  private(set) var numTutorials: Int = 0
   
-  // MARK: - Initializers
-  init(guardpost: Guardpost,
-       partialContentDetail: ContentSummaryModel) {
-    self.guardpost = guardpost
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
-    self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
-    
-    super.init()
-    
-    getContentDetails()
+  // Pagination
+  private var currentPage: Int = 1
+  private let startingPage: Int = 1
+  private(set) var defaultPageSize: Int = 20
+  
+  // Parameters
+  private var defaultParameters: [Parameter] {
+    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
   }
   
-  // MARK: - Internal
-  func getContentDetails() {
+  private(set) var currentParameters: [Parameter] = [] {
+    didSet {
+      if oldValue != currentParameters {
+        loadContents()
+      }
+    }
+  }
+    
+  // MARK: - Initializers
+  init(guardpost: Guardpost) {
+    self.guardpost = guardpost
+    
+    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+    self.bookmarksService = BookmarksService(client: self.client)
+    
+    super.init()
+
+    currentParameters = defaultParameters
+    loadContents()
+  }
+  
+  private func loadContents() {
+    
     if case(.loading) = state {
       return
     }
     
     state = .loading
     
-    contentsService.contentSummary(for: data.id) { [weak self] result in
-      
+    let pageParam = ParameterKey.pageNumber(number: currentPage).param
+    var allParams = currentParameters
+    allParams.append(pageParam)
+    
+    // Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count < numTutorials else {
+      return
+    }
+    
+    bookmarksService.bookmarks { [weak self] result in
       guard let self = self else {
         return
       }
@@ -76,12 +104,20 @@ class ContentSummaryMC: NSObject, ObservableObject {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentSummaryMC", reason: error.localizedDescription)
+          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let contentDetails):
-        self.data = contentDetails
+      case .success(let bookmarksTuple):
+        // When filtering, do we just re-do the request, or append?
+        if allParams == self.currentParameters {
+          let currentContents = self.data
+          self.data = currentContents + bookmarksTuple
+        } else {
+          self.data = bookmarksTuple
+        }
+        self.numTutorials = bookmarksTuple.count
         self.state = .hasData
       }
     }
   }
 }
+

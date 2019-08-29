@@ -198,7 +198,7 @@ enum ParameterFilterValue {
 }
 
 //sort=-released_at; reversechronological order
-enum ParameterSortValue: String {
+enum ParameterSortValue: String, Codable {
   case popularity = "popularity"
   case releasedAt = "released_at"
 }
@@ -207,7 +207,7 @@ enum ParameterSortValue: String {
 // typealias Parameter = (key: String, value: String)
 // Changing this to a struct, so that I can conform it to equatable
 
-struct Parameter: Equatable, Hashable {
+struct Parameter: Equatable, Hashable, Codable {
   let key: String
   let value: String
   let displayName: String

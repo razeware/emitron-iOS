@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ContentsRequest: Request {
-  typealias Response = (contents: [ContentDetailModel], totalNumber: Int)
+  typealias Response = (contents: [ContentSummaryModel], totalNumber: Int)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,16 +39,16 @@ struct ContentsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> (contents: [ContentDetailModel], totalNumber: Int) {
+  func handle(response: Data) throws -> (contents: [ContentSummaryModel], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let contents = doc.data.compactMap { ContentDetailModel($0, metadata: nil) }
+    let contents = doc.data.compactMap { ContentSummaryModel($0, metadata: nil) }
     return (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }
 
-struct ContentDetailRequest: Request {
-  typealias Response = ContentDetailModel
+struct ContentSummaryRequest: Request {
+  typealias Response = ContentSummaryModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -63,15 +63,15 @@ struct ContentDetailRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> ContentDetailModel {
+  func handle(response: Data) throws -> ContentSummaryModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let contentDetails = doc.data.compactMap { ContentDetailModel($0, metadata: nil) }
-    guard let contentDetail = contentDetails.first,
-      contentDetails.count == 1 else {
+    let content = doc.data.compactMap { ContentSummaryModel($0, metadata: nil) }
+    guard let contentSummary = content.first,
+      content.count == 1 else {
         throw RWAPIError.processingError(nil)
     }
     
-    return contentDetail
+    return contentSummary
   }
 }

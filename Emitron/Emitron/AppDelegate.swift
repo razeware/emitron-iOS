@@ -38,24 +38,26 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private (set) var persistentStore = PersistenceStore()
   private (set) var guardpost: Guardpost?
   private (set) var dataManager: DataManager?
-    
+  
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
     FirebaseApp.configure()
     //Fabric.with([Crashlytics.self])
-
-    let guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
-                              urlScheme: "com.razeware.emitron://",
-                              ssoSecret: AppDelegate.sso,
-                              persistentStore: persistentStore)
-
+    
+    // TODO: When you're logged out datamanager will be nil in this current setup
+    self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
+                               urlScheme: "com.razeware.emitron://",
+                               ssoSecret: AppDelegate.sso,
+                               persistentStore: persistentStore)
+    
+    guard let guardpost = guardpost,
+      let user = guardpost.currentUser  else { return true }
+    
     self.dataManager = DataManager(guardpost: guardpost,
-                                   user: guardpost.currentUser!,
+                                   user: user,
                                    persistenceStore: persistentStore)
-
-    self.guardpost = guardpost
-
+    
     return true
   }
   
