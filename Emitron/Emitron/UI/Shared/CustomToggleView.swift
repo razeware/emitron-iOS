@@ -26,27 +26,51 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-enum Constants {
-  static let filters = "Filters"
-  static let clearAll = "Clear All"
-  static let search = "Search"
-  static let loading = "Loading..."
-  static let library = "Library"
-  static let myTutorials = "My Tutorials"
-  static let downloads = "Downloads"
-  static let newest =  "Newest"
-  static let popularity = "Popularity"
-  static let tutorials = "Tutorials"
-  static let settings = "Settings"
+struct CustomToggle: UIViewRepresentable {
   
-  // Onboarding
-  static let login = "Login"
+  var isOn: Bool
+  var callback: (()->())?
   
-  // Other
-  static let today = "Today"
-  static let by = "By"
-  static let yes = "Yes"
-  static let no = "No"
+  func makeUIView(context: Context) -> UISwitch {
+    let uiView = UISwitch()
+    uiView.addTarget(
+        context.coordinator,
+        action: #selector(Coordinator.didChange(sender:)),
+        for: .valueChanged)
+
+    return uiView
+  }
+
+  func updateUIView(_ uiView: UISwitch, context: Context) {
+    // This is appGreen
+    uiView.onTintColor = UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1)
+    uiView.isOn = isOn
+  }
+  
+  func makeCoordinator() -> CustomToggle.Coordinator {
+      return Coordinator(self)
+  }
+  
+  class Coordinator: NSObject {
+    var control: CustomToggle
+    
+    init(_ control: CustomToggle) {
+      self.control = control
+    }
+    
+    @objc func didChange(sender: UISwitch) {
+      control.isOn = sender.isOn
+      control.callback?()
+    }
+  }
+}
+
+struct CustomToggleView: View {
+  var isOn: Bool
+  var callback: (()->())?
+  var body: some View {
+    CustomToggle(isOn: isOn, callback: callback)
+  }
 }
