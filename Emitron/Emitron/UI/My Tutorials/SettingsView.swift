@@ -28,16 +28,167 @@
 
 import SwiftUI
 
-struct SettingsView: View {
-    var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello World!"/*@END_MENU_TOKEN@*/)
+enum SettingsOption: Int, Identifiable {
+  case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
+  
+  var id: Int {
+    return self.rawValue
+  }
+  
+  var title: String {
+    switch self {
+      case .videoPlaybackSpeed: return "Video Playback Speed"
+      case .downloads: return "Downloads (Wifi only)"
+      case .downloadsQuality: return "Downloads Quality"
+      case .subtitles: return "Subtitles"
     }
+  }
+  
+  var detail: Detail {
+    return Detail(option: self)
+  }
+  
+  var isToggle: Bool {
+    switch self {
+      case .downloads, .subtitles: return true
+      default: return false
+    }
+  }
+  
+  // In order to iterate through detailOptions, this needs to be a class that conforms to identifiable
+  struct Detail: Identifiable {
+    let option: SettingsOption
+    
+    var detailOptions: [String] {
+      switch option {
+        case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
+        case .downloads: return ["Yes", "No"]
+        case .downloadsQuality: return ["HD", "SD"]
+        case .subtitles: return ["Yes", "No"]
+      }
+    }
+    
+    var id: Int {
+      return option.id
+    }
+  }
 }
 
-#if DEBUG
-struct SettingsView_Previews: PreviewProvider {
-    static var previews: some View {
-        SettingsView()
+struct SettingsView: View {
+  
+  var rows: [SettingsOption] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
+  
+  @Binding var isPresented: Bool
+  @State private var settingsOptionsPresented: Bool = false
+  @State var selectedOption: SettingsOption = .videoPlaybackSpeed
+  
+  var body: some View {
+    GeometryReader { geometry in
+      VStack {
+        HStack() {
+          Rectangle()
+            .frame(width: 27, height: 27, alignment: .center)
+            .foregroundColor(.clear)
+            .padding([.leading], 18)
+          
+          Spacer()
+          
+          Text(Constants.settings)
+            .font(.uiHeadline)
+            .foregroundColor(.appBlack)
+            .padding([.top], 20)
+          
+          Spacer()
+          
+          Button(action: {
+            self.isPresented = false
+          }) {
+            Image("close")
+              .frame(width: 27, height: 27, alignment: .center)
+              .padding(.trailing, 18)
+              .padding([.top], 20)
+              .foregroundColor(.battleshipGrey)
+          }
+        }
+        
+        VStack {
+          ForEach(0..<self.rows.count) { index in
+            TitleDetailView(callback: {
+              self.selectedOption = self.rows[index]
+              
+              // Only navigate to SettingsOptionsView if view isn't a toggle 
+              if !self.rows[index].isToggle {
+                self.settingsOptionsPresented.toggle()
+              } else {
+                // Update user defaults for toggle 
+                let previousState = self.setToggleState(at: index)
+                UserDefaults.standard.set(!previousState,
+                                          forKey: self.rows[index].title)
+              }
+              
+            }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
+              .frame(height: 46)
+              .sheet(isPresented: self.$settingsOptionsPresented) {
+                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
+            }
+          }
+        }
+        
+        Spacer()
+        
+        Button(action: {
+          Guardpost.current.logout()
+        }) {
+          HStack {
+            Rectangle()
+              .frame(width: 24, height: 46, alignment: .center)
+              .foregroundColor(Color.copper)
+            
+            Spacer()
+            
+            Text("Sign Out")
+              .font(.uiButtonLabel)
+              .background(Color.copper)
+              .foregroundColor(.white)
+            
+            Spacer()
+            
+            Image("arrowRed")
+              .frame(width: 24, height: 24, alignment: .center)
+              .background(Color.white)
+              .foregroundColor(.copper)
+              .cornerRadius(6)
+              .padding([.trailing], 10)
+          }
+          .background(Color.copper)
+          .cornerRadius(6)
+          .padding([.leading, .trailing], 18)
+          .frame(height: 46)
+        }
+        .padding(.bottom, 42)
+        .frame(width: geometry.size.width - (2 * 18), height: 46, alignment: .center)
+        .padding([.leading, .trailing], 18)
+        
+      }
+      .frame(width: geometry.size.width, height: geometry.size.height,alignment: .center)
+      .background(Color.paleGrey)
+      .padding([.top], 20)
     }
+  }
+  
+  private func populateDetail(at index: Int) -> String {
+    guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].title) as? String else {
+      if let detail = self.rows[index].detail.detailOptions.first {
+        return detail
+      } else {
+        return ""
+      }
+    }
+    
+    return selectedDetail
+  }
+  
+  private func setToggleState(at index: Int) -> Bool {
+    return UserDefaults.standard.bool(forKey: rows[index].title)
+  }
 }
-#endif

@@ -62,7 +62,7 @@ struct MyTutorialsView: View {
               Image("settings")
               .foregroundColor(.battleshipGrey)
               .sheet(isPresented: self.$settingsPresented) {
-                SettingsView()
+                SettingsView(isPresented: self.$settingsPresented)
               }
             }
           }
