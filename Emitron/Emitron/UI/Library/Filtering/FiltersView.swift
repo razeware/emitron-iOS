@@ -78,51 +78,10 @@ struct FiltersView: View {
         // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
         // Which ones are currently being applied to the content listing
         applyOrCloseButton()
-        emptyView()
       }
       .padding([.leading, .trailing], 18)
     }
     .background(Color.paleGrey)
-  }
-  
-  @discardableResult
-  func measure<A>(name: String = "", _ block: () -> A) -> A {
-      let startTime = CACurrentMediaTime()
-      let result = block()
-      let timeElapsed = CACurrentMediaTime() - startTime
-      print("\(timeElapsed)")
-      return result
-  }
-  
-  func emptyView() -> AnyView {
-    
-    for _ in 0...100 {
-      measure {
-        textView()
-      }
-    }
-    
-    return AnyView(Text("Lalala"))
-  }
-  
-  
-  
-  private func textView() -> Text {
-    return Text("Lea")
-  }
-  
-  private func anyTextView() -> AnyView {
-    return AnyView(Text("Lea"))
-  }
-  
-  private func groupTextView() -> Group<Text> {
-    let group = Group { Text("Lea") }
-    return group
-  }
-  
-  private func someView() -> some View {
-    let group = Group { Text("Lea") }
-    return group
   }
   
   // Is ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> actually more performance than AnyView?
@@ -137,19 +96,6 @@ struct FiltersView: View {
       }
     }
     return scrollView
-  }
-  
-  private func constructAnyScrollView() -> AnyView {
-    
-    let scrollView = ScrollView(.vertical, showsIndicators: false) {
-      VStack(alignment: .leading, spacing: 12) {
-        
-        ForEach(filters.filterGroups, id: \.self) { filterGroup in
-          self.constructFilterView(filterGroup: filterGroup)
-        }
-      }
-    }
-    return AnyView(scrollView)
   }
   
   private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
