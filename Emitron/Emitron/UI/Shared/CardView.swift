@@ -54,7 +54,7 @@ struct CardViewModel: Hashable {
 // Transform data
 extension CardViewModel {
   static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
-    let domainData = DataManager.current.domainsMC.data
+    let domainData = DataManager.current!.domainsMC.data
     let ids = content.domainIDs
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")

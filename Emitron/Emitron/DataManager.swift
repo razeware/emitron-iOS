@@ -32,8 +32,21 @@ import Combine
 class DataManager: NSObject {
 
   // MARK: - Properties
-  static var current: DataManager {
-    return (UIApplication.shared.delegate as! AppDelegate).dataManager!
+  static var current: DataManager? {
+    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
+      let user = Guardpost.current.currentUser else { return nil }
+
+    guard let existingManager = appDelegate.dataManager else {
+        // Create and assign new data manager to the AppDelegate
+      
+      let dataManager = DataManager(guardpost: Guardpost.current,
+                                    user: user,
+                                    persistenceStore: PersistenceStore())
+      appDelegate.dataManager = dataManager
+      return dataManager
+    }
+    
+    return existingManager
   }
   
   let domainsMC: DomainsMC

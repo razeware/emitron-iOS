@@ -215,14 +215,21 @@ class Filters: ObservableObject {
     let platformFilters = Set(Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) })
     platforms.filters = platformFilters
     
-    filters = filters.union(platforms.filters)
+    platformFilters.forEach { filter in
+      filters.insert(filter)
+    }
+    commitUpdates()
   }
   
   func updateCategoryFilters(for categoryModels: [CategoryModel]) {
     let categoryTypes = categoryModels.map { (id: $0.id, name: $0.name) }
     let categoryFilters = Set(Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) })
     categories.filters = categoryFilters
-    filters = filters.union(categories.filters)
+    
+    categoryFilters.forEach { filter in
+      filters.insert(filter)
+    }
+    commitUpdates()
   }
   
   func removeAll() {

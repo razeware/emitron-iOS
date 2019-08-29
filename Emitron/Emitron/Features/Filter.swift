@@ -34,6 +34,16 @@ class Filter: NSObject, Codable {
     return lhs.filterName == rhs.filterName
   }
   
+  // For set operations to work on an NSObject, we have to override isEqual
+  override func isEqual(_ object: Any?) -> Bool {
+    if let object = object as? Filter {
+      print("LHS: \(self.filterName)")
+      print("RHS: \(object.filterName)")
+      return self.filterName == object.filterName
+    }
+    return false
+  }
+  
   // MARK: - Properties
   var parameter: Parameter
   var isOn: Bool

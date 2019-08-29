@@ -40,7 +40,7 @@ struct LoginView: View {
   private func contentView() -> AnyView {
     guard userMC.user == nil else {
       let guardpost = Guardpost.current
-      let filters = DataManager.current.filters
+      let filters = DataManager.current!.filters
       let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
       
       return AnyView(TabNavView().environmentObject(contentsMC))

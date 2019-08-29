@@ -189,7 +189,7 @@ struct ClearButton: ViewModifier {
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
     let guardpost = Guardpost.current
-    let filters = DataManager.current.filters
+    let filters = DataManager.current!.filters
     let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }

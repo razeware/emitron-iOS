@@ -64,7 +64,7 @@ struct TabNavView: View {
   }
   
   func libraryView() -> AnyView {
-    let filters = DataManager.current.filters
+    let filters = DataManager.current!.filters
     return AnyView(LibraryView().environmentObject(filters))
   }
   
@@ -72,11 +72,11 @@ struct TabNavView: View {
 
     //TODO: I don't think this needs contentsMC from gurdpost, or contentsMC at all
     let guardpost = Guardpost.current
-    let filters = DataManager.current.filters
+    let filters = DataManager.current!.filters
     let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     
-    let progressionsMC = DataManager.current.progressionsMC
-    let bookmarksMC = DataManager.current.bookmarksMC
+    let progressionsMC = DataManager.current!.progressionsMC
+    let bookmarksMC = DataManager.current!.bookmarksMC
     
     return AnyView(MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC))
   }
