@@ -189,7 +189,6 @@ struct SettingsView: View {
   }
   
   private func setToggleState(at index: Int) -> Bool {
-    guard let toggleIsOn = UserDefaults.standard.object(forKey: rows[index].title) as? Bool else { return false }
-    return toggleIsOn
+    return UserDefaults.standard.bool(forKey: rows[index].title)
   }
 }
