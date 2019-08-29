@@ -71,7 +71,7 @@ struct SettingsOptionsView: View {
               UserDefaults.standard.set(detail,
                                         forKey: self.selectedSettingsOption.title)
               self.isPresented = false
-            }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, showCarrot: false)
+            }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
             .frame(height: 46)
           }
         }
@@ -82,5 +82,13 @@ struct SettingsOptionsView: View {
       .background(Color.paleGrey)
       .padding([.top], 20)
     }
+  }
+  
+  private func setCheckmark(for detailOption: String) -> String? {
+    guard let selectedDetailOption = UserDefaults.standard.object(forKey: selectedSettingsOption.title) as? String else {
+      return nil
+    }
+  
+    return selectedDetailOption == detailOption ? "checkmark" : nil
   }
 }

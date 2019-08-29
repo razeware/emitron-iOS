@@ -126,7 +126,7 @@ struct SettingsView: View {
                                           forKey: self.rows[index].title)
               }
               
-            }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), showCarrot: true)
+            }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
               .frame(height: 46)
               .sheet(isPresented: self.$settingsOptionsPresented) {
                 SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)

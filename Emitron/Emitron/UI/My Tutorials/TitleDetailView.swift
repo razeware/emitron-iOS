@@ -40,7 +40,7 @@ struct TitleDetailView: View {
   var detail: String?
   var isToggle: Bool
   var isOn: Bool
-  var showCarrot: Bool
+  var rightImageName: String?
   var body: some View {
     GeometryReader { geometry in
       Button(action: {
@@ -60,14 +60,7 @@ struct TitleDetailView: View {
             Spacer()
             
             self.textOrToggleView()
-            
-            if self.showCarrot && !self.isToggle {
-                Image("carrotRight")
-                    .resizable()
-                    .frame(maxWidth: 13, maxHeight: 13)
-                    .padding([.trailing], Layout.padding)
-                    .foregroundColor(.coolGrey)
-            }
+            self.addRightImage()
           }
           
           Rectangle()
@@ -100,12 +93,27 @@ struct TitleDetailView: View {
     
     return nil
   }
+  
+  private func addRightImage() -> AnyView? {
+    if let imageName = self.rightImageName, !self.isToggle {
+        let image = Image(imageName)
+        .resizable()
+        .frame(maxWidth: 13, maxHeight: 13)
+        .padding([.trailing], Layout.padding)
+        .foregroundColor(.coolGrey)
+      
+      return AnyView(image)
+      
+    }
+    
+    return nil
+  }
 }
 
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, isOn: false, showCarrot: true)
+    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, isOn: false, rightImageName: nil)
   }
 }
 #endif
