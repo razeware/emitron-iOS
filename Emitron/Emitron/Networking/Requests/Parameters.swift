@@ -207,7 +207,7 @@ enum ParameterSortValue: String, Codable {
 // typealias Parameter = (key: String, value: String)
 // Changing this to a struct, so that I can conform it to equatable
 
-struct Parameter: Equatable, Hashable, Codable {
+struct Parameter: Hashable, Codable {
   let key: String
   let value: String
   let displayName: String

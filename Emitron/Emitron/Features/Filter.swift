@@ -28,22 +28,18 @@
 
 import Foundation
 
-class Filter: NSObject, Codable {
+class Filter: Hashable, Codable {
   
   static func == (lhs: Filter, rhs: Filter) -> Bool {
     return lhs.filterName == rhs.filterName
   }
   
-  // For set operations to work on an NSObject, we have to override isEqual
-  override func isEqual(_ object: Any?) -> Bool {
-    if let object = object as? Filter {
-      print("LHS: \(self.filterName)")
-      print("RHS: \(object.filterName)")
-      return self.filterName == object.filterName
-    }
-    return false
+  // In order for Set equality operations to work on a Class, we have to make sure that the reference hashes are the same between filters,
+  // so we implement our own hashing function
+  func hash(into hasher: inout Hasher) {
+      hasher.combine(filterName)
   }
-  
+    
   // MARK: - Properties
   var parameter: Parameter
   var isOn: Bool
