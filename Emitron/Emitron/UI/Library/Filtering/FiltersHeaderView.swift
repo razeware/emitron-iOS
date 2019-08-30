@@ -80,7 +80,11 @@ struct FiltersHeaderView: View {
       VStack(alignment: .leading, spacing: 12) {
         
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
-          FilterView(filter: filter)
+          TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
+            filter.isOn.toggle()
+            self.filters.filters.update(with: filter)
+            self.filters.commitUpdates()
+          })
         }
       })
   }

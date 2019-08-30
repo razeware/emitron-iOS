@@ -28,9 +28,10 @@
 
 import SwiftUI
 
+//TODO: Refactor layout properties here
+
 struct CheckmarkView: View {
-  @EnvironmentObject var filters: Filters
-  var filter: Filter
+  var isOn: Bool
   
   var outerSide: CGFloat = 20
   var innerSide: CGFloat = 16
@@ -39,15 +40,15 @@ struct CheckmarkView: View {
     return outerRadius / outerSide
   }
   
+  var onChange: (Bool) -> Void
+  
   var body: some View {
         
     Button(action: {
-      self.filter.isOn.toggle()
-      self.filters.filters.update(with: self.filter)
-      self.filters.commitUpdates()
+      self.onChange(!self.isOn)
     }) {
       // TODO: Not sure how best to handle assigning the "state" initially as on/off while also maintaining the @State object
-      if filter.isOn {
+      if isOn {
         ZStack(alignment: .center) {
           Rectangle()
             .frame(maxWidth: 20, maxHeight: 20)
@@ -78,7 +79,9 @@ struct CheckmarkView: View {
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
     // TODO: No empty String
-    CheckmarkView(filter: Filter(groupType: .categories, param: Parameter(key: "bla", value: "bla", displayName: ""), isOn: false))
+    CheckmarkView(isOn: false, onChange: { change in
+      print("Changed to: \(change)")
+    })
   }
 }
 #endif
