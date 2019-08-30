@@ -47,7 +47,6 @@ struct CheckmarkView: View {
     Button(action: {
       self.onChange(!self.isOn)
     }) {
-      // TODO: Not sure how best to handle assigning the "state" initially as on/off while also maintaining the @State object
       if isOn {
         ZStack(alignment: .center) {
           Rectangle()

@@ -47,8 +47,8 @@ struct ContentListView: View {
 //    NavigationView {
 //      cardTableViewWithNav()
 //    }
-    cardsTableView()
-    // cardsScrollView()
+    //cardsTableView()
+     cardsScrollView()
   }
   
   private func cardsScrollView() -> AnyView {

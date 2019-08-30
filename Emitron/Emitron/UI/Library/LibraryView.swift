@@ -100,8 +100,8 @@ struct LibraryView: View {
     .background(Color.paleGrey)
   }
   
-  private func filtersView() -> AnyView {
-    let view = ScrollView(.horizontal, showsIndicators: false) {
+  private func filtersView() -> some View {
+    ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
         
         AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
@@ -118,13 +118,11 @@ struct LibraryView: View {
       }
     }
     .padding([.top], .filtersPaddingTop)
-    
-    return AnyView(view)
   }
   
-  private func searchField() -> AnyView {
+  private func searchField() -> some View {
     //TODO: Need to figure out how to erase the textField
-    let searchField = TextField(Constants.search,
+    TextField(Constants.search,
                                 text: $searchText,
                                 onEditingChanged: { _ in
       print("Editing changed:  \(self.searchText)")
@@ -137,8 +135,6 @@ struct LibraryView: View {
         UIApplication.shared.keyWindow?.endEditing(true)
         self.updateFilters()
       }))
-    
-    return AnyView(searchField)
   }
   
   private func updateFilters() {

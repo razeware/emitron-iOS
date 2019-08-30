@@ -120,10 +120,6 @@ struct CardView: SwiftUI.View {
           .font(.uiCaption)
           .lineLimit(5)
           .foregroundColor(.battleshipGrey)
-
-        // This space causes a crash if we use it in the tableView, but not if it's used in a scrollView
-        // Quite strange
-//        Spacer()
         
         HStack {
           Text(model.footnote)
