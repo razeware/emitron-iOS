@@ -36,9 +36,8 @@ enum MyTutorialsState: String {
   case inProgress, completed, bookmarked
 }
 
-struct MyTutorialsView: View {
+struct MyTutorialView: View {
   
-  @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -136,17 +135,16 @@ struct MyTutorialsView: View {
       }
     }
     
-    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey))
+    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey).environmentObject(DataManager.current.contentsMC))
   }
 }
 
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    let contentsMC = DataManager.current.contentsMC
     let progressionsMC = DataManager.current.progressionsMC
     let bookmarksMC = DataManager.current.bookmarksMC
-    return MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC)
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
 }
 #endif
