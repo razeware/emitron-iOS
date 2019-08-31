@@ -33,8 +33,55 @@ private struct Layout {
   static let heightDivisor: CGFloat = 3
 }
 
+enum ContentScreen {
+  case library, downloads, myTutorials, tips
+  
+  var titleMessage: String {
+    switch self {
+      // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
+    case .library: return "We couldn't find anything meeting the search criteria"
+    case .downloads: return "You haven't downloaded any tutorials yet"
+    case .myTutorials: return "You haven't started any tutorials yet"
+    case .tips: return "Swipe left to delete a downloan"
+    }
+  }
+  
+  var detailMesage: String? {
+    switch self {
+    case .library: return "Try removing some filters"
+    case .tips: return "Swipe on your downloads to remove them"
+    default: return nil
+    }
+  }
+  
+  var buttonText: String? {
+    switch self {
+    case .downloads: return "Explore Tutorials"
+    case .tips: return "Got it!"
+    default: return nil
+    }
+  }
+  
+  var buttonIconName: String? {
+    switch self {
+    case .downloads, .tips: return "arrowGreen"
+    case .myTutorials: return "arrowRed"
+    default: return nil
+    }
+  }
+  
+  var buttonColor: Color? {
+    switch self {
+    case .downloads, .tips: return .appGreen
+    case .myTutorials: return .copper
+    default: return nil
+    }
+  }
+}
+
 struct ContentListView: View {
   
+  @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   @State var contents: [ContentSummaryModel] = []
   var bgColor: Color
@@ -47,6 +94,16 @@ struct ContentListView: View {
   }
   
   private func cardsTableView() -> AnyView {
+    guard !self.contents.isEmpty else {
+      let vStack = VStack {
+        Spacer()
+        createEmptyView()
+        Spacer()
+      }
+      
+      return AnyView(vStack)
+    }
+    
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
@@ -80,6 +137,45 @@ struct ContentListView: View {
     return AnyView(list)
   }
   
+  // TODO figure out how to return VStack instead
+  private func createEmptyView() -> AnyView {
+    let vStack = VStack {
+      HStack {
+        Spacer()
+        
+        Text(contentScreen.titleMessage)
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+        
+        Spacer()
+      }
+      
+      addDetailText()
+    }
+    
+    return AnyView(vStack)
+  }
+  
+  // TODO return HStack
+  private func addDetailText() -> AnyView? {
+    guard let detail = contentScreen.detailMesage else { return nil }
+    let stack = HStack {
+        Spacer()
+        
+        Text(detail)
+        .font(.uiHeadline)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+        
+        Spacer()
+    }
+    
+    return AnyView(stack)
+  }
+  
   func loadMoreContents() {
     //TODO: Load more contents
     // contentsMC.loadContents()
@@ -95,7 +191,7 @@ struct ContentListView: View {
 struct ContentListView_Previews: PreviewProvider {
 
   static var previews: some View {
-    ContentListView(contents: [], bgColor: .paleGrey)
+    ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey)
   }
 }
 #endif

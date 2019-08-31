@@ -78,7 +78,7 @@ struct TabNavView: View {
   func downloadsView() -> AnyView {
     let contentsMC = DataManager.current.contentsMC
     
-    return AnyView(DownloadsView().environmentObject(contentsMC))
+    return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(contentsMC))
   }
 }
 

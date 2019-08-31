@@ -33,6 +33,7 @@ private extension CGFloat {
 }
 
 struct DownloadsView: View {
+  @State var contentScreen: ContentScreen
   @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
@@ -47,10 +48,15 @@ struct DownloadsView: View {
         Spacer()
       }
       
+      Spacer()
+      
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
       
+      Spacer()
+      
+      addButton()
     }
     .background(Color.paleGrey)
   }
@@ -69,10 +75,49 @@ struct DownloadsView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+      return AnyView(ContentListView(contentScreen: .downloads, contents: contentsMC.data, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }
+  }
+  
+  private func addButton() -> AnyView? {
+    guard let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
+    
+    // TODO use button Lea created in persistFilters PR once available
+    let button = Button(action: {
+      // TODO what is the action supposed to be here?
+      print("BUTTON TAPPED IN DOWNLOADS VIEW")
+      
+    }) {
+      HStack {
+        Rectangle()
+          .frame(width: 24, height: 46, alignment: .center)
+          .foregroundColor(buttonColor)
+        
+        Spacer()
+        
+        Text(buttonText)
+          .font(.uiButtonLabel)
+          .background(buttonColor)
+          .foregroundColor(.white)
+        
+        Spacer()
+        
+        Image(buttonImage)
+          .frame(width: 24, height: 24, alignment: .center)
+          .background(Color.white)
+          .foregroundColor(buttonColor)
+          .cornerRadius(6)
+          .padding([.trailing], 10)
+      }
+      .background(buttonColor)
+      .cornerRadius(6)
+      .padding([.leading, .trailing], 18)
+      .frame(height: 46)
+    }
+    
+    return AnyView(button)
   }
 }
 
@@ -80,7 +125,7 @@ struct DownloadsView: View {
 struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     let contentsMC = DataManager.current.contentsMC
-    return DownloadsView().environmentObject(contentsMC)
+    return DownloadsView(contentScreen: .downloads).environmentObject(contentsMC)
   }
 }
 #endif

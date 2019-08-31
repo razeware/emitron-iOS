@@ -193,7 +193,7 @@ struct LibraryView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      return AnyView(ContentListView(contents: contentsMC.data, bgColor: .paleGrey))
+      return AnyView(ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey))
     default:
       return AnyView(Text("Default View"))
     }

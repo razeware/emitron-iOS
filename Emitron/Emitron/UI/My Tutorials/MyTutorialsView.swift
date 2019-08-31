@@ -136,7 +136,7 @@ struct MyTutorialsView: View {
       }
     }
     
-    return AnyView(ContentListView(contents: dataToDisplay, bgColor: .paleGrey))
+    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey))
   }
 }
 
