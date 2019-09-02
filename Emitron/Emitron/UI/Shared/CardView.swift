@@ -78,11 +78,15 @@ extension CardViewModel {
 
 struct CardView: View {
   
+  var callback: (()->())?
+  var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel
   
-  init(model: CardViewModel) {
+  init(model: CardViewModel, callback: (()->())?, contentScreen: ContentScreen) {
     self.model = model
+    self.callback = callback
+    self.contentScreen = contentScreen
   }
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
@@ -128,12 +132,14 @@ struct CardView: View {
           
           Spacer()
           
-          Image("downloadInactive")
+          if contentScreen != ContentScreen.downloads {
+            Image("downloadInactive")
             .resizable()
             .frame(width: 19, height: 19)
             .onTapGesture {
               self.download()
             }
+          }
         }
       }
       .padding([.leading, .trailing, .top, .bottom], 15)
@@ -150,7 +156,7 @@ struct CardView: View {
   }
   
   private func download() {
-    print("Download button pressed.")
+    callback?()
   }
   
   private func loadImage() {
@@ -177,7 +183,7 @@ struct CardView: View {
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
     let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-    return CardView(model: cardModel)
+    return CardView(model: cardModel, callback: nil, contentScreen: .library)
   }
 }
 #endif

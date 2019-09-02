@@ -29,6 +29,8 @@
 import SwiftUI
 
 struct ContentSummaryView: View {
+  
+  var downloadsMC: DownloadsMC
   var details: ContentSummaryModel
   var body: some View {
     VStack(alignment: .leading) {
@@ -89,14 +91,18 @@ struct ContentSummaryView: View {
     }
   }
   
-  private func download() { }
+  private func download() {
+    downloadsMC.saveDownload(with: details.videoID, content: details)
+  }
+  
   private func bookmark() { }
 }
 
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      ContentSummaryView(details: ContentSummaryModel.test)
+      let downloadsMC = DataManager.current.downloadsMC
+      return ContentSummaryView(downloadsMC: downloadsMC, details: ContentSummaryModel.test)
     }
 }
 #endif

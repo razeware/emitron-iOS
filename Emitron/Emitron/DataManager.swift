@@ -41,6 +41,7 @@ class DataManager: NSObject {
   let contentsMC: ContentsMC
   let progressionsMC: ProgressionsMC
   let bookmarksMC: BookmarksMC
+  let downloadsMC: DownloadsMC
   var filters: Filters
   
   private var domainsSubscriber: AnyCancellable?
@@ -65,6 +66,7 @@ class DataManager: NSObject {
     
     self.progressionsMC = ProgressionsMC(guardpost: guardpost)
     self.bookmarksMC = BookmarksMC(guardpost: guardpost)
+    self.downloadsMC = DownloadsMC(user: user)
     
     super.init()
     createSubscribers()

@@ -88,6 +88,7 @@ struct ContentListView: View {
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var callback: (()->())?
+  var downloadsMC: DownloadsMC
   
   var body: some View {
     cardsTableView()
@@ -111,7 +112,9 @@ struct ContentListView: View {
     let list = GeometryReader {  geometry in
       List {
         ForEach(self.contents, id: \.id) { partialContent in
-          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
+            self.downloadsMC.saveDownload(with: partialContent.videoID, content: partialContent)
+          }, contentScreen: self.contentScreen)
             .listRowBackground(self.bgColor)
             .background(self.bgColor)
             .onTapGesture {
@@ -191,7 +194,8 @@ struct ContentListView: View {
 struct ContentListView_Previews: PreviewProvider {
 
   static var previews: some View {
-    ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey)
+    let downloadsMC = DataManager.current.downloadsMC
+    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey, downloadsMC: downloadsMC)
   }
 }
 #endif

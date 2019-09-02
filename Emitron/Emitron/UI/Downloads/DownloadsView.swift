@@ -34,7 +34,7 @@ private extension CGFloat {
 
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
-  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var downloadsMC: DownloadsMC
   
   var body: some View {
     VStack {
@@ -48,41 +48,35 @@ struct DownloadsView: View {
         Spacer()
       }
       
-      Spacer()
+      if downloadsMC.data.isEmpty {
+        Spacer()
+      }
       
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
       
-      Spacer()
+      if downloadsMC.data.isEmpty {
+        Spacer()
+      }
       
       addButton()
     }
     .background(Color.paleGrey)
   }
   
-  private func contentView() -> AnyView {
-    switch contentsMC.state {
-    case .initial,
-         .loading where contentsMC.data.isEmpty:
-      return AnyView(Text(Constants.loading))
+  private func contentView() -> AnyView? {
+    switch downloadsMC.state {
+    case .loading, .hasData, .initial:
+      let contents = downloadsMC.data.map { $0.content }
+      return AnyView(ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, downloadsMC: downloadsMC).environmentObject(DataManager.current.contentsMC))
     case .failed:
       return AnyView(Text("Error"))
-    case .hasData,
-         .loading where !contentsMC.data.isEmpty:
-      //      let sorted = sortSelection.sorted(data: contentsMC.data)
-      //      let parameters = filters.applied
-      //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
-      //
-      
-      return AnyView(ContentListView(contentScreen: .downloads, contents: contentsMC.data, bgColor: .paleGrey))
-    default:
-      return AnyView(Text("Default View"))
     }
   }
   
   private func addButton() -> AnyView? {
-    guard let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
+    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
     
     // TODO use button Lea created in persistFilters PR once available
     let button = Button(action: {
@@ -124,8 +118,8 @@ struct DownloadsView: View {
 #if DEBUG
 struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
-    let contentsMC = DataManager.current.contentsMC
-    return DownloadsView(contentScreen: .downloads).environmentObject(contentsMC)
+    let downloadsMC = DataManager.current.downloadsMC
+    return DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC)
   }
 }
 #endif

@@ -135,7 +135,7 @@ struct MyTutorialView: View {
       }
     }
     
-    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey).environmentObject(DataManager.current.contentsMC))
+    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, downloadsMC: DataManager.current.downloadsMC).environmentObject(DataManager.current.contentsMC))
   }
 }
 

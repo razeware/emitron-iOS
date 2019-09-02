@@ -48,7 +48,7 @@ struct ContentListingView: View {
           .onAppear(perform: loadImage)
           .transition(.opacity)
 
-        ContentSummaryView(details: contentSummaryMC.data)
+        ContentSummaryView(downloadsMC: DataManager.current.downloadsMC, details: contentSummaryMC.data)
       }
         .frame(maxWidth: UIScreen.main.bounds.width)
         .background(Color.white)

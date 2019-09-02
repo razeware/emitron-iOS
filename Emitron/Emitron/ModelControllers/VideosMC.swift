@@ -55,8 +55,9 @@ class VideosMC: NSObject, ObservableObject {
   }
   
   // MARK: - Internal
-  func loadVideoStream(for id: Int) {
+  func loadVideoStream(for id: Int, completion: (()->())? = nil) {
     if case(.loading) = state {
+      completion?()
       return
     }
     
@@ -64,6 +65,7 @@ class VideosMC: NSObject, ObservableObject {
 
     service.getVideoStream(for: id) { [weak self] result in
       guard let self = self else {
+        completion?()
         return
       }
       
@@ -71,10 +73,12 @@ class VideosMC: NSObject, ObservableObject {
       case .failure(let error):
         self.state = .failed
         Failure.fetch(from: "VideosMC", reason: error.localizedDescription).log(additionalParams: ["Id": "\(id)"])
+        completion?()
       case .success(let attachment):
         self.data = attachment
         self.streamURL = attachment.url
         self.state = .hasData
+        completion?()
       }
     }
   }
