@@ -69,7 +69,7 @@ struct DownloadsView: View {
     switch downloadsMC.state {
     case .loading, .hasData, .initial:
       let contents = downloadsMC.data.map { $0.content }
-      return AnyView(ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, downloadsMC: downloadsMC).environmentObject(DataManager.current.contentsMC))
+      return AnyView(ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey).environmentObject(DataManager.current.contentsMC).environmentObject(downloadsMC))
     case .failed:
       return AnyView(Text("Error"))
     }

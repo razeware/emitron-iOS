@@ -87,8 +87,7 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  var callback: (()->())?
-  var downloadsMC: DownloadsMC
+  @EnvironmentObject var downloadsMC: DownloadsMC
   
   var body: some View {
     cardsTableView()
@@ -185,8 +184,12 @@ struct ContentListView: View {
   }
   
   func delete(at offsets: IndexSet) {
+    for (index, _ ) in offsets.enumerated() {
+      let content = contents[index]
+      downloadsMC.deleteDownload(with: content.videoID)
+    }
+    
     contents.remove(atOffsets: offsets)
-    callback?()
   }
 }
 
@@ -195,7 +198,7 @@ struct ContentListView_Previews: PreviewProvider {
 
   static var previews: some View {
     let downloadsMC = DataManager.current.downloadsMC
-    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey, downloadsMC: downloadsMC)
+    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey).environmentObject(downloadsMC)
   }
 }
 #endif

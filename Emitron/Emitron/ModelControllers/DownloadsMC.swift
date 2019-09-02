@@ -71,6 +71,22 @@ class DownloadsMC: NSObject, ObservableObject {
     loadContents()
   }
   
+  // MARK: Public funcs
+  func deleteDownload(with videoID: Int) {
+    guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
+    let filename = String(format: "%d.%d.%@", selectedVideo.content.id, videoID, String.appExtension)
+    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
+    
+    do {
+      try FileManager.default.removeItem(at: fileURL)
+      data.remove(at: index)
+      // TODO somehow need to reload this??
+      
+    } catch {
+      fatalError("Couldn't remove file.")
+    }
+  }
+  
   func saveDownload(with videoID: Int, content: ContentSummaryModel) {
     let filename = String(format: "%d.%d.%@", content.id, videoID, String.appExtension)
     guard let destinationUrl = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
@@ -113,6 +129,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
+  // MARK: Private funcs
   private func load(url streamURL: URL, completion: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
     var request = URLRequest(url: streamURL)
     request.httpMethod = "GET"
