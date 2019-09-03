@@ -92,7 +92,10 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    downloadsMC.saveDownload(with: details.videoID, content: details)
+    DispatchQueue.main.async {
+      self.downloadsMC.saveDownload(with: self.details)
+    }
+    
   }
   
   private func bookmark() { }

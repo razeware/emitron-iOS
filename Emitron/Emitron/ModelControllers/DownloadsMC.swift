@@ -68,33 +68,31 @@ class DownloadsMC: NSObject, ObservableObject {
     self.user = user
     super.init()
 
-    loadContents()
+    loadDownloads()
   }
   
   // MARK: Public funcs
   func deleteDownload(with videoID: Int) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let filename = String(format: "%d.%d.%@", selectedVideo.content.id, videoID, String.appExtension)
-    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
+    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
     do {
       try FileManager.default.removeItem(at: fileURL)
       
-      for (index, model) in data.enumerated() {
-        if model.content.id == selectedVideo.content.id {
-          data.remove(at: index)
-          self.state = .hasData
-        }
+      DispatchQueue.main.async {
+        self.data.remove(at: index)
+        self.state = .hasData
       }
-
+      
     } catch {
       self.state = .failed
       fatalError("Couldn't remove file.")
     }
   }
   
-  func saveDownload(with videoID: Int, content: ContentSummaryModel) {
-    let filename = String(format: "%d.%d.%@", content.id, videoID, String.appExtension)
+  func saveDownload(with content: ContentSummaryModel) {
+    let filename = String(format: "%d.%d.%@", content.id, content.videoID, String.appExtension)
     guard let destinationUrl = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
     
     if FileManager().fileExists(atPath: destinationUrl.path) {
@@ -103,7 +101,7 @@ class DownloadsMC: NSObject, ObservableObject {
       
     } else {
       let videoMC = VideosMC(user: self.user)
-      videoMC.loadVideoStream(for: videoID) {
+      videoMC.loadVideoStream(for: content.videoID) {
         if let streamURL = videoMC.streamURL {
           self.load(url: streamURL) { (data, response, error) in
             if let error = error {
@@ -121,10 +119,7 @@ class DownloadsMC: NSObject, ObservableObject {
                   if let data = data {
                     if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic){
                       if let attachmentModel = videoMC.data {
-                        let downloadModel = DownloadModel(video: attachmentModel, content: content)
-                        self.data.append(downloadModel)
-                        // TODO show success hud
-                        self.state = .hasData
+                        self.createDownloadModel(with: attachmentModel, content: content)
                       }
                     } else {
                       // TODO show error hud
@@ -148,7 +143,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }).resume()
   }
   
-  private func loadContents() {
+  private func loadDownloads() {
     guard let root = localRoot else { return }
     do {
       let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
@@ -159,25 +154,8 @@ class DownloadsMC: NSObject, ObservableObject {
         if let contentIDString = lastPathComponents.first, let contentID = Int(contentIDString), let videoIDString = lastPathComponents.last, let videoID = Int(videoIDString) {
           let videoMC = VideosMC(user: self.user)
           videoMC.loadVideoStream(for: videoID) {
-            
             if let attachmentModel = videoMC.data {
-              let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
-              let contentsService = ContentsService(client: client)
-              contentsService.contentSummary(for: contentID) { [weak self] result in
-                guard let self = self else { return }
-                switch result {
-                case .failure(let error):
-                  self.state = .failed
-                  Failure
-                    .fetch(from: "DocumentsMC", reason: error.localizedDescription)
-                    .log(additionalParams: nil)
-                case .success(let content):
-                  let downloadModel = DownloadModel(video: attachmentModel, content: content)
-                  self.data.append(downloadModel)
-                  // TODO show success hud
-                  self.state = .hasData
-                }
-              }
+              self.loadContents(contentID: contentID, attachmentModel: attachmentModel)
             }
           }
         }
@@ -186,5 +164,29 @@ class DownloadsMC: NSObject, ObservableObject {
       self.state = .failed
       fatalError("Couldn't load local content. \(error.localizedDescription)")
     }
+  }
+  
+  private func loadContents(contentID: Int, attachmentModel: AttachmentModel) {
+    let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
+    let contentsService = ContentsService(client: client)
+    contentsService.contentSummary(for: contentID) { [weak self] result in
+      guard let self = self else { return }
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        Failure
+          .fetch(from: "DocumentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let content):
+        self.createDownloadModel(with: attachmentModel, content: content)
+      }
+    }
+  }
+  
+  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel) {
+    let downloadModel = DownloadModel(video: attachmentModel, content: content)
+    self.data.append(downloadModel)
+    // TODO show success hud
+    self.state = .hasData
   }
 }

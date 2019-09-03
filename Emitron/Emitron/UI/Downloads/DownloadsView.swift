@@ -48,17 +48,9 @@ struct DownloadsView: View {
         Spacer()
       }
       
-      if downloadsMC.data.isEmpty {
-        Spacer()
-      }
-      
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
-      
-      if downloadsMC.data.isEmpty {
-        Spacer()
-      }
       
       addButton()
     }

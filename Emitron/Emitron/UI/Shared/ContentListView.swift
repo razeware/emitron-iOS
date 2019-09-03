@@ -90,29 +90,34 @@ struct ContentListView: View {
   @EnvironmentObject var downloadsMC: DownloadsMC
   
   var body: some View {
-    cardsTableView()
+    if self.contents.isEmpty {
+      // TODO: fix crash when delete all items from the tableview for some reason it crashes :( 
+      return emptyView()
+    } else {
+      return cardsTableView()
+    }
+  }
+  
+  private func emptyView() -> AnyView {
+    let vStack = VStack {
+      Spacer()
+      createEmptyView()
+      Spacer()
+    }
+    
+    return AnyView(vStack)
   }
   
   private func cardsTableView() -> AnyView {
-    guard !self.contents.isEmpty else {
-      let vStack = VStack {
-        Spacer()
-        createEmptyView()
-        Spacer()
-      }
-      
-      return AnyView(vStack)
-    }
-    
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
-    let list = GeometryReader {  geometry in
+    let list = GeometryReader { geometry in
       List {
         ForEach(self.contents, id: \.id) { partialContent in
           CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
-            self.downloadsMC.saveDownload(with: partialContent.videoID, content: partialContent)
+            self.downloadsMC.saveDownload(with: partialContent)
           }, contentScreen: self.contentScreen)
             .listRowBackground(self.bgColor)
             .background(self.bgColor)
@@ -186,8 +191,10 @@ struct ContentListView: View {
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     let content = contents[index]
-    downloadsMC.deleteDownload(with: content.videoID)
-    contents.remove(atOffsets: offsets)
+    DispatchQueue.main.async {
+      self.downloadsMC.deleteDownload(with: content.videoID)
+      self.contents.remove(atOffsets: offsets)
+    }
   }
 }
 
