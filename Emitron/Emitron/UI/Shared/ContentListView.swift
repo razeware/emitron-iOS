@@ -184,11 +184,9 @@ struct ContentListView: View {
   }
   
   func delete(at offsets: IndexSet) {
-    for (index, _ ) in offsets.enumerated() {
-      let content = contents[index]
-      downloadsMC.deleteDownload(with: content.videoID)
-    }
-    
+    guard let index = offsets.first else { return }
+    let content = contents[index]
+    downloadsMC.deleteDownload(with: content.videoID)
     contents.remove(atOffsets: offsets)
   }
 }

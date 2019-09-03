@@ -30,7 +30,7 @@ import SwiftUI
 
 struct ContentSummaryView: View {
   
-  var downloadsMC: DownloadsMC
+  @EnvironmentObject var downloadsMC: DownloadsMC
   var details: ContentSummaryModel
   var body: some View {
     VStack(alignment: .leading) {
@@ -102,7 +102,7 @@ struct ContentSummaryView: View {
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
       let downloadsMC = DataManager.current.downloadsMC
-      return ContentSummaryView(downloadsMC: downloadsMC, details: ContentSummaryModel.test)
+      return ContentSummaryView(details: ContentSummaryModel.test).environmentObject(downloadsMC)
     }
 }
 #endif

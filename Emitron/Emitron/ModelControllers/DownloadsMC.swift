@@ -75,14 +75,20 @@ class DownloadsMC: NSObject, ObservableObject {
   func deleteDownload(with videoID: Int) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let filename = String(format: "%d.%d.%@", selectedVideo.content.id, videoID, String.appExtension)
-    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
+    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
     
     do {
       try FileManager.default.removeItem(at: fileURL)
-      data.remove(at: index)
-      // TODO somehow need to reload this??
       
+      for (index, model) in data.enumerated() {
+        if model.content.id == selectedVideo.content.id {
+          data.remove(at: index)
+          self.state = .hasData
+        }
+      }
+
     } catch {
+      self.state = .failed
       fatalError("Couldn't remove file.")
     }
   }
@@ -100,8 +106,12 @@ class DownloadsMC: NSObject, ObservableObject {
       videoMC.loadVideoStream(for: videoID) {
         if let streamURL = videoMC.streamURL {
           self.load(url: streamURL) { (data, response, error) in
-            if error != nil {
+            if let error = error {
               // TODO show error hud
+              self.state = .failed
+              Failure
+                .fetch(from: "DocumentsMC", reason: error.localizedDescription)
+                .log(additionalParams: nil)
               return
             }
             
@@ -114,7 +124,7 @@ class DownloadsMC: NSObject, ObservableObject {
                         let downloadModel = DownloadModel(video: attachmentModel, content: content)
                         self.data.append(downloadModel)
                         // TODO show success hud
-                        
+                        self.state = .hasData
                       }
                     } else {
                       // TODO show error hud
@@ -173,6 +183,7 @@ class DownloadsMC: NSObject, ObservableObject {
         }
       }
     } catch let error {
+      self.state = .failed
       fatalError("Couldn't load local content. \(error.localizedDescription)")
     }
   }
