@@ -65,7 +65,7 @@ struct SettingsOptionsView: View {
         }
         
         VStack {
-          ForEach(self.selectedSettingsOption.detail.detailOptions, id: \.self) { detail in
+          ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
             TitleDetailView(callback: {
               // Update user defaults
               UserDefaults.standard.set(detail,
