@@ -30,23 +30,7 @@ import SwiftUI
 
 struct DownloadsView: View {
   var body: some View {
-    List {
-      NavigationLink(destination: Text("Hahaha")) {
-        Text("Lalala")
-      }
-      NavigationLink(destination: Text("Hahaha")) {
-        Text("Lalala")
-      }
-      NavigationLink(destination: Text("Hahaha")) {
-        Text("Lalala")
-      }
-      NavigationLink(destination: Text("Hahaha")) {
-        Text("Lalala")
-      }
-      NavigationLink(destination: Text("Hahaha")) {
-        Text("Lalala")
-      }
-    }
+    Text("My Downloads")
   }
 }
 
