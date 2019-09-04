@@ -28,82 +28,101 @@
 
 import SwiftUI
 
-enum AppliedFilterType {
-  case `default`
-  case destructive
+enum MainButtonType {
+  case primary(withArrow: Bool)
+  case secondary(withArrow: Bool)
+  case destructive(withArrow: Bool)
   
   var color: Color {
     switch self {
-    case .default:
-      return .brightGrey
+    case .primary:
+      return .appGreen
+    case .secondary:
+      return .appBlack
     case .destructive:
       return .copper
     }
   }
-}
-
-private enum Layout {
-  struct Padding {
-    let overall: CGFloat = 12
-    let textTrailing: CGFloat = 2
+  
+  // TODO: Hopefully Luke gives us a white Image, so we don't have to switch here at all
+  var arrowImage: UIImage {
+    switch self {
+    case .primary, .secondary:
+      return #imageLiteral(resourceName: "arrowGreen")
+    case .destructive:
+      return #imageLiteral(resourceName: "arrowRed")
+    }
   }
   
-  static let padding = Padding()
-  static let cornerRadius: CGFloat = 9
-  static let imageSize: CGFloat = 15
+  var hasArrow: Bool {
+    switch self {
+    case .primary(let hasArrow),
+         .destructive(let hasArrow),
+         .secondary(let hasArrow):
+      return hasArrow
+    }
+  }
 }
 
-// TODO: Should make this more reuse-friendly
-struct AppliedFilterView: View {
+struct MainButtonView: View {
   
-  @EnvironmentObject var filters: Filters
-  private var filter: Filter?
-  private var type: AppliedFilterType
-  private var name: String?
-  private var filtersUpdateCallback: () -> Void
+  private var title: String
+  private var type: MainButtonType
+  private var callback: () -> Void
   
-  init(filter: Filter? = nil, type: AppliedFilterType, name: String? = nil, filtersDidUpdate: @escaping () -> Void) {
-    self.filter = filter
+  init(title: String, type: MainButtonType, callback: @escaping () -> Void) {
+    self.title = title
     self.type = type
-    self.name = name
-    self.filtersUpdateCallback = filtersDidUpdate
+    self.callback = callback
   }
   
   var body: some View {
     Button(action: {
-      // If there's no filter passed through, it's a destructive one that should clear all, so we init a new Filters object
-      if let filter = self.filter {
-        filter.isOn.toggle()
-        self.filters.filters.update(with: filter)
-        self.filters.commitUpdates()
-      } else {
-        self.filters.removeAll()
-      }
-      self.filtersUpdateCallback()
+      self.callback()
     }) {
+      
       HStack {
-        Text(filter?.filterName ?? name ?? "None")
+        
+        if type.hasArrow {
+        Rectangle()
+          .frame(width: 24, height: 24, alignment: .center)
+          .foregroundColor(type.color)
+        }
+        
+        Spacer()
+        
+        Text(title)
+          .font(.uiButtonLabel)
           .foregroundColor(.white)
-          .font(.uiButtonLabelSmall)
-          .padding([.trailing], Layout.padding.textTrailing)
-        Image("closeWhite")
-          .resizable()
-          .frame(width: Layout.imageSize, height: Layout.imageSize)
-          .foregroundColor(.white)
+        
+        Spacer()
+        
+        if type.hasArrow {
+          ZStack {
+            Rectangle()
+              .frame(width: 24, height: 24, alignment: .center)
+              .cornerRadius(9)
+              .background(Color.white)
+            Image(uiImage: type.arrowImage)
+              .resizable()
+              .foregroundColor(type.color)
+              .frame(width: 24, height: 24, alignment: .center)
+            }
+            .padding([.trailing, .top, .bottom], 10)
+          }
       }
-      .padding(.all, Layout.padding.overall)
-        .background(type.color)
-        .cornerRadius(Layout.cornerRadius)
-        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+      .frame(height: 46)
+      .background(type.color)
+      .cornerRadius(9)
     }
   }
 }
 
 #if DEBUG
-struct AppliedFilterView_Previews: PreviewProvider {
+struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    AppliedFilterView(filter: Filter.testFilter, type: .default) {
-      print("This is just a test.")
+    MainButtonView(title: "Got It!", type: .primary(withArrow: true)) {
+      print("Tapped!")
     }
   }
 }

@@ -80,7 +80,7 @@ struct FiltersHeaderView: View {
       VStack(alignment: .leading, spacing: 12) {
         
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
-          FilterView(filter: filter).environmentObject(self.filters)
+          FilterView(filter: filter)
         }
       })
   }

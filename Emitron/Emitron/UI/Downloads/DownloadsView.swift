@@ -30,7 +30,7 @@ import SwiftUI
 
 struct DownloadsView: View {
   var body: some View {
-    Text("My Downloads!")
+    Text("My Downloads")
   }
 }
 

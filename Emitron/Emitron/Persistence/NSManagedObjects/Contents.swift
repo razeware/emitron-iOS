@@ -50,7 +50,7 @@ final class Contents: NSManagedObject {
   @NSManaged var cardArtworkUrl: URL?
   @NSManaged var technologyTripleString: String
   @NSManaged var contributorString: String
-  @NSManaged var videoID: NSNumber
+  @NSManaged var videoID: NSNumber?
   
   static func transform(from model: ContentDetailModel, viewContext: NSManagedObjectContext) -> Contents {
     let contents = Contents(context: viewContext)
@@ -68,7 +68,7 @@ final class Contents: NSManagedObject {
     contents.cardArtworkUrl = model.cardArtworkURL
     contents.technologyTripleString = model.technologyTripleString
     contents.contributorString = model.contributorString
-    contents.videoID = NSNumber(value: model.videoID)
+    contents.videoID = model.videoID != nil ? NSNumber(value: model.videoID!) : nil
     return contents
   }
 }

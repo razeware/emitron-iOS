@@ -27,6 +27,8 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Kingfisher
+import UIKit
 
 enum CardViewType: Hashable {
   case `default`
@@ -52,7 +54,10 @@ struct CardViewModel: Hashable {
 // Transform data
 extension CardViewModel {
   static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
-    let domainData = DataManager.current.domainsMC.data
+    guard let domainData = DataManager.current?.domainsMC.data else {
+      return nil
+    }
+    
     let ids = content.domainIDs
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
@@ -76,10 +81,11 @@ extension CardViewModel {
   }
 }
 
-struct CardView: View {
+struct CardView: SwiftUI.View {
   
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel
+  private let animation: Animation = .easeIn
   
   init(model: CardViewModel) {
     self.model = model
@@ -87,7 +93,7 @@ struct CardView: View {
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
-  var body: some View {
+  var body: some SwiftUI.View {
     VStack(alignment: .leading) {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
@@ -104,7 +110,7 @@ struct CardView: View {
           }
           
           Spacer()
-                    
+          
           Image(uiImage: image)
             .resizable()
             .frame(width: 60, height: 60)
@@ -117,8 +123,10 @@ struct CardView: View {
           .font(.uiCaption)
           .lineLimit(5)
           .foregroundColor(.battleshipGrey)
-        
-        Spacer()
+
+        // This space causes a crash if we use it in the tableView, but not if it's used in a scrollView
+        // Quite strange
+//        Spacer()
         
         HStack {
           Text(model.footnote)
@@ -127,7 +135,7 @@ struct CardView: View {
             .foregroundColor(.battleshipGrey)
           
           Spacer()
-          
+                    
           Image("downloadInactive")
             .resizable()
             .frame(width: 19, height: 19)
@@ -160,14 +168,28 @@ struct CardView: View {
     case .asset(let img):
       image = img
     case .url(let url):
-      DispatchQueue.global().async {
-        let data = try? Data(contentsOf: url)
-        if let data = data,
-          let img = UIImage(data: data) {
-          DispatchQueue.main.async {
-            self.image = img
-          }
+//      DispatchQueue.global().async {
+//        let data = try? Data(contentsOf: url)
+//        if let data = data,
+//          let img = UIImage(data: data) {
+//          DispatchQueue.main.async {
+//            self.image = img
+//          }
+//        }
+//      }
+      fishImage(url: url)
+    }
+  }
+  
+  private func fishImage(url: URL) {
+    KingfisherManager.shared.retrieveImage(with: url) { result in
+      switch result {
+      case .success(let imageResult):
+        withAnimation(self.animation) {
+          self.image = imageResult.image
         }
+      case .failure:
+        break
       }
     }
   }
@@ -175,7 +197,7 @@ struct CardView: View {
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
-  static var previews: some View {
+  static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
     return CardView(model: cardModel)
   }

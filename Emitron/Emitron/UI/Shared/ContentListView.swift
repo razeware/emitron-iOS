@@ -39,11 +39,16 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
+  @State var imageLoaded: Bool = false
   
   var body: some View {
     //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
     // because apparently using a List causes a crash...  in the tab bar navigation...
-    cardsScrollView()
+//    NavigationView {
+//      cardTableViewWithNav()
+//    }
+    cardsTableView()
+    // cardsScrollView()
   }
   
   private func cardsScrollView() -> AnyView {
@@ -57,6 +62,7 @@ struct ContentListView: View {
         .listRowBackground(self.bgColor)
         .background(self.bgColor)
         .onTapGesture {
+          self.imageLoaded = false
           self.isPresenting = true
           self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
         }
@@ -93,7 +99,9 @@ struct ContentListView: View {
       Text("Should load more stuff...")
         // TODO: This is a hack to know when we've reached the end of the list, borrowed from
         // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-        .onAppear { self.loadMoreContents() }
+        .onAppear {
+          self.loadMoreContents()
+        }
     }
         .sheet(isPresented: self.$isPresenting) {
           user != nil
@@ -104,9 +112,33 @@ struct ContentListView: View {
     return AnyView(list)
   }
   
+//  func cardTableViewWithNav() -> AnyView {
+//    let guardpost = Guardpost.current
+//    let user = guardpost.currentUser
+//    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+//    
+//    let list = List {
+//      ForEach(contents, id: \.id) { partialContent in
+//        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
+//          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+//          .listRowBackground(self.bgColor)
+//          .background(self.bgColor)
+//        }
+//      }
+//      Text("Should load more stuff...")
+//        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+//        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+//        .onAppear {
+//          self.loadMoreContents()
+//        }
+//    }
+//    
+//    return AnyView(list)
+//  }
+  
   func loadMoreContents() {
     //TODO: Load more contents
-    // contentsMC.loadContents()
+    contentsMC.loadMore()
   }
 }
 

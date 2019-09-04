@@ -31,26 +31,26 @@ import SwiftUI
 struct TabNavView: View {
 
   @State private var selection = 0
+  @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
     let tabs = TabView(selection: $selection) {
 
-      libraryView() //TODO: This is somehow making the tabbar crash
+      libraryView()
         .tabItem {
           Text(Constants.library)
           Image("library")
         }
         .tag(0)
 
-      DownloadsView()
+      NavigationView {
+        DownloadsView()
+      }
         .tabItem {
           Text(Constants.downloads)
           Image("downloadInactive")
         }
         .tag(1)
-        .onTapGesture {
-          print("Tapped Downloads")
-        }
 
       myTutorialsView()
         .tabItem {
@@ -64,16 +64,19 @@ struct TabNavView: View {
   }
   
   func libraryView() -> AnyView {
-    
-    let contentsMC = DataManager.current.contentsMC
-    let filters = DataManager.current.filters
-    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(filters))
+    let filters = DataManager.current!.filters
+    return AnyView(LibraryView().environmentObject(filters))
   }
   
   func myTutorialsView() -> AnyView {
-    let contentsMC = DataManager.current.contentsMC
-    let progressionsMC = DataManager.current.progressionsMC
-    let bookmarksMC = DataManager.current.bookmarksMC
+
+    //TODO: I don't think this needs contentsMC from gurdpost, or contentsMC at all
+    let guardpost = Guardpost.current
+    let filters = DataManager.current!.filters
+    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
+    
+    let progressionsMC = DataManager.current!.progressionsMC
+    let bookmarksMC = DataManager.current!.bookmarksMC
     
     return AnyView(MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC))
   }

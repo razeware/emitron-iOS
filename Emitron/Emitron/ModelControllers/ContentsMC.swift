@@ -53,21 +53,17 @@ class ContentsMC: NSObject, ObservableObject {
   private(set) var defaultPageSize: Int = 20
   
   // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
-  
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
       if oldValue != currentParameters {
-        loadContents()
+        reloadContents()
       }
     }
   }
   
-  private var filters: Filters {
+  private(set) var filters: Filters {
     didSet {
-      currentParameters = filters.appliedParameters + defaultParameters
+      currentParameters = filters.appliedParameters
     }
   }
     
@@ -78,18 +74,18 @@ class ContentsMC: NSObject, ObservableObject {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.filters = filters
+    self.currentParameters = filters.appliedParameters
     
     super.init()
 
-    currentParameters = defaultParameters
-    loadContents()
+    reloadContents()
   }
   
   func updateFilters(newFilters: Filters) {
     self.filters = newFilters
   }
   
-  private func loadContents() {
+  func loadMore() {
     
     if case(.loading) = state {
       return
@@ -97,14 +93,49 @@ class ContentsMC: NSObject, ObservableObject {
     
     state = .loading
     
+    currentPage += 1
+    
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = currentParameters
     allParams.append(pageParam)
+    
+    contentsService.allContents(parameters: allParams) { [weak self] result in
+      
+      guard let self = self else {
+        return
+      }
+      
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        self.currentPage = -1
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let contentsTuple):
+        let currentContents = self.data
+        self.data = currentContents + contentsTuple.contents
+        self.numTutorials = contentsTuple.totalNumber
+        self.state = .hasData
+      }
+    }
+  }
+  
+  func reloadContents() {
+    
+    if case(.loading) = state {
+      return
+    }
+    
+    state = .loading
     
     // Don't load more contents if we've reached the end of the results
     guard data.isEmpty || data.count <= numTutorials else {
       return
     }
+    
+    // Reset current page to 1
+    currentPage = startingPage
     
     contentsService.allContents(parameters: currentParameters) { [weak self] result in
       
@@ -119,13 +150,7 @@ class ContentsMC: NSObject, ObservableObject {
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentsTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + contentsTuple.contents
-        } else {
-          self.data = contentsTuple.contents
-        }
+        self.data = contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber
         self.state = .hasData
       }

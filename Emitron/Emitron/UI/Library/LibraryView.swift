@@ -38,44 +38,11 @@ private extension CGFloat {
   static let filtersPaddingTop: CGFloat = 12
 }
 
-enum SortSelection: Int {
-  case newest
-  case popularity
-  
-  var next: SortSelection {
-    switch self {
-    case .newest:
-      return .popularity
-    case .popularity:
-      return .newest
-    }
-  }
-  
-  var name: String {
-    switch self {
-    case .newest:
-      return Constants.newest
-    case .popularity:
-      return Constants.popularity
-    }
-  }
-  
-  func sorted(data: [ContentDetailModel]) -> [ContentDetailModel] {
-    switch self {
-    case .newest:
-      return data.sorted(by: { $0.releasedAt > $1.releasedAt })
-    case .popularity:
-      return data.sorted(by: { $0.popularity > $1.popularity })
-    }
-  }
-}
-
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
-  @State var sortSelection: SortSelection = .newest
   @State private var searchText = ""
   
   var body: some View {
@@ -92,7 +59,7 @@ struct LibraryView: View {
               .foregroundColor(.battleshipGrey)
               .frame(width: .filterButtonSide, height: .filterButtonSide)
               .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.contentsMC).environmentObject(self.filters)
+                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.filters).environmentObject(self.contentsMC)
               }
           })
             .padding([.leading], .searchFilterPadding)
@@ -112,7 +79,7 @@ struct LibraryView: View {
               Image("sort")
                 .foregroundColor(.battleshipGrey)
               
-              Text(sortSelection.name)
+              Text(filters.sortFilter.name)
                 .font(.uiLabel)
                 .foregroundColor(.battleshipGrey)
             }
@@ -166,6 +133,10 @@ struct LibraryView: View {
       self.updateFilters()
     })
       .textFieldStyle(RoundedBorderTextFieldStyle())
+      .modifier(ClearButton(text: $searchText, action: {
+        UIApplication.shared.keyWindow?.endEditing(true)
+        self.updateFilters()
+      }))
     
     return AnyView(searchField)
   }
@@ -176,7 +147,8 @@ struct LibraryView: View {
   }
   
   private func changeSort() {
-    sortSelection = sortSelection.next
+    filters.changeSortFilter()
+    contentsMC.updateFilters(newFilters: filters)
   }
   
   private func contentView() -> AnyView {
@@ -200,11 +172,33 @@ struct LibraryView: View {
   }
 }
 
+// Inspired by: https://forums.developer.apple.com/thread/121162
+struct ClearButton: ViewModifier {
+  @Binding var text: String
+  var action: () -> Void
+  
+  public func body(content: Content) -> some View {
+    HStack {
+      content
+      Button(action: {
+        self.text = ""
+        self.action()
+      }) {
+        Image(systemName: "multiply.circle.fill")
+          // If we don't enforce a frame, the button doesn't register the tap action
+          .frame(width: 25, height: 25, alignment: .center)
+          .foregroundColor(.secondary)
+      }
+    }
+  }
+}
+
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let contentsMC = DataManager.current.contentsMC
-    let filters = DataManager.current.filters
+    let guardpost = Guardpost.current
+    let filters = DataManager.current!.filters
+    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     return LibraryView().environmentObject(filters).environmentObject(contentsMC)
   }
 }
