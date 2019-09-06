@@ -86,16 +86,10 @@ struct ContentListView: View {
   @State var contents: [ContentSummaryModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
-  @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var downloadsMC: DownloadsMC
   
   var body: some View {
-    if self.contents.isEmpty {
-      // TODO: fix crash when delete all items from the tableview for some reason it crashes :( 
-      return emptyView()
-    } else {
-      return cardsTableView()
-    }
+    return cardsTableView()
   }
   
   private func emptyView() -> AnyView {
@@ -129,11 +123,25 @@ struct ContentListView: View {
         .onDelete(perform: self.delete)
         .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
         
-        Text("Should load more stuff...")
-          // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-          // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-          .onAppear { self.loadMoreContents() }
+//        if self.contents.isEmpty {
+//          VStack {
+//            HStack {
+//              Spacer()
+//
+//              Text(self.contentScreen.titleMessage)
+//                .font(.uiTitle2)
+//                .foregroundColor(.appBlack)
+//                .multilineTextAlignment(.center)
+//                .lineLimit(nil)
+//
+//              Spacer()
+//            }
+//
+//            self.addDetailText()
+//          }
+//        }
       }
+      .onAppear { self.loadMoreContents() }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
           ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
@@ -144,7 +152,6 @@ struct ContentListView: View {
     return AnyView(list)
   }
   
-  // TODO figure out how to return VStack instead
   private func createEmptyView() -> AnyView {
     let vStack = VStack {
       HStack {
@@ -165,7 +172,6 @@ struct ContentListView: View {
     return AnyView(vStack)
   }
   
-  // TODO return HStack
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
@@ -191,9 +197,8 @@ struct ContentListView: View {
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     let content = contents[index]
-    DispatchQueue.main.async {
-      self.downloadsMC.deleteDownload(with: content.videoID)
-      self.contents.remove(atOffsets: offsets)
+    self.downloadsMC.deleteDownload(with: content.videoID) { contents in
+      self.contents = contents
     }
   }
 }

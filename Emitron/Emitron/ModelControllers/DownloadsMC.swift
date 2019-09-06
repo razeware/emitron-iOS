@@ -72,7 +72,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Public funcs
-  func deleteDownload(with videoID: Int) {
+  func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let filename = String(format: "%d.%d.%@", selectedVideo.content.id, videoID, String.appExtension)
     guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
@@ -80,10 +80,11 @@ class DownloadsMC: NSObject, ObservableObject {
     do {
       try FileManager.default.removeItem(at: fileURL)
       
-      DispatchQueue.main.async {
-        self.data.remove(at: index)
-        self.state = .hasData
-      }
+      
+      self.data.remove(at: index)
+      self.state = .hasData
+      let contents = self.data.map { $0.content }
+      completion(contents)
       
     } catch {
       self.state = .failed
@@ -104,25 +105,27 @@ class DownloadsMC: NSObject, ObservableObject {
       videoMC.loadVideoStream(for: content.videoID) {
         if let streamURL = videoMC.streamURL {
           self.load(url: streamURL) { (data, response, error) in
-            if let error = error {
-              // TODO show error hud
-              self.state = .failed
-              Failure
-                .fetch(from: "DocumentsMC", reason: error.localizedDescription)
-                .log(additionalParams: nil)
-              return
-            }
-            
-            if let response = response as? HTTPURLResponse {
-              if response.statusCode == 200 {
-                DispatchQueue.main.async {
-                  if let data = data {
-                    if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic){
-                      if let attachmentModel = videoMC.data {
-                        self.createDownloadModel(with: attachmentModel, content: content)
+            DispatchQueue.main.async {
+              if let error = error {
+                // TODO show error hud
+                self.state = .failed
+                Failure
+                  .fetch(from: "DocumentsMC", reason: error.localizedDescription)
+                  .log(additionalParams: nil)
+                return
+              }
+              
+              if let response = response as? HTTPURLResponse {
+                if response.statusCode == 200 {
+                  DispatchQueue.main.async {
+                    if let data = data {
+                      if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic){
+                        if let attachmentModel = videoMC.data {
+                          self.createDownloadModel(with: attachmentModel, content: content)
+                        }
+                      } else {
+                        // TODO show error hud
                       }
-                    } else {
-                      // TODO show error hud
                     }
                   }
                 }
@@ -155,7 +158,9 @@ class DownloadsMC: NSObject, ObservableObject {
           let videoMC = VideosMC(user: self.user)
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
-              self.loadContents(contentID: contentID, attachmentModel: attachmentModel)
+              DispatchQueue.main.async {
+                self.loadContents(contentID: contentID, attachmentModel: attachmentModel)
+              }
             }
           }
         }
@@ -178,7 +183,9 @@ class DownloadsMC: NSObject, ObservableObject {
           .fetch(from: "DocumentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let content):
-        self.createDownloadModel(with: attachmentModel, content: content)
+        DispatchQueue.main.async {
+          self.createDownloadModel(with: attachmentModel, content: content)
+        }
       }
     }
   }
