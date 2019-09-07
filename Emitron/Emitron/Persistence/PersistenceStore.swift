@@ -73,6 +73,57 @@ extension PersistenceStore {
 // Progress for contentID
 // App Settings
 
+// UserDefaults.standard.updateFilters
+
+enum UserDefaultsType: String {
+  case filters, sort, playbackSpeed
+}
+
+extension UserDefaults {
+  
+  // Construct filters from UserDefaults
+  // Search is not included?
+  // Filters = filters (domains + content + categories + difficulties) + sort
+  var filters: Set<Filter> {
+    guard let filterDataArray = UserDefaults.standard.object(forKey: UserDefaultsType.filters.rawValue) as? [Data] else {
+      return []
+    }
+    
+    let decoder  = JSONDecoder()
+    let decodedFilterArray = filterDataArray.compactMap { try? decoder.decode(Filter.self, from: $0) }
+    return Set(decodedFilterArray)
+  }
+  
+  func updateFilters(with newFilters: Filters) {
+    let encoder  = JSONEncoder()
+    
+    var encodedFilterArray: [Data] = []
+    for filter in newFilters.filters {
+      let encodedFilter = try? encoder.encode(filter)
+      encodedFilterArray.append(encodedFilter!)
+    }
+    
+    set(encodedFilterArray, forKey: UserDefaultsType.filters.rawValue)
+  }
+  
+  var sort: SortFilter {
+    guard let sortFilterData = UserDefaults.standard.object(forKey: UserDefaultsType.sort.rawValue) as? Data else {
+      return SortFilter.newest
+    }
+    
+    let decoder = JSONDecoder()
+    let sortFilter = try? decoder.decode(SortFilter.self, from: sortFilterData)
+    return sortFilter!
+  }
+  
+  func updateSort(with sortFilter: SortFilter) {
+    let encoder  = JSONEncoder()
+    let encodedFilter = try? encoder.encode(sortFilter)
+    set(encodedFilter, forKey: UserDefaultsType.sort.rawValue)
+  }
+  
+}
+
 extension PersistenceStore {
   
 }

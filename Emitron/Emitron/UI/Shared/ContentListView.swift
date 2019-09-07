@@ -35,7 +35,7 @@ private struct Layout {
 
 enum ContentScreen {
   case library, downloads, myTutorials, tips
-  
+
   var titleMessage: String {
     switch self {
       // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
@@ -45,7 +45,7 @@ enum ContentScreen {
     case .tips: return "Swipe left to delete a downloan"
     }
   }
-  
+
   var detailMesage: String? {
     switch self {
     case .library: return "Try removing some filters"
@@ -53,7 +53,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-  
+
   var buttonText: String? {
     switch self {
     case .downloads: return "Explore Tutorials"
@@ -61,7 +61,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-  
+
   var buttonIconName: String? {
     switch self {
     case .downloads, .tips: return "arrowGreen"
@@ -69,7 +69,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-  
+
   var buttonColor: Color? {
     switch self {
     case .downloads, .tips: return .appGreen
@@ -80,43 +80,42 @@ enum ContentScreen {
 }
 
 struct ContentListView: View {
-  
+
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentSummaryModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
+  @EnvironmentObject var contentsMC: ContentsMC
+  @State var imageLoaded: Bool = false
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
-  
+
   var body: some View {
-    // TODO: once crash doesn't happen with new SwiftUI (HOPEFULLY!) we can uncomment this :)
-//    if contents.isEmpty {
-//      return createEmptyView()
-//    } else {
-//      return cardsTableView()
-//    }
-    return cardsTableView()
+  // TODO: once crash doesn't happen with new SwiftUI (HOPEFULLY!) we can uncomment this :)
+  //    if contents.isEmpty {
+  //      return createEmptyView()
+  //    } else {
+  //      return cardsTableView()
+  //    }
+
+    cardsTableView()
   }
-  
-  mutating func updateContents(with newContents: [ContentSummaryModel]) {
-    self.contents = newContents
-  }
-  
+
   private func emptyView() -> AnyView {
     let vStack = VStack {
       Spacer()
       createEmptyView()
       Spacer()
     }
-    
+
     return AnyView(vStack)
   }
-  
+
   private func cardsTableView() -> AnyView {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    
+
     let list = GeometryReader { geometry in
       List {
         ForEach(self.contents, id: \.id) { partialContent in
@@ -132,7 +131,7 @@ struct ContentListView: View {
         }
         .onDelete(perform: self.delete)
         .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
-        
+
         // TODO: this is NOT the final empty view. This is a hack. Once SwiftUI doesn't crash with empty view in body, can remove this
         if self.contents.isEmpty {
           VStack {
@@ -156,71 +155,97 @@ struct ContentListView: View {
       .onAppear { self.loadMoreContents() }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
-          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!,callback: { content in
+          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
             self.callback?(.save, content)
           }, user: user!))
           : AnyView(Text("Unable to show video..."))
       }
     }
-    
+
     return AnyView(list)
   }
-  
+
   private func createEmptyView() -> AnyView {
     let vStack = VStack {
       HStack {
         Spacer()
-        
+
         Text(contentScreen.titleMessage)
         .font(.uiTitle2)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
-        
+
         Spacer()
       }
-      
+
       addDetailText()
     }
-    
+
     return AnyView(vStack)
   }
-  
+
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
         Spacer()
-        
+
         Text(detail)
         .font(.uiHeadline)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
-        
+
         Spacer()
     }
-    
+
     return AnyView(stack)
   }
-  
+
+//  func cardTableViewWithNav() -> AnyView {
+//    let guardpost = Guardpost.current
+//    let user = guardpost.currentUser
+//    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+//
+//    let list = List {
+//      ForEach(contents, id: \.id) { partialContent in
+//        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
+//          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
+//          .listRowBackground(self.bgColor)
+//          .background(self.bgColor)
+//        }
+//      }
+//      Text("Should load more stuff...")
+//        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
+//        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
+//        .onAppear {
+//          self.loadMoreContents()
+//        }
+//    }
+//
+//    return AnyView(list)
+//  }
+
   func loadMoreContents() {
     //TODO: Load more contents
-    // contentsMC.loadContents()
+    contentsMC.loadMore()
   }
-  
+
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     let content = contents[index]
     callback?(.delete, content)
   }
+  
+  mutating func updateContents(with newContents: [ContentSummaryModel]) {
+    self.contents = newContents
+  }
 }
 
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
-
   static var previews: some View {
-    let downloadsMC = DataManager.current.downloadsMC
-    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey).environmentObject(downloadsMC)
+    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey)
   }
 }
 #endif

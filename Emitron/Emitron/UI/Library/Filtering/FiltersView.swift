@@ -54,8 +54,6 @@ struct FiltersView: View {
         
         Button(action: {
           self.isPresented = false
-          //TODO: This should probably definitely not be here in the end
-           self.contentsMC.updateFilters(newFilters: self.filters)
         }) {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
@@ -66,16 +64,29 @@ struct FiltersView: View {
       .padding(.top, 20)
       
       constructScrollView()
-      .padding([.leading, .trailing, .top], 20)
+        .padding([.leading, .trailing, .top], 20)
+      
+      HStack {
+        
+        MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
+          self.isPresented = false
+          self.filters.removeAll()
+          self.contentsMC.updateFilters(newFilters: self.filters)
+        }
+        .padding([.trailing], 10)
+        
+        // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
+        // Which ones are currently being applied to the content listing
+        applyOrCloseButton()
+      }
+      .padding([.leading, .trailing], 18)
     }
     .background(Color.paleGrey)
-      //TODO: In the current beta onDisappear() doesn’t seem to get called, so we're doing this on the close button action instead
-      .onDisappear {
-         self.contentsMC.updateFilters(newFilters: self.filters)
-      }
   }
   
-  func constructScrollView() -> AnyView? {
+  // Is ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> actually more performance than AnyView?
+  private func constructScrollView() -> ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> {
+
     let scrollView = ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         
@@ -84,11 +95,24 @@ struct FiltersView: View {
         }
       }
     }
-    return AnyView(scrollView)
+    return scrollView
   }
   
-  func constructFilterView(filterGroup: FilterGroup) -> AnyView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup).environmentObject(filters)
-    return AnyView(filtersView)
+  private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup)
+    return filtersView
+  }
+  
+  private func applyOrCloseButton() -> MainButtonView {
+    
+    let equalSets = Set(contentsMC.currentParameters) == Set(filters.appliedParameters)
+    let title = equalSets ? "Close" : "Apply"
+    
+    let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
+      self.isPresented = false
+      self.contentsMC.updateFilters(newFilters: self.filters)
+    }
+    
+    return buttonView
   }
 }

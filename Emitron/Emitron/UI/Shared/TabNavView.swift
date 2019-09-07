@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,11 +31,12 @@ import SwiftUI
 struct TabNavView: View {
 
   @State private var selection = 0
+  @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
     let tabs = TabView(selection: $selection) {
 
-      libraryView() //TODO: This is somehow making the tabbar crash
+      libraryView()
         .tabItem {
           Text(Constants.library)
           Image("library")
@@ -59,23 +60,25 @@ struct TabNavView: View {
 
     return tabs
   }
-  
-  func libraryView() -> AnyView {
-    
-    let contentsMC = DataManager.current.contentsMC
-    let downloadsMC = DataManager.current.downloadsMC
-    let filters = DataManager.current.filters
+
+  func libraryView() -> AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    let contentsMC = dataManager.contentsMC
+    let downloadsMC = dataManager.downloadsMC
+    let filters = dataManager.filters
     return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters))
   }
-  
-  func myTutorialsView() -> AnyView {
-    let progressionsMC = DataManager.current.progressionsMC
-    let bookmarksMC = DataManager.current.bookmarksMC
+
+  func myTutorialsView() -> AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    let progressionsMC = dataManager.progressionsMC
+    let bookmarksMC = dataManager.bookmarksMC
     return AnyView(MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC))
   }
-  
-  func downloadsView() -> AnyView {
-    let downloadsMC = DataManager.current.downloadsMC
+
+  func downloadsView() -> AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    let downloadsMC = dataManager.downloadsMC
     return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC))
   }
 }

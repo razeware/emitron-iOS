@@ -30,7 +30,6 @@ import SwiftUI
 
 struct ContentSummaryView: View {
   
-//  @EnvironmentObject var downloadsMC: DownloadsMC
   var callback: ((ContentSummaryModel)->())?
   var details: ContentSummaryModel
   var body: some View {
@@ -102,7 +101,6 @@ struct ContentSummaryView: View {
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      let downloadsMC = DataManager.current.downloadsMC
       return ContentSummaryView(details: ContentSummaryModel.test)
     }
 }

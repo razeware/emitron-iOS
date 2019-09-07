@@ -29,63 +29,88 @@
 import SwiftUI
 
 struct ContentListingView: View {
-  
+
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   var callback: ((ContentSummaryModel)->())?
-  
+//  @Binding var imageLoaded: Bool
+
   var user: UserModel
-    
+
   var body: some View {
-    
+
     List {
       VStack {
-        
-        // TODO: This is probably not the correct image...
-        Image(uiImage: uiImage)
-          .resizable()
-          .frame(width: 375, height: 283)
-          .onAppear(perform: loadImage)
-          .transition(.opacity)
 
-        ContentSummaryView(callback: callback, details: contentSummaryMC.data)
+//        Image("loading")
+//          .fetchingRemoteImage(from: contentDetailsMC.data.cardArtworkURL!)
+//          .frame(width: 375, height: 283)
+//
+//        ContentSummaryView(details: contentDetailsMC.data)
+
+//         TODO: This is probably not the correct image...
+                Image(uiImage: uiImage)
+                  .resizable()
+                  .frame(width: 375, height: 283)
+                  .onAppear(perform: loadImage)
+                  .transition(.opacity)
+
+                ContentSummaryView(callback: callback, details: contentSummaryMC.data)
       }
-        .frame(maxWidth: UIScreen.main.bounds.width)
-        .background(Color.white)
-      
+      .frame(maxWidth: UIScreen.main.bounds.width)
+      .background(Color.white)
+
       if contentSummaryMC.data.contentType == .collection {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-        
+
         VStack {
           Text("Course Episodes")
             .font(.uiTitle2)
             .padding([.top], -5)
-          
-          // TODO: Ask Lea & Sam about this... 
-//          ForEach(contentSummaryMC.data.groups, id: \.id) { group in
-//            Section(header:
-//              CourseHeaderView(name: group.name, color: .white)
-//                .background(Color.white)
-//            ) {
-//              ForEach(group.childContents, id: \.id) { summary in
-//
-//                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
-//                  // Download
-//                })
-//                .onTapGesture {
-//                  self.isPresented = true
-//                }
-//                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
-//              }
-//            }
-//          }
+
+          //          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
+          //            Section(header:
+          //              CourseHeaderView(name: group.name, color: .white)
+          //                .background(Color.white)
+          //            ) {
+          //              ForEach(group.childContents, id: \.id) { summary in
+          //
+          //                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
+          //                  // Download
+          //                })
+          //                  .onTapGesture {
+          //                    self.isPresented = true
+          //                }
+          //                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
+          //              }
+          //            }
+          //          }
+          // TODO: Ask Lea & Sam about this...
+          //          ForEach(contentSummaryMC.data.groups, id: \.id) { group in
+          //            Section(header:
+          //              CourseHeaderView(name: group.name, color: .white)
+          //                .background(Color.white)
+          //            ) {
+          //              ForEach(group.childContents, id: \.id) { summary in
+          //
+          //                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
+          //                  // Download
+          //                })
+          //                .onTapGesture {
+          //                  self.isPresented = true
+          //                }
+          //                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
+          //              }
+          //            }
+          //          }
         }
       } else {
         Button(action: {
           self.isPresented = true
         }) {
           Text("Play Video!")
+            //TODO: This is wrong
             .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID, user: self.user) }
         }
       }
@@ -94,24 +119,55 @@ struct ContentListingView: View {
       //TODO: Kind of hack to force data-reload while this modal-presentation with List issue goes on
       self.contentSummaryMC.getContentDetails()
     }
+    .onDisappear {
+      print("I'm gone...")
+    }
   }
-  
-  private func loadImage() {
-      //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-      // is causing this file to not compile
-          
-      guard let url = contentSummaryMC.data.cardArtworkURL else {
-        return
-      }
 
-      DispatchQueue.global().async {
-          let data = try? Data(contentsOf: url)
-          DispatchQueue.main.async {
-            if let data = data,
-              let img = UIImage(data: data) {
-              self.uiImage = img
-            }
-          }
+//  private func loadImageAlt() -> AnyView {
+//    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+//    // is causing this file to not compile
+//
+//    //TODO: This is probably not the right way tohandle image change, only doing this because the .onAppear trigger doesn't work for modals...
+//    let image = Image(uiImage: uiImage)
+//      .resizable()
+//      .frame(width: 375, height: 283)
+//
+//    guard let url = contentDetailsMC.data.cardArtworkURL else {
+//      return AnyView(image)
+//    }
+//
+//    if !imageLoaded {
+//      DispatchQueue.global().async {
+//        let data = try? Data(contentsOf: url)
+//        DispatchQueue.main.async {
+//          if let data = data,
+//            let img = UIImage(data: data) {
+//            self.uiImage = img
+//            self.imageLoaded.toggle()
+//          }
+//        }
+//      }
+//    }
+//  }
+
+  private func loadImage() {
+    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+    // is causing this file to not compile
+
+    guard let url = contentSummaryMC.data.cardArtworkURL else {
+      return
+    }
+
+    DispatchQueue.global().async {
+      let data = try? Data(contentsOf: url)
+      DispatchQueue.main.async {
+        if let data = data,
+          let img = UIImage(data: data) {
+          self.uiImage = img
+//          self.imageLoaded.toggle()
+        }
       }
     }
+  }
 }
