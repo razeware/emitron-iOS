@@ -30,7 +30,8 @@ import SwiftUI
 
 struct ContentSummaryView: View {
   
-  @EnvironmentObject var downloadsMC: DownloadsMC
+//  @EnvironmentObject var downloadsMC: DownloadsMC
+  var callback: ((ContentSummaryModel)->())?
   var details: ContentSummaryModel
   var body: some View {
     VStack(alignment: .leading) {
@@ -92,10 +93,7 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    DispatchQueue.main.async {
-      self.downloadsMC.saveDownload(with: self.details)
-    }
-    
+    self.callback?(details)
   }
   
   private func bookmark() { }
@@ -105,7 +103,7 @@ struct ContentSummaryView: View {
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
       let downloadsMC = DataManager.current.downloadsMC
-      return ContentSummaryView(details: ContentSummaryModel.test).environmentObject(downloadsMC)
+      return ContentSummaryView(details: ContentSummaryModel.test)
     }
 }
 #endif

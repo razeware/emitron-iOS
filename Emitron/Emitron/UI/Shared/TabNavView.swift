@@ -63,8 +63,9 @@ struct TabNavView: View {
   func libraryView() -> AnyView {
     
     let contentsMC = DataManager.current.contentsMC
+    let downloadsMC = DataManager.current.downloadsMC
     let filters = DataManager.current.filters
-    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(filters))
+    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters))
   }
   
   func myTutorialsView() -> AnyView {

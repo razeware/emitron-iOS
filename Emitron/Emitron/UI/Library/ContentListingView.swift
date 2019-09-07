@@ -33,6 +33,7 @@ struct ContentListingView: View {
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
+  var callback: ((ContentSummaryModel)->())?
   
   var user: UserModel
     
@@ -48,7 +49,7 @@ struct ContentListingView: View {
           .onAppear(perform: loadImage)
           .transition(.opacity)
 
-        ContentSummaryView(details: contentSummaryMC.data).environmentObject(DataManager.current.downloadsMC)
+        ContentSummaryView(callback: callback, details: contentSummaryMC.data)
       }
         .frame(maxWidth: UIScreen.main.bounds.width)
         .background(Color.white)

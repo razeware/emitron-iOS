@@ -35,6 +35,9 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @EnvironmentObject var downloadsMC: DownloadsMC
+  var contents: [ContentSummaryModel] {
+    return downloadsMC.data.map { $0.content }
+  }
   
   var body: some View {
     VStack {
@@ -60,8 +63,26 @@ struct DownloadsView: View {
   private func contentView() -> AnyView? {
     switch downloadsMC.state {
     case .loading, .hasData, .initial:
-      let contents = downloadsMC.data.map { $0.content }
-      return AnyView(ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey).environmentObject(DataManager.current.contentsMC).environmentObject(downloadsMC))
+      var updatedContents = contents
+      var contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey) { (action, content) in
+        switch action {
+        case .delete:
+          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
+            updatedContents = contents
+          }
+          
+        case .save:
+          self.downloadsMC.saveDownload(with: content) { contents in
+            updatedContents = contents
+          }
+        }
+      }
+      
+      DispatchQueue.main.async {
+        contentListView.updateContents(with: updatedContents)
+      }
+      
+      return AnyView(contentListView)
     case .failed:
       return AnyView(Text("Error"))
     }

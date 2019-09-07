@@ -83,13 +83,23 @@ struct ContentListView: View {
   
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
-  @State var contents: [ContentSummaryModel] = []
+  var contents: [ContentSummaryModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
-  @EnvironmentObject var downloadsMC: DownloadsMC
+  var callback: ((DownloadsAction, ContentSummaryModel)->())?
   
   var body: some View {
+    // TODO: once crash doesn't happen with new SwiftUI (HOPEFULLY!) we can uncomment this :)
+//    if contents.isEmpty {
+//      return createEmptyView()
+//    } else {
+//      return cardsTableView()
+//    }
     return cardsTableView()
+  }
+  
+  mutating func updateContents(with newContents: [ContentSummaryModel]) {
+    self.contents = newContents
   }
   
   private func emptyView() -> AnyView {
@@ -111,7 +121,7 @@ struct ContentListView: View {
       List {
         ForEach(self.contents, id: \.id) { partialContent in
           CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
-            self.downloadsMC.saveDownload(with: partialContent)
+            self.callback?(.save, partialContent)
           }, contentScreen: self.contentScreen)
             .listRowBackground(self.bgColor)
             .background(self.bgColor)
@@ -123,28 +133,32 @@ struct ContentListView: View {
         .onDelete(perform: self.delete)
         .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
         
-//        if self.contents.isEmpty {
-//          VStack {
-//            HStack {
-//              Spacer()
-//
-//              Text(self.contentScreen.titleMessage)
-//                .font(.uiTitle2)
-//                .foregroundColor(.appBlack)
-//                .multilineTextAlignment(.center)
-//                .lineLimit(nil)
-//
-//              Spacer()
-//            }
-//
-//            self.addDetailText()
-//          }
-//        }
+        // TODO: this is NOT the final empty view. This is a hack. Once SwiftUI doesn't crash with empty view in body, can remove this
+        if self.contents.isEmpty {
+          VStack {
+            HStack {
+              Spacer()
+
+              Text(self.contentScreen.titleMessage)
+                .font(.uiTitle2)
+                .foregroundColor(.appBlack)
+                .multilineTextAlignment(.center)
+                .lineLimit(nil)
+
+              Spacer()
+            }
+
+            self.addDetailText()
+          }
+          .background(self.bgColor)
+        }
       }
       .onAppear { self.loadMoreContents() }
       .sheet(isPresented: self.$isPresenting) {
         user != nil
-          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
+          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!,callback: { content in
+            self.callback?(.save, content)
+          }, user: user!))
           : AnyView(Text("Unable to show video..."))
       }
     }
@@ -197,9 +211,7 @@ struct ContentListView: View {
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     let content = contents[index]
-    self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-      self.contents = contents
-    }
+    callback?(.delete, content)
   }
 }
 

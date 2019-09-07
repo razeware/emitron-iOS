@@ -38,6 +38,10 @@ extension String {
   static let thumbnailKey: String = "Thumbnail"
 }
 
+enum DownloadsAction {
+  case save, delete
+}
+
 class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
@@ -83,22 +87,25 @@ class DownloadsMC: NSObject, ObservableObject {
       
       self.data.remove(at: index)
       self.state = .hasData
-      let contents = self.data.map { $0.content }
-      completion(contents)
       
     } catch {
       self.state = .failed
       fatalError("Couldn't remove file.")
     }
+    
+    let contents = self.data.map { $0.content }
+    completion(contents)
   }
   
-  func saveDownload(with content: ContentSummaryModel) {
+  func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
     let filename = String(format: "%d.%d.%@", content.id, content.videoID, String.appExtension)
     guard let destinationUrl = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
     
     if FileManager().fileExists(atPath: destinationUrl.path) {
       print("file already exists")
       // TODO show error hud
+      let contents = self.data.map { $0.content }
+      completion(contents)
       
     } else {
       let videoMC = VideosMC(user: self.user)
@@ -125,6 +132,8 @@ class DownloadsMC: NSObject, ObservableObject {
                         }
                       } else {
                         // TODO show error hud
+                        let contents = self.data.map { $0.content }
+                        completion(contents)
                       }
                     }
                   }
@@ -134,6 +143,8 @@ class DownloadsMC: NSObject, ObservableObject {
           }
         }
       }
+      let contents = self.data.map { $0.content }
+      completion(contents)
     }
   }
   

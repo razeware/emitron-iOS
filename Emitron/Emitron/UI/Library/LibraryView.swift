@@ -73,6 +73,7 @@ enum SortSelection: Int {
 struct LibraryView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State var sortSelection: SortSelection = .newest
@@ -193,7 +194,26 @@ struct LibraryView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      return AnyView(ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey).environmentObject(DataManager.current.downloadsMC))
+      var updatedContents = contentsMC.data
+      var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
+        switch action {
+        case .delete:
+          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
+            updatedContents = contents
+          }
+          
+        case .save:
+          self.downloadsMC.saveDownload(with: content) { contents in
+            updatedContents = contents
+          }
+        }
+      }
+      
+      DispatchQueue.main.async {
+        contentListView.updateContents(with: updatedContents)
+      }
+      
+      return AnyView(contentListView)
     default:
       return AnyView(Text("Default View"))
     }
@@ -204,8 +224,9 @@ struct LibraryView: View {
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
     let contentsMC = DataManager.current.contentsMC
+    let downloadsMC = DataManager.current.downloadsMC
     let filters = DataManager.current.filters
-    return LibraryView().environmentObject(filters).environmentObject(contentsMC)
+    return LibraryView().environmentObject(filters).environmentObject(contentsMC).environmentObject(downloadsMC)
   }
 }
 #endif
