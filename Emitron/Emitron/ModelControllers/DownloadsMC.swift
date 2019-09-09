@@ -78,8 +78,8 @@ class DownloadsMC: NSObject, ObservableObject {
   // MARK: Public funcs
   func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
-    let filename = String(format: "%d.%d.%@", selectedVideo.content.id, videoID, String.appExtension)
-    guard let fileURL = localRoot?.appendingPathComponent(filename, isDirectory: false), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
+    let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
+    guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
     do {
       try FileManager.default.removeItem(at: fileURL)
@@ -98,10 +98,10 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
-    let filename = String(format: "%d.%d.%@", content.id, content.videoID, String.appExtension)
-    guard let destinationUrl = localRoot?.appendingPathComponent(filename, isDirectory: false) else { return }
+    let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
+    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
-    if FileManager().fileExists(atPath: destinationUrl.path) {
+    if FileManager.default.fileExists(atPath: destinationUrl.path) {
       print("file already exists")
       // TODO show error hud
       let contents = self.data.map { $0.content }
@@ -126,7 +126,7 @@ class DownloadsMC: NSObject, ObservableObject {
                 if response.statusCode == 200 {
                   DispatchQueue.main.async {
                     if let data = data {
-                      if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic){
+                      if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
                         if let attachmentModel = videoMC.data {
                           self.createDownloadModel(with: attachmentModel, content: content)
                         }
@@ -152,9 +152,7 @@ class DownloadsMC: NSObject, ObservableObject {
   private func load(url streamURL: URL, completion: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
     var request = URLRequest(url: streamURL)
     request.httpMethod = "GET"
-    _ = URLSession(configuration: .default).dataTask(with: request, completionHandler: { (data, response, error) in
-      completion(data, response, error)
-    }).resume()
+    _ = URLSession(configuration: .default).dataTask(with: request, completionHandler: completion).resume()
   }
   
   private func loadDownloads() {
@@ -165,7 +163,10 @@ class DownloadsMC: NSObject, ObservableObject {
       for localDoc in localDocs where localDoc.pathExtension == .appExtension {
         let lastPathComponents = localDoc.lastPathComponent.components(separatedBy: ".").dropLast()
         
-        if let contentIDString = lastPathComponents.first, let contentID = Int(contentIDString), let videoIDString = lastPathComponents.last, let videoID = Int(videoIDString) {
+        if let contentIDString = lastPathComponents.first,
+          let contentID = Int(contentIDString),
+          let videoIDString = lastPathComponents.last,
+          let videoID = Int(videoIDString) {
           let videoMC = VideosMC(user: self.user)
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
@@ -178,7 +179,7 @@ class DownloadsMC: NSObject, ObservableObject {
       }
     } catch let error {
       self.state = .failed
-      fatalError("Couldn't load local content. \(error.localizedDescription)")
+      // TODO show error
     }
   }
   
