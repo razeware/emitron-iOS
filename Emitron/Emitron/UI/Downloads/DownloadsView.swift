@@ -78,8 +78,10 @@ struct DownloadsView: View {
         }
       }
 
-      DispatchQueue.main.async {
-        contentListView.updateContents(with: updatedContents)
+      downloadsMC.setDownloads(for: updatedContents) { contents in
+        DispatchQueue.main.async {
+          contentListView.updateContents(with: contents)
+        }
       }
 
       return AnyView(contentListView)

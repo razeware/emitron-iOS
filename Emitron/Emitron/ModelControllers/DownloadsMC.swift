@@ -79,11 +79,11 @@ class DownloadsMC: NSObject, ObservableObject {
   func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
-    guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true), let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
+    guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: false),
+          let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
     do {
       try FileManager.default.removeItem(at: fileURL)
-      
       
       self.data.remove(at: index)
       self.state = .hasData
@@ -99,7 +99,7 @@ class DownloadsMC: NSObject, ObservableObject {
   
   func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
-    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
+    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: false) else { return }
     
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
       print("file already exists")
@@ -128,7 +128,7 @@ class DownloadsMC: NSObject, ObservableObject {
                     if let data = data {
                       if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
                         if let attachmentModel = videoMC.data {
-                          self.createDownloadModel(with: attachmentModel, content: content)
+                          self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
                         }
                       } else {
                         // TODO show error hud
@@ -146,6 +146,18 @@ class DownloadsMC: NSObject, ObservableObject {
       let contents = self.data.map { $0.content }
       completion(contents)
     }
+  }
+  
+  func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
+    contents.forEach { model in
+      if data.contains(where: { $0.content.videoID == model.videoID }) {
+        model.isDownloaded = true
+      } else {
+        model.isDownloaded = false
+      }
+    }
+    
+    completion(contents)
   }
   
   // MARK: Private funcs
@@ -171,7 +183,7 @@ class DownloadsMC: NSObject, ObservableObject {
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
               DispatchQueue.main.async {
-                self.loadContents(contentID: contentID, attachmentModel: attachmentModel)
+                self.loadContents(contentID: contentID, attachmentModel: attachmentModel, isDownloaded: true)
               }
             }
           }
@@ -183,7 +195,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  private func loadContents(contentID: Int, attachmentModel: AttachmentModel) {
+  private func loadContents(contentID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
     contentsService.contentSummary(for: contentID) { [weak self] result in
@@ -196,14 +208,14 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: content)
+          self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: isDownloaded)
         }
       }
     }
   }
   
-  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel) {
-    let downloadModel = DownloadModel(video: attachmentModel, content: content)
+  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
+    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
     self.data.append(downloadModel)
     // TODO show success hud
     self.state = .hasData

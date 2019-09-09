@@ -34,7 +34,6 @@ struct ContentListingView: View {
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
   var callback: ((ContentSummaryModel)->())?
-//  @Binding var imageLoaded: Bool
 
   var user: UserModel
 
@@ -56,7 +55,7 @@ struct ContentListingView: View {
                   .onAppear(perform: loadImage)
                   .transition(.opacity)
 
-                ContentSummaryView(callback: callback, details: contentSummaryMC.data)
+        ContentSummaryView(callback: callback, details: contentSummaryMC.data)
       }
       .frame(maxWidth: UIScreen.main.bounds.width)
       .background(Color.white)

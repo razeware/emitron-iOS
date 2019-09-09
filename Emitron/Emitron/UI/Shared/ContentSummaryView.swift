@@ -28,6 +28,11 @@
 
 import SwiftUI
 
+struct DownloadImageName {
+  static let active: String = "downloadActive"
+  static let inActive: String = "downloadInactive"
+}
+
 struct ContentSummaryView: View {
   
   var callback: ((ContentSummaryModel)->())?
@@ -57,7 +62,7 @@ struct ContentSummaryView: View {
           // Download Action
           self.download()
         }) {
-          Image("downloadInactive")
+          Image(downloadImageName())
             .padding([.trailing], 30)
             .foregroundColor(.coolGrey)
         }
@@ -91,7 +96,16 @@ struct ContentSummaryView: View {
     }
   }
   
+  private func downloadImageName() -> String {
+    return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+  }
+  
   private func download() {
+    guard downloadImageName() != DownloadImageName.inActive else {
+      // TODO show hud stating already downloaded
+      return
+    }
+    
     self.callback?(details)
   }
   

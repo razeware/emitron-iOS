@@ -49,6 +49,7 @@ struct CardViewModel: Hashable {
   let footnote: String
   let type: CardViewType
   let progress: CGFloat
+  let isDownloaded: Bool
 }
 
 // Transform data
@@ -61,6 +62,7 @@ extension CardViewModel {
     let ids = content.domainIDs
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
+    let isDownloaded = content.isDownloaded
 
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -75,7 +77,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
 
     return cardModel
   }
@@ -141,7 +143,7 @@ struct CardView: SwiftUI.View {
           Spacer()
           
           if contentScreen != ContentScreen.downloads {
-            Image("downloadInactive")
+            Image(self.downloadImageName())
             .resizable()
             .frame(width: 19, height: 19)
             .onTapGesture {
@@ -164,6 +166,11 @@ struct CardView: SwiftUI.View {
   }
 
   private func download() {
+    guard downloadImageName() != DownloadImageName.inActive else {
+      // TODO show hud stating already downloaded
+      return
+    }
+    
     callback?()
   }
 
@@ -198,6 +205,10 @@ struct CardView: SwiftUI.View {
         break
       }
     }
+  }
+  
+  private func downloadImageName() -> String {
+    return model.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
 }
 

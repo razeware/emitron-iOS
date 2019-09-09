@@ -181,8 +181,10 @@ struct LibraryView: View {
         }
       }
 
-      DispatchQueue.main.async {
-        contentListView.updateContents(with: updatedContents)
+      downloadsMC.setDownloads(for: updatedContents) { contents in
+        DispatchQueue.main.async {
+          contentListView.updateContents(with: contents)
+        }
       }
 
       return AnyView(contentListView)
@@ -190,6 +192,18 @@ struct LibraryView: View {
       return AnyView(Text("Default View"))
     }
   }
+  
+//  private func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
+//    contents.forEach { model in
+//      if downloadsMC.data.contains(where: { $0.content.videoID == model.videoID }) {
+//        model.isDownloaded = true
+//      } else {
+//        model.isDownloaded = false
+//      }
+//    }
+//
+//    completion(contents)
+//  }
 }
 
 // Inspired by: https://forums.developer.apple.com/thread/121162
