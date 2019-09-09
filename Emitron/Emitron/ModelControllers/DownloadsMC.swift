@@ -102,47 +102,28 @@ class DownloadsMC: NSObject, ObservableObject {
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: false) else { return }
     
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
-      print("file already exists")
       // TODO show error hud
       let contents = self.data.map { $0.content }
       completion(contents)
       
     } else {
-      let videoMC = VideosMC(user: self.user)
-      videoMC.loadVideoStream(for: content.videoID) {
-        if let streamURL = videoMC.streamURL {
-          self.load(url: streamURL) { (data, response, error) in
-            DispatchQueue.main.async {
-              if let error = error {
-                // TODO show error hud
-                self.state = .failed
-                Failure
-                  .fetch(from: "DocumentsMC", reason: error.localizedDescription)
-                  .log(additionalParams: nil)
-                return
+      let videosMC = VideosMC(user: self.user)
+      self.loadVideoStream(for: content, on: videosMC) { data, response in
+        if let response = response as? HTTPURLResponse,
+          response.statusCode == 200,
+          let data = data {
+          DispatchQueue.main.async {
+            if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
+              if let attachmentModel = videosMC.data {
+                self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
               }
-              
-              if let response = response as? HTTPURLResponse {
-                if response.statusCode == 200 {
-                  DispatchQueue.main.async {
-                    if let data = data {
-                      if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
-                        if let attachmentModel = videoMC.data {
-                          self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
-                        }
-                      } else {
-                        // TODO show error hud
-                        let contents = self.data.map { $0.content }
-                        completion(contents)
-                      }
-                    }
-                  }
-                }
-              }
+            } else {
+              // TODO show error hud
             }
           }
         }
       }
+      
       let contents = self.data.map { $0.content }
       completion(contents)
     }
@@ -161,6 +142,28 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Private funcs
+  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?, URLResponse?) -> Void)) {
+    videosMC.loadVideoStream(for: content.videoID) {
+      if let streamURL = videosMC.streamURL {
+        self.load(url: streamURL) { (data, response, error) in
+          
+          if let error = error {
+            // TODO show error hud
+            
+            self.state = .failed
+            Failure
+              .fetch(from: "DocumentsMC", reason: error.localizedDescription)
+              .log(additionalParams: nil)
+            completion(nil, nil)
+            return
+          }
+          
+          completion(data, response)
+        }
+      }
+    }
+  }
+  
   private func load(url streamURL: URL, completion: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
     var request = URLRequest(url: streamURL)
     request.httpMethod = "GET"
@@ -190,8 +193,12 @@ class DownloadsMC: NSObject, ObservableObject {
         }
       }
     } catch let error {
-      self.state = .failed
       // TODO show error
+      
+      self.state = .failed
+      Failure
+      .fetch(from: "DocumentsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
     }
   }
   
