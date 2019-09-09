@@ -79,7 +79,7 @@ class DownloadsMC: NSObject, ObservableObject {
   func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
-    guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: false),
+    guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
           let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
     do {
@@ -99,7 +99,7 @@ class DownloadsMC: NSObject, ObservableObject {
   
   func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
-    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: false) else { return }
+    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
       // TODO show error hud
