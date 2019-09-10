@@ -75,6 +75,9 @@ struct AppliedFilterView: View {
       if let filter = self.filter {
         filter.isOn.toggle()
         self.filters.filters.update(with: filter)
+        if let arrIndex = self.filters.filtersArr.firstIndex(of: filter) {
+          self.filters.filtersArr[arrIndex] = filter
+        }
         self.filters.commitUpdates()
       } else {
         self.filters.removeAll()

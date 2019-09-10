@@ -104,6 +104,12 @@ class Filters: ObservableObject {
     }
   }
   
+  var filtersArr: [Filter] {
+    didSet {
+      print("Got set...")
+    }
+  }
+  
   var filterGroups: [FilterGroup] {
       return [platforms, categories, contentTypes, difficulties]
     }
@@ -207,6 +213,7 @@ class Filters: ObservableObject {
     // 1. Check if there is a sort in UserDefaults and use that
     let savedSort = UserDefaults.standard.sort
     self.sortFilter = savedSort
+    self.filtersArr = Array(freshFilters)
   }
   
   func updatePlatformFilters(for domainModels: [DomainModel]) {
