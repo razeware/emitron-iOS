@@ -53,6 +53,7 @@ class DownloadsMC: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
+
   
   private(set) var data: [DownloadModel] = []
   private(set) var numTutorials: Int = 0
@@ -130,12 +131,9 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
+    
     contents.forEach { model in
-      if data.contains(where: { $0.content.videoID == model.videoID }) {
-        model.isDownloaded = true
-      } else {
-        model.isDownloaded = false
-      }
+      model.isDownloaded = data.contains(where: { $0.content.videoID == model.videoID })
     }
     
     completion(contents)

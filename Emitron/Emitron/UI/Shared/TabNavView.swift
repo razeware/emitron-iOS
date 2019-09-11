@@ -61,23 +61,23 @@ struct TabNavView: View {
     return tabs
   }
 
-  func libraryView() -> AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
+  func libraryView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
     return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters))
   }
 
-  func myTutorialsView() -> AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
+  func myTutorialsView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
     return AnyView(MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC))
   }
 
-  func downloadsView() -> AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
+  func downloadsView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
     return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC))
   }

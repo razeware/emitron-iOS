@@ -36,13 +36,11 @@ class DownloadModel {
   var task: URLSessionDownloadTask?
   var resumeData: Data?
   var progress: Double = 0
-  var isDownloaded: Bool
 
   // MARK: - Initializers
   init(video: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
     self.video = video
     self.content = content
-    self.isDownloaded = isDownloaded
     self.content.isDownloaded = isDownloaded
   }
 }
