@@ -91,115 +91,49 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
 
   var body: some View {
-  // TODO: once crash doesn't happen with new SwiftUI (HOPEFULLY!) we can uncomment this :)
-  //    if contents.isEmpty {
-  //      return createEmptyView()
-  //    } else {
-  //      return cardsTableView()
-  //    }
-
     cardsTableView()
-  }
-
-  private func emptyView() -> AnyView {
-    let vStack = VStack {
-      Spacer()
-      createEmptyView()
-      Spacer()
-    }
-
-    return AnyView(vStack)
   }
 
   private func cardsTableView() -> AnyView {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-
+    
     let list = GeometryReader { geometry in
-      List {
-        ForEach(self.contents, id: \.id) { partialContent in
-          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
-            self.callback?(.save, partialContent)
-          }, contentScreen: self.contentScreen)
-            .listRowBackground(self.bgColor)
-            .background(self.bgColor)
-            .onTapGesture {
-              self.isPresenting = true
-              self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-          }
+      if self.contents.isEmpty {
+        List {
+          CardView(model: nil, callback: nil, contentScreen: self.contentScreen)
+          .listRowBackground(self.bgColor)
+          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
         }
-        .onDelete(perform: self.delete)
-        .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
-
-        // TODO: this is NOT the final empty view. This is a hack. Once SwiftUI doesn't crash with empty view in body, can remove this
-        if self.contents.isEmpty {
-          VStack {
-            HStack {
-              Spacer()
-
-              Text(self.contentScreen.titleMessage)
-                .font(.uiTitle2)
-                .foregroundColor(.appBlack)
-                .multilineTextAlignment(.center)
-                .lineLimit(nil)
-
-              Spacer()
+      } else {
+        List {
+          ForEach(self.contents, id: \.id) { partialContent in
+            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
+              self.callback?(.save, partialContent)
+            }, contentScreen: self.contentScreen)
+              .listRowBackground(self.bgColor)
+              .background(self.bgColor)
+              .onTapGesture {
+                self.isPresenting = true
+                self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
             }
-
-            self.addDetailText()
           }
-          .background(self.bgColor)
+          .onDelete(perform: self.delete)
+          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
         }
-      }
-      .onAppear { self.loadMoreContents() }
-      .sheet(isPresented: self.$isPresenting) {
-        user != nil
-          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-            self.callback?(.save, content)
-          }, user: user!))
-          : AnyView(Text("Unable to show video..."))
+        .onAppear { self.loadMoreContents() }
+        .sheet(isPresented: self.$isPresenting) {
+          user != nil
+            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+              self.callback?(.save, content)
+            }, user: user!))
+            : AnyView(Text("Unable to show video..."))
+        }
       }
     }
 
     return AnyView(list)
-  }
-
-  private func createEmptyView() -> AnyView {
-    let vStack = VStack {
-      HStack {
-        Spacer()
-
-        Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
-
-        Spacer()
-      }
-
-      addDetailText()
-    }
-
-    return AnyView(vStack)
-  }
-
-  private func addDetailText() -> AnyView? {
-    guard let detail = contentScreen.detailMesage else { return nil }
-    let stack = HStack {
-        Spacer()
-
-        Text(detail)
-        .font(.uiHeadline)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
-
-        Spacer()
-    }
-
-    return AnyView(stack)
   }
 
 //  func cardTableViewWithNav() -> AnyView {
@@ -233,8 +167,10 @@ struct ContentListView: View {
 
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
-    let content = contents[index]
-    callback?(.delete, content)
+    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+      let content = self.contents[index]
+      self.callback?(.delete, content)
+    }
   }
   
   mutating func updateContents(with newContents: [ContentSummaryModel]) {

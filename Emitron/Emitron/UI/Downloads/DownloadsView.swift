@@ -60,33 +60,48 @@ struct DownloadsView: View {
     .background(Color.paleGrey)
   }
 
-  private func contentView() -> AnyView? {
+  private func contentView() -> some View {
     switch downloadsMC.state {
+    case .failed:
+      fatalError("crash in DownloadsView with data")
     case .loading, .hasData, .initial:
       var updatedContents = contents
-      var contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey) { (action, content) in
-        switch action {
-        case .delete:
-          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-            updatedContents = contents
-          }
-
-        case .save:
-          self.downloadsMC.saveDownload(with: content) { contents in
+      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey) { (action, content) in
+        self.handleAction(with: action, content: content) { contents in
+          self.downloadsMC.setDownloads(for: contents) { contents in
             updatedContents = contents
           }
         }
       }
-
-      downloadsMC.setDownloads(for: updatedContents) { contents in
+      
+      DispatchQueue.main.async {
+        contentListView.updateContents(with: updatedContents)
+      }
+      
+      if updatedContents.isEmpty {
+        return ContentListView(contentScreen: .downloads, bgColor: .paleGrey)
+      } else {
+        return contentListView
+      }
+    }
+  }
+  
+  private func handleAction(with action: DownloadsAction, content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
+    
+    switch action {
+    case .delete:
+      self.downloadsMC.deleteDownload(with: content.videoID) { contents in
         DispatchQueue.main.async {
-          contentListView.updateContents(with: contents)
+          completion(contents)
         }
       }
-
-      return AnyView(contentListView)
-    case .failed:
-      return AnyView(Text("Error"))
+      
+    case .save:
+      self.downloadsMC.saveDownload(with: content) { contents in
+        DispatchQueue.main.async {
+          completion(contents)
+        }
+      }
     }
   }
 

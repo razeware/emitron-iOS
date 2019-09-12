@@ -171,18 +171,22 @@ struct LibraryView: View {
         switch action {
         case .delete:
           self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-            updatedContents = contents
+            DispatchQueue.main.async {
+              updatedContents = contents
+            }
           }
 
         case .save:
           self.downloadsMC.saveDownload(with: content) { contents in
-            updatedContents = contents
+            DispatchQueue.main.async {
+              updatedContents = contents
+            }
           }
         }
       }
 
       downloadsMC.setDownloads(for: updatedContents) { contents in
-        DispatchQueue.main.async {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
           contentListView.updateContents(with: contents)
         }
       }

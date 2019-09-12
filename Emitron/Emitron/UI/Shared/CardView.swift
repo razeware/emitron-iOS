@@ -88,10 +88,10 @@ struct CardView: SwiftUI.View {
   var callback: (()->())?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
-  private var model: CardViewModel
+  private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel, callback: (()->())?, contentScreen: ContentScreen) {
+  init(model: CardViewModel?, callback: (()->())?, contentScreen: ContentScreen) {
     self.model = model
     self.callback = callback
     self.contentScreen = contentScreen
@@ -100,7 +100,12 @@ struct CardView: SwiftUI.View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
-    VStack(alignment: .leading) {
+    guard let model = model else {
+      let emptyView = AnyView(createEmptyView())
+      return emptyView
+    }
+    
+    let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
           VStack(alignment: .leading, spacing: 5) {
@@ -163,6 +168,8 @@ struct CardView: SwiftUI.View {
     .background(Color.white)
     .cornerRadius(6)
     .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    
+    return AnyView(stack)
   }
 
   private func download() {
@@ -175,6 +182,7 @@ struct CardView: SwiftUI.View {
   }
 
   private func loadImage() {
+    guard let model = model else { return }
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
     switch model.imageType {
@@ -208,7 +216,45 @@ struct CardView: SwiftUI.View {
   }
   
   private func downloadImageName() -> String {
+    guard let model = model else { return DownloadImageName.inActive }
     return model.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+  }
+  
+  private func createEmptyView() -> AnyView {
+    let vStack = VStack {
+      HStack {
+        Spacer()
+
+        Text(contentScreen.titleMessage)
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+
+        Spacer()
+      }
+
+      addDetailText()
+    }
+
+    return AnyView(vStack)
+  }
+
+  private func addDetailText() -> AnyView? {
+    guard let detail = contentScreen.detailMesage else { return nil }
+    let stack = HStack {
+        Spacer()
+
+        Text(detail)
+        .font(.uiHeadline)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+
+        Spacer()
+    }
+
+    return AnyView(stack)
   }
 }
 

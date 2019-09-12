@@ -142,11 +142,8 @@ struct MyTutorialView: View {
 #if DEBUG
 struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    let filters = DataManager.current!.filters
     let progressionsMC = DataManager.current!.progressionsMC
     let bookmarksMC = DataManager.current!.bookmarksMC
-    //TODO: I don't think this needs the contentsMC to be shareed anymore
     return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
 }
