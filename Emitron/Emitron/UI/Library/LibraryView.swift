@@ -186,7 +186,7 @@ struct LibraryView: View {
       }
 
       downloadsMC.setDownloads(for: updatedContents) { contents in
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.async {
           contentListView.updateContents(with: contents)
         }
       }

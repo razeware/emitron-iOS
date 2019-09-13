@@ -167,7 +167,7 @@ struct ContentListView: View {
 
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
-    DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+    DispatchQueue.main.async {
       let content = self.contents[index]
       self.callback?(.delete, content)
     }
