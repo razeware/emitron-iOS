@@ -60,6 +60,8 @@ class ContentSummaryModel {
   private(set) var progression: ProgressionModel?
   private(set) var bookmark: BookmarkModel?
   private(set) var domainIDs: [Int] = []
+  
+  var isDownloaded: Bool = false
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,

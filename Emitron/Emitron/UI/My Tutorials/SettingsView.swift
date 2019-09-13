@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-enum SettingsOption: Int, Identifiable {
+enum SettingsOption: Int, Identifiable, CaseIterable {
   case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
   
   var id: Int {
@@ -44,32 +44,19 @@ enum SettingsOption: Int, Identifiable {
     }
   }
   
-  var detail: Detail {
-    return Detail(option: self)
+  var detail: [String] {
+    switch self {
+      case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
+      case .downloads: return ["Yes", "No"]
+      case .downloadsQuality: return ["HD", "SD"]
+      case .subtitles: return ["Yes", "No"]
+    }
   }
   
   var isToggle: Bool {
     switch self {
       case .downloads, .subtitles: return true
       default: return false
-    }
-  }
-  
-  // In order to iterate through detailOptions, this needs to be a class that conforms to identifiable
-  struct Detail: Identifiable {
-    let option: SettingsOption
-    
-    var detailOptions: [String] {
-      switch option {
-        case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
-        case .downloads: return ["Yes", "No"]
-        case .downloadsQuality: return ["HD", "SD"]
-        case .subtitles: return ["Yes", "No"]
-      }
-    }
-    
-    var id: Int {
-      return option.id
     }
   }
 }
@@ -178,7 +165,7 @@ struct SettingsView: View {
   
   private func populateDetail(at index: Int) -> String {
     guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].title) as? String else {
-      if let detail = self.rows[index].detail.detailOptions.first {
+      if let detail = self.rows[index].detail.first {
         return detail
       } else {
         return ""

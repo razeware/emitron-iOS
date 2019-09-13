@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -49,6 +49,7 @@ struct CardViewModel: Hashable {
   let footnote: String
   let type: CardViewType
   let progress: CGFloat
+  let isDownloaded: Bool
 }
 
 // Transform data
@@ -57,60 +58,70 @@ extension CardViewModel {
     guard let domainData = DataManager.current?.domainsMC.data else {
       return nil
     }
-    
+
     let ids = content.domainIDs
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
-    
+    let isDownloaded = content.isDownloaded
+
     var progress: CGFloat = 0
     if let progression = content.progression {
       progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
     }
-        
+
     var imageType: ImageType
-    
+
     if let imageURL = content.cardArtworkURL {
       imageType = ImageType.url(imageURL)
     } else {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
-    
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress)
-    
+
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+
     return cardModel
   }
 }
 
 struct CardView: SwiftUI.View {
-  
+
+  var callback: (()->())?
+  var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
-  private var model: CardViewModel
+  private var model: CardViewModel?
   private let animation: Animation = .easeIn
-  
-  init(model: CardViewModel) {
+
+  init(model: CardViewModel?, callback: (()->())?, contentScreen: ContentScreen) {
     self.model = model
+    self.callback = callback
+    self.contentScreen = contentScreen
   }
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
-    VStack(alignment: .leading) {
+    guard let model = model else {
+      let emptyView = AnyView(createEmptyView())
+      return emptyView
+    }
+    
+    let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading) {
         HStack(alignment: .top) {
           VStack(alignment: .leading, spacing: 5) {
-            
+
             Text(model.title)
               .font(.uiTitle4)
               .lineLimit(nil)
-            
+
             Text(model.subtitle)
               .font(.uiCaption)
               .lineLimit(nil)
               .foregroundColor(.battleshipGrey)
           }
-          
+
           Spacer()
-          
+
           Image(uiImage: image)
             .resizable()
             .frame(width: 60, height: 60)
@@ -118,7 +129,7 @@ struct CardView: SwiftUI.View {
             .transition(.opacity)
             .cornerRadius(6)
         }
-        
+
         Text(model.description)
           .font(.uiCaption)
           .lineLimit(5)
@@ -127,41 +138,51 @@ struct CardView: SwiftUI.View {
         // This space causes a crash if we use it in the tableView, but not if it's used in a scrollView
         // Quite strange
 //        Spacer()
-        
+
         HStack {
           Text(model.footnote)
             .font(.uiCaption)
             .lineLimit(1)
             .foregroundColor(.battleshipGrey)
-          
+
           Spacer()
-                    
-          Image("downloadInactive")
+          
+          if contentScreen != ContentScreen.downloads {
+            Image(self.downloadImageName())
             .resizable()
             .frame(width: 19, height: 19)
             .onTapGesture {
               self.download()
             }
+          }
         }
       }
       .padding([.leading, .trailing, .top, .bottom], 15)
       .frame(minHeight: 184)
-      
+
       Spacer()
-      
+
       ProgressBarView(progress: model.progress)
     }
     .frame(minWidth: 339, minHeight: 195)
     .background(Color.white)
     .cornerRadius(6)
     .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    
+    return AnyView(stack)
   }
-  
+
   private func download() {
-    print("Download button pressed.")
+    guard downloadImageName() != DownloadImageName.inActive else {
+      // TODO show hud stating already downloaded
+      return
+    }
+    
+    callback?()
   }
-  
+
   private func loadImage() {
+    guard let model = model else { return }
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
     switch model.imageType {
@@ -180,7 +201,7 @@ struct CardView: SwiftUI.View {
       fishImage(url: url)
     }
   }
-  
+
   private func fishImage(url: URL) {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
@@ -193,13 +214,55 @@ struct CardView: SwiftUI.View {
       }
     }
   }
+  
+  private func downloadImageName() -> String {
+    guard let model = model else { return DownloadImageName.inActive }
+    return model.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+  }
+  
+  private func createEmptyView() -> AnyView {
+    let vStack = VStack {
+      HStack {
+        Spacer()
+
+        Text(contentScreen.titleMessage)
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+
+        Spacer()
+      }
+
+      addDetailText()
+    }
+
+    return AnyView(vStack)
+  }
+
+  private func addDetailText() -> AnyView? {
+    guard let detail = contentScreen.detailMesage else { return nil }
+    let stack = HStack {
+        Spacer()
+
+        Text(detail)
+        .font(.uiHeadline)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .lineLimit(nil)
+
+        Spacer()
+    }
+
+    return AnyView(stack)
+  }
 }
 
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-    return CardView(model: cardModel)
+    return CardView(model: cardModel, callback: nil, contentScreen: .library)
   }
 }
 #endif
