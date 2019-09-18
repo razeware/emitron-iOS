@@ -75,8 +75,8 @@ struct FiltersHeaderView: View {
     }
   }
   
-  func expandedView() -> AnyView {
-    return AnyView(
+  func expandedView() -> some View {
+    return
       VStack(alignment: .leading, spacing: 12) {
         
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
@@ -86,7 +86,7 @@ struct FiltersHeaderView: View {
             self.filters.commitUpdates()
           })
         }
-      })
+      }
   }
 }
 

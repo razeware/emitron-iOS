@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -43,9 +43,7 @@ struct TabNavView: View {
         }
         .tag(0)
 
-      NavigationView {
-        DownloadsView()
-      }
+      downloadsView()
         .tabItem {
           Text(Constants.downloads)
           Image("downloadInactive")
@@ -62,23 +60,26 @@ struct TabNavView: View {
 
     return tabs
   }
-  
-  func libraryView() -> AnyView {
-    let filters = DataManager.current!.filters
-    return AnyView(LibraryView().environmentObject(filters))
-  }
-  
-  func myTutorialsView() -> AnyView {
 
-    //TODO: I don't think this needs contentsMC from gurdpost, or contentsMC at all
-    let guardpost = Guardpost.current
-    let filters = DataManager.current!.filters
-    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-    
-    let progressionsMC = DataManager.current!.progressionsMC
-    let bookmarksMC = DataManager.current!.bookmarksMC
-    
-    return AnyView(MyTutorialsView().environmentObject(contentsMC).environmentObject(progressionsMC).environmentObject(bookmarksMC))
+  func libraryView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
+    let contentsMC = dataManager.contentsMC
+    let downloadsMC = dataManager.downloadsMC
+    let filters = dataManager.filters
+    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters))
+  }
+
+  func myTutorialsView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
+    let progressionsMC = dataManager.progressionsMC
+    let bookmarksMC = dataManager.bookmarksMC
+    return AnyView(MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC))
+  }
+
+  func downloadsView() -> some View {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
+    let downloadsMC = dataManager.downloadsMC
+    return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC))
   }
 }
 

@@ -29,45 +29,45 @@
 import SwiftUI
 
 struct ContentListingView: View {
-  
+
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @State var isPresented = false
   @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-//  @Binding var imageLoaded: Bool
-  
+  var callback: ((ContentSummaryModel)->())?
+
   var user: UserModel
-  
+
   var body: some View {
-    
+
     List {
       VStack {
-        
+
 //        Image("loading")
 //          .fetchingRemoteImage(from: contentDetailsMC.data.cardArtworkURL!)
 //          .frame(width: 375, height: 283)
 //
 //        ContentSummaryView(details: contentDetailsMC.data)
-        
+
 //         TODO: This is probably not the correct image...
                 Image(uiImage: uiImage)
                   .resizable()
                   .frame(width: 375, height: 283)
                   .onAppear(perform: loadImage)
                   .transition(.opacity)
-        
-                ContentSummaryView(details: contentSummaryMC.data)
+
+        ContentSummaryView(callback: callback, details: contentSummaryMC.data)
       }
       .frame(maxWidth: UIScreen.main.bounds.width)
       .background(Color.white)
-      
+
       if contentSummaryMC.data.contentType == .collection {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-        
+
         VStack {
           Text("Course Episodes")
             .font(.uiTitle2)
             .padding([.top], -5)
-          
+
           //          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
           //            Section(header:
           //              CourseHeaderView(name: group.name, color: .white)
@@ -122,8 +122,8 @@ struct ContentListingView: View {
       print("I'm gone...")
     }
   }
-  
-//  private func loadImageAlt() -> AnyView {
+
+//  private func loadImageAlt() -> some View {
 //    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
 //    // is causing this file to not compile
 //
@@ -149,15 +149,15 @@ struct ContentListingView: View {
 //      }
 //    }
 //  }
-  
+
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-    
+
     guard let url = contentSummaryMC.data.cardArtworkURL else {
       return
     }
-    
+
     DispatchQueue.global().async {
       let data = try? Data(contentsOf: url)
       DispatchQueue.main.async {

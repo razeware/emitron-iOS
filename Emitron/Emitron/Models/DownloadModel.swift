@@ -31,14 +31,16 @@ import Foundation
 class DownloadModel {
 
   // MARK: - Properties
-  var video: VideoModel
+  var content: ContentSummaryModel
+  var video: AttachmentModel
   var task: URLSessionDownloadTask?
-  var isDownloading: Bool = false
   var resumeData: Data?
   var progress: Double = 0
 
   // MARK: - Initializers
-  init(video: VideoModel) {
+  init(video: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
     self.video = video
+    self.content = content
+    self.content.isDownloaded = isDownloaded
   }
 }
