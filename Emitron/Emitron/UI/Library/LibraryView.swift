@@ -39,19 +39,20 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
-  
+
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
-  
+
   var body: some View {
     VStack {
       VStack {
-                
+
         HStack {
           searchField()
-          
+
           Button(action: {
             self.filtersPresented.toggle()
           }, label: {
@@ -64,13 +65,13 @@ struct LibraryView: View {
           })
             .padding([.leading], .searchFilterPadding)
         }
-        
+
         HStack {
           Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
             .font(.uiLabel)
             .foregroundColor(.battleshipGrey)
           Spacer()
-          
+
           Button(action: {
             // Change sort
             self.changeSort()
@@ -78,7 +79,7 @@ struct LibraryView: View {
             HStack {
               Image("sort")
                 .foregroundColor(.battleshipGrey)
-              
+
               Text(filters.sortFilter.name)
                 .font(.uiLabel)
                 .foregroundColor(.battleshipGrey)
@@ -86,24 +87,24 @@ struct LibraryView: View {
           }
         }
         .padding([.top], .sidePadding)
-        
+
         if !filters.appliedFilters.isEmpty {
           filtersView()
         }
       }
       .padding([.leading, .trailing, .top], .sidePadding)
-      
+
       contentView()
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
     }
     .background(Color.paleGrey)
   }
-  
-  private func filtersView() -> some View {
-    ScrollView(.horizontal, showsIndicators: false) {
+
+  private func filtersView() -> AnyView {
+    let view = ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
-        
+
         AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
           self.contentsMC.updateFilters(newFilters: self.filters)
         }
@@ -118,11 +119,13 @@ struct LibraryView: View {
       }
     }
     .padding([.top], .filtersPaddingTop)
+
+    return AnyView(view)
   }
-  
-  private func searchField() -> some View {
+
+  private func searchField() -> AnyView {
     //TODO: Need to figure out how to erase the textField
-    TextField(Constants.search,
+    let searchField = TextField(Constants.search,
                                 text: $searchText,
                                 onEditingChanged: { _ in
       print("Editing changed:  \(self.searchText)")
@@ -135,18 +138,20 @@ struct LibraryView: View {
         UIApplication.shared.keyWindow?.endEditing(true)
         self.updateFilters()
       }))
+
+    return AnyView(searchField)
   }
-  
+
   private func updateFilters() {
     filters.searchQuery = self.searchText
     contentsMC.updateFilters(newFilters: filters)
   }
-  
+
   private func changeSort() {
     filters.changeSortFilter()
     contentsMC.updateFilters(newFilters: filters)
   }
-  
+
   private func contentView() -> AnyView {
     switch contentsMC.state {
     case .initial,
@@ -160,8 +165,33 @@ struct LibraryView: View {
       //      let parameters = filters.applied
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
-      
-      return AnyView(ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey))
+
+      var updatedContents = contentsMC.data
+      var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
+        switch action {
+        case .delete:
+          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
+            DispatchQueue.main.async {
+              updatedContents = contents
+            }
+          }
+
+        case .save:
+          self.downloadsMC.saveDownload(with: content) { contents in
+            DispatchQueue.main.async {
+              updatedContents = contents
+            }
+          }
+        }
+      }
+
+      downloadsMC.setDownloads(for: updatedContents) { contents in
+        DispatchQueue.main.async {
+          contentListView.updateContents(with: contents)
+        }
+      }
+
+      return AnyView(contentListView)
     default:
       return AnyView(Text("Default View"))
     }
@@ -172,7 +202,7 @@ struct LibraryView: View {
 struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
-  
+
   public func body(content: Content) -> some View {
     HStack {
       content
@@ -192,10 +222,11 @@ struct ClearButton: ViewModifier {
 #if DEBUG
 struct LibraryView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    let filters = DataManager.current!.filters
-    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-    return LibraryView().environmentObject(filters).environmentObject(contentsMC)
+    guard let dataManager = DataManager.current else { fatalError("dataManager is nil in LibraryView") }
+    let contentsMC = dataManager.contentsMC
+    let downloadsMC = dataManager.downloadsMC
+    let filters = dataManager.filters
+    return LibraryView().environmentObject(filters).environmentObject(contentsMC).environmentObject(downloadsMC)
   }
 }
 #endif
