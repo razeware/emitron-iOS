@@ -85,15 +85,15 @@ extension CardViewModel {
 
 struct CardView: SwiftUI.View {
 
-  var callback: (()->())?
+  var onRightIconTap: (() -> Void)?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?, callback: (()->())?, contentScreen: ContentScreen) {
+  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: (() -> Void)? = nil) {
     self.model = model
-    self.callback = callback
+    self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
   }
 
@@ -178,7 +178,7 @@ struct CardView: SwiftUI.View {
       return
     }
     
-    callback?()
+    onRightIconTap?()
   }
 
   private func loadImage() {
@@ -262,7 +262,7 @@ struct CardView: SwiftUI.View {
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-    return CardView(model: cardModel, callback: nil, contentScreen: .library)
+    return CardView(model: cardModel, contentScreen: .library, onRightIconTap: nil)
   }
 }
 #endif

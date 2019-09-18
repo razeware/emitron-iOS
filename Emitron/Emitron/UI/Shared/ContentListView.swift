@@ -108,16 +108,16 @@ struct ContentListView: View {
     let list = GeometryReader { geometry in
       if self.contents.isEmpty {
         List {
-          CardView(model: nil, callback: nil, contentScreen: self.contentScreen)
+          CardView(model: nil, contentScreen: self.contentScreen)
             .listRowBackground(self.bgColor)
             .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
         }
       } else {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
-            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
+            self.cardView(content: partialContent, onRightTap: {
               self.callback?(.save, partialContent)
-            }, contentScreen: self.contentScreen)
+            })
               .listRowBackground(self.bgColor)
               .background(self.bgColor)
               .onTapGesture {
@@ -142,38 +142,12 @@ struct ContentListView: View {
     return AnyView(list)
   }
   
-  private func cardsScrollView() -> AnyView {
-    let guardpost = Guardpost.current
-    let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
+  private func cardView(content: ContentSummaryModel, onRightTap: (() -> Void)?) -> CardView {
+    let viewModel = CardViewModel.transform(content, cardViewType: .default)
     
-    let scrollView = ScrollView(.vertical, showsIndicators: false) {
-      VStack(alignment: .leading, spacing: 12) {
-        ForEach(contents, id: \.id) { content in
-          CardView(model: CardViewModel.transform(content, cardViewType: .default), callback: {
-            print("Not sure why this is here...")
-          }, contentScreen: .library)
-          .listRowBackground(self.bgColor)
-          .background(self.bgColor)
-          .onTapGesture {
-            self.imageLoaded = false
-            self.isPresenting = true
-            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: content)
-          }
-        }
-        Text("Should load more stuff...")
-        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-        .onAppear { self.loadMoreContents() }
-    }
-      .sheet(isPresented: self.$isPresenting) {
-        user != nil
-          ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, user: user!))
-          : AnyView(Text("Unable to show video..."))
-      }
-      .padding([.leading, .trailing], Layout.sidePadding)
-    }
-    return AnyView(scrollView)
+    return CardView(model: viewModel,
+                    contentScreen: contentScreen,
+                    onRightIconTap: onRightTap)
   }
   
   func loadMoreContents() {
