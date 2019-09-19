@@ -81,6 +81,8 @@ enum ContentScreen {
 
 struct ContentListView: View {
 
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentSummaryModel] = []
@@ -91,7 +93,15 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
 
   var body: some View {
-    cardsTableView()
+    if !showHudView {
+      return AnyView(cardsTableView())
+    } else {
+      let success: HudOption = showSuccess ? .success : .error
+      return AnyView(cardsTableView()
+      .overlay(HudView(option: success, callback: {
+        self.showHudView.toggle()
+      }), alignment: .bottom))
+    }
   }
 
   private func cardsTableView() -> AnyView {
@@ -109,8 +119,13 @@ struct ContentListView: View {
       } else {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
-            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: {
-              self.callback?(.save, partialContent)
+            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: { success in
+              if !success {
+                self.showHudView.toggle()
+                self.showSuccess = false
+              } else {
+                self.callback?(.save, partialContent)
+              }
             }, contentScreen: self.contentScreen)
               .listRowBackground(self.bgColor)
               .background(self.bgColor)

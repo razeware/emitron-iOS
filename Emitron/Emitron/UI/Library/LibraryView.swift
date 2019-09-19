@@ -45,9 +45,26 @@ struct LibraryView: View {
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
 
   var body: some View {
-    VStack {
+    
+    if !showHudView {
+      return createVStack()
+    } else {
+      let success: HudOption = showSuccess ? .success : .error
+      let view = createVStack()
+      .overlay(HudView(option: success, callback: {
+        self.showHudView.toggle()
+      }), alignment: .bottom)
+      
+      return AnyView(view)
+    }
+  }
+
+  private func createVStack() -> AnyView {
+    let vStack = VStack {
       VStack {
 
         HStack {
@@ -99,8 +116,10 @@ struct LibraryView: View {
         .background(Color.paleGrey)
     }
     .background(Color.paleGrey)
+    
+    return AnyView(vStack)
   }
-
+  
   private func filtersView() -> AnyView {
     let view = ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
@@ -170,16 +189,24 @@ struct LibraryView: View {
       var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
         switch action {
         case .delete:
-          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-            DispatchQueue.main.async {
-              updatedContents = contents
+          self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+            self.showHudView.toggle()
+            self.showSuccess = success
+            if success {
+              DispatchQueue.main.async {
+                updatedContents = contents
+              }
             }
           }
 
         case .save:
-          self.downloadsMC.saveDownload(with: content) { contents in
-            DispatchQueue.main.async {
-              updatedContents = contents
+          self.downloadsMC.saveDownload(with: content) { (success, contents) in
+            self.showHudView.toggle()
+            self.showSuccess = success
+            if success {
+              DispatchQueue.main.async {
+                updatedContents = contents
+              }
             }
           }
         }

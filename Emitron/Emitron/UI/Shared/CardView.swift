@@ -85,13 +85,13 @@ extension CardViewModel {
 
 struct CardView: SwiftUI.View {
 
-  var callback: (()->())?
+  var callback: ((Bool)->())?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?, callback: (()->())?, contentScreen: ContentScreen) {
+  init(model: CardViewModel?, callback: ((Bool)->())?, contentScreen: ContentScreen) {
     self.model = model
     self.callback = callback
     self.contentScreen = contentScreen
@@ -173,12 +173,8 @@ struct CardView: SwiftUI.View {
   }
 
   private func download() {
-    guard downloadImageName() != DownloadImageName.inActive else {
-      // TODO show hud stating already downloaded
-      return
-    }
-    
-    callback?()
+    let success = downloadImageName() != DownloadImageName.inActive
+    callback?(success)
   }
 
   private func loadImage() {

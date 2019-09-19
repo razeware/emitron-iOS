@@ -35,6 +35,8 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @EnvironmentObject var downloadsMC: DownloadsMC
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
   var contents: [ContentSummaryModel] {
     return downloadsMC.data.map { $0.content }
   }
@@ -90,16 +92,24 @@ struct DownloadsView: View {
     
     switch action {
     case .delete:
-      self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-        DispatchQueue.main.async {
-          completion(contents)
+      self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+        self.showHudView.toggle()
+        self.showSuccess = success
+        if success {
+          DispatchQueue.main.async {
+            completion(contents)
+          }
         }
       }
       
     case .save:
-      self.downloadsMC.saveDownload(with: content) { contents in
-        DispatchQueue.main.async {
-          completion(contents)
+      self.downloadsMC.saveDownload(with: content) { (success, contents) in
+        self.showHudView.toggle()
+        self.showSuccess = success
+        if success {
+          DispatchQueue.main.async {
+            completion(contents)
+          }
         }
       }
     }

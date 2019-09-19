@@ -19,6 +19,7 @@
 		95CD793C22F0BEF40080C407 /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793B22F0BEF40080C407 /* Contents.swift */; };
 		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
+		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
 		B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653C23094E3100A3FF44 /* ProgressionsMC.swift */; };
 		B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653E230953EF00A3FF44 /* BookmarksMC.swift */; };
@@ -145,6 +146,7 @@
 		95CD793B22F0BEF40080C407 /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
 		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
+		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
 		B595653C23094E3100A3FF44 /* ProgressionsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsMC.swift; sourceTree = "<group>"; };
 		B595653E230953EF00A3FF44 /* BookmarksMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksMC.swift; sourceTree = "<group>"; };
@@ -625,6 +627,7 @@
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
+				B53272DC2333ABF80069DF57 /* HudView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
 			);
@@ -843,6 +846,7 @@
 				B66778A223044BDF003EEBAB /* Progression.swift in Sources */,
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* LoginView.swift in Sources */,
+				B53272DD2333ABF80069DF57 /* HudView.swift in Sources */,
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */,

@@ -35,10 +35,12 @@ struct DownloadImageName {
 
 struct ContentSummaryView: View {
   
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
   var callback: ((ContentSummaryModel)->())?
   var details: ContentSummaryModel
   var body: some View {
-    VStack(alignment: .leading) {
+    let vStack = VStack(alignment: .leading) {
       
       Text(details.technologyTripleString.uppercased())
         .font(.uiUppercase)
@@ -94,6 +96,17 @@ struct ContentSummaryView: View {
         .lineLimit(2)
         .padding([.top], 5)
     }
+    
+    if showHudView {
+      let success: HudOption = showSuccess ? .success : .error
+      return AnyView(vStack
+      .overlay(HudView(option: success, callback: {
+        self.showHudView.toggle()
+      }), alignment: .bottom))
+      
+    } else {
+      return AnyView(vStack)
+    }
   }
   
   private func downloadImageName() -> String {
@@ -102,7 +115,8 @@ struct ContentSummaryView: View {
   
   private func download() {
     guard downloadImageName() != DownloadImageName.inActive else {
-      // TODO show hud stating already downloaded
+      self.showHudView.toggle()
+      self.showSuccess = false
       return
     }
     

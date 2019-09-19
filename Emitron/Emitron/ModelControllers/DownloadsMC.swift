@@ -77,7 +77,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Public funcs
-  func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
+  func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
@@ -91,21 +91,22 @@ class DownloadsMC: NSObject, ObservableObject {
       
     } catch {
       self.state = .failed
+      completion(false, [])
       fatalError("Couldn't remove file.")
     }
     
     let contents = self.data.map { $0.content }
-    completion(contents)
+    completion(true, contents)
   }
   
-  func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
+  func saveDownload(with content: ContentSummaryModel, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
       // TODO show error hud
       let contents = self.data.map { $0.content }
-      completion(contents)
+      completion(false, contents)
       
     } else {
       let videosMC = VideosMC(user: self.user)
@@ -119,14 +120,14 @@ class DownloadsMC: NSObject, ObservableObject {
                 self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
               }
             } else {
-              // TODO show error hud
+              completion(false, [])
             }
           }
         }
       }
       
       let contents = self.data.map { $0.content }
-      completion(contents)
+      completion(true, contents)
     }
   }
   
