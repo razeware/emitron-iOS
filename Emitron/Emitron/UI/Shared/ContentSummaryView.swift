@@ -113,7 +113,7 @@ struct ContentSummaryView: View {
   private func createHudView() -> some View {
     let option: HudOption = showSuccess ? .success : .error
     return HudView(option: option) {
-      self.showHudView.toggle()
+      self.showHudView = false
     }
   }
   
@@ -123,8 +123,12 @@ struct ContentSummaryView: View {
   
   private func download() {
     guard downloadImageName() != DownloadImageName.inActive else {
-      self.showHudView.toggle()
-      self.showSuccess = false
+      if showHudView {
+        // dismiss hud currently showing
+        showHudView.toggle()
+      }
+      showSuccess = false
+      showHudView = true
       return
     }
     

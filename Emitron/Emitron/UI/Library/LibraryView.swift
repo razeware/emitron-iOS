@@ -120,7 +120,7 @@ struct LibraryView: View {
   private func createHudView() -> some View {
     let option: HudOption = showSuccess ? .success : .error
     return HudView(option: option) {
-      self.showHudView.toggle()
+      self.showHudView = false
     }
   }
   
@@ -194,8 +194,13 @@ struct LibraryView: View {
         switch action {
         case .delete:
           self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
-            self.showHudView.toggle()
+            if self.showHudView {
+              // dismiss hud currently showing
+              self.showHudView.toggle()
+            }
+            
             self.showSuccess = success
+            self.showHudView = true
             if success {
               DispatchQueue.main.async {
                 updatedContents = contents
@@ -205,8 +210,13 @@ struct LibraryView: View {
 
         case .save:
           self.downloadsMC.saveDownload(with: content) { (success, contents) in
-            self.showHudView.toggle()
-            self.showSuccess = success
+            if self.showHudView {
+              // dismiss hud currently showing
+              self.showHudView.toggle()
+            }
+            
+             self.showSuccess = success
+             self.showHudView = true
             if success {
               DispatchQueue.main.async {
                 updatedContents = contents

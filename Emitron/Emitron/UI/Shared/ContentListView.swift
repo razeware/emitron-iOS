@@ -120,12 +120,14 @@ struct ContentListView: View {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
             CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: { success in
-              if !success {
+              if self.showHudView {
+                // dismiss hud currently showing
                 self.showHudView.toggle()
-                self.showSuccess = false
-              } else {
-                self.callback?(.save, partialContent)
               }
+              
+              self.showSuccess = success
+              self.showHudView = true
+              self.callback?(.save, partialContent)
             }, contentScreen: self.contentScreen)
               .listRowBackground(self.bgColor)
               .background(self.bgColor)
@@ -154,7 +156,7 @@ struct ContentListView: View {
   private func createHudView() -> some View {
     let option: HudOption = showSuccess ? .success : .error
     return HudView(option: option) {
-      self.showHudView.toggle()
+      self.showHudView = false
     }
   }
 
