@@ -45,6 +45,8 @@ enum DownloadsAction {
 class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
+  @Published var progress: CGFloat = 1.0
+  var downloadedData: Data?
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -110,10 +112,8 @@ class DownloadsMC: NSObject, ObservableObject {
       
     } else {
       let videosMC = VideosMC(user: self.user)
-      self.loadVideoStream(for: content, on: videosMC) { data, response in
-        if let response = response as? HTTPURLResponse,
-          response.statusCode == 200,
-          let data = data {
+      self.loadVideoStream(for: content, on: videosMC) { data in
+        if let data = data {
           DispatchQueue.main.async {
             if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
               if let attachmentModel = videosMC.data {
@@ -141,32 +141,20 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Private funcs
-  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?, URLResponse?) -> Void)) {
+  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?) -> Void)) {
     videosMC.loadVideoStream(for: content.videoID) {
       if let streamURL = videosMC.streamURL {
-        self.load(url: streamURL) { (data, response, error) in
-          
-          if let error = error {
-            // TODO show error hud
-            
-            self.state = .failed
-            Failure
-              .fetch(from: "DocumentsMC", reason: error.localizedDescription)
-              .log(additionalParams: nil)
-            completion(nil, nil)
-            return
-          }
-          
-          completion(data, response)
+        
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).downloadTask(with: streamURL).resume()
+        
+        if let data = self.downloadedData {
+          completion(data)
+        } else {
+          completion(nil)
         }
+
       }
     }
-  }
-  
-  private func load(url streamURL: URL, completion: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-    var request = URLRequest(url: streamURL)
-    request.httpMethod = "GET"
-    _ = URLSession(configuration: .default).dataTask(with: request, completionHandler: completion).resume()
   }
   
   private func loadDownloads() {
@@ -221,9 +209,23 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
-    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
+    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded, downloadProgress: self.progress)
     self.data.append(downloadModel)
     // TODO show success hud
     self.state = .hasData
   }
 }
+
+extension DownloadsMC: URLSessionDownloadDelegate {
+  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    self.downloadedData = downloadTask.response?.url?.dataRepresentation
+  }
+  
+  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    DispatchQueue.main.async {
+      let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
+      self.progress = 1.0 - progress
+    }
+  }
+}
+

@@ -62,6 +62,7 @@ class ContentSummaryModel {
   private(set) var domainIDs: [Int] = []
   
   var isDownloaded: Bool = false
+  var downloadProgress: CGFloat = 0.0
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,

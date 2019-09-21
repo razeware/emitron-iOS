@@ -50,6 +50,7 @@ struct CardViewModel: Hashable {
   let type: CardViewType
   let progress: CGFloat
   let isDownloaded: Bool
+  let downloadProgress: CGFloat
 }
 
 // Transform data
@@ -63,6 +64,7 @@ extension CardViewModel {
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     let isDownloaded = content.isDownloaded
+    let downloadProgress = content.downloadProgress
 
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -77,7 +79,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded, downloadProgress: downloadProgress)
 
     return cardModel
   }
@@ -148,6 +150,8 @@ struct CardView: SwiftUI.View {
           Spacer()
           
           if contentScreen != ContentScreen.downloads {
+            setUpProgress()
+            
             Image(self.downloadImageName())
             .resizable()
             .frame(width: 19, height: 19)
@@ -171,6 +175,12 @@ struct CardView: SwiftUI.View {
     
     return AnyView(stack)
   }
+  
+  private func setUpProgress() -> AnyView? {
+    guard let model = model, model.isDownloaded else { return nil }
+    return AnyView(CircularProgressBar(progress: model.downloadProgress))
+  }
+
 
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
