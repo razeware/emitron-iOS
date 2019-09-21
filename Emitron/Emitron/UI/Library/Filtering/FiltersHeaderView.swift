@@ -82,7 +82,7 @@ struct FiltersHeaderView: View {
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
           TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
             filter.isOn.toggle()
-            self.filters.filters.update(with: filter)
+            self.filters.all.update(with: filter)
             self.filters.commitUpdates()
           })
         }

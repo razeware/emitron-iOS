@@ -91,26 +91,20 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
   
   var body: some View {
-    //TODO: Currently showing this as a scrollview, so that the tab bar navigation doesn't cause a crash
-    // because apparently using a List causes a crash...  in the tab bar navigation...
-    //    NavigationView {
-    //      cardTableViewWithNav()
-    //    }
     cardsTableView()
-    //cardsScrollView()
   }
   
   private func cardsTableView() -> AnyView {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
     
     let list = GeometryReader { geometry in
       if self.contents.isEmpty {
         List {
           CardView(model: nil, contentScreen: self.contentScreen)
             .listRowBackground(self.bgColor)
-            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
+            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
+                   height: geometry.size.height, alignment: .center)
         }
       } else {
         List {
@@ -150,7 +144,16 @@ struct ContentListView: View {
                     onRightIconTap: onRightTap)
   }
   
-  func loadMoreContents() {
+  private func emptyView() -> some View {
+    VStack {
+      Text(contentScreen.titleMessage)
+      .multilineTextAlignment(.leading)
+      .font(.uiLargeTitle)
+      .foregroundColor(.appBlack)
+    }
+  }
+  
+  private func loadMoreContents() {
     contentsMC.loadMore()
   }
   
