@@ -40,7 +40,19 @@ struct ContentSummaryView: View {
   var callback: ((ContentSummaryModel)->())?
   var details: ContentSummaryModel
   var body: some View {
-    let vStack = VStack(alignment: .leading) {
+    
+    ZStack(alignment: .bottom) {
+      createVStack()
+      
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
+  }
+  
+  private func createVStack() -> some View {
+    return VStack(alignment: .leading) {
       
       Text(details.technologyTripleString.uppercased())
         .font(.uiUppercase)
@@ -96,16 +108,12 @@ struct ContentSummaryView: View {
         .lineLimit(2)
         .padding([.top], 5)
     }
-    
-    if showHudView {
-      let success: HudOption = showSuccess ? .success : .error
-      return AnyView(vStack
-      .overlay(HudView(option: success, callback: {
-        self.showHudView.toggle()
-      }), alignment: .bottom))
-      
-    } else {
-      return AnyView(vStack)
+  }
+  
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView.toggle()
     }
   }
   

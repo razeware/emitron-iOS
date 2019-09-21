@@ -50,20 +50,17 @@ struct LibraryView: View {
 
   var body: some View {
     
-    if !showHudView {
-      return createVStack()
-    } else {
-      let success: HudOption = showSuccess ? .success : .error
-      let view = createVStack()
-      .overlay(HudView(option: success, callback: {
-        self.showHudView.toggle()
-      }), alignment: .bottom)
+    ZStack(alignment: .bottom) {
+      createVStack()
       
-      return AnyView(view)
+      if showHudView {
+        createHudView()
+        .animation(.spring())
+      }
     }
   }
 
-  private func createVStack() -> AnyView {
+  private func createVStack() -> some View {
     let vStack = VStack {
       VStack {
 
@@ -118,6 +115,13 @@ struct LibraryView: View {
     .background(Color.paleGrey)
     
     return AnyView(vStack)
+  }
+  
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView.toggle()
+    }
   }
   
   private func filtersView() -> AnyView {

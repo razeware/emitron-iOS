@@ -85,8 +85,8 @@ struct HudView: View {
             .foregroundColor(Color.white)
         }
       }
-        .background(self.option.color)
-        .frame(width: UIScreen.main.bounds.width, height: 54, alignment: .leading)
+      .background(self.option.color)
+      .frame(width: UIScreen.main.bounds.width, height: 54, alignment: .leading)
   }
   
   private func dismiss() {

@@ -93,14 +93,14 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
 
   var body: some View {
-    if !showHudView {
-      return AnyView(cardsTableView())
-    } else {
-      let success: HudOption = showSuccess ? .success : .error
-      return AnyView(cardsTableView()
-      .overlay(HudView(option: success, callback: {
-        self.showHudView.toggle()
-      }), alignment: .bottom))
+    
+    ZStack(alignment: .bottom) {
+      cardsTableView()
+      
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
     }
   }
 
@@ -149,6 +149,13 @@ struct ContentListView: View {
     }
 
     return AnyView(list)
+  }
+  
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView.toggle()
+    }
   }
 
 //  func cardTableViewWithNav() -> AnyView {
