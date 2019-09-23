@@ -275,11 +275,11 @@ struct CardView: SwiftUI.View {
   }
 }
 
-//#if DEBUG
-//struct CardView_Previews: PreviewProvider {
-//  static var previews: some SwiftUI.View {
-//    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-//    return CardView(model: cardModel, callback: nil, contentScreen: .library, progress: 1.0)
-//  }
-//}
-//#endif
+#if DEBUG
+struct CardView_Previews: PreviewProvider {
+  static var previews: some SwiftUI.View {
+    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
+    return CardView(model: cardModel, callback: nil, contentScreen: .library)
+  }
+}
+#endif

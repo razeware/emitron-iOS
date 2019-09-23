@@ -28,7 +28,6 @@
 
 import Foundation
 import SwiftyJSON
-import SwiftUI
 
 extension String {
 
