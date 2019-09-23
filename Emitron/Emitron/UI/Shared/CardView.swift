@@ -42,6 +42,7 @@ enum ImageType: Hashable {
 
 // Shuold be data model independent, so that we can transform any type of data into the cardViewModel data
 struct CardViewModel: Hashable {
+  let id: Int
   let title: String
   let subtitle: String
   let description: String
@@ -50,7 +51,6 @@ struct CardViewModel: Hashable {
   let type: CardViewType
   let progress: CGFloat
   let isDownloaded: Bool
-  let downloadProgress: CGFloat
 }
 
 // Transform data
@@ -64,7 +64,6 @@ extension CardViewModel {
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     let isDownloaded = content.isDownloaded
-    let downloadProgress = content.downloadProgress
 
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -79,14 +78,14 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded, downloadProgress: downloadProgress)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
 
     return cardModel
   }
 }
 
 struct CardView: SwiftUI.View {
-
+  
   var callback: ((Bool)->())?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
@@ -150,14 +149,16 @@ struct CardView: SwiftUI.View {
           Spacer()
           
           if contentScreen != ContentScreen.downloads {
-            setUpProgress()
             
-            Image(self.downloadImageName())
-            .resizable()
-            .frame(width: 19, height: 19)
-            .onTapGesture {
-              self.download()
-            }
+            setUpImageAndProgress()
+//            setUpProgress()
+//
+//            Image(self.downloadImageName())
+//            .resizable()
+//            .frame(width: 19, height: 19)
+//            .onTapGesture {
+//              self.download()
+//            }
           }
         }
       }
@@ -176,11 +177,39 @@ struct CardView: SwiftUI.View {
     return AnyView(stack)
   }
   
-  private func setUpProgress() -> AnyView? {
-    guard let model = model, model.isDownloaded else { return nil }
-    return AnyView(CircularProgressBar(progress: model.downloadProgress))
+  private func setUpImageAndProgress() -> AnyView {
+    let image = Image(self.downloadImageName())
+      .resizable()
+      .frame(width: 19, height: 19)
+      .onTapGesture {
+        self.download()
+    }
+    
+    guard let model = model, let downloadsMC = DataManager.current?.downloadsMC else {
+      return AnyView(image)
+    }
+    
+    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
+    guard let progress = downloadModel?.downloadProgress else {
+      return AnyView(image)
+    }
+    
+    //    print("model.downloadProgress: \(model.downloadProgress)")
+    while progress > 0.0 {
+      print("progress: \(progress)")
+      return AnyView(CircularProgressBar(progress: progress))
+    }
+    
+    return AnyView(image)
   }
-
+  
+  private func setUpCircle() -> AnyView? {
+    guard let model = model, let downloadsMC = DataManager.current?.downloadsMC else { return nil }
+    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
+    guard let progress = downloadModel?.downloadProgress else { return nil }
+    print("progress: \(progress)")
+    return AnyView(CircularProgressBar(progress: progress))
+  }
 
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
@@ -264,11 +293,11 @@ struct CardView: SwiftUI.View {
   }
 }
 
-#if DEBUG
-struct CardView_Previews: PreviewProvider {
-  static var previews: some SwiftUI.View {
-    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-    return CardView(model: cardModel, callback: nil, contentScreen: .library)
-  }
-}
-#endif
+//#if DEBUG
+//struct CardView_Previews: PreviewProvider {
+//  static var previews: some SwiftUI.View {
+//    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
+//    return CardView(model: cardModel, callback: nil, contentScreen: .library, progress: 1.0)
+//  }
+//}
+//#endif

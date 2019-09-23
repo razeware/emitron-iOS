@@ -47,6 +47,7 @@ class DownloadsMC: NSObject, ObservableObject {
   // MARK: - Properties
   @Published var progress: CGFloat = 1.0
   var downloadedData: Data?
+  var downloadedModel: DownloadModel?
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -209,10 +210,18 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
-    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded, downloadProgress: self.progress)
+    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
+    self.downloadedModel = downloadModel
     self.data.append(downloadModel)
     // TODO show success hud
     self.state = .hasData
+  }
+  
+  private func updateModel(with id: Int) {
+    
+    if let downloadedModel = downloadedModel, let index = data.firstIndex(where: { $0.content.id == id }) {
+      data[index] = downloadedModel
+    }
   }
 }
 
@@ -224,7 +233,11 @@ extension DownloadsMC: URLSessionDownloadDelegate {
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
     DispatchQueue.main.async {
       let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
+      self.downloadedModel?.downloadProgress = 1.0 - progress
       self.progress = 1.0 - progress
+      if let downloadedModel = self.downloadedModel {
+        self.updateModel(with: downloadedModel.content.id)
+      }
     }
   }
 }

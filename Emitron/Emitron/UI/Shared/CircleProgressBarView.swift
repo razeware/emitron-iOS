@@ -37,7 +37,6 @@ private struct Layout {
 struct CircularProgressBar: View {
   
   @State var progress: CGFloat = 1.0
-  @State var spinCircle: Bool = false
   
   var body: some View {
     
@@ -54,13 +53,7 @@ struct CircularProgressBar: View {
         .frame(width: Layout.frame, height: Layout.frame)
         .rotationEffect(.degrees(90), anchor: .center)
         .animation(Animation.linear(duration: 60))
-    } .onAppear {
-      self.spinCircle.toggle()
     }
-  }
-  
-  func updateProgress(with progress: CGFloat) {
-    
   }
 }
 
