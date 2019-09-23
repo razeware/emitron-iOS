@@ -120,13 +120,6 @@ struct ContentListView: View {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
             CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: { success in
-              if self.showHudView {
-                // dismiss hud currently showing
-                self.showHudView.toggle()
-              }
-              
-              self.showSuccess = success
-              self.showHudView = true
               self.callback?(.save, partialContent)
             }, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
               .listRowBackground(self.bgColor)
