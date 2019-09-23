@@ -86,6 +86,7 @@ extension CardViewModel {
 
 struct CardView: SwiftUI.View {
   
+  @EnvironmentObject var downloadsMC: DownloadsMC
   var callback: ((Bool)->())?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
@@ -149,16 +150,7 @@ struct CardView: SwiftUI.View {
           Spacer()
           
           if contentScreen != ContentScreen.downloads {
-            
             setUpImageAndProgress()
-//            setUpProgress()
-//
-//            Image(self.downloadImageName())
-//            .resizable()
-//            .frame(width: 19, height: 19)
-//            .onTapGesture {
-//              self.download()
-//            }
           }
         }
       }
@@ -185,7 +177,7 @@ struct CardView: SwiftUI.View {
         self.download()
     }
     
-    guard let model = model, let downloadsMC = DataManager.current?.downloadsMC else {
+    guard let model = model else {
       return AnyView(image)
     }
     
@@ -194,21 +186,11 @@ struct CardView: SwiftUI.View {
       return AnyView(image)
     }
     
-    //    print("model.downloadProgress: \(model.downloadProgress)")
-    while progress > 0.0 {
-      print("progress: \(progress)")
+    while 0.0 < progress, progress < 0.9 {
       return AnyView(CircularProgressBar(progress: progress))
     }
     
     return AnyView(image)
-  }
-  
-  private func setUpCircle() -> AnyView? {
-    guard let model = model, let downloadsMC = DataManager.current?.downloadsMC else { return nil }
-    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
-    guard let progress = downloadModel?.downloadProgress else { return nil }
-    print("progress: \(progress)")
-    return AnyView(CircularProgressBar(progress: progress))
   }
 
   private func download() {

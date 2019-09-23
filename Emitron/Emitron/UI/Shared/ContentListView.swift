@@ -112,7 +112,7 @@ struct ContentListView: View {
     let list = GeometryReader { geometry in
       if self.contents.isEmpty {
         List {
-          CardView(model: nil, callback: nil, contentScreen: self.contentScreen)
+          CardView(model: nil, callback: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
           .listRowBackground(self.bgColor)
           .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
         }
@@ -128,7 +128,7 @@ struct ContentListView: View {
               self.showSuccess = success
               self.showHudView = true
               self.callback?(.save, partialContent)
-            }, contentScreen: self.contentScreen)
+            }, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
               .listRowBackground(self.bgColor)
               .background(self.bgColor)
               .onTapGesture {
