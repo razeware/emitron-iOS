@@ -38,3 +38,14 @@ extension ContentSummaryModel {
     return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
   }
 }
+
+extension ContentDetailsModel {
+  var dateAndTimeString: String {
+    var start = releasedAt.cardString
+    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+      start = Constants.today
+    }
+    
+    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+  }
+}

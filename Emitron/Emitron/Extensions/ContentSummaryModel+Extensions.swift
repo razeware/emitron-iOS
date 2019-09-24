@@ -26,7 +26,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-extension ContentDetailModel {
+extension ContentDetailsModel {
   // NOTE: Here in case the API starts returning Course Name + Episode Name again, rather than just Episode Name
   private var cleanTitleString: String {
     let realTitle = name.split(separator: "·",

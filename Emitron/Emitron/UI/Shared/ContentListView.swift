@@ -87,7 +87,6 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  @State var imageLoaded: Bool = false
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
   
   var body: some View {
@@ -127,7 +126,7 @@ struct ContentListView: View {
           self.selectedMC = nil
         }) { contentSummary in
           ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-            self.callback?(.save, content)
+            self.callback?(.save, ContentSummaryModel(contentDetails: content))
           }, user: user!)
         }
           

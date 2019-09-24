@@ -43,7 +43,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: ContentSummaryModel
+  private(set) var data: ContentDetailsModel
   
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -51,22 +51,22 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
+    self.data = ContentDetailsModel(summaryModel: partialContentDetail)
     
     super.init()
     
-    getContentDetails()
+    getContentSummary()
   }
   
   // MARK: - Internal
-  func getContentDetails() {
+  func getContentSummary() {
     if case(.loading) = state {
       return
     }
     
     state = .loading
     
-    contentsService.contentSummary(for: data.id) { [weak self] result in
+    contentsService.contentDetails(for: data.id) { [weak self] result in
       
       guard let self = self else {
         return

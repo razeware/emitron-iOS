@@ -52,7 +52,7 @@ final class Contents: NSManagedObject {
   @NSManaged var contributorString: String
   @NSManaged var videoID: NSNumber?
   
-  static func transform(from model: ContentDetailModel, viewContext: NSManagedObjectContext) -> Contents {
+  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
     let contents = Contents(context: viewContext)
     contents.id = NSNumber(value: model.id)
     contents.name = model.name

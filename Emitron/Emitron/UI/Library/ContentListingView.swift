@@ -28,145 +28,115 @@
 
 import SwiftUI
 
+
 struct ContentListingView: View {
   
-  var contentSummaryMC: ContentSummaryMC
-  var callback: ((ContentSummaryModel)->())?
+  @ObservedObject var contentSummaryMC: ContentSummaryMC
+  var callback: ((ContentDetailsModel)->())?
   var user: UserModel
   
+  // These should be private
   @State var isPresented = false
   @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
+  @State var firstLoad: Bool = true
+
   var imageRatio: CGFloat = 283/375
   
-  func topView() -> some View {
-    return Text("Hola!")
+  private func episodeListing(data: [ContentSummaryModel]) -> some View {
+    ForEach(data, id: \.id) { model in
+      TextListItemView(contentSummary: model, buttonAction: {
+        // Download
+      })
+      .onTapGesture {
+        self.isPresented = true
+      }
+      .sheet(isPresented: self.$isPresented) { VideoView(videoID: model.videoID, user: self.user) }
+    }
+  }
+  
+  private func singleEpisode() -> some View {
+    let button = Button(action: {
+      self.isPresented = true
+    }) {
+      Text("Play Video!")
+        //TODO: This is wrong
+        .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID ?? 0, user: self.user) }
+    }
+    
+    return button
+  }
+  
+  private func coursesSection() -> AnyView {
+    let groups = contentSummaryMC.data.groups
+    
+    guard contentSummaryMC.data.contentType == .collection, !groups.isEmpty else {
+      return AnyView(singleEpisode())
+    }
+    
+    let sections = Section {
+      Text("Course Episodes")
+        .font(.uiTitle2)
+        .padding([.top], -5)
+      
+      if groups.count > 1 {
+        ForEach(groups, id: \.id) { group in
+          
+          Section(header: CourseHeaderView(name: group.name, color: .white)
+            .background(Color.white)) {
+              self.episodeListing(data: group.childContents)
+          }
+        }
+      } else {
+        self.episodeListing(data: groups.first!.childContents)
+      }
+    }
+    
+    return AnyView(sections)
+    
   }
   
   var body: some View {
     
+    // This just keeps re-rendering the view. Not sure how to mitigate :(
     loadImage()
-    
-    let list = GeometryReader { geometry in
-      
-      if self.contentSummaryMC.data.contentType == .collection {
-        // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         
-        VStack {
-          Text("Course Episodes")
-            .font(.uiTitle2)
-            .padding([.top], -5)
-          
-          //          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
-          //            Section(header:
-          //              CourseHeaderView(name: group.name, color: .white)
-          //                .background(Color.white)
-          //            ) {
-          //              ForEach(group.childContents, id: \.id) { summary in
-          //
-          //                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
-          //                  // Download
-          //                })
-          //                  .onTapGesture {
-          //                    self.isPresented = true
-          //                }
-          //                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
-          //              }
-          //            }
-          //          }
-          // TODO: Ask Lea & Sam about this...
-          //          ForEach(contentSummaryMC.data.groups, id: \.id) { group in
-          //            Section(header:
-          //              CourseHeaderView(name: group.name, color: .white)
-          //                .background(Color.white)
-          //            ) {
-          //              ForEach(group.childContents, id: \.id) { summary in
-          //
-          //                TextListItemView(contentSummary: summary, timeStamp: "", buttonAction: {
-          //                  // Download
-          //                })
-          //                .onTapGesture {
-          //                  self.isPresented = true
-          //                }
-          //                .sheet(isPresented: self.$isPresented) { VideoView(videoID: summary.videoID, user: self.user) }
-          //              }
-          //            }
-          //          }
-        }
-      } else {
-        Button(action: {
-          self.isPresented = true
-        }) {
-          Text("Play Video!")
-            //TODO: This is wrong
-            .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID, user: self.user) }
-        }
-      }
-    }
-    
     let scrollView = GeometryReader { geometry in
-      ScrollView(.vertical, showsIndicators: false) {
-        VStack {
+      List {
+        Section {
           Image(uiImage: self.uiImage)
             .resizable()
             .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
             .transition(.opacity)
 
           ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
-            .padding([.leading, .trailing], 20)
-
-          list
+            .padding(20)
         }
-        .background(Color.paleGrey)
+        .listRowInsets(EdgeInsets())
+        
+        self.coursesSection()
       }
+      .background(Color.paleGrey)
     }
-    
+        
     return scrollView
   }
-
-//  private func loadImageAlt() -> some View {
-//    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-//    // is causing this file to not compile
-//
-//    //TODO: This is probably not the right way tohandle image change, only doing this because the .onAppear trigger doesn't work for modals...
-//    let image = Image(uiImage: uiImage)
-//      .resizable()
-//      .frame(width: 375, height: 283)
-//
-//    guard let url = contentDetailsMC.data.cardArtworkURL else {
-//      return AnyView(image)
-//    }
-//
-//    if !imageLoaded {
-//      DispatchQueue.global().async {
-//        let data = try? Data(contentsOf: url)
-//        DispatchQueue.main.async {
-//          if let data = data,
-//            let img = UIImage(data: data) {
-//            self.uiImage = img
-//            self.imageLoaded.toggle()
-//          }
-//        }
-//      }
-//    }
-//  }
-
-func loadImage() {
-  //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-  // is causing this file to not compile
   
-  guard let url = contentSummaryMC.data.cardArtworkURL else {
-    return
-  }
-  
-  DispatchQueue.global().async {
-    let data = try? Data(contentsOf: url)
-    DispatchQueue.main.async {
-      if let data = data,
-        let img = UIImage(data: data) {
-        self.uiImage = img
-        //          self.imageLoaded.toggle()
+  func loadImage() {
+    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+    // is causing this file to not compile
+    
+    guard let url = contentSummaryMC.data.cardArtworkURL else {
+      return
+    }
+    
+    DispatchQueue.global().async {
+      let data = try? Data(contentsOf: url)
+      DispatchQueue.main.async {
+        if let data = data,
+          let img = UIImage(data: data) {
+          self.uiImage = img
+        }
       }
     }
   }
-}
 }

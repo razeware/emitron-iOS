@@ -35,8 +35,8 @@ struct DownloadImageName {
 
 struct ContentSummaryView: View {
   
-  var callback: ((ContentSummaryModel)->())?
-  var details: ContentSummaryModel
+  var callback: ((ContentDetailsModel)->())?
+  var details: ContentDetailsModel
   var body: some View {
     VStack(alignment: .leading) {
       
@@ -102,7 +102,8 @@ struct ContentSummaryView: View {
   }
   
   private func downloadImageName() -> String {
-    return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    DownloadImageName.inActive
+    //return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func download() {
@@ -120,7 +121,7 @@ struct ContentSummaryView: View {
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      return ContentSummaryView(details: ContentSummaryModel.test)
+      return ContentSummaryView(details: ContentDetailsModel.test)
     }
 }
 #endif
