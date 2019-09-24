@@ -112,7 +112,9 @@ struct CardView: SwiftUI.View {
 
             Text(model.title)
               .font(.uiTitle4)
-              .lineLimit(nil)
+              //TODO: Figure out why there's a bug with laying out the title + spacer + image (title doesn't stretch far enough)
+              // .fixedSize(horizontal: true, vertical: true) doesn't work.
+              .lineLimit(2)
 
             Text(model.subtitle)
               .font(.uiCaption)
@@ -132,7 +134,8 @@ struct CardView: SwiftUI.View {
 
         Text(model.description)
           .font(.uiCaption)
-          .lineLimit(5)
+          .fixedSize(horizontal: false, vertical: true)
+          .lineLimit(3)
           .foregroundColor(.battleshipGrey)
 
         // This space causes a crash if we use it in the tableView, but not if it's used in a scrollView

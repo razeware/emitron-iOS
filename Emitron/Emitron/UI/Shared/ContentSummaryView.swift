@@ -42,7 +42,7 @@ struct ContentSummaryView: View {
       
       Text(details.technologyTripleString.uppercased())
         .font(.uiUppercase)
-        .foregroundColor(.coolGrey)
+        .foregroundColor(.battleshipGrey)
         .kerning(0.5)
       // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
       
@@ -51,11 +51,12 @@ struct ContentSummaryView: View {
         .lineLimit(nil)
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
+        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], -5)
       
       Text(details.dateAndTimeString)
         .font(.uiFootnote)
-        .foregroundColor(.coolGrey)
+        .foregroundColor(.battleshipGrey)
       
       HStack {
         Button(action: {
@@ -63,7 +64,9 @@ struct ContentSummaryView: View {
           self.download()
         }) {
           Image(downloadImageName())
-            .padding([.trailing], 30)
+            .resizable()
+            .frame(width: 20, height: 20)
+            .padding([.trailing], 20)
             .foregroundColor(.coolGrey)
         }
         
@@ -73,7 +76,7 @@ struct ContentSummaryView: View {
         }) {
           Image("bookmarkInactive")
             .resizable()
-            .frame(maxWidth: 20, maxHeight: 20)
+            .frame(width: 20, height: 20)
             .foregroundColor(.coolGrey)
         }
       }
@@ -81,17 +84,19 @@ struct ContentSummaryView: View {
       
       Text(details.description)
         .font(.uiFootnote)
-        .foregroundColor(.coolGrey)
-        .lineLimit(nil)
+        .foregroundColor(.battleshipGrey)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
+        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 20)
+        .lineLimit(nil)
       
       Text("By \(details.contributorString)")
         .font(.uiFootnote)
-        .foregroundColor(.coolGrey)
+        .foregroundColor(.battleshipGrey)
         .lineLimit(2)
+        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 5)
     }
   }

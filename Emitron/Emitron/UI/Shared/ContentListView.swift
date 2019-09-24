@@ -123,13 +123,21 @@ struct ContentListView: View {
           .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
         }
         .onAppear { self.loadMoreContents() }
-        .sheet(isPresented: self.$isPresenting) {
-          user != nil
-            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-              self.callback?(.save, content)
-            }, user: user!))
-            : AnyView(Text("Unable to show video..."))
+        .sheet(item: self.$selectedMC, onDismiss: {
+          self.selectedMC = nil
+        }) { contentSummary in
+          ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+            self.callback?(.save, content)
+          }, user: user!)
         }
+          
+//        .sheet(isPresented: self.$isPresenting) {
+//          user != nil
+//            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+//              self.callback?(.save, content)
+//            }, user: user!))
+//            : AnyView(Text("Unable to show video..."))
+//        }
       }
     }
     

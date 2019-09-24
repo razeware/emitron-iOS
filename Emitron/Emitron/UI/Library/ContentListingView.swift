@@ -29,45 +29,33 @@
 import SwiftUI
 
 struct ContentListingView: View {
-
-  @ObservedObject var contentSummaryMC: ContentSummaryMC
-  @State var isPresented = false
-  @State private var uiImage: UIImage = #imageLiteral(resourceName: "loading")
+  
+  var contentSummaryMC: ContentSummaryMC
   var callback: ((ContentSummaryModel)->())?
-
   var user: UserModel
-
+  
+  @State var isPresented = false
+  @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
+  var imageRatio: CGFloat = 283/375
+  
+  func topView() -> some View {
+    return Text("Hola!")
+  }
+  
   var body: some View {
-
-    List {
-      VStack {
-
-//        Image("loading")
-//          .fetchingRemoteImage(from: contentDetailsMC.data.cardArtworkURL!)
-//          .frame(width: 375, height: 283)
-//
-//        ContentSummaryView(details: contentDetailsMC.data)
-
-//         TODO: This is probably not the correct image...
-                Image(uiImage: uiImage)
-                  .resizable()
-                  .frame(width: 375, height: 283)
-                  .onAppear(perform: loadImage)
-                  .transition(.opacity)
-
-        ContentSummaryView(callback: callback, details: contentSummaryMC.data)
-      }
-      .frame(maxWidth: UIScreen.main.bounds.width)
-      .background(Color.white)
-
-      if contentSummaryMC.data.contentType == .collection {
+    
+    loadImage()
+    
+    let list = GeometryReader { geometry in
+      
+      if self.contentSummaryMC.data.contentType == .collection {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-
+        
         VStack {
           Text("Course Episodes")
             .font(.uiTitle2)
             .padding([.top], -5)
-
+          
           //          ForEach(contentDetailsMC.data.groups, id: \.id) { group in
           //            Section(header:
           //              CourseHeaderView(name: group.name, color: .white)
@@ -114,13 +102,25 @@ struct ContentListingView: View {
         }
       }
     }
-    .onAppear {
-      //TODO: Kind of hack to force data-reload while this modal-presentation with List issue goes on
-      self.contentSummaryMC.getContentDetails()
+    
+    let scrollView = GeometryReader { geometry in
+      ScrollView(.vertical, showsIndicators: false) {
+        VStack {
+          Image(uiImage: self.uiImage)
+            .resizable()
+            .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
+            .transition(.opacity)
+
+          ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
+            .padding([.leading, .trailing], 20)
+
+          list
+        }
+        .background(Color.paleGrey)
+      }
     }
-    .onDisappear {
-      print("I'm gone...")
-    }
+    
+    return scrollView
   }
 
 //  private func loadImageAlt() -> some View {
@@ -150,23 +150,23 @@ struct ContentListingView: View {
 //    }
 //  }
 
-  private func loadImage() {
-    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-    // is causing this file to not compile
-
-    guard let url = contentSummaryMC.data.cardArtworkURL else {
-      return
-    }
-
-    DispatchQueue.global().async {
-      let data = try? Data(contentsOf: url)
-      DispatchQueue.main.async {
-        if let data = data,
-          let img = UIImage(data: data) {
-          self.uiImage = img
-//          self.imageLoaded.toggle()
-        }
+func loadImage() {
+  //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
+  // is causing this file to not compile
+  
+  guard let url = contentSummaryMC.data.cardArtworkURL else {
+    return
+  }
+  
+  DispatchQueue.global().async {
+    let data = try? Data(contentsOf: url)
+    DispatchQueue.main.async {
+      if let data = data,
+        let img = UIImage(data: data) {
+        self.uiImage = img
+        //          self.imageLoaded.toggle()
       }
     }
   }
+}
 }
