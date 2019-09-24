@@ -48,6 +48,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case categories = "Categories"
   case contentTypes = "Content Type"
   case difficulties = "Difficulties"
+  case search = "Search"
   case none = "" // For filters whose values aren't an array, for example the search query
   
   var name: String {
@@ -101,6 +102,7 @@ class Filters: ObservableObject {
       categories.filters = all.filter { $0.groupType == .categories }
       contentTypes.filters = all.filter { $0.groupType == .contentTypes }
       difficulties.filters = all.filter { $0.groupType == .difficulties }
+      searchFilter = all.filter { $0.groupType == .search }.first
     }
   }
   
@@ -155,6 +157,7 @@ class Filters: ObservableObject {
       }
       let filter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
       searchFilter = filter
+      all.update(with: filter)
     }
   }
   

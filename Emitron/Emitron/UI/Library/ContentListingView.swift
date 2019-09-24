@@ -54,23 +54,37 @@ struct ContentListingView: View {
     }
   }
   
-  private func singleEpisode() -> some View {
+  private func playButton() -> some View {
     let button = Button(action: {
       self.isPresented = true
     }) {
-      Text("Play Video!")
-        //TODO: This is wrong
-        .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID ?? 0, user: self.user) }
+      
+      ZStack {
+        Rectangle()
+          .frame(maxWidth: 70, maxHeight: 70)
+          .foregroundColor(.white)
+          .cornerRadius(6)
+        Rectangle()
+          .frame(maxWidth: 60, maxHeight: 60)
+          .foregroundColor(.appBlack)
+          .cornerRadius(6)
+        Image("materialIconPlay")
+          .resizable()
+          .frame(width: 40, height: 40)
+          .foregroundColor(.white)
+        
+      }
+      .sheet(isPresented: self.$isPresented) { VideoView(videoID: self.contentSummaryMC.data.videoID ?? 0, user: self.user) }
     }
     
     return button
   }
   
-  private func coursesSection() -> AnyView {
+  private func coursesSection() -> AnyView? {
     let groups = contentSummaryMC.data.groups
     
     guard contentSummaryMC.data.contentType == .collection, !groups.isEmpty else {
-      return AnyView(singleEpisode())
+      return nil
     }
     
     let sections = Section {
@@ -103,10 +117,13 @@ struct ContentListingView: View {
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-          Image(uiImage: self.uiImage)
-            .resizable()
-            .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
-            .transition(.opacity)
+          ZStack {
+            Image(uiImage: self.uiImage)
+              .resizable()
+              .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
+              .transition(.opacity)
+            self.playButton()
+          }
 
           ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
             .padding(20)
