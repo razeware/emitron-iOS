@@ -122,6 +122,9 @@ struct ContentListingView: View {
               .resizable()
               .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
               .transition(.opacity)
+            Rectangle()
+              .foregroundColor(.appBlack)
+              .opacity(0.2)
             self.playButton()
           }
 

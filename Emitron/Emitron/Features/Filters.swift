@@ -102,7 +102,6 @@ class Filters: ObservableObject {
       categories.filters = all.filter { $0.groupType == .categories }
       contentTypes.filters = all.filter { $0.groupType == .contentTypes }
       difficulties.filters = all.filter { $0.groupType == .difficulties }
-      searchFilter = all.filter { $0.groupType == .search }.first
     }
   }
   

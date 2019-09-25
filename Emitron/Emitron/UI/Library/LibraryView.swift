@@ -70,6 +70,7 @@ struct LibraryView: View {
           Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
             .font(.uiLabel)
             .foregroundColor(.battleshipGrey)
+          
           Spacer()
 
           Button(action: {
@@ -125,6 +126,7 @@ struct LibraryView: View {
 
   private func searchField() -> AnyView {
     //TODO: Need to figure out how to erase the textField
+    
     let searchField = TextField(Constants.search,
                                 text: $searchText,
                                 onEditingChanged: { _ in
