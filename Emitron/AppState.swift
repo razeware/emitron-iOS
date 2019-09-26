@@ -26,44 +26,14 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
+import Combine
 
-struct LoginView: View {
-  
-  @ObservedObject var userMC: UserMC
-  @State var showModal: Bool = false
-  
-  var body: some View {
-    return contentView()
-  }
-  
-  private func contentView() -> AnyView {
-    guard userMC.user == nil else {
-      let guardpost = Guardpost.current
-      let filters = DataManager.current!.filters
-      let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-      let emitronState = AppState()
-      
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+class AppState: NSObject, ObservableObject {
+  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
+  var selectedTab: Int = 0 {
+    willSet {
+      objectWillChange.send(())
     }
-    
-    return AnyView(
-      VStack {
-        Button(Constants.login) {
-          self.userMC.login()
-        }
-      })
   }
 }
-
-#if DEBUG
-struct LoginView_Previews: PreviewProvider {
-
-  static var previews: some View {
-    let guardpost = Guardpost.current
-    let userMC = UserMC(guardpost: guardpost)
-    
-    return LoginView(userMC: userMC)
-  }
-}
-#endif

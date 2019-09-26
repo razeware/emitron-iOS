@@ -31,12 +31,13 @@ import SwiftUI
 struct TabNavView: View {
 
   @State var selection = 0
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
-    let tabs = TabView(selection: $selection) {
+    let tabs = TabView(selection: $emitron.selectedTab) {
 
-      libraryView()
+       libraryView()
         .tabItem {
           Text(Constants.library)
           Image("library")

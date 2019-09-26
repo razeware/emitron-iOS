@@ -38,6 +38,7 @@ struct DownloadsView: View {
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   @State var tabSelection: Int
+  @EnvironmentObject var emitron: AppState
   var contents: [ContentSummaryModel] {
     return downloadsMC.data.map { $0.content }
   }
@@ -116,12 +117,15 @@ struct DownloadsView: View {
     }
   }
 
-  private func addButton() -> MainButtonView? {
-    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
-
-    return MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      // Switch tab bar back to 0
+  private func addButton() -> AnyView? {
+    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
+    
+    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
+      self.emitron.selectedTab = 0
     }
+    .padding([.bottom, .leading, .trailing], 20)
+    
+    return AnyView(button)
   }
 }
 
