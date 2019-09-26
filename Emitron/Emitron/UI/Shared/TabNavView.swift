@@ -30,7 +30,7 @@ import SwiftUI
 
 struct TabNavView: View {
 
-  @State private var selection = 0
+  @State var selection = 0
   @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
@@ -79,7 +79,7 @@ struct TabNavView: View {
   func downloadsView() -> some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC))
+    return AnyView(DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC))
   }
 }
 

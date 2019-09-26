@@ -56,7 +56,6 @@ class DownloadsMC: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
-
   
   private(set) var data: [DownloadModel] = []
   private(set) var numTutorials: Int = 0

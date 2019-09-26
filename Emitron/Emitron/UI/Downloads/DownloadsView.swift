@@ -37,6 +37,7 @@ struct DownloadsView: View {
   @EnvironmentObject var downloadsMC: DownloadsMC
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
+  @State var tabSelection: Int
   var contents: [ContentSummaryModel] {
     return downloadsMC.data.map { $0.content }
   }
@@ -115,43 +116,12 @@ struct DownloadsView: View {
     }
   }
 
-  private func addButton() -> AnyView? {
+  private func addButton() -> MainButtonView? {
     guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
 
-    // TODO use button Lea created in persistFilters PR once available
-    let button = Button(action: {
-      // TODO what is the action supposed to be here?
-      print("BUTTON TAPPED IN DOWNLOADS VIEW")
-
-    }) {
-      HStack {
-        Rectangle()
-          .frame(width: 24, height: 46, alignment: .center)
-          .foregroundColor(buttonColor)
-
-        Spacer()
-
-        Text(buttonText)
-          .font(.uiButtonLabel)
-          .background(buttonColor)
-          .foregroundColor(.white)
-
-        Spacer()
-
-        Image(buttonImage)
-          .frame(width: 24, height: 24, alignment: .center)
-          .background(Color.white)
-          .foregroundColor(buttonColor)
-          .cornerRadius(6)
-          .padding([.trailing], 10)
-      }
-      .background(buttonColor)
-      .cornerRadius(6)
-      .padding([.leading, .trailing], 18)
-      .frame(height: 46)
+    return MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
+      // Switch tab bar back to 0
     }
-
-    return AnyView(button)
   }
 }
 
@@ -160,7 +130,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC)
+    return DownloadsView(contentScreen: .downloads, tabSelection: 0).environmentObject(downloadsMC)
   }
 }
 #endif
