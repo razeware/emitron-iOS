@@ -30,13 +30,14 @@ import SwiftUI
 
 struct TabNavView: View {
 
-  @State private var selection = 0
+  @State var selection = 0
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
-    let tabs = TabView(selection: $selection) {
+    let tabs = TabView(selection: $emitron.selectedTab) {
 
-      libraryView()
+       libraryView()
         .tabItem {
           Text(Constants.library)
           Image("library")
@@ -79,7 +80,7 @@ struct TabNavView: View {
   func downloadsView() -> some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return AnyView(DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC))
+    return AnyView(DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC))
   }
 }
 

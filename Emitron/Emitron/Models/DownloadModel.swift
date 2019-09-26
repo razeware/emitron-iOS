@@ -27,6 +27,8 @@
 /// THE SOFTWARE.
 
 import Foundation
+import UIKit
+import SwiftUI
 
 class DownloadModel {
 
@@ -36,6 +38,7 @@ class DownloadModel {
   var task: URLSessionDownloadTask?
   var resumeData: Data?
   var progress: Double = 0
+  @Published var downloadProgress: CGFloat = 1.0
 
   // MARK: - Initializers
   init(video: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {

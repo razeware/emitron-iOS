@@ -45,9 +45,23 @@ struct LibraryView: View {
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
 
   var body: some View {
-    VStack {
+    
+    ZStack(alignment: .bottom) {
+      createVStack()
+      
+      if showHudView {
+        createHudView()
+        .animation(.spring())
+      }
+    }
+  }
+
+  private func createVStack() -> some View {
+    let vStack = VStack {
       VStack {
 
         HStack {
@@ -100,8 +114,17 @@ struct LibraryView: View {
         .background(Color.paleGrey)
     }
     .background(Color.paleGrey)
+    
+    return AnyView(vStack)
   }
-
+  
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView = false
+    }
+  }
+  
   private func filtersView() -> AnyView {
     let view = ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
@@ -172,16 +195,34 @@ struct LibraryView: View {
       var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
         switch action {
         case .delete:
-          self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-            DispatchQueue.main.async {
-              updatedContents = contents
+          self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+            if self.showHudView {
+              // dismiss hud currently showing
+              self.showHudView.toggle()
+            }
+            
+            self.showSuccess = success
+            self.showHudView = true
+            if success {
+              DispatchQueue.main.async {
+                updatedContents = contents
+              }
             }
           }
 
         case .save:
-          self.downloadsMC.saveDownload(with: content) { contents in
-            DispatchQueue.main.async {
-              updatedContents = contents
+          self.downloadsMC.saveDownload(with: content) { (success, contents) in
+            if self.showHudView {
+              // dismiss hud currently showing
+              self.showHudView.toggle()
+            }
+            
+             self.showSuccess = success
+             self.showHudView = true
+            if success {
+              DispatchQueue.main.async {
+                updatedContents = contents
+              }
             }
           }
         }

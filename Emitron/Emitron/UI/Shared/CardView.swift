@@ -42,6 +42,7 @@ enum ImageType: Hashable {
 
 // Shuold be data model independent, so that we can transform any type of data into the cardViewModel data
 struct CardViewModel: Hashable {
+  let id: Int
   let title: String
   let subtitle: String
   let description: String
@@ -77,21 +78,21 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
 
     return cardModel
   }
 }
 
 struct CardView: SwiftUI.View {
-
-  var onRightIconTap: (() -> Void)?
+  var onRightIconTap: ((Bool) -> Void)?
+  @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: (() -> Void)? = nil) {
+  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
@@ -150,18 +151,13 @@ struct CardView: SwiftUI.View {
               Spacer()
               
               if self.contentScreen != ContentScreen.downloads {
-                Image(self.downloadImageName())
-                  .resizable()
-                  .frame(width: 19, height: 19)
-                  .onTapGesture {
-                    self.download()
-                }
+                self.setUpImageAndProgress()
               }
             }
           }
           .padding([.leading, .trailing, .top, .bottom], 15)
           .frame(minHeight: 184)
-          
+                    
           Spacer()
           
           ProgressBarView(progress: model.progress)
@@ -175,14 +171,34 @@ struct CardView: SwiftUI.View {
     
     return AnyView(stack)
   }
-
-  private func download() {
-    guard downloadImageName() != DownloadImageName.inActive else {
-      // TODO show hud stating already downloaded
-      return
+  
+  private func setUpImageAndProgress() -> AnyView {
+    let image = Image(self.downloadImageName())
+      .resizable()
+      .frame(width: 19, height: 19)
+      .onTapGesture {
+        self.download()
     }
     
-    onRightIconTap?()
+    guard let model = model else {
+      return AnyView(image)
+    }
+    
+    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
+    guard let progress = downloadModel?.downloadProgress else {
+      return AnyView(image)
+    }
+    
+    while 0.0 < progress, progress < 0.9 {
+      return AnyView(CircularProgressBar(progress: progress))
+    }
+    
+    return AnyView(image)
+  }
+
+  private func download() {
+    let success = downloadImageName() != DownloadImageName.inActive
+    onRightIconTap?(success)
   }
 
   private func loadImage() {

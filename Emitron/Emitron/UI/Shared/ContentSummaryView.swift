@@ -35,10 +35,24 @@ struct DownloadImageName {
 
 struct ContentSummaryView: View {
   
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel)->())?
   var details: ContentDetailsModel
   var body: some View {
-    VStack(alignment: .leading) {
+    
+    ZStack(alignment: .bottom) {
+      createVStack()
+      
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
+  }
+  
+  private func createVStack() -> some View {
+    return VStack(alignment: .leading) {
       
       Text(details.technologyTripleString.uppercased())
         .font(.uiUppercase)
@@ -101,6 +115,13 @@ struct ContentSummaryView: View {
     }
   }
   
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView = false
+    }
+  }
+  
   private func downloadImageName() -> String {
     DownloadImageName.inActive
     //return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
@@ -108,7 +129,12 @@ struct ContentSummaryView: View {
   
   private func download() {
     guard downloadImageName() != DownloadImageName.inActive else {
-      // TODO show hud stating already downloaded
+      if showHudView {
+        // dismiss hud currently showing
+        showHudView.toggle()
+      }
+      showSuccess = false
+      showHudView = true
       return
     }
     

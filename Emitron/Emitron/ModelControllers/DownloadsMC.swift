@@ -45,6 +45,9 @@ enum DownloadsAction {
 class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
+  @Published var progress: CGFloat = 1.0
+  var downloadedData: Data?
+  var downloadedModel: DownloadModel?
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -53,7 +56,6 @@ class DownloadsMC: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
-
   
   private(set) var data: [DownloadModel] = []
   private(set) var numTutorials: Int = 0
@@ -77,7 +79,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Public funcs
-  func deleteDownload(with videoID: Int, completion: @escaping (([ContentSummaryModel])->())) {
+  func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
@@ -91,42 +93,41 @@ class DownloadsMC: NSObject, ObservableObject {
       
     } catch {
       self.state = .failed
+      completion(false, [])
       fatalError("Couldn't remove file.")
     }
     
     let contents = self.data.map { $0.content }
-    completion(contents)
+    completion(true, contents)
   }
   
-  func saveDownload(with content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
+  func saveDownload(with content: ContentSummaryModel, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
       // TODO show error hud
       let contents = self.data.map { $0.content }
-      completion(contents)
+      completion(false, contents)
       
     } else {
       let videosMC = VideosMC(user: self.user)
-      self.loadVideoStream(for: content, on: videosMC) { data, response in
-        if let response = response as? HTTPURLResponse,
-          response.statusCode == 200,
-          let data = data {
+      self.loadVideoStream(for: content, on: videosMC) { data in
+        if let data = data {
           DispatchQueue.main.async {
             if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
               if let attachmentModel = videosMC.data {
                 self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
               }
             } else {
-              // TODO show error hud
+              completion(false, [])
             }
           }
         }
       }
       
       let contents = self.data.map { $0.content }
-      completion(contents)
+      completion(true, contents)
     }
   }
   
@@ -140,32 +141,20 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Private funcs
-  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?, URLResponse?) -> Void)) {
+  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?) -> Void)) {
     videosMC.loadVideoStream(for: content.videoID) {
       if let streamURL = videosMC.streamURL {
-        self.load(url: streamURL) { (data, response, error) in
-          
-          if let error = error {
-            // TODO show error hud
-            
-            self.state = .failed
-            Failure
-              .fetch(from: "DocumentsMC", reason: error.localizedDescription)
-              .log(additionalParams: nil)
-            completion(nil, nil)
-            return
-          }
-          
-          completion(data, response)
+        
+        URLSession(configuration: .default, delegate: self, delegateQueue: .main).downloadTask(with: streamURL).resume()
+        
+        if let data = self.downloadedData {
+          completion(data)
+        } else {
+          completion(nil)
         }
+
       }
     }
-  }
-  
-  private func load(url streamURL: URL, completion: @escaping ((Data?, URLResponse?, Error?) -> Void)) {
-    var request = URLRequest(url: streamURL)
-    request.httpMethod = "GET"
-    _ = URLSession(configuration: .default).dataTask(with: request, completionHandler: completion).resume()
   }
   
   private func loadDownloads() {
@@ -221,8 +210,34 @@ class DownloadsMC: NSObject, ObservableObject {
   
   private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
     let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
+    self.downloadedModel = downloadModel
     self.data.append(downloadModel)
     // TODO show success hud
     self.state = .hasData
   }
+  
+  private func updateModel(with id: Int) {
+    
+    if let downloadedModel = downloadedModel, let index = data.firstIndex(where: { $0.content.id == id }) {
+      data[index] = downloadedModel
+    }
+  }
 }
+
+extension DownloadsMC: URLSessionDownloadDelegate {
+  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
+    self.downloadedData = downloadTask.response?.url?.dataRepresentation
+  }
+  
+  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    DispatchQueue.main.async {
+      let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
+      self.downloadedModel?.downloadProgress = 1.0 - progress
+      self.progress = 1.0 - progress
+      if let downloadedModel = self.downloadedModel {
+        self.updateModel(with: downloadedModel.content.id)
+      }
+    }
+  }
+}
+

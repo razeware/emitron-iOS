@@ -81,6 +81,8 @@ enum ContentScreen {
 
 struct ContentListView: View {
   
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentSummaryModel] = []
@@ -90,7 +92,15 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
   
   var body: some View {
-    cardsTableView()
+    
+    ZStack(alignment: .bottom) {
+      cardsTableView()
+      
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
   }
   
   private func cardsTableView() -> AnyView {
@@ -100,7 +110,7 @@ struct ContentListView: View {
     let list = GeometryReader { geometry in
       if self.contents.isEmpty {
         List {
-          CardView(model: nil, contentScreen: self.contentScreen)
+          CardView(model: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
             .listRowBackground(self.bgColor)
             .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
                    height: geometry.size.height, alignment: .center)
@@ -108,7 +118,7 @@ struct ContentListView: View {
       } else {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
-            self.cardView(content: partialContent, onRightTap: {
+            self.cardView(content: partialContent, onRightTap: { success in
               self.callback?(.save, partialContent)
             })
               .listRowBackground(self.bgColor)
@@ -129,39 +139,39 @@ struct ContentListView: View {
             self.callback?(.save, ContentSummaryModel(contentDetails: content))
           }, user: user!)
         }
-          
-//        .sheet(isPresented: self.$isPresenting) {
-//          user != nil
-//            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-//              self.callback?(.save, content)
-//            }, user: user!))
-//            : AnyView(Text("Unable to show video..."))
-//        }
       }
     }
     
     return AnyView(list)
   }
   
-  private func cardView(content: ContentSummaryModel, onRightTap: (() -> Void)?) -> CardView {
+  
+  private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
     
     return CardView(model: viewModel,
                     contentScreen: contentScreen,
-                    onRightIconTap: onRightTap)
+                    onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
   }
   
   private func emptyView() -> some View {
     VStack {
       Text(contentScreen.titleMessage)
-      .multilineTextAlignment(.leading)
-      .font(.uiLargeTitle)
-      .foregroundColor(.appBlack)
+        .multilineTextAlignment(.leading)
+        .font(.uiLargeTitle)
+        .foregroundColor(.appBlack)
     }
   }
   
   private func loadMoreContents() {
     contentsMC.loadMore()
+  }
+  
+  private func createHudView() -> some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView = false
+    }
   }
   
   func delete(at offsets: IndexSet) {
