@@ -31,6 +31,7 @@ import Combine
 
 class AppState: NSObject, ObservableObject {
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
+  
   var selectedTab: Int = 0 {
     willSet {
       objectWillChange.send(())

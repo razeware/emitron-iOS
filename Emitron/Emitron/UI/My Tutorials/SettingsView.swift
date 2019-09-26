@@ -123,38 +123,10 @@ struct SettingsView: View {
         
         Spacer()
         
-        Button(action: {
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
           Guardpost.current.logout()
-        }) {
-          HStack {
-            Rectangle()
-              .frame(width: 24, height: 46, alignment: .center)
-              .foregroundColor(Color.copper)
-            
-            Spacer()
-            
-            Text("Sign Out")
-              .font(.uiButtonLabel)
-              .background(Color.copper)
-              .foregroundColor(.white)
-            
-            Spacer()
-            
-            Image("arrowRed")
-              .frame(width: 24, height: 24, alignment: .center)
-              .background(Color.white)
-              .foregroundColor(.copper)
-              .cornerRadius(6)
-              .padding([.trailing], 10)
-          }
-          .background(Color.copper)
-          .cornerRadius(6)
-          .padding([.leading, .trailing], 18)
-          .frame(height: 46)
         }
-        .padding(.bottom, 42)
-        .frame(width: geometry.size.width - (2 * 18), height: 46, alignment: .center)
-        .padding([.leading, .trailing], 18)
+        .padding([.bottom, .leading, .trailing], 20)
         
       }
       .frame(width: geometry.size.width, height: geometry.size.height,alignment: .center)
