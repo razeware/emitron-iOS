@@ -98,7 +98,7 @@ extension UserDefaults {
     let encoder  = JSONEncoder()
     
     var encodedFilterArray: [Data] = []
-    for filter in newFilters.filters {
+    for filter in newFilters.all {
       let encodedFilter = try? encoder.encode(filter)
       encodedFilterArray.append(encodedFilter!)
     }

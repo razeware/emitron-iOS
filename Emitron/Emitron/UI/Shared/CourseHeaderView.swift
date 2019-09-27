@@ -33,15 +33,8 @@ struct CourseHeaderView: View {
   let color: Color
   
   var body: some View {
-    VStack(alignment: .leading) {
-      Spacer()
-      HStack {
-        Text(name)
-          .font(.uiTitle4)
-        Spacer()
-      }
-      Spacer()
-    }.padding(0).background(color)
+    Text(name)
+    .font(.uiTitle4)
   }
 }
 

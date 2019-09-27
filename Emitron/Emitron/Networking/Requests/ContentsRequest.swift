@@ -47,8 +47,8 @@ struct ContentsRequest: Request {
   }
 }
 
-struct ContentSummaryRequest: Request {
-  typealias Response = ContentSummaryModel
+struct ContentDetailsRequest: Request {
+  typealias Response = ContentDetailsModel
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -63,10 +63,10 @@ struct ContentSummaryRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> ContentSummaryModel {
+  func handle(response: Data) throws -> ContentDetailsModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let content = doc.data.compactMap { ContentSummaryModel($0, metadata: nil) }
+    let content = doc.data.compactMap { ContentDetailsModel($0, metadata: nil) }
     guard let contentSummary = content.first,
       content.count == 1 else {
         throw RWAPIError.processingError(nil)

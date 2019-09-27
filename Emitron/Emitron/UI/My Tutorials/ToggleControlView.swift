@@ -93,7 +93,7 @@ struct ToggleControlView: View {
     }
   }
   
-  private func updateToggleToOn(with text: String) -> AnyView {
+  private func updateToggleToOn(with text: String) -> some View {
     
     let stackView = VStack {
       Text(text)
@@ -110,7 +110,7 @@ struct ToggleControlView: View {
     return AnyView(stackView)
   }
   
-  private func updateToggleToOff(with text: String) -> AnyView {
+  private func updateToggleToOff(with text: String) -> some View {
     
     let stackView = VStack {
       Text(text)
