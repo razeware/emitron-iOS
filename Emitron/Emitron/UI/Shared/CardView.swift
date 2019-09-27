@@ -156,14 +156,12 @@ struct CardView: SwiftUI.View {
             }
           }
           .padding([.leading, .trailing, .top, .bottom], 15)
-          .frame(minHeight: 184)
                     
           Spacer()
           
           ProgressBarView(progress: model.progress)
         }
       }
-      .frame(minWidth: geometry.size.width * 0.9, minHeight: geometry.size.width * 0.9 * 0.57)
       .background(Color.white)
       .cornerRadius(6)
       .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)

@@ -112,32 +112,35 @@ struct ContentListView: View {
         List {
           CardView(model: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
             .listRowBackground(self.bgColor)
-            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
-                   height: geometry.size.height, alignment: .center)
+//            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
+//                   height: geometry.size.height, alignment: .center)
         }
       } else {
         List {
-          ForEach(self.contents, id: \.id) { partialContent in
-            self.cardView(content: partialContent, onRightTap: { success in
-              self.callback?(.save, partialContent)
-            })
-              .listRowBackground(self.bgColor)
-              .background(self.bgColor)
-              .onTapGesture {
-                self.isPresenting = true
-                self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
+//          VStack(alignment: .leading, spacing: 10) {
+            ForEach(self.contents, id: \.id) { partialContent in
+              self.cardView(content: partialContent, onRightTap: { success in
+                self.callback?(.save, partialContent)
+              })
+                .listRowBackground(self.bgColor)
+                .background(self.bgColor)
+                .onTapGesture {
+                  self.isPresenting = true
+                  self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
+              }
             }
+            .onDelete(perform: self.delete)
+        .padding()
+//            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
+            .onAppear { self.loadMoreContents() }
+            .sheet(item: self.$selectedMC, onDismiss: {
+              self.selectedMC = nil
+            }) { contentSummary in
+              ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+                self.callback?(.save, ContentSummaryModel(contentDetails: content))
+              }, user: user!)
+//            }
           }
-          .onDelete(perform: self.delete)
-          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
-        }
-        .onAppear { self.loadMoreContents() }
-        .sheet(item: self.$selectedMC, onDismiss: {
-          self.selectedMC = nil
-        }) { contentSummary in
-          ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
-          }, user: user!)
         }
       }
     }
