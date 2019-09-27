@@ -15,8 +15,8 @@
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "B6D7DC2A22C79743006DD325"
-               BuildableName = "Emitron.app"
-               BlueprintName = "Emitron"
+               BuildableName = "raywenderlich.app"
+               BlueprintName = "emitron"
                ReferencedContainer = "container:Emitron.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
@@ -45,8 +45,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B6D7DC2A22C79743006DD325"
-            BuildableName = "Emitron.app"
-            BlueprintName = "Emitron"
+            BuildableName = "raywenderlich.app"
+            BlueprintName = "emitron"
             ReferencedContainer = "container:Emitron.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
@@ -68,8 +68,8 @@
          <BuildableReference
             BuildableIdentifier = "primary"
             BlueprintIdentifier = "B6D7DC2A22C79743006DD325"
-            BuildableName = "Emitron.app"
-            BlueprintName = "Emitron"
+            BuildableName = "raywenderlich.app"
+            BlueprintName = "emitron"
             ReferencedContainer = "container:Emitron.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
