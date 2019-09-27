@@ -77,7 +77,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
 
     return cardModel
   }
