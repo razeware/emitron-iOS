@@ -29,7 +29,7 @@
 import Foundation
 import SwiftyJSON
 
-class ContentDetailModel {
+class ContentDetailsModel {
 
   // MARK: - Properties
   private(set) var id: Int = 0
@@ -141,6 +141,24 @@ class ContentDetailModel {
     self.url = jsonResource.links["self"]
   }
   
+  init(summaryModel: ContentSummaryModel) {
+    self.id = summaryModel.id
+    self.name = summaryModel.name
+    self.uri = summaryModel.uri
+    self.description = summaryModel.description
+    self.releasedAt = summaryModel.releasedAt
+    self.free = summaryModel.free
+    self.difficulty = summaryModel.difficulty
+    self.contentType = summaryModel.contentType
+    self.duration = summaryModel.duration
+    self.bookmarked = summaryModel.bookmarked
+    self.popularity = summaryModel.popularity
+    self.cardArtworkURL = summaryModel.cardArtworkURL
+    self.technologyTripleString = summaryModel.technologyTripleString
+    self.contributorString = summaryModel.contributorString
+    self.videoID = summaryModel.videoID
+  }
+  
   /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
   ///
   /// - parameters:
@@ -164,8 +182,8 @@ class ContentDetailModel {
   }
 }
 
-extension ContentDetailModel {
-  static var test: ContentDetailModel {
+extension ContentDetailsModel {
+  static var test: ContentDetailsModel {
     do {
       let fileURL = Bundle.main.url(forResource: "ContentDetailsModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
@@ -173,10 +191,10 @@ extension ContentDetailModel {
     
       let document = JSONAPIDocument(json)
       let resource = JSONAPIResource(json, parent: document)
-      return ContentDetailModel(resource, metadata: nil)!
+      return ContentDetailsModel(resource, metadata: nil)!
     } catch {
       let resource = JSONAPIResource()
-      return ContentDetailModel(resource, metadata: nil)!
+      return ContentDetailsModel(resource, metadata: nil)!
     }
   }
 }

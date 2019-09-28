@@ -48,6 +48,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case categories = "Categories"
   case contentTypes = "Content Type"
   case difficulties = "Difficulties"
+  case search = "Search"
   case none = "" // For filters whose values aren't an array, for example the search query
   
   var name: String {
@@ -95,12 +96,12 @@ class Filters: ObservableObject {
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
-  var filters: Set<Filter> {
+  var all: Set<Filter> {
     didSet {
-      platforms.filters = filters.filter { $0.groupType == .platforms }
-      categories.filters = filters.filter { $0.groupType == .categories }
-      contentTypes.filters = filters.filter { $0.groupType == .contentTypes }
-      difficulties.filters = filters.filter { $0.groupType == .difficulties }
+      platforms.filters = all.filter { $0.groupType == .platforms }
+      categories.filters = all.filter { $0.groupType == .categories }
+      contentTypes.filters = all.filter { $0.groupType == .contentTypes }
+      difficulties.filters = all.filter { $0.groupType == .difficulties }
     }
   }
   
@@ -109,12 +110,12 @@ class Filters: ObservableObject {
     }
   
   var appliedParameters: [Parameter] {
-    var filterParameters = appliedFilters.map { $0.parameter }
+    var filterParameters = applied.map { $0.parameter }
     let appliedContentFilters = contentTypes.filters.filter { $0.isOn }
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: defaultFilters.map { $0.parameter })
+      filterParameters.append(contentsOf: self.default.map { $0.parameter })
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -126,17 +127,17 @@ class Filters: ObservableObject {
     return appliedParameters
   }
   
-  var appliedFilters: [Filter] {
+  var applied: [Filter] {
     // TODO: Check with Luke if we should have the Search filter here or not
     // It is convenient to be able to clear it from the applied filters control
     // But will also have to figure out how to connect the searchQuery + the AppliedFilter
-    return filters.filter { $0.isOn }
+    return all.filter { $0.isOn }
   }
   
   // The  default filters to always apply, unless the user selects them, are .collection and .screencast
   // If the user makes a selection on ANY of them for the contentTypes group, only apply those
   // They can only select between .collection, .screencast and .episode
-  var defaultFilters: [Filter] {
+  var `default`: [Filter] {
     let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) })
     
     return Array(contentFilters)
@@ -147,7 +148,7 @@ class Filters: ObservableObject {
       guard let query = searchQuery else {
         // Remove search filter from filters
         if let searchFilter = searchFilter {
-          filters.remove(searchFilter)
+          all.remove(searchFilter)
         }
         
         searchFilter = nil
@@ -155,6 +156,7 @@ class Filters: ObservableObject {
       }
       let filter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
       searchFilter = filter
+      all.update(with: filter)
     }
   }
   
@@ -202,7 +204,7 @@ class Filters: ObservableObject {
     // 4. If there are no filters stores in UserDefaults, use the default filters and parameters
     
     let freshFilters = platforms.filters.union(categories.filters).union(contentTypes.filters).union(difficulties.filters).union(platforms.filters)
-    self.filters = freshFilters
+    self.all = freshFilters
     
     // 1. Check if there is a sort in UserDefaults and use that
     let savedSort = UserDefaults.standard.sort
@@ -216,7 +218,7 @@ class Filters: ObservableObject {
     platforms.filters = platformFilters
     
     platformFilters.forEach { filter in
-      filters.insert(filter)
+      all.insert(filter)
     }
     commitUpdates()
   }
@@ -227,15 +229,15 @@ class Filters: ObservableObject {
     categories.filters = categoryFilters
     
     categoryFilters.forEach { filter in
-      filters.insert(filter)
+      all.insert(filter)
     }
     commitUpdates()
   }
   
   func removeAll() {
-    appliedFilters.forEach {
+    applied.forEach {
       $0.isOn = false
-      filters.update(with: $0)
+      all.update(with: $0)
     }
     commitUpdates()
   }

@@ -193,7 +193,7 @@ class DownloadsMC: NSObject, ObservableObject {
   private func loadContents(contentID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
-    contentsService.contentSummary(for: contentID) { [weak self] result in
+    contentsService.contentDetails(for: contentID) { [weak self] result in
       guard let self = self else { return }
       switch result {
       case .failure(let error):
@@ -203,7 +203,7 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: isDownloaded)
+          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content), isDownloaded: isDownloaded)
         }
       }
     }

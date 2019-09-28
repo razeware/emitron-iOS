@@ -78,24 +78,25 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
 
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
 
     return cardModel
   }
 }
 
 struct CardView: SwiftUI.View {
-  
+
   @EnvironmentObject var downloadsMC: DownloadsMC
-  var callback: ((Bool)->())?
+//  var callback: ((Bool)->())?
+  var onRightIconTap: (() -> Void)?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?, callback: ((Bool)->())?, contentScreen: ContentScreen) {
+  init(model: CardViewModel?,contentScreen: ContentScreen, onRightIconTap: (() -> Void)? = nil) {
     self.model = model
-    self.callback = callback
+    self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
   }
 
@@ -106,69 +107,71 @@ struct CardView: SwiftUI.View {
       let emptyView = AnyView(createEmptyView())
       return emptyView
     }
-    
-    let stack = VStack(alignment: .leading) {
-      VStack(alignment: .leading) {
-        HStack(alignment: .top) {
-          VStack(alignment: .leading, spacing: 5) {
 
-            Text(model.title)
-              .font(.uiTitle4)
-              .lineLimit(nil)
+    let stack = GeometryReader { geometry in
+      VStack {
+        VStack(alignment: .leading) {
+          VStack(alignment: .leading, spacing: 15) {
+            VStack(alignment: .leading, spacing: 0) {
+              HStack(alignment: .center) {
 
-            Text(model.subtitle)
+                Text(model.title)
+                  .font(.uiTitle4)
+                  .lineLimit(2)
+                  .fixedSize(horizontal: false, vertical: true)
+                  .padding([.trailing], 15)
+
+                Spacer()
+
+                Image(uiImage: self.image)
+                  .resizable()
+                  .frame(width: 60, height: 60)
+                  .onAppear(perform: self.loadImage)
+                  .transition(.opacity)
+                  .cornerRadius(6)
+              }
+              .padding([.top], 10)
+
+              Text(model.subtitle)
+                .font(.uiCaption)
+                .lineLimit(nil)
+                .foregroundColor(.battleshipGrey)
+            }
+
+            Text(model.description)
               .font(.uiCaption)
-              .lineLimit(nil)
+              .fixedSize(horizontal: false, vertical: true)
+              .lineLimit(3)
               .foregroundColor(.battleshipGrey)
+
+            HStack {
+              Text(model.footnote)
+                .font(.uiCaption)
+                .lineLimit(1)
+                .foregroundColor(.battleshipGrey)
+
+              Spacer()
+
+              if self.contentScreen != ContentScreen.downloads {
+                self.setUpImageAndProgress()
+              }
+            }
           }
+          .padding([.leading, .trailing, .top, .bottom], 15)
+          .frame(minHeight: 184)
 
           Spacer()
-
-          Image(uiImage: image)
-            .resizable()
-            .frame(width: 60, height: 60)
-            .onAppear(perform: loadImage)
-            .transition(.opacity)
-            .cornerRadius(6)
-        }
-
-        Text(model.description)
-          .font(.uiCaption)
-          .lineLimit(5)
-          .foregroundColor(.battleshipGrey)
-
-        // This space causes a crash if we use it in the tableView, but not if it's used in a scrollView
-        // Quite strange
-//        Spacer()
-
-        HStack {
-          Text(model.footnote)
-            .font(.uiCaption)
-            .lineLimit(1)
-            .foregroundColor(.battleshipGrey)
-
-          Spacer()
-          
-          if contentScreen != ContentScreen.downloads {
-            setUpImageAndProgress()
-          }
         }
       }
-      .padding([.leading, .trailing, .top, .bottom], 15)
-      .frame(minHeight: 184)
-
-      Spacer()
-
-      ProgressBarView(progress: model.progress)
+      .frame(minWidth: geometry.size.width * 0.9, minHeight: geometry.size.width * 0.9 * 0.57)
+      .background(Color.white)
+      .cornerRadius(6)
+      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     }
-    .frame(minWidth: 339, minHeight: 195)
-    .background(Color.white)
-    .cornerRadius(6)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-    
+
     return AnyView(stack)
   }
-  
+
   private func setUpImageAndProgress() -> AnyView {
     let image = Image(self.downloadImageName())
       .resizable()
@@ -176,26 +179,27 @@ struct CardView: SwiftUI.View {
       .onTapGesture {
         self.download()
     }
-    
+
     guard let model = model else {
       return AnyView(image)
     }
-    
+
     let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
     guard let progress = downloadModel?.downloadProgress else {
       return AnyView(image)
     }
-    
+
     while 0.0 < progress, progress < 0.9 {
       return AnyView(CircularProgressBar(progress: progress))
     }
-    
+
     return AnyView(image)
   }
 
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
-    callback?(success)
+//    callback?(success)
+    onRightIconTap?()
   }
 
   private func loadImage() {
@@ -231,12 +235,12 @@ struct CardView: SwiftUI.View {
       }
     }
   }
-  
+
   private func downloadImageName() -> String {
     guard let model = model else { return DownloadImageName.inActive }
     return model.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
-  
+
   private func createEmptyView() -> AnyView {
     let vStack = VStack {
       HStack {
@@ -279,7 +283,7 @@ struct CardView: SwiftUI.View {
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
-    return CardView(model: cardModel, callback: nil, contentScreen: .library)
+    return CardView(model: cardModel, contentScreen: .library, onRightIconTap: nil)
   }
 }
 #endif

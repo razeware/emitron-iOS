@@ -38,7 +38,7 @@ enum ContentScreen {
 
   var titleMessage: String {
     switch self {
-      // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
+    // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library: return "We couldn't find anything meeting the search criteria"
     case .downloads: return "You haven't downloaded any tutorials yet"
     case .myTutorials: return "You haven't started any tutorials yet"
@@ -89,14 +89,13 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  @State var imageLoaded: Bool = false
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
 
   var body: some View {
-    
+
     ZStack(alignment: .bottom) {
       cardsTableView()
-      
+
       if showHudView {
         createHudView()
           .animation(.spring())
@@ -107,21 +106,22 @@ struct ContentListView: View {
   private func cardsTableView() -> AnyView {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    
+
     let list = GeometryReader { geometry in
       if self.contents.isEmpty {
         List {
-          CardView(model: nil, callback: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
+          CardView(model: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
           .listRowBackground(self.bgColor)
-          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
+          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
+                   height: geometry.size.height, alignment: .center)
         }
       } else {
         List {
           ForEach(self.contents, id: \.id) { partialContent in
-            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: { success in
+            self.cardView(content: partialContent, onRightTap: {
               self.callback?(.save, partialContent)
-            }, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
+            })
+              .environmentObject(DataManager.current!.downloadsMC)
               .listRowBackground(self.bgColor)
               .background(self.bgColor)
               .onTapGesture {
@@ -133,19 +133,27 @@ struct ContentListView: View {
           .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
         }
         .onAppear { self.loadMoreContents() }
-        .sheet(isPresented: self.$isPresenting) {
-          user != nil
-            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-              self.callback?(.save, content)
-            }, user: user!))
-            : AnyView(Text("Unable to show video..."))
+        .sheet(item: self.$selectedMC, onDismiss: {
+          self.selectedMC = nil
+        }) { contentSummary in
+          ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+          }, user: user!)
         }
+
+//        .sheet(isPresented: self.$isPresenting) {
+//          user != nil
+//            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+//              self.callback?(.save, content)
+//            }, user: user!))
+//            : AnyView(Text("Unable to show video..."))
+//        }
       }
     }
 
     return AnyView(list)
   }
-  
+
   private func createHudView() -> some View {
     let option: HudOption = showSuccess ? .success : .error
     return HudView(option: option) {
@@ -153,32 +161,24 @@ struct ContentListView: View {
     }
   }
 
-//  func cardTableViewWithNav() -> AnyView {
-//    let guardpost = Guardpost.current
-//    let user = guardpost.currentUser
-//    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-//
-//    let list = List {
-//      ForEach(contents, id: \.id) { partialContent in
-//        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
-//          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
-//          .listRowBackground(self.bgColor)
-//          .background(self.bgColor)
-//        }
-//      }
-//      Text("Should load more stuff...")
-//        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-//        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-//        .onAppear {
-//          self.loadMoreContents()
-//        }
-//    }
-//
-//    return AnyView(list)
-//  }
+  private func cardView(content: ContentSummaryModel, onRightTap: (() -> Void)?) -> CardView {
+    let viewModel = CardViewModel.transform(content, cardViewType: .default)
 
-  func loadMoreContents() {
-    //TODO: Load more contents
+    return CardView(model: viewModel,
+                    contentScreen: contentScreen,
+                    onRightIconTap: onRightTap)
+  }
+
+  private func emptyView() -> some View {
+    VStack {
+      Text(contentScreen.titleMessage)
+      .multilineTextAlignment(.leading)
+      .font(.uiLargeTitle)
+      .foregroundColor(.appBlack)
+    }
+  }
+
+  private func loadMoreContents() {
     contentsMC.loadMore()
   }
 
@@ -189,7 +189,7 @@ struct ContentListView: View {
       self.callback?(.delete, content)
     }
   }
-  
+
   mutating func updateContents(with newContents: [ContentSummaryModel]) {
     self.contents = newContents
   }

@@ -84,6 +84,7 @@ struct LibraryView: View {
           Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
             .font(.uiLabel)
             .foregroundColor(.battleshipGrey)
+          
           Spacer()
 
           Button(action: {
@@ -102,7 +103,7 @@ struct LibraryView: View {
         }
         .padding([.top], .sidePadding)
 
-        if !filters.appliedFilters.isEmpty {
+        if !filters.applied.isEmpty {
           filtersView()
         }
       }
@@ -133,7 +134,7 @@ struct LibraryView: View {
         }
         .environmentObject(self.filters)
 
-        ForEach(filters.appliedFilters, id: \.self) { filter in
+        ForEach(filters.applied, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
             self.contentsMC.updateFilters(newFilters: self.filters)
           }
@@ -148,6 +149,7 @@ struct LibraryView: View {
 
   private func searchField() -> AnyView {
     //TODO: Need to figure out how to erase the textField
+    
     let searchField = TextField(Constants.search,
                                 text: $searchText,
                                 onEditingChanged: { _ in

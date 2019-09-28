@@ -29,7 +29,18 @@
 import Foundation
 
 extension ContentSummaryModel {
-  var dateAndTimeString: String {
+  var releasedAtDateTimeString: String {
+    var start = releasedAt.cardString
+    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+      start = Constants.today
+    }
+    
+    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+  }
+}
+
+extension ContentDetailsModel {
+  var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
       start = Constants.today

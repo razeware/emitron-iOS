@@ -41,6 +41,7 @@ struct TitleDetailView: View {
   var isToggle: Bool
   var isOn: Bool
   var rightImageName: String?
+  
   var body: some View {
     GeometryReader { geometry in
       Button(action: {

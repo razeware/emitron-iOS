@@ -26,13 +26,12 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-extension ContentDetailsModel {
-  // NOTE: Here in case the API starts returning Course Name + Episode Name again, rather than just Episode Name
-  private var cleanTitleString: String {
-    let realTitle = name.split(separator: "·",
-                               maxSplits: 1,
-                               omittingEmptySubsequences: true)
-    let str = "\(realTitle.last!)"
-    return str.trimmingCharacters(in: .whitespaces)
+import SwiftUI
+
+// Inspired by: https://forums.developer.apple.com/thread/121162
+struct TitleLabel: ViewModifier {
+
+  public func body(content: Content) -> some View {
+    content
   }
 }
