@@ -200,7 +200,7 @@
 		B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
 		B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
 		B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
-		B6D7DC2B22C79743006DD325 /* Emitron.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Emitron.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6D7DC2B22C79743006DD325 /* raywenderlich.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = raywenderlich.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D7DC2E22C79743006DD325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3022C79743006DD325 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3422C79745006DD325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -438,7 +438,7 @@
 		B6D7DC2C22C79743006DD325 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B6D7DC2B22C79743006DD325 /* Emitron.app */,
+				B6D7DC2B22C79743006DD325 /* raywenderlich.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -685,9 +685,9 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
-		B6D7DC2A22C79743006DD325 /* Emitron */ = {
+		B6D7DC2A22C79743006DD325 /* emitron */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "Emitron" */;
+			buildConfigurationList = B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "emitron" */;
 			buildPhases = (
 				C9CEA336BF2F8C7E45AC687C /* [CP] Check Pods Manifest.lock */,
 				B6D7DC2722C79743006DD325 /* Sources */,
@@ -696,14 +696,15 @@
 				56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */,
 				B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */,
 				958699B722D48F3E00E33625 /* SwiftLint Run Script */,
+				222DD7F4233B9A9900CF561F /* Set Build Number */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
-			name = Emitron;
+			name = emitron;
 			productName = Emitron;
-			productReference = B6D7DC2B22C79743006DD325 /* Emitron.app */;
+			productReference = B6D7DC2B22C79743006DD325 /* raywenderlich.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -734,7 +735,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				B6D7DC2A22C79743006DD325 /* Emitron */,
+				B6D7DC2A22C79743006DD325 /* emitron */,
 			);
 		};
 /* End PBXProject section */
@@ -768,6 +769,24 @@
 /* End PBXResourcesBuildPhase section */
 
 /* Begin PBXShellScriptBuildPhase section */
+		222DD7F4233B9A9900CF561F /* Set Build Number */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			name = "Set Build Number";
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "git=`sh /etc/profile; which git`\nbundleVersion=`\"$git\" rev-list --all |wc -l`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $bundleVersion\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n";
+		};
 		56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1094,10 +1113,12 @@
 			baseConfigurationReference = 9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = 2HG8AL7F4U;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1105,8 +1126,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.Emitron;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitron.ios;
+				PRODUCT_NAME = raywenderlich;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1117,9 +1140,11 @@
 			baseConfigurationReference = 45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
+				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = 2HG8AL7F4U;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1127,8 +1152,10 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.Emitron;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				MARKETING_VERSION = 0.0.1;
+				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitron.ios;
+				PRODUCT_NAME = raywenderlich;
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -1146,7 +1173,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "Emitron" */ = {
+		B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "emitron" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				B6D7DC4022C79745006DD325 /* Debug */,

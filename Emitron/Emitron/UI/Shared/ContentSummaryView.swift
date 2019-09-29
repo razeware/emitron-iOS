@@ -68,7 +68,7 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], -5)
       
-      Text(details.dateAndTimeString)
+      Text(details.releasedAtDateTimeString)
         .font(.uiFootnote)
         .foregroundColor(.battleshipGrey)
       
