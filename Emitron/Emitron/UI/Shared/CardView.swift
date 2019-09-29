@@ -85,16 +85,14 @@ extension CardViewModel {
 }
 
 struct CardView: SwiftUI.View {
-
+  var onRightIconTap: ((Bool) -> Void)?
   @EnvironmentObject var downloadsMC: DownloadsMC
-//  var callback: ((Bool)->())?
-  var onRightIconTap: (() -> Void)?
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?,contentScreen: ContentScreen, onRightIconTap: (() -> Void)? = nil) {
+  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
@@ -107,67 +105,65 @@ struct CardView: SwiftUI.View {
       let emptyView = AnyView(createEmptyView())
       return emptyView
     }
+    
+    let stack = VStack {
+      VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 15) {
+          VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
 
-    let stack = GeometryReader { geometry in
-      VStack {
-        VStack(alignment: .leading) {
-          VStack(alignment: .leading, spacing: 15) {
-            VStack(alignment: .leading, spacing: 0) {
-              HStack(alignment: .center) {
-
-                Text(model.title)
-                  .font(.uiTitle4)
-                  .lineLimit(2)
-                  .fixedSize(horizontal: false, vertical: true)
-                  .padding([.trailing], 15)
-
-                Spacer()
-
-                Image(uiImage: self.image)
-                  .resizable()
-                  .frame(width: 60, height: 60)
-                  .onAppear(perform: self.loadImage)
-                  .transition(.opacity)
-                  .cornerRadius(6)
-              }
-              .padding([.top], 10)
-
-              Text(model.subtitle)
-                .font(.uiCaption)
-                .lineLimit(nil)
-                .foregroundColor(.battleshipGrey)
-            }
-
-            Text(model.description)
-              .font(.uiCaption)
-              .fixedSize(horizontal: false, vertical: true)
-              .lineLimit(3)
-              .foregroundColor(.battleshipGrey)
-
-            HStack {
-              Text(model.footnote)
-                .font(.uiCaption)
-                .lineLimit(1)
-                .foregroundColor(.battleshipGrey)
+              Text(model.title)
+                .font(.uiTitle4)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding([.trailing], 15)
 
               Spacer()
 
-              if self.contentScreen != ContentScreen.downloads {
-                self.setUpImageAndProgress()
-              }
+              Image(uiImage: self.image)
+                .resizable()
+                .frame(width: 60, height: 60)
+                .onAppear(perform: self.loadImage)
+                .transition(.opacity)
+                .cornerRadius(6)
+            }
+            .padding([.top], 10)
+
+            Text(model.subtitle)
+              .font(.uiCaption)
+              .lineLimit(nil)
+              .foregroundColor(.battleshipGrey)
+          }
+
+          Text(model.description)
+            .font(.uiCaption)
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(3)
+            .foregroundColor(.battleshipGrey)
+
+          HStack {
+            Text(model.footnote)
+              .font(.uiCaption)
+              .lineLimit(1)
+              .foregroundColor(.battleshipGrey)
+
+            Spacer()
+
+            if self.contentScreen != ContentScreen.downloads {
+              self.setUpImageAndProgress()
             }
           }
-          .padding([.leading, .trailing, .top, .bottom], 15)
-          .frame(minHeight: 184)
-
-          Spacer()
         }
+        .padding([.leading, .trailing, .top, .bottom], 15)
+
+        Spacer()
+
+        ProgressBarView(progress: model.progress)
       }
-      .frame(minWidth: geometry.size.width * 0.9, minHeight: geometry.size.width * 0.9 * 0.57)
-      .background(Color.white)
-      .cornerRadius(6)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     }
+    .background(Color.white)
+    .cornerRadius(6)
+    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
 
     return AnyView(stack)
   }
@@ -198,8 +194,7 @@ struct CardView: SwiftUI.View {
 
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
-//    callback?(success)
-    onRightIconTap?()
+    onRightIconTap?(success)
   }
 
   private func loadImage() {
@@ -210,15 +205,15 @@ struct CardView: SwiftUI.View {
     case .asset(let img):
       image = img
     case .url(let url):
-//      DispatchQueue.global().async {
-//        let data = try? Data(contentsOf: url)
-//        if let data = data,
-//          let img = UIImage(data: data) {
-//          DispatchQueue.main.async {
-//            self.image = img
-//          }
-//        }
-//      }
+      //      DispatchQueue.global().async {
+      //        let data = try? Data(contentsOf: url)
+      //        if let data = data,
+      //          let img = UIImage(data: data) {
+      //          DispatchQueue.main.async {
+      //            self.image = img
+      //          }
+      //        }
+      //      }
       fishImage(url: url)
     }
   }
@@ -247,10 +242,10 @@ struct CardView: SwiftUI.View {
         Spacer()
 
         Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
+          .font(.uiTitle2)
+          .foregroundColor(.appBlack)
+          .multilineTextAlignment(.center)
+          .lineLimit(nil)
 
         Spacer()
       }
@@ -264,15 +259,15 @@ struct CardView: SwiftUI.View {
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
-        Spacer()
+      Spacer()
 
-        Text(detail)
+      Text(detail)
         .font(.uiHeadline)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
 
-        Spacer()
+      Spacer()
     }
 
     return AnyView(stack)

@@ -34,7 +34,7 @@ struct DownloadImageName {
 }
 
 struct ContentSummaryView: View {
-
+  
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel)->())?

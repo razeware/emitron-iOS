@@ -86,7 +86,7 @@ struct MainButtonView: View {
         if type.hasArrow {
         Rectangle()
           .frame(width: 24, height: 24, alignment: .center)
-          .foregroundColor(type.color)
+          .foregroundColor(Color.clear)
         }
         
         Spacer()
@@ -102,7 +102,8 @@ struct MainButtonView: View {
             Rectangle()
               .frame(width: 24, height: 24, alignment: .center)
               .cornerRadius(9)
-              .background(Color.white)
+              .background(Color.clear)
+              .foregroundColor(.white)
             Image(uiImage: type.arrowImage)
               .resizable()
               .foregroundColor(type.color)
