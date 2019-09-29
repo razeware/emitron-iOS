@@ -109,6 +109,24 @@ class ContentSummaryModel {
       self.domainIDs = ids
     }
   }
+  
+  init(contentDetails: ContentDetailsModel) {
+    self.id = contentDetails.id
+    self.name = contentDetails.name
+    self.uri = contentDetails.uri
+    self.description = contentDetails.description
+    self.releasedAt = contentDetails.releasedAt
+    self.free = contentDetails.free
+    self.difficulty = contentDetails.difficulty
+    self.contentType = contentDetails.contentType
+    self.duration = contentDetails.duration
+    self.bookmarked = contentDetails.bookmarked
+    self.popularity = contentDetails.popularity
+    self.cardArtworkURL = contentDetails.cardArtworkURL
+    self.technologyTripleString = contentDetails.technologyTripleString
+    self.contributorString = contentDetails.contributorString
+    self.videoID = contentDetails.videoID ?? 0
+  }
 }
 
 extension ContentSummaryModel {

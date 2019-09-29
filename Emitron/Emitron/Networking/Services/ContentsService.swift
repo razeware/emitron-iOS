@@ -39,9 +39,9 @@ class ContentsService: Service {
                           completion: completion)
   }
   
-  func contentSummary(for id: Int,
-                     completion: @escaping (_ response: Result<ContentSummaryRequest.Response, RWAPIError>) -> Void) {
-    let request = ContentSummaryRequest(id: id)
+  func contentDetails(for id: Int,
+                     completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void) {
+    let request = ContentDetailsRequest(id: id)
     makeAndProcessRequest(request: request, completion: completion)
   }
 }

@@ -91,7 +91,7 @@ struct MyTutorialView: View {
     .background(Color.paleGrey)
   }
 
-  private func contentView() -> AnyView {
+  private func contentView() -> some View {
     let dataToDisplay: [ContentSummaryModel]
 
     switch state {

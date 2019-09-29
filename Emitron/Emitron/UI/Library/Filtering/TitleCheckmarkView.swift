@@ -39,20 +39,21 @@ private enum Layout {
   static let imageSize: CGFloat = 15
 }
 
-struct FilterView: View {
-  @EnvironmentObject var filters: Filters
-  var filter: Filter
+struct TitleCheckmarkView: View {
+  var name: String
+  var isOn: Bool
+  var onChange: (Bool) -> Void
   
   var body: some View {
     HStack {
-      Text(filter.filterName)
+      Text(name)
         .foregroundColor(.appBlack)
         .font(.uiBodyCustom)
         .padding([.trailing], Layout.padding.textTrailing)
       
       Spacer()
       
-      CheckmarkView(filter: filter)
+      CheckmarkView(isOn: isOn, onChange: onChange)
     }
       .frame(minHeight: 46)
   }
@@ -62,7 +63,9 @@ struct FilterView: View {
 struct FilterView_Previews: PreviewProvider {
   static var previews: some View {
     // TODO: Give this a proper value
-    FilterView(filter: Filter.testFilter)
+    TitleCheckmarkView(name: "Turned...", isOn: Filter.testFilter.isOn, onChange: { isOn in
+      print("On state changed to: \(isOn)")
+    })
   }
 }
 #endif

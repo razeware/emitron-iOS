@@ -28,49 +28,54 @@
 
 import SwiftUI
 
+private extension CGFloat {
+  static let horizontalSpacing: CGFloat = 15
+  static let buttonSide: CGFloat = 30
+}
+
 struct TextListItemView: View {
   var contentSummary: ContentSummaryModel
-  var timeStamp: String
   var buttonAction: () -> Void
   
   var body: some View {
-    HStack(alignment: .center, spacing: 15) {
-      ZStack {
-        Rectangle()
-          .frame(width: 30, height: 30, alignment: .center)
-          .foregroundColor(.brightGrey)
-          .cornerRadius(6)
+    VStack(alignment: .leading, spacing: 0) {
+      HStack(alignment: .center, spacing: .horizontalSpacing) {
+        ZStack {
+          Rectangle()
+            .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
+            .foregroundColor(.brightGrey)
+            .cornerRadius(6)
+          
+          Text("\(contentSummary.index)")
+            .font(.uiButtonLabelSmall)
+            .foregroundColor(.white)
+        }
         
-        Text("\(contentSummary.index)")
-          .font(.uiButtonLabelSmall)
-          .foregroundColor(.white)
-      }
-      
-      VStack(alignment: .leading) {
         Text(contentSummary.name)
           .font(.uiHeadline)
-          .lineLimit(nil)
-        Text(timeStamp)
-          .font(.uiCaption)
-      }
-      
-      Spacer()
-      
-      //TODO: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
-      // it just passes through; example below
-      Image("downloadInactive")
-        .foregroundColor(.coolGrey)
-        .onTapGesture {
-          self.buttonAction()
+          .fixedSize(horizontal: false, vertical: true)
+        
+        Spacer()
+        
+        //TODO: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
+        // it just passes through; example below
+        Image("downloadInactive")
+          .foregroundColor(.coolGrey)
+          .onTapGesture {
+            self.buttonAction()
         }
-      
-//      Button(action: {
-//        self.buttonAction()
-//      }) {
-//        Image("download")
-//          .foregroundColor(.coolGrey)
-//        }
-//      }
+        
+        //      Button(action: {
+        //        self.buttonAction()
+        //      }) {
+        //        Image("download")
+        //          .foregroundColor(.coolGrey)
+        //        }
+        //      }
+      }
+      Text(contentSummary.duration.timeFromSeconds)
+        .font(.uiCaption)
+        .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
     }
   }
 }
@@ -79,9 +84,8 @@ struct TextListItemView: View {
 struct TextListItemView_Previews: PreviewProvider {
   static var previews: some View {
     let contentSummary = ContentSummaryModel.test
-    let timeStamp = "1:31"
     
-    return TextListItemView(contentSummary: contentSummary, timeStamp: timeStamp, buttonAction: {
+    return TextListItemView(contentSummary: contentSummary, buttonAction: {
       print("Testing")
     })
   }

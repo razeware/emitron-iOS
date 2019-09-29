@@ -35,17 +35,17 @@ private struct Layout {
 
 enum ContentScreen {
   case library, downloads, myTutorials, tips
-
+  
   var titleMessage: String {
     switch self {
-      // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
+    // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library: return "We couldn't find anything meeting the search criteria"
     case .downloads: return "You haven't downloaded any tutorials yet"
     case .myTutorials: return "You haven't started any tutorials yet"
     case .tips: return "Swipe left to delete a downloan"
     }
   }
-
+  
   var detailMesage: String? {
     switch self {
     case .library: return "Try removing some filters"
@@ -53,7 +53,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-
+  
   var buttonText: String? {
     switch self {
     case .downloads: return "Explore Tutorials"
@@ -61,7 +61,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-
+  
   var buttonIconName: String? {
     switch self {
     case .downloads, .tips: return "arrowGreen"
@@ -69,7 +69,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-
+  
   var buttonColor: Color? {
     switch self {
     case .downloads, .tips: return .appGreen
@@ -80,7 +80,7 @@ enum ContentScreen {
 }
 
 struct ContentListView: View {
-
+  
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   @State var contentScreen: ContentScreen
@@ -89,9 +89,12 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  @State var imageLoaded: Bool = false
   var callback: ((DownloadsAction, ContentSummaryModel)->())?
-
+  
+  // HEIGHT VS WIDTH: 200/340; 0.59 - 0.6
+  
+  private let screenHeight = UIScreen.main.bounds.size.height
+  
   var body: some View {
     
     ZStack(alignment: .bottom) {
@@ -103,47 +106,76 @@ struct ContentListView: View {
       }
     }
   }
-
+  
   private func cardsTableView() -> AnyView {
-    let guardpost = Guardpost.current
-    let user = guardpost.currentUser
-    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-    
-    let list = GeometryReader { geometry in
-      if self.contents.isEmpty {
-        List {
-          CardView(model: nil, callback: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
-          .listRowBackground(self.bgColor)
-          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: geometry.size.height, alignment: .center)
-        }
-      } else {
-        List {
-          ForEach(self.contents, id: \.id) { partialContent in
-            CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!, callback: { success in
-              self.callback?(.save, partialContent)
-            }, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
+      let guardpost = Guardpost.current
+      let user = guardpost.currentUser
+      
+      let list = GeometryReader { geometry in
+        if self.contents.isEmpty {
+          List {
+            CardView(model: nil, contentScreen: self.contentScreen)
               .listRowBackground(self.bgColor)
-              .background(self.bgColor)
-              .onTapGesture {
-                self.isPresenting = true
-                self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-            }
+              .frame(width: (geometry.size.width - (2 * Layout.sidePadding)),
+                     height: (geometry.size.width - (2 * Layout.sidePadding)) * 0.6, alignment: .center)
           }
-          .onDelete(perform: self.delete)
-          .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.height / Layout.heightDivisor), alignment: .center)
-        }
-        .onAppear { self.loadMoreContents() }
-        .sheet(isPresented: self.$isPresenting) {
-          user != nil
-            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-              self.callback?(.save, content)
-            }, user: user!))
-            : AnyView(Text("Unable to show video..."))
+        } else {
+          List {
+            ForEach(self.contents, id: \.id) { partialContent in
+              self.cardView(content: partialContent, onRightTap: { success in
+                self.callback?(.save, partialContent)
+              })
+                .listRowBackground(self.bgColor)
+                .background(self.bgColor)
+                .onTapGesture {
+                  self.isPresenting = true
+                  self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
+              }
+            }
+            .onDelete(perform: self.delete)
+            .frame(width: (geometry.size.width - (2 * Layout.sidePadding)), height: (geometry.size.width - (2 * Layout.sidePadding)) * 0.6, alignment: .center)
+          }
+          .onAppear { self.loadMoreContents() }
+          .sheet(item: self.$selectedMC, onDismiss: {
+            self.selectedMC = nil
+          }) { contentSummary in
+            ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+              self.callback?(.save, ContentSummaryModel(contentDetails: content))
+            }, user: user!)
+          }
+            
+  //        .sheet(isPresented: self.$isPresenting) {
+  //          user != nil
+  //            ? AnyView(ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+  //              self.callback?(.save, content)
+  //            }, user: user!))
+  //            : AnyView(Text("Unable to show video..."))
+  //        }
         }
       }
+      
+      return AnyView(list)
     }
-
-    return AnyView(list)
+  
+  private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
+    let viewModel = CardViewModel.transform(content, cardViewType: .default)
+    
+    return CardView(model: viewModel,
+                    contentScreen: contentScreen,
+                    onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
+  }
+  
+  private func emptyView() -> some View {
+    VStack {
+      Text(contentScreen.titleMessage)
+        .multilineTextAlignment(.leading)
+        .font(.uiLargeTitle)
+        .foregroundColor(.appBlack)
+    }
+  }
+  
+  private func loadMoreContents() {
+    contentsMC.loadMore()
   }
   
   private func createHudView() -> some View {
@@ -152,36 +184,7 @@ struct ContentListView: View {
       self.showHudView = false
     }
   }
-
-//  func cardTableViewWithNav() -> AnyView {
-//    let guardpost = Guardpost.current
-//    let user = guardpost.currentUser
-//    //TODO: This is a workaround hack to pass the MC the right partial content, because you can't do it in the "closure containing a declaration"
-//
-//    let list = List {
-//      ForEach(contents, id: \.id) { partialContent in
-//        NavigationLink(destination: ContentListingView(contentDetailsMC: ContentDetailsMC(guardpost: guardpost, partialContentDetail: partialContent), imageLoaded: self.$imageLoaded, user: user!)) {
-//          CardView(model: CardViewModel.transform(partialContent, cardViewType: .default)!)
-//          .listRowBackground(self.bgColor)
-//          .background(self.bgColor)
-//        }
-//      }
-//      Text("Should load more stuff...")
-//        // TODO: This is a hack to know when we've reached the end of the list, borrowed from
-//        // https://stackoverflow.com/questions/56602089/in-swiftui-where-are-the-control-events-i-e-scrollviewdidscroll-to-detect-the
-//        .onAppear {
-//          self.loadMoreContents()
-//        }
-//    }
-//
-//    return AnyView(list)
-//  }
-
-  func loadMoreContents() {
-    //TODO: Load more contents
-    contentsMC.loadMore()
-  }
-
+  
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {

@@ -26,26 +26,12 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-extension ContentSummaryModel {
-  var dateAndTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
-  }
-}
+// Inspired by: https://forums.developer.apple.com/thread/121162
+struct TitleLabel: ViewModifier {
 
-extension ContentDetailsModel {
-  var dateAndTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+  public func body(content: Content) -> some View {
+    content
   }
 }

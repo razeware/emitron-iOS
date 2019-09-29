@@ -74,7 +74,7 @@ struct AppliedFilterView: View {
       // If there's no filter passed through, it's a destructive one that should clear all, so we init a new Filters object
       if let filter = self.filter {
         filter.isOn.toggle()
-        self.filters.filters.update(with: filter)
+        self.filters.all.update(with: filter)
         self.filters.commitUpdates()
       } else {
         self.filters.removeAll()
