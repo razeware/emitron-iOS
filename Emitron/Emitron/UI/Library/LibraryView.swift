@@ -39,121 +39,76 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
-
+  
   @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
+  
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
-
+  
   var body: some View {
     
     ZStack(alignment: .bottom) {
-      createVStack()
+      VStack {
+        VStack {
+          
+          HStack {
+            searchField
+            filterButton
+          }
+          
+          HStack {
+            Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
+              .font(.uiLabel)
+              .foregroundColor(.battleshipGrey)
+            
+            Spacer()
+            
+            sortButton
+          }
+          .padding([.top], .sidePadding)
+          
+          if !filters.applied.isEmpty {
+            filtersView
+          }
+        }
+        .padding([.leading, .trailing, .top], .sidePadding)
+        
+        contentView
+          .padding([.top], .sidePadding)
+          .background(Color.paleGrey)
+      }
+      .background(Color.paleGrey)
       
       if showHudView {
-        createHudView()
-        .animation(.spring())
+        hudView
+          .animation(.spring())
       }
-    }
-  }
-
-  private func createVStack() -> some View {
-    let vStack = VStack {
-      VStack {
-
-        HStack {
-          searchField()
-
-          Button(action: {
-            self.filtersPresented.toggle()
-          }, label: {
-            Image("filter")
-              .foregroundColor(.battleshipGrey)
-              .frame(width: .filterButtonSide, height: .filterButtonSide)
-              .sheet(isPresented: self.$filtersPresented) {
-                FiltersView(isPresented: self.$filtersPresented).environmentObject(self.filters).environmentObject(self.contentsMC)
-              }
-          })
-            .padding([.leading], .searchFilterPadding)
-        }
-
-        HStack {
-          Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
-            .font(.uiLabel)
-            .foregroundColor(.battleshipGrey)
-          
-          Spacer()
-
-          Button(action: {
-            // Change sort
-            self.changeSort()
-          }) {
-            HStack {
-              Image("sort")
-                .foregroundColor(.battleshipGrey)
-
-              Text(filters.sortFilter.name)
-                .font(.uiLabel)
-                .foregroundColor(.battleshipGrey)
-            }
-          }
-        }
-        .padding([.top], .sidePadding)
-
-        if !filters.applied.isEmpty {
-          filtersView()
-        }
-      }
-      .padding([.leading, .trailing, .top], .sidePadding)
-
-      contentView()
-        .padding([.top], .sidePadding)
-        .background(Color.paleGrey)
-    }
-    .background(Color.paleGrey)
-    
-    return AnyView(vStack)
-  }
-  
-  private func createHudView() -> some View {
-    let option: HudOption = showSuccess ? .success : .error
-    return HudView(option: option) {
-      self.showHudView = false
     }
   }
   
-  private func filtersView() -> AnyView {
-    let view = ScrollView(.horizontal, showsIndicators: false) {
-      HStack(alignment: .top, spacing: .filterSpacing) {
-
-        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
-          self.contentsMC.updateFilters(newFilters: self.filters)
-        }
-        .environmentObject(self.filters)
-
-        ForEach(filters.applied, id: \.self) { filter in
-          AppliedFilterView(filter: filter, type: .default) {
-            self.contentsMC.updateFilters(newFilters: self.filters)
-          }
-          .environmentObject(self.filters)
-        }
+  private var filterButton: some View {
+    Button(action: {
+      self.filtersPresented.toggle()
+    }, label: {
+      Image("filter")
+        .foregroundColor(.battleshipGrey)
+        .frame(width: .filterButtonSide, height: .filterButtonSide)
+        .sheet(isPresented: self.$filtersPresented) {
+          FiltersView(isPresented: self.$filtersPresented).environmentObject(self.filters).environmentObject(self.contentsMC)
       }
-    }
-    .padding([.top], .filtersPaddingTop)
-
-    return AnyView(view)
+    })
+      .padding([.leading], .searchFilterPadding)
   }
-
-  private func searchField() -> AnyView {
-    //TODO: Need to figure out how to erase the textField
-    
-    let searchField = TextField(Constants.search,
-                                text: $searchText,
-                                onEditingChanged: { _ in
-      print("Editing changed:  \(self.searchText)")
+  
+  private var searchField: some View {
+    TextField(Constants.search,
+              text: $searchText,
+              onEditingChanged: { _ in
+                print("Editing changed:  \(self.searchText)")
     }, onCommit: { () in
       UIApplication.shared.keyWindow?.endEditing(true)
       self.updateFilters()
@@ -163,21 +118,52 @@ struct LibraryView: View {
         UIApplication.shared.keyWindow?.endEditing(true)
         self.updateFilters()
       }))
-
-    return AnyView(searchField)
   }
-
-  private func updateFilters() {
-    filters.searchQuery = self.searchText
-    contentsMC.updateFilters(newFilters: filters)
+  
+  private var sortButton: some View {
+    Button(action: {
+      // Change sort
+      self.changeSort()
+    }) {
+      HStack {
+        Image("sort")
+          .foregroundColor(.battleshipGrey)
+        
+        Text(filters.sortFilter.name)
+          .font(.uiLabel)
+          .foregroundColor(.battleshipGrey)
+      }
+    }
   }
-
-  private func changeSort() {
-    filters.changeSortFilter()
-    contentsMC.updateFilters(newFilters: filters)
+  
+  private var hudView: some View {
+    let option: HudOption = showSuccess ? .success : .error
+    return HudView(option: option) {
+      self.showHudView = false
+    }
   }
-
-  private func contentView() -> AnyView {
+  
+  private var filtersView: some View {
+    ScrollView(.horizontal, showsIndicators: false) {
+      HStack(alignment: .top, spacing: .filterSpacing) {
+        
+        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
+          self.contentsMC.updateFilters(newFilters: self.filters)
+        }
+        .environmentObject(self.filters)
+        
+        ForEach(filters.applied, id: \.self) { filter in
+          AppliedFilterView(filter: filter, type: .default) {
+            self.contentsMC.updateFilters(newFilters: self.filters)
+          }
+          .environmentObject(self.filters)
+        }
+      }
+    }
+    .padding([.top], .filtersPaddingTop)
+  }
+  
+  private var contentView: AnyView {
     switch contentsMC.state {
     case .initial,
          .loading where contentsMC.data.isEmpty:
@@ -190,7 +176,7 @@ struct LibraryView: View {
       //      let parameters = filters.applied
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
-
+      
       var updatedContents = contentsMC.data
       var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
         switch action {
@@ -209,7 +195,7 @@ struct LibraryView: View {
               }
             }
           }
-
+          
         case .save:
           self.downloadsMC.saveDownload(with: content) { (success, contents) in
             if self.showHudView {
@@ -217,8 +203,8 @@ struct LibraryView: View {
               self.showHudView.toggle()
             }
             
-             self.showSuccess = success
-             self.showHudView = true
+            self.showSuccess = success
+            self.showHudView = true
             if success {
               DispatchQueue.main.async {
                 updatedContents = contents
@@ -227,17 +213,27 @@ struct LibraryView: View {
           }
         }
       }
-
+      
       downloadsMC.setDownloads(for: updatedContents) { contents in
         DispatchQueue.main.async {
           contentListView.updateContents(with: contents)
         }
       }
-
+      
       return AnyView(contentListView)
     default:
       return AnyView(Text("Default View"))
     }
+  }
+  
+  private func updateFilters() {
+    filters.searchQuery = self.searchText
+    contentsMC.updateFilters(newFilters: filters)
+  }
+  
+  private func changeSort() {
+    filters.changeSortFilter()
+    contentsMC.updateFilters(newFilters: filters)
   }
 }
 
@@ -245,7 +241,7 @@ struct LibraryView: View {
 struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
-
+  
   public func body(content: Content) -> some View {
     HStack {
       content

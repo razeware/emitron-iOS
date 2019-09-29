@@ -44,7 +44,7 @@ struct LoginView: View {
       let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
       let emitronState = AppState()
       
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+      return AnyView(TabNavView(emitron: AppState()).environmentObject(contentsMC))
     }
     
     return AnyView(
