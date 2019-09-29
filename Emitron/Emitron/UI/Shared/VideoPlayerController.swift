@@ -80,20 +80,27 @@ class VideoPlayerController: AVPlayerViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-
-    videosMC.getVideoStream(for: videoID) { [weak self] result in
-      guard let self = self else {
-        return
+    
+    if let downloadsMC = DataManager.current?.downloadsMC, let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == videoID }) {
+      if let url = downloadModel.video.url {
+        self.player = AVPlayer(url: url)
+        self.player?.play()
       }
-      
-      switch result {
-      case .failure(let error):
-        print(error.localizedDescription)
-      case .success(let videoStream):
-        print(videoStream)
-        if let url = videoStream.url {
-          self.player = AVPlayer(url: url)
-          self.player?.play()
+    } else {
+      videosMC.getVideoStream(for: videoID) { [weak self] result in
+        guard let self = self else {
+          return
+        }
+        
+        switch result {
+        case .failure(let error):
+          print(error.localizedDescription)
+        case .success(let videoStream):
+          print(videoStream)
+          if let url = videoStream.url {
+            self.player = AVPlayer(url: url)
+            self.player?.play()
+          }
         }
       }
     }

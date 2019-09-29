@@ -35,6 +35,10 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @EnvironmentObject var downloadsMC: DownloadsMC
+  @State var showHudView: Bool = false
+  @State var showSuccess: Bool = false
+  @State var tabSelection: Int
+  @EnvironmentObject var emitron: AppState
   var contents: [ContentSummaryModel] {
     return downloadsMC.data.map { $0.content }
   }
@@ -90,57 +94,37 @@ struct DownloadsView: View {
     
     switch action {
     case .delete:
-      self.downloadsMC.deleteDownload(with: content.videoID) { contents in
-        DispatchQueue.main.async {
-          completion(contents)
+      self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+        self.showHudView.toggle()
+        self.showSuccess = success
+        if success {
+          DispatchQueue.main.async {
+            completion(contents)
+          }
         }
       }
       
     case .save:
-      self.downloadsMC.saveDownload(with: content) { contents in
-        DispatchQueue.main.async {
-          completion(contents)
+      self.downloadsMC.saveDownload(with: content) { (success, contents) in
+        self.showHudView.toggle()
+        self.showSuccess = success
+        if success {
+          DispatchQueue.main.async {
+            completion(contents)
+          }
         }
       }
     }
   }
 
   private func addButton() -> AnyView? {
-    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText, let buttonColor = contentScreen.buttonColor, let buttonImage = contentScreen.buttonIconName else { return nil }
-
-    // TODO use button Lea created in persistFilters PR once available
-    let button = Button(action: {
-      // TODO what is the action supposed to be here?
-      print("BUTTON TAPPED IN DOWNLOADS VIEW")
-
-    }) {
-      HStack {
-        Rectangle()
-          .frame(width: 24, height: 46, alignment: .center)
-          .foregroundColor(buttonColor)
-
-        Spacer()
-
-        Text(buttonText)
-          .font(.uiButtonLabel)
-          .background(buttonColor)
-          .foregroundColor(.white)
-
-        Spacer()
-
-        Image(buttonImage)
-          .frame(width: 24, height: 24, alignment: .center)
-          .background(Color.white)
-          .foregroundColor(buttonColor)
-          .cornerRadius(6)
-          .padding([.trailing], 10)
-      }
-      .background(buttonColor)
-      .cornerRadius(6)
-      .padding([.leading, .trailing], 18)
-      .frame(height: 46)
+    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
+    
+    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
+      self.emitron.selectedTab = 0
     }
-
+    .padding([.bottom, .leading, .trailing], 20)
+    
     return AnyView(button)
   }
 }
@@ -150,7 +134,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads).environmentObject(downloadsMC)
+    return DownloadsView(contentScreen: .downloads, tabSelection: 0).environmentObject(downloadsMC)
   }
 }
 #endif

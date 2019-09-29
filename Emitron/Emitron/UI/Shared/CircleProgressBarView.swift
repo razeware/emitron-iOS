@@ -28,42 +28,37 @@
 
 import SwiftUI
 
-struct LoginView: View {
+private struct Layout {
+  static let line: CGFloat = 5.0
+  static let frame: CGFloat = 19.0
+  static let endProgress: CGFloat = 1.0
+}
+
+struct CircularProgressBar: View {
   
-  @ObservedObject var userMC: UserMC
-  @State var showModal: Bool = false
+  @State var progress: CGFloat = 1.0
   
   var body: some View {
-    return contentView()
-  }
-  
-  private func contentView() -> AnyView {
-    guard userMC.user == nil else {
-      let guardpost = Guardpost.current
-      let filters = DataManager.current!.filters
-      let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-      let emitronState = AppState()
+    
+    return ZStack {
+      Circle()
+        .trim(from: 0, to: Layout.endProgress)
+        .stroke(Color.coolGrey, lineWidth: Layout.line)
+        .frame(width: Layout.frame, height: Layout.frame)
+        .opacity(0.2)
       
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+      Circle()
+        .trim(from: progress != 1 ? progress : 1, to: Layout.endProgress)
+        .stroke(Color.appGreen, lineWidth: Layout.line)
+        .frame(width: Layout.frame, height: Layout.frame)
+        .rotationEffect(.degrees(90), anchor: .center)
+        .animation(Animation.linear(duration: 60))
     }
-    
-    return AnyView(
-      VStack {
-        Button(Constants.login) {
-          self.userMC.login()
-        }
-      })
   }
 }
 
-#if DEBUG
-struct LoginView_Previews: PreviewProvider {
-
+struct CircularProgressIndicator_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    let userMC = UserMC(guardpost: guardpost)
-    
-    return LoginView(userMC: userMC)
+    CircularProgressBar(progress: 1.0)
   }
 }
-#endif

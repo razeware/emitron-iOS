@@ -42,6 +42,7 @@ enum ImageType: Hashable {
 
 // Shuold be data model independent, so that we can transform any type of data into the cardViewModel data
 struct CardViewModel: Hashable {
+  let id: Int
   let title: String
   let subtitle: String
   let description: String
@@ -58,45 +59,45 @@ extension CardViewModel {
     guard let domainData = DataManager.current?.domainsMC.data else {
       return nil
     }
-
+    
     let ids = content.domainIDs
     let contentDomains = domainData.filter { ids.contains($0.id) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     let isDownloaded = content.isDownloaded
-
+    
     var progress: CGFloat = 0
     if let progression = content.progression {
       progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
     }
-
+    
     var imageType: ImageType
-
+    
     if let imageURL = content.cardArtworkURL {
       imageType = ImageType.url(imageURL)
     } else {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
-
-    let cardModel = CardViewModel(title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
-
+    
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.dateAndTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    
     return cardModel
   }
 }
 
 struct CardView: SwiftUI.View {
-
-  var onRightIconTap: (() -> Void)?
+  var onRightIconTap: ((Bool) -> Void)?
+  @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
-
-  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: (() -> Void)? = nil) {
+  
+  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
   }
-
+  
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
@@ -105,86 +106,97 @@ struct CardView: SwiftUI.View {
       return emptyView
     }
     
-    let stack = GeometryReader { geometry in
-      VStack {
-        VStack(alignment: .leading) {
-          VStack(alignment: .leading, spacing: 15) {
-            VStack(alignment: .leading, spacing: 0) {
-              HStack(alignment: .center) {
-                
-                Text(model.title)
-                  .font(.uiTitle4)
-                  .lineLimit(2)
-                  .fixedSize(horizontal: false, vertical: true)
-                  .padding([.trailing], 15)
-                
-                Spacer()
-                
-                Image(uiImage: self.image)
-                  .resizable()
-                  .frame(width: 60, height: 60)
-                  .onAppear(perform: self.loadImage)
-                  .transition(.opacity)
-                  .cornerRadius(6)
-              }
-              .padding([.top], 10)
+    let stack = VStack {
+      VStack(alignment: .leading) {
+        VStack(alignment: .leading, spacing: 15) {
+          VStack(alignment: .leading, spacing: 0) {
+            HStack(alignment: .center) {
               
-              Text(model.subtitle)
-                .font(.uiCaption)
-                .lineLimit(nil)
-                .foregroundColor(.battleshipGrey)
-            }
-            
-            Text(model.description)
-              .font(.uiCaption)
-              .fixedSize(horizontal: false, vertical: true)
-              .lineLimit(3)
-              .foregroundColor(.battleshipGrey)
-            
-            HStack {
-              Text(model.footnote)
-                .font(.uiCaption)
-                .lineLimit(1)
-                .foregroundColor(.battleshipGrey)
+              Text(model.title)
+                .font(.uiTitle4)
+                .lineLimit(2)
+                .fixedSize(horizontal: false, vertical: true)
+                .padding([.trailing], 15)
               
               Spacer()
               
-              if self.contentScreen != ContentScreen.downloads {
-                Image(self.downloadImageName())
-                  .resizable()
-                  .frame(width: 19, height: 19)
-                  .onTapGesture {
-                    self.download()
-                }
-              }
+              Image(uiImage: self.image)
+                .resizable()
+                .frame(width: 60, height: 60)
+                .onAppear(perform: self.loadImage)
+                .transition(.opacity)
+                .cornerRadius(6)
+            }
+            .padding([.top], 10)
+            
+            Text(model.subtitle)
+              .font(.uiCaption)
+              .lineLimit(nil)
+              .foregroundColor(.battleshipGrey)
+          }
+          
+          Text(model.description)
+            .font(.uiCaption)
+            .fixedSize(horizontal: false, vertical: true)
+            .lineLimit(3)
+            .foregroundColor(.battleshipGrey)
+          
+          HStack {
+            Text(model.footnote)
+              .font(.uiCaption)
+              .lineLimit(1)
+              .foregroundColor(.battleshipGrey)
+            
+            Spacer()
+            
+            if self.contentScreen != ContentScreen.downloads {
+              self.setUpImageAndProgress()
             }
           }
-          .padding([.leading, .trailing, .top, .bottom], 15)
-          .frame(minHeight: 184)
-          
-          Spacer()
-          
-          ProgressBarView(progress: model.progress)
         }
+        .padding([.leading, .trailing, .top, .bottom], 15)
+        
+        Spacer()
+        
+        ProgressBarView(progress: model.progress)
       }
-      .frame(minWidth: geometry.size.width * 0.9, minHeight: geometry.size.width * 0.9 * 0.57)
-      .background(Color.white)
-      .cornerRadius(6)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     }
+    .background(Color.white)
+    .cornerRadius(6)
+    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     
     return AnyView(stack)
   }
-
-  private func download() {
-    guard downloadImageName() != DownloadImageName.inActive else {
-      // TODO show hud stating already downloaded
-      return
+  
+  private func setUpImageAndProgress() -> AnyView {
+    let image = Image(self.downloadImageName())
+      .resizable()
+      .frame(width: 19, height: 19)
+      .onTapGesture {
+        self.download()
     }
     
-    onRightIconTap?()
+    guard let model = model else {
+      return AnyView(image)
+    }
+    
+    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
+    guard let progress = downloadModel?.downloadProgress else {
+      return AnyView(image)
+    }
+    
+    while 0.0 < progress, progress < 0.9 {
+      return AnyView(CircularProgressBar(progress: progress))
+    }
+    
+    return AnyView(image)
   }
-
+  
+  private func download() {
+    let success = downloadImageName() != DownloadImageName.inActive
+    onRightIconTap?(success)
+  }
+  
   private func loadImage() {
     guard let model = model else { return }
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
@@ -193,19 +205,19 @@ struct CardView: SwiftUI.View {
     case .asset(let img):
       image = img
     case .url(let url):
-//      DispatchQueue.global().async {
-//        let data = try? Data(contentsOf: url)
-//        if let data = data,
-//          let img = UIImage(data: data) {
-//          DispatchQueue.main.async {
-//            self.image = img
-//          }
-//        }
-//      }
+      //      DispatchQueue.global().async {
+      //        let data = try? Data(contentsOf: url)
+      //        if let data = data,
+      //          let img = UIImage(data: data) {
+      //          DispatchQueue.main.async {
+      //            self.image = img
+      //          }
+      //        }
+      //      }
       fishImage(url: url)
     }
   }
-
+  
   private func fishImage(url: URL) {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
@@ -228,36 +240,36 @@ struct CardView: SwiftUI.View {
     let vStack = VStack {
       HStack {
         Spacer()
-
+        
         Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
-
+          .font(.uiTitle2)
+          .foregroundColor(.appBlack)
+          .multilineTextAlignment(.center)
+          .lineLimit(nil)
+        
         Spacer()
       }
-
+      
       addDetailText()
     }
-
+    
     return AnyView(vStack)
   }
-
+  
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
-        Spacer()
-
-        Text(detail)
+      Spacer()
+      
+      Text(detail)
         .font(.uiHeadline)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
-
-        Spacer()
+      
+      Spacer()
     }
-
+    
     return AnyView(stack)
   }
 }

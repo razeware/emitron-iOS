@@ -28,42 +28,78 @@
 
 import SwiftUI
 
-struct LoginView: View {
+enum HudOption {
+  case success, error
   
-  @ObservedObject var userMC: UserMC
-  @State var showModal: Bool = false
-  
-  var body: some View {
-    return contentView()
+  var title: String {
+    switch self {
+    case .success: return "success".uppercased()
+    case .error: return "error".uppercased()
+    }
   }
   
-  private func contentView() -> AnyView {
-    guard userMC.user == nil else {
-      let guardpost = Guardpost.current
-      let filters = DataManager.current!.filters
-      let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-      let emitronState = AppState()
-      
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+  var detail: String {
+    switch self {
+    case .error: return "Failure".capitalized
+    default: return ""
     }
+  }
+  
+  var color: Color {
+    switch self {
+    case .success: return .appGreen
+    case .error: return .copper
+    }
+  }
+}
+
+struct HudView: View {
+  var option: HudOption
+  var callback: (()->())?
+  
+  var body: some View {
     
-    return AnyView(
-      VStack {
-        Button(Constants.login) {
-          self.userMC.login()
+      HStack(alignment: .center) {
+        ZStack {
+          Rectangle()
+          .foregroundColor(Color.white)
+          .cornerRadius(15)
+          .padding([.top, .bottom], 10)
+
+          Text(self.option.title)
+          .foregroundColor(self.option.color)
         }
-      })
+        .padding([.leading], 18)
+        
+        Text(self.option.detail)
+          .foregroundColor(Color.white)
+          .padding([.top, .bottom], 10)
+
+        Spacer()
+        
+        Button(action: {
+          self.dismiss()
+        }) {
+          Image("close")
+            .padding([.trailing], 18)
+            .foregroundColor(Color.white)
+        }
+      }
+      .background(self.option.color)
+      .frame(width: UIScreen.main.bounds.width, height: 54, alignment: .leading)
+  }
+  
+  private func dismiss() {
+    callback?()
   }
 }
 
 #if DEBUG
-struct LoginView_Previews: PreviewProvider {
-
+struct HudView_Previews: PreviewProvider {
   static var previews: some View {
-    let guardpost = Guardpost.current
-    let userMC = UserMC(guardpost: guardpost)
-    
-    return LoginView(userMC: userMC)
+    // TODO: No empty String
+    return HudView(option: .success)
   }
 }
 #endif
+
