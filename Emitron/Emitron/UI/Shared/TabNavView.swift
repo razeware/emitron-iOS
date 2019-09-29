@@ -80,7 +80,7 @@ struct TabNavView: View {
   func downloadsView() -> some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return AnyView(DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC))
+    return AnyView(DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC)).environmentObject(emitron)
   }
 }
 
