@@ -34,8 +34,6 @@ import SwiftyJSON
 extension String {
   static let appExtension: String = "ptk"
   static let videoIDKey: String = "videoID"
-  static let photoKey: String = "Photo"
-  static let thumbnailKey: String = "Thumbnail"
 }
 
 enum DownloadsAction {

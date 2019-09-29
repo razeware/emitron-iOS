@@ -31,7 +31,7 @@ import SwiftUI
 struct TabNavView: View {
 
   @State var selection = 0
-  @EnvironmentObject var emitron: AppState
+  @ObservedObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
 
   var body: some View {
@@ -87,7 +87,7 @@ struct TabNavView: View {
 #if DEBUG
 struct TabNavView_Previews: PreviewProvider {
   static var previews: some View {
-    TabNavView()
+    TabNavView(emitron: AppState())
   }
 }
 #endif
