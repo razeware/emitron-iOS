@@ -46,7 +46,7 @@ struct DownloadsView: View {
   var body: some View {
     NavigationView {
       VStack {
-        contentView()
+        contentView
           .padding([.top], .sidePadding)
           .background(Color.paleGrey)
         
@@ -57,7 +57,7 @@ struct DownloadsView: View {
     }
   }
   
-  private func contentView() -> some View {
+  private var contentView: some View {
     let contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
