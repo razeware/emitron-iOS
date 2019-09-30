@@ -44,22 +44,20 @@ struct MyTutorialView: View {
   @State private var state: MyTutorialsState = .inProgress
   
   var body: some View {
-    NavigationView {
-      contentView
-        //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
-        .navigationBarTitle(Text(Constants.myTutorials))
-        .navigationBarItems(trailing:
-          Group {
-            Button(action: {
-              self.settingsPresented = true
-            }) {
-              Image("settings")
-                .foregroundColor(.battleshipGrey)
-            }
-        })
-    }
-    .sheet(isPresented: self.$settingsPresented) {
-      SettingsView()
+    contentView
+      //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
+      .navigationBarTitle(Text(Constants.myTutorials))
+      .navigationBarItems(trailing:
+        Group {
+          Button(action: {
+            self.settingsPresented = true
+          }) {
+            Image("settings")
+              .foregroundColor(.battleshipGrey)
+          }
+      })
+      .sheet(isPresented: self.$settingsPresented) {
+        SettingsView()
     }
   }
   

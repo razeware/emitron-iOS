@@ -95,36 +95,35 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
   
   var body: some View {
-    ZStack(alignment: .bottom) {
-      contentView
-      
-      if showHudView {
-        createHudView()
-          .animation(.spring())
-      }
-    }
+//    ZStack(alignment: .bottom) {
+//      contentView
+//
+//      if showHudView {
+//        createHudView()
+//          .animation(.spring())
+//      }
+//    }
+    contentView
   }
   
   private var listView: some View {
-    VStack {
-      List {
-        if headerView != nil {
-          Section(header: headerView) {
-            if contentScreen == .downloads {
-              cardsTableViewWithDelete
-            } else {
-              cardTableNavView
-            }
-            loadMoreView
-          }.listRowInsets(EdgeInsets())
-        } else {
+    List {
+      if headerView != nil {
+        Section(header: headerView) {
           if contentScreen == .downloads {
             cardsTableViewWithDelete
           } else {
             cardTableNavView
           }
           loadMoreView
+        }.listRowInsets(EdgeInsets())
+      } else {
+        if contentScreen == .downloads {
+          cardsTableViewWithDelete
+        } else {
+          cardTableNavView
         }
+        loadMoreView
       }
     }
   }

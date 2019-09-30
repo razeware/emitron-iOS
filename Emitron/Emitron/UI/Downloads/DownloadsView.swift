@@ -44,17 +44,15 @@ struct DownloadsView: View {
   }
   
   var body: some View {
-    NavigationView {
-      VStack {
-        contentView
-          .padding([.top], .sidePadding)
-          .background(Color.paleGrey)
-        
-        addButton()
-      }
-      .background(Color.paleGrey)
-      .navigationBarTitle(Text(Constants.downloads))
+    VStack {
+      contentView
+        .padding([.top], .sidePadding)
+        .background(Color.paleGrey)
+      
+      addButton()
     }
+    .background(Color.paleGrey)
+    .navigationBarTitle(Text(Constants.downloads))
   }
   
   private var contentView: some View {

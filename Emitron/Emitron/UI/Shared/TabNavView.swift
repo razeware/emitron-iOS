@@ -36,19 +36,26 @@ struct TabNavView: View {
   
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
-      libraryView.tabItem {
+      NavigationView {
+        libraryView
+      }.tabItem {
         Text(Constants.library)
         Image("library")
       }
       .tag(0)
       
-      downloadsView.tabItem {
+      NavigationView {
+        downloadsView
+      }.tabItem {
         Text(Constants.downloads)
         Image("downloadInactive")
       }
       .tag(1)
       
-      myTutorialsView.tabItem {
+      NavigationView {
+        myTutorialsView
+        
+      }.tabItem {
         Text(Constants.myTutorials)
         Image("myTutorials")
       }

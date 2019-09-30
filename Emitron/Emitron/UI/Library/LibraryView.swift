@@ -50,11 +50,9 @@ struct LibraryView: View {
 
   var body: some View {
     ZStack(alignment: .bottom) {
-      NavigationView {
         contentView
         .navigationBarTitle(
           Text(Constants.library))
-      }
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
       }
