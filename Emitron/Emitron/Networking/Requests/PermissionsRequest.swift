@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,32 +27,21 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
-class ContentsService: Service {
+struct PermissionsRequest: Request {
+  typealias Response = PermissionsModel
+
+  // MARK: - Properties
+  var method: HTTPMethod { return .GET }
+  var path: String { return "/persmissions)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
 
   // MARK: - Internal
-  func allContents(parameters: [Parameter],
-                   completion: @escaping (_ response: Result<ContentsRequest.Response, RWAPIError>) -> Void) {
-    let request = ContentsRequest()
-    makeAndProcessRequest(request: request,
-                          parameters: parameters,
-                          completion: completion)
-  }
-  
-  func contentDetails(for id: Int,
-                     completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void) {
-    let request = ContentDetailsRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
-  }
-  
-  func getBeginPlaybackToken(completion: @escaping(_ response: Result<BeginPlaybackTokenRequest.Response, RWAPIError>) -> Void) {
-    let request = BeginPlaybackTokenRequest()
-    makeAndProcessRequest(request: request, completion: completion)
-  }
-  
-  func reportPlaybackUsage(for id: Int, progress: Int, playbackToken: String,
-                          completion: @escaping(_ response: Result<PlaybackUsageRequest.Response, RWAPIError>) -> Void) {
-    let request = PlaybackUsageRequest(id: id, progress: progress, token: playbackToken)
-    makeAndProcessRequest(request: request, completion: completion)
+  func handle(response: Data) throws -> PermissionsModel {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    return doc.data.compactMap { PermissionsModel($0, metadata: nil) }.first!
   }
 }

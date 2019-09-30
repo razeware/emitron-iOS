@@ -63,7 +63,7 @@ class ContentDetailsModel {
     self.id = jsonResource.id
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
-    self.description = jsonResource["description"] as? String ?? ""
+    self.description = jsonResource["description_plain_text"] as? String ?? ""
 
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()

@@ -75,8 +75,8 @@ extension PersistenceStore {
 
 // UserDefaults.standard.updateFilters
 
-enum UserDefaultsType: String {
-  case filters, sort, playbackSpeed
+enum UserDefaultsKey: String {
+  case filters, sort, playbackToken, playSpeed, subtitlesOn, wifiOnlyDownloads, downloadQuality
 }
 
 extension UserDefaults {
@@ -85,7 +85,7 @@ extension UserDefaults {
   // Search is not included?
   // Filters = filters (domains + content + categories + difficulties) + sort
   var filters: Set<Filter> {
-    guard let filterDataArray = UserDefaults.standard.object(forKey: UserDefaultsType.filters.rawValue) as? [Data] else {
+    guard let filterDataArray = UserDefaults.standard.object(forKey: UserDefaultsKey.filters.rawValue) as? [Data] else {
       return []
     }
     
@@ -103,11 +103,11 @@ extension UserDefaults {
       encodedFilterArray.append(encodedFilter!)
     }
     
-    set(encodedFilterArray, forKey: UserDefaultsType.filters.rawValue)
+    set(encodedFilterArray, forKey: UserDefaultsKey.filters.rawValue)
   }
   
   var sort: SortFilter {
-    guard let sortFilterData = UserDefaults.standard.object(forKey: UserDefaultsType.sort.rawValue) as? Data else {
+    guard let sortFilterData = UserDefaults.standard.object(forKey: UserDefaultsKey.sort.rawValue) as? Data else {
       return SortFilter.newest
     }
     
@@ -119,9 +119,33 @@ extension UserDefaults {
   func updateSort(with sortFilter: SortFilter) {
     let encoder  = JSONEncoder()
     let encodedFilter = try? encoder.encode(sortFilter)
-    set(encodedFilter, forKey: UserDefaultsType.sort.rawValue)
+    set(encodedFilter, forKey: UserDefaultsKey.sort.rawValue)
   }
   
+  // Playback Token
+  func setPlaybackToken(token: String) {
+    set(token, forKey: UserDefaultsKey.playbackToken.rawValue)
+  }
+  
+  var playbackToken: String? {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? String
+  }
+  
+  var playSpeed: Float {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? Float ?? 1.0
+  }
+  
+  var wifiOnlyDownloads: Bool {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.wifiOnlyDownloads.rawValue) as? Bool ?? false
+  }
+  
+  var downloadQuality: String? {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? "HD"
+  }
+  
+  var subtitlesOn: Bool {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? Bool ?? false
+  }
 }
 
 extension PersistenceStore {

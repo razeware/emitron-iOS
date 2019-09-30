@@ -30,6 +30,7 @@ import Crashlytics
 import Fabric
 import Firebase
 import UIKit
+import AVFoundation
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -44,6 +45,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Override point for customization after application launch.
     FirebaseApp.configure()
     //Fabric.with([Crashlytics.self])
+    
+    let audioSession = AVAudioSession.sharedInstance()
+    do {
+      try audioSession.setCategory(AVAudioSession.Category.playback)
+    } catch {
+        print("Setting category to AVAudioSessionCategoryPlayback failed.")
+    }
     
     // TODO: When you're logged out datamanager will be nil in this current setup
     self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",

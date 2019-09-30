@@ -37,26 +37,35 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   
   var title: String {
     switch self {
-      case .videoPlaybackSpeed: return "Video Playback Speed"
-      case .downloads: return "Downloads (Wifi only)"
-      case .downloadsQuality: return "Downloads Quality"
-      case .subtitles: return "Subtitles"
+    case .videoPlaybackSpeed: return "Video Playback Speed"
+    case .downloads: return "Downloads (Wifi only)"
+    case .downloadsQuality: return "Downloads Quality"
+    case .subtitles: return "Subtitles"
+    }
+  }
+  
+  var key: UserDefaultsKey {
+    switch self {
+    case .videoPlaybackSpeed: return .playSpeed
+    case .downloads: return .wifiOnlyDownloads
+    case .downloadsQuality: return .downloadQuality
+    case .subtitles: return .subtitlesOn
     }
   }
   
   var detail: [String] {
     switch self {
-      case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
-      case .downloads: return ["Yes", "No"]
-      case .downloadsQuality: return ["HD", "SD"]
-      case .subtitles: return ["Yes", "No"]
+    case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
+    case .downloads: return ["Yes", "No"]
+    case .downloadsQuality: return ["HD", "SD"]
+    case .subtitles: return ["Yes", "No"]
     }
   }
   
   var isToggle: Bool {
     switch self {
-      case .downloads, .subtitles: return true
-      default: return false
+    case .downloads, .subtitles: return true
+    default: return false
     }
   }
 }
@@ -110,7 +119,7 @@ struct SettingsView: View {
                 // Update user defaults for toggle 
                 let previousState = self.setToggleState(at: index)
                 UserDefaults.standard.set(!previousState,
-                                          forKey: self.rows[index].title)
+                                          forKey: self.rows[index].key.rawValue)
               }
               
             }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
@@ -136,7 +145,7 @@ struct SettingsView: View {
   }
   
   private func populateDetail(at index: Int) -> String {
-    guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].title) as? String else {
+    guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].key.rawValue) as? String else {
       if let detail = self.rows[index].detail.first {
         return detail
       } else {
@@ -148,6 +157,6 @@ struct SettingsView: View {
   }
   
   private func setToggleState(at index: Int) -> Bool {
-    return UserDefaults.standard.bool(forKey: rows[index].title)
+    return UserDefaults.standard.bool(forKey: rows[index].key.rawValue)
   }
 }

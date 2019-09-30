@@ -33,30 +33,33 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   typealias UIViewControllerType = VideoPlayerController
   
   let videoID: Int
+  let contentID: Int
   private let user: UserModel
   
-  init(with videoID: Int, user: UserModel) {
+  init(with videoID: Int, contentID: Int, user: UserModel) {
     self.videoID = videoID
+    self.contentID = contentID
     self.user = user
   }
   
   func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerControllerRepresentable.UIViewControllerType {
-    let videosMC = VideosMC(user: user)
+    let videosMC = VideosMC(user: user, contentId: contentID)
     return VideoPlayerController(with: videoID, videosMC: videosMC)
   }
   
   func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {
-    //
+    // N/A
   }
 }
 
 struct VideoView: View {
   
+  let contentID: Int
   let videoID: Int
   let user: UserModel
   
   var body: some View {
-    VideoPlayerControllerRepresentable(with: videoID, user: user)
+    VideoPlayerControllerRepresentable(with: videoID, contentID: contentID, user: user)
   }
 }
 
@@ -65,7 +68,7 @@ struct VideoView_Previews: PreviewProvider {
 
   static var previews: some View {
     let user = Guardpost.current.currentUser!
-    return VideoView(videoID: 2292, user: user)
+    return VideoView(contentID: 4919757, videoID: 2292, user: user)
   }
 }
 #endif
