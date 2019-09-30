@@ -33,7 +33,7 @@ import SwiftUI
 private extension CGFloat {
   static let filterButtonSide: CGFloat = 27
   static let sidePadding: CGFloat = 18
-  static let searchFilterPadding: CGFloat = 42
+  static let searchFilterPadding: CGFloat = 30
   static let filterSpacing: CGFloat = 6
   static let filtersPaddingTop: CGFloat = 12
 }
@@ -67,25 +67,27 @@ struct LibraryView: View {
   }
   
   private var contentControlsSection: AnyView {
-    AnyView(VStack {
-      
-      searchAndFilterControls
-      numberAndSortView
-      
-      if !filters.applied.isEmpty {
-        filtersView
+    AnyView(
+      VStack {
+        searchAndFilterControls
+        numberAndSortView
+        
+        if !filters.applied.isEmpty {
+          filtersView
+        }
       }
-    }
-    .background(Color.paleGrey))
+      .padding([.bottom, .top, .leading, .trailing], 20)
+      .background(Color.white)
+    )
   }
   
   private var searchField: some View {
     //TODO: Need to figure out how to erase the textField
     
     TextField(Constants.search,
-                                text: $searchText,
-                                onEditingChanged: { _ in
-      print("Editing changed:  \(self.searchText)")
+              text: $searchText,
+              onEditingChanged: { _ in
+                print("Editing changed:  \(self.searchText)")
     }, onCommit: { () in
       UIApplication.shared.keyWindow?.endEditing(true)
       self.updateFilters()
@@ -101,7 +103,6 @@ struct LibraryView: View {
     HStack {
       searchField
 
-      
       Button(action: {
         self.filtersPresented = true
       }, label: {
@@ -135,7 +136,6 @@ struct LibraryView: View {
         }
       }
     }
-    .padding([.top], .sidePadding)
   }
   
   private var filtersView: some View {
@@ -155,7 +155,6 @@ struct LibraryView: View {
         }
       }
     }
-    .padding([.top], .filtersPaddingTop)
   }
   
   private var hudView: some View {
@@ -176,35 +175,25 @@ struct LibraryView: View {
   }
 
   private var contentView: AnyView {
-    switch contentsMC.state {
-    case .initial,
-         .loading where contentsMC.data.isEmpty:
-      return AnyView(Text(Constants.loading))
-    case .failed:
-      return AnyView(Text("Error"))
-    case .hasData,
-         .loading where !contentsMC.data.isEmpty:
-
-      let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: contentControlsSection) { (action, content) in
-        switch action {
-          case .delete:
-            self.delete(for: content.videoID)
-          case .save:
-            self.save(for: content)
-          }
+    let header = AnyView(contentControlsSection)
+    let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state) { (action, content) in
+      switch action {
+        case .delete:
+          self.delete(for: content.videoID)
+        case .save:
+          self.save(for: content)
         }
-      
-      switch downloadsMC.state {
-        case .hasData: print("I have (new) data!")
-        case .failed: print("I have failed!")
-        case .initial: print("I am initial!")
-        case .loading: print("I am loading!")
       }
-      
-      return AnyView(contentSectionView)
-    default:
-      return AnyView(Text("Default View"))
+    
+    switch downloadsMC.state {
+      // Callling this simply to trigger view re-rendering
+      case .hasData: print("I have (new) data!")
+      case .failed: print("I have failed!")
+      case .initial: print("I am initial!")
+      case .loading: print("I am loading!")
     }
+    
+    return AnyView(contentSectionView)
   }
   
   private func delete(for videoId: Int) {
@@ -230,9 +219,9 @@ struct LibraryView: View {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-
-       self.showSuccess = success
-       self.showHudView = true
+      
+      self.showSuccess = success
+      self.showHudView = true
       if success {
         self.downloadsMC.setDownloads(for: contents) { contents in
           print("Saving downloads...")

@@ -63,7 +63,7 @@ struct DownloadsView: View {
       fatalError("crash in DownloadsView with data")
     case .loading, .hasData, .initial:
       var updatedContents = contents
-      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey, headerView: nil) { (action, content) in
+      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state) { (action, content) in
         self.handleAction(with: action, content: content) { contents in
           self.downloadsMC.setDownloads(for: contents) { contents in
             updatedContents = contents
@@ -71,15 +71,16 @@ struct DownloadsView: View {
         }
       }
       
-      DispatchQueue.main.async {
-        contentListView.updateContents(with: updatedContents)
-      }
-      
-      if updatedContents.isEmpty {
-        return ContentListView(contentScreen: .downloads, bgColor: .paleGrey)
-      } else {
-        return contentListView
-      }
+//      DispatchQueue.main.async {
+//        contentListView.updateContents(with: updatedContents)
+//      }
+//
+//      if updatedContents.isEmpty {
+//        return ContentListView(contentScreen: .downloads, bgColor: .paleGrey)
+//      } else {
+//        return contentListView
+//      }
+      return contentListView
     }
   }
   

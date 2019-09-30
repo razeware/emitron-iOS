@@ -39,17 +39,17 @@ enum ContentScreen {
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything meeting the search criteria"
-    case .downloads: return "You haven't downloaded any tutorials yet"
-    case .myTutorials: return "You haven't started any tutorials yet"
-    case .tips: return "Swipe left to delete a downloan"
+    case .library: return "We couldn't find anything meeting the search criteria."
+    case .downloads: return "You haven't downloaded any tutorials yet."
+    case .myTutorials: return "You haven't started any tutorials yet."
+    case .tips: return "Swipe left to delete a download."
     }
   }
   
   var detailMesage: String? {
     switch self {
-    case .library: return "Try removing some filters"
-    case .tips: return "Swipe on your downloads to remove them"
+    case .library: return "Try removing some filters."
+    case .tips: return "Swipe on your downloads to remove them."
     default: return nil
     }
   }
@@ -90,25 +90,45 @@ struct ContentListView: View {
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
+  var dataState: DataState
   var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
-  
   
   var body: some View {
     ZStack(alignment: .bottom) {
-      List {
-        if headerView != nil {
-          Section(header: headerView) {
-            cardTableNavView
-          }
-        } else {
-          cardTableNavView
-        }
-      }
+      contentView
       
       if showHudView {
         createHudView()
           .animation(.spring())
       }
+    }
+  }
+  
+  private var listView: some View {
+    List {
+      if headerView != nil {
+        Section(header: headerView) {
+          cardTableNavView
+        }.listRowInsets(EdgeInsets())
+      } else {
+        cardTableNavView
+      }
+    }
+  }
+  
+  private var contentView: AnyView {
+    switch dataState {
+    case .initial,
+         .loading where contents.isEmpty:
+      return AnyView(loadingView)
+    case .hasData where contents.isEmpty:
+      return AnyView(emptyView)
+    case .hasData,
+         .failed,
+         .loading where !contents.isEmpty:
+      return AnyView(listView)
+    default:
+      return AnyView(emptyView)
     }
   }
   
@@ -127,18 +147,14 @@ struct ContentListView: View {
         self.cardView(content: partialContent, onRightTap: { success in
           self.callback?(.save, partialContent)
         })
-          .listRowBackground(self.bgColor)
-          .background(self.bgColor)
-          .onTapGesture {
-            self.isPresenting = true
-            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-        }
+          .padding([.leading], 20)
+          .padding([.top, .bottom], 10)
       }
     }
     .onDelete(perform: self.delete)
-    .listRowInsets(EdgeInsets())
-    .padding([.leading, .trailing], 20)
-    .padding([.bottom], 30)
+    .listRowBackground(self.bgColor)
+    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+    .background(self.bgColor)
   }
   
   private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
@@ -149,12 +165,38 @@ struct ContentListView: View {
                     onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
   }
   
-  private func emptyView() -> some View {
+  private var emptyView: some View {
     VStack {
+      headerView
+      
+      Spacer()
+      
       Text(contentScreen.titleMessage)
-        .multilineTextAlignment(.leading)
-        .font(.uiLargeTitle)
+        .font(.uiTitle2)
         .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+      
+      Text(contentScreen.detailMesage ?? "")
+        .font(.uiLabel)
+        .foregroundColor(.battleshipGrey)
+      
+      Spacer()
+    }
+  }
+  
+  private var loadingView: some View {
+    VStack {
+      headerView
+      
+      Spacer()
+      
+      Text("Loading...")
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
     }
   }
   
@@ -185,7 +227,7 @@ struct ContentListView: View {
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey)
+    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData)
   }
 }
 #endif

@@ -78,8 +78,10 @@ struct MyTutorialView: View {
   private var contentView: some View {
     let dataToDisplay: [ContentSummaryModel]
 
+    var stateToUse: DataState
     switch state {
     case .inProgress, .completed:
+      stateToUse = progressionsMC.state
       switch progressionsMC.state {
       case .initial,
            .loading where progressionsMC.data.isEmpty:
@@ -103,6 +105,7 @@ struct MyTutorialView: View {
       }
 
     case .bookmarked:
+      stateToUse = bookmarksMC.state
       switch bookmarksMC.state {
       case .initial,
            .loading where bookmarksMC.data.isEmpty:
@@ -119,7 +122,7 @@ struct MyTutorialView: View {
       }
     }
 
-    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl))
+    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse))
   }
 }
 

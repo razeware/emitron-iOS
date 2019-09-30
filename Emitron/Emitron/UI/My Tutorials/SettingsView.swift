@@ -79,69 +79,64 @@ struct SettingsView: View {
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   
   var body: some View {
-    GeometryReader { geometry in
-      VStack {
-        HStack() {
-          Rectangle()
-            .frame(width: 27, height: 27, alignment: .center)
-            .foregroundColor(.clear)
-            .padding([.leading], 18)
-          
-          Spacer()
-          
-          Text(Constants.settings)
-            .font(.uiHeadline)
-            .foregroundColor(.appBlack)
-            .padding([.top], 20)
-          
-          Spacer()
-          Group {
-            Button(action: {
-              self.presentationMode.wrappedValue.dismiss()
-            }) {
-              Image("close")
-                .frame(width: 27, height: 27, alignment: .center)
-                .padding(.trailing, 18)
-                .padding([.top], 20)
-                .foregroundColor(.battleshipGrey)
-            }
-          }
-        }
-        
-        VStack {
-          ForEach(0..<self.rows.count) { index in
-            TitleDetailView(callback: {
-              self.selectedOption = self.rows[index]
-              
-              // Only navigate to SettingsOptionsView if view isn't a toggle 
-              if !self.rows[index].isToggle {
-                self.settingsOptionsPresented.toggle()
-              } else {
-                // Update user defaults for toggle 
-                let previousState = self.setToggleState(at: index)
-                UserDefaults.standard.set(!previousState,
-                                          forKey: self.rows[index].key.rawValue)
-              }
-              
-            }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
-              .frame(height: 46)
-              .sheet(isPresented: self.$settingsOptionsPresented) {
-                SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
-            }
-          }
-        }
+    VStack {
+      HStack() {
+        Rectangle()
+          .frame(width: 27, height: 27, alignment: .center)
+          .foregroundColor(.clear)
+          .padding([.leading], 18)
         
         Spacer()
         
-        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          Guardpost.current.logout()
-        }
-        .padding([.bottom, .leading, .trailing], 20)
+        Text(Constants.settings)
+          .font(.uiHeadline)
+          .foregroundColor(.appBlack)
+          .padding([.top], 20)
         
+        Spacer()
+        Group {
+          Button(action: {
+            self.presentationMode.wrappedValue.dismiss()
+          }) {
+            Image("close")
+              .frame(width: 27, height: 27, alignment: .center)
+              .padding(.trailing, 18)
+              .padding([.top], 20)
+              .foregroundColor(.battleshipGrey)
+          }
+        }
       }
-      .frame(width: geometry.size.width, height: geometry.size.height,alignment: .center)
+      
+      VStack {
+        ForEach(0..<self.rows.count) { index in
+          TitleDetailView(callback: {
+            self.selectedOption = self.rows[index]
+            
+            // Only navigate to SettingsOptionsView if view isn't a toggle
+            if !self.rows[index].isToggle {
+              self.settingsOptionsPresented.toggle()
+            } else {
+              // Update user defaults for toggle
+              let previousState = self.setToggleState(at: index)
+              UserDefaults.standard.set(!previousState,
+                                        forKey: self.rows[index].key.rawValue)
+            }
+            
+          }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
+            .frame(height: 46)
+            .sheet(isPresented: self.$settingsOptionsPresented) {
+              SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
+          }
+        }
+      }
+      
+      Spacer()
+      
+      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+        Guardpost.current.logout()
+      }
+      .padding([.bottom, .leading, .trailing], 20)
       .background(Color.paleGrey)
-      .padding([.top], 20)
     }
   }
   

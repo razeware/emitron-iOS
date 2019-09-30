@@ -168,6 +168,8 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   private func loadDownloads() {
+    self.state = .loading
+    
     guard let root = localRoot else { return }
     do {
       let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
@@ -189,10 +191,14 @@ class DownloadsMC: NSObject, ObservableObject {
           }
         }
       }
+      
+      self.state = .hasData
+      
     } catch let error {
       // TODO show error
       
       self.state = .failed
+      
       Failure
       .fetch(from: "DocumentsMC", reason: error.localizedDescription)
       .log(additionalParams: nil)
