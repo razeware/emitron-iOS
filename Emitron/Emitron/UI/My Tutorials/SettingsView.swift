@@ -49,7 +49,7 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     case .videoPlaybackSpeed: return .playSpeed
     case .downloads: return .wifiOnlyDownloads
     case .downloadsQuality: return .downloadQuality
-    case .subtitles: return .subtitlesOn
+    case .subtitles: return .closedCaptionOn
     }
   }
   

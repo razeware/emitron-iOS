@@ -114,16 +114,30 @@ class VideoPlayerController: AVPlayerViewController {
       case .success(let videoStream):
         print(videoStream)
         if let url = videoStream.url {
-          self.player = AVPlayer(url: url)
+          let playerItem = self.createPlayerItem(for: url)
+          self.player = AVPlayer(playerItem: playerItem)
           self.player?.play()
           self.player?.rate = UserDefaults.standard.playSpeed
-          self.player?.appliesMediaSelectionCriteriaAutomatically = true
-          self.player?.isClosedCaptionDisplayEnabled = true
-          
+          self.player?.appliesMediaSelectionCriteriaAutomatically = false
           self.startProgressObservation()
         }
       }
     }
+  }
+  
+  private func createPlayerItem(for url: URL) -> AVPlayerItem {
+    let asset = AVAsset(url: url)
+    let playerItem = AVPlayerItem(asset: asset)
+    
+    if let group = asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
+        let locale = Locale(identifier: "en")
+        let options =
+            AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
+    if let option = options.first, UserDefaults.standard.closedCaptionOn {
+            playerItem.select(option, in: group)
+        }
+    }
+    return playerItem
   }
   
   private func startProgressObservation() {
