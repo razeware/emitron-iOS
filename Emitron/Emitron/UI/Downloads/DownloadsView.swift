@@ -44,24 +44,17 @@ struct DownloadsView: View {
   }
 
   var body: some View {
-    VStack {
-      HStack {
-        Text(Constants.downloads)
-          .multilineTextAlignment(.leading)
-          .font(.uiLargeTitle)
-          .foregroundColor(.appBlack)
-          .padding([.top, .leading], .sidePadding)
+    NavigationView {
+      VStack {
+        contentView()
+          .padding([.top], .sidePadding)
+          .background(Color.paleGrey)
 
-        Spacer()
+        addButton()
       }
-
-      contentView()
-        .padding([.top], .sidePadding)
-        .background(Color.paleGrey)
-
-      addButton()
+      .background(Color.paleGrey)
+      .navigationBarTitle(Text(Constants.downloads))
     }
-    .background(Color.paleGrey)
   }
 
   private func contentView() -> some View {
@@ -70,7 +63,7 @@ struct DownloadsView: View {
       fatalError("crash in DownloadsView with data")
     case .loading, .hasData, .initial:
       var updatedContents = contents
-      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey) { (action, content) in
+      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey, headerView: nil) { (action, content) in
         self.handleAction(with: action, content: content) { contents in
           self.downloadsMC.setDownloads(for: contents) { contents in
             updatedContents = contents

@@ -29,58 +29,52 @@
 import SwiftUI
 
 struct TabNavView: View {
-
+  
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
-
+  
   var body: some View {
-    let tabs = TabView(selection: $emitron.selectedTab) {
-
-       libraryView()
-        .tabItem {
-          Text(Constants.library)
-          Image("library")
-        }
-        .tag(0)
-
-      downloadsView()
-        .tabItem {
-          Text(Constants.downloads)
-          Image("downloadInactive")
-        }
-        .tag(1)
-
-      myTutorialsView()
-        .tabItem {
-          Text(Constants.myTutorials)
-          Image("myTutorials")
-        }
-        .tag(2)
-    }
-
-    return tabs
+    TabView(selection: $emitron.selectedTab) {
+      libraryView.tabItem {
+        Text(Constants.library)
+        Image("library")
+      }
+      .tag(0)
+      
+      downloadsView.tabItem {
+        Text(Constants.downloads)
+        Image("downloadInactive")
+      }
+      .tag(1)
+      
+      myTutorialsView.tabItem {
+        Text(Constants.myTutorials)
+        Image("myTutorials")
+      }
+      .tag(2)
+    }.edgesIgnoringSafeArea(.top)
   }
-
-  func libraryView() -> some View {
+  
+  private var libraryView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
-    return AnyView(LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters))
+    return LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters)
   }
-
-  func myTutorialsView() -> some View {
+  
+  private var myTutorialsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
-    return AnyView(MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC))
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
-
-  func downloadsView() -> some View {
+  
+  private var downloadsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return AnyView(DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC))
+    return DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC)
   }
 }
 

@@ -35,7 +35,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
-    didSet {
+    willSet {
       objectWillChange.send(())
     }
   }
@@ -55,7 +55,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     
     super.init()
     
-    getContentSummary()
+    //getContentSummary()
   }
   
   // MARK: - Internal

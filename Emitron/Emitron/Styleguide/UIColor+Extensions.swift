@@ -30,6 +30,9 @@ import UIKit
 
 extension UIColor {
 
+  static var appBlack: UIColor {
+    return UIColor(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0, alpha: 1.0)
+  }
   static var darkSeaGreen: UIColor {
     return UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1.0)
   }

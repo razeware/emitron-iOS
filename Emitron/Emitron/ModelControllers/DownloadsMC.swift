@@ -80,10 +80,13 @@ class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: Public funcs
   func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
+    
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
           let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
+    
+    self.state = .loading
     
     do {
       try FileManager.default.removeItem(at: fileURL)
@@ -105,9 +108,12 @@ class DownloadsMC: NSObject, ObservableObject {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
+    self.state = .loading
+    
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
       // TODO show error hud
       let contents = self.data.map { $0.content }
+      self.state = .failed
       completion(false, contents)
       
     } else {
@@ -120,6 +126,7 @@ class DownloadsMC: NSObject, ObservableObject {
                 self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
               }
             } else {
+              self.state = .failed
               completion(false, [])
             }
           }
@@ -127,15 +134,18 @@ class DownloadsMC: NSObject, ObservableObject {
       }
       
       let contents = self.data.map { $0.content }
+      self.state = .hasData
       completion(true, contents)
     }
   }
   
   func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
     
+    self.state = .loading
     contents.forEach { model in
       model.isDownloaded = data.contains(where: { $0.content.videoID == model.videoID })
     }
+    self.state = .hasData
     
     completion(contents)
   }

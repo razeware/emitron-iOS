@@ -77,6 +77,7 @@ struct SettingsView: View {
   @Binding var isPresented: Bool
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
+  @Environment(\.presentationMode) var presentationMode
   
   var body: some View {
     GeometryReader { geometry in
@@ -97,7 +98,7 @@ struct SettingsView: View {
           Spacer()
           
           Button(action: {
-            self.isPresented = false
+            self.presentationMode.wrappedValue.dismiss()
           }) {
             Image("close")
               .frame(width: 27, height: 27, alignment: .center)

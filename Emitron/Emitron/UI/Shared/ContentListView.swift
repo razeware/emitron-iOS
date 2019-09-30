@@ -89,12 +89,21 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  var callback: ((DownloadsAction, ContentSummaryModel)->())?
+  var headerView: AnyView?
+  var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
+  
   
   var body: some View {
-    
     ZStack(alignment: .bottom) {
-      cardsTableView()
+      List {
+        if headerView != nil {
+          Section(header: headerView) {
+            cardTableNavView
+          }
+        } else {
+          cardTableNavView
+        }
+      }
       
       if showHudView {
         createHudView()
@@ -103,44 +112,33 @@ struct ContentListView: View {
     }
   }
   
-  private func cardsTableView() -> AnyView {
+  private var cardTableNavView: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     
-    if self.contents.isEmpty {
-      return AnyView(List {
-        CardView(model: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
+    return
+      ForEach(contents, id: \.id) { partialContent in
+      
+      NavigationLink(destination:
+        ContentListingView(content: partialContent, callback: { content in
+          self.callback?(.save, ContentSummaryModel(contentDetails: content))
+        }, user: user!))
+      {
+        self.cardView(content: partialContent, onRightTap: { success in
+          self.callback?(.save, partialContent)
+        })
           .listRowBackground(self.bgColor)
-      })
-    } else {
-      return AnyView(
-        List {
-          ForEach(self.contents, id: \.id) { partialContent in
-            self.cardView(content: partialContent, onRightTap: { success in
-              self.callback?(.save, partialContent)
-            })
-              .listRowBackground(self.bgColor)
-              .background(self.bgColor)
-              .onTapGesture {
-                self.isPresenting = true
-                self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-            }
-          }
-          .onDelete(perform: self.delete)
-          .listRowInsets(EdgeInsets())
-          .padding([.leading, .trailing], 20)
-          .padding([.bottom], 30)
-          .onAppear { self.loadMoreContents() }
-          .sheet(item: self.$selectedMC, onDismiss: {
-            self.selectedMC = nil
-          }) { contentSummary in
-            ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
-              self.callback?(.save, ContentSummaryModel(contentDetails: content))
-            }, user: user!)
-          }
+          .background(self.bgColor)
+          .onTapGesture {
+            self.isPresenting = true
+            self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
+        }
       }
-      )
     }
+    .onDelete(perform: self.delete)
+    .listRowInsets(EdgeInsets())
+    .padding([.leading, .trailing], 20)
+    .padding([.bottom], 30)
   }
   
   private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {

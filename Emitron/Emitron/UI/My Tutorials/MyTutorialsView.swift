@@ -42,56 +42,42 @@ struct MyTutorialView: View {
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
-
+  
   var body: some View {
-    VStack {
-      VStack {
-
-        HStack {
-          Text(Constants.myTutorials)
-          .font(.uiLargeTitle)
-          .foregroundColor(.appBlack)
-
-          Spacer()
-
-          Button(action: {
-            self.settingsPresented.toggle()
-          }) {
-            HStack {
-              Image("settings")
+    NavigationView {
+      contentView
+      .background(Color.paleGrey)
+      .navigationBarTitle(Text(Constants.myTutorials))
+      .navigationBarItems(trailing:
+        Button(action: {
+          self.settingsPresented = true
+        }) {
+          HStack {
+            Image("settings")
               .foregroundColor(.battleshipGrey)
               .sheet(isPresented: self.$settingsPresented) {
                 SettingsView(isPresented: self.$settingsPresented)
-              }
             }
           }
         }
-        .padding([.top], .sidePadding)
-      }
-      .padding([.leading, .trailing, .top], .sidePadding)
-
-      ToggleControlView(inProgressClosure: {
-        self.state = .inProgress
-
-      }, completedClosure: {
-        self.state = .completed
-
-      }, bookmarkedClosure: {
-        self.state = .bookmarked
-
-      })
-        .padding([.leading, .trailing, .top], .sidePadding)
-        .background(Color.paleGrey)
-
-      contentView()
-        .padding([.top], .sidePadding)
-        .background(Color.paleGrey)
-
+      )
     }
-    .background(Color.paleGrey)
+  }
+  
+  private var toggleControl: AnyView {
+    AnyView(ToggleControlView(inProgressClosure: {
+      self.state = .inProgress
+    }, completedClosure: {
+      self.state = .completed
+    }, bookmarkedClosure: {
+      self.state = .bookmarked
+    })
+      .padding([.top], .sidePadding)
+      .background(Color.paleGrey)
+    )
   }
 
-  private func contentView() -> some View {
+  private var contentView: some View {
     let dataToDisplay: [ContentSummaryModel]
 
     switch state {
@@ -135,7 +121,7 @@ struct MyTutorialView: View {
       }
     }
 
-    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey))
+    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl))
   }
 }
 

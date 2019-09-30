@@ -32,6 +32,7 @@ import SwiftUI
 struct ContentListingView: View {
   
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  var content: ContentSummaryModel
   var callback: ((ContentDetailsModel)->())?
   var user: UserModel
   
@@ -41,6 +42,13 @@ struct ContentListingView: View {
   @State var firstLoad: Bool = true
 
   var imageRatio: CGFloat = 283/375
+  
+  init(content: ContentSummaryModel, callback: ((ContentDetailsModel)->())?, user: UserModel) {
+    self.content = content
+    self.callback = callback
+    self.user = user
+    self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
+  }
   
   private func episodeListing(data: [ContentSummaryModel]) -> some View {
     ForEach(data, id: \.id) { model in
@@ -112,10 +120,7 @@ struct ContentListingView: View {
   }
   
   var body: some View {
-    
-    // This just keeps re-rendering the view. Not sure how to mitigate :(
-    loadImage()
-        
+            
     let scrollView = GeometryReader { geometry in
       List {
         Section {
@@ -135,12 +140,27 @@ struct ContentListingView: View {
         }
         .listRowInsets(EdgeInsets())
         
-        self.coursesSection
+        self.courseDetailsSection()
       }
       .background(Color.paleGrey)
     }
+    .onAppear {
+      self.loadImage()
+      self.contentSummaryMC.getContentSummary()
+    }
         
     return scrollView
+  }
+  
+  func courseDetailsSection() -> AnyView {
+    switch contentSummaryMC.state {
+    case .failed:
+      return AnyView(Text("We have failed"))
+    case .hasData:
+      return AnyView(coursesSection)
+    case .initial, .loading:
+      return AnyView(Text("Loading"))
+    }
   }
   
   func loadImage() {

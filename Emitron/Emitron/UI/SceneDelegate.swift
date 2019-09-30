@@ -40,6 +40,19 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // If using a storyboard, the `window` property will automatically be initialized and attached to the scene.
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
+    // TODO: When a modifier is available these should be refactored
+    UITableView.appearance().separatorColor = .clear
+    
+    UINavigationBar.appearance().largeTitleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.appBlack,
+      NSAttributedString.Key.font: UIFont.uiLargeTitle
+    ]
+    
+    UINavigationBar.appearance().titleTextAttributes = [
+      NSAttributedString.Key.foregroundColor: UIColor.appBlack,
+      NSAttributedString.Key.font: UIFont.uiHeadline
+    ]
+    
     // Use a UIHostingController as window root view controller
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
@@ -50,6 +63,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       window.rootViewController = UIHostingController(rootView: loginView)
       self.window = window
+      // TODO: When a modifier is available this should be refactored
+      window.tintColor = UIColor.darkSeaGreen
+      
       window.makeKeyAndVisible()
     }
   }
