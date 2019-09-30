@@ -74,10 +74,9 @@ struct SettingsView: View {
   
   var rows: [SettingsOption] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
   
-  @Binding var isPresented: Bool
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
-  @Environment(\.presentationMode) var presentationMode
+  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   
   var body: some View {
     GeometryReader { geometry in
@@ -96,15 +95,16 @@ struct SettingsView: View {
             .padding([.top], 20)
           
           Spacer()
-          
-          Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
-          }) {
-            Image("close")
-              .frame(width: 27, height: 27, alignment: .center)
-              .padding(.trailing, 18)
-              .padding([.top], 20)
-              .foregroundColor(.battleshipGrey)
+          Group {
+            Button(action: {
+              self.presentationMode.wrappedValue.dismiss()
+            }) {
+              Image("close")
+                .frame(width: 27, height: 27, alignment: .center)
+                .padding(.trailing, 18)
+                .padding([.top], 20)
+                .foregroundColor(.battleshipGrey)
+            }
           }
         }
         

@@ -46,21 +46,19 @@ struct MyTutorialView: View {
   var body: some View {
     NavigationView {
       contentView
-      .background(Color.paleGrey)
-      .navigationBarTitle(Text(Constants.myTutorials))
-      .navigationBarItems(trailing:
-        Button(action: {
-          self.settingsPresented = true
-        }) {
-          HStack {
-            Image("settings")
-              .foregroundColor(.battleshipGrey)
-              .sheet(isPresented: self.$settingsPresented) {
-                SettingsView(isPresented: self.$settingsPresented)
+        .background(Color.paleGrey)
+        .navigationBarTitle(Text(Constants.myTutorials))
+        .navigationBarItems(trailing:
+          Group {
+            Button(action: {
+              self.settingsPresented = true
+            }) {
+              Image("settings")
+                .foregroundColor(.battleshipGrey)
             }
-          }
-        }
-      )
+          }).sheet(isPresented: self.$settingsPresented) {
+              SettingsView()
+            }
     }
   }
   

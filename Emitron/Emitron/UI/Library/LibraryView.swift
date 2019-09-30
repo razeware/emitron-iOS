@@ -55,6 +55,9 @@ struct LibraryView: View {
         .navigationBarTitle(
           Text(Constants.library))
       }
+      .sheet(isPresented: $filtersPresented) {
+        FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+      }
 
       if showHudView {
         hudView
@@ -98,15 +101,13 @@ struct LibraryView: View {
     HStack {
       searchField
 
+      
       Button(action: {
         self.filtersPresented = true
       }, label: {
         Image("filter")
           .foregroundColor(.battleshipGrey)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
-          .sheet(isPresented: self.$filtersPresented) {
-            FiltersView(isPresented: self.$filtersPresented).environmentObject(self.filters).environmentObject(self.contentsMC)
-          }
       })
         .padding([.leading], .searchFilterPadding)
     }

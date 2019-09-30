@@ -32,7 +32,7 @@ struct FiltersView: View {
   
   @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var filters: Filters
-  @Binding var isPresented: Bool
+  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   
   var body: some View {
     VStack {
@@ -53,7 +53,7 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
-          self.isPresented = false
+          self.presentationMode.wrappedValue.dismiss()
         }) {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
@@ -69,7 +69,7 @@ struct FiltersView: View {
       HStack {
         
         MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
-          self.isPresented = false
+          self.presentationMode.wrappedValue.dismiss()
           self.filters.removeAll()
           self.contentsMC.updateFilters(newFilters: self.filters)
         }
@@ -109,7 +109,7 @@ struct FiltersView: View {
     let title = equalSets ? "Close" : "Apply"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
-      self.isPresented = false
+      self.presentationMode.wrappedValue.dismiss()
       self.contentsMC.updateFilters(newFilters: self.filters)
     }
     
