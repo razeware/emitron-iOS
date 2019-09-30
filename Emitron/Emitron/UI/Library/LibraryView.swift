@@ -177,50 +177,55 @@ struct LibraryView: View {
       //      let filtered = sorted.filter { $0.domains.map { $0.id }.contains(domainIdInt) }
       //
       
-      var updatedContents = contentsMC.data
-      var contentListView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey) { (action, content) in
-        switch action {
-        case .delete:
-          self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
-            if self.showHudView {
-              // dismiss hud currently showing
-              self.showHudView.toggle()
-            }
-            
-            self.showSuccess = success
-            self.showHudView = true
-            if success {
-              DispatchQueue.main.async {
-                updatedContents = contents
-              }
-            }
-          }
-          
-        case .save:
-          self.downloadsMC.saveDownload(with: content) { (success, contents) in
-            if self.showHudView {
-              // dismiss hud currently showing
-              self.showHudView.toggle()
-            }
-            
-            self.showSuccess = success
-            self.showHudView = true
-            if success {
-              DispatchQueue.main.async {
-                updatedContents = contents
+      
+      
+      switch self.downloadsMC.state {
+      case .failed:
+        if self.showHudView {
+          // dismiss hud currently showing
+          self.showHudView.toggle()
+        }
+        
+        self.showSuccess = false
+        self.showHudView = true
+        return AnyView(Text("Error"))
+      case .initial, .hasData, .loading:
+        
+        var contents = self.contentsMC.data
+        if self.downloadsMC.contents.count > 0 {
+          self.downloadsMC.contents.forEach { content in
+
+            DispatchQueue.main.async {
+              if let index = self.contentsMC.data.firstIndex(where: { $0.id == content.id }) {
+                contents[index] = content
               }
             }
           }
         }
-      }
-      
-      downloadsMC.setDownloads(for: updatedContents) { contents in
-        DispatchQueue.main.async {
-          contentListView.updateContents(with: contents)
+        
+        let contentListView = ContentListView(contentScreen: .library, contents: contents, bgColor: .paleGrey) { (action, content) in
+          switch action {
+          case .delete:
+            self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+              if self.showHudView {
+                // dismiss hud currently showing
+                self.showHudView.toggle()
+              }
+              
+              self.showSuccess = success
+              self.showHudView = true
+
+            }
+            
+          case .save:
+            self.downloadsMC.saveDownload(with: content)
+          }
         }
+        
+        return AnyView(contentListView)
+        
       }
       
-      return AnyView(contentListView)
     default:
       return AnyView(Text("Default View"))
     }

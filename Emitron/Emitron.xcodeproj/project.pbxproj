@@ -21,6 +21,7 @@
 		95CD793C22F0BEF40080C407 /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793B22F0BEF40080C407 /* Contents.swift */; };
 		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
 		9B04B462E926326C5C109756 /* Pods_Emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C7348A1A1FE3CBB7B4F2E8E5 /* Pods_Emitron.framework */; };
+		B51C5979234153F200D7B0E2 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C5978234153F200D7B0E2 /* DownloadService.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
@@ -151,6 +152,7 @@
 		95CD793B22F0BEF40080C407 /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
 		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		9C58877F67D1B0DCFE8C0308 /* Pods-Emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Emitron.debug.xcconfig"; path = "Target Support Files/Pods-Emitron/Pods-Emitron.debug.xcconfig"; sourceTree = "<group>"; };
+		B51C5978234153F200D7B0E2 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
@@ -673,6 +675,7 @@
 			children = (
 				B6FC15D422CB68E20078CEDB /* Service.swift */,
 				B6FC15D622CB817C0078CEDB /* BookmarksService.swift */,
+				B51C5978234153F200D7B0E2 /* DownloadService.swift */,
 				B6D8EB1A22CBA3FE00DE29AF /* CategoriesService.swift */,
 				B6D8EB1E22CBA72D00DE29AF /* ContentsService.swift */,
 				B6D8EB2222CBA81200DE29AF /* DomainsService.swift */,
@@ -927,6 +930,7 @@
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
+				B51C5979234153F200D7B0E2 /* DownloadService.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,

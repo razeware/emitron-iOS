@@ -69,20 +69,15 @@ struct DownloadsView: View {
     case .failed:
       fatalError("crash in DownloadsView with data")
     case .loading, .hasData, .initial:
-      var updatedContents = contents
-      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey) { (action, content) in
+      
+      let content = self.downloadsMC.data.map { $0.content }
+      let contentListView = ContentListView(contentScreen: .downloads, contents: content, bgColor: .paleGrey) { (action, content) in
         self.handleAction(with: action, content: content) { contents in
-          self.downloadsMC.setDownloads(for: contents) { contents in
-            updatedContents = contents
-          }
+          self.downloadsMC.setDownloads(for: contents)
         }
       }
       
-      DispatchQueue.main.async {
-        contentListView.updateContents(with: updatedContents)
-      }
-      
-      if updatedContents.isEmpty {
+      if self.downloadsMC.data.isEmpty {
         return ContentListView(contentScreen: .downloads, bgColor: .paleGrey)
       } else {
         return contentListView
@@ -105,15 +100,13 @@ struct DownloadsView: View {
       }
       
     case .save:
-      self.downloadsMC.saveDownload(with: content) { (success, contents) in
-        self.showHudView.toggle()
-        self.showSuccess = success
-        if success {
-          DispatchQueue.main.async {
-            completion(contents)
-          }
+      self.downloadsMC.saveDownload(with: content)
+      self.showHudView.toggle()
+      //FJ FIX TODO
+      self.showSuccess = true
+        DispatchQueue.main.async {
+          completion(self.contents)
         }
-      }
     }
   }
 

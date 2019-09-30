@@ -43,11 +43,29 @@ enum DownloadsAction {
 class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
+  let downloadService = DownloadService()
+  lazy var downloadsSession: URLSession = {
+    return URLSession(configuration: .default,
+                      delegate: self,
+                      delegateQueue: nil)
+  }()
+  
+  var downloadTask: URLSessionDownloadTask?
+  var dataTask: URLSessionDataTask?
+  var attachmentModel: AttachmentModel?
+  var downloadedContent: ContentSummaryModel?
+  var contents = [ContentSummaryModel]()
   @Published var progress: CGFloat = 1.0
   var downloadedData: Data?
   var downloadedModel: DownloadModel?
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
+  
+  func localFilePath(for url: URL) -> URL {
+    return localRoot!.appendingPathComponent(url.lastPathComponent)
+  }
+  
+  
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
     didSet {
@@ -74,6 +92,7 @@ class DownloadsMC: NSObject, ObservableObject {
     super.init()
 
     loadDownloads()
+    downloadService.downloadsSession = downloadsSession
   }
   
   // MARK: Public funcs
@@ -83,74 +102,74 @@ class DownloadsMC: NSObject, ObservableObject {
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
           let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
+    self.state = .loading
+    
     do {
       try FileManager.default.removeItem(at: fileURL)
       
       self.data.remove(at: index)
-      self.state = .hasData
+      DispatchQueue.main.async {
+        self.state = .hasData
+      }
       
     } catch {
-      self.state = .failed
+      DispatchQueue.main.async {
+        self.state = .failed
+      }
+      
       completion(false, [])
-      fatalError("Couldn't remove file.")
     }
     
     let contents = self.data.map { $0.content }
     completion(true, contents)
   }
   
-  func saveDownload(with content: ContentSummaryModel, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
+  func saveDownload(with content: ContentSummaryModel) {
     let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
     
+    self.state = .loading
+    
     if FileManager.default.fileExists(atPath: destinationUrl.path) {
-      // TODO show error hud
-      let contents = self.data.map { $0.content }
-      completion(false, contents)
       
-    } else {
-      let videosMC = VideosMC(user: self.user)
-      self.loadVideoStream(for: content, on: videosMC) { data in
-        if let data = data {
-          DispatchQueue.main.async {
-            if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
-              if let attachmentModel = videosMC.data {
-                self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
-              }
-            } else {
-              completion(false, [])
-            }
-          }
-        }
+      DispatchQueue.main.async {
+        let contents = self.data.map { $0.content }
+        self.contents = contents
+        self.state = .hasData
       }
       
-      let contents = self.data.map { $0.content }
-      completion(true, contents)
+    } else {
+      self.downloadedContent = content
+      
+      let videosMC = VideosMC(user: self.user)
+      self.loadVideoStream(for: content, on: videosMC)
     }
   }
   
-  func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
+  private func startDownload(url: URL) {
+    let downloadTask = downloadsSession.downloadTask(with: url)
+    downloadTask.resume()
+    self.downloadTask = downloadTask
+  }
+  
+  func setDownloads(for contents: [ContentSummaryModel]) {
     
     contents.forEach { model in
       model.isDownloaded = data.contains(where: { $0.content.videoID == model.videoID })
     }
     
-    completion(contents)
   }
   
   // MARK: Private funcs
-  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?) -> Void)) {
-    videosMC.loadVideoStream(for: content.videoID) {
-      if let streamURL = videosMC.streamURL {
-        
-        URLSession(configuration: .default, delegate: self, delegateQueue: .main).downloadTask(with: streamURL).resume()
-        
-        if let data = self.downloadedData {
-          completion(data)
-        } else {
-          completion(nil)
+  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC) {
+    videosMC.getDownloadVideofor(id: content.videoID) { response in
+      switch response {
+      case let .success(attachment):
+        if let streamURL = attachment.first?.url {
+          self.startDownload(url: streamURL)
         }
-
+      case let .failure(error):
+        print("error: \(error)")
       }
     }
   }
@@ -169,9 +188,9 @@ class DownloadsMC: NSObject, ObservableObject {
           let videoID = Int(videoIDString) {
           let videoMC = VideosMC(user: self.user)
           videoMC.loadVideoStream(for: videoID) {
-            if let attachmentModel = videoMC.data {
+            if let attachmentModel = self.attachmentModel {
               DispatchQueue.main.async {
-                self.loadContents(contentID: contentID, attachmentModel: attachmentModel, isDownloaded: true)
+                self.loadContents(contentID: contentID, attachmentModel: attachmentModel, isDownloaded: true, localPath: localDoc)
               }
             }
           }
@@ -187,7 +206,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  private func loadContents(contentID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
+  private func loadContents(contentID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool, localPath: URL) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
     contentsService.contentDetails(for: contentID) { [weak self] result in
@@ -200,16 +219,18 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content), isDownloaded: isDownloaded)
+          self.state = .loading
+          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content), isDownloaded: isDownloaded, localPath: localPath)
         }
       }
     }
   }
   
-  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
-    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
+  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool, localPath: URL) {
+    let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath)
     self.downloadedModel = downloadModel
     self.data.append(downloadModel)
+    self.updateModel(with: content.id)
     // TODO show success hud
     self.state = .hasData
   }
@@ -217,25 +238,46 @@ class DownloadsMC: NSObject, ObservableObject {
   private func updateModel(with id: Int) {
     
     if let downloadedModel = downloadedModel, let index = data.firstIndex(where: { $0.content.id == id }) {
+      downloadedModel.downloadProgress = self.progress
       data[index] = downloadedModel
     }
+    self.contents = data.map { $0.content }
+    print("CONTENTS IN UPDATE: \(self.contents)")
+    self.state = .hasData
   }
 }
 
 extension DownloadsMC: URLSessionDownloadDelegate {
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
     self.downloadedData = downloadTask.response?.url?.dataRepresentation
+    
+    // 1
+    guard let sourceURL = downloadTask.originalRequest?.url else {
+      print("RETURN IN SOURCE URL")
+      return
+    }
+    
+    // 2
+    let destinationURL = localFilePath(for: sourceURL)
+    print(destinationURL)
+    
+    if let data = downloadTask.response?.url?.dataRepresentation, let content = downloadedContent {
+      DispatchQueue.main.async {
+        if let _ = try? data.write(to: destinationURL, options: Data.WritingOptions.atomic) {
+          if let attachmentModel = self.attachmentModel {
+            DispatchQueue.main.async {
+               self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true, localPath: destinationURL)
+            }
+          }
+        }
+      }
+    }
   }
   
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-    DispatchQueue.main.async {
-      let progress = CGFloat(totalBytesWritten)/CGFloat(totalBytesExpectedToWrite)
-      self.downloadedModel?.downloadProgress = 1.0 - progress
-      self.progress = 1.0 - progress
-      if let downloadedModel = self.downloadedModel {
-        self.updateModel(with: downloadedModel.content.id)
-      }
-    }
+    let progress = CGFloat(bytesWritten)/CGFloat(totalBytesExpectedToWrite)
+    self.progress = 1.0 - progress
+    self.state = .loading
   }
 }
 

@@ -82,10 +82,9 @@ class VideoPlayerController: AVPlayerViewController {
     super.viewDidLoad()
     
     if let downloadsMC = DataManager.current?.downloadsMC, let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == videoID }) {
-      if let url = downloadModel.video.url {
-        self.player = AVPlayer(url: url)
-        self.player?.play()
-      }
+      print("downloadModel.localPath: \(downloadModel.localPath)")
+      self.player = AVPlayer(url: downloadModel.localPath)
+      self.player?.play()
     } else {
       videosMC.getVideoStream(for: videoID) { [weak self] result in
         guard let self = self else {
