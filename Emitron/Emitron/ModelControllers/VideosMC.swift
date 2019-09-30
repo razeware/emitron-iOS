@@ -42,20 +42,84 @@ class VideosMC: NSObject, ObservableObject {
   
   private let client: RWAPI
   private let user: UserModel
-  private let service: VideosService
+  private let videoService: VideosService
+  private let contentsService: ContentsService
+  private let contentId: Int
+  private var token: String?
+  
+  private var timer: Timer?
   private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
   
   // MARK: - Initializers
-  init(user: UserModel) {
+  init(user: UserModel, contentId: Int) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
-    self.service = VideosService(client: self.client)
+    self.videoService = VideosService(client: self.client)
+    self.contentsService = ContentsService(client: self.client)
+    self.contentId = contentId
+    self.token = UserDefaults.standard.playbackToken
+    
+    super.init()    
   }
   
   // MARK: - Internal
-  func loadVideoStream(for id: Int, completion: (()->())? = nil) {
+  func fetchBeginPlaybackToken(completion: @escaping (Bool, String?) -> Void) {
+    contentsService.getBeginPlaybackToken { result in
+      switch result {
+      case .failure(let error):
+        Failure
+          .fetch(from: "VideosMC_PlaybackToken", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+        // Ask user to re-confirm
+        completion(false, nil)
+      case .success(let token):
+        UserDefaults.standard.setPlaybackToken(token: token)
+        self.token = token
+        completion(true, token)
+      }
+    }
+  }
+  
+  @objc func reportUsageStatistics(progress: Int) {
+    
+    guard let playbackToken = token else {
+      fetchBeginPlaybackToken { [weak self] (success, token) in
+        guard let self = self else { return }
+        if success {
+          self.reportUsageStatistics(progress: progress)
+        } else {
+          // Ask user to re-confirm
+        }
+      }
+      return
+    }
+    
+    if timer == nil {
+      timer = Timer.scheduledTimer(timeInterval: 5.0,
+                                        target: self,
+                                        selector: #selector(reportUsageStatistics),
+                                        userInfo: nil,
+                                        repeats: true)
+    }
+    
+    contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { result in
+      switch result {
+      case .failure(let error):
+        Failure
+        .fetch(from: "VideosMC_PlaybackUsage", reason: error.localizedDescription)
+        .log(additionalParams: nil)
+        
+        //TODO: Stop playback, ask use to re-play the video
+      case .success(let playbackProgress):
+        print("USAGE STATISTICS")
+        
+      }
+    }
+  }
+  
+  func loadVideoStream(for id: Int, completion: (() -> Void)? = nil) {
     if case(.loading) = state {
       completion?()
       return
@@ -63,7 +127,7 @@ class VideosMC: NSObject, ObservableObject {
     
     state = .loading
 
-    service.getVideoStream(for: id) { [weak self] result in
+    videoService.getVideoStream(for: id) { [weak self] result in
       guard let self = self else {
         completion?()
         return
@@ -72,7 +136,9 @@ class VideosMC: NSObject, ObservableObject {
       switch result {
       case .failure(let error):
         self.state = .failed
-        Failure.fetch(from: "VideosMC", reason: error.localizedDescription).log(additionalParams: ["Id": "\(id)"])
+        Failure
+          .fetch(from: "VideosMC", reason: error.localizedDescription)
+          .log(additionalParams: ["Id": "\(id)"])
         completion?()
       case .success(let attachment):
         self.data = attachment
@@ -90,7 +156,7 @@ class VideosMC: NSObject, ObservableObject {
     }
     
     state = .loading
-    service.getVideoStream(for: id) { [weak self] result in
+    videoService.getVideoStream(for: id) { [weak self] result in
       completion(result)
       
       guard let self = self else {

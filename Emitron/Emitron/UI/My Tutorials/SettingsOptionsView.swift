@@ -36,52 +36,49 @@ struct SettingsOptionsView: View {
   
   var body: some View {
     
-    GeometryReader { geometry in
-      VStack {
-        HStack() {
-          Rectangle()
+    VStack {
+      HStack() {
+        Rectangle()
+          .frame(width: 27, height: 27, alignment: .center)
+          .foregroundColor(.clear)
+          .padding([.leading], 18)
+        
+        Spacer()
+        
+        Text(self.selectedSettingsOption.title)
+          .font(.uiHeadline)
+          .foregroundColor(.appBlack)
+          .padding([.top], 20)
+        
+        Spacer()
+        
+        Button(action: {
+          self.isPresented = false
+        }) {
+          Image("close")
             .frame(width: 27, height: 27, alignment: .center)
-            .foregroundColor(.clear)
-            .padding([.leading], 18)
-
-          Spacer()
-
-          Text(self.selectedSettingsOption.title)
-            .font(.uiHeadline)
-            .foregroundColor(.appBlack)
+            .padding(.trailing, 18)
             .padding([.top], 20)
-
-          Spacer()
-
-          Button(action: {
-            self.isPresented = false
-          }) {
-            Image("close")
-              .frame(width: 27, height: 27, alignment: .center)
-              .padding(.trailing, 18)
-              .padding([.top], 20)
-              .foregroundColor(.battleshipGrey)
-          }
+            .foregroundColor(.battleshipGrey)
         }
-        
-        VStack {
-          ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
-            TitleDetailView(callback: {
-              // Update user defaults
-              UserDefaults.standard.set(detail,
-                                        forKey: self.selectedSettingsOption.title)
-              self.isPresented = false
-            }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
-            .frame(height: 46)
-          }
-        }
-        .padding([.leading, .trailing], 18)
-        
       }
-      .frame(width: geometry.size.width, height: geometry.size.height,alignment: .top)
-      .background(Color.paleGrey)
-      .padding([.top], 20)
+      
+      VStack {
+        ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
+          TitleDetailView(callback: {
+            // Update user defaults
+            UserDefaults.standard.set(detail,
+                                      forKey: self.selectedSettingsOption.title)
+            self.isPresented = false
+          }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
+            .frame(height: 46)
+        }
+      }
+      .padding([.leading, .trailing], 18)
+      
+      Spacer()
     }
+    .background(Color.paleGrey)
   }
   
   private func setCheckmark(for detailOption: String) -> String? {

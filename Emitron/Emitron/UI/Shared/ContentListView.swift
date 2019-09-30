@@ -39,17 +39,17 @@ enum ContentScreen {
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything meeting the search criteria"
-    case .downloads: return "You haven't downloaded any tutorials yet"
-    case .myTutorials: return "You haven't started any tutorials yet"
-    case .tips: return "Swipe left to delete a downloan"
+    case .library: return "We couldn't find anything meeting the search criteria."
+    case .downloads: return "You haven't downloaded any tutorials yet."
+    case .myTutorials: return "You haven't started any tutorials yet."
+    case .tips: return "Swipe left to delete a download."
     }
   }
   
   var detailMesage: String? {
     switch self {
-    case .library: return "Try removing some filters"
-    case .tips: return "Swipe on your downloads to remove them"
+    case .library: return "Try removing some filters."
+    case .tips: return "Swipe on your downloads to remove them."
     default: return nil
     }
   }
@@ -89,57 +89,120 @@ struct ContentListView: View {
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
-  var callback: ((DownloadsAction, ContentSummaryModel)->())?
+  var headerView: AnyView?
+  var dataState: DataState
+  var totalContentNum: Int
+  var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
   
   var body: some View {
-    
-    ZStack(alignment: .bottom) {
-      cardsTableView()
-      
-      if showHudView {
-        createHudView()
-          .animation(.spring())
+//    ZStack(alignment: .bottom) {
+//      contentView
+//
+//      if showHudView {
+//        createHudView()
+//          .animation(.spring())
+//      }
+//    }
+    contentView
+  }
+  
+  private var listView: some View {
+    List {
+      if headerView != nil {
+        Section(header: headerView) {
+          if contentScreen == .downloads {
+            cardsTableViewWithDelete
+          } else {
+            cardTableNavView
+          }
+          loadMoreView
+        }.listRowInsets(EdgeInsets())
+      } else {
+        if contentScreen == .downloads {
+          cardsTableViewWithDelete
+        } else {
+          cardTableNavView
+        }
+        loadMoreView
       }
     }
   }
   
-  private func cardsTableView() -> AnyView {
+  private var loadMoreView: AnyView? {
+    if totalContentNum > contents.count {
+      return AnyView(Text("Loading...")
+        .onAppear {
+          self.contentsMC.loadMore()
+      })
+    } else {
+      return nil
+    }
+  }
+  
+  private var contentView: AnyView {
+    switch dataState {
+    case .initial,
+         .loading where contents.isEmpty:
+      return AnyView(loadingView)
+    case .hasData where contents.isEmpty:
+      return AnyView(emptyView)
+    case .hasData,
+         .failed,
+         .loading where !contents.isEmpty:
+      return AnyView(listView)
+    default:
+      return AnyView(emptyView)
+    }
+  }
+  
+  private var cardTableNavView: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
     
-    if self.contents.isEmpty {
-      return AnyView(List {
-        CardView(model: nil, contentScreen: self.contentScreen).environmentObject(DataManager.current!.downloadsMC)
-          .listRowBackground(self.bgColor)
-      })
-    } else {
-      return AnyView(List {
-        ForEach(self.contents, id: \.id) { partialContent in
+    return
+      ForEach(contents, id: \.id) { partialContent in
+        
+        NavigationLink(destination:
+          ContentListingView(content: partialContent, callback: { content in
+            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+          }, user: user!))
+        {
           self.cardView(content: partialContent, onRightTap: { success in
             self.callback?(.save, partialContent)
           })
-            .listRowBackground(self.bgColor)
-            .background(self.bgColor)
-            .onTapGesture {
-              self.isPresenting = true
-              self.selectedMC = ContentSummaryMC(guardpost: guardpost, partialContentDetail: partialContent)
-          }
+            .padding([.leading], 20)
+            .padding([.top, .bottom], 10)
         }
-        .onDelete(perform: self.delete)
-        .listRowInsets(EdgeInsets())
-        .padding([.leading, .trailing], 20)
-        .padding([.bottom], 30)
-        .onAppear { self.loadMoreContents() }
-        .sheet(item: self.$selectedMC, onDismiss: {
-          self.selectedMC = nil
-        }) { contentSummary in
-          ContentListingView(contentSummaryMC: self.selectedMC!, callback: { content in
+      }
+      .listRowBackground(self.bgColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+      .background(self.bgColor)
+  }
+  
+  //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
+  private var cardsTableViewWithDelete: some View {
+    let guardpost = Guardpost.current
+    let user = guardpost.currentUser
+    
+    return
+      ForEach(contents, id: \.id) { partialContent in
+        
+        NavigationLink(destination:
+          ContentListingView(content: partialContent, callback: { content in
             self.callback?(.save, ContentSummaryModel(contentDetails: content))
-          }, user: user!)
-          //            }
+          }, user: user!))
+        {
+          self.cardView(content: partialContent, onRightTap: { success in
+            self.callback?(.save, partialContent)
+          })
+            .padding([.leading], 20)
+            .padding([.top, .bottom], 10)
         }
-      })
-    }
+      }
+      .onDelete(perform: self.delete)
+      .listRowBackground(self.bgColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+      .background(self.bgColor)
   }
   
   private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
@@ -150,12 +213,38 @@ struct ContentListView: View {
                     onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
   }
   
-  private func emptyView() -> some View {
+  private var emptyView: some View {
     VStack {
+      headerView
+      
+      Spacer()
+      
       Text(contentScreen.titleMessage)
-        .multilineTextAlignment(.leading)
-        .font(.uiLargeTitle)
+        .font(.uiTitle2)
         .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+      
+      Text(contentScreen.detailMesage ?? "")
+        .font(.uiLabel)
+        .foregroundColor(.battleshipGrey)
+      
+      Spacer()
+    }
+  }
+  
+  private var loadingView: some View {
+    VStack {
+      headerView
+      
+      Spacer()
+      
+      Text("Loading...")
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
     }
   }
   
@@ -186,7 +275,7 @@ struct ContentListView: View {
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey)
+    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
   }
 }
 #endif

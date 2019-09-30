@@ -80,29 +80,58 @@ class VideoPlayerController: AVPlayerViewController {
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    if let downloadsMC = DataManager.current?.downloadsMC, let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == videoID }) {
-      if let url = downloadModel.video.url {
-        self.player = AVPlayer(url: url)
-        self.player?.play()
-      }
-    } else {
-      videosMC.getVideoStream(for: videoID) { [weak self] result in
-        guard let self = self else {
-          return
-        }
         
-        switch result {
-        case .failure(let error):
-          print(error.localizedDescription)
-        case .success(let videoStream):
-          print(videoStream)
-          if let url = videoStream.url {
-            self.player = AVPlayer(url: url)
-            self.player?.play()
-          }
+    videosMC.fetchBeginPlaybackToken { [weak self] (success, token)  in
+      guard let self = self else {
+        // TODO: Show failure message/view
+        return
+      }
+      if success {
+        if let downloadsMC = DataManager.current?.downloadsMC, let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoID }) {
+          self.playFromLocalStorage()
+        } else {
+          self.streamVideo()
+        }
+      } else {
+        // TODO: Show failure message/view
+      }
+    }
+  }
+  
+  private func playFromLocalStorage() {
+    // TODO: fj
+  }
+  
+  private func streamVideo() {
+    videosMC.getVideoStream(for: videoID) { [weak self] result in
+      guard let self = self else {
+        return
+      }
+      
+      switch result {
+      case .failure(let error):
+        print(error.localizedDescription)
+      case .success(let videoStream):
+        print(videoStream)
+        if let url = videoStream.url {
+          self.player = AVPlayer(url: url)
+          self.player?.play()
+          self.player?.rate = UserDefaults.standard.playSpeed
+          self.player?.appliesMediaSelectionCriteriaAutomatically = true
+          self.player?.isClosedCaptionDisplayEnabled = true
+          
+          self.startProgressObservation()
         }
       }
     }
+  }
+  
+  private func startProgressObservation() {
+    player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 5, preferredTimescale: 1), queue: DispatchQueue.main, using: { [weak self] progressTime in
+      guard let self = self else { return }
+      
+      let seconds = CMTimeGetSeconds(progressTime)
+      self.videosMC.reportUsageStatistics(progress: Int(seconds))
+    })
   }
 }

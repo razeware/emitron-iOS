@@ -63,4 +63,7 @@ extension Color {
   static var coolGrey: Color {
     return Color(red: 167.0 / 255.0, green: 173.0 / 255.0, blue: 180.0 / 255.0)
   }
+  static var tableViewBGColor: Color {
+    return Color(red: 0.74, green: 0.74, blue: 0.74)
+  }
 }

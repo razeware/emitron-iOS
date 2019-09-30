@@ -75,3 +75,66 @@ struct ContentDetailsRequest: Request {
     return contentSummary
   }
 }
+
+struct BeginPlaybackTokenRequest: Request {
+  typealias Response = String
+  
+  // MARK: - Properties
+  var method: HTTPMethod { return .POST }
+  var path: String { return "/contents/begin_playback" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  
+  func handle(response: Data) throws -> String {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+
+    guard let token = doc.data.first,
+    let tokenString = token["video_playback_token"] as? String, !tokenString.isEmpty else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return tokenString
+  }
+}
+
+// This needs to get called every 5 seconds to report usage statistics
+struct PlaybackUsageRequest: Request {
+  typealias Response = ProgressionModel
+  
+  // MARK: - Properties
+  var method: HTTPMethod { return .POST }
+  var path: String { return "/contents/\(id)/playback" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { 
+    let json: [String: Any] = ["video_playback_token": token, "progress": progress, "seconds": seconds]
+    return try? JSONSerialization.data(withJSONObject: json)
+  }
+  
+  private var token: String
+  private var id: Int
+  private var progress: Int
+  private var seconds = 5
+  
+  // MARK: - Initializers
+  init(id: Int, progress: Int, token: String) {
+    self.id = id
+    self.progress = progress
+    self.token = token
+  }
+  
+  func handle(response: Data) throws -> ProgressionModel {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let playbackProgressContent = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    
+    guard let progress = playbackProgressContent.first,
+      playbackProgressContent.count == 1 else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return progress
+  }
+}
+
+
