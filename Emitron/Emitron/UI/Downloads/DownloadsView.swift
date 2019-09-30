@@ -42,75 +42,45 @@ struct DownloadsView: View {
   var contents: [ContentSummaryModel] {
     return downloadsMC.data.map { $0.content }
   }
-
+  
   var body: some View {
     NavigationView {
       VStack {
         contentView()
           .padding([.top], .sidePadding)
           .background(Color.paleGrey)
-
+        
         addButton()
       }
       .background(Color.paleGrey)
       .navigationBarTitle(Text(Constants.downloads))
     }
   }
-
+  
   private func contentView() -> some View {
-    switch downloadsMC.state {
-    case .failed:
-      fatalError("crash in DownloadsView with data")
-    case .loading, .hasData, .initial:
-      var updatedContents = contents
-      var contentListView = ContentListView(contentScreen: .downloads, contents: updatedContents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state) { (action, content) in
-        self.handleAction(with: action, content: content) { contents in
-          self.downloadsMC.setDownloads(for: contents) { contents in
-            updatedContents = contents
-          }
-        }
-      }
-      
-//      DispatchQueue.main.async {
-//        contentListView.updateContents(with: updatedContents)
-//      }
-//
-//      if updatedContents.isEmpty {
-//        return ContentListView(contentScreen: .downloads, bgColor: .paleGrey)
-//      } else {
-//        return contentListView
-//      }
-      return contentListView
+    let contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+      self.handleAction(with: action, content: content)
     }
+    return contentListView
   }
   
-  private func handleAction(with action: DownloadsAction, content: ContentSummaryModel, completion: @escaping (([ContentSummaryModel])->())) {
+  private func handleAction(with action: DownloadsAction, content: ContentSummaryModel) {
     
     switch action {
     case .delete:
       self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
         self.showHudView.toggle()
         self.showSuccess = success
-        if success {
-          DispatchQueue.main.async {
-            completion(contents)
-          }
-        }
       }
       
     case .save:
       self.downloadsMC.saveDownload(with: content) { (success, contents) in
         self.showHudView.toggle()
         self.showSuccess = success
-        if success {
-          DispatchQueue.main.async {
-            completion(contents)
-          }
-        }
       }
     }
   }
-
+  
   private func addButton() -> AnyView? {
     guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
     

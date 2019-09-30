@@ -136,8 +136,8 @@ struct SettingsView: View {
         Guardpost.current.logout()
       }
       .padding([.bottom, .leading, .trailing], 20)
-      .background(Color.paleGrey)
     }
+    .background(Color.paleGrey)
   }
   
   private func populateDetail(at index: Int) -> String {

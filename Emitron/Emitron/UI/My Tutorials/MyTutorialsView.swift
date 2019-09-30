@@ -46,7 +46,7 @@ struct MyTutorialView: View {
   var body: some View {
     NavigationView {
       contentView
-        .background(Color.paleGrey)
+        //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
         .navigationBarTitle(Text(Constants.myTutorials))
         .navigationBarItems(trailing:
           Group {
@@ -56,38 +56,41 @@ struct MyTutorialView: View {
               Image("settings")
                 .foregroundColor(.battleshipGrey)
             }
-          }).sheet(isPresented: self.$settingsPresented) {
-              SettingsView()
-            }
+        })
+    }
+    .sheet(isPresented: self.$settingsPresented) {
+      SettingsView()
     }
   }
   
   private var toggleControl: AnyView {
-    AnyView(ToggleControlView(inProgressClosure: {
-      self.state = .inProgress
-    }, completedClosure: {
-      self.state = .completed
-    }, bookmarkedClosure: {
-      self.state = .bookmarked
-    })
-      .padding([.top], .sidePadding)
-      .background(Color.paleGrey)
+    AnyView(
+      VStack {
+        ToggleControlView(inProgressClosure: {
+          self.state = .inProgress
+        }, completedClosure: {
+          self.state = .completed
+        }, bookmarkedClosure: {
+          self.state = .bookmarked
+        })
+          .padding([.top], .sidePadding)
+      }
+      .padding([.leading, .trailing], 20)
+      .background(Color.white)
     )
   }
-
+  
   private var contentView: some View {
-    let dataToDisplay: [ContentSummaryModel]
-
+    var dataToDisplay: [ContentSummaryModel] = []
     var stateToUse: DataState
+    var numTutorials: Int
+    
     switch state {
     case .inProgress, .completed:
       stateToUse = progressionsMC.state
+      numTutorials = progressionsMC.numTutorials
+      
       switch progressionsMC.state {
-      case .initial,
-           .loading where progressionsMC.data.isEmpty:
-        return AnyView(Text(Constants.loading))
-      case .failed:
-        return AnyView(Text("Error"))
       case .hasData,
            .loading where !progressionsMC.data.isEmpty:
         if state == .inProgress {
@@ -99,30 +102,25 @@ struct MyTutorialView: View {
           let contents = completedData.compactMap { $0.content }
           dataToDisplay = contents
         }
-
-      default:
-        return AnyView(Text("Default View"))
+      default: break
       }
-
+      
     case .bookmarked:
       stateToUse = bookmarksMC.state
+      numTutorials = bookmarksMC.numTutorials
+      
       switch bookmarksMC.state {
-      case .initial,
-           .loading where bookmarksMC.data.isEmpty:
-        return AnyView(Text(Constants.loading))
-      case .failed:
-        return AnyView(Text("Error"))
       case .hasData,
            .loading where !bookmarksMC.data.isEmpty:
         let content = bookmarksMC.data.compactMap { $0.content }
         dataToDisplay = content
-
-      default:
-        return AnyView(Text("Default View"))
+      default: break
       }
     }
-
-    return AnyView(ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse))
+    
+    let contentView = ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    
+    return AnyView(contentView)
   }
 }
 

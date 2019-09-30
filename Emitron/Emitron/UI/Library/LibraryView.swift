@@ -176,7 +176,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state) { (action, content) in
+    let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           self.delete(for: content.videoID)
