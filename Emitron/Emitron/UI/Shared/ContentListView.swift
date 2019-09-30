@@ -95,15 +95,14 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
   
   var body: some View {
-//    ZStack(alignment: .bottom) {
-//      contentView
-//
-//      if showHudView {
-//        createHudView()
-//          .animation(.spring())
-//      }
-//    }
-    contentView
+    ZStack(alignment: .bottom) {
+      contentView
+
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
   }
   
   private var listView: some View {

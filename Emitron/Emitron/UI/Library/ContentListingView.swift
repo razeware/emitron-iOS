@@ -159,7 +159,20 @@ struct ContentListingView: View {
     case .hasData:
       return AnyView(coursesSection)
     case .initial, .loading:
-      return AnyView(Text("Loading"))
+      return AnyView(loadingView)
+    }
+  }
+  
+  private var loadingView: some View {
+    VStack {      
+      Spacer()
+      
+      Text("Loading...")
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
     }
   }
   
