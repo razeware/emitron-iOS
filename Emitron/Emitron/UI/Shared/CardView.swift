@@ -169,6 +169,7 @@ struct CardView: SwiftUI.View {
   }
   
   private func setUpImageAndProgress() -> AnyView {
+    
     let image = Image(self.downloadImageName())
       .resizable()
       .frame(width: 19, height: 19)
@@ -176,17 +177,20 @@ struct CardView: SwiftUI.View {
         self.download()
     }
     
+    // Only show progress on model that is currently being downloaded
     guard let model = model,
-          let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }) else {
+          let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }),
+          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
       return AnyView(image)
     }
     
-    // Download percentage goes to ~0.99
-    while 0.0 < downloadModel.downloadProgress, downloadModel.downloadProgress < 0.99 {
+    switch downloadsMC.state {
+    case .loading:
       return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      
+    default:
+      return AnyView(image)
     }
-    
-    return AnyView(image)
   }
   
   private func download() {
