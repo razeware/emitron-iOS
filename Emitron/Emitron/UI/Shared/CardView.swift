@@ -176,17 +176,14 @@ struct CardView: SwiftUI.View {
         self.download()
     }
     
-    guard let model = model else {
+    guard let model = model,
+          let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }) else {
       return AnyView(image)
     }
     
-    let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id })
-    guard let progress = downloadModel?.downloadProgress else {
-      return AnyView(image)
-    }
-    
-    while 0.0 < progress, progress < 0.9 {
-      return AnyView(CircularProgressBar(progress: progress))
+    // Download percentage goes to ~0.99
+    while 0.0 < downloadModel.downloadProgress, downloadModel.downloadProgress < 0.99 {
+      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
     }
     
     return AnyView(image)
@@ -233,7 +230,8 @@ struct CardView: SwiftUI.View {
   
   private func downloadImageName() -> String {
     guard let model = model else { return DownloadImageName.inActive }
-    return model.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    
+    return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func createEmptyView() -> AnyView {

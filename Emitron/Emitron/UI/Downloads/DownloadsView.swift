@@ -72,10 +72,7 @@ struct DownloadsView: View {
       }
       
     case .save:
-      self.downloadsMC.saveDownload(with: content) { (success, contents) in
-        self.showHudView.toggle()
-        self.showSuccess = success
-      }
+      self.downloadsMC.saveDownload(with: content)
     }
   }
   

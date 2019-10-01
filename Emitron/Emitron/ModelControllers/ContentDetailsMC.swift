@@ -52,6 +52,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = ContentDetailsModel(summaryModel: partialContentDetail)
+    self.data.isDownloaded = partialContentDetail.isDownloaded
     
     super.init()
     

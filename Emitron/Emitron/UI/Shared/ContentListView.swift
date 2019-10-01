@@ -95,15 +95,14 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
   
   var body: some View {
-//    ZStack(alignment: .bottom) {
-//      contentView
-//
-//      if showHudView {
-//        createHudView()
-//          .animation(.spring())
-//      }
-//    }
-    contentView
+    ZStack(alignment: .bottom) {
+      contentView
+
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
   }
   
   private var listView: some View {
@@ -168,7 +167,16 @@ struct ContentListView: View {
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
-            self.callback?(.save, partialContent)
+            if success {
+              self.callback?(.save, partialContent)
+            } else {
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+              
+              self.showSuccess = false
+              self.showHudView = true
+            }
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
@@ -193,7 +201,16 @@ struct ContentListView: View {
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
-            self.callback?(.save, partialContent)
+            if success {
+              self.callback?(.save, partialContent)
+            } else {
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+              
+              self.showSuccess = false
+              self.showHudView = true
+            }
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)

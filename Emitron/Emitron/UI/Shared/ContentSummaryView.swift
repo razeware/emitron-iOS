@@ -123,8 +123,7 @@ struct ContentSummaryView: View {
   }
   
   private func downloadImageName() -> String {
-    DownloadImageName.inActive
-    //return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func download() {

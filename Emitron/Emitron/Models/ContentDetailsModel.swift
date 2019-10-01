@@ -55,6 +55,8 @@ class ContentDetailsModel {
   private(set) var bookmark: BookmarkModel?
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
+  
+  var isDownloaded: Bool = false
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,

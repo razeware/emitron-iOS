@@ -36,7 +36,7 @@ private struct Layout {
 
 struct CircularProgressBar: View {
   
-  @State var progress: CGFloat = 1.0
+  @State var progress: CGFloat
   
   var body: some View {
     
@@ -52,8 +52,8 @@ struct CircularProgressBar: View {
         .stroke(Color.appGreen, lineWidth: Layout.line)
         .frame(width: Layout.frame, height: Layout.frame)
         .rotationEffect(.degrees(90), anchor: .center)
-        .animation(Animation.linear(duration: 60))
     }
+    .animation(Animation.default)
   }
 }
 

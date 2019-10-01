@@ -203,16 +203,39 @@ struct LibraryView: View {
 
       self.showSuccess = success
       self.showHudView = true
-      if success {
-        self.downloadsMC.setDownloads(for: contents) { contents in
-          print("saving downloads")
-        }
-      }
+//      if success {
+//        self.downloadsMC.setDownloads(for: contents) { contents in
+//          print("saving downloads")
+//        }
+//      }
     }
   }
   
   private func save(for content: ContentSummaryModel) {
-    self.downloadsMC.saveDownload(with: content) { (success, contents) in
+    guard downloadsMC.state != .loading else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.showSuccess = false
+      self.showHudView = true
+      return
+    }
+    
+    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.showSuccess = false
+      self.showHudView = true
+      return
+    }
+    
+    self.downloadsMC.saveDownload(with: content)
+    self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
@@ -220,11 +243,6 @@ struct LibraryView: View {
       
       self.showSuccess = success
       self.showHudView = true
-      if success {
-        self.downloadsMC.setDownloads(for: contents) { contents in
-          print("Saving downloads...")
-        }
-      }
     }
   }
 }
