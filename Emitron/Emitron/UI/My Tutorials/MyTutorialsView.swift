@@ -58,7 +58,7 @@ struct MyTutorialView: View {
       })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView()
-    }
+      }
   }
   
   private var toggleControl: AnyView {

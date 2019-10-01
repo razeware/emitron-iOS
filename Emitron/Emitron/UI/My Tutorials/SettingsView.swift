@@ -38,7 +38,7 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   var title: String {
     switch self {
     case .videoPlaybackSpeed: return "Video Playback Speed"
-    case .downloads: return "Downloads (Wifi only)"
+    case .downloads: return "Downloads (WiFi only)"
     case .downloadsQuality: return "Downloads Quality"
     case .subtitles: return "Subtitles"
     }
@@ -118,11 +118,14 @@ struct SettingsView: View {
             } else {
               // Update user defaults for toggle
               let previousState = self.setToggleState(at: index)
-              UserDefaults.standard.set(!previousState,
-                                        forKey: self.rows[index].key.rawValue)
+              UserDefaults.standard.set(!previousState, forKey: self.rows[index].key.rawValue)
             }
             
-          }, title: self.rows[index].title, detail: self.populateDetail(at: index), isToggle: self.rows[index].isToggle, isOn: self.setToggleState(at: index), rightImageName: "carrotRight")
+          }, title: self.rows[index].title,
+             detail: self.populateDetail(at: index),
+             isToggle: self.rows[index].isToggle,
+             isOn: self.setToggleState(at: index),
+             rightImageName: "carrotRight")
             .frame(height: 46)
             .sheet(isPresented: self.$settingsOptionsPresented) {
               SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
@@ -138,6 +141,9 @@ struct SettingsView: View {
       .padding([.bottom, .leading, .trailing], 20)
     }
     .background(Color.paleGrey)
+    .onAppear {
+      print("SETTINGS VIEW APPEARINGGGGG")
+    }
   }
   
   private func populateDetail(at index: Int) -> String {

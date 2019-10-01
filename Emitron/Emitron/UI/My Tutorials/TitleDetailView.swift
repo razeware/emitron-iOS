@@ -35,7 +35,7 @@ private enum Layout {
 
 struct TitleDetailView: View {
   
-  var callback: (()->())?
+  var callback: (() -> Void)?
   var title: String
   var detail: String?
   var isToggle: Bool
@@ -43,35 +43,32 @@ struct TitleDetailView: View {
   var rightImageName: String?
   
   var body: some View {
-    GeometryReader { geometry in
-      Button(action: {
-        if !self.isToggle {
-          self.callback?()
+    Button(action: {
+      if !self.isToggle {
+        self.callback?()
+      }
+    }, label: {
+      
+      VStack {
+        HStack {
+          Text(self.title)
+            .foregroundColor(.appBlack)
+            .font(.uiBodyAppleDefault)
+            .padding([.leading,.trailing], Layout.padding)
+          
+          Spacer()
+          
+          self.textOrToggleView()
+          self.addRightImage()
         }
-      }, label: {
         
-        VStack {
-          
-          HStack {
-            Text(self.title)
-              .foregroundColor(.appBlack)
-              .font(.uiBodyAppleDefault)
-              .padding([.leading,.trailing], Layout.padding)
-            
-            Spacer()
-            
-            self.textOrToggleView()
-            self.addRightImage()
-          }
-          
-          Rectangle()
-            .frame(width: (geometry.size.width - (2*Layout.padding)), height: 1, alignment: .center)
-            .foregroundColor(Color.paleBlue)
-            .padding([.leading, .trailing], Layout.padding)
-        }
-      })
-      .background(Color.paleGrey)
-    }
+        Rectangle()
+          .frame(height: 1)
+          .foregroundColor(Color.paleBlue)
+          .padding([.leading, .trailing], Layout.padding)
+      }
+    })
+    .background(Color.paleGrey)
   }
   
   private func textOrToggleView() -> AnyView? {
