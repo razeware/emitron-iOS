@@ -67,8 +67,7 @@ struct SettingsOptionsView: View {
         ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
           TitleDetailView(callback: {
             // Update user defaults
-            UserDefaults.standard.set(detail,
-                                      forKey: self.selectedSettingsOption.title)
+            UserDefaults.standard.set(detail, forKey: self.selectedSettingsOption.key.rawValue)
             self.isPresented = false
           }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
             .frame(height: 46)
