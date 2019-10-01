@@ -195,19 +195,15 @@ struct LibraryView: View {
   }
   
   private func delete(for videoId: Int) {
-    self.downloadsMC.deleteDownload(with: videoId) { (success, contents) in
+    downloadsMC.deleteDownload(with: videoId)
+    self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-
+      
       self.showSuccess = success
       self.showHudView = true
-//      if success {
-//        self.downloadsMC.setDownloads(for: contents) { contents in
-//          print("saving downloads")
-//        }
-//      }
     }
   }
   

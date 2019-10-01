@@ -56,23 +56,29 @@ struct DownloadsView: View {
   }
   
   private var contentView: some View {
-    let contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    return ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
-    return contentListView
   }
   
   private func handleAction(with action: DownloadsAction, content: ContentSummaryModel) {
     
     switch action {
     case .delete:
-      self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
-        self.showHudView.toggle()
-        self.showSuccess = success
-      }
+      downloadsMC.deleteDownload(with: content.videoID)
       
     case .save:
       self.downloadsMC.saveDownload(with: content)
+    }
+    
+    self.downloadsMC.callback = { success in
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.showSuccess = success
+      self.showHudView = true
     }
   }
   

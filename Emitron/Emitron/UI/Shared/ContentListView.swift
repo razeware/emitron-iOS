@@ -139,19 +139,7 @@ struct ContentListView: View {
   }
   
   private var contentView: AnyView {
-    switch dataState {
-    case .initial,
-         .loading where contents.isEmpty:
-      return AnyView(loadingView)
-    case .hasData where contents.isEmpty:
-      return AnyView(emptyView)
-    case .hasData,
-         .failed,
-         .loading where !contents.isEmpty:
-      return AnyView(listView)
-    default:
-      return AnyView(emptyView)
-    }
+    return AnyView(listView)
   }
   
   private var cardTableNavView: some View {
@@ -162,7 +150,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
         
         NavigationLink(destination:
-          ContentListingView(content: partialContent, callback: { content in
+          ContentListingView(content: partialContent, videoID: partialContent.videoID, callback: { content in
             self.callback?(.save, ContentSummaryModel(contentDetails: content))
           }, user: user!))
         {
@@ -196,7 +184,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
         
         NavigationLink(destination:
-          ContentListingView(content: partialContent, callback: { content in
+          ContentListingView(content: partialContent, videoID: partialContent.videoID, callback: { content in
             self.callback?(.save, ContentSummaryModel(contentDetails: content))
           }, user: user!))
         {

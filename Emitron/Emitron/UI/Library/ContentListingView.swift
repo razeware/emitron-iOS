@@ -43,7 +43,7 @@ struct ContentListingView: View {
 
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentSummaryModel, callback: ((ContentDetailsModel)->())?, user: UserModel) {
+  init(content: ContentSummaryModel, videoID: Int, callback: ((ContentDetailsModel)->())?, user: UserModel) {
     self.content = content
     self.callback = callback
     self.user = user

@@ -87,8 +87,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Public funcs
-  func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
-    
+  func deleteDownload(with videoID: Int) {
     guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
     let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
@@ -101,15 +100,12 @@ class DownloadsMC: NSObject, ObservableObject {
       
       self.data.remove(at: index)
       self.state = .hasData
+      self.callback?(true)
       
     } catch {
       self.state = .failed
-      completion(false, [])
-      fatalError("Couldn't remove file.")
+      self.callback?(false)
     }
-    
-    let contents = self.data.map { $0.content }
-    completion(true, contents)
   }
   
   func saveDownload(with content: ContentSummaryModel) {
@@ -131,17 +127,6 @@ class DownloadsMC: NSObject, ObservableObject {
     let videosMC = VideosMC(user: self.user, contentId: content.id)
     self.loadVideoStream(for: content, on: videosMC)
   }
-  
-//  func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
-//
-//    self.state = .loading
-//    contents.forEach { model in
-//      model.isDownloaded = data.contains(where: { $0.content.videoID == model.videoID })
-//    }
-//    self.state = .hasData
-//
-//    completion(contents)
-//  }
   
   // MARK: Private funcs
   private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC) {
@@ -177,6 +162,7 @@ class DownloadsMC: NSObject, ObservableObject {
       let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
       
       for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        
         let lastPathComponents = localDoc.lastPathComponent.components(separatedBy: ".").dropLast()
         if let contentIDString = lastPathComponents.first,
           let contentID = Int(contentIDString),
@@ -186,7 +172,7 @@ class DownloadsMC: NSObject, ObservableObject {
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
               DispatchQueue.main.async {
-                self.loadContents(contentID: contentID, attachmentModel: attachmentModel, isDownloaded: true)
+                self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: attachmentModel, isDownloaded: true)
               }
             }
           }
@@ -205,7 +191,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  private func loadContents(contentID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
+  private func loadContents(contentID: Int, videoID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
     contentsService.contentDetails(for: contentID) { [weak self] result in
@@ -219,7 +205,7 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content), isDownloaded: isDownloaded)
+          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content, videoID: videoID), isDownloaded: isDownloaded)
           self.state = .hasData
         }
       }
@@ -250,12 +236,6 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       self.state = .loading
     }
     
-    guard let content = downloadedModel?.content else {
-      self.state = .failed
-      self.callback?(false)
-      return
-    }
-    
     guard let destinationUrl = self.destinationURL else {
       self.state = .failed
       self.callback?(false)
@@ -273,11 +253,8 @@ extension DownloadsMC: URLSessionDownloadDelegate {
     if let data = downloadTask.response?.url?.dataRepresentation {
       DispatchQueue.main.async {
         if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
-          if let attachmentModel = self.attachmentModel {
-            self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: true)
             self.state = .hasData
             self.callback?(true)
-          }
         }
       }
     }
