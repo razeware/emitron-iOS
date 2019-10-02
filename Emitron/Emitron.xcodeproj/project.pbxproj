@@ -1156,7 +1156,7 @@
 				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = "${ sigh_com.razeware.emitron.ios_appstore_team-id }";
+				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
