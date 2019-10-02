@@ -22,6 +22,6 @@ platform :ios do
     sync_code_signing(type: 'appstore', readonly: true)
     build_app(workspace: 'Emitron.xcworkspace', scheme: 'Emitron')
     upload_to_testflight(skip_waiting_for_build_processing: true)
-    slack(message: 'App successfully uploaded to TestFlight!')
+    slack(message: 'emitron successfully uploaded to TestFlight!')
   end
 end
