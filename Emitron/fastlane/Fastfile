@@ -19,9 +19,7 @@ platform :ios do
   desc 'Push a new beta build to TestFlight'
   lane :beta do
     match(type: 'appstore', readonly: is_ci)
-    #disable_automatic_code_signing(path: 'Emitron.xcodeproj')
     build_app(workspace: 'Emitron.xcworkspace', scheme: 'Emitron')
-    #enable_automatic_code_signing(path: 'Emitron.xcodeproj')
     #upload_to_testflight
   end
 end
