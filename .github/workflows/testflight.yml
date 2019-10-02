@@ -27,6 +27,7 @@ jobs:
         FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        SLACK_URL: ${{ SLACK_URL }}
       run: |
         cd Emitron
         bundle exec fastlane -v
