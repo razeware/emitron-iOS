@@ -1,11 +1,11 @@
-git_url("git@github.com:razeware/apple-certificates.git")
+git_url('https://github.com/razeware/apple-certificates.git')
 
-storage_mode("git")
+storage_mode('git')
 
-type("appstore") # The default type, can be: appstore, adhoc, enterprise or development
+type('appstore') # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(["com.razeware.emitron.ios"])
-username("sam@razeware.com") # Your Apple Developer Portal username
+app_identifier(['com.razeware.emitron.ios'])
+username('engineering@razeware.com') # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
 # Remove the # in the beginning of the line to enable the other options

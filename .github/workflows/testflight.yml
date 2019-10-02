@@ -15,10 +15,16 @@ jobs:
     - uses: actions/checkout@v1
     - name: Switch to Xcode 11
       run: sudo xcode-select --switch /Applications/Xcode_11.app
-    - name: Build
+    - name: Update fastlane
       run: |
-        ls
         cd Emitron
         bundle install
         bundle exec fastlane -v
-        bundle exec fastlane beta
+    - name: Execute fastlane
+      env:
+        FASTLANE_USER: engineering@razeware.com
+        FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+      run: |
+        bundle exec fastlane ci_beta
