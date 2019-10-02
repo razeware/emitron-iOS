@@ -1130,7 +1130,7 @@
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = 2HG8AL7F4U;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1152,11 +1152,11 @@
 			baseConfigurationReference = 45501AC5B37D3A0B5D0BBBB0 /* Pods-Emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Development";
-				CODE_SIGN_STYLE = Automatic;
+				CODE_SIGN_IDENTITY = "Apple Distribution";
+				CODE_SIGN_STYLE = Manual;
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = 2HG8AL7F4U;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1167,7 +1167,7 @@
 				MARKETING_VERSION = 0.0.1;
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitron.ios;
 				PRODUCT_NAME = raywenderlich;
-				PROVISIONING_PROFILE_SPECIFIER = "";
+				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios_appstore_profile-name)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
