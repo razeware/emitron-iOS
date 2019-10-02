@@ -45,15 +45,22 @@ class UserMC: NSObject, ObservableObject {
     }
   }
   
-  private let client: RWAPI
+  private(set) var client: RWAPI
   private let guardpost: Guardpost
-  private(set) var user: UserModel?
+  private(set) var user: UserModel? {
+    didSet {
+      self.client = RWAPI(authToken: self.user?.token ?? "")
+      self.permissionsService = PermissionsService(client: self.client)
+    }
+  }
+  private(set) var permissionsService: PermissionsService
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
+    self.permissionsService = PermissionsService(client: self.client)
   }
   
   // MARK: - Internal
@@ -78,7 +85,6 @@ class UserMC: NSObject, ObservableObject {
             .log(additionalParams: nil)
         case .success(let user):
           self.user = user
-          self.state = .hasData
           
           //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
           //probably using Combine or Notifications
@@ -87,7 +93,27 @@ class UserMC: NSObject, ObservableObject {
           Event
             .login(from: "UserMC")
             .log(additionalParams: nil)
+          
+          self.fetchPermissions()
+          
         }
+      }
+    }
+  }
+  
+  func fetchPermissions() {
+    permissionsService.permissions { result in
+      switch result {
+      case .failure(let error):
+        Failure
+        .fetch(from: "UserMC_Permissions", reason: error.localizedDescription)
+        .log(additionalParams: nil)
+        
+        self.state = .hasData
+      case .success(let permissions):
+        self.user?.permissions = permissions
+        
+        self.state = .hasData
       }
     }
   }

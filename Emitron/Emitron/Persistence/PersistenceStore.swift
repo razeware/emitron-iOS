@@ -132,10 +132,11 @@ extension UserDefaults {
   }
   
   var playSpeed: Float {
-    if let speedString = UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? String {
-      return Float(Double(speedString)!)
+    if let speedString = UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? String,
+      let speed = Double(speedString) {
+      return Float(speed)
     } else {
-      return 0.0
+      return 1.0
     }
   }
   

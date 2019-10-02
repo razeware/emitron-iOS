@@ -48,7 +48,7 @@ enum ContentScreen {
   
   var detailMesage: String? {
     switch self {
-    case .library: return "Try removing some filters."
+    case .library: return "Try removing some filters or checking your \n WiFi settings."
     case .tips: return "Swipe on your downloads to remove them."
     default: return nil
     }
@@ -143,10 +143,10 @@ struct ContentListView: View {
     case .initial,
          .loading where contents.isEmpty:
       return AnyView(loadingView)
-    case .hasData where contents.isEmpty:
+    case .failed,
+         .hasData where contents.isEmpty:
       return AnyView(emptyView)
     case .hasData,
-         .failed,
          .loading where !contents.isEmpty:
       return AnyView(listView)
     default:
@@ -227,6 +227,8 @@ struct ContentListView: View {
       Text(contentScreen.detailMesage ?? "")
         .font(.uiLabel)
         .foregroundColor(.battleshipGrey)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
       
       Spacer()
     }

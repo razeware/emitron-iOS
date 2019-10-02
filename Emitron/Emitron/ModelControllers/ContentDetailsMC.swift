@@ -54,8 +54,6 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.data = ContentDetailsModel(summaryModel: partialContentDetail)
     
     super.init()
-    
-    //getContentSummary()
   }
   
   // MARK: - Internal
