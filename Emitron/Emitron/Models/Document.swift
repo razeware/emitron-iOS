@@ -46,10 +46,8 @@ class Document: UIDocument {
     return data
   }()
   
-  // 4
   var url: URL? {
     didSet {
-      print("url IN DOCUMENT: \(url)")
       videoData.url = url
     }
   }
