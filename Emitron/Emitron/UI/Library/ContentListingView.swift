@@ -35,6 +35,7 @@ struct ContentListingView: View {
   var content: ContentSummaryModel
   var callback: ((ContentDetailsModel)->())?
   var user: UserModel
+  var videoID: Int
   
   // These should be private
   @State var isPresented = false
@@ -48,6 +49,7 @@ struct ContentListingView: View {
     self.callback = callback
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
+    self.videoID = content.videoID
   }
   
   private func episodeListing(data: [ContentSummaryModel]) -> some View {
@@ -86,7 +88,7 @@ struct ContentListingView: View {
         
       }
       .sheet(isPresented: self.$isPresented) { VideoView(contentID: contentID,
-                                                         videoID: self.contentSummaryMC.data.videoID ?? 0,
+                                                         videoID: self.videoID,
                                                          user: self.user) }
     }
   }

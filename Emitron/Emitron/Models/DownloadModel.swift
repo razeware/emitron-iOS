@@ -38,12 +38,14 @@ class DownloadModel {
   var task: URLSessionDownloadTask?
   var resumeData: Data?
   var progress: Double = 0
+  var localPath: URL
   @Published var downloadProgress: CGFloat = 0.0
 
   // MARK: - Initializers
-  init(attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
+  init(attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool, localPath: URL) {
     self.attachmentModel = attachmentModel
     self.content = content
     self.content.isDownloaded = isDownloaded
+    self.localPath = localPath
   }
 }

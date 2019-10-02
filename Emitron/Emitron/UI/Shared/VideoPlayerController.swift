@@ -87,8 +87,10 @@ class VideoPlayerController: AVPlayerViewController {
         return
       }
       if success {
-        if let downloadsMC = DataManager.current?.downloadsMC, let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoID }) {
-          self.playFromLocalStorage()
+        
+        if let downloadsMC = DataManager.current?.downloadsMC,
+          let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoID }) {
+          self.playFromLocalStorage(with: downloadModel.localPath)
         } else {
           self.streamVideo()
         }
@@ -98,8 +100,15 @@ class VideoPlayerController: AVPlayerViewController {
     }
   }
   
-  private func playFromLocalStorage() {
-    // TODO: fj
+  private func playFromLocalStorage(with url: URL) {
+    self.player = AVPlayer(url: url)
+    let playerLayer = AVPlayerLayer(player: self.player)
+    playerLayer.frame = self.view.bounds
+    self.view.layer.addSublayer(playerLayer)
+    self.player?.play()
+    self.player?.rate = UserDefaults.standard.playSpeed
+    self.player?.appliesMediaSelectionCriteriaAutomatically = true
+    self.player?.isClosedCaptionDisplayEnabled = true
   }
   
   private func streamVideo() {

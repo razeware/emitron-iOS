@@ -125,17 +125,17 @@ class DownloadsMC: NSObject, ObservableObject {
     }
     
     let videosMC = VideosMC(user: self.user, contentId: content.id)
-    self.loadVideoStream(for: content, on: videosMC)
+    self.loadVideoStream(for: content, on: videosMC, localPath: destinationUrl)
   }
   
   // MARK: Private funcs
-  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC) {
+  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, localPath: URL) {
     videosMC.getDownloadVideofor(id: content.videoID) { response in
       switch response {
       case let .success(attachment):
         if let attachment = attachment.first {
           self.attachmentModel = attachment
-          self.createDownloadModel(with: attachment, content: content, isDownloaded: true)
+          self.createDownloadModel(with: attachment, content: content, isDownloaded: true, localPath: localPath)
         }
         
         if let streamURL = attachment.first?.url {
@@ -172,7 +172,7 @@ class DownloadsMC: NSObject, ObservableObject {
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
               DispatchQueue.main.async {
-                self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: attachmentModel, isDownloaded: true)
+                self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: attachmentModel, isDownloaded: true, localPath: localDoc)
               }
             }
           }
@@ -191,7 +191,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  private func loadContents(contentID: Int, videoID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool) {
+  private func loadContents(contentID: Int, videoID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool, localPath: URL) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
     contentsService.contentDetails(for: contentID) { [weak self] result in
@@ -205,15 +205,15 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content, videoID: videoID), isDownloaded: isDownloaded)
+          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content, videoID: videoID), isDownloaded: isDownloaded, localPath: localPath)
           self.state = .hasData
         }
       }
     }
   }
   
-  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
-    let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded)
+  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool, localPath: URL) {
+    let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath)
     self.downloadedModel = downloadModel
     data.append(downloadModel)
     self.state = .loading
