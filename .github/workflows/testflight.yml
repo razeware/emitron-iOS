@@ -27,5 +27,6 @@ jobs:
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
       run: |
+        cd Emitron
         bundle exec fastlane -v
         bundle exec fastlane ci_beta
