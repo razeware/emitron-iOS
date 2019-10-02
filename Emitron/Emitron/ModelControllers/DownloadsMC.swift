@@ -34,8 +34,10 @@ import SwiftyJSON
 extension String {
   static let appExtension: String = "ptk"
   static let videoIDKey: String = "videoID"
-  static let photoKey: String = "Photo"
-  static let thumbnailKey: String = "Thumbnail"
+  static let versionKey: String = "Version"
+  static let videoKey: String = "Video"
+  static let dataKey: String = "Data"
+  static let dataFilename: String = "video.data"
 }
 
 enum DownloadsAction {
@@ -219,12 +221,31 @@ class DownloadsMC: NSObject, ObservableObject {
     self.state = .loading
   }
   
-  private func updateModel(with id: Int, progress: CGFloat) {
+  private func updateModel(with id: Int,
+                           progress: CGFloat) {
 
     if let downloadedModel = downloadedModel, let index = data.firstIndex(where: { $0.content.id == id }) {
       downloadedModel.downloadProgress = progress
       data[index] = downloadedModel
       self.state = .loading
+    }
+  }
+  
+  private func saveNewDocument(with fileURL: URL, location: URL) {
+    
+    let doc = Document(fileURL: fileURL)
+    doc.url = location
+
+    doc.save(to: fileURL, for: .forCreating) {
+      [weak self] success in
+      guard let `self` = self else { return }
+      guard success else {
+        fatalError("Failed to create file.")
+      }
+
+      print("File created at: \(fileURL)")
+      self.state = .hasData
+      self.callback?(true)
     }
   }
 }
@@ -250,17 +271,18 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       return
     }
     
-    if let data = downloadTask.response?.url?.dataRepresentation {
+    if let url = downloadTask.response?.url {
       DispatchQueue.main.async {
-        if let _ = try? data.write(to: destinationUrl, options: Data.WritingOptions.atomic) {
-            self.state = .hasData
-            self.callback?(true)
-        }
+        print("location: \(url)")
+        self.saveNewDocument(with: destinationUrl, location: url)
       }
     }
   }
 
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+    
+    print("DATA URL: \(downloadTask.response?.url) vs: totalBytesExpectedToWrite \(totalBytesExpectedToWrite)")
+    
     let progress = CGFloat(bytesWritten)/CGFloat(totalBytesExpectedToWrite)
     DispatchQueue.main.async {
       if let model = self.downloadedModel {

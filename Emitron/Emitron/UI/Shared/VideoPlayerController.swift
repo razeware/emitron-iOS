@@ -101,14 +101,30 @@ class VideoPlayerController: AVPlayerViewController {
   }
   
   private func playFromLocalStorage(with url: URL) {
-    self.player = AVPlayer(url: url)
-    let playerLayer = AVPlayerLayer(player: self.player)
-    playerLayer.frame = self.view.bounds
-    self.view.layer.addSublayer(playerLayer)
-    self.player?.play()
-    self.player?.rate = UserDefaults.standard.playSpeed
-    self.player?.appliesMediaSelectionCriteriaAutomatically = true
-    self.player?.isClosedCaptionDisplayEnabled = true
+    let doc = Document(fileURL: url)
+    doc.open { [weak self] success in
+      guard let `self` = self else { return }
+      guard success else {
+        fatalError("Failed to open doc.")
+      }
+      
+      if let url = doc.videoData.url {
+        self.player = AVPlayer(url: url)
+        let playerLayer = AVPlayerLayer(player: self.player)
+        playerLayer.frame = self.view.bounds
+        self.view.layer.addSublayer(playerLayer)
+        self.player?.play()
+        self.player?.rate = UserDefaults.standard.playSpeed
+        self.player?.appliesMediaSelectionCriteriaAutomatically = true
+        self.player?.isClosedCaptionDisplayEnabled = true
+        
+        doc.close() { success in
+          guard success else {
+            fatalError("Failed to close doc.")
+          }
+        }
+      }
+    }
   }
   
   private func streamVideo() {
