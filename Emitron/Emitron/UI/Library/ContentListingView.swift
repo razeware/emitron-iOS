@@ -131,7 +131,7 @@ struct ContentListingView: View {
             self.opacityOverlay(for: geometry.size.width)
           }
 
-          ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
+          ContentSummaryView(contentSummaryMC: self.contentSummaryMC, callback: self.callback)
             .padding(20)
         }
         .listRowInsets(EdgeInsets())

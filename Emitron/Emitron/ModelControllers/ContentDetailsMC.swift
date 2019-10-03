@@ -43,6 +43,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
+  private let bookmarksService: BookmarksService
   private(set) var data: ContentDetailsModel
   
   // MARK: - Initializers
@@ -52,6 +53,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
+    self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
   }
@@ -79,6 +81,38 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData
+      }
+    }
+  }
+  
+  func toggleBookmark() {
+    
+    state = .loading
+    
+    if !data.bookmarked {
+      bookmarksService.makeBookmark(for: data.id) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+        case .failure(let error):
+          print(error)
+          self.state = .failed
+        case .success(let bookmark):
+          self.data.bookmark = bookmark
+          self.state = .hasData
+        }
+      }
+    } else {
+      bookmarksService.destroyBookmark(for: data.id) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+        case .failure(let error):
+          print(error)
+          self.state = .failed
+        case .success(let success):
+          print(success)
+        }
       }
     }
   }

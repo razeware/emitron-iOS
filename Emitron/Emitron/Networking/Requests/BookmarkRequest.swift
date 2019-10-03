@@ -102,6 +102,35 @@ struct BookmarkRequest: Request {
   }
 }
 
+struct DestroyBookmarkRequest: Request {
+  typealias Response = Int
+  
+  // MARK: - Properties
+  var method: HTTPMethod { return .DELETE }
+  var path: String { return "/bookmarks/\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  private var id: Int
+  
+  // MARK: - Initializers
+  init(id: Int) {
+    self.id = id
+  }
+  
+  // MARK: - Internal
+  func handle(response: Data) throws -> Int {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
+    guard let bookmark = bookmarks.first,
+      bookmarks.count == 1 else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return 0
+  }
+}
+
 struct MakeBookmark: Request {
   typealias Response = BookmarkModel
   

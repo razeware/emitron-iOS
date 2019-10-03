@@ -37,8 +37,8 @@ struct ContentSummaryView: View {
   
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
+  @ObservedObject var contentSummaryMC: ContentSummaryMC
   var callback: ((ContentDetailsModel) -> Void)?
-  var details: ContentDetailsModel
   var body: some View {
     
     ZStack(alignment: .bottom) {
@@ -55,19 +55,19 @@ struct ContentSummaryView: View {
     return VStack(alignment: .leading) {
       
       HStack {
-        Text(details.technologyTripleString.uppercased())
+        Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
           .foregroundColor(.battleshipGrey)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
         
-        if details.professional {
+        if contentSummaryMC.data.professional {
           proTag
         }
       }
       
-      Text(details.name)
+      Text(contentSummaryMC.data.name)
         .font(.uiTitle1)
         .lineLimit(nil)
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
@@ -75,7 +75,7 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], -5)
       
-      Text(details.releasedAtDateTimeString)
+      Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiFootnote)
         .foregroundColor(.battleshipGrey)
       
@@ -86,7 +86,7 @@ struct ContentSummaryView: View {
       }
       .padding([.top], 20)
       
-      Text(details.description)
+      Text(contentSummaryMC.data.description)
         .font(.uiFootnote)
         .foregroundColor(.battleshipGrey)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
@@ -96,7 +96,7 @@ struct ContentSummaryView: View {
         .padding([.top], 20)
         .lineLimit(nil)
       
-      Text("By \(details.contributorString)")
+      Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.battleshipGrey)
         .lineLimit(2)
@@ -106,7 +106,7 @@ struct ContentSummaryView: View {
   }
   
   private var completedTag: AnyView? {
-    guard let progression = details.progression, progression.finished else { return nil }
+    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
     
     let view = ZStack {
       Rectangle()
@@ -144,16 +144,14 @@ struct ContentSummaryView: View {
   }
   
   private var downloadImage: some View {
-    let imgName = details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
     return Button(action: {
       // Download Action
       self.download()
     }) {
-      Image(imgName)
+      Image(downloadImgName)
         .resizable()
         .frame(width: 20, height: 20)
         .padding([.trailing], 20)
-        .foregroundColor(.coolGrey)
     }
   }
   
@@ -162,7 +160,8 @@ struct ContentSummaryView: View {
       // Download Action
       self.bookmark()
     }) {
-      if !details.bookmarked {
+      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
+      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
         Image("bookmarkActive")
           .resizable()
           .frame(width: 20, height: 20)
@@ -179,7 +178,7 @@ struct ContentSummaryView: View {
   }
   
   private var downloadImgName: String {
-    details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    contentSummaryMC.data.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func download() {
@@ -193,20 +192,10 @@ struct ContentSummaryView: View {
       return
     }
     
-    self.callback?(details)
+    self.callback?(contentSummaryMC.data)
   }
   
   private func bookmark() {
-    let guardpost = Guardpost.current
-    let bookmarksMC = BookmarksMC(guardpost: guardpost)
-    bookmarksMC.toggleBookmark(for: details.id)
+    contentSummaryMC.toggleBookmark()
   }
 }
-
-#if DEBUG
-struct ContentSummaryView_Previews: PreviewProvider {
-    static var previews: some View {
-      return ContentSummaryView(details: ContentDetailsModel.test)
-    }
-}
-#endif

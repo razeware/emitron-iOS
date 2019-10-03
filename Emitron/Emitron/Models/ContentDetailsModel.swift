@@ -53,18 +53,16 @@ class ContentDetailsModel {
   private(set) var domains: [DomainModel] = []
   private(set) var childContents: [ContentDetailsModel] = []
   private(set) var groups: [GroupModel] = []
-  private(set) var progression: ProgressionModel?
-  private(set) var bookmark: BookmarkModel?
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
   
   var isDownloaded: Bool = false
+  var progression: ProgressionModel?
+  var bookmark: BookmarkModel?
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any]?,
-        bookmarkModel: BookmarkModel? = nil,
-        progressionModel: ProgressionModel? = nil) {
+        metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
@@ -131,23 +129,15 @@ class ContentDetailsModel {
 
         self.groups = groups
       case "progression":
-        if let model = progressionModel {
-          self.progression = model
-        } else {
-          let ids = relationship.data.compactMap { $0.id }
-          let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-          let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
-          self.progression = progressions?.first
-        }
+        let ids = relationship.data.compactMap { $0.id }
+        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+        let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
+        self.progression = progressions?.first
       case "bookmark":
-        if let model = bookmarkModel {
-          self.bookmark = model
-        } else {
-          let ids = relationship.data.compactMap { $0.id }
-          let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
-          let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
-          self.bookmark = bookmarks?.first
-        }
+        let ids = relationship.data.compactMap { $0.id }
+        let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
+        let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
+        self.bookmark = bookmarks?.first
       default:
         break
       }
