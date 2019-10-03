@@ -88,7 +88,6 @@ class ContentDetailsModel {
 
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
-    self.bookmarked = jsonResource["bookmarked?"] as? Bool ?? false
     self.professional = jsonResource["professional"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
@@ -144,15 +143,8 @@ class ContentDetailsModel {
       }
     }
     
+    self.bookmarked = self.bookmark != nil
     self.url = jsonResource.links["self"]
-  }
-  
-  convenience init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any]?,
-        progression: ProgressionModel? = nil) {
-    
-    self.init(jsonResource, metadata: metadata)
-    self.progression = progression
   }
   
   init(summaryModel: ContentSummaryModel) {

@@ -158,16 +158,23 @@ struct ContentSummaryView: View {
   }
   
   private var bookmarkImage: some View {
-    let imgName = details.bookmarked ? "bookmarkActive" : "bookmarkInactive"
     return Button(action: {
       // Download Action
       self.bookmark()
     }) {
-      Image(imgName)
-        .resizable()
-        .frame(width: 20, height: 20)
-        .padding([.trailing], 20)
-        .foregroundColor(.coolGrey)
+      if !details.bookmarked {
+        Image("bookmarkActive")
+          .resizable()
+          .frame(width: 20, height: 20)
+          .padding([.trailing], 20)
+          .foregroundColor(.coolGrey)
+      } else {
+        Image("bookmarkActive")
+          .resizable()
+          .frame(width: 20, height: 20)
+          .padding([.trailing], 20)
+          .foregroundColor(.appGreen)
+      }
     }
   }
   

@@ -55,8 +55,10 @@ class BookmarkModel {
       case "content":
         let ids = relationship.data.compactMap { $0.id }
         let included = resource.parent?.included.filter { ids.contains($0.id) }
-        let includedContent = included?.compactMap { ContentDetailsModel($0, metadata: $0.meta) }
-        if let content = includedContent?.first {
+        // TODO: Fix tthee crash, so we don't have to do a double transformation
+        let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta) }
+        let detailsContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
+        if let content = detailsContent?.first {
           self.content = content
         }
         

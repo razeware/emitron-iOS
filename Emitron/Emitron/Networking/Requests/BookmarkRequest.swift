@@ -112,7 +112,7 @@ struct MakeBookmark: Request {
   var body: Data? {
     let json: [String: Any] =
       ["data":
-        ["type": "bookmakrs", "relationships":
+        ["type": "bookmarks", "relationships":
           ["content":
             ["data":
               ["type": "contents", "id": id]
