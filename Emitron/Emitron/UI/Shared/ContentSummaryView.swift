@@ -80,28 +80,8 @@ struct ContentSummaryView: View {
         .foregroundColor(.battleshipGrey)
       
       HStack {
-        Button(action: {
-          // Download Action
-          self.download()
-        }) {
-          Image(downloadImageName())
-            .resizable()
-            .frame(width: 20, height: 20)
-            .padding([.trailing], 20)
-            .foregroundColor(.coolGrey)
-        }
-        
-        Button(action: {
-          // Bookmark Action
-          self.bookmark()
-        }) {
-          Image("bookmarkInactive")
-            .resizable()
-            .frame(width: 20, height: 20)
-            .padding([.trailing], 20)
-            .foregroundColor(.coolGrey)
-        }
-        
+        downloadImage
+        bookmarkImage
         completedTag // If needed
       }
       .padding([.top], 20)
@@ -163,13 +143,40 @@ struct ContentSummaryView: View {
     }
   }
   
-  private func downloadImageName() -> String {
-    DownloadImageName.inActive
-    //return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+  private var downloadImage: some View {
+    let imgName = details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    return Button(action: {
+      // Download Action
+      self.download()
+    }) {
+      Image(imgName)
+        .resizable()
+        .frame(width: 20, height: 20)
+        .padding([.trailing], 20)
+        .foregroundColor(.coolGrey)
+    }
+  }
+  
+  private var bookmarkImage: some View {
+    let imgName = details.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    return Button(action: {
+      // Download Action
+      self.bookmark()
+    }) {
+      Image(imgName)
+        .resizable()
+        .frame(width: 20, height: 20)
+        .padding([.trailing], 20)
+        .foregroundColor(.coolGrey)
+    }
+  }
+  
+  private var downloadImgName: String {
+    details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func download() {
-    guard downloadImageName() != DownloadImageName.inActive else {
+    guard downloadImgName != DownloadImageName.inActive else {
       if showHudView {
         // dismiss hud currently showing
         showHudView.toggle()
@@ -185,7 +192,7 @@ struct ContentSummaryView: View {
   private func bookmark() {
     let guardpost = Guardpost.current
     let bookmarksMC = BookmarksMC(guardpost: guardpost)
-    //bookmarksMC.
+    bookmarksMC.toggleBookmark(for: details.id)
   }
 }
 

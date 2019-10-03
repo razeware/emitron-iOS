@@ -40,7 +40,7 @@ class UserMC: NSObject, ObservableObject {
   
   /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
   private(set) var state = DataState.initial {
-    didSet {
+    willSet {
       objectWillChange.send(())
     }
   }

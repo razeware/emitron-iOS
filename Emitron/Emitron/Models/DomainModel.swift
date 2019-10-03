@@ -30,7 +30,7 @@ import CoreData
 import Foundation
 import SwiftyJSON
 
-enum DomainLevel: String {
+enum DomainLevel: String, Equatable {
   // Production + Beta are the only user-facing ones
   case none
   case production
@@ -44,7 +44,15 @@ enum DomainLevel: String {
   }
 }
 
-class DomainModel {
+class DomainModel: Equatable {
+  static func == (lhs: DomainModel, rhs: DomainModel) -> Bool {
+    return lhs.id == rhs.id
+    && lhs.name == rhs.name
+    && lhs.slug == rhs.slug
+    && lhs.description == rhs.description
+    && lhs.level == rhs.level
+  }
+  
 
   // MARK: - Properties
   private(set) var id: Int = 0

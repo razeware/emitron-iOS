@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ContentsRequest: Request {
-  typealias Response = (contents: [ContentSummaryModel], totalNumber: Int)
+  typealias Response = (contents: [ContentDetailsModel], totalNumber: Int)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,10 +39,10 @@ struct ContentsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> (contents: [ContentSummaryModel], totalNumber: Int) {
+  func handle(response: Data) throws -> (contents: [ContentDetailsModel], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let contents = doc.data.compactMap { ContentSummaryModel($0, metadata: nil) }
+    let contents = doc.data.compactMap { ContentDetailsModel($0, metadata: nil) }
     return (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }

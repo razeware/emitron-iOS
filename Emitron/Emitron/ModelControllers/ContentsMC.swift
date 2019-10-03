@@ -36,7 +36,7 @@ class ContentsMC: NSObject, ObservableObject {
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
-    didSet {
+    willSet {
       objectWillChange.send(())
     }
   }
@@ -44,7 +44,7 @@ class ContentsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: [ContentSummaryModel] = []
+  private(set) var data: [ContentDetailsModel] = []
   private(set) var numTutorials: Int = 0
   
   // Pagination

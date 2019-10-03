@@ -176,7 +176,9 @@ struct LibraryView: View {
     let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
-          self.delete(for: content.videoID)
+          if let videoID = content.videoID {
+            self.delete(for: videoID)
+          }
         case .save:
           self.save(for: content)
         }
@@ -210,7 +212,7 @@ struct LibraryView: View {
     }
   }
   
-  private func save(for content: ContentSummaryModel) {
+  private func save(for content: ContentDetailsModel) {
     self.downloadsMC.saveDownload(with: content) { (success, contents) in
       if self.showHudView {
         // dismiss hud currently showing

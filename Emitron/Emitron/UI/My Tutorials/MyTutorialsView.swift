@@ -79,7 +79,7 @@ struct MyTutorialView: View {
   }
   
   private var contentView: some View {
-    var dataToDisplay: [ContentSummaryModel] = []
+    var dataToDisplay: [ContentDetailsModel] = []
     var stateToUse: DataState
     var numTutorials: Int
     

@@ -57,6 +57,8 @@ class ContentDetailsModel {
   private(set) var bookmark: BookmarkModel?
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
+  
+  var isDownloaded: Bool = false
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -143,6 +145,14 @@ class ContentDetailsModel {
     }
     
     self.url = jsonResource.links["self"]
+  }
+  
+  convenience init?(_ jsonResource: JSONAPIResource,
+        metadata: [String: Any]?,
+        progression: ProgressionModel? = nil) {
+    
+    self.init(jsonResource, metadata: metadata)
+    self.progression = progression
   }
   
   init(summaryModel: ContentSummaryModel) {

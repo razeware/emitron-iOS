@@ -40,7 +40,7 @@ struct ContentListingView: View {
 
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentSummaryModel, callback: ((ContentDetailsModel) -> Void)?, user: UserModel) {
+  init(content: ContentDetailsModel, callback: ((ContentDetailsModel) -> Void)?, user: UserModel) {
     self.callback = callback
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)

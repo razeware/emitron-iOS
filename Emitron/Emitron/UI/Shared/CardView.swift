@@ -55,13 +55,13 @@ struct CardViewModel: Hashable {
 
 // Transform data
 extension CardViewModel {
-  static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
+  static func transform(_ content: ContentDetailsModel, cardViewType: CardViewType) -> CardViewModel? {
     guard let domainData = DataManager.current?.domainsMC.data else {
       return nil
     }
     
-    let ids = content.domainIDs
-    let contentDomains = domainData.filter { ids.contains($0.id) }
+    let domains = content.domains
+    let contentDomains = domainData.filter { domains.contains($0) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     let isDownloaded = content.isDownloaded
     
@@ -277,7 +277,7 @@ struct CardView: SwiftUI.View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
-    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
+    let cardModel = CardViewModel.transform(ContentDetailsModel.test, cardViewType: .default)!
     return CardView(model: cardModel, contentScreen: .library, onRightIconTap: nil)
   }
 }

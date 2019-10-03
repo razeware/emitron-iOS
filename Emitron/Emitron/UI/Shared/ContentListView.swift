@@ -85,14 +85,14 @@ struct ContentListView: View {
   @State var showSuccess: Bool = false
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
-  var contents: [ContentSummaryModel] = []
+  var contents: [ContentDetailsModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
   var dataState: DataState
   var totalContentNum: Int
-  var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
+  var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
   
   var body: some View {
     ZStack(alignment: .bottom) {
@@ -163,7 +163,7 @@ struct ContentListView: View {
         
         NavigationLink(destination:
           ContentListingView(content: partialContent, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+            self.callback?(.save, content)
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
@@ -188,7 +188,7 @@ struct ContentListView: View {
         
         NavigationLink(destination:
           ContentListingView(content: partialContent, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+            self.callback?(.save, content)
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
@@ -204,7 +204,7 @@ struct ContentListView: View {
       .background(self.bgColor)
   }
   
-  private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
+  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
     
     return CardView(model: viewModel,
@@ -268,7 +268,7 @@ struct ContentListView: View {
     }
   }
   
-  mutating func updateContents(with newContents: [ContentSummaryModel]) {
+  mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
 }
