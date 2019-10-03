@@ -51,6 +51,7 @@ struct CardViewModel: Hashable {
   let type: CardViewType
   let progress: CGFloat
   let isDownloaded: Bool
+  let isPro: Bool
 }
 
 // Transform data
@@ -78,7 +79,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded, isPro: content.professional)
     
     return cardModel
   }
@@ -142,6 +143,12 @@ struct CardView: SwiftUI.View {
             .foregroundColor(.battleshipGrey)
           
           HStack {
+            
+            if model.isPro {
+              proTag
+                .padding([.trailing], 5)
+            }
+            
             Text(model.footnote)
               .font(.uiCaption)
               .lineLimit(1)
@@ -190,6 +197,20 @@ struct CardView: SwiftUI.View {
     }
     
     return AnyView(image)
+  }
+  
+  private var proTag: some SwiftUI.View {
+    return
+      ZStack {
+        Rectangle()
+          .foregroundColor(.appGreen)
+          .cornerRadius(6)
+          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+
+        Text("PRO")
+          .foregroundColor(.white)
+          .font(.uiUppercase)
+    }
   }
   
   private func download() {
