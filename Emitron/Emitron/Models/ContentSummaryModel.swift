@@ -55,7 +55,7 @@ class ContentSummaryModel {
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
   private(set) var index: Int?
-  private(set) var videoID: Int = 0
+  private(set) var videoID: Int?
   private(set) var professional: Bool = false
   
   private(set) var progression: ProgressionModel?
@@ -68,7 +68,7 @@ class ContentSummaryModel {
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?,
         index: Int = 0,
-        progression: ProgressionModel? = nil) {
+        progression: ProgressionModel? = nil, bookmark: BookmarkModel? = nil) {
     
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
@@ -127,7 +127,7 @@ class ContentSummaryModel {
     self.cardArtworkURL = contentDetails.cardArtworkURL
     self.technologyTripleString = contentDetails.technologyTripleString
     self.contributorString = contentDetails.contributorString
-    self.videoID = contentDetails.videoID ?? 0
+    self.videoID = contentDetails.videoID
     self.progression = contentDetails.progression
     self.bookmark = contentDetails.bookmark
   }

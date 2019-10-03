@@ -67,7 +67,6 @@ class ProgressionModel {
     for relationship in jsonResource.relationships where relationship.type == "content" {
       let ids = relationship.data.compactMap { $0.id }
       let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-      // TODO: A bug here is causeing a crash that needs to be investigated where you can't directly create a ContentDetailsModel
       let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, progression: self) }
       let detailContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
       if let content = detailContent?.first {

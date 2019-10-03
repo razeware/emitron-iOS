@@ -72,7 +72,7 @@ class VideosMC: NSObject, ObservableObject {
         Failure
           .fetch(from: "VideosMC_PlaybackToken", reason: error.localizedDescription)
           .log(additionalParams: nil)
-        // Ask user to re-confirm
+        //TODO: Ask user to re-confirm
         completion(false, nil)
       case .success(let token):
         UserDefaults.standard.setPlaybackToken(token: token)
@@ -90,7 +90,7 @@ class VideosMC: NSObject, ObservableObject {
         if success {
           self.reportUsageStatistics(progress: progress)
         } else {
-          // Ask user to re-confirm
+          //TODO: Ask user to re-confirm
         }
       }
       return

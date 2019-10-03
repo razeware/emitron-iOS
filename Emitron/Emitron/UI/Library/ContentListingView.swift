@@ -47,7 +47,9 @@ struct ContentListingView: View {
   }
   
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
-    ForEach(data, id: \.id) { model in
+    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
+    
+    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
       TextListItemView(contentSummary: model, buttonAction: {
         // Download
       })
@@ -55,14 +57,16 @@ struct ContentListingView: View {
         self.isPresented = true
       }
       .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID ?? 0,
+                                                         videoID: model.videoID!,
                                                          user: self.user) }
-    }
+    })
   }
   
-  var playButton: some View {
-    let contentID = self.contentSummaryMC.data.childContents.first?.id ?? 4919757
-    return Button(action: {
+  private var playButton: AnyView? {
+    guard let videoID = contentSummaryMC.data.videoID,
+    let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
+    
+    return AnyView(Button(action: {
       self.isPresented = true
     }) {
       
@@ -82,9 +86,9 @@ struct ContentListingView: View {
         
       }
       .sheet(isPresented: self.$isPresented) { VideoView(contentID: contentID,
-                                                         videoID: self.contentSummaryMC.data.videoID ?? 0,
+                                                         videoID: videoID,
                                                          user: self.user) }
-    }
+    })
   }
   
   var coursesSection: AnyView? {
