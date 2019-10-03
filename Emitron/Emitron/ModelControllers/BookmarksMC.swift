@@ -119,5 +119,16 @@ class BookmarksMC: NSObject, ObservableObject {
       }
     }
   }
+  
+  func toggleBookmark(for id: Int) {
+    bookmarksService.makeBookmark(for: id) { response in
+      switch response {
+      case .failure(let error):
+        print("sad error")
+      case .success(let bookmark):
+        print("Yay!")
+      }
+    }
+  }
 }
 

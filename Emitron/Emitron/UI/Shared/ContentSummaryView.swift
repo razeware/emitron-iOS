@@ -182,7 +182,11 @@ struct ContentSummaryView: View {
     self.callback?(details)
   }
   
-  private func bookmark() { }
+  private func bookmark() {
+    let guardpost = Guardpost.current
+    let bookmarksMC = BookmarksMC(guardpost: guardpost)
+    //bookmarksMC.
+  }
 }
 
 #if DEBUG

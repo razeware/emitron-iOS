@@ -50,4 +50,9 @@ class BookmarksService: Service {
     let request = BookmarkRequest(id: id)
     makeAndProcessRequest(request: request, completion: completion)
   }
+  
+  func makeBookmark(for id: Int, completion: @escaping (_ response: Result<MakeBookmark.Response, RWAPIError>) -> Void) {
+    let request = MakeBookmark(id: id)
+    makeAndProcessRequest(request: request, completion: completion)
+  }
 }
