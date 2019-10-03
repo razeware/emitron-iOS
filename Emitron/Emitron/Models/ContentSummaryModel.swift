@@ -50,12 +50,13 @@ class ContentSummaryModel {
   private(set) var contentType: ContentType = .none
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
-  private(set) var bookmarked: Bool = false
+  private(set) var bookmarked: Bool = true
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
-  private(set) var index: Int = 0
+  private(set) var index: Int?
   private(set) var videoID: Int = 0
+  private(set) var professional: Bool = false
   
   private(set) var progression: ProgressionModel?
   private(set) var bookmark: BookmarkModel?
@@ -70,7 +71,7 @@ class ContentSummaryModel {
         progression: ProgressionModel? = nil) {
     
     self.id = jsonResource.id
-    self.index = index
+    self.index = jsonResource["ordinal"] as? Int
     
     self.uri = jsonResource["uri"] as? String ?? ""
     
@@ -99,6 +100,7 @@ class ContentSummaryModel {
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
     self.bookmarked = jsonResource["bookmarked"] as? Bool ?? false
+    self.professional = jsonResource["professional"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
@@ -126,6 +128,8 @@ class ContentSummaryModel {
     self.technologyTripleString = contentDetails.technologyTripleString
     self.contributorString = contentDetails.contributorString
     self.videoID = contentDetails.videoID ?? 0
+    self.progression = contentDetails.progression
+    self.bookmark = contentDetails.bookmark
   }
 }
 

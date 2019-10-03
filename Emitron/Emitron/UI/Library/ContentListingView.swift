@@ -28,29 +28,25 @@
 
 import SwiftUI
 
-
 struct ContentListingView: View {
   
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-  var content: ContentSummaryModel
-  var callback: ((ContentDetailsModel)->())?
+  var callback: ((ContentDetailsModel) -> Void )?
   var user: UserModel
   
   // These should be private
   @State var isPresented = false
   @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-  @State var firstLoad: Bool = true
 
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentSummaryModel, callback: ((ContentDetailsModel)->())?, user: UserModel) {
-    self.content = content
+  init(content: ContentSummaryModel, callback: ((ContentDetailsModel) -> Void)?, user: UserModel) {
     self.callback = callback
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
   }
   
-  private func episodeListing(data: [ContentSummaryModel]) -> some View {
+  private func episodeListing(data: [ContentDetailsModel]) -> some View {
     ForEach(data, id: \.id) { model in
       TextListItemView(contentSummary: model, buttonAction: {
         // Download
@@ -59,7 +55,7 @@ struct ContentListingView: View {
         self.isPresented = true
       }
       .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID,
+                                                         videoID: model.videoID ?? 0,
                                                          user: self.user) }
     }
   }
@@ -124,15 +120,11 @@ struct ContentListingView: View {
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-          ZStack {
-            Image(uiImage: self.uiImage)
-              .resizable()
-              .frame(width: geometry.size.width, height: geometry.size.width * self.imageRatio)
-              .transition(.opacity)
-            Rectangle()
-              .foregroundColor(.appBlack)
-              .opacity(0.2)
-            self.playButton
+          
+          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
+            self.blurOverlay(for: geometry.size.width)
+          } else {
+            self.opacityOverlay(for: geometry.size.width)
           }
 
           ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
@@ -140,7 +132,7 @@ struct ContentListingView: View {
         }
         .listRowInsets(EdgeInsets())
         
-        self.courseDetailsSection()
+        self.courseDetailsSection
       }
       .background(Color.paleGrey)
     }
@@ -152,7 +144,58 @@ struct ContentListingView: View {
     return scrollView
   }
   
-  func courseDetailsSection() -> AnyView {
+  private func opacityOverlay(for width: CGFloat) -> some View {
+    ZStack {
+      Image(uiImage: uiImage)
+        .resizable()
+        .frame(width: width, height: width * imageRatio)
+        .transition(.opacity)
+      
+      Rectangle()
+        .foregroundColor(.appBlack)
+        .opacity(0.2)
+      
+      playButton
+    }
+  }
+  
+  private func blurOverlay(for width: CGFloat) -> some View {
+    ZStack {
+      Image(uiImage: uiImage)
+        .resizable()
+        .frame(width: width, height: width * imageRatio)
+        .transition(.opacity)
+        .blur(radius: 10)
+      
+      Rectangle()
+        .foregroundColor(.appBlack)
+        .opacity(0.5)
+        .blur(radius: 10)
+      
+      proView
+    }
+  }
+  
+  private var proView: some View {
+    return
+      VStack {
+        HStack {
+          Image("padlock")
+            .foregroundColor(.white)
+          Text("Pro Course")
+            .font(.uiTitle1)
+            .foregroundColor(.white)
+        }
+        
+        Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
+          .multilineTextAlignment(.center)
+          .font(.uiLabel)
+          .foregroundColor(.white)
+          .lineLimit(3)
+    }
+  }
+  
+  private var courseDetailsSection: AnyView {
     switch contentSummaryMC.state {
     case .failed:
       return AnyView(Text("We have failed"))

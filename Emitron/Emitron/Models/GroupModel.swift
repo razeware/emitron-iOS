@@ -35,12 +35,12 @@ class GroupModel {
   private(set) var name: String = ""
   private(set) var description: String = ""
   private(set) var ordinal: Int = 0
-  private(set) var childContents: [ContentSummaryModel] = []
+  private(set) var childContents: [ContentDetailsModel] = []
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any],
-        childContents: [ContentSummaryModel] = []) {
+        childContents: [ContentDetailsModel] = []) {
 
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""

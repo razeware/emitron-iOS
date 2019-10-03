@@ -37,7 +37,7 @@ struct ContentSummaryView: View {
   
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
-  var callback: ((ContentDetailsModel)->())?
+  var callback: ((ContentDetailsModel) -> Void)?
   var details: ContentDetailsModel
   var body: some View {
     
@@ -54,13 +54,20 @@ struct ContentSummaryView: View {
   private func createVStack() -> some View {
     return VStack(alignment: .leading) {
       
-      Text(details.technologyTripleString.uppercased())
-        .font(.uiUppercase)
-        .foregroundColor(.battleshipGrey)
-        .kerning(0.5)
-      // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
+      HStack {
+        Text(details.technologyTripleString.uppercased())
+          .font(.uiUppercase)
+          .foregroundColor(.battleshipGrey)
+          .kerning(0.5)
+        // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
+        Spacer()
+        
+        if details.professional {
+          proTag
+        }
+      }
       
-      Text(details.name) // TITLE
+      Text(details.name)
         .font(.uiTitle1)
         .lineLimit(nil)
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
@@ -91,8 +98,11 @@ struct ContentSummaryView: View {
           Image("bookmarkInactive")
             .resizable()
             .frame(width: 20, height: 20)
+            .padding([.trailing], 20)
             .foregroundColor(.coolGrey)
         }
+        
+        completedTag // If needed
       }
       .padding([.top], 20)
       
@@ -112,6 +122,37 @@ struct ContentSummaryView: View {
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 5)
+    }
+  }
+  
+  private var completedTag: AnyView? {
+    guard let progression = details.progression, progression.finished else { return nil }
+    
+    let view = ZStack {
+      Rectangle()
+        .foregroundColor(.appGreen)
+        .cornerRadius(6)
+        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+      
+      Text("COMPLETED")
+        .foregroundColor(.white)
+        .font(.uiUppercase)
+    }
+    
+    return AnyView(view)
+  }
+  
+  private var proTag: some View {
+    return
+      ZStack {
+        Rectangle()
+          .foregroundColor(.appGreen)
+          .cornerRadius(6)
+          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+        
+        Text("PRO")
+          .foregroundColor(.white)
+          .font(.uiUppercase)
     }
   }
   

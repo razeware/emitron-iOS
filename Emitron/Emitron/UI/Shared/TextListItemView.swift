@@ -34,22 +34,16 @@ private extension CGFloat {
 }
 
 struct TextListItemView: View {
-  var contentSummary: ContentSummaryModel
+  // It's fine that this child view isn't observing this parameter, because the parent is, so the changes will trickle down through the requests
+  // Good thought to have when creating the architecture for non-networking based views
+  var contentSummary: ContentDetailsModel
   var buttonAction: () -> Void
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .center, spacing: .horizontalSpacing) {
-        ZStack {
-          Rectangle()
-            .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
-            .foregroundColor(.brightGrey)
-            .cornerRadius(6)
-          
-          Text("\(contentSummary.index)")
-            .font(.uiButtonLabelSmall)
-            .foregroundColor(.white)
-        }
+        
+        doneCheckbox
         
         Text(contentSummary.name)
           .font(.uiHeadline)
@@ -57,7 +51,7 @@ struct TextListItemView: View {
         
         Spacer()
         
-        //TODO: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
+        //ISSUE: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
         // it just passes through; example below
         Image("downloadInactive")
           .foregroundColor(.coolGrey)
@@ -78,16 +72,41 @@ struct TextListItemView: View {
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
     }
   }
-}
-
-#if DEBUG
-struct TextListItemView_Previews: PreviewProvider {
-  static var previews: some View {
-    let contentSummary = ContentSummaryModel.test
+  
+  private var doneCheckbox: AnyView {
+    let numberView = ZStack {
+      Rectangle()
+        .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
+        .foregroundColor(.brightGrey)
+        .cornerRadius(6)
+      
+      Text("\(contentSummary.index ?? 0)")
+        .font(.uiButtonLabelSmall)
+        .foregroundColor(.white)
+    }
+    .onTapGesture {
+      self.toggleCompleteness()
+    }
     
-    return TextListItemView(contentSummary: contentSummary, buttonAction: {
-      print("Testing")
-    })
+    let completeView = ZStack(alignment: .center) {
+      Rectangle()
+        .frame(width: .buttonSide, height: .buttonSide)
+        .foregroundColor(Color.appGreen)
+      
+      Image("checkmark")
+        .resizable()
+        .frame(maxWidth: 15, maxHeight: 17)
+        .foregroundColor(Color.white)
+    }
+    .cornerRadius(6)
+    
+    guard let progression = contentSummary.progression, progression.finished else {
+      return AnyView(numberView)
+    }
+    return AnyView(completeView)
+  }
+  
+  private func toggleCompleteness() {
+    print("Make me complete!!!")
   }
 }
-#endif
