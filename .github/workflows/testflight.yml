@@ -1,0 +1,33 @@
+name: Push to Testflight
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Switch to Xcode 11
+      run: sudo xcode-select --switch /Applications/Xcode_11.app
+    - name: Update fastlane
+      run: |
+        cd Emitron
+        bundle install
+        bundle exec fastlane -v
+    - name: Execute fastlane
+      env:
+        FASTLANE_USER: engineering@razeware.com
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        SLACK_URL: ${{ secrets.SLACK_URL }}
+      run: |
+        cd Emitron
+        bundle exec fastlane -v
+        bundle exec fastlane ci_beta
