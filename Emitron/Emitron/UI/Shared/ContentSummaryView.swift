@@ -105,10 +105,11 @@ struct ContentSummaryView: View {
   }
   
   private func setUpImageAndProgress() -> AnyView {
-    
+    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
     let image = Image(self.downloadImageName())
       .resizable()
       .frame(width: 19, height: 19)
+      .foregroundColor(imageColor)
       .onTapGesture {
         self.download()
     }

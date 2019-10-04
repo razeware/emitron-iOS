@@ -103,7 +103,7 @@ class VideoPlayerController: AVPlayerViewController {
   private func playFromLocalStorage(with url: URL) {
     let doc = Document(fileURL: url)
     doc.open { [weak self] success in
-      guard let `self` = self else { return }
+      guard let self = self else { return }
       guard success else {
         fatalError("Failed to open doc.")
       }
