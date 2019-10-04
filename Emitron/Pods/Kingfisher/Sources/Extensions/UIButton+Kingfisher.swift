@@ -24,6 +24,9 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
+#if !os(watchOS)
+
+#if canImport(UIKit)
 import UIKit
 
 extension KingfisherWrapper where Base: UIButton {
@@ -320,19 +323,22 @@ extension KingfisherWrapper where Base: UIButton {
     private typealias TaskIdentifier = Box<[UInt: Source.Identifier.Value]>
     
     public func taskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
+        defer { objc_sync_exit(self) }
+        objc_sync_enter(self)
         return taskIdentifierInfo.value[state.rawValue]
     }
 
     private func setTaskIdentifier(_ identifier: Source.Identifier.Value?, for state: UIControl.State) {
+        defer { objc_sync_exit(self) }
+        objc_sync_enter(self)
         taskIdentifierInfo.value[state.rawValue] = identifier
     }
     
     private var taskIdentifierInfo: TaskIdentifier {
         return  getAssociatedObject(base, &taskIdentifierKey) ?? {
-            let value = TaskIdentifier([:])
-            setRetainedAssociatedObject(base, &taskIdentifierKey, value)
-            return value
-        }()
+            setRetainedAssociatedObject(base, &taskIdentifierKey, $0)
+            return $0
+        } (TaskIdentifier([:]))
     }
     
     private var imageTask: DownloadTask? {
@@ -349,19 +355,22 @@ private var backgroundImageTaskKey: Void?
 extension KingfisherWrapper where Base: UIButton {
     
     public func backgroundTaskIdentifier(for state: UIControl.State) -> Source.Identifier.Value? {
+        defer { objc_sync_exit(self) }
+        objc_sync_enter(self)
         return backgroundTaskIdentifierInfo.value[state.rawValue]
     }
     
     private func setBackgroundTaskIdentifier(_ identifier: Source.Identifier.Value?, for state: UIControl.State) {
+        defer { objc_sync_exit(self) }
+        objc_sync_enter(self)
         backgroundTaskIdentifierInfo.value[state.rawValue] = identifier
     }
     
     private var backgroundTaskIdentifierInfo: TaskIdentifier {
         return  getAssociatedObject(base, &backgroundTaskIdentifierKey) ?? {
-            let value = TaskIdentifier([:])
-            setRetainedAssociatedObject(base, &backgroundTaskIdentifierKey, value)
-            return value
-        }()
+            setRetainedAssociatedObject(base, &backgroundTaskIdentifierKey, $0)
+            return $0
+        } (TaskIdentifier([:]))
     }
     
     private var backgroundImageTask: DownloadTask? {
@@ -390,3 +399,6 @@ extension KingfisherWrapper where Base: UIButton {
         return nil
     }
 }
+#endif
+
+#endif

@@ -179,6 +179,7 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
   if (newOptions) {
     newOptions.optionsDictionary = self.optionsDictionary;
     newOptions.deepLinkURLScheme = self.deepLinkURLScheme;
+    newOptions.appGroupID = self.appGroupID;
     newOptions.editingLocked = self.isEditingLocked;
     newOptions.usingOptionsFromDefaultPlist = self.usingOptionsFromDefaultPlist;
   }
@@ -340,6 +341,11 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
   _optionsDictionary[kFIRBundleID] = [bundleID copy];
 }
 
+- (void)setAppGroupID:(NSString *)appGroupID {
+  [self checkEditingLocked];
+  _appGroupID = [appGroupID copy];
+}
+
 #pragma mark - Internal instance methods
 
 - (NSDictionary *)analyticsOptionsDictionaryWithInfoDictionary:(NSDictionary *)infoDictionary {
@@ -393,7 +399,7 @@ static NSDictionary *sDefaultOptionsDictionary = nil;
   return [value boolValue];
 }
 
-- (BOOL)isAnalyticsCollectionExpicitlySet {
+- (BOOL)isAnalyticsCollectionExplicitlySet {
   // If it's de-activated, it classifies as explicity set. If not, it's not a good enough indication
   // that the developer wants FirebaseAnalytics enabled so continue checking.
   if (self.isAnalyticsCollectionDeactivated) {
