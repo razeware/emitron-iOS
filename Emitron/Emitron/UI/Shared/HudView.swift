@@ -94,6 +94,42 @@ struct HudView: View {
   }
 }
 
+struct Hud<Presenting>: View where Presenting: View {
+  
+  @Binding var isShowing: Bool
+  @Binding var hudOption: HudOption
+  let presenting: () -> Presenting
+  var callback: (() -> Void)?
+  
+  var body: some View {
+    
+    GeometryReader { geometry in
+      
+      ZStack(alignment: .bottom) {
+        
+        self.presenting()
+        
+        VStack {
+          HudView(option: self.hudOption, callback: self.callback)
+        }
+        .frame(width: UIScreen.main.bounds.width, height: 54, alignment: .leading)
+        .transition(.slide)
+        .opacity(self.isShowing ? 1 : 0)
+      }
+    }
+  }
+}
+
+extension View {
+  
+  func hud(isShowing: Binding<Bool>, hudOption: Binding<HudOption>, callback: (() -> Void)?) -> some View {
+    return Hud(isShowing: isShowing,
+               hudOption: hudOption,
+               presenting: { self },
+               callback: callback)
+  }
+}
+
 #if DEBUG
 struct HudView_Previews: PreviewProvider {
   static var previews: some View {

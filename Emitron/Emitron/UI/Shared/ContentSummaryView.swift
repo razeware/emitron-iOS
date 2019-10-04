@@ -35,20 +35,12 @@ struct DownloadImageName {
 
 struct ContentSummaryView: View {
   
-  @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
-  var callback: ((ContentDetailsModel)->())?
+  var callback: ((ContentSummaryModel, Bool) -> Void)?
+  @ObservedObject var downloadsMC: DownloadsMC
   var details: ContentDetailsModel
+  var videoId: Int?
   var body: some View {
-    
-    ZStack(alignment: .bottom) {
-      createVStack()
-      
-      if showHudView {
-        createHudView()
-          .animation(.spring())
-      }
-    }
+    createVStack()
   }
   
   private func createVStack() -> some View {
@@ -77,11 +69,7 @@ struct ContentSummaryView: View {
           // Download Action
           self.download()
         }) {
-          Image(downloadImageName())
-            .resizable()
-            .frame(width: 20, height: 20)
-            .padding([.trailing], 20)
-            .foregroundColor(.coolGrey)
+          self.setUpImageAndProgress()
         }
         
         Button(action: {
@@ -113,31 +101,42 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 5)
     }
+    
   }
   
-  private func createHudView() -> some View {
-    let option: HudOption = showSuccess ? .success : .error
-    return HudView(option: option) {
-      self.showHudView = false
+  private func setUpImageAndProgress() -> AnyView {
+    
+    let image = Image(self.downloadImageName())
+      .resizable()
+      .frame(width: 19, height: 19)
+      .onTapGesture {
+        self.download()
+    }
+    
+    // Only show progress on model that is currently being downloaded
+    guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == details.id }),
+          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+      return AnyView(image)
+    }
+    
+    switch downloadsMC.state {
+    case .loading:
+      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      
+    default:
+      return AnyView(image)
     }
   }
   
   private func downloadImageName() -> String {
-    return details.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
+    let content = ContentSummaryModel(contentDetails: details)
+    return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
   }
   
   private func download() {
-    guard downloadImageName() != DownloadImageName.inActive else {
-      if showHudView {
-        // dismiss hud currently showing
-        showHudView.toggle()
-      }
-      showSuccess = false
-      showHudView = true
-      return
-    }
-    
-    self.callback?(details)
+    let success = downloadImageName() != DownloadImageName.inActive
+    let content = ContentSummaryModel(contentDetails: details, videoID: self.videoId)
+    callback?(content, success)
   }
   
   private func bookmark() { }
@@ -146,7 +145,7 @@ struct ContentSummaryView: View {
 #if DEBUG
 struct ContentSummaryView_Previews: PreviewProvider {
     static var previews: some View {
-      return ContentSummaryView(details: ContentDetailsModel.test)
+      return ContentSummaryView(downloadsMC: DataManager.current!.downloadsMC, details: ContentDetailsModel.test)
     }
 }
 #endif

@@ -31,9 +31,11 @@ import SwiftUI
 
 struct ContentListingView: View {
   
+  @State var showHudView: Bool = false
+  @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  @ObservedObject var downloadsMC: DownloadsMC
   var content: ContentSummaryModel
-  var callback: ((ContentDetailsModel)->())?
   var user: UserModel
   var videoID: Int
   
@@ -44,12 +46,12 @@ struct ContentListingView: View {
 
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentSummaryModel, videoID: Int, callback: ((ContentDetailsModel)->())?, user: UserModel) {
+  init(content: ContentSummaryModel, videoID: Int, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
-    self.callback = callback
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
     self.videoID = content.videoID
+    self.downloadsMC = downloadsMC
   }
   
   private func episodeListing(data: [ContentSummaryModel]) -> some View {
@@ -136,8 +138,19 @@ struct ContentListingView: View {
               .opacity(0.2)
             self.playButton
           }
-
-          ContentSummaryView(callback: self.callback, details: self.contentSummaryMC.data)
+          
+          ContentSummaryView(callback: { (content, success) in
+            if success {
+              self.save(for: content)
+            } else {
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+              
+              self.hudOption = success ? .success : .error
+              self.showHudView = true
+            }
+          }, downloadsMC: self.downloadsMC, details: self.contentSummaryMC.data, videoId: self.videoID)
             .padding(20)
         }
         .listRowInsets(EdgeInsets())
@@ -149,6 +162,9 @@ struct ContentListingView: View {
     .onAppear {
       self.loadImage()
       self.contentSummaryMC.getContentSummary()
+    }
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
     }
         
     return scrollView
@@ -181,6 +197,41 @@ struct ContentListingView: View {
           self.uiImage = img
         }
       }
+    }
+  }
+  
+  private func save(for content: ContentSummaryModel) {
+    guard downloadsMC.state != .loading else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
+    
+    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
+    
+    self.downloadsMC.saveDownload(with: content)
+    self.downloadsMC.callback = { success in
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = success ? .success : .error
+      self.showHudView = true
     }
   }
 }

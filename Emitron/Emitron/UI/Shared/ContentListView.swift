@@ -82,7 +82,9 @@ enum ContentScreen {
 struct ContentListView: View {
   
   @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
+  @State var hudOption: HudOption = .success
+  @ObservedObject var downloadsMC: DownloadsMC
+  
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentSummaryModel] = []
@@ -95,13 +97,9 @@ struct ContentListView: View {
   var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
   
   var body: some View {
-    ZStack(alignment: .bottom) {
-      contentView
-
-      if showHudView {
-        createHudView()
-          .animation(.spring())
-      }
+    contentView
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
     }
   }
   
@@ -150,9 +148,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
         
         NavigationLink(destination:
-          ContentListingView(content: partialContent, videoID: partialContent.videoID, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
-          }, user: user!))
+          ContentListingView(content: partialContent, videoID: partialContent.videoID, user: user!, downloadsMC: self.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -162,7 +158,7 @@ struct ContentListView: View {
                 self.showHudView.toggle()
               }
               
-              self.showSuccess = false
+              self.hudOption = success ? .success : .error
               self.showHudView = true
             }
           })
@@ -184,9 +180,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
         
         NavigationLink(destination:
-          ContentListingView(content: partialContent, videoID: partialContent.videoID, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
-          }, user: user!))
+          ContentListingView(content: partialContent, videoID: partialContent.videoID, user: user!, downloadsMC: self.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -196,7 +190,7 @@ struct ContentListView: View {
                 self.showHudView.toggle()
               }
               
-              self.showSuccess = false
+              self.hudOption = success ? .success : .error
               self.showHudView = true
             }
           })
@@ -257,13 +251,6 @@ struct ContentListView: View {
     contentsMC.loadMore()
   }
   
-  private func createHudView() -> some View {
-    let option: HudOption = showSuccess ? .success : .error
-    return HudView(option: option) {
-      self.showHudView = false
-    }
-  }
-  
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
@@ -280,7 +267,7 @@ struct ContentListView: View {
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
   }
 }
 #endif

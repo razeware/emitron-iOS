@@ -242,8 +242,7 @@ class DownloadsMC: NSObject, ObservableObject {
       guard success else {
         fatalError("Failed to create file.")
       }
-
-      print("File created at: \(fileURL)")
+      
       self.state = .hasData
       self.callback?(true)
     }
@@ -258,8 +257,10 @@ extension DownloadsMC: URLSessionDownloadDelegate {
     }
     
     guard let destinationUrl = self.destinationURL else {
-      self.state = .failed
-      self.callback?(false)
+      DispatchQueue.main.async {
+        self.state = .failed
+        self.callback?(false)
+      }
       return
     }
     
@@ -273,16 +274,12 @@ extension DownloadsMC: URLSessionDownloadDelegate {
     
     if let url = downloadTask.response?.url {
       DispatchQueue.main.async {
-        print("location: \(url)")
         self.saveNewDocument(with: destinationUrl, location: url)
       }
     }
   }
 
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-    
-    print("DATA URL: \(downloadTask.response?.url) vs: totalBytesExpectedToWrite \(totalBytesExpectedToWrite)")
-    
     let progress = CGFloat(bytesWritten)/CGFloat(totalBytesExpectedToWrite)
     DispatchQueue.main.async {
       if let model = self.downloadedModel {

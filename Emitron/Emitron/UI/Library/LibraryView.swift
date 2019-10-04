@@ -46,21 +46,17 @@ struct LibraryView: View {
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
   @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
+  @State var hudOption: HudOption = .success
 
   var body: some View {
-    ZStack(alignment: .bottom) {
-        contentView
-        .navigationBarTitle(
-          Text(Constants.library))
+    contentView
+      .navigationBarTitle(
+        Text(Constants.library))
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
-      }
-
-      if showHudView {
-        hudView
-        .animation(.spring())
-      }
+    }
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
     }
   }
   
@@ -154,13 +150,6 @@ struct LibraryView: View {
       }
     }
   }
-  
-  private var hudView: some View {
-    let option: HudOption = showSuccess ? .success : .error
-    return HudView(option: option) {
-      self.showHudView = false
-    }
-  }
 
   private func updateFilters() {
     filters.searchQuery = self.searchText
@@ -174,7 +163,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           self.delete(for: content.videoID)
@@ -202,7 +191,7 @@ struct LibraryView: View {
         self.showHudView.toggle()
       }
       
-      self.showSuccess = success
+      self.hudOption = success ? .success : .error
       self.showHudView = true
     }
   }
@@ -214,7 +203,7 @@ struct LibraryView: View {
         self.showHudView.toggle()
       }
       
-      self.showSuccess = false
+      self.hudOption = .error
       self.showHudView = true
       return
     }
@@ -225,7 +214,7 @@ struct LibraryView: View {
         self.showHudView.toggle()
       }
       
-      self.showSuccess = false
+      self.hudOption = .error
       self.showHudView = true
       return
     }
@@ -237,7 +226,7 @@ struct LibraryView: View {
         self.showHudView.toggle()
       }
       
-      self.showSuccess = success
+      self.hudOption = success ? .success : .error
       self.showHudView = true
     }
   }

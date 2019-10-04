@@ -35,8 +35,6 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @EnvironmentObject var downloadsMC: DownloadsMC
-  @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentSummaryModel] {
@@ -56,7 +54,7 @@ struct DownloadsView: View {
   }
   
   private var contentView: some View {
-    return ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
   }
@@ -69,16 +67,6 @@ struct DownloadsView: View {
       
     case .save:
       self.downloadsMC.saveDownload(with: content)
-    }
-    
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-      
-      self.showSuccess = success
-      self.showHudView = true
     }
   }
   
