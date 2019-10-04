@@ -37,6 +37,7 @@ private struct Layout {
 struct CircularProgressBar: View {
   
   @State var progress: CGFloat
+  @State var spinCircle = false
   
   var body: some View {
     
@@ -48,12 +49,21 @@ struct CircularProgressBar: View {
         .opacity(0.2)
       
       Circle()
-        .trim(from: progress != 1 ? progress : 1, to: Layout.endProgress)
+        .trim(from: 0, to: spinCircle ? progress : Layout.endProgress)
         .stroke(Color.appGreen, lineWidth: Layout.line)
         .frame(width: Layout.frame, height: Layout.frame)
-        .rotationEffect(.degrees(90), anchor: .center)
+        .rotationEffect(.degrees(0), anchor: .center)
+        .animation(Animation.linear.repeatForever(autoreverses: false))
     }
-    .animation(Animation.default)
+    .onAppear {
+      while self.progress <= 1.0 {
+        self.spinCircle = true
+        return
+      }
+      
+      self.spinCircle = false
+    
+    }
   }
 }
 
