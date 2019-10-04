@@ -24,4 +24,8 @@ platform :ios do
     upload_to_testflight(skip_waiting_for_build_processing: true)
     slack(message: 'emitron successfully uploaded to TestFlight!')
   end
+
+  lane :tests do
+    run_tests(scheme: 'Emitron')
+  end
 end
