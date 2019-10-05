@@ -69,9 +69,9 @@ struct FiltersView: View {
       HStack {
         
         MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
-          self.presentationMode.wrappedValue.dismiss()
           self.filters.removeAll()
           self.contentsMC.updateFilters(newFilters: self.filters)
+          self.presentationMode.wrappedValue.dismiss()
         }
         .padding([.trailing], 10)
         
@@ -109,8 +109,8 @@ struct FiltersView: View {
     let title = equalSets ? "Close" : "Apply"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
-      self.presentationMode.wrappedValue.dismiss()
       self.contentsMC.updateFilters(newFilters: self.filters)
+      self.presentationMode.wrappedValue.dismiss()
     }
     
     return buttonView

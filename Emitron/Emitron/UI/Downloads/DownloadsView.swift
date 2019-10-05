@@ -39,7 +39,7 @@ struct DownloadsView: View {
   @State var showSuccess: Bool = false
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
-  var contents: [ContentSummaryModel] {
+  var contents: [ContentDetailsModel] {
     return downloadsMC.data.map { $0.content }
   }
   
@@ -62,11 +62,12 @@ struct DownloadsView: View {
     return contentListView
   }
   
-  private func handleAction(with action: DownloadsAction, content: ContentSummaryModel) {
+  private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
     
     switch action {
     case .delete:
-      self.downloadsMC.deleteDownload(with: content.videoID) { (success, contents) in
+      guard let videoId = content.videoID else { return }
+      self.downloadsMC.deleteDownload(with: videoId) { (success, contents) in
         self.showHudView.toggle()
         self.showSuccess = success
       }

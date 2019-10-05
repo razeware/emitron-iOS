@@ -47,20 +47,25 @@ class ContentDetailsModel {
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
   private(set) var videoID: Int?
+  private(set) var index: Int?
+  private(set) var professional: Bool = false
 
   private(set) var domains: [DomainModel] = []
-  private(set) var childContents: [ContentSummaryModel] = []
+  private(set) var childContents: [ContentDetailsModel] = []
   private(set) var groups: [GroupModel] = []
-  private(set) var progression: ProgressionModel?
-  private(set) var bookmark: BookmarkModel?
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
+  
+  var isDownloaded: Bool = false
+  var progression: ProgressionModel?
+  var bookmark: BookmarkModel?
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any]?) {
 
     self.id = jsonResource.id
+    self.index = jsonResource["ordinal"] as? Int
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
     self.description = jsonResource["description_plain_text"] as? String ?? ""
@@ -83,7 +88,7 @@ class ContentDetailsModel {
 
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
-    self.bookmarked = jsonResource["bookmarked?"] as? Bool ?? false
+    self.professional = jsonResource["professional"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""    
@@ -112,10 +117,10 @@ class ContentDetailsModel {
               let contentIds = relationship.data.compactMap { $0.id }
               let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
               // This is an ugly hack for now
-              let contentSummaries = included?.enumerated().compactMap({ index, summary -> ContentSummaryModel? in
-                ContentSummaryModel(summary, metadata: summary.meta, index: index)
+              let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
+                ContentDetailsModel(summary.element, metadata: [:])
               })
-              if let group = GroupModel(resource, metadata: resource.meta, childContents: contentSummaries ?? []) {
+              if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
                 groups.append(group)
               }
             }
@@ -138,6 +143,7 @@ class ContentDetailsModel {
       }
     }
     
+    self.bookmarked = self.bookmark != nil
     self.url = jsonResource.links["self"]
   }
   

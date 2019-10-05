@@ -76,7 +76,7 @@ extension PersistenceStore {
 // UserDefaults.standard.updateFilters
 
 enum UserDefaultsKey: String {
-  case filters, sort, playbackToken, playSpeed, subtitlesOn, wifiOnlyDownloads, downloadQuality
+  case filters, sort, playbackToken, playSpeed, closedCaptionOn, wifiOnlyDownloads, downloadQuality
 }
 
 extension UserDefaults {
@@ -132,7 +132,12 @@ extension UserDefaults {
   }
   
   var playSpeed: Float {
-    return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? Float ?? 1.0
+    if let speedString = UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? String,
+      let speed = Double(speedString) {
+      return Float(speed)
+    } else {
+      return 1.0
+    }
   }
   
   var wifiOnlyDownloads: Bool {
@@ -143,8 +148,8 @@ extension UserDefaults {
     return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? "HD"
   }
   
-  var subtitlesOn: Bool {
-    return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? Bool ?? false
+  var closedCaptionOn: Bool {
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.closedCaptionOn.rawValue) as? Bool ?? false
   }
 }
 

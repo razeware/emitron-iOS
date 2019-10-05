@@ -52,7 +52,7 @@ class DownloadsMC: NSObject, ObservableObject {
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
-    didSet {
+    willSet {
       objectWillChange.send(())
     }
   }
@@ -79,10 +79,11 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Public funcs
-  func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
+  func deleteDownload(with videoID: Int, completion: @escaping ((Bool, [ContentDetailsModel]) -> Void)) {
     
-    guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }) else { return }
-    let fileName = "\(selectedVideo.content.id).\(selectedVideo.content.videoID).\(String.appExtension)"
+    guard let selectedVideo = data.first(where: { $0.content.videoID == videoID }),
+    let videoId = selectedVideo.content.videoID else { return }
+    let fileName = "\(selectedVideo.content.id).\(videoId).\(String.appExtension)"
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
           let index = data.firstIndex(where: { $0.content.id == selectedVideo.content.id }) else { return }
     
@@ -104,9 +105,9 @@ class DownloadsMC: NSObject, ObservableObject {
     completion(true, contents)
   }
   
-  func saveDownload(with content: ContentSummaryModel, completion: @escaping ((Bool, [ContentSummaryModel])->())) {
-    let fileName = "\(content.id).\(content.videoID).\(String.appExtension)"
-    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
+  func saveDownload(with content: ContentDetailsModel, completion: @escaping ((Bool, [ContentDetailsModel]) -> Void)) {
+    guard let videoId = content.videoID,
+      let destinationUrl = localRoot?.appendingPathComponent("\(content.id).\(videoId).\(String.appExtension)", isDirectory: true) else { return }
     
     self.state = .loading
     
@@ -139,7 +140,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  func setDownloads(for contents: [ContentSummaryModel], with completion: (([ContentSummaryModel])->())) {
+  func setDownloads(for contents: [ContentDetailsModel], with completion: (([ContentDetailsModel]) -> Void)) {
     
     self.state = .loading
     contents.forEach { model in
@@ -151,8 +152,9 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   // MARK: Private funcs
-  private func loadVideoStream(for content: ContentSummaryModel, on videosMC: VideosMC, completion: @escaping ((Data?) -> Void)) {
-    videosMC.loadVideoStream(for: content.videoID) {
+  private func loadVideoStream(for content: ContentDetailsModel, on videosMC: VideosMC, completion: @escaping ((Data?) -> Void)) {
+    guard let videoID = content.videoID else { return }
+    videosMC.loadVideoStream(for: videoID) {
       if let streamURL = videosMC.streamURL {
         
         URLSession(configuration: .default, delegate: self, delegateQueue: .main).downloadTask(with: streamURL).resume()
@@ -218,13 +220,13 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          self.createDownloadModel(with: attachmentModel, content: ContentSummaryModel(contentDetails: content), isDownloaded: isDownloaded)
+          self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: isDownloaded)
         }
       }
     }
   }
   
-  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool) {
+  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool) {
     let downloadModel = DownloadModel(video: attachmentModel, content: content, isDownloaded: isDownloaded)
     self.downloadedModel = downloadModel
     self.data.append(downloadModel)

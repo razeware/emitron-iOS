@@ -37,6 +37,13 @@ public struct UserModel: Codable {
   public let avatarUrl: URL
   public let name: String
   public let token: String
+  var permissions: PermissionsModel?
+  
+//  public var isPro: Bool {
+//    guard let permissions = permissions else { return false }
+//    return permissions.tag == .pro
+//  }
+  public var isPro = true
 
   // MARK: - Initializers
   init?(dictionary: [String: String]) {
@@ -57,6 +64,7 @@ public struct UserModel: Codable {
     self.avatarUrl = avatarUrl
     self.name = name
     self.token = token
+    self.permissions = nil
   }
 }
 

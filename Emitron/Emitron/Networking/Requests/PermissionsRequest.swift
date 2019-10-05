@@ -34,7 +34,7 @@ struct PermissionsRequest: Request {
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
-  var path: String { return "/persmissions)" }
+  var path: String { return "/permissions)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 

@@ -73,3 +73,53 @@ struct ShowProgressionsRequest: Request {
     return progression
   }
 }
+
+struct UpdateProgressionsRequeest: Request {
+  typealias Response = ProgressionModel
+
+  // MARK: - Properties
+  var method: HTTPMethod { return .POST }
+  var path: String { return "/progressions/bulk" }
+  var additionalHeaders: [String: String]?
+  var body: Data? {
+    let json: [String: Any] =
+      ["progressions":
+        [[
+          "content_id": id,
+          "progress": 10,
+          "updated_at": "2019-06-18T14:16:53.689"
+          ],
+         [
+          "content_id": 67890,
+          "finished": true,
+          "updated_at": "2019-06-18T14:16:53.689"
+          ]]
+      ]
+        
+    return try? JSONSerialization.data(withJSONObject: json)
+  }
+
+  private var id: Int
+  private var progress: Int
+  private var finished: Bool = false
+  private var updatedAt: Date
+
+  // MARK: - Initializers
+  init(id: Int, progress: Int, finished: Bool, updatedAt: Date) {
+    self.id = id
+    self.progress = progress
+    self.finished = finished
+    self.updatedAt = updatedAt
+  }
+
+  // MARK: - Internal
+  func handle(response: Data) throws -> ProgressionModel {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    guard let progression = progressions.first else {
+      throw RWAPIError.processingError(nil)
+    }
+    return progression
+  }
+}

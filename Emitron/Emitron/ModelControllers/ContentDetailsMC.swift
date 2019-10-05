@@ -43,19 +43,19 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
+  private let bookmarksService: BookmarksService
   private(set) var data: ContentDetailsModel
   
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentSummaryModel) {
+       partialContentDetail: ContentDetailsModel) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.data = ContentDetailsModel(summaryModel: partialContentDetail)
+    self.data = partialContentDetail
+    self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
-    
-    //getContentSummary()
   }
   
   // MARK: - Internal
@@ -76,11 +76,49 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentSummaryMC", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData
+      }
+    }
+  }
+  
+  func toggleBookmark(for bookmarkId: Int? = nil) {
+    
+    state = .loading
+    
+    if !data.bookmarked {
+      bookmarksService.makeBookmark(for: data.id) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+        case .failure(let error):
+          self.state = .failed
+          Failure
+          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+        case .success(let bookmark):
+          self.data.bookmark = bookmark
+          self.state = .hasData
+        }
+      }
+    } else {
+      guard let id = bookmarkId else { return }
+      // For deleting the bookmark, we have to use the original bookmark id
+      bookmarksService.destroyBookmark(for: id) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+        case .failure(let error):
+          Failure
+          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+          self.state = .failed
+        case .success(_):
+          self.state = .hasData
+        }
       }
     }
   }

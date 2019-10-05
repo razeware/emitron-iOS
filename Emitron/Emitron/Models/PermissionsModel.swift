@@ -29,13 +29,21 @@
 import Foundation
 import SwiftyJSON
 
-enum Permission: String {
+enum Permission: String, Codable {
   case beginner = "stream-beginner-videos"
   case pro = "stream-professional-videos"
   case none = ""
 }
 
-class PermissionsModel {
+class PermissionsModel: Codable, Equatable {
+  
+  static func == (lhs: PermissionsModel, rhs: PermissionsModel) -> Bool {
+    return lhs.id == rhs.id
+      && lhs.name == rhs.name
+      && lhs.tag == rhs.tag
+      && lhs.createdAt == rhs.createdAt
+      && lhs.updatedAt == rhs.updatedAt
+  }
   
   // MARK: - Properties
   private(set) var id: Int = 0

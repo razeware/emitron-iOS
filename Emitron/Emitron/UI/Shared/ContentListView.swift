@@ -48,7 +48,7 @@ enum ContentScreen {
   
   var detailMesage: String? {
     switch self {
-    case .library: return "Try removing some filters."
+    case .library: return "Try removing some filters or checking your \n WiFi settings."
     case .tips: return "Swipe on your downloads to remove them."
     default: return nil
     }
@@ -85,25 +85,24 @@ struct ContentListView: View {
   @State var showSuccess: Bool = false
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
-  var contents: [ContentSummaryModel] = []
+  var contents: [ContentDetailsModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
   var dataState: DataState
   var totalContentNum: Int
-  var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
+  var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
   
   var body: some View {
-//    ZStack(alignment: .bottom) {
-//      contentView
-//
-//      if showHudView {
-//        createHudView()
-//          .animation(.spring())
-//      }
-//    }
-    contentView
+    ZStack(alignment: .bottom) {
+      contentView
+
+      if showHudView {
+        createHudView()
+          .animation(.spring())
+      }
+    }
   }
   
   private var listView: some View {
@@ -144,10 +143,10 @@ struct ContentListView: View {
     case .initial,
          .loading where contents.isEmpty:
       return AnyView(loadingView)
-    case .hasData where contents.isEmpty:
+    case .failed,
+         .hasData where contents.isEmpty:
       return AnyView(emptyView)
     case .hasData,
-         .failed,
          .loading where !contents.isEmpty:
       return AnyView(listView)
     default:
@@ -164,7 +163,7 @@ struct ContentListView: View {
         
         NavigationLink(destination:
           ContentListingView(content: partialContent, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+            self.callback?(.save, content)
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
@@ -189,7 +188,7 @@ struct ContentListView: View {
         
         NavigationLink(destination:
           ContentListingView(content: partialContent, callback: { content in
-            self.callback?(.save, ContentSummaryModel(contentDetails: content))
+            self.callback?(.save, content)
           }, user: user!))
         {
           self.cardView(content: partialContent, onRightTap: { success in
@@ -205,7 +204,7 @@ struct ContentListView: View {
       .background(self.bgColor)
   }
   
-  private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
+  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
     
     return CardView(model: viewModel,
@@ -228,6 +227,8 @@ struct ContentListView: View {
       Text(contentScreen.detailMesage ?? "")
         .font(.uiLabel)
         .foregroundColor(.battleshipGrey)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
       
       Spacer()
     }
@@ -267,7 +268,7 @@ struct ContentListView: View {
     }
   }
   
-  mutating func updateContents(with newContents: [ContentSummaryModel]) {
+  mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
 }
