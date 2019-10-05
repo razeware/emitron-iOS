@@ -73,11 +73,11 @@ struct ContentSummaryView: View {
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .fixedSize(horizontal: false, vertical: true)
-        .padding([.top], -5)
       
       Text(contentSummaryMC.data.releasedAtDateTimeString)
-        .font(.uiFootnote)
+        .font(.uiCaption)
         .foregroundColor(.battleshipGrey)
+        .padding([.top], 5)
       
       HStack {
         downloadImage
@@ -87,7 +87,7 @@ struct ContentSummaryView: View {
       .padding([.top], 20)
       
       Text(contentSummaryMC.data.description)
-        .font(.uiFootnote)
+        .font(.uiCaption)
         .foregroundColor(.battleshipGrey)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...

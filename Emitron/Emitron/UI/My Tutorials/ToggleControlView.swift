@@ -98,7 +98,7 @@ struct ToggleControlView: View {
     let stackView = VStack {
       Text(text)
       .lineLimit(1)
-      .font(.uiButtonLabelSmall)
+      .font(.uiButtonLabel)
       .foregroundColor(Color.appGreen)
       .frame(width: 80, height: nil, alignment: .center)
       
@@ -115,7 +115,7 @@ struct ToggleControlView: View {
     let stackView = VStack {
       Text(text)
       .lineLimit(1)
-      .font(.uiButtonLabelSmall)
+      .font(.uiButtonLabel)
       .foregroundColor(Color.coolGrey)
       .frame(width: 80, height: nil, alignment: .center)
       
