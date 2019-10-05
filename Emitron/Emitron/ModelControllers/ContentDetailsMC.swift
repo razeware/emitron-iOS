@@ -85,7 +85,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     }
   }
   
-  func toggleBookmark() {
+  func toggleBookmark(for bookmarkId: Int? = nil) {
     
     state = .loading
     
@@ -103,7 +103,9 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
         }
       }
     } else {
-      bookmarksService.destroyBookmark(for: data.id) { [weak self] result in
+      guard let id = bookmarkId else { return }
+      // For deleting the bookmark, we have to use the original bookmark id
+      bookmarksService.destroyBookmark(for: id) { [weak self] result in
         guard let self = self else { return }
         
         switch result {

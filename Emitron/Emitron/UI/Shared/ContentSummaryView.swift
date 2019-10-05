@@ -196,6 +196,6 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark()
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
   }
 }

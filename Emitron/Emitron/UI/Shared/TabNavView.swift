@@ -41,6 +41,7 @@ struct TabNavView: View {
       }.tabItem {
         Text(Constants.library)
         Image("library")
+          .foregroundColor(.appGreen)
       }
       .tag(0)
       
