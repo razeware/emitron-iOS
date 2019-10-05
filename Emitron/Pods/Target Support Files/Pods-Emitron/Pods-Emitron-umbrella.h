@@ -11,6 +11,6 @@
 #endif
 
 
-FOUNDATION_EXPORT double Pods_EmitronVersionNumber;
-FOUNDATION_EXPORT const unsigned char Pods_EmitronVersionString[];
+FOUNDATION_EXPORT double Pods_emitronVersionNumber;
+FOUNDATION_EXPORT const unsigned char Pods_emitronVersionString[];
 
