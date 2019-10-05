@@ -115,6 +115,9 @@ public class Guardpost {
     }
 
     authSession?.presentationContextProvider = presentationContextDelegate
+    // This will prevent sharing cookies with Safari, which means no auto-login
+    // However, it also means that you can actually log out, which is good, I guess.
+    authSession?.prefersEphemeralWebBrowserSession = true
     authSession?.start()
   }
 
