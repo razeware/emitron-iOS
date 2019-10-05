@@ -76,7 +76,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentSummaryMC", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
@@ -95,8 +95,10 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
         
         switch result {
         case .failure(let error):
-          print(error)
           self.state = .failed
+          Failure
+          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
         case .success(let bookmark):
           self.data.bookmark = bookmark
           self.state = .hasData
@@ -110,10 +112,12 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
         
         switch result {
         case .failure(let error):
-          print(error)
+          Failure
+          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
           self.state = .failed
-        case .success(let success):
-          print(success)
+        case .success(_):
+          self.state = .hasData
         }
       }
     }

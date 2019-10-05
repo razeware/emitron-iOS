@@ -95,10 +95,8 @@ struct UpdateProgressionsRequeest: Request {
           "updated_at": "2019-06-18T14:16:53.689"
           ]]
       ]
-    
-    let jsonData = try? JSONSerialization.data(withJSONObject: json)
-    
-    return jsonData
+        
+    return try? JSONSerialization.data(withJSONObject: json)
   }
 
   private var id: Int

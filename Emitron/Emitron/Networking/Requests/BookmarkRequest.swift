@@ -148,11 +148,9 @@ struct MakeBookmark: Request {
             ]
           ]
         ]
-    ]
+    ]    
     
-    let jsonData = try? JSONSerialization.data(withJSONObject: json)
-    
-    return jsonData
+    return try? JSONSerialization.data(withJSONObject: json)
   }
   
   private var id: Int
