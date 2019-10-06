@@ -32,7 +32,7 @@ import Combine
 import SwiftyJSON
 
 extension String {
-  static let appExtension: String = "ptk"
+  static let appExtension: String = "vdl"
   static let videoIDKey: String = "videoID"
   static let versionKey: String = "Version"
   static let videoKey: String = "Video"
@@ -240,6 +240,9 @@ class DownloadsMC: NSObject, ObservableObject {
       [weak self] success in
       guard let `self` = self else { return }
       guard success else {
+        Failure
+        .fetch(from: "DownloadsMC", reason: "Error in saveNewDocument")
+        .log(additionalParams: nil)
         fatalError("Failed to create file.")
       }
       

@@ -84,6 +84,9 @@ class Document: UIDocument {
       unarchiver.requiresSecureCoding = false
       return unarchiver.decodeObject(forKey: .dataKey)
     } catch let error {
+      Failure
+        .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+        .log(additionalParams: nil)
       fatalError("Unarchiving failed. \(error.localizedDescription)")
     }
   }
