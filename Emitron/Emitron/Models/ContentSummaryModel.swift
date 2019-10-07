@@ -112,7 +112,7 @@ class ContentSummaryModel {
     }
   }
 
-  init(contentDetails: ContentDetailsModel, videoID: Int? = nil) {
+  init(contentDetails: ContentDetailsModel) {
     self.id = contentDetails.id
     self.name = contentDetails.name
     self.uri = contentDetails.uri
@@ -127,11 +127,7 @@ class ContentSummaryModel {
     self.cardArtworkURL = contentDetails.cardArtworkURL
     self.technologyTripleString = contentDetails.technologyTripleString
     self.contributorString = contentDetails.contributorString
-    if let videoID = videoID {
-      self.videoID = videoID
-    } else {
-      self.videoID = contentDetails.videoID ?? 0
-    }
+    self.videoID = contentDetails.videoID ?? 0
     self.progression = contentDetails.progression
     self.bookmark = contentDetails.bookmark
 
