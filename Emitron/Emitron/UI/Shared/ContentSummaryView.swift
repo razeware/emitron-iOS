@@ -38,7 +38,7 @@ struct ContentSummaryView: View {
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, Bool) -> Void)?
-  @ObservedObject var downloadsMC: DownloadsMC
+  var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
 //  var details: ContentDetailsModel
   var body: some View {
@@ -189,7 +189,6 @@ struct ContentSummaryView: View {
 
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
-//    let content = ContentSummaryModel(contentDetails: details, videoID: self.videoId)
     callback?(contentSummaryMC.data, success)
   }
 
@@ -197,105 +196,3 @@ struct ContentSummaryView: View {
     contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
   }
 }
-
-//#if DEBUG
-//struct ContentSummaryView_Previews: PreviewProvider {
-//    static var previews: some View {
-//      return ContentSummaryView(downloadsMC: DataManager.current!.downloadsMC, details: ContentDetailsModel.test)
-//    }
-//  private var completedTag: AnyView? {
-//    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
-//
-//    let view = ZStack {
-//      Rectangle()
-//        .foregroundColor(.appGreen)
-//        .cornerRadius(6)
-//        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-//
-//      Text("COMPLETED")
-//        .foregroundColor(.white)
-//        .font(.uiUppercase)
-//    }
-//
-//    return AnyView(view)
-//  }
-//
-//  private var proTag: some View {
-//    return
-//      ZStack {
-//        Rectangle()
-//          .foregroundColor(.appGreen)
-//          .cornerRadius(6)
-//          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-//
-//        Text("PRO")
-//          .foregroundColor(.white)
-//          .font(.uiUppercase)
-//    }
-//  }
-//
-//  private func createHudView() -> some View {
-//    let option: HudOption = showSuccess ? .success : .error
-//    return HudView(option: option) {
-//      self.showHudView = false
-//    }
-//  }
-//
-//  private var downloadImage: some View {
-//    return Button(action: {
-//      // Download Action
-//      self.download()
-//    }) {
-//      Image(downloadImgName)
-//        .resizable()
-//        .frame(width: 20, height: 20)
-//        .padding([.trailing], 20)
-//    }
-//  }
-//
-//  private var bookmarkImage: some View {
-//    return Button(action: {
-//      // Download Action
-//      self.bookmark()
-//    }) {
-//      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
-//      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
-//        Image("bookmarkActive")
-//          .resizable()
-//          .frame(width: 20, height: 20)
-//          .padding([.trailing], 20)
-//          .foregroundColor(.coolGrey)
-//      } else {
-//        Image("bookmarkActive")
-//          .resizable()
-//          .frame(width: 20, height: 20)
-//          .padding([.trailing], 20)
-//          .foregroundColor(.appGreen)
-//      }
-//    }
-//  }
-//
-//  private var downloadImgName: String {
-//    contentSummaryMC.data.isDownloaded ? DownloadImageName.inActive : DownloadImageName.active
-//  }
-//
-//  private func download() {
-//    guard downloadImgName != DownloadImageName.inActive else {
-//      if showHudView {
-//        // dismiss hud currently showing
-//        showHudView.toggle()
-//      }
-//      showSuccess = false
-//      showHudView = true
-//      return
-//    }
-//
-//    self.callback?(contentSummaryMC.data)
-//  }
-//
-//  private func bookmark() {
-//    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
-//  }
-//}
-//#endif
-

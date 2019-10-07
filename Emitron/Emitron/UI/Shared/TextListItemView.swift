@@ -37,7 +37,9 @@ struct TextListItemView: View {
   // It's fine that this child view isn't observing this parameter, because the parent is, so the changes will trickle down through the requests
   // Good thought to have when creating the architecture for non-networking based views
   var contentSummary: ContentDetailsModel
-  var buttonAction: () -> Void
+  var buttonAction: (Bool) -> Void
+  var downloadsMC: DownloadsMC
+
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -51,27 +53,48 @@ struct TextListItemView: View {
         
         Spacer()
         
-        //ISSUE: Should probably wrap this in a Button view, but the tapAction, when placed on a cell doesn't actually register for the button,
-        // it just passes through; example below
-        Image("downloadInactive")
-          .foregroundColor(.coolGrey)
-          .onTapGesture {
-            self.buttonAction()
-        }
-        
-        //      Button(action: {
-        //        self.buttonAction()
-        //      }) {
-        //        Image("download")
-        //          .foregroundColor(.coolGrey)
-        //        }
-        //      }
+        setUpImageAndProgress()
+
       }
       Text(contentSummary.duration.timeFromSeconds)
         .font(.uiCaption)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
     }
   }
+  
+  private func setUpImageAndProgress() -> AnyView {
+    
+    let image = Image(self.downloadImageName())
+      .resizable()
+      .frame(width: 19, height: 19)
+      .onTapGesture {
+        self.download()
+    }
+    
+    // Only show progress on model that is currently being downloaded
+    guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummary.id }),
+          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+      return AnyView(image)
+    }
+    
+    switch downloadsMC.state {
+    case .loading:
+      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      
+    default:
+      return AnyView(image)
+    }
+  }
+  
+  private func downloadImageName() -> String {
+    return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
+  }
+  
+  private func download() {
+    let success = downloadImageName() != DownloadImageName.inActive
+    buttonAction(success)
+  }
+
   
   private var doneCheckbox: AnyView {
     let numberView = ZStack {

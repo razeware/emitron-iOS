@@ -33,7 +33,7 @@ struct ContentListingView: View {
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-  @ObservedObject var downloadsMC: DownloadsMC
+  var downloadsMC: DownloadsMC
   var content: ContentDetailsModel
   var user: UserModel
 
@@ -47,7 +47,6 @@ struct ContentListingView: View {
     self.content = content
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
-//    self.videoID = content.videoID
     self.downloadsMC = downloadsMC
   }
 
@@ -55,9 +54,19 @@ struct ContentListingView: View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
 
     return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
-      TextListItemView(contentSummary: model, buttonAction: {
-        // Download
-      })
+      TextListItemView(contentSummary: model, buttonAction: { success in
+        if success {
+          self.save(for: model)
+        } else {
+          if self.showHudView {
+            self.showHudView.toggle()
+          }
+
+          self.hudOption = success ? .success : .error
+          self.showHudView = true
+        }
+      }, downloadsMC: self.downloadsMC)
+
       .onTapGesture {
         self.isPresented = true
       }
@@ -66,7 +75,7 @@ struct ContentListingView: View {
                                                          user: self.user) }
     })
   }
-
+  
   private var playButton: AnyView? {
     guard let videoID = contentSummaryMC.data.videoID,
     let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
@@ -99,7 +108,7 @@ struct ContentListingView: View {
   var coursesSection: AnyView? {
     let groups = contentSummaryMC.data.groups
 
-    guard contentSummaryMC.data.contentType == .collection, !groups.isEmpty else {
+    guard contentSummaryMC.data.contentType == .collection else {
       return nil
     }
 
@@ -219,6 +228,7 @@ struct ContentListingView: View {
   }
 
   private var courseDetailsSection: AnyView {
+    
     switch contentSummaryMC.state {
     case .failed:
       return AnyView(Text("We have failed"))
@@ -283,8 +293,13 @@ struct ContentListingView: View {
       self.showHudView = true
       return
     }
-
-    self.downloadsMC.saveDownload(with: content)
+    
+    if content.videoID == nil {
+      self.downloadsMC.saveCollection(with: content)
+    } else {
+      self.downloadsMC.saveDownload(with: content)
+    }
+    
     self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing

@@ -163,9 +163,6 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    contentsMC.data.forEach { model in
-      print("model.videoID: \(model.videoID)")
-    }
     let contentSectionView = ContentListView(downloadsMC: downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
@@ -173,7 +170,6 @@ struct LibraryView: View {
             self.delete(for: videoID)
           }
         case .save:
-          print("content: \(content.videoID)")
           self.save(for: content)
         }
       }
@@ -225,7 +221,17 @@ struct LibraryView: View {
       return
     }
 
-    self.downloadsMC.saveDownload(with: content)
+    if content.videoID == nil {
+      
+      if content.groups.isEmpty {
+        self.contentsMC.getContentSummary(with: content.id) { detailsModel in
+          self.downloadsMC.saveCollection(with: detailsModel)
+        }
+      }
+    } else {
+      self.downloadsMC.saveDownload(with: content)
+    }
+    
     self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing

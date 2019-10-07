@@ -113,8 +113,8 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   func saveDownload(with content: ContentDetailsModel) {
-    print("content: \(content.videoID)")
     guard let videoID = content.videoID else { return }
+    
     let fileName = "\(content.id).\(videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else {
       self.callback?(false)
@@ -132,6 +132,16 @@ class DownloadsMC: NSObject, ObservableObject {
 
     let videosMC = VideosMC(user: self.user, contentId: content.id)
     self.loadVideoStream(for: content, on: videosMC, localPath: destinationUrl)
+  }
+  
+  func saveCollection(with content: ContentDetailsModel) {
+    self.state = .loading
+    content.groups.forEach { groupModel in
+      groupModel.childContents.forEach { model in
+        print("model: \(model)")
+        saveDownload(with: model)
+      }
+    }
   }
 
   // MARK: Private funcs
