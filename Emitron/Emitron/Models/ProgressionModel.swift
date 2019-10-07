@@ -40,7 +40,7 @@ class ProgressionModel {
   // There's something funky going on with Date's in Xcode 11
   private(set) var createdAt: Date
   private(set) var updatedAt: Date
-  private(set) var content: ContentSummaryModel?
+  private(set) var content: ContentDetailsModel?
   
   // MARK: - Initializers
   init(_ jsonResource: JSONAPIResource,
@@ -68,7 +68,8 @@ class ProgressionModel {
       let ids = relationship.data.compactMap { $0.id }
       let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
       let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, progression: self) }
-      if let content = includedContent?.first {
+      let detailContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
+      if let content = detailContent?.first {
         self.content = content
       }
     }

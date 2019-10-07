@@ -31,7 +31,7 @@ import SwiftUI
 struct CustomToggle: UIViewRepresentable {
   
   var isOn: Bool
-  var callback: (()->())?
+  var callback: (() -> Void)?
   
   func makeUIView(context: Context) -> UISwitch {
     let uiView = UISwitch()
@@ -69,7 +69,7 @@ struct CustomToggle: UIViewRepresentable {
 
 struct CustomToggleView: View {
   var isOn: Bool
-  var callback: (()->())?
+  var callback: (() -> Void)?
   var body: some View {
     CustomToggle(isOn: isOn, callback: callback)
   }

@@ -35,7 +35,7 @@ private struct Layout {
 
 enum ContentScreen {
   case library, downloads, myTutorials, tips
-  
+
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
@@ -45,15 +45,15 @@ enum ContentScreen {
     case .tips: return "Swipe left to delete a download."
     }
   }
-  
+
   var detailMesage: String? {
     switch self {
-    case .library: return "Try removing some filters."
+    case .library: return "Try removing some filters or checking your \n WiFi settings."
     case .tips: return "Swipe on your downloads to remove them."
     default: return nil
     }
   }
-  
+
   var buttonText: String? {
     switch self {
     case .downloads: return "Explore Tutorials"
@@ -61,7 +61,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-  
+
   var buttonIconName: String? {
     switch self {
     case .downloads, .tips: return "arrowGreen"
@@ -69,7 +69,7 @@ enum ContentScreen {
     default: return nil
     }
   }
-  
+
   var buttonColor: Color? {
     switch self {
     case .downloads, .tips: return .appGreen
@@ -80,29 +80,29 @@ enum ContentScreen {
 }
 
 struct ContentListView: View {
-  
+
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var downloadsMC: DownloadsMC
-  
+
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
-  var contents: [ContentSummaryModel] = []
+  var contents: [ContentDetailsModel] = []
   var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
   var dataState: DataState
   var totalContentNum: Int
-  var callback: ((DownloadsAction, ContentSummaryModel) -> Void)?
-  
+  var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
+
   var body: some View {
     contentView
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
   }
-  
+
   private var listView: some View {
     List {
       if headerView != nil {
@@ -124,7 +124,7 @@ struct ContentListView: View {
       }
     }
   }
-  
+
   private var loadMoreView: AnyView? {
     if totalContentNum > contents.count {
       return AnyView(Text("Loading...")
@@ -135,20 +135,20 @@ struct ContentListView: View {
       return nil
     }
   }
-  
+
   private var contentView: AnyView {
     return AnyView(listView)
   }
-  
+
   private var cardTableNavView: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    
+
     return
       ForEach(contents, id: \.id) { partialContent in
-        
+
         NavigationLink(destination:
-          ContentListingView(content: partialContent, videoID: partialContent.videoID, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -157,7 +157,7 @@ struct ContentListView: View {
               if self.showHudView {
                 self.showHudView.toggle()
               }
-              
+
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
@@ -170,17 +170,17 @@ struct ContentListView: View {
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
   }
-  
+
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
   private var cardsTableViewWithDelete: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    
+
     return
       ForEach(contents, id: \.id) { partialContent in
-        
+
         NavigationLink(destination:
-          ContentListingView(content: partialContent, videoID: partialContent.videoID, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -189,7 +189,7 @@ struct ContentListView: View {
               if self.showHudView {
                 self.showHudView.toggle()
               }
-              
+
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
@@ -203,54 +203,56 @@ struct ContentListView: View {
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
   }
-  
-  private func cardView(content: ContentSummaryModel, onRightTap: ((Bool) -> Void)?) -> some View {
+
+  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
-    
+
     return CardView(model: viewModel,
                     contentScreen: contentScreen,
                     onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
   }
-  
+
   private var emptyView: some View {
     VStack {
       headerView
-      
+
       Spacer()
-      
+
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
-      
+
       Text(contentScreen.detailMesage ?? "")
         .font(.uiLabel)
         .foregroundColor(.battleshipGrey)
-      
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
+
       Spacer()
     }
   }
-  
+
   private var loadingView: some View {
     VStack {
       headerView
-      
+
       Spacer()
-      
+
       Text("Loading...")
         .font(.uiTitle2)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
-      
+
       Spacer()
     }
   }
-  
+
   private func loadMoreContents() {
     contentsMC.loadMore()
   }
-  
+
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
@@ -258,8 +260,8 @@ struct ContentListView: View {
       self.callback?(.delete, content)
     }
   }
-  
-  mutating func updateContents(with newContents: [ContentSummaryModel]) {
+
+  mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
 }

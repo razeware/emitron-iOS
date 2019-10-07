@@ -31,14 +31,14 @@ import SwiftyJSON
 
 struct GetBookmarksRequest: Request {
   typealias Response = [BookmarkModel]
-
+  
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/bookmarks" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   var parameters: [Parameter]? { return nil }
-
+  
   // MARK: - Internal
   func handle(response: Data) throws -> [BookmarkModel] {
     let json = try JSON(data: response)
@@ -50,20 +50,20 @@ struct GetBookmarksRequest: Request {
 
 struct DeleteBookmarkRequest: Request {
   typealias Response = [BookmarkModel]
-
+  
   // MARK: - Properties
   var method: HTTPMethod { return .DELETE }
   var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
-
+  
   private var id: Int
-
+  
   // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
-
+  
   // MARK: - Internal
   func handle(response: Data) throws -> [BookmarkModel] {
     let json = try JSON(data: response)
@@ -75,19 +75,91 @@ struct DeleteBookmarkRequest: Request {
 
 struct BookmarkRequest: Request {
   typealias Response = BookmarkModel
-
+  
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
   private var id: Int
-
+  
   // MARK: - Initializers
   init(id: Int) {
     self.id = id
   }
+  
+  // MARK: - Internal
+  func handle(response: Data) throws -> BookmarkModel {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
+    guard let bookmark = bookmarks.first,
+      bookmarks.count == 1 else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return bookmark
+  }
+}
 
+struct DestroyBookmarkRequest: Request {
+  typealias Response = Int
+  
+  // MARK: - Properties
+  var method: HTTPMethod { return .DELETE }
+  var path: String { return "/bookmarks/\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { return nil }
+  private var id: Int
+  
+  // MARK: - Initializers
+  init(id: Int) {
+    self.id = id
+  }
+  
+  // MARK: - Internal
+  func handle(response: Data) throws -> Int {
+    let json = try JSON(data: response)
+    let doc = JSONAPIDocument(json)
+    let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
+    guard let bookmark = bookmarks.first,
+      bookmarks.count == 1 else {
+        throw RWAPIError.processingError(nil)
+    }
+    
+    return 0
+  }
+}
+
+struct MakeBookmark: Request {
+  typealias Response = BookmarkModel
+  
+  // MARK: - Properties
+  var method: HTTPMethod { return .POST }
+  var path: String { return "/bookmarks" }
+  var additionalHeaders: [String: String]?
+  var body: Data? {
+    let json: [String: Any] =
+      ["data":
+        ["type": "bookmarks", "relationships":
+          ["content":
+            ["data":
+              ["type": "contents", "id": id]
+            ]
+          ]
+        ]
+    ]    
+    
+    return try? JSONSerialization.data(withJSONObject: json)
+  }
+  
+  private var id: Int
+  
+  // MARK: - Initializers
+  init(id: Int) {
+    self.id = id
+  }
+  
   // MARK: - Internal
   func handle(response: Data) throws -> BookmarkModel {
     let json = try JSON(data: response)

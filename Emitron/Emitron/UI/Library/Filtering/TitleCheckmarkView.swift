@@ -48,7 +48,7 @@ struct TitleCheckmarkView: View {
     HStack {
       Text(name)
         .foregroundColor(.appBlack)
-        .font(.uiBodyCustom)
+        .font(.uiLabel)
         .padding([.trailing], Layout.padding.textTrailing)
       
       Spacer()

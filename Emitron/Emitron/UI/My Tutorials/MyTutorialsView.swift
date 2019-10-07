@@ -58,7 +58,7 @@ struct MyTutorialView: View {
       })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView()
-    }
+      }
   }
   
   private var toggleControl: AnyView {
@@ -79,7 +79,7 @@ struct MyTutorialView: View {
   }
   
   private var contentView: some View {
-    var dataToDisplay: [ContentSummaryModel] = []
+    var dataToDisplay: [ContentDetailsModel] = []
     var stateToUse: DataState
     var numTutorials: Int
     

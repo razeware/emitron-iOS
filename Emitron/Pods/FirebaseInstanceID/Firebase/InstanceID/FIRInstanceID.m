@@ -697,13 +697,7 @@ static FIRInstanceID *gInstanceID;
                          userInfo:userInfo];
 }
 
-// If the firebaseApp is available we should send logs for the error through it before
-// raising an exception.
 + (void)exitWithReason:(nonnull NSString *)reason forFirebaseApp:(FIRApp *)firebaseApp {
-  [firebaseApp sendLogsWithServiceName:kFIRIIDServiceInstanceID
-                               version:FIRInstanceIDCurrentLibraryVersion()
-                                 error:[self configureErrorWithReason:reason]];
-
   [NSException raise:kFIRIIDErrorDomain
               format:@"Could not configure Firebase InstanceID. %@", reason];
 }
@@ -946,9 +940,9 @@ static FIRInstanceID *gInstanceID;
                                           object:[self.defaultFCMToken copy]];
         [[NSNotificationQueue defaultQueue] enqueueNotification:tokenRefreshNotification
                                                    postingStyle:NSPostASAP];
-
-        [self performDefaultTokenHandlerWithToken:token error:nil];
       }
+
+      [self performDefaultTokenHandlerWithToken:token error:nil];
     }
   };
 
@@ -1018,6 +1012,16 @@ static FIRInstanceID *gInstanceID;
     FIRInstanceID_WEAKIFY(self);
     [self asyncLoadKeyPairWithHandler:^(FIRInstanceIDKeyPair *keyPair, NSError *error) {
       FIRInstanceID_STRONGIFY(self);
+      if (self == nil) {
+        FIRInstanceIDLoggerError(kFIRInstanceIDMessageCodeInstanceID017,
+                                 @"Instance ID shut down during token reset. Aborting");
+        return;
+      }
+      if (self.apnsTokenData == nil) {
+        FIRInstanceIDLoggerError(kFIRInstanceIDMessageCodeInstanceID018,
+                                 @"apnsTokenData was set to nil during token reset. Aborting");
+        return;
+      }
 
       NSMutableDictionary *tokenOptions = [@{
         kFIRInstanceIDTokenOptionsAPNSKey : self.apnsTokenData,

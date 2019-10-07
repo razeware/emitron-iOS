@@ -59,13 +59,13 @@ struct LibraryView: View {
       self.showHudView = false
     }
   }
-  
+
   private var contentControlsSection: AnyView {
     AnyView(
       VStack {
         searchAndFilterControls
         numberAndSortView
-        
+
         if !filters.applied.isEmpty {
           filtersView
         }
@@ -74,10 +74,10 @@ struct LibraryView: View {
       .background(Color.white)
     )
   }
-  
+
   private var searchField: some View {
     //TODO: Need to figure out how to erase the textField
-    
+
     TextField(Constants.search,
               text: $searchText,
               onEditingChanged: { _ in
@@ -92,7 +92,7 @@ struct LibraryView: View {
         self.updateFilters()
       }))
   }
-  
+
   private var searchAndFilterControls: some View {
     HStack {
       searchField
@@ -107,13 +107,13 @@ struct LibraryView: View {
         .padding([.leading], .searchFilterPadding)
     }
   }
-  
+
   private var numberAndSortView: some View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
         .font(.uiLabel)
         .foregroundColor(.battleshipGrey)
-      
+
       Spacer()
 
       Button(action: {
@@ -131,7 +131,7 @@ struct LibraryView: View {
       }
     }
   }
-  
+
   private var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
@@ -163,15 +163,21 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
+    contentsMC.data.forEach { model in
+      print("model.videoID: \(model.videoID)")
+    }
     let contentSectionView = ContentListView(downloadsMC: downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
-          self.delete(for: content.videoID)
+          if let videoID = content.videoID {
+            self.delete(for: videoID)
+          }
         case .save:
+          print("content: \(content.videoID)")
           self.save(for: content)
         }
       }
-    
+
     switch downloadsMC.state {
       // Callling this simply to trigger view re-rendering
       case .hasData: print("I have (new) data!")
@@ -179,10 +185,10 @@ struct LibraryView: View {
       case .initial: print("I am initial!")
       case .loading: print("I am loading!")
     }
-    
+
     return AnyView(contentSectionView)
   }
-  
+
   private func delete(for videoId: Int) {
     downloadsMC.deleteDownload(with: videoId)
     self.downloadsMC.callback = { success in
@@ -190,42 +196,42 @@ struct LibraryView: View {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-      
+
       self.hudOption = success ? .success : .error
       self.showHudView = true
     }
   }
-  
-  private func save(for content: ContentSummaryModel) {
+
+  private func save(for content: ContentDetailsModel) {
     guard downloadsMC.state != .loading else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-      
+
       self.hudOption = .error
       self.showHudView = true
       return
     }
-    
+
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-      
+
       self.hudOption = .error
       self.showHudView = true
       return
     }
-    
+
     self.downloadsMC.saveDownload(with: content)
     self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-      
+
       self.hudOption = success ? .success : .error
       self.showHudView = true
     }

@@ -36,16 +36,16 @@ extension Font {
     return Font.custom("Bitter-Bold", size: 28.0)
   }
   static var uiTitle2: Font {
-    return Font.custom("Bitter-Bold", size: 22.0)
+    return Font.custom("Bitter-Bold", size: 23.0)
   }
   static var uiTitle3: Font {
     return Font.custom("Bitter-Bold", size: 20.0)
   }
   static var uiTitle4: Font {
-    return Font.custom("Bitter-Bold", size: 17.0)
+    return Font.custom("Bitter-Bold", size: 19.0)
   }
   static var uiHeadline: Font {
-    return Font.custom("Bitter-Regular", size: 17.0)
+    return Font.custom("Bitter-Regular", size: 18.0)
   }
 
   static var uiBodyAppleDefault: Font {
@@ -54,13 +54,13 @@ extension Font {
 
   // Can't have bold Font's
   static var uiButtonLabel: Font {
-    return Font.system(size: 15.0).bold()
+    return Font.system(size: 17.0).bold()
   }
   static var uiBodyCustom: Font {
     return Font.system(size: 15.0)
   }
   static var uiLabel: Font {
-    return Font.system(size: 14.0).weight(.semibold)
+    return Font.system(size: 16.0).weight(.semibold)
   }
   static var uiButtonLabelSmall: Font {
     return Font.system(size: 13.0).weight(.semibold)
@@ -69,9 +69,9 @@ extension Font {
     return Font.footnote
   }
   static var uiCaption: Font {
-    return Font.system(size: 12.0)
+    return Font.system(size: 13.0)
   }
   static var uiUppercase: Font {
-    return Font.system(size: 11.0).weight(.bold)
+    return Font.system(size: 12.0).weight(.bold)
   }
 }

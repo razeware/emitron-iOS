@@ -36,7 +36,7 @@ class BookmarksMC: NSObject, ObservableObject {
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
-    didSet {
+    willSet {
       objectWillChange.send(())
     }
   }

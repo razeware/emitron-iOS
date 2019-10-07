@@ -51,17 +51,18 @@ struct CardViewModel: Hashable {
   let type: CardViewType
   let progress: CGFloat
   let isDownloaded: Bool
+  let isPro: Bool
 }
 
 // Transform data
 extension CardViewModel {
-  static func transform(_ content: ContentSummaryModel, cardViewType: CardViewType) -> CardViewModel? {
+  static func transform(_ content: ContentDetailsModel, cardViewType: CardViewType) -> CardViewModel? {
     guard let domainData = DataManager.current?.domainsMC.data else {
       return nil
     }
     
-    let ids = content.domainIDs
-    let contentDomains = domainData.filter { ids.contains($0.id) }
+    let domains = content.domains
+    let contentDomains = domainData.filter { domains.contains($0) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
     let isDownloaded = content.isDownloaded
     
@@ -78,7 +79,7 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded, isPro: content.professional)
     
     return cardModel
   }
@@ -142,6 +143,12 @@ struct CardView: SwiftUI.View {
             .foregroundColor(.battleshipGrey)
           
           HStack {
+            
+            if model.isPro {
+              proTag
+                .padding([.trailing], 5)
+            }
+            
             Text(model.footnote)
               .font(.uiCaption)
               .lineLimit(1)
@@ -190,6 +197,20 @@ struct CardView: SwiftUI.View {
       
     default:
       return AnyView(image)
+    }
+  }
+  
+  private var proTag: some SwiftUI.View {
+    return
+      ZStack {
+        Rectangle()
+          .foregroundColor(.appGreen)
+          .cornerRadius(6)
+          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+
+        Text("PRO")
+          .foregroundColor(.white)
+          .font(.uiUppercase)
     }
   }
   
@@ -279,7 +300,7 @@ struct CardView: SwiftUI.View {
 #if DEBUG
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
-    let cardModel = CardViewModel.transform(ContentSummaryModel.test, cardViewType: .default)!
+    let cardModel = CardViewModel.transform(ContentDetailsModel.test, cardViewType: .default)!
     return CardView(model: cardModel, contentScreen: .library, onRightIconTap: nil)
   }
 }

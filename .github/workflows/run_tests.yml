@@ -1,0 +1,23 @@
+name: Run tests
+
+on: [push]
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Switch to Xcode 11
+      run: sudo xcode-select --switch /Applications/Xcode_11.app
+    - name: Update fastlane
+      run: |
+        cd Emitron
+        bundle install
+        bundle exec fastlane -v
+    - name: Execute fastlane
+      run: |
+        cd Emitron
+        bundle exec fastlane -v
+        bundle exec fastlane tests

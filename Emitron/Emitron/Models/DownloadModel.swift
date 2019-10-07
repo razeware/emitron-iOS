@@ -33,7 +33,7 @@ import SwiftUI
 class DownloadModel {
 
   // MARK: - Properties
-  var content: ContentSummaryModel
+  var content: ContentDetailsModel
   var attachmentModel: AttachmentModel
   var task: URLSessionDownloadTask?
   var resumeData: Data?
@@ -42,7 +42,7 @@ class DownloadModel {
   @Published var downloadProgress: CGFloat = 0.0
 
   // MARK: - Initializers
-  init(attachmentModel: AttachmentModel, content: ContentSummaryModel, isDownloaded: Bool, localPath: URL) {
+  init(attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL) {
     self.attachmentModel = attachmentModel
     self.content = content
     self.content.isDownloaded = isDownloaded
