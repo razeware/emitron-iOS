@@ -40,14 +40,12 @@ struct ContentSummaryView: View {
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-//  var details: ContentDetailsModel
   var body: some View {
     createVStack()
   }
   
   private var bookmarkImage: some View {
     return Button(action: {
-      // Download Action
       self.bookmark()
     }) {
       // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
