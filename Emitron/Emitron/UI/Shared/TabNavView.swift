@@ -72,7 +72,7 @@ struct TabNavView: View {
     
     UserMC(guardpost: Guardpost.current).fetchPermissions()
     
-    return LibraryView().environmentObject(contentsMC).environmentObject(downloadsMC).environmentObject(filters)
+    return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
   }
   
   private var myTutorialsView: some View {
@@ -85,7 +85,7 @@ struct TabNavView: View {
   private var downloadsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, tabSelection: selection).environmentObject(downloadsMC)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: selection).environmentObject(downloadsMC)
   }
 }
 

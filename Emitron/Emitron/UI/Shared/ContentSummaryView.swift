@@ -38,7 +38,7 @@ struct ContentSummaryView: View {
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, Bool) -> Void)?
-  var downloadsMC: DownloadsMC
+  @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
 //  var details: ContentDetailsModel
   var body: some View {

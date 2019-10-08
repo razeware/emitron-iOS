@@ -34,7 +34,7 @@ private extension CGFloat {
 
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
-  @EnvironmentObject var downloadsMC: DownloadsMC
+  @ObservedObject var downloadsMC: DownloadsMC
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
@@ -89,7 +89,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, tabSelection: 0).environmentObject(downloadsMC)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: 0)
   }
 }
 #endif

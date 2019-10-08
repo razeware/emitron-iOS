@@ -33,7 +33,7 @@ struct ContentListingView: View {
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-  var downloadsMC: DownloadsMC
+  @ObservedObject var downloadsMC: DownloadsMC
   var content: ContentDetailsModel
   var user: UserModel
 

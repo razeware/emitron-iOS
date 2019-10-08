@@ -41,7 +41,7 @@ private extension CGFloat {
 struct LibraryView: View {
 
   @EnvironmentObject var contentsMC: ContentsMC
-  @EnvironmentObject var downloadsMC: DownloadsMC
+  var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
@@ -163,7 +163,8 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+//    let newDownloadsMC = DownloadsMC(user: Guardpost.current.currentUser!)
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           if let videoID = content.videoID {
@@ -272,7 +273,7 @@ struct LibraryView_Previews: PreviewProvider {
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
-    return LibraryView().environmentObject(filters).environmentObject(contentsMC).environmentObject(downloadsMC)
+    return LibraryView(downloadsMC: downloadsMC).environmentObject(filters).environmentObject(contentsMC)
   }
 }
 #endif

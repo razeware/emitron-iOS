@@ -38,8 +38,7 @@ struct TextListItemView: View {
   // Good thought to have when creating the architecture for non-networking based views
   var contentSummary: ContentDetailsModel
   var buttonAction: (Bool) -> Void
-  var downloadsMC: DownloadsMC
-
+  @ObservedObject var downloadsMC: DownloadsMC
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {

@@ -148,7 +148,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user!, downloadsMC: DataManager.current!.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -180,7 +180,7 @@ struct ContentListView: View {
       ForEach(contents, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user!, downloadsMC: DataManager.current!.downloadsMC))
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
@@ -209,7 +209,7 @@ struct ContentListView: View {
 
     return CardView(model: viewModel,
                     contentScreen: contentScreen,
-                    onRightIconTap: onRightTap).environmentObject(DataManager.current!.downloadsMC)
+                    onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
   }
 
   private var emptyView: some View {
