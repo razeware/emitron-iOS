@@ -49,18 +49,39 @@ struct ContentListingView: View {
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
     
-    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
-      TextListItemView(contentSummary: model, buttonAction: {
-        // Download
-      })
-      .onTapGesture {
-        self.isPresented = true
+    return ForEach(onlyContentWithVideoID, id: \.id) { model in
+      // Use Group when you want to add some logic here
+//      Group {
+//        TextListItemView(contentSummary: model, buttonAction: {
+//          // Download
+//        })
+//          .onTapGesture {
+//            self.isPresented = true
+//        }
+//        .sheet(isPresented: self.$isPresented, onDismiss: {
+//          print("Dismissing...")
+//        }, content: {
+//          NavigationView {
+//            Text("Video ID: \(model.videoID!)")
+//          }.navigationViewStyle(StackNavigationViewStyle())
+//        })
+//      }
+      NavigationLink(destination:
+        VideoView(contentID: model.id,
+                  videoID: model.videoID!,
+                  user: self.user)
+      ) {
+        TextListItemView(contentSummary: model, buttonAction: {
+          // Download
+        })
       }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID!,
-                                                         user: self.user) }
-    })
+    }
   }
+  
+          //Text("Video ID: \(model.videoID!)")
+  //        VideoView(contentID: model.id,
+  //                  videoID: model.videoID!,
+  //                  user: self.user)
   
   private var playButton: AnyView? {
     guard let videoID = contentSummaryMC.data.videoID,
@@ -105,7 +126,7 @@ struct ContentListingView: View {
       
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
-          
+
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
               self.episodeListing(data: group.childContents)
@@ -124,7 +145,7 @@ struct ContentListingView: View {
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-          
+
           if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
@@ -135,16 +156,19 @@ struct ContentListingView: View {
             .padding(20)
         }
         .listRowInsets(EdgeInsets())
-        
+
         self.courseDetailsSection
       }
       .background(Color.paleGrey)
     }
     .onAppear {
       self.loadImage()
-      self.contentSummaryMC.getContentSummary()
+      if self.contentSummaryMC.state != .hasData {
+        self.contentSummaryMC.getContentSummary()
+      }
     }
-        
+    .navigationBarHidden(true)
+
     return scrollView
   }
   

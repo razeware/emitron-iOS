@@ -65,6 +65,25 @@ class VideoPlayerController: AVPlayerViewController {
     self.videoID = videoID
     self.videosMC = videosMC
     super.init(nibName: nil, bundle: nil)
+    setupNotification()
+  }
+  
+  private func setupNotification() {
+    NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification,
+                                           object: nil,
+                                           queue: .main,
+                                           using: didRotate)
+  }
+  
+  var didRotate: (Notification) -> Void = { notification in
+    switch UIDevice.current.orientation {
+    case .landscapeLeft, .landscapeRight:
+      print("landscape")
+    case .portrait, .portraitUpsideDown:
+      print("Portrait")
+    default:
+      print("other")
+    }
   }
 
   @available(*, unavailable)
@@ -147,5 +166,9 @@ class VideoPlayerController: AVPlayerViewController {
       let seconds = CMTimeGetSeconds(progressTime)
       self.videosMC.reportUsageStatistics(progress: Int(seconds))
     })
+  }
+  
+  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+    print("Transitioning...")
   }
 }

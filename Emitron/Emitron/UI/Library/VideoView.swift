@@ -60,6 +60,7 @@ struct VideoView: View {
   
   var body: some View {
     VideoPlayerControllerRepresentable(with: videoID, contentID: contentID, user: user)
+    .navigationBarHidden(true)
   }
 }
 
