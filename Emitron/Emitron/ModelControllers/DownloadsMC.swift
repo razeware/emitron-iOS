@@ -120,8 +120,18 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  func saveDownload(with content: ContentDetailsModel) {
-    guard let videoID = content.videoID, let parentId = content.parentContent?.id else { return }
+  func saveDownload(with content: ContentDetailsModel, videoId: Int? = nil) {
+    
+    let videoID: Int
+    if let videoId = videoId {
+      videoID = videoId
+    } else if let videoId = content.videoID {
+      videoID = videoId
+    } else {
+      return
+    }
+  
+    guard let parentId = content.parentContent?.id else { return }
     
     let fileName = "\(content.id).\(parentId).\(videoID).\(String.appExtension)"
     guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else {
@@ -153,7 +163,7 @@ class DownloadsMC: NSObject, ObservableObject {
     let videosMC = VideosMC(user: self.user, contentId: content.id)
     
     if content.isInCollection {
-      self.loadCollectionVideoStream(or: content, on: videosMC, localPath: destinationUrl)
+      self.loadCollectionVideoStream(or: content, on: videosMC, localPath: destinationUrl, videoId: videoID)
     } else {
        self.loadIndividualVideoStream(for: content, on: videosMC, localPath: destinationUrl)
     }
@@ -173,6 +183,13 @@ class DownloadsMC: NSObject, ObservableObject {
     }
     
     state = .loading
+    
+    // save parent content
+    if let childContent = content.groups.first?.childContents.first {
+      self.saveDownload(with: content, videoId: childContent.videoID)
+      
+      
+    }
 
     content.groups.forEach { groupModel in
       numGroupsCounter -= 1
@@ -184,8 +201,16 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Private funcs
-  private func loadCollectionVideoStream(or content: ContentDetailsModel, on videosMC: VideosMC, localPath: URL) {
-    guard let videoID = content.videoID else { return }
+  private func loadCollectionVideoStream(or content: ContentDetailsModel, on videosMC: VideosMC, localPath: URL, videoId: Int?) {
+    
+    let videoID: Int
+    if let videoId = videoId {
+      videoID = videoId
+    } else if let videoId = content.videoID {
+      videoID = videoId
+    } else {
+      return
+    }
     
     videosMC.getDownloadVideofor(id: videoID) { response in
       switch response {
@@ -314,6 +339,9 @@ class DownloadsMC: NSObject, ObservableObject {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath, parentContentId: parentContentId)
     self.downloadedModel = downloadModel
     data.append(downloadModel)
+    
+    print("downloadModel name: \(downloadModel.content.name) & localPath: \(localPath)")
+    
     self.state = .loading
   }
 
@@ -366,7 +394,6 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       self.state = .loading
     }
     
-    
     guard let destinationUrl = self.destinationURL else {
       DispatchQueue.main.async {
         self.state = .failed
@@ -374,7 +401,6 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       }
       return
     }
-    
     
     guard !FileManager.default.fileExists(atPath: destinationUrl.path) else {
       DispatchQueue.main.async {

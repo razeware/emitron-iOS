@@ -38,7 +38,7 @@ struct DownloadsView: View {
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
-    return downloadsMC.data.map { $0.content }
+    return getContents()
   }
 
   var body: some View {
@@ -54,9 +54,29 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
+    
     return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
+  }
+  
+  private func getContents() -> [ContentDetailsModel] {
+    var contents = [ContentDetailsModel]()
+    let downloadedContents = downloadsMC.data.map { $0.content }
+    
+    downloadedContents.forEach { content in
+      
+      if content.contentType == .episode {
+        if content.parentContentId == content.id {
+          contents.append(content)
+        }
+      } else {
+        contents.append(content)
+      }
+      
+    }
+    
+    return contents
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
