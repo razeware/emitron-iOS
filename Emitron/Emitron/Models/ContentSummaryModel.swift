@@ -57,11 +57,11 @@ class ContentSummaryModel {
   private(set) var index: Int?
   private(set) var videoID: Int?
   private(set) var professional: Bool = false
-  
+
   private(set) var progression: ProgressionModel?
   private(set) var bookmark: BookmarkModel?
   private(set) var domainIDs: [Int] = []
-  
+
   var isDownloaded: Bool = false
 
   // MARK: - Initializers
@@ -69,34 +69,34 @@ class ContentSummaryModel {
         metadata: [String: Any]?,
         index: Int = 0,
         progression: ProgressionModel? = nil, bookmark: BookmarkModel? = nil) {
-    
+
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
-    
+
     self.uri = jsonResource["uri"] as? String ?? ""
-    
+
     //TODO: This should be coming from the API rather than me parsing it here, so will be removed in the future
     self.videoID = Int(self.uri.digits) ?? 0
-    
+
     self.name = jsonResource["name"] as? String ?? ""
     self.description = jsonResource["description_plain_text"] as? String ?? ""
-    
+
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
     } else {
       self.releasedAt = Date()
     }
-    
+
     self.free = jsonResource["free"] as? Bool ?? false
-    
+
     if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? ContentDifficulty.none.rawValue) {
       self.difficulty = difficulty
     }
-    
+
     if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? ContentType.none.rawValue) {
       self.contentType = type
     }
-    
+
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
     self.bookmarked = jsonResource["bookmarked"] as? Bool ?? false
@@ -105,13 +105,13 @@ class ContentSummaryModel {
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.progression = progression
-    
+
     for relationship in jsonResource.relationships where relationship.type == "domains" {
       let ids = relationship.data.compactMap { $0.id }
       self.domainIDs = ids
     }
   }
-  
+
   init(contentDetails: ContentDetailsModel) {
     self.id = contentDetails.id
     self.name = contentDetails.name
@@ -127,9 +127,10 @@ class ContentSummaryModel {
     self.cardArtworkURL = contentDetails.cardArtworkURL
     self.technologyTripleString = contentDetails.technologyTripleString
     self.contributorString = contentDetails.contributorString
-    self.videoID = contentDetails.videoID
+    self.videoID = contentDetails.videoID ?? 0
     self.progression = contentDetails.progression
     self.bookmark = contentDetails.bookmark
+
   }
 }
 
@@ -139,7 +140,7 @@ extension ContentSummaryModel {
       let fileURL = Bundle.main.url(forResource: "ContentSummaryModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
       let json = try JSON(data: data)
-    
+
       let document = JSONAPIDocument(json)
       let resource = JSONAPIResource(json, parent: document)
       return ContentSummaryModel(resource, metadata: nil)!

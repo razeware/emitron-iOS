@@ -156,4 +156,24 @@ class ContentsMC: NSObject, ObservableObject {
       }
     }
   }
+  
+  func getContentSummary(with id: Int, completion: ((ContentDetailsModel) -> Void)?) {
+    if case(.loading) = state {
+      return
+    }
+
+    state = .loading
+
+    contentsService.contentDetails(for: id) { result in
+
+      switch result {
+      case .failure(let error):
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let contentDetails):
+        completion?(contentDetails)
+      }
+    }
+  }
 }
