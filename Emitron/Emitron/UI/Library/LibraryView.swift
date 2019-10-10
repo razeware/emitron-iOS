@@ -221,7 +221,7 @@ struct LibraryView: View {
       return
     }
 
-    if content.videoID == nil {
+    if content.isInCollection {
       
       if content.groups.isEmpty {
         self.contentsMC.getContentSummary(with: content.id) { detailsModel in

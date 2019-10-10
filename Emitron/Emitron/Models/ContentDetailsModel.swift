@@ -55,7 +55,9 @@ class ContentDetailsModel {
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
-
+  
+  var parentContentId: Int?
+  var parentContent: ContentDetailsModel?
   var isDownloaded: Bool = false
   var progression: ProgressionModel?
   var bookmark: BookmarkModel?
@@ -93,6 +95,7 @@ class ContentDetailsModel {
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.videoID = jsonResource["video_identifier"] as? Int
+    self.parentContent = self
 
     for relationship in jsonResource.relationships {
       switch relationship.type {
@@ -118,8 +121,11 @@ class ContentDetailsModel {
               let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
               // This is an ugly hack for now
               let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
-                ContentDetailsModel(summary.element, metadata: [:])
+                let content = ContentDetailsModel(summary.element, metadata: [:])
+                content?.parentContent = self
+                return content
               })
+              
               if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
                 groups.append(group)
               }
@@ -202,5 +208,13 @@ extension ContentDetailsModel {
       let resource = JSONAPIResource()
       return ContentDetailsModel(resource, metadata: nil)!
     }
+  }
+}
+
+extension ContentDetailsModel {
+  
+  var isInCollection: Bool {
+    guard let parentContent = parentContent else { return false }
+    return parentContent.contentType == .collection
   }
 }

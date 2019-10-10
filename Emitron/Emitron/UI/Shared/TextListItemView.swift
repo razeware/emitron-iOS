@@ -70,15 +70,27 @@ struct TextListItemView: View {
         self.download()
     }
     
-    // Only show progress on model that is currently being downloaded
-    guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummary.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-      return AnyView(image)
-    }
-    
     switch downloadsMC.state {
     case .loading:
-      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+
+      if contentSummary.isInCollection {
+        
+        guard let downloadedContent = downloadsMC.downloadedContent,
+        downloadedContent.id == contentSummary.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+
+      } else {
+        // Only show progress on model that is currently being downloaded
+        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummary.id }),
+              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      }
       
     default:
       return AnyView(image)
@@ -86,7 +98,14 @@ struct TextListItemView: View {
   }
   
   private func downloadImageName() -> String {
-    return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    if contentSummary.isInCollection {
+      return downloadsMC.data.contains { downloadModel in
+        
+        return downloadModel.content.id == contentSummary.id
+      } ? DownloadImageName.inActive : DownloadImageName.active
+    } else {
+      return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    }
   }
   
   private func download() {

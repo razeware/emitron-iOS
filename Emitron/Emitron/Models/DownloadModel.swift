@@ -42,10 +42,11 @@ class DownloadModel {
   @Published var downloadProgress: CGFloat = 0.0
 
   // MARK: - Initializers
-  init(attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL) {
+  init(attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
     self.attachmentModel = attachmentModel
     self.content = content
     self.content.isDownloaded = isDownloaded
+    self.content.parentContentId = parentContentId
     self.localPath = localPath
   }
 }

@@ -50,8 +50,9 @@ struct CardViewModel: Hashable {
   let footnote: String
   let type: CardViewType
   let progress: CGFloat
-  let isDownloaded: Bool
   let isPro: Bool
+  let parentContentId: Int
+  let isInCollection: Bool
 }
 
 // Transform data
@@ -64,7 +65,6 @@ extension CardViewModel {
     let domains = content.domains
     let contentDomains = domainData.filter { domains.contains($0) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
-    let isDownloaded = content.isDownloaded
     
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -79,7 +79,16 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isDownloaded: isDownloaded, isPro: content.professional)
+    let parentContentId: Int
+    if let parentContent = content.parentContentId {
+      parentContentId = parentContent
+    } else {
+      parentContentId = 0
+    }
+    
+    let isInCollection = content.isInCollection
+    
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isPro: content.professional, parentContentId: parentContentId, isInCollection: isInCollection)
     
     return cardModel
   }
@@ -184,16 +193,30 @@ struct CardView: SwiftUI.View {
         self.download()
     }
     
-    // Only show progress on model that is currently being downloaded
-    guard let model = model,
-          let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-      return AnyView(image)
-    }
-    
     switch downloadsMC.state {
     case .loading:
-      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      
+      guard let model = model else {
+        return AnyView(image)
+      }
+      
+      if model.isInCollection {
+        guard let downloadedContent = downloadsMC.downloadedContent,
+        downloadedContent.id == model.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+
+      } else {
+        // Only show progress on model that is currently being downloaded
+        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }),
+              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      }
       
     default:
       return AnyView(image)
@@ -256,7 +279,15 @@ struct CardView: SwiftUI.View {
   private func downloadImageName() -> String {
     guard let model = model else { return DownloadImageName.inActive }
     
-    return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    if model.isInCollection {
+      
+      return downloadsMC.data.contains { downloadModel in
+        
+        return downloadModel.content.parentContentId == model.id
+      } ? DownloadImageName.inActive : DownloadImageName.active
+    } else {
+      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    }
   }
   
   private func createEmptyView() -> AnyView {

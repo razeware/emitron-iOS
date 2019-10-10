@@ -294,7 +294,7 @@ struct ContentListingView: View {
       return
     }
     
-    if content.videoID == nil {
+    if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
     } else {
       self.downloadsMC.saveDownload(with: content)

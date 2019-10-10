@@ -164,25 +164,47 @@ struct ContentSummaryView: View {
       .onTapGesture {
         self.download()
     }
-
-    // Only show progress on model that is currently being downloaded
-    guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-      return AnyView(image)
-    }
-
+    
     switch downloadsMC.state {
     case .loading:
-      return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
 
+      if contentSummaryMC.data.isInCollection {
+        
+        guard let downloadedContent = downloadsMC.downloadedContent,
+        downloadedContent.id == contentSummaryMC.data.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+
+      } else {
+        // Only show progress on model that is currently being downloaded
+        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
+              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+          return AnyView(image)
+        }
+        
+        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+      }
+      
     default:
       return AnyView(image)
     }
   }
 
   private func downloadImageName() -> String {
-    let content = ContentSummaryModel(contentDetails: contentSummaryMC.data)
-    return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    
+    if contentSummaryMC.data.isInCollection {
+      
+      return downloadsMC.data.contains { downloadModel in        
+        return downloadModel.content.parentContentId == contentSummaryMC.data.id
+        } ? DownloadImageName.inActive : DownloadImageName.active
+      
+    } else {
+      
+      let content = ContentSummaryModel(contentDetails: contentSummaryMC.data)
+      return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
+    }
   }
 
   private func download() {
