@@ -67,3 +67,8 @@ Carthage/Build
 **/fastlane/screenshots/**/*.png
 **/fastlane/test_output
 **/GithubIgnore
+
+# Secrets
+secrets.*.xcconfig
+!secrets.template.xcconfig
+
