@@ -26,4 +26,4 @@ signature=$(echo -en "${string_to_sign}" | openssl sha1 -hmac "${secret}" -binar
 curl -v -H "Host: ${bucket_name}.s3.amazonaws.com" \
         -H "Date: $curr_date" \
         -H "Authorization: AWS ${s3_key}:${signature}" \
-         "https://${bucket_name}.s3.amazonaws.com${req_path}" --compress
+         "https://${bucket_name}.s3.amazonaws.com${req_path}" --compressed
