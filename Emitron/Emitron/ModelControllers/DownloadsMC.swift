@@ -237,7 +237,7 @@ class DownloadsMC: NSObject, ObservableObject {
               self.state = .loading
             }
             
-            if let url = url {
+            if let url = response?.url {
               DispatchQueue.main.async {
                 self.saveNewDocument(with: localPath, location: url, content: content)
               }
