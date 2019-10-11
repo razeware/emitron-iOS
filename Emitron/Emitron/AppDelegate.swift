@@ -35,7 +35,6 @@ import AVFoundation
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  static let sso = "26396abfea170b54f53df4549d60b7e405509e04aa62c26bd6acc0247fc21b8e71bcb0e94678d55e36133e44d47574bc58ac740c877cba293979ec4a38128936"
   private (set) var persistentStore = PersistenceStore()
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
@@ -56,7 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // TODO: When you're logged out datamanager will be nil in this current setup
     self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
                                urlScheme: "com.razeware.emitron://",
-                               ssoSecret: AppDelegate.sso,
+                               ssoSecret: Configuration.ssoSecret,
                                persistentStore: persistentStore)
     
     guard let guardpost = guardpost,
