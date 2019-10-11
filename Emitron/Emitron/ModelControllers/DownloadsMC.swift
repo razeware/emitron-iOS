@@ -227,7 +227,7 @@ class DownloadsMC: NSObject, ObservableObject {
               self.state = .loading
             }
             
-            if let url = url {
+            if let url = response?.url {
               DispatchQueue.main.async {
                 self.saveNewDocument(with: localPath, location: url, content: content)
               }
@@ -339,9 +339,6 @@ class DownloadsMC: NSObject, ObservableObject {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath, parentContentId: parentContentId)
     self.downloadedModel = downloadModel
     data.append(downloadModel)
-    
-    print("downloadModel name: \(downloadModel.content.name) & localPath: \(localPath)")
-    
     self.state = .loading
   }
 
