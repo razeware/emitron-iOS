@@ -84,7 +84,9 @@ struct DownloadVideoRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/videos/\(id)/download" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String]? {
+    return ["RW-App-Token":"STORED ELSEWHERE"]
+  }
   var body: Data? { return nil }
 
   private var id: Int

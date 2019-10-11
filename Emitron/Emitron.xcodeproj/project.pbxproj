@@ -27,6 +27,8 @@
 		95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793922F0B83A0080C407 /* DomainModel.swift */; };
 		95CD793C22F0BEF40080C407 /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793B22F0BEF40080C407 /* Contents.swift */; };
 		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
+		B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597A2344DF3300D7B0E2 /* VideoData.swift */; };
+		B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597C2344EDF800D7B0E2 /* Document.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
@@ -178,6 +180,8 @@
 		95CD793B22F0BEF40080C407 /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
 		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_emitron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		B51C597A2344DF3300D7B0E2 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
+		B51C597C2344EDF800D7B0E2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
@@ -406,6 +410,8 @@
 				B6DF2F9522CA05140081A3A3 /* AttachmentModel.swift */,
 				B6DF2F9722CA051B0081A3A3 /* BookmarkModel.swift */,
 				B6DF2F9922CA05230081A3A3 /* CategoryModel.swift */,
+				B51C597A2344DF3300D7B0E2 /* VideoData.swift */,
+				B51C597C2344EDF800D7B0E2 /* Document.swift */,
 				B6DF2F9D22CA05320081A3A3 /* ContentDetailsModel.swift */,
 				B6DF2F9B22CA052B0081A3A3 /* ContentSummaryModel.swift */,
 				95CD793922F0B83A0080C407 /* DomainModel.swift */,
@@ -1048,6 +1054,7 @@
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */,
 				B6DF2F9822CA051B0081A3A3 /* BookmarkModel.swift in Sources */,
+				B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */,
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
 				B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */,
@@ -1067,6 +1074,7 @@
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
+				B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
@@ -1334,11 +1342,11 @@
 			baseConfigurationReference = 8E27149DB5E7CEE532EF9C04 /* Pods-emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1350,7 +1358,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitron.ios;
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios_appstore_profile-name)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

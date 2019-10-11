@@ -56,6 +56,8 @@ class ContentDetailsModel {
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
   
+  var parentContentId: Int?
+  var parentContent: ContentDetailsModel?
   var isDownloaded: Bool = false
   var progression: ProgressionModel?
   var bookmark: BookmarkModel?
@@ -91,8 +93,9 @@ class ContentDetailsModel {
     self.professional = jsonResource["professional"] as? Bool ?? false
     self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
-    self.contributorString = jsonResource["contributor_string"] as? String ?? ""    
+    self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.videoID = jsonResource["video_identifier"] as? Int
+    self.parentContent = self
 
     for relationship in jsonResource.relationships {
       switch relationship.type {
@@ -100,16 +103,16 @@ class ContentDetailsModel {
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
-        
+
         // If a domain comes through that doesn't match any of the domains we have, make a new domain request.
         self.domains = domains ?? []
-      
+
       //TODO: This will be improved when the API returns enough info to render the video listing, currently
       // picking up the bits and pieces of info from separate parts
       case "groups": // this is where we get our video list
         let ids = relationship.data.compactMap { $0.id }
         let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        
+
         var groups: [GroupModel] = []
         if let included = maybeIncluded {
           for resource in included {
@@ -118,8 +121,11 @@ class ContentDetailsModel {
               let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
               // This is an ugly hack for now
               let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
-                ContentDetailsModel(summary.element, metadata: [:])
+                let content = ContentDetailsModel(summary.element, metadata: [:])
+                content?.parentContent = self
+                return content
               })
+              
               if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
                 groups.append(group)
               }
@@ -142,11 +148,11 @@ class ContentDetailsModel {
         break
       }
     }
-    
+
     self.bookmarked = self.bookmark != nil
     self.url = jsonResource.links["self"]
   }
-  
+
   init(summaryModel: ContentSummaryModel) {
     self.id = summaryModel.id
     self.name = summaryModel.name
@@ -164,7 +170,7 @@ class ContentDetailsModel {
     self.contributorString = summaryModel.contributorString
     self.videoID = summaryModel.videoID
   }
-  
+
   /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
   ///
   /// - parameters:
@@ -194,7 +200,7 @@ extension ContentDetailsModel {
       let fileURL = Bundle.main.url(forResource: "ContentDetailsModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
       let json = try JSON(data: data)
-    
+
       let document = JSONAPIDocument(json)
       let resource = JSONAPIResource(json, parent: document)
       return ContentDetailsModel(resource, metadata: nil)!
@@ -202,5 +208,13 @@ extension ContentDetailsModel {
       let resource = JSONAPIResource()
       return ContentDetailsModel(resource, metadata: nil)!
     }
+  }
+}
+
+extension ContentDetailsModel {
+  
+  var isInCollection: Bool {
+    guard let parentContent = parentContent else { return false }
+    return parentContent.contentType == .collection
   }
 }

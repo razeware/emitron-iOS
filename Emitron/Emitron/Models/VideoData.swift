@@ -26,49 +26,28 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-private struct Layout {
-  static let line: CGFloat = 5.0
-  static let frame: CGFloat = 19.0
-  static let endProgress: CGFloat = 1.0
-}
-
-struct CircularProgressBar: View {
+class VideoData: NSObject, NSCoding {
+  var url: URL?
   
-  @State var progress: CGFloat
-  @State var spinCircle = false
-  
-  var body: some View {
-    
-    return ZStack {
-      Circle()
-        .trim(from: 0, to: Layout.endProgress)
-        .stroke(Color.coolGrey, lineWidth: Layout.line)
-        .frame(width: Layout.frame, height: Layout.frame)
-        .opacity(0.2)
-      
-      Circle()
-        .trim(from: 0, to: spinCircle ? progress : Layout.endProgress)
-        .stroke(Color.appGreen, lineWidth: Layout.line)
-        .frame(width: Layout.frame, height: Layout.frame)
-        .rotationEffect(.degrees(360), anchor: .center)
-        .animation(Animation.easeIn(duration: spinCircle ? 30 : 0))
-    }
-    .onAppear {
-      while self.progress <= 1.0 {
-        self.spinCircle = true
-        return
-      }
-      
-      self.spinCircle = false
-    
-    }
+  init(url: URL? = nil) {
+    self.url = url
   }
-}
-
-struct CircularProgressIndicator_Previews: PreviewProvider {
-  static var previews: some View {
-    CircularProgressBar(progress: 1.0)
+  
+  func encode(with aCoder: NSCoder) {
+    aCoder.encode(1, forKey: .versionKey)
+    guard let videoURL = url else { return }
+    
+    aCoder.encode(videoURL, forKey: .videoKey)
+  }
+  
+  required init?(coder aDecoder: NSCoder) {
+    aDecoder.decodeInteger(forKey: .versionKey)
+    guard let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? URL else {
+      return nil
+    }
+    
+    self.url = videoURL
   }
 }

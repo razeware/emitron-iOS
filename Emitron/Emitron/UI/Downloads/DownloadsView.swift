@@ -34,60 +34,72 @@ private extension CGFloat {
 
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
-  @EnvironmentObject var downloadsMC: DownloadsMC
-  @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
+  @ObservedObject var downloadsMC: DownloadsMC
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
-    return downloadsMC.data.map { $0.content }
+    return getContents()
   }
-  
+
   var body: some View {
     VStack {
       contentView
         .padding([.top], .sidePadding)
         .background(Color.paleGrey)
-      
+
       addButton()
     }
     .background(Color.paleGrey)
     .navigationBarTitle(Text(Constants.downloads))
   }
-  
+
   private var contentView: some View {
-    let contentListView = ContentListView(contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    
+    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
-    return contentListView
   }
   
+  private func getContents() -> [ContentDetailsModel] {
+    var contents = [ContentDetailsModel]()
+    let downloadedContents = downloadsMC.data.map { $0.content }
+    
+    downloadedContents.forEach { content in
+      
+      if content.contentType == .episode {
+        if content.parentContentId == content.id {
+          contents.append(content)
+        }
+      } else {
+        contents.append(content)
+      }
+      
+    }
+    
+    return contents
+  }
+
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
+
+    guard let videoID = content.videoID else { return }
     
     switch action {
     case .delete:
-      guard let videoId = content.videoID else { return }
-      self.downloadsMC.deleteDownload(with: videoId) { (success, contents) in
-        self.showHudView.toggle()
-        self.showSuccess = success
-      }
-      
+      downloadsMC.deleteDownload(with: videoID)
+
     case .save:
-      self.downloadsMC.saveDownload(with: content) { (success, contents) in
-        self.showHudView.toggle()
-        self.showSuccess = success
-      }
+      self.downloadsMC.saveDownload(with: content)
     }
   }
-  
+
   private func addButton() -> AnyView? {
     guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
-    
+
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
       self.emitron.selectedTab = 0
     }
     .padding([.bottom, .leading, .trailing], 20)
-    
+
     return AnyView(button)
   }
 }
@@ -97,7 +109,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, tabSelection: 0).environmentObject(downloadsMC)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: 0)
   }
 }
 #endif

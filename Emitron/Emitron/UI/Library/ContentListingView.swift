@@ -30,20 +30,24 @@ import SwiftUI
 
 struct ContentListingView: View {
   
+  @State var showHudView: Bool = false
+  @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-  var callback: ((ContentDetailsModel) -> Void )?
+  @ObservedObject var downloadsMC: DownloadsMC
+  var content: ContentDetailsModel
   var user: UserModel
   
   // These should be private
   @State var isPresented = false
   @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-
+  
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentDetailsModel, callback: ((ContentDetailsModel) -> Void)?, user: UserModel) {
-    self.callback = callback
+  init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
+    self.content = content
     self.user = user
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
+    self.downloadsMC = downloadsMC
   }
   
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
@@ -51,41 +55,54 @@ struct ContentListingView: View {
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       // Use Group when you want to add some logic here
-//      Group {
-//        TextListItemView(contentSummary: model, buttonAction: {
-//          // Download
-//        })
-//          .onTapGesture {
-//            self.isPresented = true
-//        }
-//        .sheet(isPresented: self.$isPresented, onDismiss: {
-//          print("Dismissing...")
-//        }, content: {
-//          NavigationView {
-//            Text("Video ID: \(model.videoID!)")
-//          }.navigationViewStyle(StackNavigationViewStyle())
-//        })
-//      }
+      //      Group {
+      //        TextListItemView(contentSummary: model, buttonAction: {
+      //          // Download
+      //        })
+      //          .onTapGesture {
+      //            self.isPresented = true
+      //        }
+      //        .sheet(isPresented: self.$isPresented, onDismiss: {
+      //          print("Dismissing...")
+      //        }, content: {
+      //          NavigationView {
+      //            Text("Video ID: \(model.videoID!)")
+      //          }.navigationViewStyle(StackNavigationViewStyle())
+      //        })
+      //      }
       NavigationLink(destination:
         VideoView(contentID: model.id,
                   videoID: model.videoID!,
                   user: self.user)
       ) {
-        TextListItemView(contentSummary: model, buttonAction: {
-          // Download
-        })
+        TextListItemView(contentSummary: model, buttonAction: { success in
+          if success {
+            self.save(for: model)
+          } else {
+            if self.showHudView {
+              self.showHudView.toggle()
+            }
+            
+            self.hudOption = success ? .success : .error
+            self.showHudView = true
+          }
+        }, downloadsMC: self.downloadsMC)
+          
+          .onTapGesture {
+            self.isPresented = true
+        }
       }
     }
   }
   
-          //Text("Video ID: \(model.videoID!)")
+  //Text("Video ID: \(model.videoID!)")
   //        VideoView(contentID: model.id,
   //                  videoID: model.videoID!,
   //                  user: self.user)
   
   private var playButton: AnyView? {
     guard let videoID = contentSummaryMC.data.videoID,
-    let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
+      let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
     
     return AnyView(Button(action: {
       self.isPresented = true
@@ -115,7 +132,7 @@ struct ContentListingView: View {
   var coursesSection: AnyView? {
     let groups = contentSummaryMC.data.groups
     
-    guard contentSummaryMC.data.contentType == .collection, !groups.isEmpty else {
+    guard contentSummaryMC.data.contentType == .collection else {
       return nil
     }
     
@@ -126,7 +143,7 @@ struct ContentListingView: View {
       
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
-
+          
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
               self.episodeListing(data: group.childContents)
@@ -141,22 +158,33 @@ struct ContentListingView: View {
   }
   
   var body: some View {
-            
+    
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-
+          
           if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
           }
-
-          ContentSummaryView(contentSummaryMC: self.contentSummaryMC, callback: self.callback)
+          
+          ContentSummaryView(callback: { (content, success) in
+            if success {
+              self.save(for: content)
+            } else {
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+              
+              self.hudOption = success ? .success : .error
+              self.showHudView = true
+            }
+          }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
             .padding(20)
         }
         .listRowInsets(EdgeInsets())
-
+        
         self.courseDetailsSection
       }
       .background(Color.paleGrey)
@@ -167,8 +195,11 @@ struct ContentListingView: View {
         self.contentSummaryMC.getContentSummary()
       }
     }
-    .navigationBarHidden(true)
-
+      .navigationBarHidden(true)
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
+      }
+    
     return scrollView
   }
   
@@ -224,6 +255,7 @@ struct ContentListingView: View {
   }
   
   private var courseDetailsSection: AnyView {
+    
     switch contentSummaryMC.state {
     case .failed:
       return AnyView(Text("We have failed"))
@@ -235,7 +267,7 @@ struct ContentListingView: View {
   }
   
   private var loadingView: some View {
-    VStack {      
+    VStack {
       Spacer()
       
       Text("Loading...")
@@ -263,6 +295,46 @@ struct ContentListingView: View {
           self.uiImage = img
         }
       }
+    }
+  }
+  
+  private func save(for content: ContentDetailsModel) {
+    guard downloadsMC.state != .loading else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
+    
+    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
+    
+    if content.isInCollection {
+      self.downloadsMC.saveCollection(with: content)
+    } else {
+      self.downloadsMC.saveDownload(with: content)
+    }
+    
+    self.downloadsMC.callback = { success in
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+      
+      self.hudOption = success ? .success : .error
+      self.showHudView = true
     }
   }
 }

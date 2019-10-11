@@ -41,34 +41,31 @@ private extension CGFloat {
 struct LibraryView: View {
 
   @EnvironmentObject var contentsMC: ContentsMC
-  @EnvironmentObject var downloadsMC: DownloadsMC
+  var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
   @State private var searchText = ""
   @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
+  @State var hudOption: HudOption = .success
 
   var body: some View {
-    ZStack(alignment: .bottom) {
-        contentView
-        .navigationBarTitle(Text(Constants.library))
-        .sheet(isPresented: $filtersPresented) {
-          FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
-        }
-
-      if showHudView {
-        hudView
-        .animation(.spring())
-      }
+    contentView
+      .navigationBarTitle(
+        Text(Constants.library))
+      .sheet(isPresented: $filtersPresented) {
+        FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+    }
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
     }
   }
-  
+
   private var contentControlsSection: AnyView {
     AnyView(
       VStack {
         searchAndFilterControls
         numberAndSortView
-        
+
         if !filters.applied.isEmpty {
           filtersView
         }
@@ -77,10 +74,10 @@ struct LibraryView: View {
       .background(Color.white)
     )
   }
-  
+
   private var searchField: some View {
     //TODO: Need to figure out how to erase the textField
-    
+
     TextField(Constants.search,
               text: $searchText,
               onEditingChanged: { _ in
@@ -95,7 +92,7 @@ struct LibraryView: View {
         self.updateFilters()
       }))
   }
-  
+
   private var searchAndFilterControls: some View {
     HStack {
       searchField
@@ -110,13 +107,13 @@ struct LibraryView: View {
         .padding([.leading], .searchFilterPadding)
     }
   }
-  
+
   private var numberAndSortView: some View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
         .font(.uiLabel)
         .foregroundColor(.battleshipGrey)
-      
+
       Spacer()
 
       Button(action: {
@@ -134,7 +131,7 @@ struct LibraryView: View {
       }
     }
   }
-  
+
   private var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
@@ -153,13 +150,6 @@ struct LibraryView: View {
       }
     }
   }
-  
-  private var hudView: some View {
-    let option: HudOption = showSuccess ? .success : .error
-    return HudView(option: option) {
-      self.showHudView = false
-    }
-  }
 
   private func updateFilters() {
     filters.searchQuery = self.searchText
@@ -173,7 +163,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           if let videoID = content.videoID {
@@ -183,7 +173,7 @@ struct LibraryView: View {
           self.save(for: content)
         }
       }
-    
+
     switch downloadsMC.state {
       // Callling this simply to trigger view re-rendering
       case .hasData: print("I have (new) data!")
@@ -191,41 +181,65 @@ struct LibraryView: View {
       case .initial: print("I am initial!")
       case .loading: print("I am loading!")
     }
-    
+
     return AnyView(contentSectionView)
   }
-  
+
   private func delete(for videoId: Int) {
-    self.downloadsMC.deleteDownload(with: videoId) { (success, contents) in
+    downloadsMC.deleteDownload(with: videoId)
+    self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
 
-      self.showSuccess = success
+      self.hudOption = success ? .success : .error
       self.showHudView = true
-      if success {
-        self.downloadsMC.setDownloads(for: contents) { contents in
-          print("saving downloads")
-        }
-      }
     }
   }
-  
+
   private func save(for content: ContentDetailsModel) {
-    self.downloadsMC.saveDownload(with: content) { (success, contents) in
+    guard downloadsMC.state != .loading else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-      
-      self.showSuccess = success
+
+      self.hudOption = .error
       self.showHudView = true
-      if success {
-        self.downloadsMC.setDownloads(for: contents) { contents in
-          print("Saving downloads...")
+      return
+    }
+
+    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
+
+    if content.isInCollection {
+      
+      if content.groups.isEmpty {
+        self.contentsMC.getContentSummary(with: content.id) { detailsModel in
+          self.downloadsMC.saveCollection(with: detailsModel)
         }
       }
+    } else {
+      self.downloadsMC.saveDownload(with: content)
+    }
+    
+    self.downloadsMC.callback = { success in
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = success ? .success : .error
+      self.showHudView = true
     }
   }
 }
@@ -258,7 +272,7 @@ struct LibraryView_Previews: PreviewProvider {
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
-    return LibraryView().environmentObject(filters).environmentObject(contentsMC).environmentObject(downloadsMC)
+    return LibraryView(downloadsMC: downloadsMC).environmentObject(filters).environmentObject(contentsMC)
   }
 }
 #endif

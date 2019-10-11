@@ -34,16 +34,19 @@ class DownloadModel {
 
   // MARK: - Properties
   var content: ContentDetailsModel
-  var video: AttachmentModel
+  var attachmentModel: AttachmentModel
   var task: URLSessionDownloadTask?
   var resumeData: Data?
   var progress: Double = 0
-  @Published var downloadProgress: CGFloat = 1.0
+  var localPath: URL
+  @Published var downloadProgress: CGFloat = 0.0
 
   // MARK: - Initializers
-  init(video: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool) {
-    self.video = video
+  init(attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
+    self.attachmentModel = attachmentModel
     self.content = content
     self.content.isDownloaded = isDownloaded
+    self.content.parentContentId = parentContentId
+    self.localPath = localPath
   }
 }

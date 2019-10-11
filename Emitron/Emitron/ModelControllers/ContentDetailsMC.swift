@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-/// 
+///
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-/// 
+///
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-/// 
+///
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-/// 
+///
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 
 class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
-  
+
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -39,13 +39,13 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       objectWillChange.send(())
     }
   }
-  
+
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
   private let bookmarksService: BookmarksService
   private(set) var data: ContentDetailsModel
-  
+
   // MARK: - Initializers
   init(guardpost: Guardpost,
        partialContentDetail: ContentDetailsModel) {
@@ -53,25 +53,26 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
+    self.data.isDownloaded = partialContentDetail.isDownloaded
     self.bookmarksService = BookmarksService(client: self.client)
-    
+
     super.init()
   }
-  
+
   // MARK: - Internal
   func getContentSummary() {
     if case(.loading) = state {
       return
     }
-    
+
     state = .loading
-    
+
     contentsService.contentDetails(for: data.id) { [weak self] result in
-      
+
       guard let self = self else {
         return
       }
-      
+
       switch result {
       case .failure(let error):
         self.state = .failed
@@ -84,15 +85,15 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       }
     }
   }
-  
+
   func toggleBookmark(for bookmarkId: Int? = nil) {
-    
+
     state = .loading
-    
+
     if !data.bookmarked {
       bookmarksService.makeBookmark(for: data.id) { [weak self] result in
         guard let self = self else { return }
-        
+
         switch result {
         case .failure(let error):
           self.state = .failed
@@ -109,7 +110,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       // For deleting the bookmark, we have to use the original bookmark id
       bookmarksService.destroyBookmark(for: id) { [weak self] result in
         guard let self = self else { return }
-        
+
         switch result {
         case .failure(let error):
           Failure

@@ -116,7 +116,7 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
     
     return AnyView(contentView)
   }

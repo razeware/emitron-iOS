@@ -176,4 +176,31 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
+  
+  func getDownloadVideofor(id: Int,
+                           completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
+    if case(.loading) = state {
+      return
+    }
+
+    state = .loading
+    videoService.getVideoDownload(for: id) { [weak self] result in
+      completion(result)
+
+      guard let self = self else {
+        return
+      }
+
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        Failure
+          .fetch(from: "VideosMC", reason: error.localizedDescription)
+          .log(additionalParams: ["VideoID": "\(id)"])
+      case .success(let attachment):
+        self.data = attachment.first
+        self.state = .hasData
+      }
+    }
+  }
 }
