@@ -2,6 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>APP_TOKEN</key>
+	<string>$(APP_TOKEN)</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
@@ -40,6 +42,8 @@
 	</dict>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Need access to dowload videos.</string>
+	<key>SSO_SECRET</key>
+	<string>$(SSO_SECRET)</string>
 	<key>UIAppFonts</key>
 	<array>
 		<string>Bitter-Bold.ttf</string>
