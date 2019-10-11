@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ContentListingView: View {
 
+  @State private var showingSheet = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
@@ -56,6 +57,7 @@ struct ContentListingView: View {
     return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
       TextListItemView(contentSummary: model, buttonAction: { success in
         if success {
+          self.showingSheet = true
           self.save(for: model)
         } else {
           if self.showHudView {
@@ -147,6 +149,7 @@ struct ContentListingView: View {
 
           ContentSummaryView(callback: { (content, success) in
             if success {
+              self.showingSheet = true
               self.save(for: content)
             } else {
               if self.showHudView {
@@ -171,6 +174,9 @@ struct ContentListingView: View {
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
+    }
+    .actionSheet(isPresented: $showingSheet) {
+      actionSheet
     }
 
     return scrollView
@@ -205,6 +211,14 @@ struct ContentListingView: View {
         .blur(radius: 10)
 
       proView
+    }
+  }
+  
+  private var actionSheet: ActionSheet {
+    return showActionSheet(for: .cancel) { action in
+      self.downloadsMC.cancelDownload()
+      self.showingSheet = false
+      self.showHudView = false
     }
   }
 
@@ -294,6 +308,9 @@ struct ContentListingView: View {
       return
     }
     
+    // show sheet to cancel download
+    self.showingSheet = true
+      
     if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
     } else {
@@ -308,6 +325,8 @@ struct ContentListingView: View {
 
       self.hudOption = success ? .success : .error
       self.showHudView = true
+      // hide sheet to cancel
+      self.showingSheet = false
     }
   }
 }

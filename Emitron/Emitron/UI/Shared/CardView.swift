@@ -181,6 +181,7 @@ struct CardView: SwiftUI.View {
     .cornerRadius(6)
     .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     
+    
     return AnyView(stack)
   }
   

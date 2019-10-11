@@ -89,6 +89,9 @@ struct DownloadsView: View {
 
     case .save:
       self.downloadsMC.saveDownload(with: content)
+      
+    case .cancel:
+      self.downloadsMC.cancelDownload()
     }
   }
 

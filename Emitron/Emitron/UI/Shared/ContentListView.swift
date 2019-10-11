@@ -81,6 +81,7 @@ enum ContentScreen {
 
 struct ContentListView: View {
 
+  @State private var showingSheet = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   var downloadsMC: DownloadsMC
@@ -100,6 +101,9 @@ struct ContentListView: View {
     contentView
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
+    }
+    .actionSheet(isPresented: $showingSheet) {
+      actionSheet
     }
   }
 
@@ -152,6 +156,9 @@ struct ContentListView: View {
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
+              // show sheet to cancel download
+              self.showingSheet = true
+              
               self.callback?(.save, partialContent)
             } else {
               if self.showHudView {
@@ -184,6 +191,8 @@ struct ContentListView: View {
         {
           self.cardView(content: partialContent, onRightTap: { success in
             if success {
+              // show sheet to cancel download
+              self.showingSheet = true
               self.callback?(.save, partialContent)
             } else {
               if self.showHudView {
@@ -202,6 +211,14 @@ struct ContentListView: View {
       .listRowBackground(self.bgColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
+  }
+  
+  private var actionSheet: ActionSheet {
+    return showActionSheet(for: .cancel) { action in
+      self.downloadsMC.cancelDownload()
+      self.showingSheet = false
+      self.showHudView = false
+    }
   }
 
   private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {

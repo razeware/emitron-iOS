@@ -41,7 +41,7 @@ extension String {
 }
 
 enum DownloadsAction {
-  case save, delete
+  case save, delete, cancel
 }
 
 class DownloadsMC: NSObject, ObservableObject {
@@ -52,6 +52,8 @@ class DownloadsMC: NSObject, ObservableObject {
                       delegate: self,
                       delegateQueue: nil)
   }()
+  
+  var downloadTask: URLSessionDownloadTask?
 
   var attachmentModel: AttachmentModel?
   var downloadedModel: DownloadModel?
@@ -187,8 +189,6 @@ class DownloadsMC: NSObject, ObservableObject {
     // save parent content
     if let childContent = content.groups.first?.childContents.first {
       self.saveDownload(with: content, videoId: childContent.videoID)
-      
-      
     }
 
     content.groups.forEach { groupModel in
@@ -198,6 +198,16 @@ class DownloadsMC: NSObject, ObservableObject {
         self.saveDownload(with: child)
       }
     }
+  }
+  
+  func cancelDownload() {
+    self.downloadTask?.cancel()
+    self.downloadsSession.invalidateAndCancel()
+    self.collectionProgress = 0.0
+    
+    self.downloadedModel = nil
+    self.downloadedContent = nil
+    
   }
 
   // MARK: Private funcs
@@ -221,7 +231,7 @@ class DownloadsMC: NSObject, ObservableObject {
         }
         
         if let streamURL = attachment.first?.url {
-          self.downloadsSession.downloadTask(with: streamURL, completionHandler: { (url, response, error) in
+          self.downloadTask = self.downloadsSession.downloadTask(with: streamURL, completionHandler: { (url, response, error) in
             
             DispatchQueue.main.async {
               self.state = .loading
@@ -232,7 +242,9 @@ class DownloadsMC: NSObject, ObservableObject {
                 self.saveNewDocument(with: localPath, location: url, content: content)
               }
             }
-          }).resume()
+          })
+          
+          self.downloadTask?.resume()
         }
         
       case let .failure(error):
@@ -256,7 +268,8 @@ class DownloadsMC: NSObject, ObservableObject {
         }
 
         if let streamURL = attachment.first?.url {
-          self.downloadsSession.downloadTask(with: streamURL).resume()
+          self.downloadTask = self.downloadsSession.downloadTask(with: streamURL)
+          self.downloadTask?.resume()
         }
 
       case let .failure(error):
@@ -339,9 +352,6 @@ class DownloadsMC: NSObject, ObservableObject {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath, parentContentId: parentContentId)
     self.downloadedModel = downloadModel
     data.append(downloadModel)
-    
-    print("downloadModel name: \(downloadModel.content.name) & localPath: \(localPath)")
-    
     self.state = .loading
   }
 

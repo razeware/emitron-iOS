@@ -171,6 +171,9 @@ struct LibraryView: View {
           }
         case .save:
           self.save(for: content)
+        
+        case .cancel:
+          self.downloadsMC.cancelDownload()
         }
       }
 
