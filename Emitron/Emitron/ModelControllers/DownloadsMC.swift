@@ -59,7 +59,11 @@ class DownloadsMC: NSObject, ObservableObject {
   var downloadedModel: DownloadModel?
   var destinationURL: URL?
   var callback: ((Bool) -> Void)?
-  var downloadedContent: ContentDetailsModel?
+  var downloadedContent: ContentDetailsModel? {
+    willSet {
+      objectWillChange.send(())
+    }
+  }
   var finishedDownloadingCollection: Bool {
     return episodesCounter == 0
   }
@@ -67,6 +71,12 @@ class DownloadsMC: NSObject, ObservableObject {
   var totalNum: Double = 0
   var numGroupsCounter: Double = 0
   @Published var collectionProgress: CGFloat = 0.0
+  var activeDownloads = [ContentDetailsModel]()
+  var cancelDownload = false {
+    willSet {
+      objectWillChange.send(())
+    }
+  }
 
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -162,6 +172,8 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   func saveDownload(with content: ContentDetailsModel, videoId: Int? = nil) {
+    print("cancelDownload: \(cancelDownload) & count: \(activeDownloads.count)")
+    guard !cancelDownload else { return }
     
     // if session has been invalidated, recreate 
     downloadsSession = URLSession(configuration: .default,
@@ -231,6 +243,7 @@ class DownloadsMC: NSObject, ObservableObject {
     
     content.groups.forEach { groupModel in
       episodesCounter += groupModel.childContents.count
+      activeDownloads += groupModel.childContents
     }
     
     state = .loading
@@ -238,11 +251,11 @@ class DownloadsMC: NSObject, ObservableObject {
     // save parent content
     if let childContent = content.groups.first?.childContents.first {
       content.videoID = childContent.videoID
+      activeDownloads.append(content)
       self.saveDownload(with: content, videoId: childContent.videoID)
     }
 
     content.groups.forEach { groupModel in
-      numGroupsCounter -= 1
       groupModel.childContents.forEach { child in
         child.parentContent = content
         self.saveDownload(with: child)
@@ -251,23 +264,21 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   func cancelDownload(with content: ContentDetailsModel) {
+    cancelDownload = true 
+    downloadedModel = nil
+    downloadedContent?.parentContent = nil
+    downloadedContent?.parentContentId = nil
+    downloadedContent = nil
     
-    if data.contains(where: { $0.content.id == content.id }) {
-      
-      if content.isInCollection, let parentContent = content.parentContent {
-        deleteCollectionContents(withParent: parentContent, showCallback: false)
-      } else {
-        deleteDownload(with: content, showCallback: false)
-      }
-      
-      downloadTask?.cancel()
-      downloadsSession.invalidateAndCancel()
-      downloadTask = nil
-      collectionProgress = 0.0
-      
-      self.downloadedModel = nil
-      downloadedContent = nil
+    downloadTask?.cancel()
+    downloadsSession.invalidateAndCancel()
+    downloadTask = nil
+    
+    activeDownloads.forEach { (model) in
+      deleteDownload(with: model, showCallback: false)
     }
+    
+    activeDownloads.removeAll()
   }
 
   // MARK: Private funcs
@@ -431,6 +442,8 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel? = nil) {
+    
+    guard activeDownloads.count > 0 else { return }
     
     let doc = Document(fileURL: fileURL)
     doc.url = location

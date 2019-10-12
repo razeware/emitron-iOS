@@ -100,7 +100,6 @@ struct TextListItemView: View {
   private var downloadImageName: String {
     if contentSummary.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        print("downloadModel.content: \(downloadModel.content.id) & contentSummary.id: \(contentSummary.id)")
         return downloadModel.content.id == contentSummary.id
       } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
