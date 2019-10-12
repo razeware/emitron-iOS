@@ -139,11 +139,16 @@ extension View {
                callback: callback)
   }
   
-  func showActionSheet(for action: SheetAction, onAction: @escaping ((SheetAction) -> Void)) -> ActionSheet {
+  func showActionSheet(for action: SheetAction, onAction: @escaping ((SheetAction?) -> Void)) -> ActionSheet {
+    
+    let cancelDownload: Alert.Button = .default(Text("Cancel Download")) {
+      onAction(.cancel)
+    }
+    
     return ActionSheet(title: Text(action.title),
                        message: nil,
-                       buttons: [Alert.Button.cancel({
-                        onAction(.cancel)
+                       buttons: [cancelDownload, Alert.Button.cancel({
+                        onAction(nil)
                        })])
   }
 }

@@ -156,8 +156,8 @@ struct ContentSummaryView: View {
   }
 
   private func setUpImageAndProgress() -> AnyView {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
-    let image = Image(self.downloadImageName())
+    let imageColor: Color = downloadImageName == DownloadImageName.inActive ? .appGreen : .coolGrey
+    let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .foregroundColor(imageColor)
@@ -192,7 +192,7 @@ struct ContentSummaryView: View {
     }
   }
 
-  private func downloadImageName() -> String {
+  private var downloadImageName: String {
     
     if contentSummaryMC.data.isInCollection {
       
@@ -208,7 +208,7 @@ struct ContentSummaryView: View {
   }
 
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inActive
     callback?(contentSummaryMC.data, success)
   }
 

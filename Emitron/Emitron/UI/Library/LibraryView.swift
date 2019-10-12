@@ -166,14 +166,13 @@ struct LibraryView: View {
     let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
-          if let videoID = content.videoID {
-            self.delete(for: videoID)
-          }
+          self.delete(for: content)
+        
         case .save:
           self.save(for: content)
         
         case .cancel:
-          self.downloadsMC.cancelDownload()
+          self.downloadsMC.cancelDownload(with: content)
         }
       }
 
@@ -188,8 +187,13 @@ struct LibraryView: View {
     return AnyView(contentSectionView)
   }
 
-  private func delete(for videoId: Int) {
-    downloadsMC.deleteDownload(with: videoId)
+  private func delete(for content: ContentDetailsModel) {
+    if content.isInCollection, let parent = content.parentContent {
+      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
+    } else {
+      downloadsMC.deleteDownload(with: content)
+    }
+    
     self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing
@@ -228,6 +232,9 @@ struct LibraryView: View {
       
       if content.groups.isEmpty {
         self.contentsMC.getContentSummary(with: content.id) { detailsModel in
+          
+          print("content.videoid: \(detailsModel.videoID) & parentL \(detailsModel.parentContent?.videoID)")
+          
           self.downloadsMC.saveCollection(with: detailsModel)
         }
       }

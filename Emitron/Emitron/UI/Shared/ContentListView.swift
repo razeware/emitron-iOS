@@ -120,7 +120,13 @@ struct ContentListView: View {
         }.listRowInsets(EdgeInsets())
       } else {
         if contentScreen == .downloads {
-          cardsTableViewWithDelete
+          
+          if contents.isEmpty || downloadsMC.data.isEmpty {
+            emptyView
+          } else {
+            cardsTableViewWithDelete
+          }
+          
         } else {
           cardTableNavView
         }
@@ -158,7 +164,6 @@ struct ContentListView: View {
             if success {
               // show sheet to cancel download
               self.showingSheet = true
-              
               self.callback?(.save, partialContent)
             } else {
               if self.showHudView {
@@ -215,9 +220,11 @@ struct ContentListView: View {
   
   private var actionSheet: ActionSheet {
     return showActionSheet(for: .cancel) { action in
-      self.downloadsMC.cancelDownload()
-      self.showingSheet = false
-      self.showHudView = false
+      if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+        self.downloadsMC.cancelDownload(with: content)
+        self.showingSheet = false
+        self.showHudView = false
+      }
     }
   }
 
@@ -274,6 +281,7 @@ struct ContentListView: View {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
       let content = self.contents[index]
+      print("content.videoid: \(content.videoID)")
       self.callback?(.delete, content)
     }
   }

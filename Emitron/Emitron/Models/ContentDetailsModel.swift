@@ -46,7 +46,7 @@ class ContentDetailsModel {
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
-  private(set) var videoID: Int?
+  var videoID: Int?
   private(set) var index: Int?
   private(set) var professional: Bool = false
 

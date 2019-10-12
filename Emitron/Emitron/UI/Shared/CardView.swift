@@ -187,7 +187,7 @@ struct CardView: SwiftUI.View {
   
   private func setUpImageAndProgress() -> AnyView {
     
-    let image = Image(self.downloadImageName())
+    let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .onTapGesture {
@@ -239,7 +239,7 @@ struct CardView: SwiftUI.View {
   }
   
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inActive
     onRightIconTap?(success)
   }
   
@@ -277,7 +277,7 @@ struct CardView: SwiftUI.View {
     }
   }
   
-  private func downloadImageName() -> String {
+  private var downloadImageName: String {
     guard let model = model else { return DownloadImageName.inActive }
     
     if model.isInCollection {

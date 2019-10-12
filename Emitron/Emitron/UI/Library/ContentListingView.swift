@@ -216,9 +216,11 @@ struct ContentListingView: View {
   
   private var actionSheet: ActionSheet {
     return showActionSheet(for: .cancel) { action in
-      self.downloadsMC.cancelDownload()
-      self.showingSheet = false
-      self.showHudView = false
+      if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+        self.downloadsMC.cancelDownload(with: content)
+        self.showingSheet = false
+        self.showHudView = false
+      }
     }
   }
 

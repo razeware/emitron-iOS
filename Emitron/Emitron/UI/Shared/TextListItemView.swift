@@ -63,7 +63,7 @@ struct TextListItemView: View {
   
   private func setUpImageAndProgress() -> AnyView {
     
-    let image = Image(self.downloadImageName())
+    let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .onTapGesture {
@@ -97,10 +97,10 @@ struct TextListItemView: View {
     }
   }
   
-  private func downloadImageName() -> String {
+  private var downloadImageName: String {
     if contentSummary.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        
+        print("downloadModel.content: \(downloadModel.content.id) & contentSummary.id: \(contentSummary.id)")
         return downloadModel.content.id == contentSummary.id
       } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
@@ -109,7 +109,7 @@ struct TextListItemView: View {
   }
   
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inActive
     buttonAction(success)
   }
 

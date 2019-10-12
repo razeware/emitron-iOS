@@ -80,18 +80,20 @@ struct DownloadsView: View {
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
-
-    guard let videoID = content.videoID else { return }
     
     switch action {
     case .delete:
-      downloadsMC.deleteDownload(with: videoID)
+      if content.isInCollection {
+        downloadsMC.deleteCollectionContents(withParent: content, showCallback: true)
+      } else {
+        downloadsMC.deleteDownload(with: content)
+      }
 
     case .save:
       self.downloadsMC.saveDownload(with: content)
       
     case .cancel:
-      self.downloadsMC.cancelDownload()
+      self.downloadsMC.cancelDownload(with: content)
     }
   }
 

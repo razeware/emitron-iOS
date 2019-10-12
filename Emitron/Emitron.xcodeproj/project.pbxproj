@@ -32,7 +32,6 @@
 		B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597C2344EDF800D7B0E2 /* Document.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
-		B5858F182350D4F700DCE6B0 /* DownloadsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5858F172350D4F700DCE6B0 /* DownloadsService.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
 		B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653C23094E3100A3FF44 /* ProgressionsMC.swift */; };
 		B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653E230953EF00A3FF44 /* BookmarksMC.swift */; };
@@ -160,8 +159,6 @@
 		22D176C123460A060038333D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+UserKeychainTest.swift"; sourceTree = "<group>"; };
 		22D176CD2347520D0038333D /* UserModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModelTest.swift; sourceTree = "<group>"; };
-		22D17704235074C80038333D /* secrets.production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.production.xcconfig; sourceTree = "<group>"; };
-		22D17705235075910038333D /* secrets.development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.development.xcconfig; sourceTree = "<group>"; };
 		22D17706235075B10038333D /* secrets.template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.template.xcconfig; sourceTree = "<group>"; };
 		22D17707235078030038333D /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		45C70622AD5673AD0AB91CF1 /* Pods-emitronTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitronTests.debug.xcconfig"; path = "Target Support Files/Pods-emitronTests/Pods-emitronTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -190,7 +187,6 @@
 		B51C597C2344EDF800D7B0E2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
-		B5858F172350D4F700DCE6B0 /* DownloadsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsService.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
 		B595653C23094E3100A3FF44 /* ProgressionsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsMC.swift; sourceTree = "<group>"; };
 		B595653E230953EF00A3FF44 /* BookmarksMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksMC.swift; sourceTree = "<group>"; };
@@ -362,8 +358,6 @@
 		22D177032350748E0038333D /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				22D17704235074C80038333D /* secrets.production.xcconfig */,
-				22D17705235075910038333D /* secrets.development.xcconfig */,
 				22D17706235075B10038333D /* secrets.template.xcconfig */,
 				22D17707235078030038333D /* Configuration.swift */,
 			);
@@ -779,7 +773,6 @@
 				B6D8EB2422CBA85300DE29AF /* ProgressionsService.swift */,
 				B6D8EB2822CBA93D00DE29AF /* VideosService.swift */,
 				8BFCEF1C23411817003FF72F /* PermissionsService.swift */,
-				B5858F172350D4F700DCE6B0 /* DownloadsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1071,7 +1064,6 @@
 				22D17708235078030038333D /* Configuration.swift in Sources */,
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
-				B5858F182350D4F700DCE6B0 /* DownloadsService.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */,
@@ -1219,7 +1211,6 @@
 		};
 		B6D7DC3D22C79745006DD325 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22D17705235075910038333D /* secrets.development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1280,7 +1271,6 @@
 		};
 		B6D7DC3E22C79745006DD325 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22D17704235074C80038333D /* secrets.production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;

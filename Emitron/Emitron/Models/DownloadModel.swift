@@ -40,7 +40,6 @@ class DownloadModel {
   var localPath: URL
   @Published var downloadProgress: CGFloat = 0.0
   var task: URLSessionDownloadTask?
-  var isDownloading: Bool = false
 
   // MARK: - Initializers
   init(attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
