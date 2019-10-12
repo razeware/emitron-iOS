@@ -72,12 +72,7 @@ class DownloadsMC: NSObject, ObservableObject {
   var numGroupsCounter: Double = 0
   @Published var collectionProgress: CGFloat = 0.0
   var activeDownloads = [ContentDetailsModel]()
-  var cancelDownload = false {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
-
+  var cancelDownload = false
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -172,7 +167,6 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   func saveDownload(with content: ContentDetailsModel, videoId: Int? = nil) {
-    print("cancelDownload: \(cancelDownload) & count: \(activeDownloads.count)")
     guard !cancelDownload else { return }
     
     // if session has been invalidated, recreate 
@@ -243,7 +237,6 @@ class DownloadsMC: NSObject, ObservableObject {
     
     content.groups.forEach { groupModel in
       episodesCounter += groupModel.childContents.count
-      activeDownloads += groupModel.childContents
     }
     
     state = .loading
@@ -251,7 +244,6 @@ class DownloadsMC: NSObject, ObservableObject {
     // save parent content
     if let childContent = content.groups.first?.childContents.first {
       content.videoID = childContent.videoID
-      activeDownloads.append(content)
       self.saveDownload(with: content, videoId: childContent.videoID)
     }
 
@@ -279,6 +271,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
     
     activeDownloads.removeAll()
+    print("activeDownloads count: \(activeDownloads.count)")
   }
 
   // MARK: Private funcs
@@ -310,7 +303,24 @@ class DownloadsMC: NSObject, ObservableObject {
             
             if let url = response?.url {
               DispatchQueue.main.async {
-                self.saveNewDocument(with: localPath, location: url, content: content)
+                self.saveNewDocument(with: localPath, location: url, content: content) {
+                  
+                  print("new doc activeDownloads: \(self.activeDownloads.count) & cancelDownload: \(self.cancelDownload)")
+                  
+                  if self.cancelDownload {
+                    print("CANCEL")
+                    self.activeDownloads.forEach { model in
+                      self.deleteDownload(with: model, showCallback: false)
+                    }
+                    
+                    self.activeDownloads.removeAll()
+                    self.downloadedModel = nil
+                    self.downloadedContent?.parentContent = nil
+                    self.downloadedContent?.parentContentId = nil
+                    self.downloadedContent = nil
+                  }
+                  
+                }
               }
             }
           })
@@ -441,9 +451,9 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel? = nil) {
+  private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel? = nil, completion: (()-> Void)? = nil) {
     
-    guard activeDownloads.count > 0 else { return }
+    guard !cancelDownload else { return }
     
     let doc = Document(fileURL: fileURL)
     doc.url = location
@@ -452,6 +462,7 @@ class DownloadsMC: NSObject, ObservableObject {
       [weak self] success in
       guard let `self` = self else { return }
       guard success else {
+        completion?()
         Failure
         .fetch(from: "DownloadsMC", reason: "Error in saveNewDocument")
         .log(additionalParams: nil)
@@ -463,6 +474,14 @@ class DownloadsMC: NSObject, ObservableObject {
         self.collectionProgress = CGFloat(1.0 - (self.numGroupsCounter/self.totalNum))
       }
       
+      if let content = content {
+        self.activeDownloads.append(content)
+      } else if let content = self.downloadedContent {
+        self.activeDownloads.append(content)
+      } else if let content = self.downloadedModel?.content {
+        self.activeDownloads.append(content)
+      }
+      
       // check if sending content from saveCollection call
       if let content = content, (content.isInCollection && self.finishedDownloadingCollection) {
         self.state = .hasData
@@ -471,6 +490,8 @@ class DownloadsMC: NSObject, ObservableObject {
         self.state = .hasData
         self.callback?(true)
       }
+      
+      completion?()
     }
   }
 }
@@ -500,7 +521,7 @@ extension DownloadsMC: URLSessionDownloadDelegate {
 
     if let url = downloadTask.response?.url {
       DispatchQueue.main.async {
-        self.saveNewDocument(with: destinationUrl, location: url)
+        self.saveNewDocument(with: destinationUrl, location: url, content: nil)
       }
     }
   }
