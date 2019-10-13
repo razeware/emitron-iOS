@@ -31,41 +31,16 @@ import AVFoundation
 import UIKit
 import AVKit
 
-class VideoViewUIKit: UIView {
-  
-  var player: AVPlayer? {
-    get {
-      return playerLayer.player
-    }
-    
-    set {
-      playerLayer.player = newValue
-    }
-  }
-  
-  override class var layerClass: AnyClass {
-    return AVPlayerLayer.self
-  }
-  
-  var playerLayer: AVPlayerLayer {
-    return layer as! AVPlayerLayer
-  }
-}
-
 class VideoPlayerController: AVPlayerViewController {
   
   let videoID: Int
   private var videosMC: VideosMC
   
-  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return .landscapeLeft
-  }
-  
   init(with videoID: Int, videosMC: VideosMC) {
     self.videoID = videoID
     self.videosMC = videosMC
     super.init(nibName: nil, bundle: nil)
-    setupNotification()
+    //setupNotification()
   }
   
   private func setupNotification() {
@@ -95,11 +70,13 @@ class VideoPlayerController: AVPlayerViewController {
     super.viewWillDisappear(animated)
 
     player?.pause()
-    UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+    //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
   }
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    entersFullScreenWhenPlaybackBegins = true
         
     videosMC.fetchBeginPlaybackToken { [weak self] (success, token)  in
       guard let self = self else {
@@ -136,7 +113,6 @@ class VideoPlayerController: AVPlayerViewController {
         self.player?.play()
         self.player?.rate = UserDefaults.standard.playSpeed
         self.player?.appliesMediaSelectionCriteriaAutomatically = true
-        self.player?.isClosedCaptionDisplayEnabled = true
         
         doc.close() { success in
           guard success else {
@@ -194,11 +170,11 @@ class VideoPlayerController: AVPlayerViewController {
     })
   }
   
-  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-    if UIDevice.current.orientation.isLandscape {
-        print("Landscape")
-    } else {
-        print("Portrait")
-    }
-  }
+//  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+//    if UIDevice.current.orientation.isLandscape {
+//        print("Landscape")
+//    } else {
+//        print("Portrait")
+//    }
+//  }
 }

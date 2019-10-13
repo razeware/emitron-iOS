@@ -29,9 +29,7 @@
 import SwiftUI
 
 struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
-  
-  typealias UIViewControllerType = VideoPlayerController
-  
+    
   let videoID: Int
   let contentID: Int
   private let user: UserModel
@@ -42,7 +40,7 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
     self.user = user
   }
   
-  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerControllerRepresentable.UIViewControllerType {
+  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerController {
     let videosMC = VideosMC(user: user, contentId: contentID)
     return VideoPlayerController(with: videoID, videosMC: videosMC)
   }

@@ -241,8 +241,8 @@ struct ContentListingView: View {
           
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
-              //self.episodeListing(data: group.childContents)
-              self.modalEpisodeListing(data: group.childContents)
+              self.episodeListing(data: group.childContents)
+              //self.modalEpisodeListing(data: group.childContents)
           }
         }
       } else {
