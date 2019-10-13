@@ -85,7 +85,9 @@ struct ContentListingView: View {
     }
     .onAppear {
       self.loadImage()
-      self.contentSummaryMC.getContentSummary()
+      if self.contentSummaryMC.state != .hasData {
+        self.contentSummaryMC.getContentSummary()
+      }
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
