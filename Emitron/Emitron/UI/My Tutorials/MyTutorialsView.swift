@@ -71,10 +71,11 @@ struct MyTutorialView: View {
         }, bookmarkedClosure: {
           self.state = .bookmarked
         })
-          .padding([.top], .sidePadding)
+          .padding([.top, .bottom], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
       .background(Color.white)
+      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     )
   }
   
