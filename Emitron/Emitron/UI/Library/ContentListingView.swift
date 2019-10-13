@@ -141,6 +141,32 @@ struct ContentListingView: View {
     }
   }
   
+  private func modalEpisodeListing(data: [ContentDetailsModel]) -> some View {
+    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
+
+    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
+      TextListItemView(contentSummary: model, buttonAction: { success in
+        if success {
+          self.save(for: model)
+        } else {
+          if self.showHudView {
+            self.showHudView.toggle()
+          }
+
+          self.hudOption = success ? .success : .error
+          self.showHudView = true
+        }
+      }, downloadsMC: self.downloadsMC)
+
+      .onTapGesture {
+        self.isPresented = true
+      }
+      .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
+                                                         videoID: model.videoID!,
+                                                         user: self.user) }
+    })
+  }
+  
   private var contentModelForPlayButton: ContentDetailsModel? {
     guard let progression = contentSummaryMC.data.progression else { return nil }
     
@@ -215,7 +241,8 @@ struct ContentListingView: View {
           
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
-              self.episodeListing(data: group.childContents)
+              //self.episodeListing(data: group.childContents)
+              self.modalEpisodeListing(data: group.childContents)
           }
         }
       } else {
