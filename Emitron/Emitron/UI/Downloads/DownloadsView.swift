@@ -64,14 +64,14 @@ struct DownloadsView: View {
     var contents = [ContentDetailsModel]()
     let downloadedContents = downloadsMC.data.map { $0.content }
     
-    downloadedContents.forEach { content in
+    downloadedContents.forEach { download in
       
-      if content.contentType == .episode {
-        if content.parentContentId == content.id {
-          contents.append(content)
+      if download.contentType == .episode {
+        if download.videoID == nil {
+          contents.append(download)
         }
       } else {
-        contents.append(content)
+        contents.append(download)
       }
       
     }
@@ -84,7 +84,7 @@ struct DownloadsView: View {
     switch action {
     case .delete:
       if content.isInCollection {
-        downloadsMC.deleteCollectionContents(withParent: content, showCallback: true)
+        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
       } else {
         downloadsMC.deleteDownload(with: content)
       }
