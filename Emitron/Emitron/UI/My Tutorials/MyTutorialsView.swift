@@ -61,21 +61,20 @@ struct MyTutorialView: View {
       }
   }
   
-  private var toggleControl: AnyView {
-    AnyView(
-      VStack {
-        ToggleControlView(inProgressClosure: {
-          self.state = .inProgress
-        }, completedClosure: {
-          self.state = .completed
-        }, bookmarkedClosure: {
-          self.state = .bookmarked
-        })
-          .padding([.top], .sidePadding)
-      }
-      .padding([.leading, .trailing], 20)
-      .background(Color.white)
-    )
+  private var toggleControl: some View {
+    VStack {
+      ToggleControlView(inProgressClosure: {
+        self.state = .inProgress
+      }, completedClosure: {
+        self.state = .completed
+      }, bookmarkedClosure: {
+        self.state = .bookmarked
+      })
+        .padding([.top, .bottom], .sidePadding)
+    }
+    .padding([.leading, .trailing], 20)
+    .background(Color.white)
+    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
   }
   
   private var contentView: some View {
@@ -116,7 +115,7 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
     
     return AnyView(contentView)
   }
