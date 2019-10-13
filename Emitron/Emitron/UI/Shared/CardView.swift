@@ -170,16 +170,21 @@ struct CardView: SwiftUI.View {
             }
           }
         }
-        .padding([.leading, .trailing, .top, .bottom], 15)
+        .padding(15)
         
         Spacer()
         
         ProgressBarView(progress: model.progress)
+        Rectangle()
+          .frame(height: 1)
+          .foregroundColor(Color.paleBlue)
       }
     }
-    .background(Color.white)
     .cornerRadius(6)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    
+    // TODO: If we want to get the card + dropshadow design back, uncomment this
+//    .background(Color.white)
+//    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     
     return AnyView(stack)
   }
