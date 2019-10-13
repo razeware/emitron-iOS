@@ -71,7 +71,7 @@ struct MyTutorialView: View {
         }, bookmarkedClosure: {
           self.state = .bookmarked
         })
-          .padding([.top, .bottom], .sidePadding)
+          .padding([.top], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
       .background(Color.white)
