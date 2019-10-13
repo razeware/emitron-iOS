@@ -41,7 +41,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
     // TODO: When a modifier is available these should be refactored
-    //UITableView.appearance().separatorColor = .clear
+    UITableView.appearance().separatorColor = .clear
     
     UINavigationBar.appearance().largeTitleTextAttributes = [
       NSAttributedString.Key.foregroundColor: UIColor.appBlack,
