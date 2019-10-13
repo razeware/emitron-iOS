@@ -28,38 +28,101 @@
 
 import SwiftUI
 
+private struct Layout {
+  static let buttonSize: CGFloat = 21
+}
+
 struct DownloadImageName {
   static let active: String = "downloadActive"
   static let inActive: String = "downloadInactive"
 }
 
 struct ContentSummaryView: View {
-
+  
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  
   var body: some View {
-    createVStack()
+    VStack(alignment: .leading) {
+      
+      HStack {
+        Text(contentSummaryMC.data.technologyTripleString.uppercased())
+          .font(.uiUppercase)
+          .foregroundColor(.battleshipGrey)
+          .kerning(0.5)
+        // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
+        Spacer()
+        
+        if contentSummaryMC.data.professional {
+          proTag
+        }
+      }
+      .padding([.top], 20)
+      
+      Text(contentSummaryMC.data.name)
+        .font(.uiTitle1)
+        .lineLimit(nil)
+        //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
+        // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
+        .fixedSize(horizontal: false, vertical: true)
+        .padding([.top], 10)
+      
+      Text(contentSummaryMC.data.releasedAtDateTimeString)
+        .font(.uiCaption)
+        .foregroundColor(.battleshipGrey)
+        .padding([.top], 12)
+      
+      HStack(spacing: 30, content: {
+        downloadButton
+        bookmarkButton
+        completedTag // If needed
+      })
+      .padding([.top], 15)
+      
+      Text(contentSummaryMC.data.description)
+        .font(.uiCaption)
+        .foregroundColor(.battleshipGrey)
+        // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
+        // '.frame(idealHeight: .infinity)' to the TITLE...
+        //.frame(idealHeight: .infinity)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding([.top], 15)
+        .lineLimit(nil)
+      
+      Text("By \(contentSummaryMC.data.contributorString)")
+        .font(.uiFootnote)
+        .foregroundColor(.battleshipGrey)
+        .lineLimit(2)
+        .fixedSize(horizontal: false, vertical: true)
+        .padding([.top], 10)
+    }
   }
   
-  private var bookmarkImage: some View {
-    return Button(action: {
+  private var downloadButton: some View {
+    Button(action: {
+      self.download()
+    }) {
+      self.completeDownloadButton
+    }
+  }
+  
+  private var bookmarkButton: some View {
+    Button(action: {
       self.bookmark()
     }) {
       // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
       if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
         Image("bookmarkActive")
           .resizable()
-          .frame(width: 20, height: 20)
-          .padding([.trailing], 20)
+          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
           .foregroundColor(.coolGrey)
       } else {
         Image("bookmarkActive")
           .resizable()
-          .frame(width: 20, height: 20)
-          .padding([.trailing], 20)
+          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
           .foregroundColor(.appGreen)
       }
     }
@@ -95,71 +158,12 @@ struct ContentSummaryView: View {
           .font(.uiUppercase)
     }
   }
-
-  private func createVStack() -> some View {
-    return VStack(alignment: .leading) {
-
-      HStack {
-        Text(contentSummaryMC.data.technologyTripleString.uppercased())
-          .font(.uiUppercase)
-          .foregroundColor(.battleshipGrey)
-          .kerning(0.5)
-        // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
-        Spacer()
-
-        if contentSummaryMC.data.professional {
-          proTag
-        }
-      }
-
-      Text(contentSummaryMC.data.name)
-        .font(.uiTitle1)
-        .lineLimit(nil)
-        //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
-        // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-        .fixedSize(horizontal: false, vertical: true)
-
-      Text(contentSummaryMC.data.releasedAtDateTimeString)
-        .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
-        .padding([.top], 5)
-
-      HStack {
-        Button(action: {
-          // Download Action
-          self.download()
-        }) {
-          self.setUpImageAndProgress()
-        }
-        bookmarkImage
-        completedTag // If needed
-      }
-      .padding([.top], 20)
-
-      Text(contentSummaryMC.data.description)
-        .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
-        // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
-        // '.frame(idealHeight: .infinity)' to the TITLE...
-        //.frame(idealHeight: .infinity)
-        .fixedSize(horizontal: false, vertical: true)
-        .padding([.top], 20)
-        .lineLimit(nil)
-
-      Text("By \(contentSummaryMC.data.contributorString)")
-        .font(.uiFootnote)
-        .foregroundColor(.battleshipGrey)
-        .lineLimit(2)
-        .fixedSize(horizontal: false, vertical: true)
-        .padding([.top], 5)
-    }
-  }
-
-  private func setUpImageAndProgress() -> AnyView {
+  
+  private var completeDownloadButton: some View {
     let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
     let image = Image(self.downloadImageName())
       .resizable()
-      .frame(width: 19, height: 19)
+      .frame(width: Layout.buttonSize, height: Layout.buttonSize)
       .foregroundColor(imageColor)
       .onTapGesture {
         self.download()
@@ -167,21 +171,21 @@ struct ContentSummaryView: View {
     
     switch downloadsMC.state {
     case .loading:
-
+      
       if contentSummaryMC.data.isInCollection {
         
         guard let downloadedContent = downloadsMC.downloadedContent,
-        downloadedContent.id == contentSummaryMC.data.id else {
-          return AnyView(image)
+          downloadedContent.id == contentSummaryMC.data.id else {
+            return AnyView(image)
         }
         
         return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
-
+        
       } else {
         // Only show progress on model that is currently being downloaded
         guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
-              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-          return AnyView(image)
+          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+            return AnyView(image)
         }
         
         return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
@@ -191,7 +195,7 @@ struct ContentSummaryView: View {
       return AnyView(image)
     }
   }
-
+  
   private func downloadImageName() -> String {
     
     if contentSummaryMC.data.isInCollection {
@@ -206,12 +210,12 @@ struct ContentSummaryView: View {
       return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
-
+  
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
     callback?(contentSummaryMC.data, success)
   }
-
+  
   private func bookmark() {
     contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
   }

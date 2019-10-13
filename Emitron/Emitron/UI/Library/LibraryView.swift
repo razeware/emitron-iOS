@@ -60,19 +60,21 @@ struct LibraryView: View {
     }
   }
 
-  private var contentControlsSection: AnyView {
-    AnyView(
-      VStack {
-        searchAndFilterControls
-        numberAndSortView
-
-        if !filters.applied.isEmpty {
-          filtersView
-        }
+  private var contentControlsSection: some View {
+    VStack {
+      searchAndFilterControls
+        .padding([.top], 15)
+      
+      if !filters.applied.isEmpty {
+        filtersView
+          .padding([.top], 10)
       }
-      .padding([.bottom, .top, .leading, .trailing], 20)
-      .background(Color.white)
-    )
+      numberAndSortView
+        .padding([.top, .bottom], 10)
+    }
+    .padding([.leading, .trailing], 20)
+    .background(Color.white)
+    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
   }
 
   private var searchField: some View {
@@ -163,7 +165,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .paleGrey, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .white, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           if let videoID = content.videoID {
