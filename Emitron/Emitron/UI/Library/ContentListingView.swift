@@ -76,11 +76,39 @@ struct ContentListingView: View {
     })
   }
   
-  private var playButton: AnyView? {
-    guard let videoID = contentSummaryMC.data.videoID,
-    let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
+  private var contentModelForPlayButton: ContentDetailsModel? {
+    guard let progression = contentSummaryMC.data.progression else { return nil }
+    
+    // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
+    if progression.finished || progression.percentComplete == 0.0 {
+      return contentSummaryMC.data.groups.first?.childContents.first ?? nil
+    }
+    
+    // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
+    // This means that we return true for when the first progression is nil, or when the target > the progress
+      
+    else {
+      let allContentModels = contentSummaryMC.data.groups.flatMap { $0.childContents }
+      let firstUnplayedConsecutive = allContentModels.first { model -> Bool in
+        guard let progression = model.progression else { return true }
+        return progression.target > progression.progress
+      }
+      
+      return firstUnplayedConsecutive ?? nil
+    }
+  }
+  
+  private var contentIdForPlayButton: Int {
+    return contentModelForPlayButton?.id ?? 0
+  }
+  
+  private var videoIdForPlayButton: Int {
+    return contentModelForPlayButton?.videoID ?? 0
+  }
+  
+  private var playButton: some View {
 
-    return AnyView(Button(action: {
+    return Button(action: {
       self.isPresented = true
     }) {
 
@@ -99,10 +127,10 @@ struct ContentListingView: View {
           .foregroundColor(.white)
 
       }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: contentID,
-                                                         videoID: videoID,
+      .sheet(isPresented: self.$isPresented) { VideoView(contentID: self.contentIdForPlayButton,
+                                                         videoID: self.videoIdForPlayButton,
                                                          user: self.user) }
-    })
+    }
   }
 
   var coursesSection: AnyView? {
