@@ -61,20 +61,21 @@ struct MyTutorialView: View {
       }
   }
   
-  private var toggleControl: some View {
-    VStack {
-      ToggleControlView(inProgressClosure: {
-        self.state = .inProgress
-      }, completedClosure: {
-        self.state = .completed
-      }, bookmarkedClosure: {
-        self.state = .bookmarked
-      })
-        .padding([.top, .bottom], .sidePadding)
-    }
-    .padding([.leading, .trailing], 20)
-    .background(Color.white)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+  private var toggleControl: AnyView {
+    AnyView(
+      VStack {
+        ToggleControlView(inProgressClosure: {
+          self.state = .inProgress
+        }, completedClosure: {
+          self.state = .completed
+        }, bookmarkedClosure: {
+          self.state = .bookmarked
+        })
+          .padding([.top], .sidePadding)
+      }
+      .padding([.leading, .trailing], 20)
+      .background(Color.white)
+    )
   }
   
   private var contentView: some View {
