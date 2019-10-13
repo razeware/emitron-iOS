@@ -104,20 +104,11 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Public funcs
-  func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true, videoId: Int? = nil) {
-    
-    let videoID: Int
-    if let videoId = videoId {
-      videoID = videoId
-    } else if let videoId = content.videoID {
-      videoID = videoId
-    } else {
-      return
-    }
+  func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true) {
     
     let contentId: Int
     let parentId: Int
-    if let selectedDownload = data.first(where: { $0.content.videoID == videoID }), let parent = selectedDownload.content.parentContent {
+    if let selectedDownload = data.first(where: { $0.content.videoID == content.videoID }), let parent = selectedDownload.content.parentContent {
       contentId = selectedDownload.content.id
       parentId = parent.id
     } else if let parent = data.first(where: { $0.content.videoID == nil }) {
@@ -127,7 +118,13 @@ class DownloadsMC: NSObject, ObservableObject {
       return
     }
     
-    let fileName = "\(contentId).\(parentId).\(videoID).\(String.appExtension)"
+    let fileName: String
+    if let videoId = content.videoID {
+      fileName = "\(contentId).\(parentId).\(videoId).\(String.appExtension)"
+    } else {
+      fileName = "\(contentId).\(parentId).\(String.appExtension)"
+    }
+    
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
           let index = data.firstIndex(where: { $0.content.id == contentId }) else { return }
 
@@ -135,7 +132,6 @@ class DownloadsMC: NSObject, ObservableObject {
 
     do {
       try FileManager.default.removeItem(at: fileURL)
-      print("FJ successfully deleted: \(content.name)")
       self.data.remove(at: index)
       self.state = .hasData
       if showCallback {
@@ -144,7 +140,6 @@ class DownloadsMC: NSObject, ObservableObject {
       
 
     } catch let error as NSError {
-      print("FJ fileURL failed deleteDownload: \(content.name) & error: \(error.description)")
       self.state = .failed
       if showCallback {
         self.callback?(false)
@@ -153,14 +148,6 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool) {
-    
-    // delete parent content
-    if let parent = self.data.first(where: { $0.content.id == content.id }) {
-      if let videoID = content.groups.first?.childContents.first?.videoID {
-        print("FJ delete parent: \(parent.content.id) & videoId: \(videoID)")
-        self.deleteDownload(with: parent.content, showCallback: showCallback, videoId: videoID)   
-      }
-    }
     
     content.groups.forEach { groupModel in
       groupModel.childContents.forEach { child in
@@ -178,12 +165,15 @@ class DownloadsMC: NSObject, ObservableObject {
           try FileManager.default.removeItem(at: fileURL)
           self.data.remove(at: index)
           self.state = .hasData
-          print("FJ successfully deleted: \(content.name)")
 
         } catch let error as NSError {
-          print("FJ fileURL failed deleteCollection: \(content.name) & error: \(error.description)")
           self.state = .failed
         }
+      }
+      
+      // delete parent content
+      if let parent = self.data.first(where: { $0.content.id == content.id }) {
+        self.deleteDownload(with: parent.content, showCallback: showCallback)
       }
     }
   }
@@ -264,15 +254,33 @@ class DownloadsMC: NSObject, ObservableObject {
     state = .loading
     
     // save parent content
-    if let videoID = content.groups.first?.childContents.first?.videoID {
-      self.saveDownload(with: content, videoId: videoID)
-    }
+    saveParent(with: content)
 
     content.groups.forEach { groupModel in
       groupModel.childContents.forEach { child in
         child.parentContent = content
         self.saveDownload(with: child)
       }
+    }
+  }
+  
+  func saveParent(with content: ContentDetailsModel) {
+    // if session has been invalidated, recreate
+      downloadsSession = URLSession(configuration: .default,
+                                    delegate: self,
+                                    delegateQueue: nil)
+    
+    let fileName = "\(content.id).\(content.id).\(String.appExtension)"
+    guard let destinationUrl = localRoot?.appendingPathComponent(fileName, isDirectory: true) else { return }
+    self.destinationURL = destinationUrl
+    
+    self.state = .loading
+    
+    guard !FileManager.default.fileExists(atPath: destinationUrl.path) else { return }
+    
+    saveNewDocument(with: destinationUrl, location: destinationUrl, content: content) {
+      let downloadModel = DownloadModel(attachmentModel: nil, content: content, isDownloaded: true, localPath: destinationUrl, parentContentId: content.id)
+      self.data.append(downloadModel)
     }
   }
   
@@ -323,12 +331,8 @@ class DownloadsMC: NSObject, ObservableObject {
             if let url = response?.url {
               DispatchQueue.main.async {
                 self.saveNewDocument(with: localPath, location: url, content: content) {
-                  
-                  print("FJ new doc activeDownloads: \(self.activeDownloads.count) & cancelDownload: \(self.cancelDownload)")
-                  
                   if self.cancelDownload {
                     self.activeDownloads.forEach { model in
-                      print("FJ CANCEL: \(model.name)")
                       self.deleteDownload(with: model, showCallback: false)
                     }
                     
@@ -398,7 +402,7 @@ class DownloadsMC: NSObject, ObservableObject {
       let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
 
       for localDoc in localDocs where localDoc.pathExtension == .appExtension {
-
+        
         let lastPathComponents = localDoc.lastPathComponent.components(separatedBy: ".").dropLast()
         if let contentIDString = lastPathComponents.first,
           let contentID = Int(contentIDString),
@@ -406,6 +410,7 @@ class DownloadsMC: NSObject, ObservableObject {
           let videoID = Int(videoIDString) {
           let videoMC = VideosMC(user: self.user, contentId: contentID)
           videoMC.loadVideoStream(for: videoID) {
+            // FJ FIX - make a call to the file manager
             if let attachmentModel = videoMC.data {
               DispatchQueue.main.async {
                 let updatedContentString = lastPathComponents.dropFirst()
@@ -447,8 +452,6 @@ class DownloadsMC: NSObject, ObservableObject {
           .log(additionalParams: nil)
       case .success(let content):
         DispatchQueue.main.async {
-          print("FJ content: \(content.name)")
-          
           self.createDownloadModel(with: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath, parentContentId: parentContentId)
           self.state = .hasData
         }
@@ -512,8 +515,6 @@ class DownloadsMC: NSObject, ObservableObject {
         self.state = .hasData
         self.callback?(true)
       }
-      
-      print("FJ SAVED: \(content?.name)")
       
       completion?()
     }
