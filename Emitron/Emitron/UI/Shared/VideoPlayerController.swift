@@ -33,12 +33,19 @@ import AVKit
 
 class VideoPlayerController: AVPlayerViewController {
   
-  let videoID: Int
+  private var content: [ContentDetailsModel]
   private var videosMC: VideosMC
+  private var usageTimeObserverToken: Any?
+  private var autoplayNextTimeObserverToken: Any?
+  private var avQueuePlayer: AVQueuePlayer? {
+    didSet {
+      self.player = avQueuePlayer
+    }
+  }
   
-  init(with videoID: Int, videosMC: VideosMC) {
-    self.videoID = videoID
+  init(with content: [ContentDetailsModel], videosMC: VideosMC) {
     self.videosMC = videosMC
+    self.content = content
     super.init(nibName: nil, bundle: nil)
     //setupNotification()
   }
@@ -48,6 +55,7 @@ class VideoPlayerController: AVPlayerViewController {
                                            object: nil,
                                            queue: .main,
                                            using: didRotate)
+
   }
   
   var didRotate: (Notification) -> Void = { notification in
@@ -60,7 +68,7 @@ class VideoPlayerController: AVPlayerViewController {
       print("other")
     }
   }
-
+  
   @available(*, unavailable)
   required init?(coder: NSCoder) {
     fatalError("init(coder:) has not been implemented")
@@ -68,9 +76,31 @@ class VideoPlayerController: AVPlayerViewController {
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-
+    
     player?.pause()
+    removeUsageObserverToken()
+    
     //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
+  }
+  
+  private func removeUsageObserverToken() {
+    if let usageObserverToken = usageTimeObserverToken {
+      player?.removeTimeObserver(usageObserverToken)
+      usageTimeObserverToken = nil
+    }
+  }
+  
+  deinit {
+    
+    NotificationCenter.default.removeObserver(self)
+    removeUsageObserverToken()
+  }
+  
+  @objc private func playerDidFinishPlaying() {
+    DispatchQueue.main.async {
+      guard let content = self.content.first else { return }
+      self.insertVideoStream(for: content)
+    }
   }
   
   override func viewDidLoad() {
@@ -85,16 +115,33 @@ class VideoPlayerController: AVPlayerViewController {
       }
       if success {
         
-        if let downloadsMC = DataManager.current?.downloadsMC,
-          let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoID }) {
-          self.playFromLocalStorage(with: downloadModel.localPath)
-        } else {
-          self.streamVideo()
-        }
+        // TODO: Revisit downloads MC
+//        if let downloadsMC = DataManager.current?.downloadsMC,
+//          let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoIDs.first! }) {
+//          self.playFromLocalStorage(with: downloadModel.localPath)
+//        } else {
+//          guard let firstContent = self.content.first,
+//            let videoID = firstContent.videoID else { return }
+//          self.insertVideoStream(for: videoID, duration: firstContent.duration)
+//        }
+        guard let firstContent = self.content.first else { return }
+        
+        self.insertVideoStream(for: firstContent)
+        
       } else {
         // TODO: Show failure message/view
       }
     }
+  }
+  
+  private func setUpAVQueuePlayer(with item: AVPlayerItem) -> Void {
+    let queuePlayer = AVQueuePlayer(items: [item])
+    
+    queuePlayer.play()
+    queuePlayer.rate = UserDefaults.standard.playSpeed
+    queuePlayer.appliesMediaSelectionCriteriaAutomatically = false
+    
+    avQueuePlayer = queuePlayer
   }
   
   private func playFromLocalStorage(with url: URL) {
@@ -123,7 +170,9 @@ class VideoPlayerController: AVPlayerViewController {
     }
   }
   
-  private func streamVideo() {
+  private func insertVideoStream(for content: ContentDetailsModel) {
+    
+    guard let videoID = content.videoID else { return }
     videosMC.getVideoStream(for: videoID) { [weak self] result in
       guard let self = self else {
         return
@@ -131,16 +180,29 @@ class VideoPlayerController: AVPlayerViewController {
       
       switch result {
       case .failure(let error):
-        print(error.localizedDescription)
+        Failure
+        .fetch(from: "VideeoPlayerControlelr_insert", reason: error.localizedDescription)
+        .log(additionalParams: nil)
       case .success(let videoStream):
-        print(videoStream)
+        
         if let url = videoStream.url {
+          // Create player item
           let playerItem = self.createPlayerItem(for: url)
-          self.player = AVPlayer(playerItem: playerItem)
-          self.player?.play()
-          self.player?.rate = UserDefaults.standard.playSpeed
-          self.player?.appliesMediaSelectionCriteriaAutomatically = false
-          self.startProgressObservation()
+          
+          // If the queuePlayer exists, then insert after current item
+          if let qPlayer = self.avQueuePlayer {
+            qPlayer.insert(playerItem, after: nil)
+            
+            // Kill current usage observer and start a new one
+            self.removeUsageObserverToken()
+            self.startProgressObservation(for: content.id)
+            
+          } else {
+            self.setUpAVQueuePlayer(with: playerItem)
+            self.startProgressObservation(for: content.id)
+          }
+          // Remove the played item from the contents array
+          self.content.removeFirst()
         }
       }
     }
@@ -150,23 +212,31 @@ class VideoPlayerController: AVPlayerViewController {
     let asset = AVAsset(url: url)
     let playerItem = AVPlayerItem(asset: asset)
     
+    NotificationCenter.default.addObserver(self,
+                                           selector: #selector(self.playerDidFinishPlaying),
+                                           name: .AVPlayerItemDidPlayToEndTime,
+                                           object: playerItem)
+    
     if let group = asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
-        let locale = Locale(identifier: "en")
-        let options =
-            AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
-    if let option = options.first, UserDefaults.standard.closedCaptionOn {
-            playerItem.select(option, in: group)
-        }
+      let locale = Locale(identifier: "en")
+      let options =
+        AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
+      if let option = options.first, UserDefaults.standard.closedCaptionOn {
+        playerItem.select(option, in: group)
+      }
     }
     return playerItem
   }
   
-  private func startProgressObservation() {
-    player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 5, preferredTimescale: 1), queue: DispatchQueue.main, using: { [weak self] progressTime in
-      guard let self = self else { return }
+  private func startProgressObservation(for contentID: Int) {
+    usageTimeObserverToken = player?.addPeriodicTimeObserver(forInterval: CMTime(seconds: 5, preferredTimescale: 1), queue: DispatchQueue.main, using: { [weak self] progressTime in
       
+      // When you stop the video, the progressTime becomes very large, so adding a check in order to see whether the progreess > .oneDay
+      // which we will safely assume is not the actual progreess time
       let seconds = CMTimeGetSeconds(progressTime)
-      self.videosMC.reportUsageStatistics(progress: Int(seconds))
+      guard let self = self, seconds < TimeInterval.oneDay else { return }
+      
+      self.videosMC.reportUsageStatistics(progress: Int(seconds), contentID: contentID)
     })
   }
   

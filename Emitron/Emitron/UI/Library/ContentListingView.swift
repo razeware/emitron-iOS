@@ -95,6 +95,16 @@ struct ContentListingView: View {
 
     return scrollView
   }
+  
+  private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
+    let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
+    let allTitles = allContents.map { $0.name }
+    
+    guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
+      else { return [] }
+    
+    return allContents[currentIndex..<allContents.count].compactMap { $0 }
+  }
 
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
@@ -117,8 +127,7 @@ struct ContentListingView: View {
       //        })
       //      }
       NavigationLink(destination:
-        VideoView(contentID: model.id,
-                  videoID: model.videoID!,
+        VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
                   user: self.user)
       ) {
         TextListItemView(contentSummary: model, buttonAction: { success in
@@ -139,32 +148,6 @@ struct ContentListingView: View {
         }
       }
     }
-  }
-  
-  private func modalEpisodeListing(data: [ContentDetailsModel]) -> some View {
-    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
-
-    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
-      TextListItemView(contentSummary: model, buttonAction: { success in
-        if success {
-          self.save(for: model)
-        } else {
-          if self.showHudView {
-            self.showHudView.toggle()
-          }
-
-          self.hudOption = success ? .success : .error
-          self.showHudView = true
-        }
-      }, downloadsMC: self.downloadsMC)
-
-      .onTapGesture {
-        self.isPresented = true
-      }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID!,
-                                                         user: self.user) }
-    })
   }
   
   private var contentModelForPlayButton: ContentDetailsModel? {
@@ -198,7 +181,7 @@ struct ContentListingView: View {
   }
   
   private var playButton: some View {
-
+        
     return Button(action: {
       self.isPresented = true
     }) {
@@ -218,9 +201,9 @@ struct ContentListingView: View {
           .foregroundColor(.white)
         
       }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: self.contentIdForPlayButton,
-                                                         videoID: self.videoIdForPlayButton,
-                                                         user: self.user) }
+      .sheet(isPresented: self.$isPresented) {
+        VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.contentIdForPlayButton),
+                  user: self.user) }
     }
   }
   
