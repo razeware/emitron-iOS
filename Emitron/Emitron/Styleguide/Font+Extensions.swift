@@ -72,6 +72,6 @@ extension Font {
     return Font.system(size: 13.0)
   }
   static var uiUppercase: Font {
-    return Font.system(size: 12.0).weight(.bold)
+    return Font.system(size: 12.0).weight(.semibold)
   }
 }

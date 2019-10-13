@@ -49,6 +49,50 @@ struct ContentListingView: View {
     self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
     self.downloadsMC = downloadsMC
   }
+  
+  var body: some View {
+
+    let scrollView = GeometryReader { geometry in
+      List {
+        Section {
+
+          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
+            self.blurOverlay(for: geometry.size.width)
+          } else {
+            self.opacityOverlay(for: geometry.size.width)
+          }
+
+          ContentSummaryView(callback: { (content, success) in
+            if success {
+              self.save(for: content)
+            } else {
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+
+              self.hudOption = success ? .success : .error
+              self.showHudView = true
+            }
+          }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
+            .padding([.leading, .trailing], 20)
+            .padding([.bottom], 37)
+        }
+        .listRowInsets(EdgeInsets())
+
+        self.courseDetailsSection
+      }
+      .background(Color.paleGrey)
+    }
+    .onAppear {
+      self.loadImage()
+      self.contentSummaryMC.getContentSummary()
+    }
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
+    }
+
+    return scrollView
+  }
 
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
@@ -116,11 +160,11 @@ struct ContentListingView: View {
         Rectangle()
           .frame(maxWidth: 70, maxHeight: 70)
           .foregroundColor(.white)
-          .cornerRadius(6)
+          .cornerRadius(9)
         Rectangle()
           .frame(maxWidth: 60, maxHeight: 60)
           .foregroundColor(.appBlack)
-          .cornerRadius(6)
+          .cornerRadius(9)
         Image("materialIconPlay")
           .resizable()
           .frame(width: 40, height: 40)
@@ -159,49 +203,6 @@ struct ContentListingView: View {
     }
 
     return AnyView(sections)
-  }
-
-  var body: some View {
-
-    let scrollView = GeometryReader { geometry in
-      List {
-        Section {
-
-          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
-            self.blurOverlay(for: geometry.size.width)
-          } else {
-            self.opacityOverlay(for: geometry.size.width)
-          }
-
-          ContentSummaryView(callback: { (content, success) in
-            if success {
-              self.save(for: content)
-            } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
-            }
-          }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
-            .padding(20)
-        }
-        .listRowInsets(EdgeInsets())
-
-        self.courseDetailsSection
-      }
-      .background(Color.paleGrey)
-    }
-    .onAppear {
-      self.loadImage()
-      self.contentSummaryMC.getContentSummary()
-    }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
-    }
-
-    return scrollView
   }
 
   private func opacityOverlay(for width: CGFloat) -> some View {
