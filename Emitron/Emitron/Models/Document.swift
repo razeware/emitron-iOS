@@ -34,13 +34,19 @@ class Document: UIDocument {
   }
 
   var fileWrapper: FileWrapper?
+  var contentId: String
+  var content: ContentDetailsModel? {
+    didSet {
+      videoData.content = content
+    }
+  }
 
   lazy var videoData: VideoData = {
     guard
       fileWrapper != nil,
       let data = decodeFromWrapper(for: .dataFilename) as? VideoData
       else {
-        return VideoData()
+        return VideoData(contentId: self.contentId)
     }
     
     return data
@@ -51,7 +57,13 @@ class Document: UIDocument {
       videoData.url = url
     }
   }
-
+  
+  init(fileURL: URL, contentId: String) {
+    self.contentId = contentId
+    self.url = fileURL
+    super.init(fileURL: fileURL)
+  }
+  
   private func encodeToWrapper(object: NSCoding) -> FileWrapper {
     let archiver = NSKeyedArchiver(requiringSecureCoding: false)
     archiver.encode(object, forKey: .dataKey)

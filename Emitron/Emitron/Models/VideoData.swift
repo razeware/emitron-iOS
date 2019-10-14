@@ -30,9 +30,12 @@ import Foundation
 
 class VideoData: NSObject, NSCoding {
   var url: URL?
+  var content: ContentDetailsModel?
+  var contentId: String
   
-  init(url: URL? = nil) {
+  init(url: URL? = nil, contentId: String) {
     self.url = url
+    self.contentId = contentId
   }
   
   func encode(with aCoder: NSCoder) {
@@ -40,6 +43,8 @@ class VideoData: NSObject, NSCoding {
     guard let videoURL = url else { return }
     
     aCoder.encode(videoURL, forKey: .videoKey)
+    aCoder.encode(contentId, forKey: .contentIdKey)
+    aCoder.encode(content, forKey: .contentKey)
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -48,6 +53,16 @@ class VideoData: NSObject, NSCoding {
       return nil
     }
     
+    guard let contentId = aDecoder.decodeObject(forKey: .contentIdKey) as? String else {
+      return nil
+    }
+    
+    guard let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentDetailsModel else {
+      return nil
+    }
+    
     self.url = videoURL
+    self.contentId = contentId
+    self.content = content
   }
 }

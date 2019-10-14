@@ -101,7 +101,7 @@ class VideoPlayerController: AVPlayerViewController {
   }
   
   private func playFromLocalStorage(with url: URL) {
-    let doc = Document(fileURL: url)
+    let doc = Document(fileURL: url, contentId: <#String#>)
     doc.open { [weak self] success in
       guard let self = self else { return }
       guard success else {

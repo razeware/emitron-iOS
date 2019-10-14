@@ -36,6 +36,8 @@ extension String {
   static let videoIDKey: String = "videoID"
   static let versionKey: String = "Version"
   static let videoKey: String = "Video"
+  static let contentIdKey: String = "ContentId"
+  static let contentKey: String = "Content"
   static let dataKey: String = "Data"
   static let dataFilename: String = "video.data"
 }
@@ -409,6 +411,8 @@ class DownloadsMC: NSObject, ObservableObject {
           let videoIDString = lastPathComponents.last,
           let videoID = Int(videoIDString) {
           let videoMC = VideosMC(user: self.user, contentId: contentID)
+          
+          
           videoMC.loadVideoStream(for: videoID) {
             // FJ FIX - make a call to the file manager
             if let attachmentModel = videoMC.data {
@@ -435,6 +439,26 @@ class DownloadsMC: NSObject, ObservableObject {
       Failure
       .fetch(from: "DownloadsMC", reason: error.localizedDescription)
       .log(additionalParams: nil)
+    }
+  }
+  
+  private func loadLocalContents(at url: URL, contentId: String) {
+    
+    let doc = Document(fileURL: url, contentId: contentId)
+    doc.open { [weak self] success in
+      guard let self = self else { return }
+      guard success else {
+        fatalError("Failed to open doc.")
+      }
+      
+      if let url = doc.videoData.url {
+        
+        doc.close() { success in
+          guard success else {
+            fatalError("Failed to close doc.")
+          }
+        }
+      }
     }
   }
 
@@ -480,7 +504,7 @@ class DownloadsMC: NSObject, ObservableObject {
     
     guard !cancelDownload else { return }
     
-    let doc = Document(fileURL: fileURL)
+    let doc = Document(fileURL: fileURL, contentId: <#String#>)
     doc.url = location
     
     doc.save(to: fileURL, for: .forCreating) {
