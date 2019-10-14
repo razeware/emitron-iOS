@@ -160,7 +160,7 @@ class DownloadsMC: NSObject, ObservableObject {
       return
     }
 
-    let videosMC = VideosMC(user: self.user, contentId: content.id)
+    let videosMC = VideosMC(user: self.user)
     
     if content.isInCollection {
       self.loadCollectionVideoStream(or: content, on: videosMC, localPath: destinationUrl, videoId: videoID)
@@ -285,7 +285,7 @@ class DownloadsMC: NSObject, ObservableObject {
           let contentID = Int(contentIDString),
           let videoIDString = lastPathComponents.last,
           let videoID = Int(videoIDString) {
-          let videoMC = VideosMC(user: self.user, contentId: contentID)
+          let videoMC = VideosMC(user: self.user)
           videoMC.loadVideoStream(for: videoID) {
             if let attachmentModel = videoMC.data {
               DispatchQueue.main.async {

@@ -29,22 +29,18 @@
 import SwiftUI
 
 struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
-  
-  typealias UIViewControllerType = VideoPlayerController
-  
-  let videoID: Int
-  let contentID: Int
+    
+  private let contentDetails: [ContentDetailsModel]
   private let user: UserModel
   
-  init(with videoID: Int, contentID: Int, user: UserModel) {
-    self.videoID = videoID
-    self.contentID = contentID
+  init(with contentDetails: [ContentDetailsModel], user: UserModel) {
+    self.contentDetails = contentDetails
     self.user = user
   }
   
-  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerControllerRepresentable.UIViewControllerType {
-    let videosMC = VideosMC(user: user, contentId: contentID)
-    return VideoPlayerController(with: videoID, videosMC: videosMC)
+  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerController {
+    let videosMC = VideosMC(user: user)
+    return VideoPlayerController(with: contentDetails, videosMC: videosMC)
   }
   
   func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {
@@ -54,12 +50,12 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 
 struct VideoView: View {
   
-  let contentID: Int
-  let videoID: Int
+  let contentDetails: [ContentDetailsModel]
   let user: UserModel
   
   var body: some View {
-    VideoPlayerControllerRepresentable(with: videoID, contentID: contentID, user: user)
+    VideoPlayerControllerRepresentable(with: contentDetails, user: user)
+      .navigationBarTitle(contentDetails.first?.name ?? "")
   }
 }
 
@@ -68,7 +64,8 @@ struct VideoView_Previews: PreviewProvider {
 
   static var previews: some View {
     let user = Guardpost.current.currentUser!
-    return VideoView(contentID: 4919757, videoID: 2292, user: user)
+    let contentDetail = ContentDetailsModel.test
+    return VideoView(contentDetails: [contentDetail], user: user)
   }
 }
 #endif
