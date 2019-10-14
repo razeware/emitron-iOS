@@ -65,10 +65,6 @@
             argument = "-FIRDebugEnabled"
             isEnabled = "YES">
          </CommandLineArgument>
-         <CommandLineArgument
-            argument = ""
-            isEnabled = "NO">
-         </CommandLineArgument>
       </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable

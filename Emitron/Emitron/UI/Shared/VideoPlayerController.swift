@@ -229,12 +229,4 @@ class VideoPlayerController: AVPlayerViewController {
       self.videosMC.reportUsageStatistics(progress: Int(seconds), contentID: contentID)
     })
   }
-  
-//  override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
-//    if UIDevice.current.orientation.isLandscape {
-//        print("Landscape")
-//    } else {
-//        print("Portrait")
-//    }
-//  }
 }

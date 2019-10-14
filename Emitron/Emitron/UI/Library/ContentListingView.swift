@@ -227,10 +227,14 @@ struct ContentListingView: View {
         .foregroundColor(.appBlack)
         .opacity(0.2)
       
-      HStack {
-        Spacer()
-        playButton
-        Spacer()
+      GeometryReader { geometry in
+        HStack {
+          self.playButton
+          //HACK: to center the button when it's in a NavigationLink
+            .padding(.leading, geometry.size.width/2 - 32.0)
+        }
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0)
       }
     }
   }
