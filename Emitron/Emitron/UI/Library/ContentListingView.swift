@@ -85,9 +85,7 @@ struct ContentListingView: View {
     }
     .onAppear {
       self.loadImage()
-      if self.contentSummaryMC.state != .hasData {
-        self.contentSummaryMC.getContentSummary()
-      }
+      self.contentSummaryMC.getContentSummary()
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
@@ -98,7 +96,6 @@ struct ContentListingView: View {
   
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
     let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
-    let allTitles = allContents.map { $0.name }
     
     guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
       else { return [] }
@@ -110,22 +107,7 @@ struct ContentListingView: View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
-      // Use Group when you want to add some logic here
-      //      Group {
-      //        TextListItemView(contentSummary: model, buttonAction: {
-      //          // Download
-      //        })
-      //          .onTapGesture {
-      //            self.isPresented = true
-      //        }
-      //        .sheet(isPresented: self.$isPresented, onDismiss: {
-      //          print("Dismissing...")
-      //        }, content: {
-      //          NavigationView {
-      //            Text("Video ID: \(model.videoID!)")
-      //          }.navigationViewStyle(StackNavigationViewStyle())
-      //        })
-      //      }
+
       NavigationLink(destination:
         VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
                   user: self.user)
@@ -147,6 +129,8 @@ struct ContentListingView: View {
             self.isPresented = true
         }
       }
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
     }
   }
   
@@ -181,11 +165,11 @@ struct ContentListingView: View {
   }
   
   private var playButton: some View {
-        
-    return Button(action: {
-      self.isPresented = true
-    }) {
-      
+    
+    return NavigationLink(destination:
+      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
+                user: self.user))
+    {
       ZStack {
         Rectangle()
           .frame(maxWidth: 70, maxHeight: 70)
@@ -199,11 +183,7 @@ struct ContentListingView: View {
           .resizable()
           .frame(width: 40, height: 40)
           .foregroundColor(.white)
-        
       }
-      .sheet(isPresented: self.$isPresented) {
-        VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.contentIdForPlayButton),
-                  user: self.user) }
     }
   }
   
@@ -237,7 +217,7 @@ struct ContentListingView: View {
   }
   
   private func opacityOverlay(for width: CGFloat) -> some View {
-    ZStack {
+    ZStack(alignment: .center) {
       Image(uiImage: uiImage)
         .resizable()
         .frame(width: width, height: width * imageRatio)
@@ -247,7 +227,11 @@ struct ContentListingView: View {
         .foregroundColor(.appBlack)
         .opacity(0.2)
       
-      playButton
+      HStack {
+        Spacer()
+        playButton
+        Spacer()
+      }
     }
   }
   

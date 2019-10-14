@@ -80,8 +80,6 @@ class VideosMC: NSObject, ObservableObject {
   
   @objc func reportUsageStatistics(progress: Int, contentID: Int) {
     
-    print("Progress: \(progress) for contentID: \(contentID)")
-    
     guard let playbackToken = token else {
       fetchBeginPlaybackToken { [weak self] (success, token) in
         guard let self = self else { return }

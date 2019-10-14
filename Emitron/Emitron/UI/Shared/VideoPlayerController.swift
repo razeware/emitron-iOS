@@ -47,7 +47,7 @@ class VideoPlayerController: AVPlayerViewController {
     self.videosMC = videosMC
     self.content = content
     super.init(nibName: nil, bundle: nil)
-    //setupNotification()
+    setupNotification()
   }
   
   private func setupNotification() {
@@ -76,9 +76,7 @@ class VideoPlayerController: AVPlayerViewController {
   
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
-    
     player?.pause()
-    removeUsageObserverToken()
     
     //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
   }
@@ -98,8 +96,7 @@ class VideoPlayerController: AVPlayerViewController {
   
   @objc private func playerDidFinishPlaying() {
     DispatchQueue.main.async {
-      guard let content = self.content.first else { return }
-      self.insertVideoStream(for: content)
+      self.playFromLocalIfPossible()
     }
   }
   
@@ -114,23 +111,25 @@ class VideoPlayerController: AVPlayerViewController {
         return
       }
       if success {
-        
-        // TODO: Revisit downloads MC
-//        if let downloadsMC = DataManager.current?.downloadsMC,
-//          let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == self.videoIDs.first! }) {
-//          self.playFromLocalStorage(with: downloadModel.localPath)
-//        } else {
-//          guard let firstContent = self.content.first,
-//            let videoID = firstContent.videoID else { return }
-//          self.insertVideoStream(for: videoID, duration: firstContent.duration)
-//        }
-        guard let firstContent = self.content.first else { return }
-        
-        self.insertVideoStream(for: firstContent)
+        // Start playback from local, if not fetch from remote
+        DispatchQueue.main.async {
+          self.playFromLocalIfPossible()
+        }
         
       } else {
         // TODO: Show failure message/view
       }
+    }
+  }
+  
+  private func playFromLocalIfPossible() {
+    guard let firstContent = content.first else { return }
+    
+    if let downloadsMC = DataManager.current?.downloadsMC,
+      let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == firstContent.videoID }) {
+      playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
+    } else  {
+      fetchAndInsertFromVideosRemote(for: firstContent)
     }
   }
   
@@ -144,7 +143,7 @@ class VideoPlayerController: AVPlayerViewController {
     avQueuePlayer = queuePlayer
   }
   
-  private func playFromLocalStorage(with url: URL) {
+  private func playFromLocalStorage(with url: URL, contentDetails: ContentDetailsModel) {
     let doc = Document(fileURL: url)
     doc.open { [weak self] success in
       guard let self = self else { return }
@@ -153,26 +152,13 @@ class VideoPlayerController: AVPlayerViewController {
       }
       
       if let url = doc.videoData.url {
-        self.player = AVPlayer(url: url)
-        let playerLayer = AVPlayerLayer(player: self.player)
-        playerLayer.frame = self.view.bounds
-        self.view.layer.addSublayer(playerLayer)
-        self.player?.play()
-        self.player?.rate = UserDefaults.standard.playSpeed
-        self.player?.appliesMediaSelectionCriteriaAutomatically = true
-        
-        doc.close() { success in
-          guard success else {
-            fatalError("Failed to close doc.")
-          }
-        }
+        self.insertVideoStream(for: url, contentDetails: contentDetails)
       }
     }
   }
   
-  private func insertVideoStream(for content: ContentDetailsModel) {
-    
-    guard let videoID = content.videoID else { return }
+  private func fetchAndInsertFromVideosRemote(for contentDetails: ContentDetailsModel) {
+    guard let videoID = contentDetails.videoID else { return }
     videosMC.getVideoStream(for: videoID) { [weak self] result in
       guard let self = self else {
         return
@@ -186,26 +172,30 @@ class VideoPlayerController: AVPlayerViewController {
       case .success(let videoStream):
         
         if let url = videoStream.url {
-          // Create player item
-          let playerItem = self.createPlayerItem(for: url)
-          
-          // If the queuePlayer exists, then insert after current item
-          if let qPlayer = self.avQueuePlayer {
-            qPlayer.insert(playerItem, after: nil)
-            
-            // Kill current usage observer and start a new one
-            self.removeUsageObserverToken()
-            self.startProgressObservation(for: content.id)
-            
-          } else {
-            self.setUpAVQueuePlayer(with: playerItem)
-            self.startProgressObservation(for: content.id)
-          }
-          // Remove the played item from the contents array
-          self.content.removeFirst()
+          self.insertVideoStream(for: url, contentDetails: contentDetails)
         }
       }
     }
+  }
+  
+  private func insertVideoStream(for url: URL, contentDetails: ContentDetailsModel) {
+    // Create player item
+    let playerItem = createPlayerItem(for: url)
+    
+    // If the queuePlayer exists, then insert after current item
+    if let qPlayer = avQueuePlayer {
+      qPlayer.insert(playerItem, after: nil)
+      
+      // Kill current usage observer and start a new one
+      removeUsageObserverToken()
+      startProgressObservation(for: contentDetails.id)
+      
+    } else {
+      setUpAVQueuePlayer(with: playerItem)
+      startProgressObservation(for: contentDetails.id)
+    }
+    // Remove the played item from the contents array
+    content.removeFirst()
   }
   
   private func createPlayerItem(for url: URL) -> AVPlayerItem {
