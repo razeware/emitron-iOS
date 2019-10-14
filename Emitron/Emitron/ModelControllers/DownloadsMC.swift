@@ -65,6 +65,7 @@ class DownloadsMC: NSObject, ObservableObject {
   var totalNum: Double = 0
   var numGroupsCounter: Double = 0
   @Published var collectionProgress: CGFloat = 0.0
+  var videosMC: VideosMC
 
   let user: UserModel
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
@@ -91,6 +92,7 @@ class DownloadsMC: NSObject, ObservableObject {
   // MARK: - Initializers
   init(user: UserModel) {
     self.user = user
+    self.videosMC = VideosMC(user: user, contentId: 1)
     super.init()
 
     loadDownloads()
@@ -160,12 +162,12 @@ class DownloadsMC: NSObject, ObservableObject {
       return
     }
 
-    let videosMC = VideosMC(user: self.user, contentId: content.id)
+    videosMC.contentId = content.id
     
     if content.isInCollection {
-      self.loadCollectionVideoStream(or: content, on: videosMC, localPath: destinationUrl, videoId: videoID)
+      self.loadCollectionVideoStream(or: content, localPath: destinationUrl, videoId: videoID)
     } else {
-       self.loadIndividualVideoStream(for: content, on: videosMC, localPath: destinationUrl)
+       self.loadIndividualVideoStream(for: content, localPath: destinationUrl)
     }
   }
   
@@ -201,7 +203,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Private funcs
-  private func loadCollectionVideoStream(or content: ContentDetailsModel, on videosMC: VideosMC, localPath: URL, videoId: Int?) {
+  private func loadCollectionVideoStream(or content: ContentDetailsModel, localPath: URL, videoId: Int?) {
     
     let videoID: Int
     if let videoId = videoId {
@@ -212,7 +214,8 @@ class DownloadsMC: NSObject, ObservableObject {
       return
     }
     
-    videosMC.getDownloadVideofor(id: videoID) { response in
+    videosMC.getDownloadVideofor(id: videoID) { [weak self] response in
+      guard let self = self else { return }
       switch response {
       case let .success(attachment):
         if let attachment = attachment.first {
@@ -245,9 +248,10 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   
-  private func loadIndividualVideoStream(for content: ContentDetailsModel, on videosMC: VideosMC, localPath: URL) {
+  private func loadIndividualVideoStream(for content: ContentDetailsModel, localPath: URL) {
     guard let videoID = content.videoID else { return }
-    videosMC.getDownloadVideofor(id: videoID) { response in
+    videosMC.getDownloadVideofor(id: videoID) { [weak self] response in
+    guard let self = self else { return }
       switch response {
       case let .success(attachment):
         if let attachment = attachment.first {
@@ -285,18 +289,14 @@ class DownloadsMC: NSObject, ObservableObject {
           let contentID = Int(contentIDString),
           let videoIDString = lastPathComponents.last,
           let videoID = Int(videoIDString) {
-          let videoMC = VideosMC(user: self.user, contentId: contentID)
-          videoMC.loadVideoStream(for: videoID) {
-            if let attachmentModel = videoMC.data {
-              DispatchQueue.main.async {
-                let updatedContentString = lastPathComponents.dropFirst()
-                if let parentIdString = updatedContentString.first {
-                  let parentContentId = Int(parentIdString)
-                  self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: attachmentModel, isDownloaded: true, localPath: localDoc, parentContentId: parentContentId)
-                } else {
-                  self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: attachmentModel, isDownloaded: true, localPath: localDoc, parentContentId: nil)
-                }
-              }
+          videosMC.contentId = contentID
+          self.videosMC.loadVideoStream(for: videoID) {
+            let updatedContentString = lastPathComponents.dropFirst()
+            if let parentIdString = updatedContentString.first {
+              let parentContentId = Int(parentIdString)
+              self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: nil, isDownloaded: true, localPath: localDoc, parentContentId: parentContentId)
+            } else {
+              self.loadContents(contentID: contentID, videoID: videoID, attachmentModel: nil, isDownloaded: true, localPath: localDoc, parentContentId: nil)
             }
           }
         }
@@ -314,7 +314,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private func loadContents(contentID: Int, videoID: Int, attachmentModel: AttachmentModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
+  private func loadContents(contentID: Int, videoID: Int, attachmentModel: AttachmentModel?, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
     let client = RWAPI(authToken: Guardpost.current.currentUser?.token ?? "")
     let contentsService = ContentsService(client: client)
     contentsService.contentDetails(for: contentID) { [weak self] result in
@@ -335,7 +335,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private func createDownloadModel(with attachmentModel: AttachmentModel, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
+  private func createDownloadModel(with attachmentModel: AttachmentModel?, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath, parentContentId: parentContentId)
     self.downloadedModel = downloadModel
     data.append(downloadModel)

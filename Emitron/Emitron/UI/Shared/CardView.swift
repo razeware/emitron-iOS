@@ -29,6 +29,7 @@
 import SwiftUI
 import Kingfisher
 import UIKit
+import Network
 
 enum CardViewType: Hashable {
   case `default`
@@ -95,14 +96,15 @@ extension CardViewModel {
 }
 
 struct CardView: SwiftUI.View {
-  var onRightIconTap: ((Bool) -> Void)?
+  var onRightIconTap: ((HudOption) -> Void)?
   @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
+  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
   
-  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
+  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((HudOption) -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
@@ -111,6 +113,8 @@ struct CardView: SwiftUI.View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
+    setUpNetworkMonitor()
+    
     guard let model = model else {
       let emptyView = AnyView(createEmptyView())
       return emptyView
@@ -242,9 +246,19 @@ struct CardView: SwiftUI.View {
     }
   }
   
+  private func setUpNetworkMonitor() {
+    let queue = DispatchQueue(label: "Monitor")
+    monitor.start(queue: queue)
+  }
+  
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
-    onRightIconTap?(success)
+    if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
+      onRightIconTap?(.notOnWifi)
+    } else {
+      let success = downloadImageName() != DownloadImageName.inActive
+      let hudOption: HudOption = success ? .success : .error
+      onRightIconTap?(hudOption)
+    }
   }
   
   private func loadImage() {

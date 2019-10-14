@@ -29,12 +29,13 @@
 import SwiftUI
 
 enum HudOption {
-  case success, error
+  case success, error, notOnWifi
   
   var title: String {
     switch self {
     case .success: return "success".uppercased()
     case .error: return "error".uppercased()
+    default: return ""
     }
   }
   
@@ -48,7 +49,7 @@ enum HudOption {
   var color: Color {
     switch self {
     case .success: return .appGreen
-    case .error: return .copper
+    case .error, .notOnWifi: return .copper
     }
   }
 }

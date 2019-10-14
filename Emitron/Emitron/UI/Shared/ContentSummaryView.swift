@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Network
 
 private struct Layout {
   static let buttonSize: CGFloat = 21
@@ -41,12 +42,19 @@ struct ContentSummaryView: View {
   
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
-  var callback: ((ContentDetailsModel, Bool) -> Void)?
+  var callback: ((ContentDetailsModel, HudOption) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
   
   var body: some View {
-    VStack(alignment: .leading) {
+    let queue = DispatchQueue(label: "Monitor")
+    monitor.start(queue: queue)
+    return contentView
+  }
+  
+  private var contentView: some View {
+    return VStack(alignment: .leading) {
       
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
@@ -212,8 +220,13 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
-    callback?(contentSummaryMC.data, success)
+    if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
+      callback?(contentSummaryMC.data, .notOnWifi)
+    } else {
+      let success = downloadImageName() != DownloadImageName.inActive
+      let hudOption: HudOption = success ? .success : .error
+      callback?(contentSummaryMC.data, hudOption)
+    }
   }
   
   private func bookmark() {

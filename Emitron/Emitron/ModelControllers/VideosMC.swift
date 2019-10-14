@@ -44,7 +44,7 @@ class VideosMC: NSObject, ObservableObject {
   private let user: UserModel
   private let videoService: VideosService
   private let contentsService: ContentsService
-  private let contentId: Int
+  var contentId: Int
   private var token: String?
   
   private var timer: Timer?
@@ -179,9 +179,6 @@ class VideosMC: NSObject, ObservableObject {
   
   func getDownloadVideofor(id: Int,
                            completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
-    if case(.loading) = state {
-      return
-    }
 
     state = .loading
     videoService.getVideoDownload(for: id) { [weak self] result in
@@ -198,7 +195,11 @@ class VideosMC: NSObject, ObservableObject {
           .fetch(from: "VideosMC", reason: error.localizedDescription)
           .log(additionalParams: ["VideoID": "\(id)"])
       case .success(let attachment):
-        self.data = attachment.first
+        if let selectedDownloadQuality = UserDefaults.standard.downloadQuality {
+          self.data = attachment.first(where: { $0.kind.rawValue == selectedDownloadQuality })
+        } else if let defaultHD = attachment.first(where: { $0.kind.rawValue == AttachmentKind.hdVideoFile.rawValue }) {
+          self.data = defaultHD
+        }
         self.state = .hasData
       }
     }

@@ -82,6 +82,8 @@ enum ContentScreen {
 struct ContentListView: View {
 
   @State var showHudView: Bool = false
+  @State var showAlert: Bool = false
+  @State private var showSettings = false
   @State var hudOption: HudOption = .success
   var downloadsMC: DownloadsMC
 
@@ -101,7 +103,28 @@ struct ContentListView: View {
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
-  }
+    .actionSheet(isPresented: self.$showAlert) {
+        ActionSheet(
+          title: Text("You are not connected to Wi-Fi"),
+          message: Text("Turn on Wi-Fi to access data."),
+          buttons: [
+            .default(Text("Settings"), action: {
+              self.openSettings()
+            }),
+            .default(Text("OK"), action: {
+              self.showAlert.toggle()
+            })
+          ]
+        )
+      }
+    }
+    
+    private func openSettings() {
+      //for WIFI setting app
+      if let url = URL(string: "App-Prefs:root=WIFI") {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      }
+    }
 
   private var listView: some View {
     List {
@@ -150,17 +173,21 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
-            if success {
+          self.cardView(content: partialContent, onRightTap: { hudOption in
+            switch hudOption {
+            case .success:
               self.callback?(.save, partialContent)
-            } else {
+              self.showHudView = true
+            case .error:
               if self.showHudView {
                 self.showHudView.toggle()
               }
-
-              self.hudOption = success ? .success : .error
               self.showHudView = true
+            case .notOnWifi:
+              self.showAlert = true
             }
+            
+            self.hudOption = hudOption
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
@@ -182,17 +209,21 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
-            if success {
-              self.callback?(.save, partialContent)
-            } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
+          self.cardView(content: partialContent, onRightTap: { hudOption in
+          switch hudOption {
+          case .success:
+            self.callback?(.save, partialContent)
+            self.showHudView = true
+          case .error:
+            if self.showHudView {
+              self.showHudView.toggle()
             }
+            self.showHudView = true
+          case .notOnWifi:
+            self.showAlert = true
+          }
+          
+          self.hudOption = hudOption
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
@@ -204,7 +235,7 @@ struct ContentListView: View {
       .background(self.bgColor)
   }
 
-  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
+  private func cardView(content: ContentDetailsModel, onRightTap: ((HudOption) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
 
     return CardView(model: viewModel,

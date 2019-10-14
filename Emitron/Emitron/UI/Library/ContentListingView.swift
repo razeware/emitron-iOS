@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ContentListingView: View {
 
+  @State var showAlert: Bool = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
@@ -62,17 +63,21 @@ struct ContentListingView: View {
             self.opacityOverlay(for: geometry.size.width)
           }
 
-          ContentSummaryView(callback: { (content, success) in
-            if success {
+          ContentSummaryView(callback: { (content, hudOption) in
+            switch hudOption {
+            case .success:
               self.save(for: content)
-            } else {
+              self.showHudView = true
+            case .error:
               if self.showHudView {
                 self.showHudView.toggle()
               }
-
-              self.hudOption = success ? .success : .error
               self.showHudView = true
+            case .notOnWifi:
+              self.showAlert = true
             }
+            
+            self.hudOption = hudOption
           }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
             .padding([.leading, .trailing], 20)
             .padding([.bottom], 37)
@@ -90,8 +95,29 @@ struct ContentListingView: View {
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
+    .actionSheet(isPresented: self.$showAlert) {
+        ActionSheet(
+          title: Text("You are not connected to Wi-Fi"),
+          message: Text("Turn on Wi-Fi to access data."),
+          buttons: [
+            .default(Text("Settings"), action: {
+              self.openSettings()
+            }),
+            .default(Text("OK"), action: {
+              self.showAlert.toggle()
+            })
+          ]
+        )
+      }
 
     return scrollView
+  }
+  
+  private func openSettings() {
+    //for WIFI setting app
+    if let url = URL(string: "App-Prefs:root=WIFI") {
+      UIApplication.shared.open(url, options: [:], completionHandler: nil)
+    }
   }
 
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
