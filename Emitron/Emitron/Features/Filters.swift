@@ -145,18 +145,18 @@ class Filters: ObservableObject {
   
   var searchQuery: String? {
     didSet {
+      
+      // Remove search filter from filters
+      if let searchFilter = searchFilter {
+        all.remove(searchFilter)
+      }
+      
       guard let query = searchQuery else {
-        // Remove search filter from filters
-        if let searchFilter = searchFilter {
-          all.remove(searchFilter)
-        }
-        
         searchFilter = nil
         return
       }
-      let filter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
-      searchFilter = filter
-      all.update(with: filter)
+      searchFilter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
+      all.update(with: searchFilter!)
     }
   }
   
