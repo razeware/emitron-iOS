@@ -44,21 +44,17 @@ class VideosMC: NSObject, ObservableObject {
   private let user: UserModel
   private let videoService: VideosService
   private let contentsService: ContentsService
-  private let contentId: Int
   private var token: String?
-  
-  private var timer: Timer?
   private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
   
   // MARK: - Initializers
-  init(user: UserModel, contentId: Int) {
+  init(user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
     self.videoService = VideosService(client: self.client)
     self.contentsService = ContentsService(client: self.client)
-    self.contentId = contentId
     self.token = UserDefaults.standard.playbackToken
     
     super.init()    
@@ -82,13 +78,13 @@ class VideosMC: NSObject, ObservableObject {
     }
   }
   
-  @objc func reportUsageStatistics(progress: Int) {
+  @objc func reportUsageStatistics(progress: Int, contentID: Int) {
     
     guard let playbackToken = token else {
       fetchBeginPlaybackToken { [weak self] (success, token) in
         guard let self = self else { return }
         if success {
-          self.reportUsageStatistics(progress: progress)
+          self.reportUsageStatistics(progress: progress, contentID: contentID)
         } else {
           //TODO: Ask user to re-confirm
         }
@@ -96,15 +92,7 @@ class VideosMC: NSObject, ObservableObject {
       return
     }
     
-    if timer == nil {
-      timer = Timer.scheduledTimer(timeInterval: 5.0,
-                                        target: self,
-                                        selector: #selector(reportUsageStatistics),
-                                        userInfo: nil,
-                                        repeats: true)
-    }
-    
-    contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { result in
+    contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { result in
       switch result {
       case .failure(let error):
         Failure
@@ -112,7 +100,7 @@ class VideosMC: NSObject, ObservableObject {
         .log(additionalParams: nil)
         
         //TODO: Stop playback, ask use to re-play the video
-      case .success(let playbackProgress):
+      case .success(let _):
         print("USAGE STATISTICS")
         
       }
