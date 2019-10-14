@@ -269,15 +269,9 @@ struct ContentListingView: View {
   }
 
   private var loadingView: some View {
-    VStack {
-      Spacer()
-
-      Text("Loading...")
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-
-      Spacer()
+    // HACK: To put it in the middle we have to wrap it in Geometry Reader
+    GeometryReader { geometry in
+      ActivityIndicator()
     }
   }
 

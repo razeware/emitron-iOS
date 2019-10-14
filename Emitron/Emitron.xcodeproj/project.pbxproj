@@ -13,6 +13,7 @@
 		2C41F2A175393DBFC90112E9 /* Pods_emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */; };
 		501CECBBEA709C21CA95DD7D /* Pods_emitronTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 551EFD84D14BA559003D1772 /* Pods_emitronTests.framework */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
+		8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */; };
 		8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
@@ -168,6 +169,7 @@
 		74A0D662109D5BF3458D56B8 /* Pods-emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitron.debug.xcconfig"; path = "Target Support Files/Pods-emitron/Pods-emitron.debug.xcconfig"; sourceTree = "<group>"; };
 		89506CEDBFB5B4EAA22CFCE5 /* Pods-emitronTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitronTests.release.xcconfig"; path = "Target Support Files/Pods-emitronTests/Pods-emitronTests.release.xcconfig"; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
+		8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModifiers.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
@@ -377,6 +379,14 @@
 				89506CEDBFB5B4EAA22CFCE5 /* Pods-emitronTests.release.xcconfig */,
 			);
 			path = Pods;
+			sourceTree = "<group>";
+		};
+		8B28D2B123546CFD005FCC08 /* UIKit */ = {
+			isa = PBXGroup;
+			children = (
+				8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */,
+			);
+			path = UIKit;
 			sourceTree = "<group>";
 		};
 		8B6FB4422332173800185BF5 /* View Modifiers */ = {
@@ -599,6 +609,7 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				8B28D2B123546CFD005FCC08 /* UIKit */,
 				8B6FB4422332173800185BF5 /* View Modifiers */,
 				B62B9A7C22DF764900122CE8 /* Login */,
 				B6FC15AC22CB52570078CEDB /* Shared */,
@@ -1071,6 +1082,7 @@
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */,
+				8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */,
 				B6DF2F9822CA051B0081A3A3 /* BookmarkModel.swift in Sources */,
 				B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */,
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,

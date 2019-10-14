@@ -127,10 +127,15 @@ struct ContentListView: View {
 
   private var loadMoreView: AnyView? {
     if totalContentNum > contents.count {
-      return AnyView(Text("Loading...")
-        .onAppear {
-          self.contentsMC.loadMore()
-      })
+      return AnyView(
+        // HACK: To put it in the middle we have to wrap it in Geometry Reader
+        GeometryReader { geometry in
+          ActivityIndicator()
+            .onAppear {
+              self.contentsMC.loadMore()
+          }
+        }
+      )
     } else {
       return nil
     }
@@ -229,21 +234,6 @@ struct ContentListView: View {
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-
-      Spacer()
-    }
-  }
-
-  private var loadingView: some View {
-    VStack {
-      headerView
-
-      Spacer()
-
-      Text("Loading...")
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
 
       Spacer()
     }
