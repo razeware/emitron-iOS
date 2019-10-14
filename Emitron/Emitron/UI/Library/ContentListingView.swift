@@ -29,20 +29,20 @@
 import SwiftUI
 
 struct ContentListingView: View {
-
+  
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @ObservedObject var downloadsMC: DownloadsMC
   var content: ContentDetailsModel
   var user: UserModel
-
+  
   // These should be private
   @State var isPresented = false
   @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-
+  
   var imageRatio: CGFloat = 283/375
-
+  
   init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
@@ -93,35 +93,61 @@ struct ContentListingView: View {
 
     return scrollView
   }
+  
+  private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
+    
+    // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return [contentSummaryMC.data]
+    }
+    
+    let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
+    
+    guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
+      else { return [] }
+    
+    return allContents[currentIndex..<allContents.count].compactMap { $0 }
+  }
 
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
+    
+    return ForEach(onlyContentWithVideoID, id: \.id) { model in
 
-    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
-      TextListItemView(contentSummary: model, buttonAction: { success in
-        if success {
-          self.save(for: model)
-        } else {
-          if self.showHudView {
-            self.showHudView.toggle()
+      NavigationLink(destination:
+        VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
+                  user: self.user)
+      ) {
+        TextListItemView(contentSummary: model, buttonAction: { success in
+          if success {
+            self.save(for: model)
+          } else {
+            if self.showHudView {
+              self.showHudView.toggle()
+            }
+            
+            self.hudOption = success ? .success : .error
+            self.showHudView = true
           }
-
-          self.hudOption = success ? .success : .error
-          self.showHudView = true
+        }, downloadsMC: self.downloadsMC)
+          
+          .onTapGesture {
+            self.isPresented = true
         }
-      }, downloadsMC: self.downloadsMC)
-
-      .onTapGesture {
-        self.isPresented = true
       }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID!,
-                                                         user: self.user) }
-    })
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
+    }
   }
   
   private var contentModelForPlayButton: ContentDetailsModel? {
     guard let progression = contentSummaryMC.data.progression else { return nil }
+    
+    // If the content is an episode, rather than a collection, it will have a videoID associated with it,
+    // so return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return contentSummaryMC.data
+    }
     
     // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
     if progression.finished || progression.percentComplete == 0.0 {
@@ -151,11 +177,11 @@ struct ContentListingView: View {
   }
   
   private var playButton: some View {
-
-    return Button(action: {
-      self.isPresented = true
-    }) {
-
+    
+    return NavigationLink(destination:
+      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
+                user: self.user))
+    {
       ZStack {
         Rectangle()
           .frame(maxWidth: 70, maxHeight: 70)
@@ -169,57 +195,62 @@ struct ContentListingView: View {
           .resizable()
           .frame(width: 40, height: 40)
           .foregroundColor(.white)
-
       }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: self.contentIdForPlayButton,
-                                                         videoID: self.videoIdForPlayButton,
-                                                         user: self.user) }
     }
   }
-
+  
   var coursesSection: AnyView? {
     let groups = contentSummaryMC.data.groups
-
+    
     guard contentSummaryMC.data.contentType == .collection else {
       return nil
     }
-
+    
     let sections = Section {
       Text("Course Episodes")
         .font(.uiTitle2)
         .padding([.top], -5)
-
+      
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
-
+          
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
               self.episodeListing(data: group.childContents)
+              //self.modalEpisodeListing(data: group.childContents)
           }
         }
       } else {
         self.episodeListing(data: groups.first!.childContents)
       }
     }
-
+    
     return AnyView(sections)
   }
-
+  
   private func opacityOverlay(for width: CGFloat) -> some View {
-    ZStack {
+    ZStack(alignment: .center) {
       Image(uiImage: uiImage)
         .resizable()
         .frame(width: width, height: width * imageRatio)
         .transition(.opacity)
-
+      
       Rectangle()
         .foregroundColor(.appBlack)
         .opacity(0.2)
-
-      playButton
+      
+      GeometryReader { geometry in
+        HStack {
+          self.playButton
+          //HACK: to center the button when it's in a NavigationLink
+            .padding(.leading, geometry.size.width/2 - 32.0)
+        }
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0)
+      }
     }
   }
-
+  
   private func blurOverlay(for width: CGFloat) -> some View {
     ZStack {
       Image(uiImage: uiImage)
@@ -227,16 +258,16 @@ struct ContentListingView: View {
         .frame(width: width, height: width * imageRatio)
         .transition(.opacity)
         .blur(radius: 10)
-
+      
       Rectangle()
         .foregroundColor(.appBlack)
         .opacity(0.5)
         .blur(radius: 10)
-
+      
       proView
     }
   }
-
+  
   private var proView: some View {
     return
       VStack {
@@ -247,7 +278,7 @@ struct ContentListingView: View {
             .font(.uiTitle1)
             .foregroundColor(.white)
         }
-
+        
         Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
           .multilineTextAlignment(.center)
           .font(.uiLabel)
@@ -255,7 +286,7 @@ struct ContentListingView: View {
           .lineLimit(3)
     }
   }
-
+  
   private var courseDetailsSection: AnyView {
     
     switch contentSummaryMC.state {
@@ -267,28 +298,28 @@ struct ContentListingView: View {
       return AnyView(loadingView)
     }
   }
-
+  
   private var loadingView: some View {
     VStack {
       Spacer()
-
+      
       Text("Loading...")
         .font(.uiTitle2)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
-
+      
       Spacer()
     }
   }
-
+  
   func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-
+    
     guard let url = contentSummaryMC.data.cardArtworkURL else {
       return
     }
-
+    
     DispatchQueue.global().async {
       let data = try? Data(contentsOf: url)
       DispatchQueue.main.async {
@@ -299,25 +330,25 @@ struct ContentListingView: View {
       }
     }
   }
-
+  
   private func save(for content: ContentDetailsModel) {
     guard downloadsMC.state != .loading else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-
+      
       self.hudOption = .error
       self.showHudView = true
       return
     }
-
+    
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-
+      
       self.hudOption = .error
       self.showHudView = true
       return
@@ -334,7 +365,7 @@ struct ContentListingView: View {
         // dismiss hud currently showing
         self.showHudView.toggle()
       }
-
+      
       self.hudOption = success ? .success : .error
       self.showHudView = true
     }
