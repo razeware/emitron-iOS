@@ -86,46 +86,64 @@ struct MyTutorialView: View {
   }
   
   private var contentView: some View {
-    var dataToDisplay: [ContentDetailsModel] = []
-    var stateToUse: DataState
-    var numTutorials: Int
-    
     switch state {
-    case .inProgress, .completed:
-      stateToUse = progressionsMC.state
-      numTutorials = progressionsMC.numTutorials
+    case .inProgress: return AnyView(inProgressContentsView)
+    case .completed: return AnyView(completedContentsView)
+    case .bookmarked: return AnyView(bookmarkedContentsView)
+    }
+  }
+  
+  private var inProgressContentsView: some View {
+    var dataToDisplay: [ContentDetailsModel] = []
+    
+    switch progressionsMC.state {
+    case .hasData,
+         .loading where !progressionsMC.data.isEmpty:
       
-      switch progressionsMC.state {
-      case .hasData,
-           .loading where !progressionsMC.data.isEmpty:
-        if state == .inProgress {
-          let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
-          let contents = inProgressData.compactMap { $0.content }
-          dataToDisplay = contents
-        } else {
-          let completedData = progressionsMC.data.filter { $0.finished == true }
-          let contents = completedData.compactMap { $0.content }
-          dataToDisplay = contents
-        }
-      default: break
-      }
-      
-    case .bookmarked:
-      stateToUse = bookmarksMC.state
-      numTutorials = bookmarksMC.numTutorials
-      
-      switch bookmarksMC.state {
-      case .hasData,
-           .loading where !bookmarksMC.data.isEmpty:
-        let content = bookmarksMC.data.compactMap { $0.content }
-        dataToDisplay = content
-      default: break
-      }
+        dataToDisplay = []
+        let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
+        let contents = inProgressData.compactMap { $0.content }
+        dataToDisplay = contents
+        
+    default: break
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
     
-    return AnyView(contentView)
+    return contentView
+  }
+  
+  private var completedContentsView: some View {
+    var dataToDisplay: [ContentDetailsModel] = []
+    
+    switch progressionsMC.state {
+    case .hasData,
+         .loading where !progressionsMC.data.isEmpty:
+        let completedData = progressionsMC.data.filter { $0.finished == true }
+        let contents = completedData.compactMap { $0.content }
+        dataToDisplay = contents
+      
+    default: break
+    }
+    
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+    
+    return contentView
+  }
+  
+  private var bookmarkedContentsView: some View {
+    var dataToDisplay: [ContentDetailsModel] = []
+    
+    switch bookmarksMC.state {
+    case .hasData,
+         .loading where !bookmarksMC.data.isEmpty:
+      dataToDisplay = bookmarksMC.data.compactMap { $0.content }
+    default: break
+    }
+    
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    
+    return contentView
   }
 }
 
