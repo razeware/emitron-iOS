@@ -59,6 +59,12 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView()
       }
+    .onAppear {
+      switch self.state {
+      case .inProgress, .completed: self.progressionsMC.loadContents()
+      case .bookmarked: self.bookmarksMC.loadContents()
+      }
+    }
   }
   
   private var toggleControl: AnyView {
