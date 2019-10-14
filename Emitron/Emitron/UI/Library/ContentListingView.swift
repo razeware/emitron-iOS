@@ -95,6 +95,12 @@ struct ContentListingView: View {
   }
   
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
+    
+    // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return [contentSummaryMC.data]
+    }
+    
     let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
     
     guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
@@ -136,6 +142,12 @@ struct ContentListingView: View {
   
   private var contentModelForPlayButton: ContentDetailsModel? {
     guard let progression = contentSummaryMC.data.progression else { return nil }
+    
+    // If the content is an episode, rather than a collection, it will have a videoID associated with it,
+    // so return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return contentSummaryMC.data
+    }
     
     // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
     if progression.finished || progression.percentComplete == 0.0 {
