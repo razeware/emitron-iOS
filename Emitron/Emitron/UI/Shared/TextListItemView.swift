@@ -53,6 +53,7 @@ struct TextListItemView: View {
         Spacer()
         
         setUpImageAndProgress()
+          .padding([.trailing], 20)
 
       }
       Text(contentSummary.duration.timeFromSeconds)

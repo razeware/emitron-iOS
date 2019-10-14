@@ -123,6 +123,7 @@ struct ContentListView: View {
       //for WIFI setting app
       if let url = URL(string: "App-Prefs:root=WIFI") {
         UIApplication.shared.open(url, options: [:], completionHandler: nil)
+        showAlert.toggle()
       }
     }
 
@@ -177,7 +178,6 @@ struct ContentListView: View {
             switch hudOption {
             case .success:
               self.callback?(.save, partialContent)
-              self.showHudView = true
             case .error:
               if self.showHudView {
                 self.showHudView.toggle()

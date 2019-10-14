@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 
 class VideosMC: NSObject, ObservableObject {
-  
+
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -39,31 +39,27 @@ class VideosMC: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
-  
+
   private let client: RWAPI
   private let user: UserModel
   private let videoService: VideosService
   private let contentsService: ContentsService
-  var contentId: Int
   private var token: String?
-  
-  private var timer: Timer?
   private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
-  
+
   // MARK: - Initializers
-  init(user: UserModel, contentId: Int) {
+  init(user: UserModel) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
     self.videoService = VideosService(client: self.client)
     self.contentsService = ContentsService(client: self.client)
-    self.contentId = contentId
     self.token = UserDefaults.standard.playbackToken
-    
-    super.init()    
+
+    super.init()
   }
-  
+
   // MARK: - Internal
   func fetchBeginPlaybackToken(completion: @escaping (Bool, String?) -> Void) {
     contentsService.getBeginPlaybackToken { result in
@@ -81,50 +77,42 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
-  @objc func reportUsageStatistics(progress: Int) {
-    
+
+  @objc func reportUsageStatistics(progress: Int, contentID: Int) {
+
     guard let playbackToken = token else {
       fetchBeginPlaybackToken { [weak self] (success, token) in
         guard let self = self else { return }
         if success {
-          self.reportUsageStatistics(progress: progress)
+          self.reportUsageStatistics(progress: progress, contentID: contentID)
         } else {
           //TODO: Ask user to re-confirm
         }
       }
       return
     }
-    
-    if timer == nil {
-      timer = Timer.scheduledTimer(timeInterval: 5.0,
-                                        target: self,
-                                        selector: #selector(reportUsageStatistics),
-                                        userInfo: nil,
-                                        repeats: true)
-    }
-    
-    contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { result in
+
+    contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { result in
       switch result {
       case .failure(let error):
         Failure
         .fetch(from: "VideosMC_PlaybackUsage", reason: error.localizedDescription)
         .log(additionalParams: nil)
-        
+
         //TODO: Stop playback, ask use to re-play the video
-      case .success(let playbackProgress):
+      case .success(let _):
         print("USAGE STATISTICS")
-        
+
       }
     }
   }
-  
+
   func loadVideoStream(for id: Int, completion: (() -> Void)? = nil) {
     if case(.loading) = state {
       completion?()
       return
     }
-    
+
     state = .loading
 
     videoService.getVideoStream(for: id) { [weak self] result in
@@ -132,7 +120,7 @@ class VideosMC: NSObject, ObservableObject {
         completion?()
         return
       }
-      
+
       switch result {
       case .failure(let error):
         self.state = .failed
@@ -148,21 +136,21 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
+
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
     if case(.loading) = state {
       return
     }
-    
+
     state = .loading
     videoService.getVideoStream(for: id) { [weak self] result in
       completion(result)
-      
+
       guard let self = self else {
         return
       }
-      
+
       switch result {
       case .failure(let error):
         self.state = .failed
@@ -176,7 +164,7 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
+
   func getDownloadVideofor(id: Int,
                            completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
 
