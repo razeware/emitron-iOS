@@ -53,6 +53,10 @@ class Filter: Hashable, Codable {
     return parameter.displayName
   }
   
+  var sortOrdinal: Int {
+    return parameter.sortOrdinal
+  }
+  
   // MARK: - Initializers
   init(groupType: FilterGroupType, param: Parameter, isOn: Bool = false) {
     self.groupType = groupType
@@ -64,6 +68,6 @@ class Filter: Hashable, Codable {
 // For testing
 extension Filter {
   static var testFilter: Filter {
-    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: ""))
+    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: "", sortOrdinal: 0))
   }
 }

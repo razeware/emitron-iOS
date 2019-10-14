@@ -98,10 +98,10 @@ class Filters: ObservableObject {
   
   var all: Set<Filter> {
     didSet {
-      platforms.filters = all.filter { $0.groupType == .platforms } // Domain ordinal
-      categories.filters = all.filter { $0.groupType == .categories } // Alphabetical order
-      contentTypes.filters = all.filter { $0.groupType == .contentTypes } // Enforced (Video Course > Screencast > Episode)
-      difficulties.filters = all.filter { $0.groupType == .difficulties } // Enforced (Beginner > Intermediate > Advanced)
+      platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      categories.filters = all.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
     }
   }
   
@@ -195,10 +195,10 @@ class Filters: ObservableObject {
     // 2. Check whether the types of filters in UserDefaults still match the types of filters possible on the BE and sync them
     // 3. Dissementae userfilters into the appropriate filter categories
     if !savedFilters.isEmpty {
-      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }
-      self.categories.filters = savedFilters.filter { $0.groupType == .categories }
-      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }
-      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }
+      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
     }
     // 3. If there are filters stored in UserDefaults, use those
     // 4. If there are no filters stores in UserDefaults, use the default filters and parameters
@@ -213,7 +213,7 @@ class Filters: ObservableObject {
   
   func updatePlatformFilters(for domainModels: [DomainModel]) {
     let userFacingDomains = domainModels.filter { DomainLevel.userFacing.contains($0.level) }
-    let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name) }
+    let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let platformFilters = Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) }
     platforms.filters = platformFilters
     
@@ -224,7 +224,7 @@ class Filters: ObservableObject {
   }
   
   func updateCategoryFilters(for categoryModels: [CategoryModel]) {
-    let categoryTypes = categoryModels.map { (id: $0.id, name: $0.name) }
+    let categoryTypes = categoryModels.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let categoryFilters = Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) }
     categories.filters = categoryFilters
     

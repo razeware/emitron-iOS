@@ -69,7 +69,7 @@ struct FiltersHeaderView: View {
         .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
         .frame(minHeight: 50)
       
-      if isExpanded || numOfOnFilters > 0 {
+      if isExpanded {
         expandedView
       }
     }
