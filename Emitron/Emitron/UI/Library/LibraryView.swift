@@ -49,15 +49,30 @@ struct LibraryView: View {
   @State var hudOption: HudOption = .success
 
   var body: some View {
-    contentView
-      .navigationBarTitle(
-        Text(Constants.library))
-      .sheet(isPresented: $filtersPresented) {
-        FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+    VStack {
+      contentView
+        .navigationBarTitle(
+          Text(Constants.library))
+        .sheet(isPresented: $filtersPresented) {
+          FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+      }
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
+      }
+                  
+      reloadButton
+        .padding([.bottom, .leading, .trailing], 20)
     }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+  }
+  
+  private var reloadButton: AnyView? {
+    guard let buttonText = ContentScreen.library.buttonText, contentsMC.data.isEmpty, contentsMC.state == .hasData else { return nil }
+
+    let button = MainButtonView(title: buttonText, type: .primary(withArrow: false)) {
+      self.contentsMC.reloadContents()
     }
+
+    return AnyView(button)
   }
 
   private var contentControlsSection: some View {

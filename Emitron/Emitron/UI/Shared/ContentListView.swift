@@ -58,7 +58,7 @@ enum ContentScreen {
     switch self {
     case .downloads: return "Explore Tutorials"
     case .tips: return "Got it!"
-    default: return nil
+    default: return "Reload"
     }
   }
 
@@ -137,7 +137,19 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
-    return AnyView(listView)
+    switch dataState {
+    case .initial,
+         .loading where contents.isEmpty:
+      return AnyView(loadMoreView)
+    case .hasData where contents.isEmpty:
+      return AnyView(emptyView)
+    case .hasData,
+         .failed,
+         .loading where !contents.isEmpty:
+      return AnyView(listView)
+    default:
+      return AnyView(emptyView)
+    }
   }
 
   private var cardTableNavView: some View {
@@ -229,21 +241,6 @@ struct ContentListView: View {
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-
-      Spacer()
-    }
-  }
-
-  private var loadingView: some View {
-    VStack {
-      headerView
-
-      Spacer()
-
-      Text("Loading...")
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
 
       Spacer()
     }
