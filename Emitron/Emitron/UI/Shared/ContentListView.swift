@@ -140,7 +140,7 @@ struct ContentListView: View {
     switch dataState {
     case .initial,
          .loading where contents.isEmpty:
-      return AnyView(loadMoreView)
+      return AnyView(loadingView)
     case .hasData where contents.isEmpty:
       return AnyView(emptyView)
     case .hasData,
@@ -241,9 +241,30 @@ struct ContentListView: View {
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-
+      
       Spacer()
+      
+      reloadButton
+        .padding([.leading, .trailing, .bottom], 20)
     }
+  }
+  
+  private var loadingView: some View {
+    VStack {
+      headerView
+      Spacer()
+      loadMoreView
+    }
+  }
+  
+  private var reloadButton: AnyView? {
+    guard let buttonText = ContentScreen.library.buttonText, contents.isEmpty, dataState == .hasData else { return nil }
+
+    let button = MainButtonView(title: buttonText, type: .primary(withArrow: false)) {
+      self.contentsMC.reloadContents()
+    }
+
+    return AnyView(button)
   }
 
   private func loadMoreContents() {

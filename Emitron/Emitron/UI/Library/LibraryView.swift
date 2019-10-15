@@ -59,20 +59,8 @@ struct LibraryView: View {
       .hud(isShowing: $showHudView, hudOption: $hudOption) {
         self.showHudView = false
       }
-                  
-      reloadButton
-        .padding([.bottom, .leading, .trailing], 20)
+                
     }
-  }
-  
-  private var reloadButton: AnyView? {
-    guard let buttonText = ContentScreen.library.buttonText, contentsMC.data.isEmpty, contentsMC.state == .hasData else { return nil }
-
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: false)) {
-      self.contentsMC.reloadContents()
-    }
-
-    return AnyView(button)
   }
 
   private var contentControlsSection: some View {
