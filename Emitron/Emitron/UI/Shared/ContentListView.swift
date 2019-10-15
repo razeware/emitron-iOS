@@ -281,7 +281,6 @@ struct ContentListView: View {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
       let content = self.contents[index]
-      print("content.videoid: \(content.videoID)")
       self.callback?(.delete, content)
     }
   }

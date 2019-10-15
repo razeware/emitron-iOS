@@ -51,90 +51,6 @@ struct ContentListingView: View {
     self.downloadsMC = downloadsMC
   }
 
-  private func episodeListing(data: [ContentDetailsModel]) -> some View {
-    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
-
-    return AnyView(ForEach(onlyContentWithVideoID, id: \.id) { model in
-      TextListItemView(contentSummary: model, buttonAction: { success in
-        if success {
-          self.showingSheet = true
-          self.save(for: model)
-        } else {
-          if self.showHudView {
-            self.showHudView.toggle()
-          }
-
-          self.hudOption = success ? .success : .error
-          self.showHudView = true
-        }
-      }, downloadsMC: self.downloadsMC)
-
-      .onTapGesture {
-        self.isPresented = true
-      }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: model.id,
-                                                         videoID: model.videoID!,
-                                                         user: self.user) }
-    })
-  }
-  
-  private var playButton: AnyView? {
-    guard let videoID = contentSummaryMC.data.videoID,
-    let contentID = self.contentSummaryMC.data.childContents.first?.id else { return nil }
-
-    return AnyView(Button(action: {
-      self.isPresented = true
-    }) {
-
-      ZStack {
-        Rectangle()
-          .frame(maxWidth: 70, maxHeight: 70)
-          .foregroundColor(.white)
-          .cornerRadius(6)
-        Rectangle()
-          .frame(maxWidth: 60, maxHeight: 60)
-          .foregroundColor(.appBlack)
-          .cornerRadius(6)
-        Image("materialIconPlay")
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
-
-      }
-      .sheet(isPresented: self.$isPresented) { VideoView(contentID: contentID,
-                                                         videoID: videoID,
-                                                         user: self.user) }
-    })
-  }
-
-  var coursesSection: AnyView? {
-    let groups = contentSummaryMC.data.groups
-
-    guard contentSummaryMC.data.contentType == .collection else {
-      return nil
-    }
-
-    let sections = Section {
-      Text("Course Episodes")
-        .font(.uiTitle2)
-        .padding([.top], -5)
-
-      if groups.count > 1 {
-        ForEach(groups, id: \.id) { group in
-
-          Section(header: CourseHeaderView(name: group.name, color: .white)
-            .background(Color.white)) {
-              self.episodeListing(data: group.childContents)
-          }
-        }
-      } else {
-        self.episodeListing(data: groups.first!.childContents)
-      }
-    }
-
-    return AnyView(sections)
-  }
-
   var body: some View {
 
     let scrollView = GeometryReader { geometry in
@@ -149,7 +65,6 @@ struct ContentListingView: View {
 
           ContentSummaryView(callback: { (content, success) in
             if success {
-              self.showingSheet = true
               self.save(for: content)
             } else {
               if self.showHudView {
@@ -160,7 +75,8 @@ struct ContentListingView: View {
               self.showHudView = true
             }
           }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
-            .padding(20)
+            .padding([.leading, .trailing], 20)
+            .padding([.bottom], 37)
         }
         .listRowInsets(EdgeInsets())
 
@@ -182,8 +98,142 @@ struct ContentListingView: View {
     return scrollView
   }
 
+  private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
+
+    // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return [contentSummaryMC.data]
+    }
+
+    let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
+
+    guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
+      else { return [] }
+
+    return allContents[currentIndex..<allContents.count].compactMap { $0 }
+  }
+
+  private func episodeListing(data: [ContentDetailsModel]) -> some View {
+    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
+
+    return ForEach(onlyContentWithVideoID, id: \.id) { model in
+
+      NavigationLink(destination:
+        VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
+                  user: self.user)
+      ) {
+        TextListItemView(contentSummary: model, buttonAction: { success in
+          if success {
+            self.save(for: model)
+          } else {
+            if self.showHudView {
+              self.showHudView.toggle()
+            }
+
+            self.hudOption = success ? .success : .error
+            self.showHudView = true
+          }
+        }, downloadsMC: self.downloadsMC)
+
+          .onTapGesture {
+            self.isPresented = true
+        }
+      }
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
+    }
+  }
+
+  private var contentModelForPlayButton: ContentDetailsModel? {
+    guard let progression = contentSummaryMC.data.progression else { return nil }
+
+    // If the content is an episode, rather than a collection, it will have a videoID associated with it,
+    // so return the content itself
+    if contentSummaryMC.data.videoID != nil {
+      return contentSummaryMC.data
+    }
+
+    // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
+    if progression.finished || progression.percentComplete == 0.0 {
+      return contentSummaryMC.data.groups.first?.childContents.first ?? nil
+    }
+
+    // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
+    // This means that we return true for when the first progression is nil, or when the target > the progress
+
+    else {
+      let allContentModels = contentSummaryMC.data.groups.flatMap { $0.childContents }
+      let firstUnplayedConsecutive = allContentModels.first { model -> Bool in
+        guard let progression = model.progression else { return true }
+        return progression.target > progression.progress
+      }
+
+      return firstUnplayedConsecutive ?? nil
+    }
+  }
+
+  private var contentIdForPlayButton: Int {
+    return contentModelForPlayButton?.id ?? 0
+  }
+
+  private var videoIdForPlayButton: Int {
+    return contentModelForPlayButton?.videoID ?? 0
+  }
+
+  private var playButton: some View {
+
+    return NavigationLink(destination:
+      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
+                user: self.user))
+    {
+      ZStack {
+        Rectangle()
+          .frame(maxWidth: 70, maxHeight: 70)
+          .foregroundColor(.white)
+          .cornerRadius(9)
+        Rectangle()
+          .frame(maxWidth: 60, maxHeight: 60)
+          .foregroundColor(.appBlack)
+          .cornerRadius(9)
+        Image("materialIconPlay")
+          .resizable()
+          .frame(width: 40, height: 40)
+          .foregroundColor(.white)
+      }
+    }
+  }
+
+  var coursesSection: AnyView? {
+    let groups = contentSummaryMC.data.groups
+
+    guard contentSummaryMC.data.contentType == .collection else {
+      return nil
+    }
+
+    let sections = Section {
+      Text("Course Episodes")
+        .font(.uiTitle2)
+        .padding([.top], -5)
+
+      if groups.count > 1 {
+        ForEach(groups, id: \.id) { group in
+
+          Section(header: CourseHeaderView(name: group.name, color: .white)
+            .background(Color.white)) {
+              self.episodeListing(data: group.childContents)
+              //self.modalEpisodeListing(data: group.childContents)
+          }
+        }
+      } else {
+        self.episodeListing(data: groups.first!.childContents)
+      }
+    }
+
+    return AnyView(sections)
+  }
+
   private func opacityOverlay(for width: CGFloat) -> some View {
-    ZStack {
+    ZStack(alignment: .center) {
       Image(uiImage: uiImage)
         .resizable()
         .frame(width: width, height: width * imageRatio)
@@ -193,7 +243,15 @@ struct ContentListingView: View {
         .foregroundColor(.appBlack)
         .opacity(0.2)
 
-      playButton
+      GeometryReader { geometry in
+        HStack {
+          self.playButton
+          //HACK: to center the button when it's in a NavigationLink
+            .padding(.leading, geometry.size.width/2 - 32.0)
+        }
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0)
+      }
     }
   }
 
@@ -213,7 +271,7 @@ struct ContentListingView: View {
       proView
     }
   }
-  
+
   private var actionSheet: ActionSheet {
     return showActionSheet(for: .cancel) { action in
       if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
@@ -244,7 +302,7 @@ struct ContentListingView: View {
   }
 
   private var courseDetailsSection: AnyView {
-    
+
     switch contentSummaryMC.state {
     case .failed:
       return AnyView(Text("We have failed"))
@@ -309,16 +367,16 @@ struct ContentListingView: View {
       self.showHudView = true
       return
     }
-    
+
     // show sheet to cancel download
     self.showingSheet = true
-      
+
     if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
     } else {
       self.downloadsMC.saveDownload(with: content)
     }
-    
+
     self.downloadsMC.callback = { success in
       if self.showHudView {
         // dismiss hud currently showing

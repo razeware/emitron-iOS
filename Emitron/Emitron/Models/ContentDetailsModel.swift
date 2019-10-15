@@ -56,7 +56,6 @@ class ContentDetailsModel {
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
   
-  var parentContentId: Int?
   var parentContent: ContentDetailsModel?
   var isDownloaded: Bool = false
   var progression: ProgressionModel?
@@ -214,7 +213,7 @@ extension ContentDetailsModel {
 extension ContentDetailsModel {
   
   var isInCollection: Bool {
-    guard let parentContent = parentContent else { return false }
-    return parentContent.contentType == .collection
+//    guard let parentContent = parentContent else { return false }
+    return contentType == .collection
   }
 }

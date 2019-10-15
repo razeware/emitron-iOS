@@ -51,7 +51,6 @@ struct CardViewModel: Hashable {
   let type: CardViewType
   let progress: CGFloat
   let isPro: Bool
-  let parentContentId: Int
   let isInCollection: Bool
 }
 
@@ -79,16 +78,9 @@ extension CardViewModel {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
     
-    let parentContentId: Int
-    if let parentContent = content.parentContentId {
-      parentContentId = parentContent
-    } else {
-      parentContentId = 0
-    }
-    
     let isInCollection = content.isInCollection
     
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isPro: content.professional, parentContentId: parentContentId, isInCollection: isInCollection)
+    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isPro: content.professional, isInCollection: isInCollection)
     
     return cardModel
   }
@@ -170,16 +162,21 @@ struct CardView: SwiftUI.View {
             }
           }
         }
-        .padding([.leading, .trailing, .top, .bottom], 15)
+        .padding(15)
         
         Spacer()
         
         ProgressBarView(progress: model.progress)
+        Rectangle()
+          .frame(height: 1)
+          .foregroundColor(Color.paleBlue)
       }
     }
-    .background(Color.white)
     .cornerRadius(6)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    
+    // TODO: If we want to get the card + dropshadow design back, uncomment this
+//    .background(Color.white)
+//    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     
     
     return AnyView(stack)
@@ -283,11 +280,12 @@ struct CardView: SwiftUI.View {
     if model.isInCollection {
       
       return downloadsMC.data.contains { downloadModel in
-        
-        return downloadModel.content.parentContentId == model.id
+        // FJ FIX
+        return downloadModel.content.id == model.id
       } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
-      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0
+        .content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
   

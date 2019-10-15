@@ -59,6 +59,12 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView()
       }
+    .onAppear {
+      switch self.state {
+      case .inProgress, .completed: self.progressionsMC.loadContents()
+      case .bookmarked: self.bookmarksMC.loadContents()
+      }
+    }
   }
   
   private var toggleControl: AnyView {
@@ -75,6 +81,7 @@ struct MyTutorialView: View {
       }
       .padding([.leading, .trailing], 20)
       .background(Color.white)
+      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     )
   }
   
@@ -116,7 +123,7 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .paleGrey, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
     
     return AnyView(contentView)
   }

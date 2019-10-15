@@ -31,38 +31,32 @@ import Foundation
 class VideoData: NSObject, NSCoding {
   var url: URL?
   var content: ContentDetailsModel?
-  var contentId: String
   
-  init(url: URL? = nil, contentId: String) {
+  init(url: URL? = nil) {
     self.url = url
-    self.contentId = contentId
   }
   
   func encode(with aCoder: NSCoder) {
     aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url else { return }
+    guard let videoURL = url, let savedContent = content else { return }
+    
+    
+    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.description, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional)
+    
+    print("FJ content: \(contentsData)")
     
     aCoder.encode(videoURL, forKey: .videoKey)
-    aCoder.encode(contentId, forKey: .contentIdKey)
-    aCoder.encode(content, forKey: .contentKey)
+    aCoder.encode(contentsData, forKey: .contentKey)
   }
   
   required init?(coder aDecoder: NSCoder) {
     aDecoder.decodeInteger(forKey: .versionKey)
-    guard let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? URL else {
-      return nil
+    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? URL {
+      self.url = videoURL
     }
     
-    guard let contentId = aDecoder.decodeObject(forKey: .contentIdKey) as? String else {
-      return nil
+    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentDetailsModel {
+      self.content = content
     }
-    
-    guard let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentDetailsModel else {
-      return nil
-    }
-    
-    self.url = videoURL
-    self.contentId = contentId
-    self.content = content
   }
 }

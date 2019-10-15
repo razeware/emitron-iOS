@@ -43,11 +43,10 @@ class DownloadModel {
   var isDownloading = false
 
   // MARK: - Initializers
-  init(attachmentModel: AttachmentModel?, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL, parentContentId: Int?) {
+  init(attachmentModel: AttachmentModel?, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL) {
     self.attachmentModel = attachmentModel
     self.content = content
     self.content.isDownloaded = isDownloaded
-    self.content.parentContentId = parentContentId
     self.localPath = localPath
   }
 }

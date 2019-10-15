@@ -34,7 +34,7 @@ class Document: UIDocument {
   }
 
   var fileWrapper: FileWrapper?
-  var contentId: String
+  
   var content: ContentDetailsModel? {
     didSet {
       videoData.content = content
@@ -46,7 +46,7 @@ class Document: UIDocument {
       fileWrapper != nil,
       let data = decodeFromWrapper(for: .dataFilename) as? VideoData
       else {
-        return VideoData(contentId: self.contentId)
+        return VideoData()
     }
     
     return data
@@ -56,12 +56,6 @@ class Document: UIDocument {
     didSet {
       videoData.url = url
     }
-  }
-  
-  init(fileURL: URL, contentId: String) {
-    self.contentId = contentId
-    self.url = fileURL
-    super.init(fileURL: fileURL)
   }
   
   private func encodeToWrapper(object: NSCoding) -> FileWrapper {

@@ -78,7 +78,7 @@ class BookmarksMC: NSObject, ObservableObject {
     loadContents()
   }
   
-  private func loadContents() {
+  func loadContents() {
     
     if case(.loading) = state {
       return

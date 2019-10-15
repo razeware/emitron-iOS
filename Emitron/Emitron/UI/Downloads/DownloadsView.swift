@@ -44,18 +44,13 @@ struct DownloadsView: View {
   var body: some View {
     VStack {
       contentView
-        .padding([.top], .sidePadding)
-        .background(Color.paleGrey)
-
       addButton()
     }
-    .background(Color.paleGrey)
     .navigationBarTitle(Text(Constants.downloads))
   }
-
+  
   private var contentView: some View {
-    
-    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .paleGrey, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
   }
