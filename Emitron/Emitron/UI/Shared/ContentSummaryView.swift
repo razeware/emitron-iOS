@@ -75,10 +75,12 @@ struct ContentSummaryView: View {
         .foregroundColor(.battleshipGrey)
         .padding([.top], 12)
       
-      HStack(spacing: 30, content: {
+      HStack(spacing: 100, content: {
+
         downloadButton
         bookmarkButton
         completedTag // If needed
+        
       })
       .padding([.top], 15)
       
@@ -102,30 +104,30 @@ struct ContentSummaryView: View {
   }
   
   private var downloadButton: some View {
-    Button(action: {
-      self.download()
-    }) {
-      self.completeDownloadButton
+    completeDownloadButton
+      .onTapGesture {
+        self.download()
     }
   }
   
-  private var bookmarkButton: some View {
-    Button(action: {
-      self.bookmark()
-    }) {
-      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
-      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
-        Image("bookmarkActive")
+  private var bookmarkButton: AnyView {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+    //bookmark button somehow wasn't... clearyl defined, so they'd both get pressed when the bookmark button got pressed
+    AnyView(Group {
+      if !contentSummaryMC.data.bookmarked {
+        Image("bookmarkInactive")
           .resizable()
           .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.coolGrey)
       } else {
         Image("bookmarkActive")
           .resizable()
           .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.appGreen)
       }
     }
+    .onTapGesture {
+      self.bookmark()
+      }
+    )
   }
   
   private var completedTag: AnyView? {
@@ -217,6 +219,6 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmarkId)
   }
 }
