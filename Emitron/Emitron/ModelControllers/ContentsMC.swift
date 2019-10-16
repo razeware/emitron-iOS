@@ -44,6 +44,7 @@ class ContentsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
+  private let bookmarksMC: BookmarksMC
   private(set) var data: [ContentDetailsModel] = []
   private(set) var numTutorials: Int = 0
   
@@ -75,6 +76,7 @@ class ContentsMC: NSObject, ObservableObject {
     self.contentsService = ContentsService(client: self.client)
     self.filters = filters
     self.currentParameters = filters.appliedParameters
+    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     
     super.init()
 
@@ -175,6 +177,17 @@ class ContentsMC: NSObject, ObservableObject {
       case .success(let contentDetails):
         completion?(contentDetails)
       }
+    }
+  }
+  
+  func toggleBookmark(for model: ContentDetailsModel) {
+    
+    bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
+      guard let self = self,
+        let index = self.data.firstIndex(where: { $0.id == model.id } ) else { return }
+      
+      self.data[index] = newModel
+      self.objectWillChange.send(())
     }
   }
 }

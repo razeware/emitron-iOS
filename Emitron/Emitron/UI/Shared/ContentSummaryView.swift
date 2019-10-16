@@ -57,7 +57,7 @@ struct ContentSummaryView: View {
         Spacer()
         
         if contentSummaryMC.data.professional {
-          proTag
+          ProTag()
         }
       }
       .padding([.top], 20)
@@ -70,17 +70,19 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
       
-      Text(contentSummaryMC.data.releasedAtDateTimeString)
+      if contentSummaryMC.data.progression?.finished ?? false {
+        CompletedTag()
+      } else {
+        
+        Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
         .foregroundColor(.battleshipGrey)
         .padding([.top], 12)
+      }
       
       HStack(spacing: 30, content: {
-
         downloadButton
         bookmarkButton
-        completedTag // If needed
-        
       })
       .padding([.top], 15)
       
@@ -113,52 +115,17 @@ struct ContentSummaryView: View {
   private var bookmarkButton: AnyView {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    AnyView(Group {
-      if !contentSummaryMC.data.bookmarked {
-        Image("bookmarkInactive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      } else {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      }
-    }
-    .onTapGesture {
-      self.bookmark()
+    
+    let imageName = contentSummaryMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    
+    return AnyView(
+      Image(imageName)
+        .resizable()
+        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+        .onTapGesture {
+          self.bookmark()
       }
     )
-  }
-  
-  private var completedTag: AnyView? {
-    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
-    
-    let view = ZStack {
-      Rectangle()
-        .foregroundColor(.appGreen)
-        .cornerRadius(6)
-        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-      
-      Text("COMPLETED")
-        .foregroundColor(.white)
-        .font(.uiUppercase)
-    }
-    
-    return AnyView(view)
-  }
-  
-  private var proTag: some View {
-    return
-      ZStack {
-        Rectangle()
-          .foregroundColor(.appGreen)
-          .cornerRadius(6)
-          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-        
-        Text("PRO")
-          .foregroundColor(.white)
-          .font(.uiUppercase)
-    }
   }
   
   private var completeDownloadButton: some View {
@@ -219,6 +186,6 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmarkId)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data)
   }
 }

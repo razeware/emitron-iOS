@@ -26,45 +26,20 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import UIKit
+import SwiftUI
 
-extension ContentDetailsModel {
-  var releasedAtDateTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
+struct CompletedTag: View {
+  var body: some View {
+    ZStack {
+      Rectangle()
+        .foregroundColor(.appGreen)
+        .cornerRadius(6)
+        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+      
+      Text("COMPLETED")
+        .foregroundColor(.white)
+        .font(.uiUppercase)
     }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
-  }
-  
-  var cardViewSubtitle: String {
-    guard let domainData = DataManager.current?.domainsMC.data else {
-      return ""
-    }
-    
-    let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
-  
-    return subtitle
-  }
-  
-  var progress: CGFloat {
-    var progress: CGFloat = 0
-    if let progression = progression {
-      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
-    }
-    return progress
   }
 }
 
-extension ContentSummaryModel {
-  var releasedAtDateTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
-  }
-}

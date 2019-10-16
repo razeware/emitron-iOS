@@ -119,5 +119,35 @@ class BookmarksMC: NSObject, ObservableObject {
       }
     }
   }
+  
+  func toggleBookmark(for content: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
+
+    if !content.bookmarked {
+      bookmarksService.makeBookmark(for: content.id) { result in
+        switch result {
+        case .failure(let error):
+          Failure
+          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+        case .success(let bookmark):
+          content.bookmark = bookmark
+          completion(content)
+        }
+      }
+    } else {
+      guard let id = content.bookmarkId else { return }
+      // For deleting the bookmark, we have to use the original bookmark id
+      bookmarksService.destroyBookmark(for: id) { result in
+        switch result {
+        case .failure(let error):
+          Failure
+          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+        case .success(_):
+          completion(content)
+        }
+      }
+    }
+  }
 }
 

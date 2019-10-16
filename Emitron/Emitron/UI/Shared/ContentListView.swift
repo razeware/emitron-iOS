@@ -193,7 +193,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
+          self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
             } else {
@@ -204,6 +204,8 @@ struct ContentListView: View {
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
+          }, onRightTap: {
+            self.toggleBookmark(model: partialContent)
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
@@ -227,7 +229,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
+          self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
             } else {
@@ -238,6 +240,8 @@ struct ContentListView: View {
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
+          }, onRightTap: {
+            self.toggleBookmark(model: partialContent)
           })
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
@@ -251,12 +255,11 @@ struct ContentListView: View {
       .padding(.trailing, -32.0)
   }
 
-  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
-    let viewModel = CardViewModel.transform(content, cardViewType: .default)
-
-    return CardView(model: viewModel,
-                    contentScreen: contentScreen,
-                    onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
+  private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
+    AnyView(CardView(model: content,
+                     contentScreen: contentScreen,
+                     onLeftIconTap: onLeftTap,
+                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
 
   private var emptyView: some View {
@@ -285,8 +288,8 @@ struct ContentListView: View {
     VStack {
       headerView
       Spacer()
-      loadMoreView
     }
+    .overlay(ActivityIndicator())
   }
   
   private var reloadButton: AnyView? {
@@ -312,6 +315,10 @@ struct ContentListView: View {
 
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
+  }
+  
+  func toggleBookmark(model: ContentDetailsModel) {
+    contentsMC.toggleBookmark(for: model)
   }
 }
 
