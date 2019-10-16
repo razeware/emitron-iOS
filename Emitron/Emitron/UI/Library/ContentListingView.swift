@@ -221,7 +221,9 @@ struct ContentListingView: View {
           }
         }
       } else {
-        self.episodeListing(data: groups.first!.childContents)
+        if groups.count > 0 {
+          self.episodeListing(data: groups.first!.childContents)
+        }
       }
     }
     
