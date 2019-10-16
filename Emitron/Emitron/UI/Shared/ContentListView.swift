@@ -58,7 +58,7 @@ enum ContentScreen {
     switch self {
     case .downloads: return "Explore Tutorials"
     case .tips: return "Got it!"
-    default: return nil
+    default: return "Reload"
     }
   }
 
@@ -142,7 +142,45 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
-    return AnyView(listView)
+    switch dataState {
+    case .initial,
+         .loading where contents.isEmpty:
+      return AnyView(loadingView)
+    case .hasData where contents.isEmpty:
+      return AnyView(emptyView)
+    case .hasData,
+         .loading where !contents.isEmpty:
+      return AnyView(listView)
+    case .failed:
+      return AnyView(failedView)
+    default:
+      return AnyView(emptyView)
+    }
+  }
+  
+  private var failedView: some View {
+    VStack {
+      headerView
+
+      Spacer()
+
+      Text("Something went wrong.")
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+
+      Text("Please try again.")
+        .font(.uiLabel)
+        .foregroundColor(.battleshipGrey)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
+      
+      Spacer()
+      
+      reloadButton
+        .padding([.leading, .trailing, .bottom], 20)
+    }
   }
 
   private var cardTableNavView: some View {
@@ -234,9 +272,26 @@ struct ContentListView: View {
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-
+      
       Spacer()
     }
+  }
+  
+  private var loadingView: some View {
+    VStack {
+      headerView
+      Spacer()
+      loadMoreView
+    }
+  }
+  
+  private var reloadButton: AnyView? {
+
+    let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
+      self.contentsMC.reloadContents()
+    }
+
+    return AnyView(button)
   }
 
   private func loadMoreContents() {
