@@ -300,7 +300,7 @@ struct ContentListingView: View {
   }
   
   private var loadingView: some View {
-K    // HACK: To put it in the middle we have to wrap it in Geometry Reader
+    // HACK: To put it in the middle we have to wrap it in Geometry Reader
     GeometryReader { geometry in
       ActivityIndicator()
     }
