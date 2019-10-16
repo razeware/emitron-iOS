@@ -49,17 +49,14 @@ struct LibraryView: View {
   @State var hudOption: HudOption = .success
 
   var body: some View {
-    VStack {
-      contentView
-        .navigationBarTitle(
-          Text(Constants.library))
-        .sheet(isPresented: $filtersPresented) {
-          FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
-      }
-      .hud(isShowing: $showHudView, hudOption: $hudOption) {
-        self.showHudView = false
-      }
-                
+    contentView
+      .navigationBarTitle(
+        Text(Constants.library))
+      .sheet(isPresented: $filtersPresented) {
+        FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+    }
+    .hud(isShowing: $showHudView, hudOption: $hudOption) {
+      self.showHudView = false
     }
   }
 
