@@ -75,7 +75,7 @@ struct ContentSummaryView: View {
         .foregroundColor(.battleshipGrey)
         .padding([.top], 12)
       
-      HStack(spacing: 100, content: {
+      HStack(spacing: 30, content: {
 
         downloadButton
         bookmarkButton
@@ -112,7 +112,7 @@ struct ContentSummaryView: View {
   
   private var bookmarkButton: AnyView {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
-    //bookmark button somehow wasn't... clearyl defined, so they'd both get pressed when the bookmark button got pressed
+    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     AnyView(Group {
       if !contentSummaryMC.data.bookmarked {
         Image("bookmarkInactive")

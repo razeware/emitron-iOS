@@ -181,6 +181,7 @@ struct CardView: SwiftUI.View {
       }
     }
     .cornerRadius(6)
+    .padding([.trailing], 32)
     
     // TODO: If we want to get the card + dropshadow design back, uncomment this
 //    .background(Color.white)

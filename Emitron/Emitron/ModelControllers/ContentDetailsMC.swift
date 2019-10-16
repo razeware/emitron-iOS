@@ -45,6 +45,8 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let contentsService: ContentsService
   private let bookmarksService: BookmarksService
   private(set) var data: ContentDetailsModel
+  
+  private var bookmarksSubscriber: AnyCancellable?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -88,21 +90,18 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
 
   func toggleBookmark(for bookmarkId: Int? = nil) {
 
-    state = .loading
-
     if !data.bookmarked {
       bookmarksService.makeBookmark(for: data.id) { [weak self] result in
         guard let self = self else { return }
 
         switch result {
         case .failure(let error):
-          self.state = .failed
           Failure
           .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(let bookmark):
           self.data.bookmark = bookmark
-          self.state = .hasData
+          self.objectWillChange.send(())
         }
       }
     } else {
@@ -116,9 +115,9 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
           Failure
           .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
-          self.state = .failed
         case .success(_):
-          self.state = .hasData
+          self.data.bookmark = nil
+          self.objectWillChange.send(())
         }
       }
     }

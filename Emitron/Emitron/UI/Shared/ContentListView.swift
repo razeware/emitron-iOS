@@ -169,6 +169,8 @@ struct ContentListView: View {
       .listRowBackground(self.bgColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -202,6 +204,8 @@ struct ContentListView: View {
       .listRowBackground(self.bgColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
   }
 
   private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
