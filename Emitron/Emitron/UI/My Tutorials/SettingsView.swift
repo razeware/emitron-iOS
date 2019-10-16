@@ -141,9 +141,6 @@ struct SettingsView: View {
       .padding([.bottom, .leading, .trailing], 20)
     }
     .background(Color.paleGrey)
-    .onAppear {
-      print("SETTINGS VIEW APPEARINGGGGG")
-    }
   }
   
   private func populateDetail(at index: Int) -> String {
