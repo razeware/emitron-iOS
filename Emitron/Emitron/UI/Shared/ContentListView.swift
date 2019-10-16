@@ -144,11 +144,37 @@ struct ContentListView: View {
     case .hasData where contents.isEmpty:
       return AnyView(emptyView)
     case .hasData,
-         .failed,
          .loading where !contents.isEmpty:
       return AnyView(listView)
+    case .failed:
+      return AnyView(failedView)
     default:
       return AnyView(emptyView)
+    }
+  }
+  
+  private var failedView: some View {
+    VStack {
+      headerView
+
+      Spacer()
+
+      Text("Something went wrong.")
+        .font(.uiTitle2)
+        .foregroundColor(.appBlack)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+
+      Text("Please try again.")
+        .font(.uiLabel)
+        .foregroundColor(.battleshipGrey)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
+      
+      Spacer()
+      
+      reloadButton
+        .padding([.leading, .trailing, .bottom], 20)
     }
   }
 
@@ -243,9 +269,6 @@ struct ContentListView: View {
         .padding([.leading, .trailing], 20)
       
       Spacer()
-      
-      reloadButton
-        .padding([.leading, .trailing, .bottom], 20)
     }
   }
   
@@ -258,9 +281,8 @@ struct ContentListView: View {
   }
   
   private var reloadButton: AnyView? {
-    guard let buttonText = ContentScreen.library.buttonText, contents.isEmpty, dataState == .hasData else { return nil }
 
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: false)) {
+    let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
       self.contentsMC.reloadContents()
     }
 
