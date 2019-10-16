@@ -176,14 +176,6 @@ struct LibraryView: View {
         }
       }
 
-    switch downloadsMC.state {
-      // Callling this simply to trigger view re-rendering
-      case .hasData: print("I have (new) data!")
-      case .failed: print("I have failed!")
-      case .initial: print("I am initial!")
-      case .loading: print("I am loading!")
-    }
-
     return AnyView(contentSectionView)
   }
 

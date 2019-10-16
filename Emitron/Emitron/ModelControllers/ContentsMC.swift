@@ -182,12 +182,15 @@ class ContentsMC: NSObject, ObservableObject {
   
   func toggleBookmark(for model: ContentDetailsModel) {
     
+    state = .loading
     bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
       guard let self = self,
-        let index = self.data.firstIndex(where: { $0.id == model.id } ) else { return }
+        let index = self.data.firstIndex(where: { $0.id == model.id } ) else {
+          return
+      }
       
       self.data[index] = newModel
-      self.objectWillChange.send(())
+      self.state = .hasData
     }
   }
 }

@@ -84,40 +84,46 @@ struct CardView: SwiftUI.View {
           .lineLimit(2)
           .foregroundColor(.battleshipGrey)
         
+        
+        HStack {
           
-          HStack {
+          if model.professional {
+            ProTag()
+              .padding([.trailing], 5)
+          }
+          
+          if model.progress >= 1 {
+            CompletedTag()
+          } else {
+            Text(model.releasedAtDateTimeString)
+            .font(.uiCaption)
+            .lineLimit(1)
+            .foregroundColor(.battleshipGrey)
+          }
+          
+          Spacer()
+          
+          HStack(spacing: 18) {
             
-            if model.professional {
-              ProTag()
-                .padding([.trailing], 5)
-            }
+            bookmarkButton
             
-            Text(model.technologyTripleString)
-              .font(.uiCaption)
-              .lineLimit(1)
-              .foregroundColor(.battleshipGrey)
-            
-            Spacer()
-            
-            HStack(spacing: 18) {
-              if model.bookmarked || self.contentScreen == ContentScreen.myTutorials {
-                bookmarkButton
-              }
-              if self.contentScreen != ContentScreen.downloads {
-                self.setUpImageAndProgress()
-              }
+            if self.contentScreen != ContentScreen.downloads {
+              self.setUpImageAndProgress()
             }
           }
-          .padding([.top], 20)
+        }
+        .padding([.top], 20)
       }
       .padding([.trailing, .leading], 15)
       
       Group {
         ProgressBarView(progress: model.progress)
+          .padding([.top, .bottom], 0)
         
         Rectangle()
           .frame(height: 1)
           .foregroundColor(Color.paleBlue)
+          .padding([.top, .bottom], 0)
       }
       .padding([.trailing, .leading], 15)
     }
@@ -131,10 +137,11 @@ struct CardView: SwiftUI.View {
     return AnyView(stack)
   }
   
-  private var bookmarkButton: AnyView {
+  private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     
+    guard model.bookmarked || self.contentScreen == ContentScreen.myTutorials else { return nil }
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
     
     return AnyView(
