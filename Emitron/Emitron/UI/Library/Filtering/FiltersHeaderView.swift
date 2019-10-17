@@ -85,6 +85,7 @@ struct FiltersHeaderView: View {
             self.filters.all.update(with: filter)
             self.filters.commitUpdates()
           })
+            .padding([.leading, .trailing], 10)
         }
       }
   }
