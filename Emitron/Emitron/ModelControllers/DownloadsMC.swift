@@ -66,6 +66,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
   var finishedDownloadingCollection: Bool {
+    print("episodesCounter: \(episodesCounter)")
     return episodesCounter == 0
   }
   var episodesCounter: Int = 1
@@ -162,7 +163,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool) {
+  func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool, completion: (() -> Void)?) {
     content.groups.forEach { groupModel in
       groupModel.childContents.forEach { child in
         guard let videoId = child.videoID else { return }
@@ -187,14 +188,20 @@ class DownloadsMC: NSObject, ObservableObject {
         } catch {
           print("FJ FAILED TO REMOVE: \(content.name)")
           self.state = .failed
+          completion?()
         }
       }
     }
 
     // delete parent content
-    if let parent = self.data.first(where: { $0.content.videoID == nil }) {
+    if let parent = self.data.first(where: { $0.content.parentContent?.id == content.parentContent?.id }) {
       print("FJ IS IN PARENT DELETE")
       self.deleteDownload(with: parent.content, showCallback: showCallback)
+    }
+    
+    if activeDownloads.count == 0 {
+      print("COMPLETION DONE DELETING COL")
+      completion?()
     }
   }
 
@@ -294,7 +301,9 @@ class DownloadsMC: NSObject, ObservableObject {
     cancelDownload = true
     
     if content.isInCollection {
-      deleteCollectionContents(withParent: content, showCallback: false)
+      deleteCollectionContents(withParent: content, showCallback: false) {
+        print("fj in cancel download completion: \(self.data.count) & self.activeDownloads: \(self.activeDownloads.count)")
+      }
     } else {
       deleteDownload(with: content, showCallback: false)
     }
@@ -304,11 +313,17 @@ class DownloadsMC: NSObject, ObservableObject {
     downloadTask?.cancel()
     downloadsSession.invalidateAndCancel()
     downloadTask = nil
+    
+    // Protect against timing issues if download is already in progress when cancel downloads
+    if self.cancelDownload {
+      self.activeDownloads.forEach { model in
+        self.deleteDownload(with: model, showCallback: false)
+      }
+      
+      print("fj in cancel download: \(self.data.count) & self.activeDownloads: \(self.activeDownloads.count)")
 
-     // reset cancel download bool so can donwload other colletions & screencasts
-    if activeDownloads.count == 0 {
-      cancelDownload = false
-      state = .hasData
+      self.downloadedModel = nil
+      self.downloadedContent = nil
     }
     
     print("fj data count: \(data.count) & active: \(activeDownloads.count)")
@@ -343,6 +358,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
                     self.downloadedModel = nil
                     self.downloadedContent = nil
+                    self.state = .hasData
                   }
                 }
               }
@@ -444,7 +460,7 @@ class DownloadsMC: NSObject, ObservableObject {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath)
     self.downloadedModel = downloadModel
     
-    if !data.contains(where: { $0.content.id == content.id }) {
+    if !data.contains(where: { $0.content.id == content.id }) && !cancelDownload {
       data.append(downloadModel)
       print("FJ APPEND CONTENT: \(downloadModel.content.name)")
     }
@@ -484,6 +500,7 @@ class DownloadsMC: NSObject, ObservableObject {
         fatalError("Failed to create file.")
       }
 
+      print("canceL \(self.cancelDownload)")
       if content.isInCollection == true {
         self.createDownloadModel(with: attachment, content: content, isDownloaded: true, localPath: fileURL)
         self.episodesCounter -= 1
@@ -493,11 +510,6 @@ class DownloadsMC: NSObject, ObservableObject {
       self.activeDownloads.append(content)
       
       print("FJ self.activeDownloads: \(self.activeDownloads.count) & data: \(self.data.count)")
-      
-      guard !self.cancelDownload else {
-        completion?()
-        return
-      }
 
       // check if sending content from saveCollection call
       if content.isInCollection && self.finishedDownloadingCollection {

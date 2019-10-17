@@ -66,7 +66,7 @@ struct DownloadsView: View {
     switch action {
     case .delete:
       if content.isInCollection {
-        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
+        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false, completion: nil)
       } else {
         downloadsMC.deleteDownload(with: content)
       }

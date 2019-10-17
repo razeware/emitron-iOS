@@ -338,16 +338,16 @@ struct ContentListingView: View {
 
   private func save(for content: ContentDetailsModel) {
     print("downloadsMC.state: \(downloadsMC.state)")
-//    guard downloadsMC.state != .loading else {
-//      if self.showHudView {
-//        // dismiss hud currently showing
-//        self.showHudView.toggle()
-//      }
-//
-//      self.hudOption = .error
-//      self.showHudView = true
-//      return
-//    }
+    guard downloadsMC.state != .loading else {
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = .error
+      self.showHudView = true
+      return
+    }
 
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {

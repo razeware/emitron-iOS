@@ -58,7 +58,7 @@ struct CircularProgressBar: View {
       .stroke(Color.appGreen, lineWidth: Layout.line)
       .frame(width: Layout.frame, height: Layout.frame)
       .rotationEffect(.degrees(-360), anchor: .center)
-      .animation(Animation.easeIn(duration: spinCircle ? 30 : 0))
+      .animation(Animation.easeIn(duration: spinCircle ? 60 : 0))
   }
 }
 

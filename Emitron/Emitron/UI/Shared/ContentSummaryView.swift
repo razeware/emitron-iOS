@@ -201,7 +201,6 @@ struct ContentSummaryView: View {
     if contentSummaryMC.data.isInCollection {
 
       return downloadsMC.data.contains { downloadModel in
-        // FJ FIX
         return downloadModel.content.id == contentSummaryMC.data.id
         } ? DownloadImageName.inActive : DownloadImageName.active
 

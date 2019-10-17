@@ -206,7 +206,7 @@ struct LibraryView: View {
 
   private func delete(for content: ContentDetailsModel) {
     if content.isInCollection, let parent = content.parentContent {
-      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
+      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false, completion: nil)
     } else {
       downloadsMC.deleteDownload(with: content)
     }
@@ -243,7 +243,9 @@ struct LibraryView: View {
     if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
       if content.groups.isEmpty {
-        self.getContents(with: content)
+        self.getContents(with: content) { details in
+          self.downloadsMC.saveCollection(with: details)
+        }
       } else {
         self.downloadsMC.saveCollection(with: content)
       }
@@ -265,9 +267,9 @@ struct LibraryView: View {
     }
   }
   
-  private func getContents(with content: ContentDetailsModel) {
+  private func getContents(with content: ContentDetailsModel, completion: @escaping ((ContentDetailsModel)->Void)) {
     self.contentsMC.getContentSummary(with: content.id) { detailsModel in
-      self.downloadsMC.saveCollection(with: detailsModel)
+      completion(detailsModel)
     }
   }
 }
