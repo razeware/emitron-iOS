@@ -145,7 +145,7 @@ extension UserDefaults {
   }
   
   var downloadQuality: String? {
-    return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? "hd_video_file"
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? AttachmentKind.hdVideoFile.rawValue
   }
   
   var closedCaptionOn: Bool {
