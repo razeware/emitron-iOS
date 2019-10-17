@@ -191,6 +191,29 @@ class ContentDetailsModel {
     self.contributorString = content.contributorString
     self.videoID = content.videoID?.intValue
   }
+  
+  /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
+  ///
+  /// - parameters:
+  ///   - content: core data entity to transform into domain model
+  init(_ content: ContentsData) {
+    print("content.id: \(content.id)")
+    self.id = content.id ?? 0 
+    self.name = content.name
+    self.uri = content.uri
+    self.description = content.contentDescription
+    self.releasedAt = content.releasedAt
+    self.free = content.free
+    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
+    self.contentType = ContentType(rawValue: content.contentType) ?? .none
+    self.duration = content.duration
+    self.bookmarked = content.bookmarked
+    self.popularity = content.popularity
+    self.cardArtworkURL = content.cardArtworkURL
+    self.technologyTripleString = content.technologyTripleString
+    self.contributorString = content.contributorString
+    self.videoID = content.videoID
+  }
 }
 
 extension ContentDetailsModel {
@@ -213,7 +236,7 @@ extension ContentDetailsModel {
 extension ContentDetailsModel {
   
   var isInCollection: Bool {
-//    guard let parentContent = parentContent else { return false }
-    return contentType == .collection
+    guard let parentContent = parentContent else { return false }
+    return parentContent.contentType == .collection
   }
 }

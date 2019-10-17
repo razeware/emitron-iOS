@@ -38,13 +38,13 @@ struct DownloadsView: View {
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
-    return getContents()
+    return []
   }
 
   var body: some View {
     VStack {
       contentView
-      addButton()
+//      addButton()
     }
     .navigationBarTitle(Text(Constants.downloads))
   }
@@ -54,6 +54,12 @@ struct DownloadsView: View {
       self.handleAction(with: action, content: content)
     }
   }
+  
+//  private func getContents() -> [ContentDetailsModel] {
+//    let downloadedContents = downloadsMC.data.map { $0.content }
+//    let parentContent = downloadedContents.filter { $0.contentType != .episode }
+//    return !parentContent.isEmpty ? parentContent : []
+//  }
   
   private func getContents() -> [ContentDetailsModel] {
     var contents = [ContentDetailsModel]()
@@ -72,6 +78,7 @@ struct DownloadsView: View {
     }
     
     return contents
+
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {

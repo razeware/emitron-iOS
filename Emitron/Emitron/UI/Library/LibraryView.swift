@@ -197,58 +197,55 @@ struct LibraryView: View {
     }
     
     self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
+//      if self.showHudView {
+//        // dismiss hud currently showing
+//        self.showHudView.toggle()
+//      }
+//
+//      self.hudOption = success ? .success : .error
+//      self.showHudView = true
     }
   }
 
   private func save(for content: ContentDetailsModel) {
-    guard downloadsMC.state != .loading else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-
+    print("downloadsMC.state: \(downloadsMC.state)")
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
+      print("FJ IT EXSITS: \(content)")
+//      if self.showHudView {
+//        // dismiss hud currently showing
+//        self.showHudView.toggle()
+//      }
+//
+//      self.hudOption = .error
+//      self.showHudView = true
       return
     }
 
     if content.isInCollection {
-      
+      self.downloadsMC.saveCollection(with: content)
       if content.groups.isEmpty {
-        self.contentsMC.getContentSummary(with: content.id) { detailsModel in
-          self.downloadsMC.saveCollection(with: detailsModel)
-        }
+        self.getContents(with: content)
+      } else {
+        self.downloadsMC.saveCollection(with: content)
       }
     } else {
       self.downloadsMC.saveDownload(with: content)
     }
     
     self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
+//      if self.showHudView {
+//        // dismiss hud currently showing
+//        self.showHudView.toggle()
+//      }
+//
+//      self.hudOption = success ? .success : .error
+//      self.showHudView = true
+    }
+  }
+  
+  private func getContents(with content: ContentDetailsModel) {
+    self.contentsMC.getContentSummary(with: content.id) { detailsModel in
+      self.downloadsMC.saveCollection(with: detailsModel)
     }
   }
 }

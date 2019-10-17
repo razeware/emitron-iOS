@@ -67,12 +67,12 @@ struct ContentListingView: View {
             if success {
               self.save(for: content)
             } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
+//              if self.showHudView {
+//                self.showHudView.toggle()
+//              }
+//
+//              self.hudOption = success ? .success : .error
+//              self.showHudView = true
             }
           }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
             .padding([.leading, .trailing], 20)
@@ -126,12 +126,12 @@ struct ContentListingView: View {
           if success {
             self.save(for: model)
           } else {
-            if self.showHudView {
-              self.showHudView.toggle()
-            }
-
-            self.hudOption = success ? .success : .error
-            self.showHudView = true
+//            if self.showHudView {
+//              self.showHudView.toggle()
+//            }
+//
+//            self.hudOption = success ? .success : .error
+//            self.showHudView = true
           }
         }, downloadsMC: self.downloadsMC)
 
@@ -277,7 +277,7 @@ struct ContentListingView: View {
       if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
         self.downloadsMC.cancelDownload(with: content)
         self.showingSheet = false
-        self.showHudView = false
+//        self.showHudView = false
       }
     }
   }
@@ -346,16 +346,17 @@ struct ContentListingView: View {
   }
 
   private func save(for content: ContentDetailsModel) {
-    guard downloadsMC.state != .loading else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
+    print("downloadsMC.state: \(downloadsMC.state)")
+//    guard downloadsMC.state != .loading else {
+//      if self.showHudView {
+//        // dismiss hud currently showing
+//        self.showHudView.toggle()
+//      }
+//
+//      self.hudOption = .error
+//      self.showHudView = true
+//      return
+//    }
 
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {

@@ -200,7 +200,7 @@ struct CardView: SwiftUI.View {
       
       if model.isInCollection {
         guard let downloadedContent = downloadsMC.downloadedContent,
-        downloadedContent.id == model.id else {
+        downloadedContent.parentContent?.id == model.id else {
           return AnyView(image)
         }
         
@@ -280,7 +280,6 @@ struct CardView: SwiftUI.View {
     if model.isInCollection {
       
       return downloadsMC.data.contains { downloadModel in
-        // FJ FIX
         return downloadModel.content.id == model.id
       } ? DownloadImageName.inActive : DownloadImageName.active
     } else {

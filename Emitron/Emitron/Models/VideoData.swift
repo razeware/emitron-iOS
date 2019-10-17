@@ -40,10 +40,7 @@ class VideoData: NSObject, NSCoding {
     aCoder.encode(1, forKey: .versionKey)
     guard let videoURL = url, let savedContent = content else { return }
     
-    
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.description, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional)
-    
-    print("FJ content: \(contentsData)")
+    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.description, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty.rawValue, contentType: savedContent.contentType.rawValue)
     
     aCoder.encode(videoURL, forKey: .videoKey)
     aCoder.encode(contentsData, forKey: .contentKey)
@@ -55,8 +52,8 @@ class VideoData: NSObject, NSCoding {
       self.url = videoURL
     }
     
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentDetailsModel {
-      self.content = content
+    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
+      self.content = ContentDetailsModel(content)
     }
   }
 }

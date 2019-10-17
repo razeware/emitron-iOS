@@ -175,7 +175,7 @@ struct ContentSummaryView: View {
       if contentSummaryMC.data.isInCollection {
 
         guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.id == contentSummaryMC.data.id else {
+          downloadedContent.parentContent?.id == contentSummaryMC.data.id else {
             return AnyView(image)
         }
 

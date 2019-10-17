@@ -44,10 +44,12 @@ extension String {
   static let contentVideoIDKey: String = "Content.videoID"
   static let contentIndexKey: String = "Content.index"
   static let contentProfessionalKey: String = "Content.professional"
+  static let contentDifficultyKey: String = "Content.difficulty"
+  static let contentTypeKey: String = "Content.type"
 }
 
 class ContentsData: NSObject, NSCoding {
-  var id: Int = 0
+  var id: Int?
   var name: String  = ""
   var uri: String  = ""
   var contentDescription: String = ""
@@ -62,8 +64,10 @@ class ContentsData: NSObject, NSCoding {
   var videoID: Int?
   var index: Int?
   var professional: Bool = false
+  var difficulty: String = ""
+  var contentType: String = ""
   
-  init(id: Int, name: String, uri: String, description: String, releasedAt: Date, free: Bool, duration: Int, popularity: Double, bookmarked: Bool, cardArtworkURL: URL?, technologyTripleString: String, contributorString: String, videoID: Int?, index: Int?, professional: Bool) {
+  init(id: Int, name: String, uri: String, description: String, releasedAt: Date, free: Bool, duration: Int, popularity: Double, bookmarked: Bool, cardArtworkURL: URL?, technologyTripleString: String, contributorString: String, videoID: Int?, index: Int?, professional: Bool, difficulty: String, contentType: String) {
     self.id = id
     self.name = name
     self.uri = uri
@@ -79,6 +83,8 @@ class ContentsData: NSObject, NSCoding {
     self.videoID = videoID
     self.index = index
     self.professional = professional
+    self.difficulty = difficulty
+    self.contentType = contentType
     super.init()
   }
   
@@ -95,6 +101,8 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(technologyTripleString, forKey: .contentTechnologyTripleStringKey)
     aCoder.encode(contributorString, forKey: .contentContributorStringKey)
     aCoder.encode(professional, forKey: .contentProfessionalKey)
+    aCoder.encode(difficulty, forKey: .contentDifficultyKey)
+    aCoder.encode(contentType, forKey: .contentTypeKey)
     
     if let cardArtworkURL = cardArtworkURL {
       aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
@@ -167,6 +175,14 @@ class ContentsData: NSObject, NSCoding {
     
     if let professional = aDecoder.decodeObject(forKey: .contentProfessionalKey) as? Bool {
       self.professional = professional
+    }
+    
+    if let difficulty = aDecoder.decodeObject(forKey: .contentDifficultyKey) as? String {
+      self.difficulty = difficulty
+    }
+    
+    if let contentType = aDecoder.decodeObject(forKey: .contentTypeKey) as? String {
+      self.contentType = contentType
     }
   }
 }

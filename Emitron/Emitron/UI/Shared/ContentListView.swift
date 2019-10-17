@@ -166,12 +166,12 @@ struct ContentListView: View {
               self.showingSheet = true
               self.callback?(.save, partialContent)
             } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
+//              if self.showHudView {
+//                self.showHudView.toggle()
+//              }
+//
+//              self.hudOption = success ? .success : .error
+//              self.showHudView = true
             }
           })
             .padding([.leading], 20)
@@ -187,7 +187,7 @@ struct ContentListView: View {
   private var cardsTableViewWithDelete: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-
+    
     return
       ForEach(contents, id: \.id) { partialContent in
 
@@ -200,12 +200,12 @@ struct ContentListView: View {
               self.showingSheet = true
               self.callback?(.save, partialContent)
             } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
+//              if self.showHudView {
+//                self.showHudView.toggle()
+//              }
+//
+//              self.hudOption = success ? .success : .error
+//              self.showHudView = true
             }
           })
             .padding([.leading], 20)
@@ -223,14 +223,14 @@ struct ContentListView: View {
       if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
         self.downloadsMC.cancelDownload(with: content)
         self.showingSheet = false
-        self.showHudView = false
+//        self.showHudView = false
       }
     }
   }
 
   private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
-
+    
     return CardView(model: viewModel,
                     contentScreen: contentScreen,
                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
