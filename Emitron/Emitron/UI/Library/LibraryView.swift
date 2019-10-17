@@ -47,6 +47,7 @@ struct LibraryView: View {
   @State private var searchText = ""
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
+  @State var showingSheet = false
 
   var body: some View {
     contentView
@@ -58,7 +59,20 @@ struct LibraryView: View {
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
+    .actionSheet(isPresented: $showingSheet) {
+      actionSheet
+    }
   }
+  
+  private var actionSheet: ActionSheet {
+      return showActionSheet(for: .cancel) { action in
+        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+          self.downloadsMC.cancelDownload(with: content)
+          self.showingSheet = false
+          self.showHudView = false
+        }
+      }
+    }
 
   private var contentControlsSection: some View {
     VStack {
@@ -171,6 +185,7 @@ struct LibraryView: View {
           self.delete(for: content)
         
         case .save:
+          self.showingSheet = true
           self.save(for: content)
         
         case .cancel:
@@ -197,27 +212,31 @@ struct LibraryView: View {
     }
     
     self.downloadsMC.callback = { success in
-//      if self.showHudView {
-//        // dismiss hud currently showing
-//        self.showHudView.toggle()
-//      }
-//
-//      self.hudOption = success ? .success : .error
-//      self.showHudView = true
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = success ? .success : .error
+      self.showHudView = true
+      
+      // remove sheet when showing hud
+      self.showingSheet = false
     }
   }
 
   private func save(for content: ContentDetailsModel) {
-    print("downloadsMC.state: \(downloadsMC.state)")
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
-      print("FJ IT EXSITS: \(content)")
-//      if self.showHudView {
-//        // dismiss hud currently showing
-//        self.showHudView.toggle()
-//      }
-//
-//      self.hudOption = .error
-//      self.showHudView = true
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = .error
+      self.showHudView = true
+      
+      // remove sheet when showing hud
+      self.showingSheet = false
       return
     }
 
@@ -233,13 +252,16 @@ struct LibraryView: View {
     }
     
     self.downloadsMC.callback = { success in
-//      if self.showHudView {
-//        // dismiss hud currently showing
-//        self.showHudView.toggle()
-//      }
-//
-//      self.hudOption = success ? .success : .error
-//      self.showHudView = true
+      if self.showHudView {
+        // dismiss hud currently showing
+        self.showHudView.toggle()
+      }
+
+      self.hudOption = success ? .success : .error
+      self.showHudView = true
+      
+      // remove sheet when showing hud
+      self.showingSheet = false
     }
   }
   

@@ -44,7 +44,7 @@ struct ContentSummaryView: View {
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
-
+  
   var body: some View {
     VStack(alignment: .leading) {
 
@@ -201,7 +201,7 @@ struct ContentSummaryView: View {
     if contentSummaryMC.data.isInCollection {
 
       return downloadsMC.data.contains { downloadModel in
-        // FJ FIX 
+        // FJ FIX
         return downloadModel.content.id == contentSummaryMC.data.id
         } ? DownloadImageName.inActive : DownloadImageName.active
 

@@ -60,28 +60,28 @@ extension CardViewModel {
     guard let domainData = DataManager.current?.domainsMC.data else {
       return nil
     }
-    
+
     let domains = content.domains
     let contentDomains = domainData.filter { domains.contains($0) }
     let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
-    
+
     var progress: CGFloat = 0
     if let progression = content.progression {
       progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
     }
-    
+
     var imageType: ImageType
-    
+
     if let imageURL = content.cardArtworkURL {
       imageType = ImageType.url(imageURL)
     } else {
       imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
     }
-    
+
     let isInCollection = content.isInCollection
-    
+
     let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isPro: content.professional, isInCollection: isInCollection)
-    
+
     return cardModel
   }
 }
@@ -93,13 +93,13 @@ struct CardView: SwiftUI.View {
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
-  
+
   init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
   }
-  
+
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
@@ -107,21 +107,21 @@ struct CardView: SwiftUI.View {
       let emptyView = AnyView(createEmptyView())
       return emptyView
     }
-    
+
     let stack = VStack {
       VStack(alignment: .leading) {
         VStack(alignment: .leading, spacing: 15) {
           VStack(alignment: .leading, spacing: 0) {
             HStack(alignment: .center) {
-              
+
               Text(model.title)
                 .font(.uiTitle4)
                 .lineLimit(2)
                 .fixedSize(horizontal: false, vertical: true)
                 .padding([.trailing], 15)
-              
+
               Spacer()
-              
+
               Image(uiImage: self.image)
                 .resizable()
                 .frame(width: 60, height: 60)
@@ -130,42 +130,42 @@ struct CardView: SwiftUI.View {
                 .cornerRadius(6)
             }
             .padding([.top], 10)
-            
+
             Text(model.subtitle)
               .font(.uiCaption)
               .lineLimit(nil)
               .foregroundColor(.battleshipGrey)
           }
-          
+
           Text(model.description)
             .font(.uiCaption)
             .fixedSize(horizontal: false, vertical: true)
             .lineLimit(3)
             .foregroundColor(.battleshipGrey)
-          
+
           HStack {
-            
+
             if model.isPro {
               proTag
                 .padding([.trailing], 5)
             }
-            
+
             Text(model.footnote)
               .font(.uiCaption)
               .lineLimit(1)
               .foregroundColor(.battleshipGrey)
-            
+
             Spacer()
-            
+
             if self.contentScreen != ContentScreen.downloads {
               self.setUpImageAndProgress()
             }
           }
         }
         .padding(15)
-        
+
         Spacer()
-        
+
         ProgressBarView(progress: model.progress)
         Rectangle()
           .frame(height: 1)
@@ -173,37 +173,37 @@ struct CardView: SwiftUI.View {
       }
     }
     .cornerRadius(6)
-    
+
     // TODO: If we want to get the card + dropshadow design back, uncomment this
 //    .background(Color.white)
 //    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     
-    
+
     return AnyView(stack)
   }
-  
+
   private func setUpImageAndProgress() -> AnyView {
-    
+
     let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .onTapGesture {
         self.download()
     }
-    
+
     switch downloadsMC.state {
     case .loading:
-      
+
       guard let model = model else {
         return AnyView(image)
       }
-      
+
       if model.isInCollection {
         guard let downloadedContent = downloadsMC.downloadedContent,
         downloadedContent.parentContent?.id == model.id else {
           return AnyView(image)
         }
-        
+
         return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
 
       } else {
@@ -212,15 +212,15 @@ struct CardView: SwiftUI.View {
               downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
           return AnyView(image)
         }
-        
+
         return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
       }
-      
+
     default:
       return AnyView(image)
     }
   }
-  
+
   private var proTag: some SwiftUI.View {
     return
       ZStack {
@@ -234,12 +234,12 @@ struct CardView: SwiftUI.View {
           .font(.uiUppercase)
     }
   }
-  
+
   private func download() {
     let success = downloadImageName != DownloadImageName.inActive
     onRightIconTap?(success)
   }
-  
+
   private func loadImage() {
     guard let model = model else { return }
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
@@ -260,7 +260,7 @@ struct CardView: SwiftUI.View {
       fishImage(url: url)
     }
   }
-  
+
   private func fishImage(url: URL) {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
@@ -273,12 +273,12 @@ struct CardView: SwiftUI.View {
       }
     }
   }
-  
+
   private var downloadImageName: String {
     guard let model = model else { return DownloadImageName.inActive }
-    
+
     if model.isInCollection {
-      
+
       return downloadsMC.data.contains { downloadModel in
         return downloadModel.content.id == model.id
       } ? DownloadImageName.inActive : DownloadImageName.active
@@ -287,41 +287,41 @@ struct CardView: SwiftUI.View {
         .content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
-  
+
   private func createEmptyView() -> AnyView {
     let vStack = VStack {
       HStack {
         Spacer()
-        
+
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
           .foregroundColor(.appBlack)
           .multilineTextAlignment(.center)
           .lineLimit(nil)
-        
+
         Spacer()
       }
-      
+
       addDetailText()
     }
-    
+
     return AnyView(vStack)
   }
-  
+
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
       Spacer()
-      
+
       Text(detail)
         .font(.uiHeadline)
         .foregroundColor(.appBlack)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
-      
+
       Spacer()
     }
-    
+
     return AnyView(stack)
   }
 }

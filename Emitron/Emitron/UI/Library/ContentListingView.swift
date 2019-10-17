@@ -67,12 +67,12 @@ struct ContentListingView: View {
             if success {
               self.save(for: content)
             } else {
-//              if self.showHudView {
-//                self.showHudView.toggle()
-//              }
-//
-//              self.hudOption = success ? .success : .error
-//              self.showHudView = true
+              if self.showHudView {
+                self.showHudView.toggle()
+              }
+
+              self.hudOption = success ? .success : .error
+              self.showHudView = true
             }
           }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
             .padding([.leading, .trailing], 20)
@@ -91,31 +91,28 @@ struct ContentListingView: View {
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
-    .actionSheet(isPresented: $showingSheet) {
-      actionSheet
-    }
 
     return scrollView
   }
-
+  
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
-
+    
     // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
     if contentSummaryMC.data.videoID != nil {
       return [contentSummaryMC.data]
     }
-
+    
     let allContents = contentSummaryMC.data.groups.flatMap { $0.childContents }
-
+    
     guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
       else { return [] }
-
+    
     return allContents[currentIndex..<allContents.count].compactMap { $0 }
   }
-
+  
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
-
+    
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
 
       NavigationLink(destination:
@@ -126,15 +123,15 @@ struct ContentListingView: View {
           if success {
             self.save(for: model)
           } else {
-//            if self.showHudView {
-//              self.showHudView.toggle()
-//            }
-//
-//            self.hudOption = success ? .success : .error
-//            self.showHudView = true
+            if self.showHudView {
+              self.showHudView.toggle()
+            }
+            
+            self.hudOption = success ? .success : .error
+            self.showHudView = true
           }
         }, downloadsMC: self.downloadsMC)
-
+          
           .onTapGesture {
             self.isPresented = true
         }
@@ -205,19 +202,19 @@ struct ContentListingView: View {
 
   var coursesSection: AnyView? {
     let groups = contentSummaryMC.data.groups
-
+    
     guard contentSummaryMC.data.contentType == .collection else {
       return nil
     }
-
+    
     let sections = Section {
       Text("Course Episodes")
         .font(.uiTitle2)
         .padding([.top], -5)
-
+      
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
-
+          
           Section(header: CourseHeaderView(name: group.name, color: .white)
             .background(Color.white)) {
               self.episodeListing(data: group.childContents)
@@ -228,7 +225,7 @@ struct ContentListingView: View {
         self.episodeListing(data: groups.first!.childContents)
       }
     }
-
+    
     return AnyView(sections)
   }
 
@@ -314,15 +311,9 @@ struct ContentListingView: View {
   }
 
   private var loadingView: some View {
-    VStack {
-      Spacer()
-
-      Text("Loading...")
-        .font(.uiTitle2)
-        .foregroundColor(.appBlack)
-        .multilineTextAlignment(.center)
-
-      Spacer()
+    // HACK: To put it in the middle we have to wrap it in Geometry Reader
+    GeometryReader { geometry in
+      ActivityIndicator()
     }
   }
 

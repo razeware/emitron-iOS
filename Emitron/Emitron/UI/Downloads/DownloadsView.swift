@@ -38,51 +38,31 @@ struct DownloadsView: View {
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
-    return []
+    return getContents()
   }
 
   var body: some View {
     VStack {
       contentView
-//      addButton()
+      exploreButton
     }
     .navigationBarTitle(Text(Constants.downloads))
   }
-  
+
   private var contentView: some View {
     ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
   }
-  
-//  private func getContents() -> [ContentDetailsModel] {
-//    let downloadedContents = downloadsMC.data.map { $0.content }
-//    let parentContent = downloadedContents.filter { $0.contentType != .episode }
-//    return !parentContent.isEmpty ? parentContent : []
-//  }
-  
-  private func getContents() -> [ContentDetailsModel] {
-    var contents = [ContentDetailsModel]()
-    let downloadedContents = downloadsMC.data.map { $0.content }
-    
-    downloadedContents.forEach { download in
-      
-      if download.contentType == .episode {
-        if download.videoID == nil {
-          contents.append(download)
-        }
-      } else {
-        contents.append(download)
-      }
-      
-    }
-    
-    return contents
 
+  private func getContents() -> [ContentDetailsModel] {
+    let downloadedContents = downloadsMC.data.map { $0.content }
+    let parentContent = downloadedContents.filter { $0.contentType != .episode }
+    return !parentContent.isEmpty ? parentContent : []
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
-    
+
     switch action {
     case .delete:
       if content.isInCollection {
@@ -93,13 +73,13 @@ struct DownloadsView: View {
 
     case .save:
       self.downloadsMC.saveDownload(with: content)
-      
+
     case .cancel:
       self.downloadsMC.cancelDownload(with: content)
     }
   }
 
-  private func addButton() -> AnyView? {
+  private var exploreButton: AnyView? {
     guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {

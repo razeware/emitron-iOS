@@ -77,6 +77,8 @@ class VideoPlayerController: AVPlayerViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     player?.pause()
+
+    //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
   }
 
   private func removeUsageObserverToken() {
@@ -97,7 +99,7 @@ class VideoPlayerController: AVPlayerViewController {
       self.playFromLocalIfPossible()
     }
   }
-
+  
   override func viewDidLoad() {
     super.viewDidLoad()
 
@@ -119,10 +121,10 @@ class VideoPlayerController: AVPlayerViewController {
       }
     }
   }
-  
+
   private func playFromLocalIfPossible() {
     guard let firstContent = content.first else { return }
-
+    
     if let downloadsMC = DataManager.current?.downloadsMC,
       let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == firstContent.videoID }) {
       playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)

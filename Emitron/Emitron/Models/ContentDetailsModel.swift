@@ -57,7 +57,7 @@ class ContentDetailsModel {
   private(set) var url: URL?
   
   var parentContent: ContentDetailsModel?
-  var isDownloaded: Bool = false
+  var isDownloaded = false
   var progression: ProgressionModel?
   var bookmark: BookmarkModel?
 
