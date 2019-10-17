@@ -55,7 +55,6 @@ struct VideoView: View {
   
   var body: some View {
     VideoPlayerControllerRepresentable(with: contentDetails, user: user)
-      .navigationBarTitle(contentDetails.first?.name ?? "")
   }
 }
 
