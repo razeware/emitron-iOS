@@ -61,8 +61,10 @@ struct MyTutorialView: View {
       }
     .onAppear {
       switch self.state {
-      case .inProgress, .completed: self.progressionsMC.loadContents()
-      case .bookmarked: self.bookmarksMC.loadContents()
+      case .inProgress, .completed:
+        self.progressionsMC.loadContents()
+      case .bookmarked:
+        self.bookmarksMC.loadContents()
       }
     }
   }
@@ -70,7 +72,7 @@ struct MyTutorialView: View {
   private var toggleControl: AnyView {
     AnyView(
       VStack {
-        ToggleControlView(inProgressClosure: {
+        ToggleControlView(toggleState: state, inProgressClosure: {
           self.state = .inProgress
         }, completedClosure: {
           self.state = .completed
@@ -96,17 +98,10 @@ struct MyTutorialView: View {
   private var inProgressContentsView: some View {
     var dataToDisplay: [ContentDetailsModel] = []
     
-    switch progressionsMC.state {
-    case .hasData,
-         .loading where !progressionsMC.data.isEmpty:
-      
-        dataToDisplay = []
-        let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
-        let contents = inProgressData.compactMap { $0.content }
-        dataToDisplay = contents
-        
-    default: break
-    }
+    dataToDisplay = []
+    let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
+    let contents = inProgressData.compactMap { $0.content }
+    dataToDisplay = contents
     
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
     
@@ -116,15 +111,9 @@ struct MyTutorialView: View {
   private var completedContentsView: some View {
     var dataToDisplay: [ContentDetailsModel] = []
     
-    switch progressionsMC.state {
-    case .hasData,
-         .loading where !progressionsMC.data.isEmpty:
-        let completedData = progressionsMC.data.filter { $0.finished == true }
-        let contents = completedData.compactMap { $0.content }
-        dataToDisplay = contents
-      
-    default: break
-    }
+    let completedData = progressionsMC.data.filter { $0.finished == true }
+    let contents = completedData.compactMap { $0.content }
+    dataToDisplay = contents
     
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
     
@@ -133,14 +122,8 @@ struct MyTutorialView: View {
   
   private var bookmarkedContentsView: some View {
     var dataToDisplay: [ContentDetailsModel] = []
-    
-    switch bookmarksMC.state {
-    case .hasData,
-         .loading where !bookmarksMC.data.isEmpty:
+
       dataToDisplay = bookmarksMC.data.compactMap { $0.content }
-    default: break
-    }
-    
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
     
     return contentView
