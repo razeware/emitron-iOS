@@ -44,7 +44,7 @@ struct DownloadsView: View {
   var body: some View {
     VStack {
       contentView
-      addButton()
+      exploreButton
     }
     .navigationBarTitle(Text(Constants.downloads))
   }
@@ -87,7 +87,7 @@ struct DownloadsView: View {
     }
   }
 
-  private func addButton() -> AnyView? {
+  private var exploreButton: AnyView? {
     guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {

@@ -149,6 +149,7 @@ class ContentsMC: NSObject, ObservableObject {
         Failure
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
+        self.data = []
       case .success(let contentsTuple):
         self.data = contentsTuple.contents
         self.numTutorials = contentsTuple.totalNumber

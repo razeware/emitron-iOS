@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,46 +26,17 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
+import UIKit
 import SwiftUI
 
-struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
+struct ActivityIndicator: UIViewRepresentable {
     
-  private let contentDetails: [ContentDetailsModel]
-  private let user: UserModel
-  
-  init(with contentDetails: [ContentDetailsModel], user: UserModel) {
-    self.contentDetails = contentDetails
-    self.user = user
-  }
-  
-  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerController {
-    let videosMC = VideosMC(user: user)
-    return VideoPlayerController(with: contentDetails, videosMC: videosMC)
-  }
-  
-  func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {
-    // N/A
-  }
+    func makeUIView(context: Context) -> UIActivityIndicatorView {
+        let view = UIActivityIndicatorView()
+        return view
+    }
+    
+    func updateUIView(_ activityIndicator: UIActivityIndicatorView, context: Context) {
+        activityIndicator.startAnimating()
+    }
 }
-
-struct VideoView: View {
-  
-  let contentDetails: [ContentDetailsModel]
-  let user: UserModel
-  
-  var body: some View {
-    VideoPlayerControllerRepresentable(with: contentDetails, user: user)
-      .navigationBarTitle(contentDetails.first?.name ?? "")
-  }
-}
-
-#if DEBUG
-struct VideoView_Previews: PreviewProvider {
-
-  static var previews: some View {
-    let user = Guardpost.current.currentUser!
-    let contentDetail = ContentDetailsModel.test
-    return VideoView(contentDetails: [contentDetail], user: user)
-  }
-}
-#endif
