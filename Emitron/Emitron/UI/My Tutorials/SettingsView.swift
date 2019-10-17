@@ -138,7 +138,7 @@ struct SettingsView: View {
       MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
         Guardpost.current.logout()
       }
-      .padding([.bottom, .leading, .trailing], 20)
+      .padding([.bottom, .leading, .trailing], 18)
     }
     .background(Color.paleGrey)
   }

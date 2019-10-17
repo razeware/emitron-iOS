@@ -35,7 +35,7 @@ struct CheckmarkView: View {
   
   var outerSide: CGFloat = 24
   var innerSide: CGFloat = 20
-  var outerRadius: CGFloat = 6
+  var outerRadius: CGFloat = 9
   var radiusRatio: CGFloat {
     return outerRadius / outerSide
   }
@@ -58,7 +58,7 @@ struct CheckmarkView: View {
             .frame(maxWidth: innerSide-1, maxHeight: innerSide+1)
             .foregroundColor(Color.white)
         }
-        .cornerRadius(6)
+        .cornerRadius(outerRadius)
       } else {
         ZStack {
           RoundedRectangle(cornerRadius: outerRadius)

@@ -171,7 +171,7 @@ struct ContentListView: View {
         .padding([.leading, .trailing, .bottom], 20)
 
       Text("Please try again.")
-        .font(.uiLabel)
+        .font(.uiLabelBold)
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
@@ -275,7 +275,7 @@ struct ContentListView: View {
         .padding([.leading, .trailing, .bottom], 20)
 
       Text(contentScreen.detailMesage ?? "")
-        .font(.uiLabel)
+        .font(.uiLabelBold)
         .foregroundColor(.battleshipGrey)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)

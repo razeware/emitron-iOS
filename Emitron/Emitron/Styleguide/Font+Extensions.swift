@@ -59,6 +59,9 @@ extension Font {
   static var uiBodyCustom: Font {
     return Font.system(size: 15.0)
   }
+  static var uiLabelBold: Font {
+    return Font.system(size: 16.0).weight(.semibold)
+  }
   static var uiLabel: Font {
     return Font.system(size: 16.0).weight(.semibold)
   }

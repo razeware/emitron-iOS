@@ -113,7 +113,7 @@ struct LibraryView: View {
   private var numberAndSortView: some View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
-        .font(.uiLabel)
+        .font(.uiLabelBold)
         .foregroundColor(.battleshipGrey)
 
       Spacer()
@@ -127,7 +127,7 @@ struct LibraryView: View {
             .foregroundColor(.battleshipGrey)
 
           Text(filters.sortFilter.name)
-            .font(.uiLabel)
+            .font(.uiLabelBold)
             .foregroundColor(.battleshipGrey)
         }
       }

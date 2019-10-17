@@ -41,7 +41,6 @@ struct TabNavView: View {
       }.tabItem {
         Text(Constants.library)
         Image("library")
-          .foregroundColor(.appGreen)
       }
       .tag(0)
       
@@ -49,7 +48,7 @@ struct TabNavView: View {
         downloadsView
       }.tabItem {
         Text(Constants.downloads)
-        Image("downloadInactive")
+        Image("downloadTabInactive")
       }
       .tag(1)
       

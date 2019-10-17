@@ -283,7 +283,7 @@ struct ContentListingView: View {
         
         Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
           .multilineTextAlignment(.center)
-          .font(.uiLabel)
+          .font(.uiLabelBold)
           .foregroundColor(.white)
           .lineLimit(3)
     }

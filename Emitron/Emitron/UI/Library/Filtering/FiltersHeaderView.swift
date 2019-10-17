@@ -50,7 +50,7 @@ struct FiltersHeaderView: View {
       HStack {
         Text(filterGroup.type.name)
           .foregroundColor(.appBlack)
-          .font(.uiLabel)
+          .font(.uiLabelBold)
           .padding([.trailing], Layout.padding.textTrailing)
         
         Spacer()
@@ -60,14 +60,14 @@ struct FiltersHeaderView: View {
         }) {
           Text(isExpanded ? "Hide" : "Show")
             .foregroundColor(.battleshipGrey)
-            .font(.uiLabel)
+            .font(.uiLabelBold)
         }
       }
       .padding(.all, Layout.padding.overall)
         .background(Color.white)
         .cornerRadius(Layout.cornerRadius)
         .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-        .frame(minHeight: 50)
+        .frame(height: 50)
       
       if isExpanded {
         expandedView()
