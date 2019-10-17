@@ -38,6 +38,19 @@ enum ContentDifficulty: String, CaseIterable {
   var displayString: String {
     return self.rawValue.capitalized
   }
+  
+  var sortOrdinal: Int {
+    switch self {
+    case .beginner:
+      return 0
+    case .intermediate:
+      return 1
+    case .advanced:
+      return 2
+    case .none:
+      return 999 // Doesn't exist
+    }
+  }
 }
 
 enum ContentType: String {
@@ -59,6 +72,23 @@ enum ContentType: String {
       return self.rawValue.capitalized
     case .product:
       return "Book" // Probably other types of stuff
+    }
+  }
+  
+  var sortOrdinal: Int {
+    switch self {
+    case .collection:
+      return 0
+    case .screencast:
+      return 1
+    case .episode:
+      return 2
+    case .article:
+      return 3
+    case .product:
+      return 4
+    case .none:
+      return 999 // Doesn't exist
     }
   }
 }
@@ -105,14 +135,15 @@ enum ParameterKey {
     // TODO: This might need to be re-implemented
     return Parameter(key: self.strKey,
                      value: self.value,
-                     displayName: "")
+                     displayName: "",
+                     sortOrdinal: 0)
   }
 }
 
 enum ParameterFilterValue {
   case contentTypes(types: [ContentType]) // An array containing ContentType strings
-  case domainTypes(types: [(id: Int, name: String)]) // An array of numerical IDs of the domains you are interested in.
-  case categoryTypes(types: [(id: Int, name: String)]) // An array of numberical IDs of the categories you are interested in.
+  case domainTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the domains you are interested in.
+  case categoryTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
   case queryString(string: String)
@@ -134,42 +165,23 @@ enum ParameterFilterValue {
     }
   }
   
-  var values: [(displayName: String, requestValue: String)] {
+  var values: [(displayName: String, requestValue: String, ordinal: Int)] {
     switch self {
     case .contentTypes(types: let types):
-      return types.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
+      return types.map { (displayName: $0.displayString, requestValue: $0.rawValue, ordinal: $0.sortOrdinal) }
     case .domainTypes(types: let types):
-      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)", ordinal: $0.sortOrdinal) }
     case .categoryTypes(types: let types):
-      return types.map { (displayName: $0.name, requestValue: "\($0.id)") }
+      return types.map { (displayName: $0.name, requestValue: "\($0.id)", ordinal: $0.sortOrdinal) }
     case .difficulties(difficulties: let difficulties):
-      return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue) }
+      return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue, ordinal: $0.sortOrdinal) }
     case .contentIds(ids: let ids):
-      return ids.map { (displayName: "\($0)", requestValue: "\($0)") }
+      return ids.map { (displayName: "\($0)", requestValue: "\($0)", ordinal: 0) }
     case .queryString(string: let str):
-      return [(displayName: str, requestValue: str)]
+      return [(displayName: str, requestValue: str, ordinal: 0)]
     }
   }
-  
-  var groupName: String {
-    switch self {
-    case .contentTypes:
-      return "Content Type"
-    case .domainTypes:
-      return "Platforms"
-    case .categoryTypes:
-      return "Categories"
-    case .difficulties:
-      return "Difficulties"
-    case .contentIds:
-      // TODO: This is probably not required (or desired)
-      return "Contents"
-    case .queryString:
-      // TODO: This is probably not required (or desired)
-      return "Query String"
-    }
-  }
-  
+    
   var isSearchQuery: Bool {
     switch self {
     case .queryString:
@@ -211,10 +223,11 @@ struct Parameter: Hashable, Codable {
   let key: String
   let value: String
   let displayName: String
+  let sortOrdinal: Int
 }
 
 enum Param {
-  
+    
   // Not to be used for the search query filter
   static func filters(for values: [ParameterFilterValue]) -> [Parameter] {
     var allParams: [Parameter] = []
@@ -224,7 +237,7 @@ enum Param {
       
       let key = "filter[\(value.strKey)][]"
       let values = value.values
-      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName) }
+      let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName, sortOrdinal: $0.ordinal) }
       
       allParams.append(contentsOf: all)
     }
@@ -234,7 +247,7 @@ enum Param {
   
   // Only to be used for the search query filter
   static func filter(for searchParam: ParameterFilterValue) -> Parameter {
-    return Parameter(key: "filter[\(searchParam.strKey)]", value: searchParam.searchValue, displayName: searchParam.searchValue)
+    return Parameter(key: "filter[\(searchParam.strKey)]", value: searchParam.searchValue, displayName: searchParam.searchValue, sortOrdinal: 0)
   }
   
   static func sort(for value: ParameterSortValue,
@@ -242,6 +255,6 @@ enum Param {
     let key =  "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
     
-    return Parameter(key: key, value: value, displayName: "Sort")
+    return Parameter(key: key, value: value, displayName: "Sort", sortOrdinal: 0)
   }
 }
