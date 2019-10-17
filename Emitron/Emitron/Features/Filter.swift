@@ -34,8 +34,7 @@ class Filter: Hashable, Codable {
     lhs.filterName == rhs.filterName
   }
   
-  // In order for Set equality operations to work on a Class, we have to make sure that the reference hashes are the same between filters,
-  // so we implement our own hashing function
+  // In order for Set equality operations to work on a Class, we have to make sure that the reference hashes are the same between filters, so we implement our own hashing function
   func hash(into hasher: inout Hasher) {
       hasher.combine(filterName)
   }
@@ -54,6 +53,10 @@ class Filter: Hashable, Codable {
     return parameter.displayName
   }
   
+  var sortOrdinal: Int {
+    return parameter.sortOrdinal
+  }
+  
   // MARK: - Initializers
   init(groupType: FilterGroupType, param: Parameter, isOn: Bool = false) {
     self.groupType = groupType
@@ -65,6 +68,6 @@ class Filter: Hashable, Codable {
 // For testing
 extension Filter {
   static var testFilter: Filter {
-    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: ""))
+    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: "", sortOrdinal: 0))
   }
 }

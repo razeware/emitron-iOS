@@ -58,24 +58,28 @@ struct FiltersHeaderView: View {
         Button(action: {
           self.isExpanded.toggle()
         }) {
-          Text(isExpanded ? "Hide" : "Show")
+          Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
             .foregroundColor(.battleshipGrey)
             .font(.uiLabelBold)
         }
       }
       .padding(.all, Layout.padding.overall)
-        .background(Color.white)
-        .cornerRadius(Layout.cornerRadius)
-        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-        .frame(height: 50)
+      .background(Color.white)
+      .cornerRadius(Layout.cornerRadius)
+      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+      .frame(height: 50)
       
       if isExpanded {
-        expandedView()
+        expandedView
       }
     }
   }
   
-  func expandedView() -> some View {
+  private var numOfOnFilters: Int {
+    return filterGroup.filters.filter { $0.isOn }.count
+  }
+  
+  private var expandedView: some View {
     return
       VStack(alignment: .leading, spacing: 12) {
         
@@ -87,14 +91,14 @@ struct FiltersHeaderView: View {
           })
             .padding([.leading, .trailing], 10)
         }
-      }
+    }
   }
 }
 
 #if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    let filters = Set(Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) })
+    let filters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
     return FiltersHeaderView(filterGroup: FilterGroup(type: .difficulties, filters: filters))
   }
 }
