@@ -39,6 +39,7 @@ struct TextListItemView: View {
   var contentSummary: ContentDetailsModel
   var buttonAction: (Bool) -> Void
   @ObservedObject var downloadsMC: DownloadsMC
+  @ObservedObject var progressionsMC: ProgressionsMC
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {

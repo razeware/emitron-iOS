@@ -207,15 +207,15 @@ struct ContentListView: View {
           }, onRightTap: {
             self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
       .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(self.bgColor)
       //HACK: to remove navigation chevrons
-      .padding(.trailing, -32.0)
+      .padding(.trailing, -38.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -243,16 +243,16 @@ struct ContentListView: View {
           }, onRightTap: {
             self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
       .onDelete(perform: self.delete)
       .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(self.bgColor)
       //HACK: to remove navigation chevrons
-      .padding(.trailing, -32.0)
+      .padding(.trailing, -38.0)
   }
 
   private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {

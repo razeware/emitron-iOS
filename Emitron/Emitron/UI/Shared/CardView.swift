@@ -96,9 +96,9 @@ struct CardView: SwiftUI.View {
             CompletedTag()
           } else {
             Text(model.releasedAtDateTimeString)
-            .font(.uiCaption)
-            .lineLimit(1)
-            .foregroundColor(.battleshipGrey)
+              .font(.uiCaption)
+              .lineLimit(1)
+              .foregroundColor(.battleshipGrey)
           }
           
           Spacer()
@@ -117,15 +117,19 @@ struct CardView: SwiftUI.View {
       .padding([.trailing, .leading], 15)
       
       Group {
-        ProgressBarView(progress: model.progress)
-          .padding([.top, .bottom], 0)
-        
-        Rectangle()
-          .frame(height: 1)
-          .foregroundColor(Color.paleBlue)
-          .padding([.top, .bottom], 0)
+        if model.progress > 0 && model.progress < 1 {
+          ProgressBarView(progress: model.progress)
+            .padding([.top, .bottom], 0)
+        } else {
+          Rectangle()
+            .frame(height: 1)
+            .foregroundColor(Color.coolGrey)
+            .padding([.top, .bottom], 0)
+            .cornerRadius(6)
+        }
       }
       .padding([.trailing, .leading], 15)
+      .padding([.top], 10)
     }
     .cornerRadius(6)
     .padding([.trailing], 32)
