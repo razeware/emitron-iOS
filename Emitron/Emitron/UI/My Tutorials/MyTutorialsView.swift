@@ -38,6 +38,7 @@ enum MyTutorialsState: String {
 
 struct MyTutorialView: View {
   
+  @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -98,6 +99,13 @@ struct MyTutorialView: View {
   private var inProgressContentsView: some View {
     let progressions = progressionsMC.data.filter {  $0.percentComplete > 0 && !$0.finished }
     let dataToDisplay = progressions.compactMap { $0.content }
+    dataToDisplay.forEach { model in
+      domainsMC.data.forEach { domain in
+        
+        print("content name: \(model.name) & domain name: \(domain.name)")
+      }
+    }
+    
     return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
   
@@ -118,7 +126,8 @@ struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
     let progressionsMC = DataManager.current!.progressionsMC
     let bookmarksMC = DataManager.current!.bookmarksMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
+    let domainsMC = DataManager.current!.domainsMC
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC)
   }
 }
 #endif
