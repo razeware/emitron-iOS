@@ -193,11 +193,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { shouldDownload in
-            if shouldDownload {
-              self.callback?(.save, partialContent)
-            }
-          })
+          self.cardView(content: partialContent)
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
         }
@@ -218,11 +214,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { shouldDownload in
-            if shouldDownload {
-              self.callback?(.save, partialContent)
-            }
-          })
+          self.cardView(content: partialContent)
             .padding([.leading], 20)
             .padding([.top, .bottom], 10)
         }
@@ -232,21 +224,12 @@ struct ContentListView: View {
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
       .background(self.bgColor)
   }
-  
-  private var actionSheet: ActionSheet {
-    return showActionSheet(for: .cancel) { action in
-      if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-        self.downloadsMC.cancelDownload(with: content)
-      }
-    }
-  }
 
-  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
+  private func cardView(content: ContentDetailsModel) -> some View {
     let viewModel = CardViewModel.transform(content, cardViewType: .default)
     
     return CardView(model: viewModel,
-                    contentScreen: contentScreen,
-                    onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
+                    contentScreen: contentScreen).environmentObject(self.downloadsMC)
   }
 
   private var emptyView: some View {

@@ -31,19 +31,21 @@ import SwiftUI
 private struct Layout {
   static let line: CGFloat = 5.0
   static let frame: CGFloat = 19.0
-  static let endProgress: CGFloat = 1.0
+  static let endProgress: CGFloat = 0.0
 }
 
 struct CircularProgressBar: View {
   
+  @State var isCollection = false
   @State var progress: CGFloat
   @State var spinCircle = false
   
   var body: some View {
     Image("downloadLoading")
+    .foregroundColor(Color.coolGrey)
     .overlay(circleOverlay)
     .onAppear {
-      while self.progress <= 1.0 {
+      while self.progress > 0.0 {
         self.spinCircle = true
         return
       }
@@ -54,16 +56,17 @@ struct CircularProgressBar: View {
   
   var circleOverlay: some View {
     return Circle()
-      .trim(from: 0, to: spinCircle ? progress : Layout.endProgress)
+      .trim(from: 0.0, to: spinCircle ? progress : Layout.endProgress)
       .stroke(Color.appGreen, lineWidth: Layout.line)
       .frame(width: Layout.frame, height: Layout.frame)
-      .rotationEffect(.degrees(-360), anchor: .center)
-      .animation(Animation.easeIn(duration: spinCircle ? 60 : 0))
+      // FJ FIX make progress UP not count down
+      .rotationEffect(.degrees(-90), anchor: .center)
+      .animation(Animation.easeIn(duration: spinCircle ? isCollection ? 60 : 30 : 0))
   }
 }
 
 struct CircularProgressIndicator_Previews: PreviewProvider {
   static var previews: some View {
-    CircularProgressBar(progress: 1.0)
+    CircularProgressBar(progress: 0.0)
   }
 }

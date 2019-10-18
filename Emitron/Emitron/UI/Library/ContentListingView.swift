@@ -91,6 +91,9 @@ struct ContentListingView: View {
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
+    .actionSheet(isPresented: $showingSheet) {
+      actionSheet
+    }
 
     return scrollView
   }

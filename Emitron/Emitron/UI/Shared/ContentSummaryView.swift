@@ -179,7 +179,7 @@ struct ContentSummaryView: View {
             return AnyView(image)
         }
 
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
 
       } else {
         // Only show progress on model that is currently being downloaded
@@ -187,8 +187,8 @@ struct ContentSummaryView: View {
           downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
             return AnyView(image)
         }
-
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+        
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
 
     default:

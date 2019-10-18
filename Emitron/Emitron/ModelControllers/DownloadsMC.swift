@@ -72,7 +72,7 @@ class DownloadsMC: NSObject, ObservableObject {
   var episodesCounter: Int = 1
   var totalNum: Double = 0
   var numGroupsCounter: Double = 0
-  @Published var collectionProgress: CGFloat = 0.0
+  @Published var collectionProgress: CGFloat = 1.0
   var activeDownloads = [ContentDetailsModel]()
   var downloaded = [ContentDetailsModel]()
   var cancelDownload = false
@@ -236,16 +236,6 @@ class DownloadsMC: NSObject, ObservableObject {
                                   delegate: self,
                                   delegateQueue: nil)
     
-    if content.groups.isEmpty {
-      DataManager.current!.contentsMC.getContentSummary(with: content.id) { detailsModel in
-        self.handleSaving(with: detailsModel)
-      }
-    } else {
-      handleSaving(with: content)
-    }
-  }
-  
-  private func handleSaving(with content: ContentDetailsModel) {
     totalNum = Double(content.groups.count)
     numGroupsCounter = Double(content.groups.count)
 
@@ -267,7 +257,7 @@ class DownloadsMC: NSObject, ObservableObject {
       }
     }
   }
-
+  
   func saveParent(with content: ContentDetailsModel) {
     downloadedContent = content
     episodesCounter += 1
@@ -565,7 +555,7 @@ extension DownloadsMC: URLSessionDownloadDelegate {
     let progress = CGFloat(bytesWritten)/CGFloat(totalBytesExpectedToWrite)
     DispatchQueue.main.async {
       if let model = self.downloadedModel, !model.content.isInCollection {
-        self.updateModel(with: model.content.id, progress: 1.0 - progress)
+        self.updateModel(with: model.content.id, progress: progress)
       }
     }
   }

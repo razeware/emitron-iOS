@@ -38,7 +38,7 @@ class DownloadModel {
   var resumeData: Data?
   var progress: Double = 0
   var localPath: URL
-  @Published var downloadProgress: CGFloat = 0.0
+  @Published var downloadProgress: CGFloat = 1.0
   var task: URLSessionDownloadTask?
 
   // MARK: - Initializers

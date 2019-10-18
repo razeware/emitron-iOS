@@ -87,16 +87,14 @@ extension CardViewModel {
 }
 
 struct CardView: SwiftUI.View {
-  var onRightIconTap: ((Bool) -> Void)?
   @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
   private let animation: Animation = .easeIn
 
-  init(model: CardViewModel?, contentScreen: ContentScreen, onRightIconTap: ((Bool) -> Void)? = nil) {
+  init(model: CardViewModel?, contentScreen: ContentScreen) {
     self.model = model
-    self.onRightIconTap = onRightIconTap
     self.contentScreen = contentScreen
   }
 
@@ -182,43 +180,11 @@ struct CardView: SwiftUI.View {
     return AnyView(stack)
   }
 
-  private func setUpImageAndProgress() -> AnyView {
+  private func setUpImageAndProgress() -> some View {
 
-    let image = Image(self.downloadImageName)
+    return Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
-      .onTapGesture {
-        self.download()
-    }
-
-    switch downloadsMC.state {
-    case .loading:
-
-      guard let model = model else {
-        return AnyView(image)
-      }
-
-      if model.isInCollection {
-        guard let downloadedContent = downloadsMC.downloadedContent,
-        downloadedContent.parentContent?.id == model.id else {
-          return AnyView(image)
-        }
-
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
-
-      } else {
-        // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }),
-              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-          return AnyView(image)
-        }
-
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
-      }
-
-    default:
-      return AnyView(image)
-    }
   }
 
   private var proTag: some SwiftUI.View {
@@ -233,11 +199,6 @@ struct CardView: SwiftUI.View {
           .foregroundColor(.white)
           .font(.uiUppercase)
     }
-  }
-
-  private func download() {
-    let success = downloadImageName != DownloadImageName.inActive
-    onRightIconTap?(success)
   }
 
   private func loadImage() {
@@ -330,7 +291,7 @@ struct CardView: SwiftUI.View {
 struct CardView_Previews: PreviewProvider {
   static var previews: some SwiftUI.View {
     let cardModel = CardViewModel.transform(ContentDetailsModel.test, cardViewType: .default)!
-    return CardView(model: cardModel, contentScreen: .library, onRightIconTap: nil)
+    return CardView(model: cardModel, contentScreen: .library)
   }
 }
 #endif

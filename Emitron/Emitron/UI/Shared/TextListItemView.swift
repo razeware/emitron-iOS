@@ -81,7 +81,7 @@ struct TextListItemView: View {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
 
       } else {
         // Only show progress on model that is currently being downloaded
@@ -90,7 +90,7 @@ struct TextListItemView: View {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
       
     default:
