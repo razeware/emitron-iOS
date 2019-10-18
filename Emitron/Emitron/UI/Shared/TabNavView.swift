@@ -79,8 +79,7 @@ struct TabNavView: View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
-    let contentsMC = dataManager.contentsMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(contentsMC)
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
   
   private var downloadsView: some View {
