@@ -242,13 +242,6 @@ struct LibraryView: View {
 
     if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
-      if content.groups.isEmpty {
-        self.getContents(with: content) { details in
-          self.downloadsMC.saveCollection(with: details)
-        }
-      } else {
-        self.downloadsMC.saveCollection(with: content)
-      }
     } else {
       self.downloadsMC.saveDownload(with: content)
     }
