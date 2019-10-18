@@ -108,15 +108,15 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Public funcs
-  func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true) {
+  func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true, completion: ((Bool) -> Void)? = nil) {
     
-    print("FJ DELETING CONTENT: \(content.name)")
     let contentId: Int
     if let selectedDownload = data.first(where: { $0.content.videoID == content.videoID }) {
       contentId = selectedDownload.content.id
     } else if let parent = data.first(where: { $0.content.videoID == nil }) {
       contentId = parent.content.id
     } else {
+      completion?(false)
       return
     }
 
@@ -132,8 +132,8 @@ class DownloadsMC: NSObject, ObservableObject {
     
     // If content is not yet saved in files, only need to remove it from data 
     guard FileManager.default.fileExists(atPath: fileURL.path) else {
-      print("filename: \(fileName)")
       self.data.remove(at: index)
+      self.state = .hasData
       return
     }
 
@@ -143,65 +143,41 @@ class DownloadsMC: NSObject, ObservableObject {
       try FileManager.default.removeItem(at: fileURL)
       self.data.remove(at: index)
       
-      if let activeDownloadIndex = self.activeDownloads.firstIndex(where: { $0.id == contentId }) {
-        self.activeDownloads.remove(at: activeDownloadIndex)
-      }
-      print("FJ REMOVE: \(content.name)")
-      
       self.state = .hasData
       if showCallback {
         self.callback?(true)
       }
+      
+      completion?(true)
 
 
     } catch {
-      print("FJ FAILED TO REMOVE: \(content.name)")
       self.state = .failed
       if showCallback {
         self.callback?(false)
       }
+      
+      completion?(false)
     }
   }
 
   func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool, completion: (() -> Void)?) {
     content.groups.forEach { groupModel in
       groupModel.childContents.forEach { child in
-        guard let videoId = child.videoID else { return }
-
-        let fileName = "\(child.id).\(videoId).\(String.appExtension)"
-        guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
-              let index = data.firstIndex(where: { $0.content.videoID == child.videoID }) else { return }
-
-        self.state = .loading
-
-        do {
-          try FileManager.default.removeItem(at: fileURL)
-          self.data.remove(at: index)
-          
-          if let activeDownloadIndex = self.activeDownloads.firstIndex(where: { $0.videoID == child.videoID }) {
-            self.activeDownloads.remove(at: activeDownloadIndex)
-          }
-          print("FJ REMOVE: \(content.name)")
-          
-          self.state = .hasData
-
-        } catch {
-          print("FJ FAILED TO REMOVE: \(content.name)")
-          self.state = .failed
-          completion?()
-        }
+        
+        deleteDownload(with: child, showCallback: false)
       }
     }
 
     // delete parent content
     if let parent = self.data.first(where: { $0.content.parentContent?.id == content.parentContent?.id }) {
       print("FJ IS IN PARENT DELETE")
-      self.deleteDownload(with: parent.content, showCallback: showCallback)
-    }
-    
-    if activeDownloads.count == 0 {
-      print("COMPLETION DONE DELETING COL")
-      completion?()
+      deleteDownload(with: parent.content, showCallback: showCallback) { success in
+        if success {
+          print("COMPLETION DONE DELETING COL")
+          completion?()
+        }
+      }
     }
   }
 
@@ -302,7 +278,15 @@ class DownloadsMC: NSObject, ObservableObject {
     
     if content.isInCollection {
       deleteCollectionContents(withParent: content, showCallback: false) {
-        print("fj in cancel download completion: \(self.data.count) & self.activeDownloads: \(self.activeDownloads.count)")
+        self.activeDownloads.forEach { activeDownload in
+          let dataToDelete = self.data.filter { $0.content.id == activeDownload.id }
+          if dataToDelete.isEmpty {
+            self.activeDownloads.removeAll()
+            self.cancelDownload = false
+          } else if let download = self.data.first(where: { $0.content.id == activeDownload.id }) {
+            self.deleteDownload(with: download.content, showCallback: false)
+          }
+        }
       }
     } else {
       deleteDownload(with: content, showCallback: false)
@@ -499,17 +483,20 @@ class DownloadsMC: NSObject, ObservableObject {
         .log(additionalParams: nil)
         fatalError("Failed to create file.")
       }
-
-      print("canceL \(self.cancelDownload)")
+      
       if content.isInCollection == true {
         self.createDownloadModel(with: attachment, content: content, isDownloaded: true, localPath: fileURL)
-        self.episodesCounter -= 1
+        
+        // protect against weird timing
+        if self.episodesCounter > 0 {
+          self.episodesCounter -= 1
+          print("self.episodesCounter: \(self.episodesCounter)")
+        }
+        
         self.collectionProgress = CGFloat(1.0 - (self.numGroupsCounter/self.totalNum))
       }
 
       self.activeDownloads.append(content)
-      
-      print("FJ self.activeDownloads: \(self.activeDownloads.count) & data: \(self.data.count)")
 
       // check if sending content from saveCollection call
       if content.isInCollection && self.finishedDownloadingCollection {
