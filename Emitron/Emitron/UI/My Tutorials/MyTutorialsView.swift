@@ -38,6 +38,7 @@ enum MyTutorialsState: String {
 
 struct MyTutorialView: View {
   
+  @EnvironmentObject var contentsMC: ContentsMC
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -101,13 +102,14 @@ struct MyTutorialView: View {
     progressionsMC.data.forEach { model in
       if model.percentComplete > 0 && !model.finished, let content = model.content {
         content.progression = model
-        dataToDisplay.append(content)
+        
+        if let contentModel = contentsMC.data.first(where: { $0.id == content.id }) {
+          dataToDisplay.append(contentModel)
+        }
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
-    
-    return contentView
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
   
   private var completedContentsView: some View {
@@ -116,21 +118,33 @@ struct MyTutorialView: View {
     progressionsMC.data.forEach { model in
       if model.finished, let content = model.content {
         content.progression = model
-        dataToDisplay.append(content)
+        
+        if let contentModel = contentsMC.data.first(where: { $0.id == content.id }) {
+          dataToDisplay.append(contentModel)
+        } else {
+          // Not within data in ContentsMC, so won't get domain info
+          dataToDisplay.append(content)
+        }
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
-    
-    return contentView
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
   
   private var bookmarkedContentsView: some View {
-    let content = bookmarksMC.data.compactMap { $0.content }
-    let dataToDisplay = !content.isEmpty ? content : []
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    var dataToDisplay = [ContentDetailsModel]()
     
-    return contentView
+    bookmarksMC.data.forEach { model in
+      if let content = model.content {
+        content.bookmark = model
+        
+        if let contentModel = contentsMC.data.first(where: { $0.id == content.id }) {
+          dataToDisplay.append(contentModel)
+        }
+      }
+    }
+    
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
   }
 }
 
@@ -139,7 +153,8 @@ struct MyTutorialsView_Previews: PreviewProvider {
   static var previews: some View {
     let progressionsMC = DataManager.current!.progressionsMC
     let bookmarksMC = DataManager.current!.bookmarksMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
+    let contentsMC = DataManager.current!.contentsMC
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(contentsMC)
   }
 }
 #endif
