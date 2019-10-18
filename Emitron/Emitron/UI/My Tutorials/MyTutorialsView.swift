@@ -96,12 +96,14 @@ struct MyTutorialView: View {
   }
   
   private var inProgressContentsView: some View {
-    var dataToDisplay: [ContentDetailsModel] = []
+    var dataToDisplay = [ContentDetailsModel]()
     
-    dataToDisplay = []
-    let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
-    let contents = inProgressData.compactMap { $0.content }
-    dataToDisplay = contents
+    progressionsMC.data.forEach { model in
+      if model.percentComplete > 0 && !model.finished, let content = model.content {
+        content.progression = model
+        dataToDisplay.append(content)
+      }
+    }
     
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
     
@@ -109,11 +111,14 @@ struct MyTutorialView: View {
   }
   
   private var completedContentsView: some View {
-    var dataToDisplay: [ContentDetailsModel] = []
+    var dataToDisplay = [ContentDetailsModel]()
     
-    let completedData = progressionsMC.data.filter { $0.finished == true }
-    let contents = completedData.compactMap { $0.content }
-    dataToDisplay = contents
+    progressionsMC.data.forEach { model in
+      if model.finished, let content = model.content {
+        content.progression = model
+        dataToDisplay.append(content)
+      }
+    }
     
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
     
@@ -121,9 +126,8 @@ struct MyTutorialView: View {
   }
   
   private var bookmarkedContentsView: some View {
-    var dataToDisplay: [ContentDetailsModel] = []
-
-      dataToDisplay = bookmarksMC.data.compactMap { $0.content }
+    let content = bookmarksMC.data.compactMap { $0.content }
+    let dataToDisplay = !content.isEmpty ? content : []
     let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
     
     return contentView
