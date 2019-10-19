@@ -37,6 +37,10 @@ struct DownloadsView: View {
   @ObservedObject var downloadsMC: DownloadsMC
   @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
+  var contentsMC: ContentsMC {
+    return DataManager.current!.contentsMC
+  }
+  
   var contents: [ContentDetailsModel] {
     return getContents()
   }
@@ -51,7 +55,10 @@ struct DownloadsView: View {
 
   private var contentView: some View {
     ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
-      self.handleAction(with: action, content: content)
+      self.contentsMC.getContentSummary(with: content.id) { details in
+        guard let details = details else { return }
+        self.handleAction(with: action, content: details)
+      }
     }
   }
 
@@ -66,7 +73,7 @@ struct DownloadsView: View {
     switch action {
     case .delete:
       if content.isInCollection {
-        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false, completion: nil)
+        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
       } else {
         downloadsMC.deleteDownload(with: content)
       }

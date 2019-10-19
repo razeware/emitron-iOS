@@ -190,7 +190,7 @@ struct LibraryView: View {
 
   private func delete(for content: ContentDetailsModel) {
     if content.isInCollection, let parent = content.parentContent {
-      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false, completion: nil)
+      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
     } else {
       downloadsMC.deleteDownload(with: content)
     }

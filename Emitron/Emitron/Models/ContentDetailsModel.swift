@@ -60,6 +60,8 @@ class ContentDetailsModel {
   var isDownloaded = false
   var progression: ProgressionModel?
   var bookmark: BookmarkModel?
+  var shouldCancel = false
+  var isDownloading = false
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -236,7 +238,6 @@ extension ContentDetailsModel {
 extension ContentDetailsModel {
   
   var isInCollection: Bool {
-    guard let parentContent = parentContent else { return false }
-    return parentContent.contentType == .collection
+    return contentType == .collection || contentType == .episode
   }
 }

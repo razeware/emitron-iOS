@@ -61,7 +61,7 @@ struct CircularProgressBar: View {
       .frame(width: Layout.frame, height: Layout.frame)
       // FJ FIX make progress UP not count down
       .rotationEffect(.degrees(-90), anchor: .center)
-      .animation(Animation.easeIn(duration: spinCircle ? isCollection ? 60 : 30 : 0))
+      .animation(Animation.easeIn(duration: spinCircle ? isCollection ? 45 : 30 : 0))
   }
 }
 
