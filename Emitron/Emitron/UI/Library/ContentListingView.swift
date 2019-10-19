@@ -34,6 +34,7 @@ struct ContentListingView: View {
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @ObservedObject var downloadsMC: DownloadsMC
+  @EnvironmentObject var contentsMC: ContentsMC
   var content: ContentDetailsModel
   var user: UserModel
   
@@ -51,17 +52,17 @@ struct ContentListingView: View {
   }
   
   var body: some View {
-
+    
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-
+          
           if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
           }
-
+          
           ContentSummaryView(callback: { (content, success) in
             if success {
               self.save(for: content)
@@ -69,7 +70,7 @@ struct ContentListingView: View {
               if self.showHudView {
                 self.showHudView.toggle()
               }
-
+              
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
@@ -78,7 +79,7 @@ struct ContentListingView: View {
             .padding([.bottom], 37)
         }
         .listRowInsets(EdgeInsets())
-
+        
         self.courseDetailsSection
       }
       .background(Color.paleGrey)
@@ -86,10 +87,19 @@ struct ContentListingView: View {
     .onAppear {
       self.loadImage()
     }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+    .navigationBarItems(trailing:
+      Group {
+        Button(action: {
+          self.refreshContentDetails()
+        }) {
+          Image(systemName: "arrow.clockwise")
+            .foregroundColor(.battleshipGrey)
+        }
+    })
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
     }
-
+    
     return scrollView
   }
   
@@ -107,15 +117,19 @@ struct ContentListingView: View {
     
     return allContents[currentIndex..<allContents.count].compactMap { $0 }
   }
-
+  
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
-
+      
       NavigationLink(destination:
         VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
-                  user: self.user)
+                  user: self.user,
+                  onDisappear: {
+                    self.refreshContentDetails()
+        })
+        
       ) {
         TextListItemView(contentSummary: model, buttonAction: { success in
           if success {
@@ -134,8 +148,8 @@ struct ContentListingView: View {
             self.isPresented = true
         }
       }
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -32.0)
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0)
     }
   }
   
@@ -152,9 +166,9 @@ struct ContentListingView: View {
     if progression.finished || progression.percentComplete == 0.0 {
       return contentSummaryMC.data.groups.first?.childContents.first ?? nil
     }
-    
-    // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
-    // This means that we return true for when the first progression is nil, or when the target > the progress
+      
+      // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
+      // This means that we return true for when the first progression is nil, or when the target > the progress
       
     else {
       let allContentModels = contentSummaryMC.data.groups.flatMap { $0.childContents }
@@ -243,11 +257,11 @@ struct ContentListingView: View {
       GeometryReader { geometry in
         HStack {
           self.playButton
-          //HACK: to center the button when it's in a NavigationLink
+            //HACK: to center the button when it's in a NavigationLink
             .padding(.leading, geometry.size.width/2 - 32.0)
         }
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -32.0)
+          //HACK: to remove navigation chevrons
+          .padding(.trailing, -32.0)
       }
     }
   }
@@ -288,6 +302,8 @@ struct ContentListingView: View {
     }
   }
   
+  //TODO: Honestly, this is probably not the right way to manage the data flow, because the view creating has
+  // side effects, but can't think of a cleaner way, other than callbacks...
   private var courseDetailsSection: AnyView {
     
     switch contentSummaryMC.state {
@@ -296,9 +312,15 @@ struct ContentListingView: View {
     case .hasData:
       return AnyView(coursesSection)
     case .loading:
-      return AnyView(loadingView)
+      if !contentSummaryMC.data.needsDetails {
+        return AnyView(coursesSection)
+      } else {
+        return AnyView(loadingView)
+      }
     case .initial:
-      contentSummaryMC.getContentSummary()
+      if contentSummaryMC.data.needsDetails {
+        refreshContentDetails()
+      }
       return AnyView(loadingView)
     }
   }
@@ -316,7 +338,7 @@ struct ContentListingView: View {
     })
   }
   
-  func loadImage() {
+  private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
     
@@ -332,6 +354,14 @@ struct ContentListingView: View {
           self.uiImage = img
         }
       }
+    }
+  }
+  
+  private func refreshContentDetails() {
+    self.contentSummaryMC.getContentSummary { model in
+      // Update the content in the global contentsMC, to keep all the data in sync
+      guard let index = self.contentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: model)
     }
   }
   

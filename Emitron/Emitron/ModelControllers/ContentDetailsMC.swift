@@ -62,13 +62,13 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     
     // If the partial content detail is actually the full details model; don't reload
     // If childContents > 0 AND there are groupd on the content, it's been fully loadeed
-    if partialContentDetail.groups.count > 0 {
+    if !partialContentDetail.needsDetails {
       self.state = .hasData
     }
   }
 
   // MARK: - Internal
-  func getContentSummary() {
+  func getContentSummary(completion: ((ContentDetailsModel) -> Void)? = nil) {
     if case(.loading) = state {
       return
     }
@@ -90,6 +90,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData
+        completion?(contentDetails)
       }
     }
   }

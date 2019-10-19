@@ -52,6 +52,15 @@ struct LibraryView: View {
     contentView
       .navigationBarTitle(
         Text(Constants.library))
+      .navigationBarItems(trailing:
+        Group {
+          Button(action: {
+            self.contentsMC.reloadContents()
+          }) {
+            Image(systemName: "arrow.clockwise")
+              .foregroundColor(.battleshipGrey)
+          }
+      })
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
     }

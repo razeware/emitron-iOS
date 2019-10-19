@@ -61,11 +61,17 @@ class ContentDetailsModel {
   var progression: ProgressionModel?
   var progressionId: Int?
   var bookmark: BookmarkModel?
+  
   var bookmarkId: Int? {
-    return bookmark?.id
+    bookmark?.id
   }
   var bookmarked: Bool {
-    return bookmark != nil
+    bookmark != nil
+  }
+  
+  // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
+  var needsDetails: Bool {
+    contentType == .collection && !(groups.count > 0)
   }
 
   // MARK: - Initializers
