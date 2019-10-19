@@ -154,12 +154,14 @@ struct ContentListingView: View {
   }
   
   private var contentModelForPlayButton: ContentDetailsModel? {
-    guard let progression = contentSummaryMC.data.progression else { return nil }
-    
     // If the content is an episode, rather than a collection, it will have a videoID associated with it,
     // so return the content itself
-    if contentSummaryMC.data.videoID != nil {
+    if contentSummaryMC.data.contentType != .collection {
       return contentSummaryMC.data
+    }
+    
+    guard let progression = contentSummaryMC.data.progression else {
+      return contentSummaryMC.data.groups.first?.childContents.first ?? nil
     }
     
     // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
@@ -167,7 +169,7 @@ struct ContentListingView: View {
       return contentSummaryMC.data.groups.first?.childContents.first ?? nil
     }
       
-      // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
+      // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
       // This means that we return true for when the first progression is nil, or when the target > the progress
       
     else {
@@ -187,6 +189,36 @@ struct ContentListingView: View {
   
   private var videoIdForPlayButton: Int {
     return contentModelForPlayButton?.videoID ?? 0
+  }
+  
+  private var continueButton: some View {
+    return NavigationLink(destination:
+      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
+                user: self.user))
+    {
+      ZStack {
+        Rectangle()
+          .frame(width: 155, height: 70)
+          .foregroundColor(.white)
+          .cornerRadius(9)
+        Rectangle()
+          .frame(width: 145, height: 60)
+          .foregroundColor(.appBlack)
+          .cornerRadius(9)
+        
+        HStack {
+          Image("materialIconPlay")
+            .resizable()
+            .frame(width: 40, height: 40)
+            .foregroundColor(.white)
+          Text("Continue")
+            .foregroundColor(.white)
+            .font(.uiLabelBold)
+        }
+        //HACK: Beacuse the play button has padding on it
+        .padding([.leading], -7)
+      }
+    }
   }
   
   private var playButton: some View {
@@ -256,9 +288,15 @@ struct ContentListingView: View {
       
       GeometryReader { geometry in
         HStack {
-          self.playButton
+          if self.content.progress > 0.0 {
+            self.continueButton
+            //HACK: to center the button when it's in a NavigationLink
+              .padding(.leading, geometry.size.width/2 - 74.5)
+          } else {
+            self.playButton
             //HACK: to center the button when it's in a NavigationLink
             .padding(.leading, geometry.size.width/2 - 32.0)
+          }
         }
           //HACK: to remove navigation chevrons
           .padding(.trailing, -32.0)
