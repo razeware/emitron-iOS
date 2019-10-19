@@ -205,7 +205,8 @@ struct ContentListView: View {
               self.showHudView = true
             }
           }, onRightTap: {
-            self.toggleBookmark(model: partialContent)
+            // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
+            //self.toggleBookmark(model: partialContent)
           })
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
@@ -318,7 +319,7 @@ struct ContentListView: View {
   }
   
   func toggleBookmark(model: ContentDetailsModel) {
-    contentsMC.toggleBookmark(for: model)
+    DataManager.current?.contentsMC.toggleBookmark(for: model)
   }
 }
 

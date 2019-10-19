@@ -144,6 +144,7 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(_):
+          content.bookmark = nil
           completion(content)
         }
       }

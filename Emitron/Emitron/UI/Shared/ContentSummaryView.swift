@@ -44,6 +44,7 @@ struct ContentSummaryView: View {
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
     VStack(alignment: .leading) {
@@ -186,6 +187,11 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
+      
+      // Update the content in the global contentsMC, to re-render library view
+      guard let index = self.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: newModel)
+    }
   }
 }

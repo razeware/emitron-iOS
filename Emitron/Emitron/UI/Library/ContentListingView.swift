@@ -85,7 +85,6 @@ struct ContentListingView: View {
     }
     .onAppear {
       self.loadImage()
-      self.contentSummaryMC.getContentSummary()
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
@@ -293,10 +292,13 @@ struct ContentListingView: View {
     
     switch contentSummaryMC.state {
     case .failed:
-      return AnyView(Text("We have failed"))
+      return AnyView(reloadView)
     case .hasData:
       return AnyView(coursesSection)
-    case .initial, .loading:
+    case .loading:
+      return AnyView(loadingView)
+    case .initial:
+      contentSummaryMC.getContentSummary()
       return AnyView(loadingView)
     }
   }
@@ -306,6 +308,12 @@ struct ContentListingView: View {
     GeometryReader { geometry in
       ActivityIndicator()
     }
+  }
+  
+  private var reloadView: AnyView? {
+    AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
+      self.contentSummaryMC.getContentSummary()
+    })
   }
   
   func loadImage() {

@@ -193,4 +193,9 @@ class ContentsMC: NSObject, ObservableObject {
       self.state = .hasData
     }
   }
+  
+  func updateEntry(at index: Int, with model: ContentDetailsModel) {
+    data[index] = model
+    objectWillChange.send(())
+  }
 }
