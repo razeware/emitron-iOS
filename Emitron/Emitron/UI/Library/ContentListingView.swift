@@ -288,7 +288,8 @@ struct ContentListingView: View {
       
       GeometryReader { geometry in
         HStack {
-          if self.content.progress > 0.0 {
+          // If progress is between 0.0 and 100.0 show continue, otherwise show play
+          if self.content.progress > 0.0 && self.content.progress >= 100.0 {
             self.continueButton
             //HACK: to center the button when it's in a NavigationLink
               .padding(.leading, geometry.size.width/2 - 74.5)
