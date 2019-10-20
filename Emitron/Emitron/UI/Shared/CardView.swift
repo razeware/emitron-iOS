@@ -63,7 +63,8 @@ extension CardViewModel {
 
     let domains = content.domains
     let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
+    let subtitle = contentDomains.count > 1 ? "Multi-Platform" : contentDomains.first?.name ?? ""
+
 
     var progress: CGFloat = 0
     if let progression = content.progression {
@@ -131,14 +132,14 @@ struct CardView: SwiftUI.View {
             Text(model.subtitle)
               .font(.uiCaption)
               .lineLimit(nil)
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.contentText)
           }
 
           Text(model.description)
             .font(.uiCaption)
             .fixedSize(horizontal: false, vertical: true)
             .lineLimit(3)
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.contentText)
 
           HStack {
 
@@ -150,7 +151,7 @@ struct CardView: SwiftUI.View {
             Text(model.footnote)
               .font(.uiCaption)
               .lineLimit(1)
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.contentText)
 
             Spacer()
           }
@@ -162,15 +163,9 @@ struct CardView: SwiftUI.View {
         ProgressBarView(progress: model.progress)
         Rectangle()
           .frame(height: 1)
-          .foregroundColor(Color.paleBlue)
+          .foregroundColor(.separator)
       }
     }
-    .cornerRadius(6)
-
-    // TODO: If we want to get the card + dropshadow design back, uncomment this
-//    .background(Color.white)
-//    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-    
 
     return AnyView(stack)
   }
@@ -179,12 +174,12 @@ struct CardView: SwiftUI.View {
     return
       ZStack {
         Rectangle()
-          .foregroundColor(.appGreen)
+          .foregroundColor(.tagBackground)
           .cornerRadius(6)
           .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
 
         Text("PRO")
-          .foregroundColor(.white)
+          .foregroundColor(.tagForeground)
           .font(.uiUppercase)
     }
   }
@@ -230,7 +225,7 @@ struct CardView: SwiftUI.View {
 
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
-          .foregroundColor(.appBlack)
+          .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
           .lineLimit(nil)
 
@@ -250,7 +245,7 @@ struct CardView: SwiftUI.View {
 
       Text(detail)
         .font(.uiHeadline)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
 

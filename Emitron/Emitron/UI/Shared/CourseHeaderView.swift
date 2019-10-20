@@ -30,7 +30,6 @@ import SwiftUI
 
 struct CourseHeaderView: View {
   let name: String
-  let color: Color
   
   var body: some View {
     Text(name)
@@ -41,7 +40,7 @@ struct CourseHeaderView: View {
 #if DEBUG
 struct CourseHeaderView_Previews: PreviewProvider {
     static var previews: some View {
-        CourseHeaderView(name: "Intro", color: .red)
+        CourseHeaderView(name: "Intro")
     }
 }
 #endif

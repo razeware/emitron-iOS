@@ -40,7 +40,7 @@ struct DownloadsView: View {
   var contentsMC: ContentsMC {
     return DataManager.current!.contentsMC
   }
-  
+
   var contents: [ContentDetailsModel] {
     return getContents()
   }
@@ -50,11 +50,12 @@ struct DownloadsView: View {
       contentView
       exploreButton
     }
+    .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
   }
 
   private var contentView: some View {
-    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.contentsMC.getContentSummary(with: content.id) { details in
         guard let details = details else { return }
         self.handleAction(with: action, content: details)
@@ -65,7 +66,7 @@ struct DownloadsView: View {
   private func getContents() -> [ContentDetailsModel] {
     var contents = [ContentDetailsModel]()
     let downloadedContents = downloadsMC.data.map { $0.content }
-    
+
     downloadedContents.forEach { download in
       if download.contentType != .episode {
         contents.append(download)
@@ -74,7 +75,7 @@ struct DownloadsView: View {
           contents.append(download)
       }
     }
-    
+
     return !contents.isEmpty ? contents : []
   }
 

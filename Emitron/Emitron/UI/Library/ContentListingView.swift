@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import UIKit
 
 struct ContentListingView: View {
 
@@ -80,10 +81,10 @@ struct ContentListingView: View {
             .padding([.bottom], 37)
         }
         .listRowInsets(EdgeInsets())
+        .listRowBackground(Color.backgroundColor)
 
         self.courseDetailsSection
       }
-      .background(Color.paleGrey)
     }
     .onAppear {
       self.loadImage()
@@ -97,6 +98,8 @@ struct ContentListingView: View {
     }
 
     return scrollView
+      .navigationBarTitle(Text(content.name), displayMode: .inline)
+      .background(Color.backgroundColor)
   }
   
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
@@ -143,6 +146,7 @@ struct ContentListingView: View {
       //HACK: to remove navigation chevrons
       .padding(.trailing, -32.0)
     }
+    .listRowBackground(Color.backgroundColor)
   }
 
   private var contentModelForPlayButton: ContentDetailsModel? {
@@ -219,16 +223,15 @@ struct ContentListingView: View {
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
           
-          Section(header: CourseHeaderView(name: group.name, color: .white)
-            .background(Color.white)) {
+          Section(header: CourseHeaderView(name: group.name)) {
               self.episodeListing(data: group.childContents)
-              //self.modalEpisodeListing(data: group.childContents)
           }
         }
       } else {
         self.episodeListing(data: groups.first!.childContents)
       }
     }
+    .listRowBackground(Color.backgroundColor)
     
     return AnyView(sections)
   }

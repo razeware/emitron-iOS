@@ -51,23 +51,23 @@ struct CheckmarkView: View {
         ZStack(alignment: .center) {
           Rectangle()
             .frame(maxWidth: 20, maxHeight: 20)
-            .foregroundColor(Color.appGreen)
+            .foregroundColor(Color.accent)
           
           Image("checkmark")
             .resizable()
             .frame(maxWidth: 15, maxHeight: 17)
-            .foregroundColor(Color.white)
+            .foregroundColor(Color.buttonText)
         }
         .cornerRadius(6)
       } else {
         ZStack {
           RoundedRectangle(cornerRadius: outerRadius)
           .frame(maxWidth: outerSide, maxHeight: outerSide)
-          .foregroundColor(Color.coolGrey)
+          .foregroundColor(Color.borderColor)
           
           RoundedRectangle(cornerRadius: radiusRatio * innerSide)
           .frame(maxWidth: innerSide, maxHeight: innerSide)
-          .foregroundColor(Color.white)
+          .foregroundColor(Color.modalBackground)
         }
       }
     }

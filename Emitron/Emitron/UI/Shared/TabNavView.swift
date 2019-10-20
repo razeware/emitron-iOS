@@ -41,7 +41,6 @@ struct TabNavView: View {
       }.tabItem {
         Text(Constants.library)
         Image("library")
-          .foregroundColor(.appGreen)
       }
       .tag(0)
       
@@ -49,7 +48,7 @@ struct TabNavView: View {
         downloadsView
       }.tabItem {
         Text(Constants.downloads)
-        Image("downloadInactive")
+        Image("downloadActive")
       }
       .tag(1)
       
@@ -61,7 +60,9 @@ struct TabNavView: View {
         Image("myTutorials")
       }
       .tag(2)
-    }.edgesIgnoringSafeArea(.top)
+    }
+    .edgesIgnoringSafeArea(.top)
+    .background(Color.backgroundColor)
   }
   
   private var libraryView: some View {

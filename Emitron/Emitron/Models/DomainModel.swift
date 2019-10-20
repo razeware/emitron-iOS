@@ -60,6 +60,7 @@ class DomainModel: Equatable {
   private(set) var slug: String = ""
   private(set) var description: String = ""
   private(set) var level: DomainLevel = .none
+  private(set) var ordinal: Int = 0
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
@@ -67,6 +68,7 @@ class DomainModel: Equatable {
     self.name = jsonResource["name"] as? String ?? ""
     self.slug = jsonResource["slug"] as? String ?? ""
     self.description = jsonResource["description"] as? String ?? ""
+    self.ordinal = jsonResource["ordinal"] as? Int ?? 0
 
     if let domainLevel = DomainLevel(rawValue: jsonResource["level"] as? String ?? DomainLevel.none.rawValue) {
       self.level = domainLevel
