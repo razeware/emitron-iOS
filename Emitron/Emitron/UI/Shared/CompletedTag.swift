@@ -32,12 +32,12 @@ struct CompletedTag: View {
   var body: some View {
     ZStack {
       Rectangle()
-        .foregroundColor(.appGreen)
+        .foregroundColor(.accentTagBackground)
         .cornerRadius(6)
         .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
       
       Text("COMPLETED")
-        .foregroundColor(.white)
+        .foregroundColor(.accentTagForeground)
         .font(.uiUppercase)
     }
   }
