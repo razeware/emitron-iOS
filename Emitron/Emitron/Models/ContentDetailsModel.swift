@@ -221,7 +221,6 @@ class ContentDetailsModel {
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
     self.contentType = ContentType(rawValue: content.contentType) ?? .none
     self.duration = content.duration
-//    self.bookmarked = content.bookmarked
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkURL
     self.technologyTripleString = content.technologyTripleString
