@@ -65,7 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       window.rootViewController = UIHostingController(rootView: loginView)
       self.window = window
       // TODO: When a modifier is available this should be refactored
-      window.tintColor = UIColor.darkSeaGreen
+      window.tintColor = UIColor.accent
       
       window.makeKeyAndVisible()
     }
