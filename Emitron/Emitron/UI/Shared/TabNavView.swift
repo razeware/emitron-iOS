@@ -60,7 +60,9 @@ struct TabNavView: View {
         Image("myTutorials")
       }
       .tag(2)
-    }.edgesIgnoringSafeArea(.top)
+    }
+    .edgesIgnoringSafeArea(.top)
+    .background(Color.backgroundColor)
   }
   
   private var libraryView: some View {

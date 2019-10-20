@@ -45,7 +45,6 @@ struct MyTutorialView: View {
   
   var body: some View {
     contentView
-      //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
       .navigationBarTitle(Text(Constants.myTutorials))
       .navigationBarItems(trailing:
         Group {
@@ -53,7 +52,7 @@ struct MyTutorialView: View {
             self.settingsPresented = true
           }) {
             Image("settings")
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.iconButton)
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
@@ -74,8 +73,8 @@ struct MyTutorialView: View {
           .padding([.top], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
-      .background(Color.white)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+      .background(Color.backgroundColor)
+      .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
     )
   }
   
@@ -117,7 +116,7 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
     
     return AnyView(contentView)
   }

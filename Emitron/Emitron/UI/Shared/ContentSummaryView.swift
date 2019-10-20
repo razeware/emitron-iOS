@@ -52,7 +52,7 @@ struct ContentSummaryView: View {
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
@@ -70,6 +70,7 @@ struct ContentSummaryView: View {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .foregroundColor(.titleText)
       
       if contentSummaryMC.data.progression?.finished ?? false {
         CompletedTag()
@@ -77,7 +78,7 @@ struct ContentSummaryView: View {
         
         Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .padding([.top], 12)
       }
       
@@ -89,7 +90,7 @@ struct ContentSummaryView: View {
       
       Text(contentSummaryMC.data.description)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
@@ -99,7 +100,7 @@ struct ContentSummaryView: View {
       
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
@@ -130,7 +131,7 @@ struct ContentSummaryView: View {
   }
   
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
+    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .inactiveIcon : .activeIcon
     let image = Image(self.downloadImageName())
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)

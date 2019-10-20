@@ -47,27 +47,36 @@ struct FiltersHeaderView: View {
   
   var body: some View {
     VStack {
-      HStack {
-        Text(filterGroup.type.name)
-          .foregroundColor(.appBlack)
-          .font(.uiLabelBold)
-          .padding([.trailing], Layout.padding.textTrailing)
-        
-        Spacer()
-        
-        Button(action: {
-          self.isExpanded.toggle()
-        }) {
-          Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
-            .foregroundColor(.battleshipGrey)
-            .font(.uiLabelBold)
+      ZStack {
+        ZStack {
+          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+          .foregroundColor(Color.borderColor)
+          .frame(minHeight: 50)
+          
+          RoundedRectangle(cornerRadius: Layout.cornerRadius-1.5)
+          .foregroundColor(Color.listHeaderBackground)
+          .frame(minHeight: 46)
+          .padding(2)
         }
+        
+        HStack {
+          Text(filterGroup.type.name)
+            .foregroundColor(.titleText)
+            .font(.uiLabel)
+            .padding([.trailing], Layout.padding.textTrailing)
+          
+          Spacer()
+          
+          Button(action: {
+            self.isExpanded.toggle()
+          }) {
+            Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
+              .foregroundColor(.contentText)
+              .font(.uiLabelBold)
+          }
+        }
+        .padding(.all, Layout.padding.overall)
       }
-      .padding(.all, Layout.padding.overall)
-      .background(Color.white)
-      .cornerRadius(Layout.cornerRadius)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-      .frame(height: 50)
       
       if isExpanded {
         expandedView

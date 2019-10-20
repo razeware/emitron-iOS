@@ -60,6 +60,7 @@ struct CardView: SwiftUI.View {
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
               .padding([.trailing], 15)
+              .foregroundColor(.titleText)
             
             Spacer()
             
@@ -75,14 +76,14 @@ struct CardView: SwiftUI.View {
           Text(model.cardViewSubtitle)
             .font(.uiCaption)
             .lineLimit(nil)
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.contentText)
         }
         
         Text(model.description)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.contentText)
         
         
         HStack {
@@ -98,7 +99,7 @@ struct CardView: SwiftUI.View {
             Text(model.releasedAtDateTimeString)
               .font(.uiCaption)
               .lineLimit(1)
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.contentText)
           }
           
           Spacer()
@@ -123,7 +124,7 @@ struct CardView: SwiftUI.View {
         } else {
           Rectangle()
             .frame(height: 1)
-            .foregroundColor(Color.coolGrey)
+            .foregroundColor(.separator)
             .padding([.top, .bottom], 0)
             .cornerRadius(6)
         }
@@ -239,7 +240,7 @@ struct CardView: SwiftUI.View {
         
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
-          .foregroundColor(.appBlack)
+          .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
           .lineLimit(nil)
         
@@ -259,7 +260,7 @@ struct CardView: SwiftUI.View {
       
       Text(detail)
         .font(.uiHeadline)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
       

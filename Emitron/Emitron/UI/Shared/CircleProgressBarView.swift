@@ -44,13 +44,13 @@ struct CircularProgressBar: View {
     return ZStack {
       Circle()
         .trim(from: 0, to: Layout.endProgress)
-        .stroke(Color.coolGrey, lineWidth: Layout.line)
+        .stroke(Color.borderColor, lineWidth: Layout.line)
         .frame(width: Layout.frame, height: Layout.frame)
         .opacity(0.2)
       
       Circle()
         .trim(from: 0, to: spinCircle ? progress : Layout.endProgress)
-        .stroke(Color.appGreen, lineWidth: Layout.line)
+        .stroke(Color.accent, lineWidth: Layout.line)
         .frame(width: Layout.frame, height: Layout.frame)
         .rotationEffect(.degrees(360), anchor: .center)
         .animation(Animation.easeIn(duration: spinCircle ? 30 : 0))

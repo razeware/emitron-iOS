@@ -52,7 +52,7 @@ struct TitleDetailView: View {
       VStack {
         HStack {
           Text(self.title)
-            .foregroundColor(.appBlack)
+            .foregroundColor(.titleText)
             .font(.uiBodyAppleDefault)
             .padding([.leading,.trailing], Layout.padding)
           
@@ -64,17 +64,17 @@ struct TitleDetailView: View {
         
         Rectangle()
           .frame(height: 1)
-          .foregroundColor(Color.paleBlue)
+          .foregroundColor(Color.separator)
           .padding([.leading, .trailing], Layout.padding)
       }
     })
-    .background(Color.paleGrey)
+    .background(Color.modalBackground)
   }
   
   private func textOrToggleView() -> AnyView? {
     if let detail = detail, !isToggle {
       let textView = Text(detail)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .font(.uiBodyAppleDefault)
         .padding([.leading], Layout.padding)
         .padding([.trailing], Layout.smallPadding)
@@ -98,7 +98,7 @@ struct TitleDetailView: View {
         .resizable()
         .frame(maxWidth: 13, maxHeight: 13)
         .padding([.trailing], Layout.padding)
-        .foregroundColor(.coolGrey)
+        .foregroundColor(.iconButton)
       
       return AnyView(image)
       

@@ -36,11 +36,11 @@ enum MainButtonType {
   var color: Color {
     switch self {
     case .primary:
-      return .appGreen
+      return .primaryButtonBackground
     case .secondary:
-      return .appBlack
+      return .secondaryButtonBackground
     case .destructive:
-      return .copper
+      return .destructiveButtonBackground
     }
   }
   
@@ -93,7 +93,7 @@ struct MainButtonView: View {
         
         Text(title)
           .font(.uiButtonLabel)
-          .foregroundColor(.white)
+          .foregroundColor(.buttonText)
         
         Spacer()
         

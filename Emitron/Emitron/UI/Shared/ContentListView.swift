@@ -72,8 +72,8 @@ enum ContentScreen {
 
   var buttonColor: Color? {
     switch self {
-    case .downloads, .tips: return .appGreen
-    case .myTutorials: return .copper
+    case .downloads, .tips: return .accent
+    case .myTutorials: return .alarm
     default: return nil
     }
   }
@@ -88,7 +88,6 @@ struct ContentListView: View {
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentDetailsModel] = []
-  var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
@@ -98,8 +97,10 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+      // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
+      //.background(Color.backgroundColor)
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
     }
   }
 
@@ -166,13 +167,13 @@ struct ContentListView: View {
 
       Text("Something went wrong.")
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
 
       Text("Please try again.")
         .font(.uiLabelBold)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
       
@@ -212,9 +213,9 @@ struct ContentListView: View {
             .padding([.top, .bottom], 10)
         }
       }
-      .listRowBackground(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .background(self.bgColor)
+      .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
   }
@@ -249,9 +250,9 @@ struct ContentListView: View {
         }
       }
       .onDelete(perform: self.delete)
-      .listRowBackground(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .background(self.bgColor)
+      .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
   }
@@ -271,13 +272,13 @@ struct ContentListView: View {
 
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
 
       Text(contentScreen.detailMesage ?? "")
         .font(.uiLabelBold)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
       
@@ -326,7 +327,7 @@ struct ContentListView: View {
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], dataState: .hasData, totalContentNum: 5)
   }
 }
 #endif

@@ -129,12 +129,12 @@ struct TextListItemView: View {
     let numberView = ZStack {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
-        .foregroundColor(.brightGrey)
+        .foregroundColor(.secondaryButtonBackground)
         .cornerRadius(6)
       
       Text("\(contentSummary.index ?? 0)")
         .font(.uiButtonLabelSmall)
-        .foregroundColor(.white)
+        .foregroundColor(.buttonText)
     }
     .onTapGesture {
       self.toggleCompleteness()
@@ -143,12 +143,12 @@ struct TextListItemView: View {
     let completeView = ZStack(alignment: .center) {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide)
-        .foregroundColor(Color.appGreen)
+        .foregroundColor(Color.accent)
       
       Image("checkmark")
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
-        .foregroundColor(Color.white)
+        .foregroundColor(Color.buttonText)
     }
     .cornerRadius(6)
     
