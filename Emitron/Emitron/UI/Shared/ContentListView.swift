@@ -97,7 +97,8 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-      .background(Color.backgroundColor)
+      // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
+      //.background(Color.backgroundColor)
       .hud(isShowing: $showHudView, hudOption: $hudOption) {
         self.showHudView = false
     }
