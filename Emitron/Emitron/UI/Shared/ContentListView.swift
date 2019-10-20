@@ -220,8 +220,8 @@ struct ContentListView: View {
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(Color.backgroundColor)
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -38.0)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
   
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
