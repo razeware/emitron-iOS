@@ -34,10 +34,11 @@ struct LoginView: View {
   @State var showModal: Bool = false
   
   var body: some View {
-    return contentView()
+    return contentView
+      .background(Color.backgroundColor)
   }
   
-  private func contentView() -> AnyView {
+  private var contentView: AnyView {
     guard userMC.user == nil else {
       let guardpost = Guardpost.current
       let filters = DataManager.current!.filters
@@ -47,12 +48,38 @@ struct LoginView: View {
       return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
     }
     
-    return AnyView(
-      VStack {
-        Button(Constants.login) {
-          self.userMC.login()
-        }
-      })
+    return AnyView(loginView)
+  }
+  
+  private var loginView: some View {
+    VStack {
+      
+      Image("logo")
+        .padding([.top], 15)
+      
+      Spacer()
+      
+      Image("welcomeArtwork1")
+        .padding([.bottom], 50)
+      
+      Text("Watch anytime,\nanywhere")
+        .font(.uiTitle1)
+        .foregroundColor(.titleText)
+        .padding([.bottom], 15)
+        .multilineTextAlignment(.center)
+      
+      Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
+      
+      MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
+        self.userMC.login()
+      }
+      .padding([.bottom, .leading, .trailing], 18)
+    }
   }
 }
 
