@@ -72,7 +72,7 @@ struct FiltersHeaderView: View {
           }) {
             Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
               .foregroundColor(.contentText)
-              .font(.uiLabel)
+              .font(.uiLabelBold)
           }
         }
         .padding(.all, Layout.padding.overall)
@@ -89,14 +89,17 @@ struct FiltersHeaderView: View {
   }
   
   private var expandedView: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      ForEach(Array(filterGroup.filters), id: \.self) { filter in
-        TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
-          filter.isOn.toggle()
-          self.filters.all.update(with: filter)
-          self.filters.commitUpdates()
-        })
-      }
+    return
+      VStack(alignment: .leading, spacing: 12) {
+        
+        ForEach(Array(filterGroup.filters), id: \.self) { filter in
+          TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
+            filter.isOn.toggle()
+            self.filters.all.update(with: filter)
+            self.filters.commitUpdates()
+          })
+            .padding([.leading, .trailing], 10)
+        }
     }
   }
 }

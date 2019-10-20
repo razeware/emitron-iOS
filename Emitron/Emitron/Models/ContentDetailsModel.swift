@@ -42,7 +42,6 @@ class ContentDetailsModel {
   private(set) var contentType: ContentType = .none
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
-  private(set) var bookmarked: Bool = false
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
@@ -60,7 +59,20 @@ class ContentDetailsModel {
   var parentContent: ContentDetailsModel?
   var isDownloaded: Bool = false
   var progression: ProgressionModel?
+  var progressionId: Int?
   var bookmark: BookmarkModel?
+  
+  var bookmarkId: Int? {
+    bookmark?.id
+  }
+  var bookmarked: Bool {
+    bookmark != nil
+  }
+  
+  // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
+  var needsDetails: Bool {
+    contentType == .collection && !(groups.count > 0)
+  }
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -136,6 +148,7 @@ class ContentDetailsModel {
         self.groups = groups
       case "progression":
         let ids = relationship.data.compactMap { $0.id }
+        self.progressionId = ids.first
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
@@ -144,12 +157,15 @@ class ContentDetailsModel {
         let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
         let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
         self.bookmark = bookmarks?.first
+        // We can simply make a Bookmark with just an ID
+        if let id = ids.first, self.bookmark != nil {
+          self.bookmark = BookmarkModel(id: id)
+        }
       default:
         break
       }
     }
 
-    self.bookmarked = self.bookmark != nil
     self.url = jsonResource.links["self"]
   }
 
@@ -163,7 +179,6 @@ class ContentDetailsModel {
     self.difficulty = summaryModel.difficulty
     self.contentType = summaryModel.contentType
     self.duration = summaryModel.duration
-    self.bookmarked = summaryModel.bookmarked
     self.popularity = summaryModel.popularity
     self.cardArtworkURL = summaryModel.cardArtworkURL
     self.technologyTripleString = summaryModel.technologyTripleString
@@ -185,7 +200,6 @@ class ContentDetailsModel {
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
     self.contentType = ContentType(rawValue: content.contentType) ?? .none
     self.duration = content.duration.intValue
-    self.bookmarked = content.bookmarked
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkUrl
     self.technologyTripleString = content.technologyTripleString

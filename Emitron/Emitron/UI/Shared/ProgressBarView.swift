@@ -39,11 +39,19 @@ struct ProgressBarView: View {
   var body: some View {
     
     ZStack(alignment: .leading) {
+      
       GeometryReader { geometry in
+        Rectangle()
+          .frame(width: geometry.size.width, height: self.height)
+          .foregroundColor(.borderColor)
+          .cornerRadius(self.height/2)
+        
         HStack(alignment: .center) {
+          
           Rectangle()
             .frame(width: geometry.size.width * (self.progress/2), height: self.height)
             .foregroundColor(.accent)
+            .cornerRadius(self.height/2)
           
           if self.progress >= 1 {
             
@@ -52,6 +60,7 @@ struct ProgressBarView: View {
             Rectangle()
               .frame(width: geometry.size.width * (self.progress/2), height: self.height)
               .foregroundColor(.accent)
+              .cornerRadius(self.height/2)
           }
         }
         
@@ -63,11 +72,3 @@ struct ProgressBarView: View {
     }
   }
 }
-
-#if DEBUG
-struct ProgressView_Previews: PreviewProvider {
-  static var previews: some View {
-    ProgressBarView(progress: 0.5)
-  }
-}
-#endif

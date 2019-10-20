@@ -44,6 +44,7 @@ struct ContentSummaryView: View {
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
     VStack(alignment: .leading) {
@@ -57,7 +58,7 @@ struct ContentSummaryView: View {
         Spacer()
         
         if contentSummaryMC.data.professional {
-          proTag
+          ProTag()
         }
       }
       .padding([.top], 20)
@@ -71,15 +72,19 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
         .foregroundColor(.titleText)
       
-      Text(contentSummaryMC.data.releasedAtDateTimeString)
+      if contentSummaryMC.data.progression?.finished ?? false {
+        CompletedTag()
+      } else {
+        
+        Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .padding([.top], 12)
+      }
       
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
-        completedTag // If needed
       })
       .padding([.top], 15)
       
@@ -103,61 +108,26 @@ struct ContentSummaryView: View {
   }
   
   private var downloadButton: some View {
-    Button(action: {
-      self.download()
-    }) {
-      self.completeDownloadButton
+    completeDownloadButton
+      .onTapGesture {
+        self.download()
     }
   }
   
-  private var bookmarkButton: some View {
-    Button(action: {
-      self.bookmark()
-    }) {
-      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
-      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.inactiveIcon)
-      } else {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.activeIcon)
+  private var bookmarkButton: AnyView {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
+    
+    let imageName = contentSummaryMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    
+    return AnyView(
+      Image(imageName)
+        .resizable()
+        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+        .onTapGesture {
+          self.bookmark()
       }
-    }
-  }
-  
-  private var completedTag: AnyView? {
-    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
-    
-    let view = ZStack {
-      Rectangle()
-        .foregroundColor(.accentTagBackground)
-        .cornerRadius(6)
-        .frame(width: 90, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
-      
-      Text("COMPLETED")
-        .foregroundColor(.accentTagForeground)
-        .font(.uiUppercase)
-    }
-    
-    return AnyView(view)
-  }
-  
-  private var proTag: some View {
-    return
-      ZStack {
-        Rectangle()
-          .foregroundColor(.tagBackground)
-          .cornerRadius(6)
-          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-        
-        Text("PRO")
-          .foregroundColor(.tagForeground)
-          .font(.uiUppercase)
-    }
+    )
   }
   
   private var completeDownloadButton: some View {
@@ -218,6 +188,11 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
+      
+      // Update the content in the global contentsMC, to re-render library view
+      guard let index = self.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: newModel)
+    }
   }
 }
