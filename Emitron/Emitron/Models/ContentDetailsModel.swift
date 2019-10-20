@@ -185,7 +185,9 @@ class ContentDetailsModel {
     self.contributorString = summaryModel.contributorString
     self.videoID = summaryModel.videoID
     if let domainsMC = DataManager.current?.domainsMC {
-      self.domains = domainsMC.data.filter { summaryModel.domainIDs.contains($0.id) }
+      DispatchQueue.main.async {
+        self.domains = domainsMC.data.filter { summaryModel.domainIDs.contains($0.id) }
+      }
     }
   }
 

@@ -59,14 +59,6 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView()
       }
-    .onAppear {
-      switch self.state {
-      case .inProgress, .completed:
-        self.progressionsMC.loadContents()
-      case .bookmarked:
-        self.bookmarksMC.loadContents()
-      }
-    }
   }
 
   private var toggleControl: AnyView {
@@ -74,10 +66,13 @@ struct MyTutorialView: View {
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
           self.state = .inProgress
+          self.progressionsMC.loadContents()
         }, completedClosure: {
           self.state = .completed
+          self.progressionsMC.loadContents()
         }, bookmarkedClosure: {
           self.state = .bookmarked
+          self.bookmarksMC.loadContents()
         })
           .padding([.top], .sidePadding)
       }
@@ -99,10 +94,7 @@ struct MyTutorialView: View {
     let progressions = progressionsMC.data.filter {  $0.percentComplete > 0 && !$0.finished }
     let dataToDisplay = progressions.compactMap { $0.content }
     dataToDisplay.forEach { model in
-      domainsMC.data.forEach { domain in
-
-        print("content name: \(model.name) & domain name: \(domain.name)")
-      }
+      print("model domain: \(model.domains)")
     }
 
     return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
