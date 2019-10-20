@@ -84,7 +84,12 @@ struct DownloadsView: View {
     switch action {
     case .delete:
       if content.isInCollection {
-        downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
+        // if an episode, only delete the specific episode
+        if !downloadsMC.data.contains(where: { $0.content.id == content.parentContentId }) {
+          downloadsMC.deleteDownload(with: content)
+        } else {
+          downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
+        }
       } else {
         downloadsMC.deleteDownload(with: content)
       }
