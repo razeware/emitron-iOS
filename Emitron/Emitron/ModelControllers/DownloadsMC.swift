@@ -113,6 +113,8 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Public funcs
+  
+  // MARK: Delete
   func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true, completion: ((Bool) -> Void)? = nil) {
     
     let contentId: Int
@@ -235,6 +237,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
+  // MARK: Save
   func saveDownload(with content: ContentDetailsModel) {
     guard !cancelDownload, let videoID = content.videoID else { return }
 
@@ -271,7 +274,6 @@ class DownloadsMC: NSObject, ObservableObject {
     }
     
     downloadedContent = content
-    content.isDownloading = true
 
     if content.isInCollection {
       self.loadCollectionVideoStream(of: content, localPath: destinationUrl)
@@ -325,11 +327,11 @@ class DownloadsMC: NSObject, ObservableObject {
 
     downloadedContent = content
     episodesCounter += 1
-    content.isDownloading = true
     saveNewDocument(with: destinationUrl, location: destinationUrl, content: content, attachment: nil, completion: nil)
   }
 
-  func cancelDownload(with content: ContentDetailsModel) {
+  // MARK: Cancel
+  func cancelDownload(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
     cancelDownload = true
     
     data.forEach { download in
@@ -398,7 +400,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   private func handleSavedCompletion(of content: ContentDetailsModel) {
-    print("cancelDownload: \(cancelDownload) & isDownloading: \(content.isDownloading) & shouldCancel: \(content.shouldCancel)")
+    print("cancelDownload: \(cancelDownload) & shouldCancel: \(content.shouldCancel)")
     
     guard content.shouldCancel else { return }
     
@@ -478,7 +480,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
       if let content = doc.videoData.content {
         
-        print("FJ lcal content: \(content.name)")
+        print("FJ lcal content: \(content.name) & parentContentId: \(content.parentContentId) & content id: \(content.id)")
         
         self.createDownloadModel(with: nil, content: content, isDownloaded: true, localPath: url)
       }
@@ -521,6 +523,9 @@ class DownloadsMC: NSObject, ObservableObject {
       completion?(content)
       return
     }
+    
+    // add the parent content id so can filter the downloadsView content 
+    content.parentContentId = content.parentContent?.id
 
     let doc = Document(fileURL: fileURL)
     doc.url = location
@@ -537,7 +542,6 @@ class DownloadsMC: NSObject, ObservableObject {
         fatalError("Failed to create file.")
       }
       
-      content.isDownloading = false
       content.shouldCancel = self.cancelDownload
       print("saved: \(content.name) & cancelDown: \(self.cancelDownload) & shoudlCancel: \(content.shouldCancel)")
       

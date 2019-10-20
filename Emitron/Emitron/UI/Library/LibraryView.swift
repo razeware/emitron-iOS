@@ -173,7 +173,7 @@ struct LibraryView: View {
         case .save: return
         
         case .cancel:
-          self.downloadsMC.cancelDownload(with: content)
+          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
         }
       }
 

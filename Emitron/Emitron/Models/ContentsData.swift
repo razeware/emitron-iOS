@@ -46,6 +46,7 @@ extension String {
   static let contentProfessionalKey: String = "Content.professional"
   static let contentDifficultyKey: String = "Content.difficulty"
   static let contentTypeKey: String = "Content.type"
+  static let contentParentContentId: String = "Content.parentContentId"
 }
 
 class ContentsData: NSObject, NSCoding {
@@ -66,8 +67,9 @@ class ContentsData: NSObject, NSCoding {
   var professional: Bool = false
   var difficulty: String = ""
   var contentType: String = ""
+  var parentContentId: Int?
   
-  init(id: Int, name: String, uri: String, description: String, releasedAt: Date, free: Bool, duration: Int, popularity: Double, bookmarked: Bool, cardArtworkURL: URL?, technologyTripleString: String, contributorString: String, videoID: Int?, index: Int?, professional: Bool, difficulty: String, contentType: String) {
+  init(id: Int, name: String, uri: String, description: String, releasedAt: Date, free: Bool, duration: Int, popularity: Double, bookmarked: Bool, cardArtworkURL: URL?, technologyTripleString: String, contributorString: String, videoID: Int?, index: Int?, professional: Bool, difficulty: String, contentType: String, parentContentId: Int?) {
     self.id = id
     self.name = name
     self.uri = uri
@@ -85,6 +87,7 @@ class ContentsData: NSObject, NSCoding {
     self.professional = professional
     self.difficulty = difficulty
     self.contentType = contentType
+    self.parentContentId = parentContentId
     super.init()
   }
   
@@ -103,6 +106,7 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(professional, forKey: .contentProfessionalKey)
     aCoder.encode(difficulty, forKey: .contentDifficultyKey)
     aCoder.encode(contentType, forKey: .contentTypeKey)
+    aCoder.encode(parentContentId, forKey: .contentParentContentId)
     
     if let cardArtworkURL = cardArtworkURL {
       aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
@@ -183,6 +187,10 @@ class ContentsData: NSObject, NSCoding {
     
     if let contentType = aDecoder.decodeObject(forKey: .contentTypeKey) as? String {
       self.contentType = contentType
+    }
+    
+    if let parentContentId = aDecoder.decodeObject(forKey: .contentParentContentId) as? Int {
+      self.parentContentId = parentContentId
     }
   }
 }

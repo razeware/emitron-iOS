@@ -63,9 +63,21 @@ struct DownloadsView: View {
   }
 
   private func getContents() -> [ContentDetailsModel] {
+    var contents = [ContentDetailsModel]()
     let downloadedContents = downloadsMC.data.map { $0.content }
-    let parentContent = downloadedContents.filter { $0.contentType != .episode }
-    return !parentContent.isEmpty ? parentContent : []
+    
+    downloadedContents.forEach { download in
+      if download.contentType != .episode {
+        contents.append(download)
+        // only show episodes in downloads view if the parent hasn't also been downloaded
+      } else if !downloadedContents.contains(where: { $0.id == download.parentContentId }) {
+          contents.append(download)
+      }
+      
+      print("id: \(download.id) & parent: \(download.parentContentId)")
+    }
+    
+    return !contents.isEmpty ? contents : []
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
@@ -82,7 +94,7 @@ struct DownloadsView: View {
       self.downloadsMC.saveDownload(with: content)
 
     case .cancel:
-      self.downloadsMC.cancelDownload(with: content)
+      self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
     }
   }
 

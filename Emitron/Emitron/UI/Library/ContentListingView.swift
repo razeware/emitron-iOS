@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ContentListingView: View {
 
+  @State private var isEpisodeOnly = false
   @State private var showingSheet = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
@@ -65,7 +66,7 @@ struct ContentListingView: View {
 
           ContentSummaryView(callback: { (content, success) in
             if success {
-              self.save(for: content)
+              self.save(for: content, isEpisodeOnly: false)
             } else {
               if self.showHudView {
                 self.showHudView.toggle()
@@ -124,7 +125,7 @@ struct ContentListingView: View {
       ) {
         TextListItemView(contentSummary: model, buttonAction: { success in
           if success {
-            self.save(for: model)
+            self.save(for: model, isEpisodeOnly: true)
           } else {
             if self.showHudView {
               self.showHudView.toggle()
@@ -275,7 +276,7 @@ struct ContentListingView: View {
   private var actionSheet: ActionSheet {
     return showActionSheet(for: .cancel) { action in
       if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-        self.downloadsMC.cancelDownload(with: content)
+        self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
         self.showingSheet = false
 //        self.showHudView = false
       }
@@ -339,18 +340,20 @@ struct ContentListingView: View {
     }
   }
 
-  private func save(for content: ContentDetailsModel) {
+  private func save(for content: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // update bool so can cancel either entire collection or episode based on bool
+    self.isEpisodeOnly = isEpisodeOnly
     print("downloadsMC.state: \(downloadsMC.state)")
-    guard downloadsMC.state != .loading else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
+//    guard downloadsMC.state != .loading else {
+//      if self.showHudView {
+//        // dismiss hud currently showing
+//        self.showHudView.toggle()
+//      }
+//
+//      self.hudOption = .error
+//      self.showHudView = true
+//      return
+//    }
 
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {
@@ -366,7 +369,9 @@ struct ContentListingView: View {
     // show sheet to cancel download
     self.showingSheet = true
 
-    if content.isInCollection {
+    if isEpisodeOnly {
+      self.downloadsMC.saveDownload(with: content)
+    } else if content.isInCollection {
       self.downloadsMC.saveCollection(with: content)
     } else {
       self.downloadsMC.saveDownload(with: content)

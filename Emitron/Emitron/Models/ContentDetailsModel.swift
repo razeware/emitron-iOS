@@ -61,7 +61,7 @@ class ContentDetailsModel {
   var progression: ProgressionModel?
   var bookmark: BookmarkModel?
   var shouldCancel = false
-  var isDownloading = false
+  var parentContentId: Int?
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -199,7 +199,6 @@ class ContentDetailsModel {
   /// - parameters:
   ///   - content: core data entity to transform into domain model
   init(_ content: ContentsData) {
-    print("content.id: \(content.id)")
     self.id = content.id ?? 0 
     self.name = content.name
     self.uri = content.uri
@@ -215,6 +214,7 @@ class ContentDetailsModel {
     self.technologyTripleString = content.technologyTripleString
     self.contributorString = content.contributorString
     self.videoID = content.videoID
+    self.parentContentId = content.parentContentId
   }
 }
 
