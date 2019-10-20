@@ -64,7 +64,8 @@ extension CardViewModel {
     
     let domains = content.domains
     let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
+    let subtitle = contentDomains.count > 1 ? "Multi-Platform" : contentDomains.first?.name ?? ""
+    
     
     var progress: CGFloat = 0
     if let progression = content.progression {
