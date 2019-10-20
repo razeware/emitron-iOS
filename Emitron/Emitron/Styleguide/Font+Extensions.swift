@@ -63,7 +63,7 @@ extension Font {
     return Font.system(size: 16.0).weight(.semibold)
   }
   static var uiLabel: Font {
-    return Font.system(size: 16.0).weight(.semibold)
+    return Font.system(size: 16.0)
   }
   static var uiButtonLabelSmall: Font {
     return Font.system(size: 13.0).weight(.semibold)

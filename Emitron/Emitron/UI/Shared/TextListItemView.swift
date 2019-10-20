@@ -55,7 +55,6 @@ struct TextListItemView: View {
         
         setUpImageAndProgress()
           .padding([.trailing], 20)
-
       }
       
       Text(contentSummary.duration.timeFromSeconds)
@@ -68,7 +67,6 @@ struct TextListItemView: View {
           .padding([.trailing], 20)
           .padding([.top], 10)
       }
-      
     }
   }
   
@@ -123,7 +121,6 @@ struct TextListItemView: View {
     buttonAction(success)
   }
 
-  
   private var doneCheckbox: AnyView {
     let numberView = ZStack {
       Rectangle()
