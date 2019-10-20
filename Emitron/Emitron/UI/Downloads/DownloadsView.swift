@@ -46,6 +46,7 @@ struct DownloadsView: View {
       contentView
       exploreButton
     }
+    .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
   }
   

@@ -97,8 +97,9 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+      .background(Color.backgroundColor)
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
     }
   }
 
