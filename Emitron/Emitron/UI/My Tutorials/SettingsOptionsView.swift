@@ -47,7 +47,7 @@ struct SettingsOptionsView: View {
         
         Text(self.selectedSettingsOption.title)
           .font(.uiHeadline)
-          .foregroundColor(.appBlack)
+          .foregroundColor(.titleText)
           .padding([.top], 20)
         
         Spacer()
@@ -59,7 +59,7 @@ struct SettingsOptionsView: View {
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
             .padding([.top], 20)
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.iconButton)
         }
       }
       
@@ -77,7 +77,7 @@ struct SettingsOptionsView: View {
       
       Spacer()
     }
-    .background(Color.paleGrey)
+    .background(Color.backgroundColor)
   }
   
   private func setCheckmark(for detailOption: String) -> String? {

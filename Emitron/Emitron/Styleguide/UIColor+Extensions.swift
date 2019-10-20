@@ -29,6 +29,10 @@
 import UIKit
 
 extension UIColor {
+  
+  static var backgroundColor: UIColor {
+    return UIColor(named: "backgroundColor")!
+  }
 
   static var appBlack: UIColor {
     return UIColor(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0, alpha: 1.0)
