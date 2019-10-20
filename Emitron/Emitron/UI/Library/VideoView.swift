@@ -53,6 +53,7 @@ struct VideoView: View {
   let contentDetails: [ContentDetailsModel]
   let user: UserModel
   var onDisappear: (() -> Void)?
+  @State private var settingsPresented: Bool = false
   
   var body: some View {
     VideoPlayerControllerRepresentable(with: contentDetails, user: user)
@@ -60,6 +61,18 @@ struct VideoView: View {
         // When the VideoView disappears, we trigger a reload of the content details, so that the
         // progressions are shown correctly.
         self.onDisappear?()
+    }
+    .navigationBarItems(trailing:
+      Group {
+        Button(action: {
+          self.settingsPresented = true
+        }) {
+          Image("settings")
+            .foregroundColor(.iconButton)
+        }
+    })
+      .sheet(isPresented: self.$settingsPresented) {
+        SettingsView(showLogoutButton: false)
     }
   }
 }

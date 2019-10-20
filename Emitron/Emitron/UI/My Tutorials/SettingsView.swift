@@ -77,6 +77,11 @@ struct SettingsView: View {
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+  private var showLogoutButton: Bool
+  
+  init(showLogoutButton: Bool) {
+    self.showLogoutButton = showLogoutButton
+  }
   
   var body: some View {
     VStack {
@@ -135,10 +140,12 @@ struct SettingsView: View {
       
       Spacer()
       
-      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-        Guardpost.current.logout()
+      if showLogoutButton {
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+          Guardpost.current.logout()
+        }
+        .padding([.bottom, .leading, .trailing], 18)
       }
-      .padding([.bottom, .leading, .trailing], 18)
     }
     .background(Color.modalBackground)
   }
