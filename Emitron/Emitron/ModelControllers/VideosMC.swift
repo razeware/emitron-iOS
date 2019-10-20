@@ -100,7 +100,7 @@ class VideosMC: NSObject, ObservableObject {
         .log(additionalParams: nil)
         
         //TODO: Stop playback, ask use to re-play the video
-      case .success(let _):
+      case .success(_): break
         //TODO: Anything to do when we get back usage statistics?
       }
     }
