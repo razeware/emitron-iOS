@@ -30,178 +30,141 @@ import SwiftUI
 import Kingfisher
 import UIKit
 
-enum CardViewType: Hashable {
-  case `default`
-  case bookmark
-}
-
-enum ImageType: Hashable {
-  case asset(UIImage)
-  case url(URL)
-}
-
-// Shuold be data model independent, so that we can transform any type of data into the cardViewModel data
-struct CardViewModel: Hashable {
-  let id: Int
-  let title: String
-  let subtitle: String
-  let description: String
-  let imageType: ImageType
-  let footnote: String
-  let type: CardViewType
-  let progress: CGFloat
-  let isPro: Bool
-  let isInCollection: Bool
-}
-
-// Transform data
-extension CardViewModel {
-  static func transform(_ content: ContentDetailsModel, cardViewType: CardViewType) -> CardViewModel? {
-    guard let domainData = DataManager.current?.domainsMC.data else {
-      return nil
-    }
-
-    let domains = content.domains
-    let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.count > 1 ? "Multi-Platform" : contentDomains.first?.name ?? ""
-
-
-    var progress: CGFloat = 0
-    if let progression = content.progression {
-      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
-    }
-
-    var imageType: ImageType
-
-    if let imageURL = content.cardArtworkURL {
-      imageType = ImageType.url(imageURL)
-    } else {
-      imageType = ImageType.asset(#imageLiteral(resourceName: "loading"))
-    }
-
-    let isInCollection = content.isInCollection
-
-    let cardModel = CardViewModel(id: content.id, title: content.name, subtitle: subtitle, description: content.description, imageType: imageType, footnote: content.releasedAtDateTimeString, type: cardViewType, progress: progress, isPro: content.professional, isInCollection: isInCollection)
-
-    return cardModel
-  }
-}
-
 struct CardView: SwiftUI.View {
+  private var onRightIconTap: (() -> Void)?
+  private var onLeftIconTap: ((Bool) -> Void)?
+  @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
-  private var model: CardViewModel?
+  private var model: ContentDetailsModel
   private let animation: Animation = .easeIn
-
-  init(model: CardViewModel?, contentScreen: ContentScreen) {
+  
+  init(model: ContentDetailsModel, contentScreen: ContentScreen, onLeftIconTap: ((Bool) -> Void)? = nil, onRightIconTap: (() -> Void)? = nil) {
     self.model = model
+    self.onRightIconTap = onRightIconTap
+    self.onLeftIconTap = onLeftIconTap
     self.contentScreen = contentScreen
   }
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
-    guard let model = model else {
-      let emptyView = AnyView(createEmptyView())
-      return emptyView
-    }
 
-    let stack = VStack {
-      VStack(alignment: .leading) {
-        VStack(alignment: .leading, spacing: 15) {
-          VStack(alignment: .leading, spacing: 0) {
-            HStack(alignment: .center) {
+    let stack = VStack(alignment: .leading) {
+      VStack(alignment: .leading, spacing: 15) {
+        VStack(alignment: .leading, spacing: 0) {
+          HStack(alignment: .center) {
 
-              Text(model.title)
-                .font(.uiTitle4)
-                .lineLimit(2)
-                .fixedSize(horizontal: false, vertical: true)
-                .padding([.trailing], 15)
+            Text(model.name)
+              .font(.uiTitle4)
+              .lineLimit(2)
+              .fixedSize(horizontal: false, vertical: true)
+              .padding([.trailing], 15)
+              .foregroundColor(.titleText)
 
-              Spacer()
+            Spacer()
 
-              Image(uiImage: self.image)
-                .resizable()
-                .frame(width: 60, height: 60)
-                .onAppear(perform: self.loadImage)
-                .transition(.opacity)
-                .cornerRadius(6)
-            }
-            .padding([.top], 10)
+            Image(uiImage: self.image)
+              .resizable()
+              .frame(width: 60, height: 60)
+              .onAppear(perform: self.loadImage)
+              .transition(.opacity)
+              .cornerRadius(6)
+          }
+          .padding([.top], 10)
 
-            Text(model.subtitle)
-              .font(.uiCaption)
-              .lineLimit(nil)
-              .foregroundColor(.contentText)
+          Text(model.cardViewSubtitle)
+            .font(.uiCaption)
+            .lineLimit(nil)
+            .foregroundColor(.contentText)
+        }
+
+        Text(model.description)
+          .font(.uiCaption)
+          .fixedSize(horizontal: false, vertical: true)
+          .lineLimit(2)
+          .foregroundColor(.contentText)
+
+
+        HStack {
+
+          if model.professional {
+            ProTag()
+              .padding([.trailing], 5)
           }
 
-          Text(model.description)
-            .font(.uiCaption)
-            .fixedSize(horizontal: false, vertical: true)
-            .lineLimit(3)
-            .foregroundColor(.contentText)
-
-          HStack {
-
-            if model.isPro {
-              proTag
-                .padding([.trailing], 5)
-            }
-
-            Text(model.footnote)
+          if model.progress >= 1 {
+            CompletedTag()
+          } else {
+            Text(model.releasedAtDateTimeString)
               .font(.uiCaption)
               .lineLimit(1)
               .foregroundColor(.contentText)
+          }
 
-            Spacer()
+          Spacer()
+
+          HStack(spacing: 18) {
+
+            bookmarkButton
           }
         }
-        .padding(15)
-
-        Spacer()
-
-        ProgressBarView(progress: model.progress)
-        Rectangle()
-          .frame(height: 1)
-          .foregroundColor(.separator)
+        .padding([.top], 20)
       }
+      .padding([.trailing, .leading], 15)
+
+      Group {
+        if model.progress > 0 && model.progress < 1 {
+          ProgressBarView(progress: model.progress)
+            .padding([.top, .bottom], 0)
+        } else {
+          Rectangle()
+            .frame(height: 1)
+            .foregroundColor(.separator)
+            .padding([.top, .bottom], 0)
+            .cornerRadius(6)
+        }
+      }
+      .padding([.trailing, .leading], 15)
+      .padding([.top], 10)
     }
+    .cornerRadius(6)
+    .padding([.trailing], 32)
+
+    // TODO: If we want to get the card + dropshadow design back, uncomment this
+    //    .background(Color.white)
+    //    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
 
     return AnyView(stack)
   }
 
-  private var proTag: some SwiftUI.View {
-    return
-      ZStack {
-        Rectangle()
-          .foregroundColor(.tagBackground)
-          .cornerRadius(6)
-          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+  private var bookmarkButton: AnyView? {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
 
-        Text("PRO")
-          .foregroundColor(.tagForeground)
-          .font(.uiUppercase)
-    }
+    guard model.bookmarked || self.contentScreen == ContentScreen.myTutorials else { return nil }
+    let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+
+    return AnyView(
+      Image(imageName)
+        .resizable()
+        .frame(width: 21, height: 21)
+        .onTapGesture {
+          self.bookmark()
+      }
+    )
+  }
+
+  private func download() {
+    let success = downloadImageName() != DownloadImageName.inActive
+    onLeftIconTap?(success)
   }
 
   private func loadImage() {
-    guard let model = model else { return }
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-    switch model.imageType {
-    case .asset(let img):
-      image = img
-    case .url(let url):
-      //      DispatchQueue.global().async {
-      //        let data = try? Data(contentsOf: url)
-      //        if let data = data,
-      //          let img = UIImage(data: data) {
-      //          DispatchQueue.main.async {
-      //            self.image = img
-      //          }
-      //        }
-      //      }
-      fishImage(url: url)
+    if let imageURL = model.cardArtworkURL {
+      fishImage(url: imageURL)
     }
   }
 
@@ -215,6 +178,19 @@ struct CardView: SwiftUI.View {
       case .failure:
         break
       }
+    }
+  }
+
+  private func downloadImageName() -> String {
+
+    if model.isInCollection {
+
+      return downloadsMC.data.contains { downloadModel in
+
+        return downloadModel.content.parentContentId == model.id
+        } ? DownloadImageName.inActive : DownloadImageName.active
+    } else {
+      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
@@ -254,13 +230,8 @@ struct CardView: SwiftUI.View {
 
     return AnyView(stack)
   }
-}
 
-#if DEBUG
-struct CardView_Previews: PreviewProvider {
-  static var previews: some SwiftUI.View {
-    let cardModel = CardViewModel.transform(ContentDetailsModel.test, cardViewType: .default)!
-    return CardView(model: cardModel, contentScreen: .library)
+  private func bookmark() {
+    onRightIconTap?()
   }
 }
-#endif

@@ -52,6 +52,15 @@ struct LibraryView: View {
     contentView
       .navigationBarTitle(
         Text(Constants.library))
+      .navigationBarItems(trailing:
+        Group {
+          Button(action: {
+            self.contentsMC.reloadContents()
+          }) {
+            Image(systemName: "arrow.clockwise")
+              .foregroundColor(.iconButton)
+          }
+      })
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
       .background(Color.backgroundColor)
@@ -114,7 +123,7 @@ struct LibraryView: View {
   private var numberAndSortView: some View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
-        .font(.uiLabel)
+        .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
       Spacer()
@@ -128,7 +137,7 @@ struct LibraryView: View {
             .foregroundColor(.textButtonText)
 
           Text(filters.sortFilter.name)
-            .font(.uiLabel)
+            .font(.uiLabelBold)
             .foregroundColor(.textButtonText)
         }
       }
@@ -177,14 +186,6 @@ struct LibraryView: View {
           self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
         }
       }
-
-    switch downloadsMC.state {
-      // Callling this simply to trigger view re-rendering
-      case .hasData: print("I have (new) data!")
-      case .failed: print("I have failed!")
-      case .initial: print("I am initial!")
-      case .loading: print("I am loading!")
-    }
 
     return AnyView(contentSectionView)
   }
