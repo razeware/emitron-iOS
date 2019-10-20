@@ -34,6 +34,7 @@ import AVKit
 class VideoPlayerController: AVPlayerViewController {
   
   private var content: [ContentDetailsModel]
+  private var currentContent: ContentDetailsModel?
   private var videosMC: VideosMC
   private var usageTimeObserverToken: Any?
   private var autoplayNextTimeObserverToken: Any?
@@ -78,6 +79,8 @@ class VideoPlayerController: AVPlayerViewController {
     super.viewWillDisappear(animated)
     player?.pause()
     
+    // DataManager.current?.contentsMC.updateEntry(at: <#T##Int#>, with: <#T##ContentDetailsModel#>)
+    
     //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
   }
   
@@ -95,8 +98,24 @@ class VideoPlayerController: AVPlayerViewController {
   }
   
   @objc private func playerDidFinishPlaying() {
+    
     DispatchQueue.main.async {
       self.playFromLocalIfPossible()
+    }
+  }
+  
+  private func updateContentsWithProgress(progress: CGFloat) {
+    // Locally store progress, and update contentsMC
+    
+    // If there's no progression, re-fetch the content
+    if currentContent?.progression == nil {
+      
+    }
+    
+    if let contentsMC = DataManager.current?.contentsMC,
+      let current = currentContent,
+      let firstIndex = contentsMC.data.firstIndex(where: { $0.id == current.id } ) {
+        DataManager.current?.contentsMC.updateEntry(at: firstIndex, with: current)
     }
   }
   
@@ -123,8 +142,9 @@ class VideoPlayerController: AVPlayerViewController {
   }
   
   private func playFromLocalIfPossible() {
-    guard let firstContent = content.first else { return }
-    
+    currentContent = content.first
+    guard let firstContent = currentContent else { return }
+        
     if let downloadsMC = DataManager.current?.downloadsMC,
       let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == firstContent.videoID }) {
       playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
@@ -226,6 +246,7 @@ class VideoPlayerController: AVPlayerViewController {
       let seconds = CMTimeGetSeconds(progressTime)
       guard let self = self, seconds < TimeInterval.oneDay else { return }
       
+      self.updateContentsWithProgress(progress: CGFloat(seconds))
       self.videosMC.reportUsageStatistics(progress: Int(seconds), contentID: contentID)
     })
   }

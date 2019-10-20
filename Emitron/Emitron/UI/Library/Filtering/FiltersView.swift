@@ -79,7 +79,7 @@ struct FiltersView: View {
         // Which ones are currently being applied to the content listing
         applyOrCloseButton()
       }
-      .padding([.leading, .trailing], 18)
+      .padding([.leading, .trailing, .bottom], 18)
     }
     .background(Color.modalBackground)
   }

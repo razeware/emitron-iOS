@@ -48,7 +48,7 @@ struct TabNavView: View {
         downloadsView
       }.tabItem {
         Text(Constants.downloads)
-        Image("downloadInactive")
+        Image("downloadTabInactive")
       }
       .tag(1)
       
