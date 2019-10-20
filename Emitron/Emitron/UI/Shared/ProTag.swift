@@ -32,12 +32,12 @@ struct ProTag: View {
   var body: some View {
     ZStack {
       Rectangle()
-        .foregroundColor(.appGreen)
+        .foregroundColor(.tagBackground)
         .cornerRadius(6)
         .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
       
       Text("PRO")
-        .foregroundColor(.white)
+        .foregroundColor(.tagForeground)
         .font(.uiUppercase)
     }
   }
