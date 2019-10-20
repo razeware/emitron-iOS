@@ -45,25 +45,25 @@ struct CardView: SwiftUI.View {
     self.onLeftIconTap = onLeftIconTap
     self.contentScreen = contentScreen
   }
-  
+
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
-    
+
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
         VStack(alignment: .leading, spacing: 0) {
           HStack(alignment: .center) {
-            
+
             Text(model.name)
               .font(.uiTitle4)
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
               .padding([.trailing], 15)
               .foregroundColor(.titleText)
-            
+
             Spacer()
-            
+
             Image(uiImage: self.image)
               .resizable()
               .frame(width: 60, height: 60)
@@ -72,27 +72,27 @@ struct CardView: SwiftUI.View {
               .cornerRadius(6)
           }
           .padding([.top], 10)
-          
+
           Text(model.cardViewSubtitle)
             .font(.uiCaption)
             .lineLimit(nil)
             .foregroundColor(.contentText)
         }
-        
+
         Text(model.description)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
           .foregroundColor(.contentText)
-        
-        
+
+
         HStack {
-          
+
           if model.professional {
             ProTag()
               .padding([.trailing], 5)
           }
-          
+
           if model.progress >= 1 {
             CompletedTag()
           } else {
@@ -101,22 +101,18 @@ struct CardView: SwiftUI.View {
               .lineLimit(1)
               .foregroundColor(.contentText)
           }
-          
+
           Spacer()
-          
+
           HStack(spacing: 18) {
-            
+
             bookmarkButton
-            
-            if self.contentScreen != ContentScreen.downloads {
-              self.setUpImageAndProgress()
-            }
           }
         }
         .padding([.top], 20)
       }
       .padding([.trailing, .leading], 15)
-      
+
       Group {
         if model.progress > 0 && model.progress < 1 {
           ProgressBarView(progress: model.progress)
@@ -134,21 +130,21 @@ struct CardView: SwiftUI.View {
     }
     .cornerRadius(6)
     .padding([.trailing], 32)
-    
+
     // TODO: If we want to get the card + dropshadow design back, uncomment this
     //    .background(Color.white)
     //    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-    
+
     return AnyView(stack)
   }
-  
+
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
+
     guard model.bookmarked || self.contentScreen == ContentScreen.myTutorials else { return nil }
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
-    
+
     return AnyView(
       Image(imageName)
         .resizable()
@@ -158,47 +154,12 @@ struct CardView: SwiftUI.View {
       }
     )
   }
-  
-  private func setUpImageAndProgress() -> AnyView {
-    
-    let image = Image(self.downloadImageName())
-      .resizable()
-      .frame(width: 19, height: 19)
-      .onTapGesture {
-        self.download()
-    }
-    
-    switch downloadsMC.state {
-    case .loading:
-      
-      if model.isInCollection {
-        guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.id == model.id else {
-            return AnyView(image)
-        }
-        
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
-        
-      } else {
-        // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == model.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-            return AnyView(image)
-        }
-        
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
-      }
-      
-    default:
-      return AnyView(image)
-    }
-  }
-  
+
   private func download() {
     let success = downloadImageName() != DownloadImageName.inActive
     onLeftIconTap?(success)
   }
-  
+
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
@@ -206,7 +167,7 @@ struct CardView: SwiftUI.View {
       fishImage(url: imageURL)
     }
   }
-  
+
   private func fishImage(url: URL) {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
@@ -219,57 +180,57 @@ struct CardView: SwiftUI.View {
       }
     }
   }
-  
+
   private func downloadImageName() -> String {
-    
+
     if model.isInCollection {
-      
+
       return downloadsMC.data.contains { downloadModel in
-        
+
         return downloadModel.content.parentContentId == model.id
         } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
       return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
-  
+
   private func createEmptyView() -> AnyView {
     let vStack = VStack {
       HStack {
         Spacer()
-        
+
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
           .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
           .lineLimit(nil)
-        
+
         Spacer()
       }
-      
+
       addDetailText()
     }
-    
+
     return AnyView(vStack)
   }
-  
+
   private func addDetailText() -> AnyView? {
     guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
       Spacer()
-      
+
       Text(detail)
         .font(.uiHeadline)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .lineLimit(nil)
-      
+
       Spacer()
     }
-    
+
     return AnyView(stack)
   }
-  
+
   private func bookmark() {
     onRightIconTap?()
   }

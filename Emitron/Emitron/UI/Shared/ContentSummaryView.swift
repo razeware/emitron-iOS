@@ -38,17 +38,17 @@ struct DownloadImageName {
 }
 
 struct ContentSummaryView: View {
-  
+
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @EnvironmentObject var contentsMC: ContentsMC
-  
+
   var body: some View {
     VStack(alignment: .leading) {
-      
+
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
@@ -56,13 +56,13 @@ struct ContentSummaryView: View {
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
-        
+
         if contentSummaryMC.data.professional {
           ProTag()
         }
       }
       .padding([.top], 20)
-      
+
       Text(contentSummaryMC.data.name)
         .font(.uiTitle1)
         .lineLimit(nil)
@@ -71,23 +71,23 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .foregroundColor(.titleText)
-      
+
       if contentSummaryMC.data.progression?.finished ?? false {
         CompletedTag()
       } else {
-        
+
         Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .padding([.top], 12)
       }
-      
+
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
       })
       .padding([.top], 15)
-      
+
       Text(contentSummaryMC.data.description)
         .font(.uiCaption)
         .foregroundColor(.contentText)
@@ -97,7 +97,7 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
-      
+
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.contentText)
@@ -106,20 +106,20 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
     }
   }
-  
+
   private var downloadButton: some View {
     completeDownloadButton
       .onTapGesture {
         self.download()
     }
   }
-  
+
   private var bookmarkButton: AnyView {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
+
     let imageName = contentSummaryMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
-    
+
     return AnyView(
       Image(imageName)
         .resizable()
@@ -129,67 +129,63 @@ struct ContentSummaryView: View {
       }
     )
   }
-  
+
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .inactiveIcon : .activeIcon
-    let image = Image(self.downloadImageName())
+    let imageColor: Color = downloadImageColor
+    let image = Image("downloadActive")
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)
       .foregroundColor(imageColor)
       .onTapGesture {
         self.download()
     }
-    
+
     switch downloadsMC.state {
     case .loading:
-      
+
       if contentSummaryMC.data.isInCollection {
-        
+
         guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.id == contentSummaryMC.data.id else {
+          downloadedContent.parentContent?.id == contentSummaryMC.data.id else {
             return AnyView(image)
         }
-        
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
-        
+
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
+
       } else {
         // Only show progress on model that is currently being downloaded
         guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
           downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
             return AnyView(image)
         }
-        
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
-      
+
     default:
       return AnyView(image)
     }
   }
-  
-  private func downloadImageName() -> String {
-    
+
+  private var downloadImageColor: Color {
+
     if contentSummaryMC.data.isInCollection {
-      
-      return downloadsMC.data.contains { downloadModel in        
-        return downloadModel.content.parentContentId == contentSummaryMC.data.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-      
+      return downloadsMC.data.contains { downloadModel in
+        return downloadModel.content.id == contentSummaryMC.data.id
+        } ? .inactiveIcon : .activeIcon
     } else {
-      
-      let content = ContentSummaryModel(contentDetails: contentSummaryMC.data)
-      return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0.content.id == contentSummaryMC.data.id }) ? .inactiveIcon : .activeIcon
     }
   }
-  
+
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageColor != .inactiveIcon
     callback?(contentSummaryMC.data, success)
   }
-  
+
   private func bookmark() {
     contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
-      
+
       // Update the content in the global contentsMC, to re-render library view
       guard let index = self.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
       self.contentsMC.updateEntry(at: index, with: newModel)
