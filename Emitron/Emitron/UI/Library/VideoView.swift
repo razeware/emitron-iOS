@@ -52,10 +52,15 @@ struct VideoView: View {
   
   let contentDetails: [ContentDetailsModel]
   let user: UserModel
+  var onDisappear: (() -> Void)?
   
   var body: some View {
     VideoPlayerControllerRepresentable(with: contentDetails, user: user)
-      .navigationBarTitle(contentDetails.first?.name ?? "")
+      .onDisappear {
+        // When the VideoView disappears, we trigger a reload of the content details, so that the
+        // progressions are shown correctly.
+        self.onDisappear?()
+    }
   }
 }
 
@@ -65,7 +70,7 @@ struct VideoView_Previews: PreviewProvider {
   static var previews: some View {
     let user = Guardpost.current.currentUser!
     let contentDetail = ContentDetailsModel.test
-    return VideoView(contentDetails: [contentDetail], user: user)
+    return VideoView(contentDetails: [contentDetail], user: user, onDisappear: nil)
   }
 }
 #endif

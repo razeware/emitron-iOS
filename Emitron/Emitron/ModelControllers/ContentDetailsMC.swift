@@ -43,8 +43,10 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private let bookmarksService: BookmarksService
+  private let bookmarksMC: BookmarksMC
   private(set) var data: ContentDetailsModel
+  
+  private var bookmarksSubscriber: AnyCancellable?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
@@ -54,13 +56,19 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
     self.data.isDownloaded = partialContentDetail.isDownloaded
-    self.bookmarksService = BookmarksService(client: self.client)
+    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
 
     super.init()
+    
+    // If the partial content detail is actually the full details model; don't reload
+    // If childContents > 0 AND there are groupd on the content, it's been fully loadeed
+    if !partialContentDetail.needsDetails {
+      self.state = .hasData
+    }
   }
 
   // MARK: - Internal
-  func getContentSummary() {
+  func getContentSummary(completion: ((ContentDetailsModel) -> Void)? = nil) {
     if case(.loading) = state {
       return
     }
@@ -82,45 +90,18 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .success(let contentDetails):
         self.data = contentDetails
         self.state = .hasData
+        completion?(contentDetails)
       }
     }
   }
-
-  func toggleBookmark(for bookmarkId: Int? = nil) {
-
-    state = .loading
-
-    if !data.bookmarked {
-      bookmarksService.makeBookmark(for: data.id) { [weak self] result in
-        guard let self = self else { return }
-
-        switch result {
-        case .failure(let error):
-          self.state = .failed
-          Failure
-          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(let bookmark):
-          self.data.bookmark = bookmark
-          self.state = .hasData
-        }
-      }
-    } else {
-      guard let id = bookmarkId else { return }
-      // For deleting the bookmark, we have to use the original bookmark id
-      bookmarksService.destroyBookmark(for: id) { [weak self] result in
-        guard let self = self else { return }
-
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-          self.state = .failed
-        case .success(_):
-          self.state = .hasData
-        }
-      }
+  
+  func toggleBookmark(for model: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
+    bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
+      guard let self = self else { return }
+      
+      self.data = newModel
+      self.objectWillChange.send(())
+      completion(newModel)
     }
   }
 }

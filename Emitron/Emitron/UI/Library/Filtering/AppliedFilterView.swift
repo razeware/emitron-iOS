@@ -35,9 +35,9 @@ enum AppliedFilterType {
   var color: Color {
     switch self {
     case .default:
-      return .brightGrey
+      return .secondaryButtonBackground
     case .destructive:
-      return .copper
+      return .destructiveButtonBackground
     }
   }
 }
@@ -83,18 +83,17 @@ struct AppliedFilterView: View {
     }) {
       HStack {
         Text(filter?.filterName ?? name ?? "None")
-          .foregroundColor(.white)
+          .foregroundColor(.buttonText)
           .font(.uiButtonLabelSmall)
           .padding([.trailing], Layout.padding.textTrailing)
         Image("closeWhite")
           .resizable()
           .frame(width: Layout.imageSize, height: Layout.imageSize)
-          .foregroundColor(.white)
+          .foregroundColor(.buttonText)
       }
       .padding(.all, Layout.padding.overall)
         .background(type.color)
         .cornerRadius(Layout.cornerRadius)
-        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
     }
   }
 }

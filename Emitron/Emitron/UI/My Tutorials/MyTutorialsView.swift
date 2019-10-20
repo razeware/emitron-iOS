@@ -37,16 +37,15 @@ enum MyTutorialsState: String {
 }
 
 struct MyTutorialView: View {
-  
+
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
-  
+
   var body: some View {
     contentView
-      //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
       .navigationBarTitle(Text(Constants.myTutorials))
       .navigationBarItems(trailing:
         Group {
@@ -54,7 +53,7 @@ struct MyTutorialView: View {
             self.settingsPresented = true
           }) {
             Image("settings")
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.iconButton)
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
@@ -69,7 +68,7 @@ struct MyTutorialView: View {
       }
     }
   }
-  
+
   private var toggleControl: AnyView {
     AnyView(
       VStack {
@@ -83,11 +82,11 @@ struct MyTutorialView: View {
           .padding([.top], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
-      .background(Color.white)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+      .background(Color.backgroundColor)
+      .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
     )
   }
-  
+
   private var contentView: some View {
     switch state {
     case .inProgress: return AnyView(inProgressContentsView)
@@ -95,29 +94,29 @@ struct MyTutorialView: View {
     case .bookmarked: return AnyView(bookmarkedContentsView)
     }
   }
-  
+
   private var inProgressContentsView: some View {
     let progressions = progressionsMC.data.filter {  $0.percentComplete > 0 && !$0.finished }
     let dataToDisplay = progressions.compactMap { $0.content }
     dataToDisplay.forEach { model in
       domainsMC.data.forEach { domain in
-        
+
         print("content name: \(model.name) & domain name: \(domain.name)")
       }
     }
-    
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
-  
+
   private var completedContentsView: some View {
     let progressions = progressionsMC.data.filter {  $0.finished }
     let dataToDisplay = progressions.compactMap { $0.content }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
-  
+
   private var bookmarkedContentsView: some View {
     let dataToDisplay = bookmarksMC.data.compactMap { $0.content }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
   }
 }
 

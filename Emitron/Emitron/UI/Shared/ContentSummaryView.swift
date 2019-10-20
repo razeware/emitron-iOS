@@ -44,6 +44,7 @@ struct ContentSummaryView: View {
   var callback: ((ContentDetailsModel, Bool) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  @EnvironmentObject var contentsMC: ContentsMC
   
   var body: some View {
     VStack(alignment: .leading) {
@@ -51,13 +52,13 @@ struct ContentSummaryView: View {
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
         
         if contentSummaryMC.data.professional {
-          proTag
+          ProTag()
         }
       }
       .padding([.top], 20)
@@ -69,22 +70,27 @@ struct ContentSummaryView: View {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .foregroundColor(.titleText)
       
-      Text(contentSummaryMC.data.releasedAtDateTimeString)
+      if contentSummaryMC.data.progression?.finished ?? false {
+        CompletedTag()
+      } else {
+        
+        Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .padding([.top], 12)
+      }
       
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
-        completedTag // If needed
       })
       .padding([.top], 15)
       
       Text(contentSummaryMC.data.description)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
@@ -94,7 +100,7 @@ struct ContentSummaryView: View {
       
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
@@ -102,65 +108,30 @@ struct ContentSummaryView: View {
   }
   
   private var downloadButton: some View {
-    Button(action: {
-      self.download()
-    }) {
-      self.completeDownloadButton
+    completeDownloadButton
+      .onTapGesture {
+        self.download()
     }
   }
   
-  private var bookmarkButton: some View {
-    Button(action: {
-      self.bookmark()
-    }) {
-      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
-      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.coolGrey)
-      } else {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.appGreen)
+  private var bookmarkButton: AnyView {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
+    
+    let imageName = contentSummaryMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    
+    return AnyView(
+      Image(imageName)
+        .resizable()
+        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+        .onTapGesture {
+          self.bookmark()
       }
-    }
-  }
-  
-  private var completedTag: AnyView? {
-    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
-    
-    let view = ZStack {
-      Rectangle()
-        .foregroundColor(.appGreen)
-        .cornerRadius(6)
-        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-      
-      Text("COMPLETED")
-        .foregroundColor(.white)
-        .font(.uiUppercase)
-    }
-    
-    return AnyView(view)
-  }
-  
-  private var proTag: some View {
-    return
-      ZStack {
-        Rectangle()
-          .foregroundColor(.appGreen)
-          .cornerRadius(6)
-          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-        
-        Text("PRO")
-          .foregroundColor(.white)
-          .font(.uiUppercase)
-    }
+    )
   }
   
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
+    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .inactiveIcon : .activeIcon
     let image = Image(self.downloadImageName())
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)
@@ -217,6 +188,11 @@ struct ContentSummaryView: View {
   }
   
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
+      
+      // Update the content in the global contentsMC, to re-render library view
+      guard let index = self.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: newModel)
+    }
   }
 }

@@ -47,27 +47,36 @@ struct FiltersHeaderView: View {
   
   var body: some View {
     VStack {
-      HStack {
-        Text(filterGroup.type.name)
-          .foregroundColor(.appBlack)
-          .font(.uiLabel)
-          .padding([.trailing], Layout.padding.textTrailing)
-        
-        Spacer()
-        
-        Button(action: {
-          self.isExpanded.toggle()
-        }) {
-          Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
-            .foregroundColor(.battleshipGrey)
-            .font(.uiLabel)
+      ZStack {
+        ZStack {
+          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+          .foregroundColor(Color.borderColor)
+          .frame(minHeight: 50)
+          
+          RoundedRectangle(cornerRadius: Layout.cornerRadius-1.5)
+          .foregroundColor(Color.listHeaderBackground)
+          .frame(minHeight: 46)
+          .padding(2)
         }
+        
+        HStack {
+          Text(filterGroup.type.name)
+            .foregroundColor(.titleText)
+            .font(.uiLabel)
+            .padding([.trailing], Layout.padding.textTrailing)
+          
+          Spacer()
+          
+          Button(action: {
+            self.isExpanded.toggle()
+          }) {
+            Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
+              .foregroundColor(.contentText)
+              .font(.uiLabelBold)
+          }
+        }
+        .padding(.all, Layout.padding.overall)
       }
-      .padding(.all, Layout.padding.overall)
-        .background(Color.white)
-        .cornerRadius(Layout.cornerRadius)
-        .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-        .frame(minHeight: 50)
       
       if isExpanded {
         expandedView
@@ -80,14 +89,17 @@ struct FiltersHeaderView: View {
   }
   
   private var expandedView: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      ForEach(Array(filterGroup.filters), id: \.self) { filter in
-        TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
-          filter.isOn.toggle()
-          self.filters.all.update(with: filter)
-          self.filters.commitUpdates()
-        })
-      }
+    return
+      VStack(alignment: .leading, spacing: 12) {
+        
+        ForEach(Array(filterGroup.filters), id: \.self) { filter in
+          TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
+            filter.isOn.toggle()
+            self.filters.all.update(with: filter)
+            self.filters.commitUpdates()
+          })
+            .padding([.leading, .trailing], 10)
+        }
     }
   }
 }

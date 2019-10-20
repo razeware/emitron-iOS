@@ -90,7 +90,7 @@ struct SettingsView: View {
         
         Text(Constants.settings)
           .font(.uiHeadline)
-          .foregroundColor(.appBlack)
+          .foregroundColor(.titleText)
           .padding([.top], 20)
         
         Spacer()
@@ -102,7 +102,7 @@ struct SettingsView: View {
               .frame(width: 27, height: 27, alignment: .center)
               .padding(.trailing, 18)
               .padding([.top], 20)
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.iconButton)
           }
         }
       }
@@ -138,9 +138,9 @@ struct SettingsView: View {
       MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
         Guardpost.current.logout()
       }
-      .padding([.bottom, .leading, .trailing], 20)
+      .padding([.bottom, .leading, .trailing], 18)
     }
-    .background(Color.paleGrey)
+    .background(Color.modalBackground)
   }
   
   private func populateDetail(at index: Int) -> String {

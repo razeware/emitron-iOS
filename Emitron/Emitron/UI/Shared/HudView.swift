@@ -47,8 +47,8 @@ enum HudOption {
   
   var color: Color {
     switch self {
-    case .success: return .appGreen
-    case .error: return .copper
+    case .success: return .accent
+    case .error: return .alarm
     }
   }
 }

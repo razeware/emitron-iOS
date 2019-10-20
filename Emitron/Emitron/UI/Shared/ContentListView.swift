@@ -72,8 +72,8 @@ enum ContentScreen {
 
   var buttonColor: Color? {
     switch self {
-    case .downloads, .tips: return .appGreen
-    case .myTutorials: return .copper
+    case .downloads, .tips: return .accent
+    case .myTutorials: return .alarm
     default: return nil
     }
   }
@@ -88,7 +88,6 @@ struct ContentListView: View {
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentDetailsModel] = []
-  var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
@@ -98,8 +97,10 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+      // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
+      //.background(Color.backgroundColor)
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
     }
   }
 
@@ -171,13 +172,13 @@ struct ContentListView: View {
 
       Text("Something went wrong.")
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
 
       Text("Please try again.")
-        .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .font(.uiLabelBold)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
       
@@ -198,7 +199,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
+          self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
             } else {
@@ -209,14 +210,19 @@ struct ContentListView: View {
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
+          }, onRightTap: {
+            // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
+            //self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
-      .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-      .background(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .background(Color.backgroundColor)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -230,7 +236,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { success in
+          self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
             } else {
@@ -241,23 +247,26 @@ struct ContentListView: View {
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
+          }, onRightTap: {
+            self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
       .onDelete(perform: self.delete)
-      .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-      .background(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .background(Color.backgroundColor)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
 
-  private func cardView(content: ContentDetailsModel, onRightTap: ((Bool) -> Void)?) -> some View {
-    let viewModel = CardViewModel.transform(content, cardViewType: .default)
-
-    return CardView(model: viewModel,
-                    contentScreen: contentScreen,
-                    onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
+  private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
+    AnyView(CardView(model: content,
+                     contentScreen: contentScreen,
+                     onLeftIconTap: onLeftTap,
+                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
 
   private var emptyView: some View {
@@ -268,13 +277,13 @@ struct ContentListView: View {
 
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
 
       Text(contentScreen.detailMesage ?? "")
-        .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .font(.uiLabelBold)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
       
@@ -286,8 +295,8 @@ struct ContentListView: View {
     VStack {
       headerView
       Spacer()
-      loadMoreView
     }
+    .overlay(ActivityIndicator())
   }
   
   private var reloadButton: AnyView? {
@@ -314,12 +323,16 @@ struct ContentListView: View {
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
+  
+  func toggleBookmark(model: ContentDetailsModel) {
+    DataManager.current?.contentsMC.toggleBookmark(for: model)
+  }
 }
 
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], dataState: .hasData, totalContentNum: 5)
   }
 }
 #endif

@@ -42,14 +42,15 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // TODO: When a modifier is available these should be refactored
     UITableView.appearance().separatorColor = .clear
+    UINavigationBar.appearance().backgroundColor = .backgroundColor
     
     UINavigationBar.appearance().largeTitleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.appBlack,
+      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
       NSAttributedString.Key.font: UIFont.uiLargeTitle
     ]
-    
+
     UINavigationBar.appearance().titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor.appBlack,
+      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
       NSAttributedString.Key.font: UIFont.uiHeadline
     ]
     
@@ -64,7 +65,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       window.rootViewController = UIHostingController(rootView: loginView)
       self.window = window
       // TODO: When a modifier is available this should be refactored
-      window.tintColor = UIColor.darkSeaGreen
+      window.tintColor = UIColor.accent
       
       window.makeKeyAndVisible()
     }

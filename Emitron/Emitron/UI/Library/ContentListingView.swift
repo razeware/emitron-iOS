@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import UIKit
 
 struct ContentListingView: View {
   
@@ -34,6 +35,7 @@ struct ContentListingView: View {
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @ObservedObject var downloadsMC: DownloadsMC
+  @EnvironmentObject var contentsMC: ContentsMC
   var content: ContentDetailsModel
   var user: UserModel
   
@@ -51,17 +53,17 @@ struct ContentListingView: View {
   }
   
   var body: some View {
-
+    
     let scrollView = GeometryReader { geometry in
       List {
         Section {
-
+          
           if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
           }
-
+          
           ContentSummaryView(callback: { (content, success) in
             if success {
               self.save(for: content)
@@ -69,7 +71,7 @@ struct ContentListingView: View {
               if self.showHudView {
                 self.showHudView.toggle()
               }
-
+              
               self.hudOption = success ? .success : .error
               self.showHudView = true
             }
@@ -78,20 +80,30 @@ struct ContentListingView: View {
             .padding([.bottom], 37)
         }
         .listRowInsets(EdgeInsets())
+        .listRowBackground(Color.backgroundColor)
 
         self.courseDetailsSection
       }
-      .background(Color.paleGrey)
     }
     .onAppear {
       self.loadImage()
-      self.contentSummaryMC.getContentSummary()
     }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
+    .navigationBarItems(trailing:
+      Group {
+        Button(action: {
+          self.refreshContentDetails()
+        }) {
+          Image(systemName: "arrow.clockwise")
+            .foregroundColor(.iconButton)
+        }
+    })
+      .hud(isShowing: $showHudView, hudOption: $hudOption) {
+        self.showHudView = false
     }
-
+    
     return scrollView
+      .navigationBarTitle(Text(content.name), displayMode: .inline)
+      .background(Color.backgroundColor)
   }
   
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
@@ -108,15 +120,19 @@ struct ContentListingView: View {
     
     return allContents[currentIndex..<allContents.count].compactMap { $0 }
   }
-
+  
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
     let onlyContentWithVideoID = data.filter { $0.videoID != nil }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
-
+      
       NavigationLink(destination:
         VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
-                  user: self.user)
+                  user: self.user,
+                  onDisappear: {
+                    self.refreshContentDetails()
+        })
+        
       ) {
         TextListItemView(contentSummary: model, buttonAction: { success in
           if success {
@@ -129,33 +145,36 @@ struct ContentListingView: View {
             self.hudOption = success ? .success : .error
             self.showHudView = true
           }
-        }, downloadsMC: self.downloadsMC)
+        }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(guardpost: Guardpost.current))
           
           .onTapGesture {
             self.isPresented = true
         }
       }
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -32.0)
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0)
     }
+    .listRowBackground(Color.backgroundColor)
   }
   
   private var contentModelForPlayButton: ContentDetailsModel? {
-    guard let progression = contentSummaryMC.data.progression else { return nil }
-    
     // If the content is an episode, rather than a collection, it will have a videoID associated with it,
     // so return the content itself
-    if contentSummaryMC.data.videoID != nil {
+    if contentSummaryMC.data.contentType != .collection {
       return contentSummaryMC.data
+    }
+    
+    guard let progression = contentSummaryMC.data.progression else {
+      return contentSummaryMC.data.groups.first?.childContents.first ?? nil
     }
     
     // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
     if progression.finished || progression.percentComplete == 0.0 {
       return contentSummaryMC.data.groups.first?.childContents.first ?? nil
     }
-    
-    // If the progressiong is more than 0%, start at the last consecutive video in a row that hasn't been completed
-    // This means that we return true for when the first progression is nil, or when the target > the progress
+      
+      // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
+      // This means that we return true for when the first progression is nil, or when the target > the progress
       
     else {
       let allContentModels = contentSummaryMC.data.groups.flatMap { $0.childContents }
@@ -174,6 +193,36 @@ struct ContentListingView: View {
   
   private var videoIdForPlayButton: Int {
     return contentModelForPlayButton?.videoID ?? 0
+  }
+  
+  private var continueButton: some View {
+    return NavigationLink(destination:
+      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
+                user: self.user))
+    {
+      ZStack {
+        Rectangle()
+          .frame(width: 155, height: 70)
+          .foregroundColor(.white)
+          .cornerRadius(9)
+        Rectangle()
+          .frame(width: 145, height: 60)
+          .foregroundColor(.appBlack)
+          .cornerRadius(9)
+        
+        HStack {
+          Image("materialIconPlay")
+            .resizable()
+            .frame(width: 40, height: 40)
+            .foregroundColor(.white)
+          Text("Continue")
+            .foregroundColor(.white)
+            .font(.uiLabelBold)
+        }
+        //HACK: Beacuse the play button has padding on it
+        .padding([.leading], -7)
+      }
+    }
   }
   
   private var playButton: some View {
@@ -214,16 +263,17 @@ struct ContentListingView: View {
       if groups.count > 1 {
         ForEach(groups, id: \.id) { group in
           
-          Section(header: CourseHeaderView(name: group.name, color: .white)
-            .background(Color.white)) {
+          Section(header: CourseHeaderView(name: group.name)) {
               self.episodeListing(data: group.childContents)
-              //self.modalEpisodeListing(data: group.childContents)
           }
         }
       } else {
-        self.episodeListing(data: groups.first!.childContents)
+        if groups.count > 0 {
+          self.episodeListing(data: groups.first!.childContents)
+        }
       }
     }
+    .listRowBackground(Color.backgroundColor)
     
     return AnyView(sections)
   }
@@ -241,12 +291,19 @@ struct ContentListingView: View {
       
       GeometryReader { geometry in
         HStack {
-          self.playButton
-          //HACK: to center the button when it's in a NavigationLink
+          // If progress is between 0.0 and 100.0 show continue, otherwise show play
+          if self.content.progress > 0.0 && self.content.progress >= 100.0 {
+            self.continueButton
+            //HACK: to center the button when it's in a NavigationLink
+              .padding(.leading, geometry.size.width/2 - 74.5)
+          } else {
+            self.playButton
+            //HACK: to center the button when it's in a NavigationLink
             .padding(.leading, geometry.size.width/2 - 32.0)
+          }
         }
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -32.0)
+          //HACK: to remove navigation chevrons
+          .padding(.trailing, -32.0)
       }
     }
   }
@@ -281,20 +338,31 @@ struct ContentListingView: View {
         
         Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
           .multilineTextAlignment(.center)
-          .font(.uiLabel)
+          .font(.uiLabelBold)
           .foregroundColor(.white)
           .lineLimit(3)
     }
   }
   
+  //TODO: Honestly, this is probably not the right way to manage the data flow, because the view creating has
+  // side effects, but can't think of a cleaner way, other than callbacks...
   private var courseDetailsSection: AnyView {
     
     switch contentSummaryMC.state {
     case .failed:
-      return AnyView(Text("We have failed"))
+      return AnyView(reloadView)
     case .hasData:
       return AnyView(coursesSection)
-    case .initial, .loading:
+    case .loading:
+      if !contentSummaryMC.data.needsDetails {
+        return AnyView(coursesSection)
+      } else {
+        return AnyView(loadingView)
+      }
+    case .initial:
+      if contentSummaryMC.data.needsDetails {
+        refreshContentDetails()
+      }
       return AnyView(loadingView)
     }
   }
@@ -306,7 +374,13 @@ struct ContentListingView: View {
     }
   }
   
-  func loadImage() {
+  private var reloadView: AnyView? {
+    AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
+      self.contentSummaryMC.getContentSummary()
+    })
+  }
+  
+  private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
     
@@ -322,6 +396,14 @@ struct ContentListingView: View {
           self.uiImage = img
         }
       }
+    }
+  }
+  
+  private func refreshContentDetails() {
+    self.contentSummaryMC.getContentSummary { model in
+      // Update the content in the global contentsMC, to keep all the data in sync
+      guard let index = self.contentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: model)
     }
   }
   

@@ -26,9 +26,9 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import UIKit
 
-extension ContentSummaryModel {
+extension ContentDetailsModel {
   var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
@@ -37,9 +37,28 @@ extension ContentSummaryModel {
     
     return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
   }
+  
+  var cardViewSubtitle: String {
+    guard let domainData = DataManager.current?.domainsMC.data else {
+      return ""
+    }
+    
+    let contentDomains = domainData.filter { domains.contains($0) }
+    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
+  
+    return subtitle
+  }
+  
+  var progress: CGFloat {
+    var progress: CGFloat = 0
+    if let progression = progression {
+      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
+    }
+    return progress
+  }
 }
 
-extension ContentDetailsModel {
+extension ContentSummaryModel {
   var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
