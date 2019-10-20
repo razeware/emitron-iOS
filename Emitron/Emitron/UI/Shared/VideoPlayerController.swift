@@ -78,10 +78,6 @@ class VideoPlayerController: AVPlayerViewController {
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     player?.pause()
-    
-    // DataManager.current?.contentsMC.updateEntry(at: <#T##Int#>, with: <#T##ContentDetailsModel#>)
-    
-    //UIDevice.current.setValue(UIInterfaceOrientation.portrait.rawValue, forKey: "orientation")
   }
   
   private func removeUsageObserverToken() {
@@ -139,6 +135,7 @@ class VideoPlayerController: AVPlayerViewController {
         // TODO: Show failure message/view
       }
     }
+    
   }
   
   private func playFromLocalIfPossible() {
