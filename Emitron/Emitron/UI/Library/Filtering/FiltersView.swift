@@ -48,7 +48,7 @@ struct FiltersView: View {
         
         Text("Filters")
           .font(.uiHeadline)
-          .foregroundColor(.appBlack)
+          .foregroundColor(.titleText)
         
         Spacer()
         
@@ -58,7 +58,7 @@ struct FiltersView: View {
           Image("close")
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.iconButton)
         }
       }
       .padding(.top, 20)
@@ -81,7 +81,7 @@ struct FiltersView: View {
       }
       .padding([.leading, .trailing], 18)
     }
-    .background(Color.paleGrey)
+    .background(Color.modalBackground)
   }
   
   // Is ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> actually more performance than AnyView?

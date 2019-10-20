@@ -51,7 +51,7 @@ struct ContentSummaryView: View {
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
@@ -69,10 +69,11 @@ struct ContentSummaryView: View {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .foregroundColor(.titleText)
       
       Text(contentSummaryMC.data.releasedAtDateTimeString)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .padding([.top], 12)
       
       HStack(spacing: 30, content: {
@@ -84,7 +85,7 @@ struct ContentSummaryView: View {
       
       Text(contentSummaryMC.data.description)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
@@ -94,7 +95,7 @@ struct ContentSummaryView: View {
       
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
@@ -118,12 +119,12 @@ struct ContentSummaryView: View {
         Image("bookmarkActive")
           .resizable()
           .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.coolGrey)
+          .foregroundColor(.inactiveIcon)
       } else {
         Image("bookmarkActive")
           .resizable()
           .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.appGreen)
+          .foregroundColor(.activeIcon)
       }
     }
   }
@@ -133,12 +134,12 @@ struct ContentSummaryView: View {
     
     let view = ZStack {
       Rectangle()
-        .foregroundColor(.appGreen)
+        .foregroundColor(.accentTagBackground)
         .cornerRadius(6)
-        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+        .frame(width: 90, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
       
       Text("COMPLETED")
-        .foregroundColor(.white)
+        .foregroundColor(.accentTagForeground)
         .font(.uiUppercase)
     }
     
@@ -149,18 +150,18 @@ struct ContentSummaryView: View {
     return
       ZStack {
         Rectangle()
-          .foregroundColor(.appGreen)
+          .foregroundColor(.tagBackground)
           .cornerRadius(6)
           .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
         
         Text("PRO")
-          .foregroundColor(.white)
+          .foregroundColor(.tagForeground)
           .font(.uiUppercase)
     }
   }
   
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
+    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .inactiveIcon : .activeIcon
     let image = Image(self.downloadImageName())
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)
