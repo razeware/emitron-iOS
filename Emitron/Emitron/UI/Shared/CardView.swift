@@ -254,11 +254,10 @@ struct CardView: SwiftUI.View {
   }
   
   private func addDetailText() -> AnyView? {
-    guard let detail = contentScreen.detailMesage else { return nil }
     let stack = HStack {
       Spacer()
       
-      Text(detail)
+      Text(contentScreen.detailMesage)
         .font(.uiHeadline)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)

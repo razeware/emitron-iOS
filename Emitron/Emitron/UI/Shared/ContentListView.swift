@@ -60,7 +60,7 @@ enum ContentScreen {
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything meeting the search criteria."
+    case .library: return "We couldn't find anything with that search criteria."
     case .downloads: return "You haven't downloaded any tutorials yet."
     case .bookmarked: return "You haven't bookmarked any tutorials yet."
     case .inProgress: return "You don't have any tutorials in progress yet."
@@ -69,14 +69,13 @@ enum ContentScreen {
     }
   }
   
-  var detailMesage: String? {
+  var detailMesage: String {
     switch self {
-    case .library: return "Try removing some filters or checking your \n WiFi settings."
+    case .library: return "Try removing some filters or checking your WiFi settings."
     case .bookmarked: return "Tap the bookmark icon to bookmark a video course or screencast."
     case .inProgress: return "When you start a video course you can quickly resume it from here."
     case .completed: return "Watch all the episodes of a video course or screencast to complete it."
     case .downloads: return "Tap the download icon to download a video course or episode to watch offline."
-    default: return nil
     }
   }
   
@@ -87,14 +86,13 @@ enum ContentScreen {
     }
   }
   
-  var emptyImageName: String? {
+  var emptyImageName: String {
     switch self {
     case .downloads: return "artworkEmptySuitcase"
     case .bookmarked: return "artworkBookmarks"
     case .inProgress: return "artworkInProgress"
     case .completed: return "artworkCompleted"
-      
-    default: return nil
+    case .library: return "emojiCrying"
     }
   }
 }
@@ -294,8 +292,8 @@ struct ContentListView: View {
       
       Spacer()
       
-      Image(contentScreen.emptyImageName!)
-        .padding([.bottom], 30)
+      Image(contentScreen.emptyImageName)
+      .padding([.bottom], 30)
       
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
