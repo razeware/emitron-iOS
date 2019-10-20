@@ -77,7 +77,7 @@ struct SettingsOptionsView: View {
       
       Spacer()
     }
-    .background(Color.backgroundColor)
+    .background(Color.modalBackground)
   }
   
   private func setCheckmark(for detailOption: String) -> String? {
