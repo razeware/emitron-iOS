@@ -49,6 +49,7 @@ class DownloadsMC: NSObject, ObservableObject {
   
   // MARK: - Public Properties
   @Published var collectionProgress: CGFloat = 1.0
+  var isEpisodeOnly = false
   var downloadedModel: DownloadModel?
   var callback: ((Bool) -> Void)?
   var downloadedContent: ContentDetailsModel? {

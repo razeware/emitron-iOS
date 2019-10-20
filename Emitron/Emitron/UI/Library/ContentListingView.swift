@@ -139,6 +139,7 @@ struct ContentListingView: View {
         })
 
       ) {
+        
         TextListItemView(contentSummary: model, buttonAction: { success in
           if success {
             self.save(for: model, isEpisodeOnly: true)
@@ -146,7 +147,7 @@ struct ContentListingView: View {
             if self.showHudView {
               self.showHudView.toggle()
             }
-
+            
             self.hudOption = success ? .success : .error
             self.showHudView = true
           }
@@ -425,17 +426,7 @@ struct ContentListingView: View {
   private func save(for content: ContentDetailsModel, isEpisodeOnly: Bool) {
     // update bool so can cancel either entire collection or episode based on bool
     self.isEpisodeOnly = isEpisodeOnly
-    print("downloadsMC.state: \(downloadsMC.state)")
-//    guard downloadsMC.state != .loading else {
-//      if self.showHudView {
-//        // dismiss hud currently showing
-//        self.showHudView.toggle()
-//      }
-//
-//      self.hudOption = .error
-//      self.showHudView = true
-//      return
-//    }
+    downloadsMC.isEpisodeOnly = isEpisodeOnly
     guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
       if self.showHudView {
         // dismiss hud currently showing
