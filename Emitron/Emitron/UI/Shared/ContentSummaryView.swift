@@ -91,6 +91,7 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
+        .lineSpacing(3)
       
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
@@ -98,6 +99,7 @@ struct ContentSummaryView: View {
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .lineSpacing(3)
     }
   }
   

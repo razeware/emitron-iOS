@@ -62,7 +62,7 @@ struct FiltersHeaderView: View {
         HStack {
           Text(filterGroup.type.name)
             .foregroundColor(.titleText)
-            .font(.uiLabel)
+            .font(.uiLabelBold)
             .padding([.trailing], Layout.padding.textTrailing)
           
           Spacer()
@@ -77,6 +77,9 @@ struct FiltersHeaderView: View {
         }
         .padding(.all, Layout.padding.overall)
       }
+      .onTapGesture {
+        self.isExpanded.toggle()
+      }
       
       if isExpanded {
         expandedView
@@ -90,7 +93,7 @@ struct FiltersHeaderView: View {
   
   private var expandedView: some View {
     return
-      VStack(alignment: .leading, spacing: 12) {
+      VStack(alignment: .leading, spacing: 8) {
         
         ForEach(Array(filterGroup.filters), id: \.self) { filter in
           TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
@@ -98,7 +101,7 @@ struct FiltersHeaderView: View {
             self.filters.all.update(with: filter)
             self.filters.commitUpdates()
           })
-            .padding([.leading, .trailing], 10)
+            .padding([.leading, .trailing], 13)
         }
     }
   }

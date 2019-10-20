@@ -36,7 +36,6 @@ struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
   @State var tabSelection: Int
-  @EnvironmentObject var emitron: AppState
   var contents: [ContentDetailsModel] {
     return getContents()
   }
@@ -44,7 +43,6 @@ struct DownloadsView: View {
   var body: some View {
     VStack {
       contentView
-      exploreButton
     }
     .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
@@ -86,17 +84,6 @@ struct DownloadsView: View {
     case .save:
       self.downloadsMC.saveDownload(with: content)
     }
-  }
-
-  private var exploreButton: AnyView? {
-    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
-
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      self.emitron.selectedTab = 0
-    }
-    .padding([.bottom, .leading, .trailing], 20)
-
-    return AnyView(button)
   }
 }
 
