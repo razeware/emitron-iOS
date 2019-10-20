@@ -99,12 +99,12 @@ struct ToggleControlView: View {
       Text(text)
       .lineLimit(1)
       .font(.uiButtonLabelSmall)
-      .foregroundColor(Color.appGreen)
+      .foregroundColor(Color.toggleSelected)
       .frame(width: 80, height: nil, alignment: .center)
       
       Rectangle()
       .frame(maxWidth: 120, maxHeight: 2)
-      .foregroundColor(Color.appGreen)
+      .foregroundColor(Color.toggleSelected)
     }
     
     return AnyView(stackView)
@@ -116,12 +116,12 @@ struct ToggleControlView: View {
       Text(text)
       .lineLimit(1)
       .font(.uiButtonLabelSmall)
-      .foregroundColor(Color.coolGrey)
+      .foregroundColor(Color.toggleDeselected)
       .frame(width: 80, height: nil, alignment: .center)
       
       Rectangle()
       .frame(maxWidth: 120, maxHeight: 2)
-      .foregroundColor(Color.coolGrey)
+      .foregroundColor(Color.toggleDeselected)
     }
     
     return AnyView(stackView)

@@ -54,6 +54,7 @@ struct LibraryView: View {
         Text(Constants.library))
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+      .background(Color.backgroundColor)
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
@@ -73,8 +74,8 @@ struct LibraryView: View {
         .padding([.top, .bottom], 10)
     }
     .padding([.leading, .trailing], 20)
-    .background(Color.white)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    .background(Color.backgroundColor)
+    .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
   }
 
   private var searchField: some View {
@@ -103,7 +104,7 @@ struct LibraryView: View {
         self.filtersPresented = true
       }, label: {
         Image("filter")
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
       })
         .padding([.leading], .searchFilterPadding)
@@ -114,7 +115,7 @@ struct LibraryView: View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
         .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
 
       Spacer()
 
@@ -124,11 +125,11 @@ struct LibraryView: View {
       }) {
         HStack {
           Image("sort")
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.textButtonText)
 
           Text(filters.sortFilter.name)
             .font(.uiLabel)
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.textButtonText)
         }
       }
     }
@@ -165,7 +166,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .white, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
           if let videoID = content.videoID {
@@ -261,7 +262,7 @@ struct ClearButton: ViewModifier {
         Image(systemName: "multiply.circle.fill")
           // If we don't enforce a frame, the button doesn't register the tap action
           .frame(width: 25, height: 25, alignment: .center)
-          .foregroundColor(.secondary)
+          .foregroundColor(.iconButton)
       }
     }
   }

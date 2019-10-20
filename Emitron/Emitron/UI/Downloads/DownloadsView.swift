@@ -46,11 +46,12 @@ struct DownloadsView: View {
       contentView
       exploreButton
     }
+    .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
   }
   
   private var contentView: some View {
-    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
       self.handleAction(with: action, content: content)
     }
   }
