@@ -28,6 +28,16 @@
 
 import SwiftUI
 
+enum SheetAction {
+  case cancel
+  
+  var title: String {
+    switch self {
+    case .cancel: return "Download is in progress. Tap below to cancel download."
+    }
+  }
+}
+
 enum HudOption {
   case success, error
   
@@ -127,6 +137,19 @@ extension View {
                hudOption: hudOption,
                presenting: { self },
                callback: callback)
+  }
+  
+  func showActionSheet(for action: SheetAction, onAction: @escaping ((SheetAction?) -> Void)) -> ActionSheet {
+    
+    let cancelDownload: Alert.Button = .default(Text("Cancel Download")) {
+      onAction(.cancel)
+    }
+    
+    return ActionSheet(title: Text(action.title),
+                       message: nil,
+                       buttons: [cancelDownload, Alert.Button.cancel({
+                        onAction(nil)
+                       })])
   }
 }
 
