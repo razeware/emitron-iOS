@@ -72,19 +72,13 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
         .foregroundColor(.titleText)
       
-      if contentSummaryMC.data.progression?.finished ?? false {
-        CompletedTag()
-      } else {
-        
-        Text(contentSummaryMC.data.releasedAtDateTimeString)
-        .font(.uiCaption)
-        .foregroundColor(.contentText)
-        .padding([.top], 12)
-      }
-      
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
+        
+        if contentSummaryMC.data.progression?.finished ?? false {
+          CompletedTag()
+        }
       })
       .padding([.top], 15)
       

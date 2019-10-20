@@ -35,7 +35,6 @@ struct LoginView: View {
   
   var body: some View {
     return contentView
-      .background(Color.backgroundColor)
   }
   
   private var contentView: AnyView {
@@ -48,14 +47,18 @@ struct LoginView: View {
       return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
     }
     
-    return AnyView(loginView)
+    return AnyView(
+      loginView
+        .background(Color.backgroundColor)
+        .edgesIgnoringSafeArea([.all])
+    )
   }
   
   private var loginView: some View {
     VStack {
       
       Image("logo")
-        .padding([.top], 15)
+        .padding([.top], 88)
       
       Spacer()
       
@@ -78,7 +81,8 @@ struct LoginView: View {
       MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
         self.userMC.login()
       }
-      .padding([.bottom, .leading, .trailing], 18)
+      .padding([.leading, .trailing], 18)
+      .padding([.bottom], 38)
     }
   }
 }

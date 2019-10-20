@@ -202,11 +202,11 @@ struct ContentListingView: View {
     {
       ZStack {
         Rectangle()
-          .frame(width: 155, height: 70)
+          .frame(width: 155, height: 75)
           .foregroundColor(.white)
-          .cornerRadius(9)
+          .cornerRadius(11)
         Rectangle()
-          .frame(width: 145, height: 60)
+          .frame(width: 145, height: 65)
           .foregroundColor(.appBlack)
           .cornerRadius(9)
         
@@ -233,11 +233,11 @@ struct ContentListingView: View {
     {
       ZStack {
         Rectangle()
-          .frame(maxWidth: 70, maxHeight: 70)
+          .frame(maxWidth: 75, maxHeight: 75)
           .foregroundColor(.white)
-          .cornerRadius(9)
+          .cornerRadius(11)
         Rectangle()
-          .frame(maxWidth: 60, maxHeight: 60)
+          .frame(maxWidth: 65, maxHeight: 65)
           .foregroundColor(.appBlack)
           .cornerRadius(9)
         Image("materialIconPlay")
@@ -291,8 +291,8 @@ struct ContentListingView: View {
       
       GeometryReader { geometry in
         HStack {
-          // If progress is between 0.0 and 100.0 show continue, otherwise show play
-          if self.content.progress > 0.0 && self.content.progress >= 100.0 {
+          // If progress is between 0.0 and 1.0 show continue, otherwise show play
+          if self.content.progress > 0.0 && self.content.progress < 1.0 {
             self.continueButton
             //HACK: to center the button when it's in a NavigationLink
               .padding(.leading, geometry.size.width/2 - 74.5)

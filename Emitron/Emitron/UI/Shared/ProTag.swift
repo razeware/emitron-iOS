@@ -39,6 +39,7 @@ struct ProTag: View {
       Text("PRO")
         .foregroundColor(.tagForeground)
         .font(.uiUppercase)
+        .kerning(0.5)
     }
   }
 }
