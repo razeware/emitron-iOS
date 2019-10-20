@@ -370,11 +370,11 @@ struct ContentListingView: View {
     self.showingSheet = true
 
     if isEpisodeOnly {
-      self.downloadsMC.saveDownload(with: content)
+      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: isEpisodeOnly)
     } else if content.isInCollection {
-      self.downloadsMC.saveCollection(with: content)
+      self.downloadsMC.saveCollection(with: content, isEpisodeOnly: false)
     } else {
-      self.downloadsMC.saveDownload(with: content)
+      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: false)
     }
 
     self.downloadsMC.callback = { success in

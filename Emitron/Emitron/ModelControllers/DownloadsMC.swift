@@ -65,7 +65,6 @@ class DownloadsMC: NSObject, ObservableObject {
   }()
   
   private var finishedDownloadingCollection: Bool {
-    print("episodesCounter: \(episodesCounter)")
     return episodesCounter == 0
   }
   
@@ -139,7 +138,6 @@ class DownloadsMC: NSObject, ObservableObject {
     
     // If content is not yet saved in files, only need to remove it from data 
     guard FileManager.default.fileExists(atPath: fileURL.path) else {
-      print("not in files yet: \(content.name)")
       self.data.remove(at: index)
       self.state = .hasData
       return
@@ -155,13 +153,11 @@ class DownloadsMC: NSObject, ObservableObject {
         self.callback?(true)
       }
       
-      print("deleted: \(content.name)")
       completion?(true)
 
 
     } catch {
       self.state = .failed
-      print("failed deleted: \(content.name)")
       if showCallback {
         self.callback?(false)
       }
@@ -172,7 +168,6 @@ class DownloadsMC: NSObject, ObservableObject {
 
   func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool, completion: (() -> Void)? = nil) {
     
-    print("CONTENT TO DELETE: \(content.name) & groups: \(content.groups.count)")
     guard !content.groups.isEmpty else {
       deleteParent(with: content, completion: completion)
       return
@@ -211,7 +206,6 @@ class DownloadsMC: NSObject, ObservableObject {
   
   private func deleteParent(with content: ContentDetailsModel, completion: (() -> Void)?) {
     if let parent = self.data.first(where: { $0.content.id == content.id }) {
-      print("FJ parent: \(parent.content.id) & & parentCont: \(parent.content.parentContent?.id) & content: \(content.id)")
       let fileName = "\(parent.content.id).\(String.appExtension)"
       guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
         let index = data.firstIndex(where: { $0.content.id == parent.content.id }) else {
@@ -238,7 +232,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Save
-  func saveDownload(with content: ContentDetailsModel) {
+  func saveDownload(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
     guard !cancelDownload, let videoID = content.videoID else { return }
 
     // if session has been invalidated, recreate
@@ -276,13 +270,13 @@ class DownloadsMC: NSObject, ObservableObject {
     downloadedContent = content
 
     if content.isInCollection {
-      self.loadCollectionVideoStream(of: content, localPath: destinationUrl)
+      self.loadCollectionVideoStream(of: content, localPath: destinationUrl, isEpisodeOnly: isEpisodeOnly)
     } else {
        self.loadIndividualVideoStream(for: content, localPath: destinationUrl)
     }
   }
 
-  func saveCollection(with content: ContentDetailsModel) {
+  func saveCollection(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
     // reset episode counter back to 0 every time save new collection
     episodesCounter = 0
 
@@ -306,12 +300,12 @@ class DownloadsMC: NSObject, ObservableObject {
     content.groups.forEach { groupModel in
       groupModel.childContents.forEach { child in
         child.parentContent = content
-        self.saveDownload(with: child)
+        self.saveDownload(with: child, isEpisodeOnly: isEpisodeOnly)
       }
     }
   }
   
-  func saveParent(with content: ContentDetailsModel) {
+  private func saveParent(with content: ContentDetailsModel) {
     // if session has been invalidated, recreate
     downloadsSession = URLSession(configuration: .default,
                                     delegate: self,
@@ -327,7 +321,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
     downloadedContent = content
     episodesCounter += 1
-    saveNewDocument(with: destinationUrl, location: destinationUrl, content: content, attachment: nil, completion: nil)
+    saveNewDocument(with: destinationUrl, location: destinationUrl, content: content, attachment: nil, isEpisodeOnly: false, completion: nil)
   }
 
   // MARK: Cancel
@@ -336,7 +330,6 @@ class DownloadsMC: NSObject, ObservableObject {
     
     data.forEach { download in
       if download.content.parentContent?.id == content.parentContent?.id {
-        print("FJ ID: \(download.content.parentContent?.id) & download content: \(download.content.id) & content: \(content.id) & content parent: \(content.parentContent?.id) & name: \(download.content.name)")
         download.content.shouldCancel = true
       }
     }
@@ -347,12 +340,6 @@ class DownloadsMC: NSObject, ObservableObject {
       }
     }
     
-//    if content.isInCollection {
-//      self.deleteCollectionContents(withParent: content, showCallback: false, completion: nil)
-//    } else {
-//      self.deleteDownload(with: content, showCallback: false, completion: nil)
-//    }
-    
     downloadedModel = nil
     downloadedContent = nil
     downloadTask?.cancel()
@@ -361,7 +348,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   // MARK: Private funcs
-  private func loadCollectionVideoStream(of content: ContentDetailsModel, localPath: URL) {
+  private func loadCollectionVideoStream(of content: ContentDetailsModel, localPath: URL, isEpisodeOnly: Bool) {
     guard let videoID = content.videoID else { return }
 
     videosMC.getDownloadVideofor(id: videoID) { response in
@@ -377,9 +364,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
             if let url = response?.url {
               DispatchQueue.main.async {
-                self.saveNewDocument(with: localPath, location: url, content: content, attachment: attachment) { downloadedContent in
-                  print("save new doc completion: downloadedContent \(downloadedContent.name)")
-                  print("content: \(downloadedContent.shouldCancel) & downloadedContent: \(downloadedContent.shouldCancel)")
+                self.saveNewDocument(with: localPath, location: url, content: content, attachment: attachment, isEpisodeOnly: isEpisodeOnly) { downloadedContent in
                   self.handleSavedCompletion(of: downloadedContent)
                 }
               }
@@ -400,11 +385,7 @@ class DownloadsMC: NSObject, ObservableObject {
   }
   
   private func handleSavedCompletion(of content: ContentDetailsModel) {
-    print("cancelDownload: \(cancelDownload) & shouldCancel: \(content.shouldCancel)")
-    
     guard content.shouldCancel else { return }
-    
-    print("FJ data: \(data.count) & content: \(content.name) & parent: \(content.parentContent?.name)")
     
     data.forEach { download in
       if download.content.shouldCancel {
@@ -413,7 +394,6 @@ class DownloadsMC: NSObject, ObservableObject {
     }
     
     if !self.data.contains(where: { $0.content.shouldCancel }) {
-      print("FJ REMOVED ALLL THE STUFF")
       self.cancelDownload = false
       self.state = .hasData
     }
@@ -479,9 +459,6 @@ class DownloadsMC: NSObject, ObservableObject {
       }
 
       if let content = doc.videoData.content {
-        
-        print("FJ lcal content: \(content.name) & parentContentId: \(content.parentContentId) & content id: \(content.id)")
-        
         self.createDownloadModel(with: nil, content: content, isDownloaded: true, localPath: url)
       }
 
@@ -517,14 +494,14 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel, attachment: AttachmentModel?, completion: ((ContentDetailsModel)-> Void)? = nil) {
+  private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel, attachment: AttachmentModel?, isEpisodeOnly: Bool, completion: ((ContentDetailsModel)-> Void)? = nil) {
 
     guard !cancelDownload, !content.shouldCancel else {
       completion?(content)
       return
     }
     
-    // add the parent content id so can filter the downloadsView content 
+    // add the parent content id so can filter the downloadsView content
     content.parentContentId = content.parentContent?.id
 
     let doc = Document(fileURL: fileURL)
@@ -543,30 +520,26 @@ class DownloadsMC: NSObject, ObservableObject {
       }
       
       content.shouldCancel = self.cancelDownload
-      print("saved: \(content.name) & cancelDown: \(self.cancelDownload) & shoudlCancel: \(content.shouldCancel)")
-      
       guard !content.shouldCancel else {
         completion?(content)
         return
       }
       
-      
-      if content.isInCollection == true {
+      if content.isInCollection {
         self.createDownloadModel(with: attachment, content: content, isDownloaded: true, localPath: fileURL)
         self.episodesCounter -= 1
         self.collectionProgress = CGFloat(1.0 - (self.numGroupsCounter/self.totalNum))
       }
       
-      // check if sending content from saveCollection call
-      if content.isInCollection && self.finishedDownloadingCollection {
+      // If entire collection is being downloaded, only display success hud once every episode in collection is downloaded
+      if content.isInCollection, !isEpisodeOnly, self.finishedDownloadingCollection {
         self.state = .hasData
         self.callback?(true)
-        print("FJ COMPLETION IN COLL")
         completion?(content)
-      } else if !content.isInCollection {
+        // If only downloading an episode or if downloading a screencast, then don't need to keep track of entire collection's progress
+      } else if !content.isInCollection || isEpisodeOnly {
         self.state = .hasData
         self.callback?(true)
-        print("FJ COMPLETION NOT IN COLL")
         completion?(content)
       }
     }
@@ -598,7 +571,7 @@ extension DownloadsMC: URLSessionDownloadDelegate {
 
     if let url = downloadTask.response?.url, let content = self.downloadedModel?.content {
       DispatchQueue.main.async {
-        self.saveNewDocument(with: destinationUrl, location: url, content: content, attachment: nil)
+        self.saveNewDocument(with: destinationUrl, location: url, content: content, attachment: nil, isEpisodeOnly: true)
       }
     }
   }

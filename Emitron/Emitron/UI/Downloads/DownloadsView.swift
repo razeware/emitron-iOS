@@ -73,8 +73,6 @@ struct DownloadsView: View {
       } else if !downloadedContents.contains(where: { $0.id == download.parentContentId }) {
           contents.append(download)
       }
-      
-      print("id: \(download.id) & parent: \(download.parentContentId)")
     }
     
     return !contents.isEmpty ? contents : []
@@ -91,7 +89,7 @@ struct DownloadsView: View {
       }
 
     case .save:
-      self.downloadsMC.saveDownload(with: content)
+      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: false)
 
     case .cancel:
       self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
