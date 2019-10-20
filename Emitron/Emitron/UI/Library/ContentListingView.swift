@@ -85,13 +85,9 @@ struct ContentListingView: View {
       }
     }
     .onAppear {
-      UINavigationBar.appearance().backgroundColor = .clear
       self.loadImage()
       self.contentSummaryMC.getContentSummary()
     }
-    .onDisappear(perform: {
-      UINavigationBar.appearance().backgroundColor = .backgroundColor
-    })
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
