@@ -72,7 +72,7 @@ struct TextListItemView: View {
   
   private func setUpImageAndProgress() -> AnyView {
     
-    let image = Image(self.downloadImageName())
+    let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .onTapGesture {
@@ -84,12 +84,17 @@ struct TextListItemView: View {
 
       if contentSummary.isInCollection {
         
+        // If downloading entire collection, only showing loading view at the top of the ContentsListingView
+        guard downloadsMC.isEpisodeOnly else {
+          return AnyView(image)
+        }
+        
         guard let downloadedContent = downloadsMC.downloadedContent,
         downloadedContent.id == contentSummary.id else {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
 
       } else {
         // Only show progress on model that is currently being downloaded
@@ -98,7 +103,7 @@ struct TextListItemView: View {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
       
     default:
@@ -106,19 +111,18 @@ struct TextListItemView: View {
     }
   }
   
-  private func downloadImageName() -> String {
+  private var downloadImageName: String {
     if contentSummary.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        
         return downloadModel.content.id == contentSummary.id
-      } ? DownloadImageName.inActive : DownloadImageName.active
+        } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
       return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
   
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inActive
     buttonAction(success)
   }
 

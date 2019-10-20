@@ -166,10 +166,6 @@ class VideosMC: NSObject, ObservableObject {
   
   func getDownloadVideofor(id: Int,
                            completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
-    if case(.loading) = state {
-      return
-    }
-
     state = .loading
     videoService.getVideoDownload(for: id) { [weak self] result in
       completion(result)

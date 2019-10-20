@@ -81,10 +81,7 @@ enum ContentScreen {
 
 struct ContentListView: View {
 
-  @State var showHudView: Bool = false
-  @State var hudOption: HudOption = .success
   var downloadsMC: DownloadsMC
-
   @State var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentDetailsModel] = []
@@ -99,9 +96,6 @@ struct ContentListView: View {
     contentView
       // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
       //.background(Color.backgroundColor)
-      .hud(isShowing: $showHudView, hudOption: $hudOption) {
-        self.showHudView = false
-    }
   }
 
   private var listView: some View {
@@ -117,7 +111,13 @@ struct ContentListView: View {
         }.listRowInsets(EdgeInsets())
       } else {
         if contentScreen == .downloads {
-          cardsTableViewWithDelete
+
+          if contents.isEmpty || downloadsMC.data.isEmpty {
+            emptyView
+          } else {
+            cardsTableViewWithDelete
+          }
+
         } else {
           cardTableNavView
         }
@@ -158,7 +158,7 @@ struct ContentListView: View {
       return AnyView(emptyView)
     }
   }
-  
+
   private var failedView: some View {
     VStack {
       headerView
@@ -176,9 +176,9 @@ struct ContentListView: View {
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-      
+
       Spacer()
-      
+
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
@@ -197,13 +197,6 @@ struct ContentListView: View {
           self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
-            } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
             }
           }, onRightTap: {
             // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
@@ -234,13 +227,6 @@ struct ContentListView: View {
           self.cardView(content: partialContent, onLeftTap: { success in
             if success {
               self.callback?(.save, partialContent)
-            } else {
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-
-              self.hudOption = success ? .success : .error
-              self.showHudView = true
             }
           }, onRightTap: {
             self.toggleBookmark(model: partialContent)
@@ -281,11 +267,11 @@ struct ContentListView: View {
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-      
+
       Spacer()
     }
   }
-  
+
   private var loadingView: some View {
     VStack {
       headerView
@@ -293,7 +279,7 @@ struct ContentListView: View {
     }
     .overlay(ActivityIndicator())
   }
-  
+
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
@@ -318,7 +304,7 @@ struct ContentListView: View {
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
-  
+
   func toggleBookmark(model: ContentDetailsModel) {
     DataManager.current?.contentsMC.toggleBookmark(for: model)
   }
