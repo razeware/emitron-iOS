@@ -87,7 +87,6 @@ extension CardViewModel {
 }
 
 struct CardView: SwiftUI.View {
-  @EnvironmentObject var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: CardViewModel?
@@ -154,10 +153,6 @@ struct CardView: SwiftUI.View {
               .foregroundColor(.battleshipGrey)
 
             Spacer()
-
-            if self.contentScreen != ContentScreen.downloads {
-              self.setUpImageAndProgress()
-            }
           }
         }
         .padding(15)
@@ -178,13 +173,6 @@ struct CardView: SwiftUI.View {
     
 
     return AnyView(stack)
-  }
-
-  private func setUpImageAndProgress() -> some View {
-
-    return Image(self.downloadImageName)
-      .resizable()
-      .frame(width: 19, height: 19)
   }
 
   private var proTag: some SwiftUI.View {
@@ -232,20 +220,6 @@ struct CardView: SwiftUI.View {
       case .failure:
         break
       }
-    }
-  }
-
-  private var downloadImageName: String {
-    guard let model = model else { return DownloadImageName.inActive }
-
-    if model.isInCollection {
-
-      return downloadsMC.data.contains { downloadModel in
-        return downloadModel.content.id == model.id
-      } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0
-        .content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
