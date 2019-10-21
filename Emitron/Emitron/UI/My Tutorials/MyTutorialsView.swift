@@ -57,7 +57,7 @@ struct MyTutorialView: View {
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView()
+        SettingsView(showLogoutButton: true)
       }
   }
 

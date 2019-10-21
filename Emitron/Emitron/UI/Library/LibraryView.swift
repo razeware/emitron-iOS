@@ -69,7 +69,7 @@ struct LibraryView: View {
       self.showHudView = false
     }
   }
-
+  
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
@@ -178,62 +178,23 @@ struct LibraryView: View {
     let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
-          if let videoID = content.videoID {
-            self.delete(for: videoID)
-          }
-        case .save:
-          self.save(for: content)
+          self.delete(for: content)
+        
+        case .save: return
+        
+        case .cancel:
+          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
         }
       }
 
     return AnyView(contentSectionView)
   }
 
-  private func delete(for videoId: Int) {
-    downloadsMC.deleteDownload(with: videoId)
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
-    }
-  }
-
-  private func save(for content: ContentDetailsModel) {
-    guard downloadsMC.state != .loading else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-
-    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-
-    if content.isInCollection {
-      
-      if content.groups.isEmpty {
-        self.contentsMC.getContentSummary(with: content.id) { detailsModel in
-          self.downloadsMC.saveCollection(with: detailsModel)
-        }
-      }
+  private func delete(for content: ContentDetailsModel) {
+    if content.isInCollection, let parent = content.parentContent {
+      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
     } else {
-      self.downloadsMC.saveDownload(with: content)
+      downloadsMC.deleteDownload(with: content)
     }
     
     self.downloadsMC.callback = { success in

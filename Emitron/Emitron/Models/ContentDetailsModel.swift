@@ -54,21 +54,21 @@ class ContentDetailsModel {
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
-  
-  var parentContentId: Int?
+
   var parentContent: ContentDetailsModel?
-  var isDownloaded: Bool = false
+  var isDownloaded = false
   var progression: ProgressionModel?
   var progressionId: Int?
   var bookmark: BookmarkModel?
-  
+  var shouldCancel = false
+  var parentContentId: Int?
   var bookmarkId: Int? {
     bookmark?.id
   }
   var bookmarked: Bool {
     bookmark != nil
   }
-  
+
   // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
   var needsDetails: Bool {
     contentType == .collection && !(groups.count > 0)
@@ -137,7 +137,7 @@ class ContentDetailsModel {
                 content?.parentContent = self
                 return content
               })
-              
+
               if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
                 groups.append(group)
               }
@@ -211,6 +211,28 @@ class ContentDetailsModel {
     self.contributorString = content.contributorString
     self.videoID = content.videoID?.intValue
   }
+
+  /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
+  ///
+  /// - parameters:
+  ///   - content: core data entity to transform into domain model
+  init(_ content: ContentsData) {
+    self.id = content.id ?? 0
+    self.name = content.name
+    self.uri = content.uri
+    self.description = content.contentDescription
+    self.releasedAt = content.releasedAt
+    self.free = content.free
+    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
+    self.contentType = ContentType(rawValue: content.contentType) ?? .none
+    self.duration = content.duration
+    self.popularity = content.popularity
+    self.cardArtworkURL = content.cardArtworkURL
+    self.technologyTripleString = content.technologyTripleString
+    self.contributorString = content.contributorString
+    self.videoID = content.videoID
+    self.parentContentId = content.parentContentId
+  }
 }
 
 extension ContentDetailsModel {
@@ -231,9 +253,8 @@ extension ContentDetailsModel {
 }
 
 extension ContentDetailsModel {
-  
+
   var isInCollection: Bool {
-    guard let parentContent = parentContent else { return false }
-    return parentContent.contentType == .collection
+    return contentType == .collection || contentType == .episode
   }
 }

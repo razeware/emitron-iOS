@@ -160,21 +160,18 @@ class ContentsMC: NSObject, ObservableObject {
     }
   }
   
-  func getContentSummary(with id: Int, completion: ((ContentDetailsModel) -> Void)?) {
-    if case(.loading) = state {
-      return
-    }
-
+  func getContentSummary(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
     state = .loading
-
     contentsService.contentDetails(for: id) { result in
-
       switch result {
       case .failure(let error):
+        self.state = .failed
+        completion?(nil)
         Failure
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
+        self.state = .hasData
         completion?(contentDetails)
       }
     }

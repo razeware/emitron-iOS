@@ -29,11 +29,11 @@
 import SwiftUI
 
 struct TabNavView: View {
-  
+
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
-  
+
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
       NavigationView {
@@ -43,7 +43,7 @@ struct TabNavView: View {
         Image("library")
       }
       .tag(0)
-      
+
       NavigationView {
         downloadsView
       }.tabItem {
@@ -51,10 +51,10 @@ struct TabNavView: View {
         Image("downloadTabInactive")
       }
       .tag(1)
-      
+
       NavigationView {
         myTutorialsView
-        
+
       }.tabItem {
         Text(Constants.myTutorials)
         Image("myTutorials")
@@ -64,18 +64,18 @@ struct TabNavView: View {
     .edgesIgnoringSafeArea(.top)
     .background(Color.backgroundColor)
   }
-  
+
   private var libraryView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
-    
+
     UserMC(guardpost: Guardpost.current).fetchPermissions()
-    
+
     return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
   }
-  
+
   private var myTutorialsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
@@ -83,7 +83,7 @@ struct TabNavView: View {
     let domainsMC = dataManager.domainsMC
     return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC)
   }
-  
+
   private var downloadsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
