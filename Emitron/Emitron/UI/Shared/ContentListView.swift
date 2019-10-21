@@ -193,6 +193,7 @@ struct ContentListView: View {
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
+    .background(Color.backgroundColor)
   }
   
   private var cardTableNavView: some View {
@@ -306,6 +307,7 @@ struct ContentListView: View {
       headerView
       Spacer()
     }
+    .background(Color.backgroundColor)
     .overlay(ActivityIndicator())
   }
 

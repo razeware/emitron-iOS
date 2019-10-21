@@ -85,6 +85,7 @@ struct ContentListingView: View {
         .listRowBackground(Color.backgroundColor)
 
         self.courseDetailsSection
+        .background(Color.backgroundColor)
       }
     }
     .onAppear {
@@ -107,7 +108,7 @@ struct ContentListingView: View {
     }
 
     return scrollView
-      .navigationBarTitle(Text(content.name), displayMode: .inline)
+      .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
 
@@ -210,11 +211,11 @@ struct ContentListingView: View {
         Rectangle()
           .frame(width: 155, height: 75)
           .foregroundColor(.white)
-          .cornerRadius(11)
+          .cornerRadius(13)
         Rectangle()
           .frame(width: 145, height: 65)
           .foregroundColor(.appBlack)
-          .cornerRadius(9)
+          .cornerRadius(11)
 
         HStack {
           Image("materialIconPlay")
@@ -241,11 +242,11 @@ struct ContentListingView: View {
         Rectangle()
           .frame(maxWidth: 75, maxHeight: 75)
           .foregroundColor(.white)
-          .cornerRadius(11)
+          .cornerRadius(13)
         Rectangle()
           .frame(maxWidth: 65, maxHeight: 65)
           .foregroundColor(.appBlack)
-          .cornerRadius(9)
+          .cornerRadius(11)
         Image("materialIconPlay")
           .resizable()
           .frame(width: 40, height: 40)
@@ -382,12 +383,15 @@ struct ContentListingView: View {
       return AnyView(loadingView)
     }
   }
-
+  
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
     GeometryReader { geometry in
       ActivityIndicator()
     }
+    .listRowInsets(EdgeInsets())
+    .listRowBackground(Color.backgroundColor)
+    .background(Color.backgroundColor)
   }
 
   private var reloadView: AnyView? {

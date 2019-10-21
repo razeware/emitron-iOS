@@ -42,6 +42,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
     // TODO: When a modifier is available these should be refactored
     UITableView.appearance().separatorColor = .clear
+    UITableViewCell.appearance().backgroundColor = .backgroundColor
+    UITableView.appearance().backgroundColor = .backgroundColor
     UINavigationBar.appearance().backgroundColor = .backgroundColor
     
     UINavigationBar.appearance().largeTitleTextAttributes = [
@@ -64,6 +66,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       window.rootViewController = UIHostingController(rootView: loginView)
       self.window = window
+      window.rootViewController?.view.backgroundColor = UIColor.backgroundColor
       // TODO: When a modifier is available this should be refactored
       window.tintColor = UIColor.accent
       

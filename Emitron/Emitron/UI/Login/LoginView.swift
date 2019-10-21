@@ -35,6 +35,7 @@ struct LoginView: View {
   
   var body: some View {
     return contentView
+      .background(Color.backgroundColor)
   }
   
   private var contentView: AnyView {

@@ -45,7 +45,7 @@ extension Font {
     return Font.custom("Bitter-Bold", size: 19.0)
   }
   static var uiHeadline: Font {
-    return Font.system(size: 18.0)
+    return Font.system(size: 18.0).weight(.semibold)
   }
 
   static var uiBodyAppleDefault: Font {
@@ -78,6 +78,6 @@ extension Font {
     return Font.system(size: 12.0).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    return Font.system(size: 10.0).weight(.semibold)
+    return Font.system(size: 9.0).weight(.semibold)
   }
 }
