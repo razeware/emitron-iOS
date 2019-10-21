@@ -44,7 +44,6 @@ struct CardView: SwiftUI.View {
     self.onRightIconTap = onRightIconTap
     self.onLeftIconTap = onLeftIconTap
     self.contentScreen = contentScreen
-    print("model: \(model.domains.count)")
   }
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
