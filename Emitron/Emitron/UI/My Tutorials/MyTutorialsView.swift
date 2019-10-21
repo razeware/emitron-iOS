@@ -34,10 +34,21 @@ private extension CGFloat {
 
 enum MyTutorialsState: String {
   case inProgress, completed, bookmarked
+  var contentScreen: ContentScreen {
+    switch self {
+    case .inProgress:
+      return .inProgress
+    case .completed:
+      return .completed
+    case .bookmarked:
+      return .bookmarked
+    }
+  }
 }
 
 struct MyTutorialView: View {
   
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -122,18 +133,8 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
-    
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+        
     return AnyView(contentView)
   }
 }
-
-#if DEBUG
-struct MyTutorialsView_Previews: PreviewProvider {
-  static var previews: some View {
-    let progressionsMC = DataManager.current!.progressionsMC
-    let bookmarksMC = DataManager.current!.bookmarksMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
-  }
-}
-#endif
