@@ -15,6 +15,8 @@
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */; };
 		8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */; };
+		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
+		8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -33,6 +35,7 @@
 		B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597C2344EDF800D7B0E2 /* Document.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
+		B5858F1E235550E100DCE6B0 /* ContentsData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5858F1D235550E100DCE6B0 /* ContentsData.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
 		B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653C23094E3100A3FF44 /* ProgressionsMC.swift */; };
 		B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653E230953EF00A3FF44 /* BookmarksMC.swift */; };
@@ -160,8 +163,6 @@
 		22D176C123460A060038333D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+UserKeychainTest.swift"; sourceTree = "<group>"; };
 		22D176CD2347520D0038333D /* UserModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserModelTest.swift; sourceTree = "<group>"; };
-		22D17704235074C80038333D /* secrets.production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.production.xcconfig; sourceTree = "<group>"; };
-		22D17705235075910038333D /* secrets.development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.development.xcconfig; sourceTree = "<group>"; };
 		22D17706235075B10038333D /* secrets.template.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.template.xcconfig; sourceTree = "<group>"; };
 		22D17707235078030038333D /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		45C70622AD5673AD0AB91CF1 /* Pods-emitronTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitronTests.debug.xcconfig"; path = "Target Support Files/Pods-emitronTests/Pods-emitronTests.debug.xcconfig"; sourceTree = "<group>"; };
@@ -171,6 +172,8 @@
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModifiers.swift; sourceTree = "<group>"; };
+		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
+		8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTag.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -191,6 +194,7 @@
 		B51C597C2344EDF800D7B0E2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
+		B5858F1D235550E100DCE6B0 /* ContentsData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsData.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
 		B595653C23094E3100A3FF44 /* ProgressionsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsMC.swift; sourceTree = "<group>"; };
 		B595653E230953EF00A3FF44 /* BookmarksMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksMC.swift; sourceTree = "<group>"; };
@@ -362,8 +366,6 @@
 		22D177032350748E0038333D /* Configuration */ = {
 			isa = PBXGroup;
 			children = (
-				22D17704235074C80038333D /* secrets.production.xcconfig */,
-				22D17705235075910038333D /* secrets.development.xcconfig */,
 				22D17706235075B10038333D /* secrets.template.xcconfig */,
 				22D17707235078030038333D /* Configuration.swift */,
 			);
@@ -437,6 +439,7 @@
 				B6DF2F9722CA051B0081A3A3 /* BookmarkModel.swift */,
 				B6DF2F9922CA05230081A3A3 /* CategoryModel.swift */,
 				B51C597A2344DF3300D7B0E2 /* VideoData.swift */,
+				B5858F1D235550E100DCE6B0 /* ContentsData.swift */,
 				B51C597C2344EDF800D7B0E2 /* Document.swift */,
 				B6DF2F9D22CA05320081A3A3 /* ContentDetailsModel.swift */,
 				B6DF2F9B22CA052B0081A3A3 /* ContentSummaryModel.swift */,
@@ -756,6 +759,8 @@
 				B53272DC2333ABF80069DF57 /* HudView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
+				8B7E96DC2357A65F0083DA38 /* ProTag.swift */,
+				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1048,6 +1053,7 @@
 				B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
 				95BAF69C22EF628700D17323 /* Category.swift in Sources */,
+				8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
 				B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */,
 				95A4513522E224B500D24E56 /* UserMC.swift in Sources */,
@@ -1090,6 +1096,7 @@
 				B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */,
 				B595654E231B4EDB00A3FF44 /* DownloadsMC.swift in Sources */,
 				95A4513622E224B500D24E56 /* VideosMC.swift in Sources */,
+				B5858F1E235550E100DCE6B0 /* ContentsData.swift in Sources */,
 				95BAF69A22EF612100D17323 /* Domain.swift in Sources */,
 				95CD793622F0B6980080C407 /* Bookmark.swift in Sources */,
 				B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */,
@@ -1100,6 +1107,7 @@
 				B6DF2F9C22CA052B0081A3A3 /* ContentSummaryModel.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				B63834C122DFD2E60096D9F8 /* ContentDetailsMC.swift in Sources */,
+				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
@@ -1227,7 +1235,6 @@
 		};
 		B6D7DC3D22C79745006DD325 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22D17705235075910038333D /* secrets.development.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1288,7 +1295,6 @@
 		};
 		B6D7DC3E22C79745006DD325 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 22D17704235074C80038333D /* secrets.production.xcconfig */;
 			buildSettings = {
 				ALWAYS_SEARCH_USER_PATHS = NO;
 				CLANG_ANALYZER_NONNULL = YES;
@@ -1351,7 +1357,7 @@
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1374,12 +1380,11 @@
 			baseConfigurationReference = 8E27149DB5E7CEE532EF9C04 /* Pods-emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
-				CODE_SIGN_IDENTITY = "Apple Distribution";
-				CODE_SIGN_STYLE = Manual;
+				CODE_SIGN_IDENTITY = "Apple Development";
+				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;
@@ -1391,7 +1396,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitron.ios;
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
-				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios_appstore_profile-name)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};

@@ -39,37 +39,37 @@ struct DownloadImageName {
 }
 
 struct ContentSummaryView: View {
-  
+
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, HudOption) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentSummaryMC: ContentSummaryMC
+  @EnvironmentObject var contentsMC: ContentsMC
   private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
-  
+
   var body: some View {
     let queue = DispatchQueue(label: "Monitor")
     monitor.start(queue: queue)
     return contentView
   }
-  
+
   private var contentView: some View {
-    return VStack(alignment: .leading) {
-      
+    VStack(alignment: .leading) {
       HStack {
         Text(contentSummaryMC.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
-        
+
         if contentSummaryMC.data.professional {
-          proTag
+          ProTag()
         }
       }
       .padding([.top], 20)
-      
+
       Text(contentSummaryMC.data.name)
         .font(.uiTitle1)
         .lineLimit(nil)
@@ -77,159 +77,126 @@ struct ContentSummaryView: View {
         // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
-      
-      Text(contentSummaryMC.data.releasedAtDateTimeString)
-        .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
-        .padding([.top], 12)
-      
+        .foregroundColor(.titleText)
+
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
-        completedTag // If needed
+
+        if contentSummaryMC.data.progression?.finished ?? false {
+          CompletedTag()
+        }
       })
       .padding([.top], 15)
-      
+
       Text(contentSummaryMC.data.description)
         .font(.uiCaption)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
-      
+        .lineSpacing(3)
+
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .lineSpacing(3)
     }
   }
-  
+
   private var downloadButton: some View {
-    Button(action: {
-      self.download()
-    }) {
-      self.completeDownloadButton
+    completeDownloadButton
+      .onTapGesture {
+        self.download()
     }
   }
-  
-  private var bookmarkButton: some View {
-    Button(action: {
-      self.bookmark()
-    }) {
-      // ISSUE: Not sure why this view is not re-rendering, so I'm forcing a re-render through the state observable
-      if !contentSummaryMC.data.bookmarked && contentSummaryMC.state == .hasData {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.coolGrey)
-      } else {
-        Image("bookmarkActive")
-          .resizable()
-          .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-          .foregroundColor(.appGreen)
+
+  private var bookmarkButton: AnyView {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
+
+    let imageName = contentSummaryMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+
+    return AnyView(
+      Image(imageName)
+        .resizable()
+        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+        .onTapGesture {
+          self.bookmark()
       }
-    }
+    )
   }
-  
-  private var completedTag: AnyView? {
-    guard let progression = contentSummaryMC.data.progression, progression.finished else { return nil }
-    
-    let view = ZStack {
-      Rectangle()
-        .foregroundColor(.appGreen)
-        .cornerRadius(6)
-        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-      
-      Text("COMPLETED")
-        .foregroundColor(.white)
-        .font(.uiUppercase)
-    }
-    
-    return AnyView(view)
-  }
-  
-  private var proTag: some View {
-    return
-      ZStack {
-        Rectangle()
-          .foregroundColor(.appGreen)
-          .cornerRadius(6)
-          .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
-        
-        Text("PRO")
-          .foregroundColor(.white)
-          .font(.uiUppercase)
-    }
-  }
-  
+
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageName() == DownloadImageName.inActive ? .appGreen : .coolGrey
-    let image = Image(self.downloadImageName())
+    let imageColor: Color = downloadImageColor
+    let image = Image("downloadActive")
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)
       .foregroundColor(imageColor)
       .onTapGesture {
         self.download()
     }
-    
+
     switch downloadsMC.state {
     case .loading:
-      
+
       if contentSummaryMC.data.isInCollection {
-        
+
         guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.id == contentSummaryMC.data.id else {
+          downloadedContent.parentContent?.id == contentSummaryMC.data.id else {
             return AnyView(image)
         }
-        
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
-        
+
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
+
       } else {
         // Only show progress on model that is currently being downloaded
         guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
           downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
             return AnyView(image)
         }
-        
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
-      
+
     default:
       return AnyView(image)
     }
   }
-  
-  private func downloadImageName() -> String {
-    
+
+  private var downloadImageColor: Color {
+
     if contentSummaryMC.data.isInCollection {
-      
-      return downloadsMC.data.contains { downloadModel in        
-        return downloadModel.content.parentContentId == contentSummaryMC.data.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-      
+      return downloadsMC.data.contains { downloadModel in
+        return downloadModel.content.id == contentSummaryMC.data.id
+        } ? .inactiveIcon : .activeIcon
     } else {
-      
-      let content = ContentSummaryModel(contentDetails: contentSummaryMC.data)
-      return downloadsMC.data.contains(where: { $0.content.id == content.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0.content.id == contentSummaryMC.data.id }) ? .inactiveIcon : .activeIcon
     }
   }
-  
+
   private func download() {
     if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
       callback?(contentSummaryMC.data, .notOnWifi)
     } else {
-      let success = downloadImageName() != DownloadImageName.inActive
+      let success = downloadImageColor != .inactiveIcon
       let hudOption: HudOption = success ? .success : .error
       callback?(contentSummaryMC.data, hudOption)
     }
   }
-  
+
   private func bookmark() {
-    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data.bookmark?.id)
+    contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
+
+      // Update the content in the global contentsMC, to re-render library view
+      guard let index = self.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
+      self.contentsMC.updateEntry(at: index, with: newModel)
+    }
   }
 }

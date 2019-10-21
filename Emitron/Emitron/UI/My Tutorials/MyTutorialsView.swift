@@ -34,10 +34,21 @@ private extension CGFloat {
 
 enum MyTutorialsState: String {
   case inProgress, completed, bookmarked
+  var contentScreen: ContentScreen {
+    switch self {
+    case .inProgress:
+      return .inProgress
+    case .completed:
+      return .completed
+    case .bookmarked:
+      return .bookmarked
+    }
+  }
 }
 
 struct MyTutorialView: View {
   
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -45,7 +56,6 @@ struct MyTutorialView: View {
   
   var body: some View {
     contentView
-      //.background(Color.paleGrey) (This causes the navigation large title not to transform into a small title)
       .navigationBarTitle(Text(Constants.myTutorials))
       .navigationBarItems(trailing:
         Group {
@@ -53,11 +63,11 @@ struct MyTutorialView: View {
             self.settingsPresented = true
           }) {
             Image("settings")
-              .foregroundColor(.battleshipGrey)
+              .foregroundColor(.iconButton)
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView()
+        SettingsView(showLogoutButton: true)
       }
     .onAppear {
       switch self.state {
@@ -80,8 +90,8 @@ struct MyTutorialView: View {
           .padding([.top], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
-      .background(Color.white)
-      .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+      .background(Color.backgroundColor)
+      .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
     )
   }
   
@@ -123,18 +133,8 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, bgColor: .white, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
-    
+    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+        
     return AnyView(contentView)
   }
 }
-
-#if DEBUG
-struct MyTutorialsView_Previews: PreviewProvider {
-  static var previews: some View {
-    let progressionsMC = DataManager.current!.progressionsMC
-    let bookmarksMC = DataManager.current!.bookmarksMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
-  }
-}
-#endif

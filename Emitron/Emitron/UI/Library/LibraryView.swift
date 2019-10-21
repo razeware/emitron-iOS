@@ -52,14 +52,24 @@ struct LibraryView: View {
     contentView
       .navigationBarTitle(
         Text(Constants.library))
+      .navigationBarItems(trailing:
+        Group {
+          Button(action: {
+            self.contentsMC.reloadContents()
+          }) {
+            Image(systemName: "arrow.clockwise")
+              .foregroundColor(.iconButton)
+          }
+      })
       .sheet(isPresented: $filtersPresented) {
         FiltersView().environmentObject(self.filters).environmentObject(self.contentsMC)
+      .background(Color.backgroundColor)
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
       self.showHudView = false
     }
   }
-
+  
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
@@ -73,8 +83,8 @@ struct LibraryView: View {
         .padding([.top, .bottom], 10)
     }
     .padding([.leading, .trailing], 20)
-    .background(Color.white)
-    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
+    .background(Color.backgroundColor)
+    .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
   }
 
   private var searchField: some View {
@@ -103,7 +113,7 @@ struct LibraryView: View {
         self.filtersPresented = true
       }, label: {
         Image("filter")
-          .foregroundColor(.battleshipGrey)
+          .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
       })
         .padding([.leading], .searchFilterPadding)
@@ -113,8 +123,8 @@ struct LibraryView: View {
   private var numberAndSortView: some View {
     HStack {
       Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
-        .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .font(.uiLabelBold)
+        .foregroundColor(.contentText)
 
       Spacer()
 
@@ -124,11 +134,11 @@ struct LibraryView: View {
       }) {
         HStack {
           Image("sort")
-            .foregroundColor(.battleshipGrey)
+            .foregroundColor(.textButtonText)
 
           Text(filters.sortFilter.name)
-            .font(.uiLabel)
-            .foregroundColor(.battleshipGrey)
+            .font(.uiLabelBold)
+            .foregroundColor(.textButtonText)
         }
       }
     }
@@ -165,73 +175,26 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, bgColor: .white, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
       switch action {
         case .delete:
-          if let videoID = content.videoID {
-            self.delete(for: videoID)
-          }
-        case .save:
-          self.save(for: content)
+          self.delete(for: content)
+        
+        case .save: return
+        
+        case .cancel:
+          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
         }
       }
-
-    switch downloadsMC.state {
-      // Callling this simply to trigger view re-rendering
-      case .hasData: print("I have (new) data!")
-      case .failed: print("I have failed!")
-      case .initial: print("I am initial!")
-      case .loading: print("I am loading!")
-    }
 
     return AnyView(contentSectionView)
   }
 
-  private func delete(for videoId: Int) {
-    downloadsMC.deleteDownload(with: videoId)
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
-    }
-  }
-
-  private func save(for content: ContentDetailsModel) {
-    guard downloadsMC.state != .loading else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-
-    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-
-    if content.isInCollection {
-      
-      if content.groups.isEmpty {
-        self.contentsMC.getContentSummary(with: content.id) { detailsModel in
-          self.downloadsMC.saveCollection(with: detailsModel)
-        }
-      }
+  private func delete(for content: ContentDetailsModel) {
+    if content.isInCollection, let parent = content.parentContent {
+      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
     } else {
-      self.downloadsMC.saveDownload(with: content)
+      downloadsMC.deleteDownload(with: content)
     }
     
     self.downloadsMC.callback = { success in
@@ -261,7 +224,7 @@ struct ClearButton: ViewModifier {
         Image(systemName: "multiply.circle.fill")
           // If we don't enforce a frame, the button doesn't register the tap action
           .frame(width: 25, height: 25, alignment: .center)
-          .foregroundColor(.secondary)
+          .foregroundColor(.iconButton)
       }
     }
   }

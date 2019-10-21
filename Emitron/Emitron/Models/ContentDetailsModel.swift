@@ -42,7 +42,6 @@ class ContentDetailsModel {
   private(set) var contentType: ContentType = .none
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
-  private(set) var bookmarked: Bool = false
   private(set) var cardArtworkURL: URL?
   private(set) var technologyTripleString: String = ""
   private(set) var contributorString: String = ""
@@ -55,12 +54,25 @@ class ContentDetailsModel {
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
-  
-  var parentContentId: Int?
+
   var parentContent: ContentDetailsModel?
-  var isDownloaded: Bool = false
+  var isDownloaded = false
   var progression: ProgressionModel?
+  var progressionId: Int?
   var bookmark: BookmarkModel?
+  var shouldCancel = false
+  var parentContentId: Int?
+  var bookmarkId: Int? {
+    bookmark?.id
+  }
+  var bookmarked: Bool {
+    bookmark != nil
+  }
+
+  // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
+  var needsDetails: Bool {
+    contentType == .collection && !(groups.count > 0)
+  }
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -125,7 +137,7 @@ class ContentDetailsModel {
                 content?.parentContent = self
                 return content
               })
-              
+
               if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
                 groups.append(group)
               }
@@ -136,6 +148,7 @@ class ContentDetailsModel {
         self.groups = groups
       case "progression":
         let ids = relationship.data.compactMap { $0.id }
+        self.progressionId = ids.first
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
@@ -144,12 +157,15 @@ class ContentDetailsModel {
         let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
         let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
         self.bookmark = bookmarks?.first
+        // We can simply make a Bookmark with just an ID
+        if let id = ids.first, self.bookmark != nil {
+          self.bookmark = BookmarkModel(id: id)
+        }
       default:
         break
       }
     }
 
-    self.bookmarked = self.bookmark != nil
     self.url = jsonResource.links["self"]
   }
 
@@ -163,7 +179,6 @@ class ContentDetailsModel {
     self.difficulty = summaryModel.difficulty
     self.contentType = summaryModel.contentType
     self.duration = summaryModel.duration
-    self.bookmarked = summaryModel.bookmarked
     self.popularity = summaryModel.popularity
     self.cardArtworkURL = summaryModel.cardArtworkURL
     self.technologyTripleString = summaryModel.technologyTripleString
@@ -185,12 +200,33 @@ class ContentDetailsModel {
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
     self.contentType = ContentType(rawValue: content.contentType) ?? .none
     self.duration = content.duration.intValue
-    self.bookmarked = content.bookmarked
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkUrl
     self.technologyTripleString = content.technologyTripleString
     self.contributorString = content.contributorString
     self.videoID = content.videoID?.intValue
+  }
+
+  /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
+  ///
+  /// - parameters:
+  ///   - content: core data entity to transform into domain model
+  init(_ content: ContentsData) {
+    self.id = content.id ?? 0
+    self.name = content.name
+    self.uri = content.uri
+    self.description = content.contentDescription
+    self.releasedAt = content.releasedAt
+    self.free = content.free
+    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
+    self.contentType = ContentType(rawValue: content.contentType) ?? .none
+    self.duration = content.duration
+    self.popularity = content.popularity
+    self.cardArtworkURL = content.cardArtworkURL
+    self.technologyTripleString = content.technologyTripleString
+    self.contributorString = content.contributorString
+    self.videoID = content.videoID
+    self.parentContentId = content.parentContentId
   }
 }
 
@@ -212,9 +248,8 @@ extension ContentDetailsModel {
 }
 
 extension ContentDetailsModel {
-  
+
   var isInCollection: Bool {
-    guard let parentContent = parentContent else { return false }
-    return parentContent.contentType == .collection
+    return contentType == .collection || contentType == .episode
   }
 }

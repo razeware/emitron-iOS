@@ -29,11 +29,11 @@
 import SwiftUI
 
 struct TabNavView: View {
-  
+
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
-  
+
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
       NavigationView {
@@ -41,51 +41,52 @@ struct TabNavView: View {
       }.tabItem {
         Text(Constants.library)
         Image("library")
-          .foregroundColor(.appGreen)
       }
       .tag(0)
-      
+
       NavigationView {
         downloadsView
       }.tabItem {
         Text(Constants.downloads)
-        Image("downloadInactive")
+        Image("downloadTabInactive")
       }
       .tag(1)
-      
+
       NavigationView {
         myTutorialsView
-        
+
       }.tabItem {
         Text(Constants.myTutorials)
         Image("myTutorials")
       }
       .tag(2)
-    }.edgesIgnoringSafeArea(.top)
+    }
+    .edgesIgnoringSafeArea(.top)
+    .background(Color.backgroundColor)
   }
-  
+
   private var libraryView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let contentsMC = dataManager.contentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
-    
+
     UserMC(guardpost: Guardpost.current).fetchPermissions()
-    
+
     return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
   }
-  
+
   private var myTutorialsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
     return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
   }
-  
+
   private var downloadsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: selection)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
   }
 }
 

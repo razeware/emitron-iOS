@@ -35,8 +35,11 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
-  @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
+  var contentsMC: ContentsMC {
+    return DataManager.current!.contentsMC
+  }
+
   var contents: [ContentDetailsModel] {
     return getContents()
   }
@@ -44,58 +47,57 @@ struct DownloadsView: View {
   var body: some View {
     VStack {
       contentView
-      exploreButton
     }
+    .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
   }
-  
+
   private var contentView: some View {
-    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, bgColor: .white, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
-      self.handleAction(with: action, content: content)
+    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+      self.contentsMC.getContentSummary(with: content.id) { details in
+        guard let details = details else { return }
+        self.handleAction(with: action, content: details)
+      }
     }
   }
-  
+
   private func getContents() -> [ContentDetailsModel] {
     var contents = [ContentDetailsModel]()
     let downloadedContents = downloadsMC.data.map { $0.content }
-    
-    downloadedContents.forEach { content in
-      
-      if content.contentType == .episode {
-        if content.parentContentId == content.id {
-          contents.append(content)
-        }
-      } else {
-        contents.append(content)
+
+    downloadedContents.forEach { download in
+      if download.contentType != .episode {
+        contents.append(download)
+        // only show episodes in downloads view if the parent hasn't also been downloaded
+      } else if !downloadedContents.contains(where: { $0.id == download.parentContentId }) {
+          contents.append(download)
       }
-      
     }
-    
-    return contents
+
+    return !contents.isEmpty ? contents : []
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
 
-    guard let videoID = content.videoID else { return }
-    
     switch action {
     case .delete:
-      downloadsMC.deleteDownload(with: videoID)
+      if content.isInCollection {
+        // if an episode, only delete the specific episode
+        if !downloadsMC.data.contains(where: { $0.content.id == content.parentContentId }) {
+          downloadsMC.deleteDownload(with: content)
+        } else {
+          downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
+        }
+      } else {
+        downloadsMC.deleteDownload(with: content)
+      }
 
     case .save:
-      self.downloadsMC.saveDownload(with: content)
+      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: false)
+
+    case .cancel:
+      self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
     }
-  }
-
-  private var exploreButton: AnyView? {
-    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
-
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      self.emitron.selectedTab = 0
-    }
-    .padding([.bottom, .leading, .trailing], 20)
-
-    return AnyView(button)
   }
 }
 
@@ -104,7 +106,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: 0)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
   }
 }
 #endif

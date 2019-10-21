@@ -39,6 +39,7 @@ struct TextListItemView: View {
   var contentSummary: ContentDetailsModel
   var buttonAction: (Bool) -> Void
   @ObservedObject var downloadsMC: DownloadsMC
+  @ObservedObject var progressionsMC: ProgressionsMC
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -54,17 +55,24 @@ struct TextListItemView: View {
         
         setUpImageAndProgress()
           .padding([.trailing], 20)
-
       }
+      
       Text(contentSummary.duration.timeFromSeconds)
         .font(.uiCaption)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
+        .padding([.top], 2)
+      
+      if contentSummary.progress < 1.0 && contentSummary.progress > 0.0 {
+        ProgressBarView(progress: contentSummary.progress)
+          .padding([.trailing], 20)
+          .padding([.top], 10)
+      }
     }
   }
   
   private func setUpImageAndProgress() -> AnyView {
     
-    let image = Image(self.downloadImageName())
+    let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
       .onTapGesture {
@@ -76,12 +84,17 @@ struct TextListItemView: View {
 
       if contentSummary.isInCollection {
         
+        // If downloading entire collection, only showing loading view at the top of the ContentsListingView
+        guard downloadsMC.isEpisodeOnly else {
+          return AnyView(image)
+        }
+        
         guard let downloadedContent = downloadsMC.downloadedContent,
         downloadedContent.id == contentSummary.id else {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadsMC.collectionProgress))
+        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
 
       } else {
         // Only show progress on model that is currently being downloaded
@@ -90,7 +103,7 @@ struct TextListItemView: View {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(progress: downloadModel.downloadProgress))
+        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
       
     default:
@@ -98,33 +111,31 @@ struct TextListItemView: View {
     }
   }
   
-  private func downloadImageName() -> String {
+  private var downloadImageName: String {
     if contentSummary.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        
         return downloadModel.content.id == contentSummary.id
-      } ? DownloadImageName.inActive : DownloadImageName.active
+        } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
       return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
   
   private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inActive
     buttonAction(success)
   }
 
-  
   private var doneCheckbox: AnyView {
     let numberView = ZStack {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
-        .foregroundColor(.brightGrey)
+        .foregroundColor(.secondaryButtonBackground)
         .cornerRadius(6)
       
       Text("\(contentSummary.index ?? 0)")
         .font(.uiButtonLabelSmall)
-        .foregroundColor(.white)
+        .foregroundColor(.buttonText)
     }
     .onTapGesture {
       self.toggleCompleteness()
@@ -133,12 +144,12 @@ struct TextListItemView: View {
     let completeView = ZStack(alignment: .center) {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide)
-        .foregroundColor(Color.appGreen)
+        .foregroundColor(Color.accent)
       
       Image("checkmark")
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
-        .foregroundColor(Color.white)
+        .foregroundColor(Color.buttonText)
     }
     .cornerRadius(6)
     

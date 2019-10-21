@@ -239,6 +239,7 @@ class Filters: ObservableObject {
       $0.isOn = false
       all.update(with: $0)
     }
+    searchQuery = nil
     commitUpdates()
   }
   

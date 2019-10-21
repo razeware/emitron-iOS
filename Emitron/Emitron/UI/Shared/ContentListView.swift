@@ -34,47 +34,51 @@ private struct Layout {
 }
 
 enum ContentScreen {
-  case library, downloads, myTutorials, tips
+  case library, downloads, inProgress, completed, bookmarked
+
+  var isMyTutorials: Bool {
+    switch self {
+    case .bookmarked, .inProgress, .completed: return true
+    default: return false
+    }
+  }
 
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything meeting the search criteria."
+    case .library: return "We couldn't find anything with that search criteria."
     case .downloads: return "You haven't downloaded any tutorials yet."
-    case .myTutorials: return "You haven't started any tutorials yet."
-    case .tips: return "Swipe left to delete a download."
+    case .bookmarked: return "You haven't bookmarked any tutorials yet."
+    case .inProgress: return "You don't have any tutorials in progress yet."
+    case .completed: return "You haven't completed any tutorials yet."
+
     }
   }
 
-  var detailMesage: String? {
+  var detailMesage: String {
     switch self {
-    case .library: return "Try removing some filters or checking your \n WiFi settings."
-    case .tips: return "Swipe on your downloads to remove them."
-    default: return nil
+    case .library: return "Try removing some filters or checking your WiFi settings."
+    case .bookmarked: return "Tap the bookmark icon to bookmark a video course or screencast."
+    case .inProgress: return "When you start a video course you can quickly resume it from here."
+    case .completed: return "Watch all the episodes of a video course or screencast to complete it."
+    case .downloads: return "Tap the download icon to download a video course or episode to watch offline."
     }
   }
 
   var buttonText: String? {
     switch self {
-    case .downloads: return "Explore Tutorials"
-    case .tips: return "Got it!"
+    case .downloads, .inProgress, .completed, .bookmarked: return "Explore Tutorials"
     default: return "Reload"
     }
   }
 
-  var buttonIconName: String? {
+  var emptyImageName: String {
     switch self {
-    case .downloads, .tips: return "arrowGreen"
-    case .myTutorials: return "arrowRed"
-    default: return nil
-    }
-  }
-
-  var buttonColor: Color? {
-    switch self {
-    case .downloads, .tips: return .appGreen
-    case .myTutorials: return .copper
-    default: return nil
+    case .downloads: return "artworkEmptySuitcase"
+    case .bookmarked: return "artworkBookmarks"
+    case .inProgress: return "artworkInProgress"
+    case .completed: return "artworkCompleted"
+    case .library: return "emojiCrying"
     }
   }
 }
@@ -86,12 +90,11 @@ struct ContentListView: View {
   @State private var showSettings = false
   @State var hudOption: HudOption = .success
   var downloadsMC: DownloadsMC
-
-  @State var contentScreen: ContentScreen
+  var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
   var contents: [ContentDetailsModel] = []
-  var bgColor: Color
   @State var selectedMC: ContentSummaryMC?
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
   var dataState: DataState
@@ -100,32 +103,9 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
-    }
-    .actionSheet(isPresented: self.$showAlert) {
-        ActionSheet(
-          title: Text("You are not connected to Wi-Fi"),
-          message: Text("Turn on Wi-Fi to access data."),
-          buttons: [
-            .default(Text("Settings"), action: {
-              self.openSettings()
-            }),
-            .default(Text("OK"), action: {
-              self.showAlert.toggle()
-            })
-          ]
-        )
-      }
-    }
-    
-    private func openSettings() {
-      //for WIFI setting app
-      if let url = URL(string: "App-Prefs:root=WIFI") {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-        showAlert.toggle()
-      }
-    }
+      // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
+      //.background(Color.backgroundColor)
+  }
 
   private var listView: some View {
     List {
@@ -139,13 +119,28 @@ struct ContentListView: View {
           loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
+
         if contentScreen == .downloads {
-          cardsTableViewWithDelete
+
+          if contents.isEmpty || downloadsMC.data.isEmpty {
+            emptyView
+          } else {
+            cardsTableViewWithDelete
+          }
+
         } else {
           cardTableNavView
         }
         loadMoreView
       }
+    }
+  }
+
+  private func openSettings() {
+    //for WIFI setting app
+    if let url = URL(string: "App-Prefs:root=WIFI") {
+      UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      showAlert.toggle()
     }
   }
 
@@ -181,27 +176,30 @@ struct ContentListView: View {
       return AnyView(emptyView)
     }
   }
-  
+
   private var failedView: some View {
     VStack {
       headerView
 
       Spacer()
 
+      Image("emojiCrying")
+        .padding([.bottom], 30)
+
       Text("Something went wrong.")
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
 
       Text("Please try again.")
         .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)
-      
+
       Spacer()
-      
+
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
@@ -217,28 +215,23 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { hudOption in
-            switch hudOption {
-            case .success:
+          self.cardView(content: partialContent, onLeftTap: { success in
+            if success {
               self.callback?(.save, partialContent)
-            case .error:
-              if self.showHudView {
-                self.showHudView.toggle()
-              }
-              self.showHudView = true
-            case .notOnWifi:
-              self.showAlert = true
             }
-            
-            self.hudOption = hudOption
+          }, onRightTap: {
+            // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
+            //self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
-      .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-      .background(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .background(Color.backgroundColor)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -252,38 +245,30 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onRightTap: { hudOption in
-          switch hudOption {
-          case .success:
-            self.callback?(.save, partialContent)
-            self.showHudView = true
-          case .error:
-            if self.showHudView {
-              self.showHudView.toggle()
+          self.cardView(content: partialContent, onLeftTap: { success in
+            if success {
+              self.callback?(.save, partialContent)
             }
-            self.showHudView = true
-          case .notOnWifi:
-            self.showAlert = true
-          }
-          
-          self.hudOption = hudOption
+          }, onRightTap: {
+            self.toggleBookmark(model: partialContent)
           })
-            .padding([.leading], 20)
+            .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
       }
       .onDelete(perform: self.delete)
-      .listRowBackground(self.bgColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 10))
-      .background(self.bgColor)
+      .listRowBackground(Color.backgroundColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .background(Color.backgroundColor)
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -38.0)
   }
 
-  private func cardView(content: ContentDetailsModel, onRightTap: ((HudOption) -> Void)?) -> some View {
-    let viewModel = CardViewModel.transform(content, cardViewType: .default)
-
-    return CardView(model: viewModel,
-                    contentScreen: contentScreen,
-                    onRightIconTap: onRightTap).environmentObject(self.downloadsMC)
+  private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
+    AnyView(CardView(model: content,
+                     contentScreen: contentScreen,
+                     onLeftIconTap: onLeftTap,
+                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
 
   private var emptyView: some View {
@@ -292,30 +277,48 @@ struct ContentListView: View {
 
       Spacer()
 
+      Image(contentScreen.emptyImageName)
+      .padding([.bottom], 30)
+
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
-        .foregroundColor(.appBlack)
+        .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], 20)
+        .padding([.bottom], 20)
+        .padding([.leading, .trailing], 55)
 
-      Text(contentScreen.detailMesage ?? "")
+      Text(contentScreen.detailMesage)
         .font(.uiLabel)
-        .foregroundColor(.battleshipGrey)
+        .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 20)
-      
+        .padding([.leading, .trailing], 55)
+
       Spacer()
+
+      exploreButton
     }
+    .background(Color.backgroundColor)
   }
-  
+
+  private var exploreButton: AnyView? {
+    guard let buttonText = contentScreen.buttonText, contents.isEmpty && contentScreen != .library else { return nil }
+
+    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
+      self.emitron.selectedTab = 0
+    }
+    .padding([.bottom, .leading, .trailing], 20)
+
+    return AnyView(button)
+  }
+
   private var loadingView: some View {
     VStack {
       headerView
       Spacer()
-      loadMoreView
     }
+    .overlay(ActivityIndicator())
   }
-  
+
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
@@ -340,12 +343,16 @@ struct ContentListView: View {
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
+
+  func toggleBookmark(model: ContentDetailsModel) {
+    DataManager.current?.contentsMC.toggleBookmark(for: model)
+  }
 }
 
 #if DEBUG
 struct ContentListView_Previews: PreviewProvider {
   static var previews: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], bgColor: .paleGrey, dataState: .hasData, totalContentNum: 5)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], dataState: .hasData, totalContentNum: 5)
   }
 }
 #endif

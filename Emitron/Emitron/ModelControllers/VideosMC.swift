@@ -100,9 +100,8 @@ class VideosMC: NSObject, ObservableObject {
         .log(additionalParams: nil)
 
         //TODO: Stop playback, ask use to re-play the video
-      case .success(let _):
-        print("USAGE STATISTICS")
-
+      case .success(_): break
+        //TODO: Anything to do when we get back usage statistics?
       }
     }
   }
@@ -167,7 +166,6 @@ class VideosMC: NSObject, ObservableObject {
 
   func getDownloadVideofor(id: Int,
                            completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
-
     state = .loading
     videoService.getVideoDownload(for: id) { [weak self] result in
       completion(result)

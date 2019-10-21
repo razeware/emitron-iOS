@@ -33,9 +33,9 @@ import SwiftUI
 struct CheckmarkView: View {
   var isOn: Bool
   
-  var outerSide: CGFloat = 20
-  var innerSide: CGFloat = 16
-  var outerRadius: CGFloat = 6
+  var outerSide: CGFloat = 24
+  var innerSide: CGFloat = 20
+  var outerRadius: CGFloat = 9
   var radiusRatio: CGFloat {
     return outerRadius / outerSide
   }
@@ -50,24 +50,25 @@ struct CheckmarkView: View {
       if isOn {
         ZStack(alignment: .center) {
           Rectangle()
-            .frame(maxWidth: 20, maxHeight: 20)
-            .foregroundColor(Color.appGreen)
+
+            .frame(maxWidth: outerSide, maxHeight: outerSide)
+            .foregroundColor(Color.accent)
           
           Image("checkmark")
             .resizable()
-            .frame(maxWidth: 15, maxHeight: 17)
-            .foregroundColor(Color.white)
+            .frame(maxWidth: innerSide-1, maxHeight: innerSide+1)
+            .foregroundColor(Color.buttonText)
         }
-        .cornerRadius(6)
+        .cornerRadius(outerRadius)
       } else {
         ZStack {
           RoundedRectangle(cornerRadius: outerRadius)
           .frame(maxWidth: outerSide, maxHeight: outerSide)
-          .foregroundColor(Color.coolGrey)
+          .foregroundColor(Color.borderColor)
           
           RoundedRectangle(cornerRadius: radiusRatio * innerSide)
           .frame(maxWidth: innerSide, maxHeight: innerSide)
-          .foregroundColor(Color.white)
+          .foregroundColor(Color.modalBackground)
         }
       }
     }
