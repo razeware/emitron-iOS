@@ -151,6 +151,11 @@ struct ContentListView: View {
   }
   
   private var contentView: AnyView {
+    // prevent crash from displaying empty view 
+    guard contentScreen != .downloads else {
+      return AnyView(listView)
+    }
+    
     switch dataState {
     case .initial,
          .loading where contents.isEmpty:
