@@ -44,6 +44,9 @@ extension Font {
   static var uiTitle4: Font {
     return Font.custom("Bitter-Bold", size: 19.0)
   }
+  static var uiTitle5: Font {
+    return Font.custom("Bitter-Regular", size: 17.0)
+  }
   static var uiHeadline: Font {
     return Font.system(size: 18.0).weight(.semibold)
   }

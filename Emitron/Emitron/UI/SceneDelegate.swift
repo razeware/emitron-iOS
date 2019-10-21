@@ -43,6 +43,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // TODO: When a modifier is available these should be refactored
     UITableView.appearance().separatorColor = .clear
     UITableViewCell.appearance().backgroundColor = .backgroundColor
+
     UITableView.appearance().backgroundColor = .backgroundColor
     UINavigationBar.appearance().backgroundColor = .backgroundColor
     

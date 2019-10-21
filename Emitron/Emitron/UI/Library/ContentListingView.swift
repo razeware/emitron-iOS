@@ -157,10 +157,13 @@ struct ContentListingView: View {
           .onTapGesture {
             self.isPresented = true
         }
+        .padding([.leading, .trailing], 20)
+        .padding([.bottom], 20)
       }
         //HACK: to remove navigation chevrons
         .padding(.trailing, -32.0)
     }
+    .listRowInsets(EdgeInsets())
     .listRowBackground(Color.backgroundColor)
   }
 
