@@ -63,7 +63,7 @@ struct TextListItemView: View {
         .padding([.top], 2)
       
       if contentSummary.progress < 1.0 && contentSummary.progress > 0.0 {
-        ProgressBarView(progress: contentSummary.progress)
+        ProgressBarView(progress: contentSummary.progress, isRounded: true)
           .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
           .padding([.trailing], 20)
           .padding([.top], 10)

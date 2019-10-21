@@ -114,7 +114,7 @@ struct CardView: SwiftUI.View {
 
       Group {
         if model.progress > 0 && model.progress < 1 {
-          ProgressBarView(progress: model.progress)
+          ProgressBarView(progress: model.progress, isRounded: true)
             .padding([.top, .bottom], 0)
         } else {
           Rectangle()

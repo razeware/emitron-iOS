@@ -289,49 +289,55 @@ struct ContentListingView: View {
   }
 
   private func opacityOverlay(for width: CGFloat) -> some View {
-    ZStack(alignment: .center) {
-      Image(uiImage: uiImage)
-        .resizable()
-        .frame(width: width, height: width * imageRatio)
-        .transition(.opacity)
-
-      Rectangle()
-        .foregroundColor(.appBlack)
-        .opacity(0.2)
-
-      GeometryReader { geometry in
-        HStack {
-          // If progress is between 0.0 and 1.0 show continue, otherwise show play
-          if self.content.progress > 0.0 && self.content.progress < 1.0 {
-            self.continueButton
-            //HACK: to center the button when it's in a NavigationLink
-              .padding(.leading, geometry.size.width/2 - 74.5)
-          } else {
-            self.playButton
-            //HACK: to center the button when it's in a NavigationLink
-            .padding(.leading, geometry.size.width/2 - 32.0)
+    VStack(spacing: 0, content: {
+      ZStack(alignment: .center) {
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: width, height: width * imageRatio)
+          .transition(.opacity)
+        
+        Rectangle()
+          .foregroundColor(.appBlack)
+          .opacity(0.2)
+        
+        GeometryReader { geometry in
+          HStack {
+            // If progress is between 0.0 and 1.0 show continue, otherwise show play
+            if self.content.progress > 0.0 && self.content.progress < 1.0 {
+              self.continueButton
+                //HACK: to center the button when it's in a NavigationLink
+                .padding(.leading, geometry.size.width/2 - 74.5)
+            } else {
+              self.playButton
+                //HACK: to center the button when it's in a NavigationLink
+                .padding(.leading, geometry.size.width/2 - 32.0)
+            }
           }
+            //HACK: to remove navigation chevrons
+            .padding(.trailing, -32.0)
         }
-          //HACK: to remove navigation chevrons
-          .padding(.trailing, -32.0)
       }
-    }
+      ProgressBarView(progress: content.progress, isRounded: false)
+    })
   }
 
   private func blurOverlay(for width: CGFloat) -> some View {
-    ZStack {
-      Image(uiImage: uiImage)
-        .resizable()
-        .frame(width: width, height: width * imageRatio)
-        .transition(.opacity)
-        .blur(radius: 10)
-
-      Rectangle()
-        .foregroundColor(.appBlack)
-        .opacity(0.5)
-        .blur(radius: 10)
-
-      proView
+    VStack {
+      ZStack {
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: width, height: width * imageRatio)
+          .transition(.opacity)
+          .blur(radius: 10)
+        
+        Rectangle()
+          .foregroundColor(.appBlack)
+          .opacity(0.5)
+          .blur(radius: 10)
+        
+        proView
+      }
+      ProgressBarView(progress: content.progress, isRounded: false)
     }
   }
 

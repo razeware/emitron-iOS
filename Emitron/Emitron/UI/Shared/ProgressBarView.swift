@@ -31,9 +31,11 @@ import SwiftUI
 struct ProgressBarView: View {
   private var progress: CGFloat
   private var height: CGFloat = 4
+  private var isRounded: Bool
   
-  init(progress: CGFloat) {
+  init(progress: CGFloat, isRounded: Bool) {
     self.progress = progress
+    self.isRounded = isRounded
   }
   
   var body: some View {
@@ -44,14 +46,14 @@ struct ProgressBarView: View {
         Rectangle()
           .frame(width: geometry.size.width, height: self.height)
           .foregroundColor(.borderColor)
-          .cornerRadius(self.height/2)
+          .cornerRadius(self.isRounded ? self.height/2 : 0)
         
         HStack(alignment: .center) {
           
           Rectangle()
             .frame(width: geometry.size.width * (self.progress/2), height: self.height)
             .foregroundColor(.accent)
-            .cornerRadius(self.height/2)
+            .cornerRadius(self.isRounded ? self.height/2 : 0)
           
           if self.progress >= 1 {
             
@@ -60,14 +62,14 @@ struct ProgressBarView: View {
             Rectangle()
               .frame(width: geometry.size.width * (self.progress/2), height: self.height)
               .foregroundColor(.accent)
-              .cornerRadius(self.height/2)
+              .cornerRadius(self.isRounded ? self.height/2 : 0)
           }
         }
         
         Rectangle()
           .frame(width: geometry.size.width * self.progress, height: self.height)
           .foregroundColor(.accent)
-          .cornerRadius(self.height/2)
+          .cornerRadius(self.isRounded ? self.height/2 : 0)
       }
     }
   }
