@@ -44,8 +44,8 @@ extension ContentDetailsModel {
     }
     
     let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.map { $0.name }.joined(separator: ", ")
-  
+    let subtitle = contentDomains.count > 1 ? "Multi-platform" : contentDomains.first?.name ?? ""
+    
     return subtitle
   }
   
