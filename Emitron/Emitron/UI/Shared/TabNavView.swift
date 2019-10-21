@@ -87,7 +87,7 @@ struct TabNavView: View {
   private var downloadsView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: selection)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
   }
 }
 

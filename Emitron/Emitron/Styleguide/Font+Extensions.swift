@@ -77,4 +77,7 @@ extension Font {
   static var uiUppercase: Font {
     return Font.system(size: 12.0).weight(.semibold)
   }
+  static var uiUppercaseTag: Font {
+    return Font.system(size: 10.0).weight(.semibold)
+  }
 }

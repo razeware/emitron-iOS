@@ -72,19 +72,13 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
         .foregroundColor(.titleText)
 
-      if contentSummaryMC.data.progression?.finished ?? false {
-        CompletedTag()
-      } else {
-
-        Text(contentSummaryMC.data.releasedAtDateTimeString)
-        .font(.uiCaption)
-        .foregroundColor(.contentText)
-        .padding([.top], 12)
-      }
-
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
+        
+        if contentSummaryMC.data.progression?.finished ?? false {
+          CompletedTag()
+        }
       })
       .padding([.top], 15)
 
@@ -97,6 +91,7 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
+        .lineSpacing(3)
 
       Text("By \(contentSummaryMC.data.contributorString)")
         .font(.uiFootnote)
@@ -104,6 +99,7 @@ struct ContentSummaryView: View {
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
+        .lineSpacing(3)
     }
   }
 

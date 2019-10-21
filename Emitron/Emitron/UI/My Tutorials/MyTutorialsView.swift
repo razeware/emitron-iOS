@@ -34,11 +34,22 @@ private extension CGFloat {
 
 enum MyTutorialsState: String {
   case inProgress, completed, bookmarked
+  var contentScreen: ContentScreen {
+    switch self {
+    case .inProgress:
+      return .inProgress
+    case .completed:
+      return .completed
+    case .bookmarked:
+      return .bookmarked
+    }
+  }
 }
 
 struct MyTutorialView: View {
 
   @EnvironmentObject var domainsMC: DomainsMC
+  @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
@@ -99,8 +110,8 @@ struct MyTutorialView: View {
         dataToDisplay.append(content)
       }
     }
-    
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
 
   private var completedContentsView: some View {
@@ -112,7 +123,7 @@ struct MyTutorialView: View {
         dataToDisplay.append(content)
       }
     }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
 
   private var bookmarkedContentsView: some View {
@@ -120,17 +131,6 @@ struct MyTutorialView: View {
     dataToDisplay.forEach { model in
       model.domains = domainsMC.data.filter { model.domainIDs.contains($0.id) }
     }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
   }
 }
-
-#if DEBUG
-struct MyTutorialsView_Previews: PreviewProvider {
-  static var previews: some View {
-    let progressionsMC = DataManager.current!.progressionsMC
-    let bookmarksMC = DataManager.current!.bookmarksMC
-    let domainsMC = DataManager.current!.domainsMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC)
-  }
-}
-#endif
