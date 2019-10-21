@@ -91,20 +91,26 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: some View {
-    let progressions = progressionsMC.data.filter {  $0.percentComplete > 0 && !$0.finished }
-    let dataToDisplay = progressions.compactMap { $0.content }
-    dataToDisplay.forEach { model in
-      model.domains = domainsMC.data.filter { model.domainIDs.contains($0.id) }
+    var dataToDisplay = [ContentDetailsModel]()
+    progressionsMC.data.forEach { progressionModel in
+      if progressionModel.progress > 0 && !progressionModel.finished, let content = progressionModel.content {
+        content.progression = progressionModel
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        dataToDisplay.append(content)
+      }
     }
-
+    
     return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }
 
   private var completedContentsView: some View {
-    let progressions = progressionsMC.data.filter {  $0.finished }
-    let dataToDisplay = progressions.compactMap { $0.content }
-    dataToDisplay.forEach { model in
-      model.domains = domainsMC.data.filter { model.domainIDs.contains($0.id) }
+    var dataToDisplay = [ContentDetailsModel]()
+    progressionsMC.data.forEach { progressionModel in
+      if progressionModel.finished, let content = progressionModel.content {
+        content.progression = progressionModel
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        dataToDisplay.append(content)
+      }
     }
     return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .myTutorials, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
   }

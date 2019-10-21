@@ -155,11 +155,6 @@ struct CardView: SwiftUI.View {
     )
   }
 
-  private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
-    onLeftIconTap?(success)
-  }
-
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
@@ -178,19 +173,6 @@ struct CardView: SwiftUI.View {
       case .failure:
         break
       }
-    }
-  }
-
-  private func downloadImageName() -> String {
-
-    if model.isInCollection {
-
-      return downloadsMC.data.contains { downloadModel in
-
-        return downloadModel.content.parentContentId == model.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
