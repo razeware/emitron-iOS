@@ -35,7 +35,6 @@ private extension CGFloat {
 struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
-  @State var tabSelection: Int
   @EnvironmentObject var emitron: AppState
   var contentsMC: ContentsMC {
     return DataManager.current!.contentsMC
@@ -48,7 +47,6 @@ struct DownloadsView: View {
   var body: some View {
     VStack {
       contentView
-      exploreButton
     }
     .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
@@ -101,17 +99,6 @@ struct DownloadsView: View {
       self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
     }
   }
-
-  private var exploreButton: AnyView? {
-    guard downloadsMC.data.isEmpty, let buttonText = contentScreen.buttonText else { return nil }
-
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      self.emitron.selectedTab = 0
-    }
-    .padding([.bottom, .leading, .trailing], 20)
-
-    return AnyView(button)
-  }
 }
 
 #if DEBUG
@@ -119,7 +106,7 @@ struct DownloadsView_Previews: PreviewProvider {
   static var previews: some View {
     guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
     let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC, tabSelection: 0)
+    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
   }
 }
 #endif

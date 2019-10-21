@@ -34,11 +34,12 @@ struct CompletedTag: View {
       Rectangle()
         .foregroundColor(.accentTagBackground)
         .cornerRadius(6)
-        .frame(width: 86, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+        .frame(width: 86, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
       
       Text("COMPLETED")
         .foregroundColor(.accentTagForeground)
-        .font(.uiUppercase)
+        .font(.uiUppercaseTag)
+        .kerning(0.5)
     }
   }
 }
