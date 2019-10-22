@@ -37,7 +37,7 @@ class BookmarkModel {
   //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
   // Does not happen in Xcode 10
   private(set) var createdAt: Date?
-  private(set) var content: ContentDetailsModel?
+  var content: ContentDetailsModel?
 
   // MARK: - Initializers
   init?(resource: JSONAPIResource,

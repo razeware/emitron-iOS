@@ -141,7 +141,7 @@ struct CardView: SwiftUI.View {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     
-    guard model.bookmarked || self.contentScreen.isMyTutorials else { return nil }
+    guard model.bookmarked else { return nil }
 
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
 

@@ -51,7 +51,7 @@ struct MyTutorialView: View {
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
-  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
 
@@ -109,7 +109,7 @@ struct MyTutorialView: View {
         content.progression = progressionModel
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
         // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = contentsMC.data.first(where: { $0.id == content.id })?.bookmark {
+        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
           content.bookmark = bookmark
         }
         
@@ -128,7 +128,7 @@ struct MyTutorialView: View {
         content.progression = progressionModel
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
         // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = contentsMC.data.first(where: { $0.id == content.id })?.bookmark {
+        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
           content.bookmark = bookmark
         }
         
@@ -139,7 +139,14 @@ struct MyTutorialView: View {
   }
 
   private var bookmarkedContentsView: some View {
-    let dataToDisplay = contentsMC.data.filter { $0.bookmarked }    
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials)
+    var dataToDisplay = [ContentDetailsModel]()
+    bookmarksMC.data.forEach { bookmark in
+      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }){
+        content.bookmark = bookmark
+        dataToDisplay.append(content)
+      }
+    }
+    
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
   }
 }

@@ -50,7 +50,7 @@ struct ContentListingView: View {
   init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
-    self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
+    self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content, bookmarksMC: DataManager.current!.bookmarksMC)
     self.downloadsMC = downloadsMC
   }
 
