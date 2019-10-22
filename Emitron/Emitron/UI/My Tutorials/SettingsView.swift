@@ -159,7 +159,7 @@ struct SettingsView: View {
       }
     }
     
-    return selectedDetail
+    return AttachmentKind.getDetail(value: selectedDetail)
   }
   
   private func setToggleState(at index: Int) -> Bool {

@@ -33,6 +33,7 @@ struct ContentListingView: View {
 
   @State private var isEpisodeOnly = false
   @State private var showingSheet = false
+  @State var showAlert: Bool = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
@@ -66,17 +67,20 @@ struct ContentListingView: View {
             self.opacityOverlay(for: geometry.size.width)
           }
 
-          ContentSummaryView(callback: { (content, success) in
-            if success {
+          ContentSummaryView(callback: { (content, hudOption) in
+            switch hudOption {
+            case .success:
               self.save(for: content, isEpisodeOnly: false)
-            } else {
+            case .error:
               if self.showHudView {
                 self.showHudView.toggle()
               }
-
-              self.hudOption = success ? .success : .error
               self.showHudView = true
+            case .notOnWifi:
+              self.showAlert = true
             }
+
+            self.hudOption = hudOption
           }, downloadsMC: self.downloadsMC, contentSummaryMC: self.contentSummaryMC)
             .padding([.leading, .trailing], 20)
             .padding([.bottom], 37)
@@ -105,10 +109,33 @@ struct ContentListingView: View {
     .actionSheet(isPresented: $showingSheet) {
       actionSheet
     }
+    .actionSheet(isPresented: self.$showAlert) {
+        ActionSheet(
+          title: Text("You are not connected to Wi-Fi"),
+          message: Text("Turn on Wi-Fi to access data."),
+          buttons: [
+            .default(Text("Settings"), action: {
+              self.openSettings()
+            }),
+            .default(Text("OK"), action: {
+              self.showAlert.toggle()
+            })
+          ]
+        )
+      }
 
     return scrollView
       .navigationBarTitle(Text(content.name), displayMode: .inline)
       .background(Color.backgroundColor)
+  }
+
+  private func openSettings() {
+    // open iPhone settings
+    if let url = URL(string: UIApplication.openSettingsURLString) {
+      if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      }
+    }
   }
 
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
@@ -139,7 +166,7 @@ struct ContentListingView: View {
         })
 
       ) {
-        
+
         TextListItemView(contentSummary: model, buttonAction: { success in
           if success {
             self.save(for: model, isEpisodeOnly: true)
@@ -147,7 +174,7 @@ struct ContentListingView: View {
             if self.showHudView {
               self.showHudView.toggle()
             }
-            
+
             self.hudOption = success ? .success : .error
             self.showHudView = true
           }
