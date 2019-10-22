@@ -91,6 +91,6 @@ extension Int {
     let minutes = Int(minutesFromSeconds)
     let seconds = self - minutes * 60
     
-    return "\(minutes):\(seconds)"
+    return "\(minutes):\(String(format: "%02d", seconds))"
   }
 }
