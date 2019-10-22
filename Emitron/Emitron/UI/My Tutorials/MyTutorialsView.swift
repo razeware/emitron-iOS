@@ -103,9 +103,16 @@ struct MyTutorialView: View {
   private var inProgressContentsView: some View {
     var dataToDisplay = [ContentDetailsModel]()
     progressionsMC.data.forEach { progressionModel in
+      // only show parent of collection or screencast
+      guard progressionModel.content?.contentType != .episode else { return }
       if progressionModel.progress > 0 && !progressionModel.finished, let content = progressionModel.content {
         content.progression = progressionModel
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        // update content on progressionModel with whether content should be bookmarked or not
+        if let bookmark = contentsMC.data.first(where: { $0.id == content.id })?.bookmark {
+          content.bookmark = bookmark
+        }
+        
         dataToDisplay.append(content)
       }
     }
@@ -116,9 +123,15 @@ struct MyTutorialView: View {
   private var completedContentsView: some View {
     var dataToDisplay = [ContentDetailsModel]()
     progressionsMC.data.forEach { progressionModel in
+      guard progressionModel.content?.contentType != .episode else { return }
       if progressionModel.finished, let content = progressionModel.content {
         content.progression = progressionModel
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        // update content on progressionModel with whether content should be bookmarked or not
+        if let bookmark = contentsMC.data.first(where: { $0.id == content.id })?.bookmark {
+          content.bookmark = bookmark
+        }
+        
         dataToDisplay.append(content)
       }
     }
