@@ -55,6 +55,10 @@ struct LoginView: View {
     )
   }
   
+  private var testView: some View {
+    Text("Hello")
+  }
+  
   private var loginView: some View {
     VStack {
       
