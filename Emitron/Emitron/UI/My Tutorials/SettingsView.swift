@@ -159,20 +159,10 @@ struct SettingsView: View {
       }
     }
     
-    return getDetail(value: selectedDetail)
+    return AttachmentKind.getDetail(value: selectedDetail)
   }
   
   private func setToggleState(at index: Int) -> Bool {
     return UserDefaults.standard.bool(forKey: rows[index].key.rawValue)
-  }
-  
-  private func getDetail(value: String) -> String {
-    if value == AttachmentKind.sdVideoFile.rawValue {
-      return "SD"
-    } else if value == AttachmentKind.hdVideoFile.rawValue {
-      return "HD"
-    } else {
-      return value
-    }
   }
 }

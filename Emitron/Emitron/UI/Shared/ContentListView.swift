@@ -137,10 +137,11 @@ struct ContentListView: View {
   }
 
   private func openSettings() {
-    //for WIFI setting app
-    if let url = URL(string: "App-Prefs:root=WIFI") {
-      UIApplication.shared.open(url, options: [:], completionHandler: nil)
-      showAlert.toggle()
+    // open iPhone settings
+    if let url = URL(string: UIApplication.openSettingsURLString) {
+      if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      }
     }
   }
 
