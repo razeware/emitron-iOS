@@ -151,10 +151,6 @@ struct ContentListView: View {
   }
   
   private var contentView: AnyView {
-    // Prevent My Tutorials screen from reloading toggle
-    guard !contentScreen.isMyTutorials else {
-      return AnyView(listView)
-    }
     
     switch dataState {
     case .initial,

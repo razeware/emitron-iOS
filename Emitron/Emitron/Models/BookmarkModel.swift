@@ -49,21 +49,43 @@ class BookmarkModel {
     } else {
       self.createdAt = Date()
     }
+
+    var details: ContentDetailsModel?
+    var progression: ProgressionModel?
     
     for relationship in resource.relationships {
       switch relationship.type {
       case "content":
         let ids = relationship.data.compactMap { $0.id }
         let included = resource.parent?.included.filter { ids.contains($0.id) }
+        
+        if let includedRelationships = included?.first?.relationships {
+          for rel in includedRelationships {
+            switch rel.type {
+            case "progression":
+              let ids = relationship.data.compactMap { $0.id }
+              let included = resource.parent?.included.filter { ids.contains($0.id) }
+              let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
+              progression = progressions?.first
+              
+            default: break
+            }
+          }
+        }
+        
         let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, bookmark: self) }
         let detailsContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
         if let content = detailsContent?.first {
-          self.content = content
+          details = content
         }
         
       default:
+        print(relationship.type)
         break
       }
+      
+      details?.progression = progression
+      content = details
     }
   }
   

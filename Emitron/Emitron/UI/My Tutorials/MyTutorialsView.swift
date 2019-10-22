@@ -51,7 +51,7 @@ struct MyTutorialView: View {
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
-  @EnvironmentObject var bookmarksMC: BookmarksMC
+  @EnvironmentObject var contentsMC: ContentsMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
 
@@ -83,7 +83,6 @@ struct MyTutorialView: View {
           self.progressionsMC.loadContents()
         }, bookmarkedClosure: {
           self.state = .bookmarked
-          self.bookmarksMC.loadContents()
         })
           .padding([.top], .sidePadding)
       }
@@ -127,10 +126,7 @@ struct MyTutorialView: View {
   }
 
   private var bookmarkedContentsView: some View {
-    let dataToDisplay = bookmarksMC.data.compactMap { $0.content }
-    dataToDisplay.forEach { model in
-      model.domains = domainsMC.data.filter { model.domainIDs.contains($0.id) }
-    }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    let dataToDisplay = contentsMC.data.filter { $0.bookmarked }    
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials)
   }
 }
