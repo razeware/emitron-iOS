@@ -153,6 +153,7 @@ class VideoPlayerController: AVPlayerViewController {
 
       } else {
         // TODO: Show failure message/view
+        self.playFromLocalIfPossible()
       }
     }
 

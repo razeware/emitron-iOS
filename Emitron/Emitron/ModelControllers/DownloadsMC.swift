@@ -78,10 +78,7 @@ class DownloadsMC: NSObject, ObservableObject {
   private var cancelDownload = false
   private let user: UserModel
   private let videosMC: VideosMC
-  private var contentsMC: ContentsMC? {
-    guard let dataManager = DataManager.current else { return nil }
-    return dataManager.contentsMC
-  }
+  
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {

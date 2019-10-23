@@ -285,6 +285,7 @@ struct ContentListView: View {
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
+    .background(Color.backgroundColor)
   }
 
   private var emptyView: some View {
