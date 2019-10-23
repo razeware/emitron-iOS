@@ -112,6 +112,9 @@ class UserMC: NSObject, ObservableObject {
         self.state = .failed
       case .success(let permissions):
         self.user?.permissions = permissions
+        
+        // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
+        self.removeDownloadedContent()
         self.guardpost.updateUser(with: self.user)
         self.state = .hasData
       }
@@ -122,6 +125,10 @@ class UserMC: NSObject, ObservableObject {
     guardpost.logout()
     user = nil
     objectWillChange.send(())
+  }
+  
+  private func removeDownloadedContent() {
+    DataManager.current?.downloadsMC.deleteAllDownloadedContent()
   }
 }
 
