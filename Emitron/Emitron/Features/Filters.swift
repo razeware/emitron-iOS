@@ -145,9 +145,16 @@ class Filters: ObservableObject {
     return Array(contentFilters)
   }
   
+  @Published var searchStr: String = "" {
+    didSet {
+      print("Setting search!!!")
+    }
+  }
+  
   var searchQuery: String? {
     didSet {
       
+      searchStr = searchQuery ?? ""
       // Remove search filter from filters
       if let searchFilter = searchFilter {
         all.remove(searchFilter)
