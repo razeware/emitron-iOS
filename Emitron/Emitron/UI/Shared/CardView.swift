@@ -29,6 +29,7 @@
 import SwiftUI
 import Kingfisher
 import UIKit
+import Network
 
 struct CardView: SwiftUI.View {
   private var onRightIconTap: (() -> Void)?
@@ -38,7 +39,8 @@ struct CardView: SwiftUI.View {
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: ContentDetailsModel
   private let animation: Animation = .easeIn
-  
+  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
+
   init(model: ContentDetailsModel, contentScreen: ContentScreen, onLeftIconTap: ((Bool) -> Void)? = nil, onRightIconTap: (() -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
@@ -49,6 +51,8 @@ struct CardView: SwiftUI.View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
+
+    setUpNetworkMonitor()
 
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
@@ -155,6 +159,11 @@ struct CardView: SwiftUI.View {
     )
   }
 
+  private func setUpNetworkMonitor() {
+    let queue = DispatchQueue(label: "Monitor")
+    monitor.start(queue: queue)
+  }
+
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
@@ -199,7 +208,7 @@ struct CardView: SwiftUI.View {
   private func addDetailText() -> AnyView? {
     let stack = HStack {
       Spacer()
-      
+
       Text(contentScreen.detailMesage)
         .font(.uiHeadline)
         .foregroundColor(.contentText)

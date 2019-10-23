@@ -35,14 +35,14 @@ private struct Layout {
 
 enum ContentScreen {
   case library, downloads, inProgress, completed, bookmarked
-  
+
   var isMyTutorials: Bool {
     switch self {
     case .bookmarked, .inProgress, .completed: return true
     default: return false
     }
   }
-  
+
   var titleMessage: String {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
@@ -51,10 +51,10 @@ enum ContentScreen {
     case .bookmarked: return "You haven't bookmarked any tutorials yet."
     case .inProgress: return "You don't have any tutorials in progress yet."
     case .completed: return "You haven't completed any tutorials yet."
-      
+
     }
   }
-  
+
   var detailMesage: String {
     switch self {
     case .library: return "Try removing some filters or checking your WiFi settings."
@@ -64,14 +64,14 @@ enum ContentScreen {
     case .downloads: return "Tap the download icon to download a video course or episode to watch offline."
     }
   }
-  
+
   var buttonText: String? {
     switch self {
     case .downloads, .inProgress, .completed, .bookmarked: return "Explore Tutorials"
     default: return "Reload"
     }
   }
-  
+
   var emptyImageName: String {
     switch self {
     case .downloads: return "artworkEmptySuitcase"
@@ -84,8 +84,10 @@ enum ContentScreen {
 }
 
 struct ContentListView: View {
-  
+
   @State var showHudView: Bool = false
+  @State var showAlert: Bool = false
+  @State private var showSettings = false
   @State var hudOption: HudOption = .success
   var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
@@ -98,13 +100,13 @@ struct ContentListView: View {
   var dataState: DataState
   var totalContentNum: Int
   var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
-  
+
   var body: some View {
     contentView
       // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
       //.background(Color.backgroundColor)
   }
-  
+
   private var listView: some View {
     List {
       if headerView != nil {
@@ -133,7 +135,16 @@ struct ContentListView: View {
       }
     }
   }
-  
+
+  private func openSettings() {
+    // open iPhone settings
+    if let url = URL(string: UIApplication.openSettingsURLString) {
+      if UIApplication.shared.canOpenURL(url) {
+        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+      }
+    }
+  }
+
   private var loadMoreView: AnyView? {
     if totalContentNum > contents.count {
       return AnyView(
@@ -149,7 +160,7 @@ struct ContentListView: View {
       return nil
     }
   }
-  
+
   private var contentView: AnyView {
     
     switch dataState {
@@ -171,18 +182,18 @@ struct ContentListView: View {
   private var failedView: some View {
     VStack {
       headerView
-      
+
       Spacer()
-      
+
       Image("emojiCrying")
         .padding([.bottom], 30)
-            
+
       Text("Something went wrong.")
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing, .bottom], 20)
-      
+
       Text("Please try again.")
         .font(.uiLabel)
         .foregroundColor(.contentText)
@@ -195,14 +206,14 @@ struct ContentListView: View {
         .padding([.leading, .trailing, .bottom], 20)
     }
   }
-  
+
   private var cardTableNavView: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    
+
     return
       ForEach(contents, id: \.id) { partialContent in
-        
+
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
@@ -224,15 +235,15 @@ struct ContentListView: View {
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
   }
-  
+
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
   private var cardsTableViewWithDelete: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
-    
+
     return
       ForEach(contents, id: \.id) { partialContent in
-        
+
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
@@ -254,51 +265,51 @@ struct ContentListView: View {
         //HACK: to remove navigation chevrons
         .padding(.trailing, -38.0)
   }
-  
+
   private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
     AnyView(CardView(model: content,
                      contentScreen: contentScreen,
                      onLeftIconTap: onLeftTap,
                      onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
-  
+
   private var emptyView: some View {
     VStack {
       headerView
-      
+
       Spacer()
-      
+
       Image(contentScreen.emptyImageName)
       .padding([.bottom], 30)
-      
+
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.bottom], 20)
         .padding([.leading, .trailing], 55)
-      
+
       Text(contentScreen.detailMesage)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 55)
-      
+
       Spacer()
-      
+
       exploreButton
     }
     .background(Color.backgroundColor)
   }
-  
+
   private var exploreButton: AnyView? {
     guard let buttonText = contentScreen.buttonText, contents.isEmpty && contentScreen != .library else { return nil }
-    
+
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
       self.emitron.selectedTab = 0
     }
     .padding([.bottom, .leading, .trailing], 20)
-    
+
     return AnyView(button)
   }
 
@@ -311,18 +322,18 @@ struct ContentListView: View {
   }
 
   private var reloadButton: AnyView? {
-    
+
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
       self.contentsMC.reloadContents()
     }
-    
+
     return AnyView(button)
   }
-  
+
   private func loadMoreContents() {
     contentsMC.loadMore()
   }
-  
+
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
@@ -330,7 +341,7 @@ struct ContentListView: View {
       self.callback?(.delete, content)
     }
   }
-  
+
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
