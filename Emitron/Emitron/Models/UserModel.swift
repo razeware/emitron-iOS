@@ -44,6 +44,11 @@ public struct UserModel: Codable {
     return !permissions.filter { $0.tag == .pro }.isEmpty
   }
   
+  public var canDownload: Bool {
+    guard let permissions = permissions else { return false }
+    return !permissions.filter { $0.tag == .download }.isEmpty
+  }
+  
   // MARK: - Initializers
   init?(dictionary: [String: String]) {
     guard

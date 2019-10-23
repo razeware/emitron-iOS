@@ -43,6 +43,9 @@ struct TextListItemView: View {
   var isPro: Bool {
     return Guardpost.current.currentUser!.isPro
   }
+  var canDownload: Bool {
+    return Guardpost.current.currentUser!.canDownload
+  }
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -56,7 +59,7 @@ struct TextListItemView: View {
         
         Spacer()
         
-        if isPro {
+        if canDownload {
           setUpImageAndProgress()
             .padding([.trailing], 20)
         }
