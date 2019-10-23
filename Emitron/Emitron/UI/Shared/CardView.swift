@@ -177,7 +177,9 @@ struct CardView: SwiftUI.View {
       switch result {
       case .success(let imageResult):
         withAnimation(self.animation) {
-          self.image = imageResult.image
+          if let cropped = imageResult.image.croppedCenterRect {
+            self.image = cropped
+          }
         }
       case .failure:
         break
