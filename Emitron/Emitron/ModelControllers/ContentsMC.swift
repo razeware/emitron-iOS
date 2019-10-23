@@ -62,9 +62,12 @@ class ContentsMC: NSObject, ObservableObject {
     }
   }
   
+  private(set) var currentAppliedFilters: [Filter] = []
+  
   private(set) var filters: Filters {
     didSet {
       currentParameters = filters.appliedParameters
+      currentAppliedFilters = filters.applied
     }
   }
     
@@ -74,7 +77,7 @@ class ContentsMC: NSObject, ObservableObject {
     
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.filters = filters
+    self.filters = Filters()
     self.currentParameters = filters.appliedParameters
     self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     

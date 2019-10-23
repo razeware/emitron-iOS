@@ -53,6 +53,9 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
+          if Set(self.contentsMC.currentParameters) != Set(self.filters.appliedParameters) {
+            self.revertBackToPreviousFilters()
+          }
           self.presentationMode.wrappedValue.dismiss()
         }) {
           Image("close")
@@ -114,5 +117,21 @@ struct FiltersView: View {
     }
     
     return buttonView
+  }
+  
+  private func revertBackToPreviousFilters() {
+    // Update filters with the currentFilters on contentsMC, to keep them in sync (aka, remove them)
+    
+    // First, turn all applied off
+    self.filters.applied.forEach{ filter in
+      filter.isOn = false
+      self.filters.all.update(with: filter)
+    }
+    
+    // Then, turn all the currentAppliedFilters things on
+    self.contentsMC.currentAppliedFilters.forEach { filter in
+      filter.isOn = true
+      self.filters.all.update(with: filter)
+    }
   }
 }
