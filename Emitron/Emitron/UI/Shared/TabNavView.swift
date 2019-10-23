@@ -72,8 +72,6 @@ struct TabNavView: View {
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
 
-    UserMC(guardpost: Guardpost.current).fetchPermissions()
-
     return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
   }
 
