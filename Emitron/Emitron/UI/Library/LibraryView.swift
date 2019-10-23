@@ -95,7 +95,7 @@ struct LibraryView: View {
     .textFieldStyle(RoundedBorderTextFieldStyle())
     .modifier(ClearButton(text: $filters.searchStr, action: {
       self.updateFilters()
-    }))s
+    }))
   }
 
   private var searchAndFilterControls: some View {
