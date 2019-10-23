@@ -79,7 +79,8 @@ class BookmarkModel {
           details = content
         }
         
-      default: break
+      default:
+        break
       }
       
       details?.progression = progression
