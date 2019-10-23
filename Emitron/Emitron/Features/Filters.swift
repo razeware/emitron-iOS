@@ -93,6 +93,7 @@ enum SortFilter: Int, Codable {
 }
 
 class Filters: ObservableObject {
+  
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
@@ -107,8 +108,8 @@ class Filters: ObservableObject {
   
   // This decides the order in which the filter groups are displayed
   var filterGroups: [FilterGroup] {
-      return [platforms, difficulties, contentTypes, difficulties]
-    }
+    return [platforms, difficulties, contentTypes, difficulties]
+  }
   
   var appliedParameters: [Parameter] {
     var filterParameters = applied.map { $0.parameter }
@@ -179,7 +180,7 @@ class Filters: ObservableObject {
   }
   
   init() {
-
+    
     self.platforms = FilterGroup(type: .platforms)
     self.categories = FilterGroup(type: .categories)
     
@@ -253,5 +254,43 @@ class Filters: ObservableObject {
   func commitUpdates() {
     UserDefaults.standard.updateFilters(with: self)
     objectWillChange.send(())
+  }
+  
+  // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well
+  // If there are no content filters, it adds the default ones.
+  func appliedParamteresWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
+    var filterParameters = filters.map { $0.parameter }
+    let appliedContentFilters = filters.filter { $0.groupType == .contentTypes && $0.isOn }
+    
+    if appliedContentFilters.isEmpty {
+      // Add default filters
+      filterParameters.append(contentsOf: self.default.map { $0.parameter })
+    }
+    
+    var appliedParameters = filterParameters + [sortFilter.parameter]
+    
+    if let searchFilter = searchFilter {
+      appliedParameters.append(searchFilter.parameter)
+    }
+    
+    return appliedParameters
+  }
+  
+  func appliedParams(from filters: Filters) -> [Parameter] {
+    var filterParameters = filters.applied.map { $0.parameter }
+    let appliedContentFilters = contentTypes.filters.filter { $0.isOn }
+    
+    if appliedContentFilters.isEmpty {
+      // Add default filters
+      filterParameters.append(contentsOf: self.default.map { $0.parameter })
+    }
+    
+    var appliedParameters = filterParameters + [sortFilter.parameter]
+    
+    if let searchFilter = searchFilter {
+      appliedParameters.append(searchFilter.parameter)
+    }
+    
+    return appliedParameters
   }
 }

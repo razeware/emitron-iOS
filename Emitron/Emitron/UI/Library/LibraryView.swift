@@ -75,7 +75,7 @@ struct LibraryView: View {
       searchAndFilterControls
         .padding([.top], 15)
       
-      if !filters.applied.isEmpty {
+      if !contentsMC.currentFilters.isEmpty {
         filtersView
           .padding([.top], 10)
       }
@@ -145,7 +145,9 @@ struct LibraryView: View {
   }
 
   private var filtersView: some View {
-    ScrollView(.horizontal, showsIndicators: false) {
+    // Make a copy of the applied filters before we present them
+    
+    let view = ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
         AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
@@ -153,7 +155,7 @@ struct LibraryView: View {
         }
         .environmentObject(self.filters)
 
-        ForEach(filters.applied, id: \.self) { filter in
+        ForEach(contentsMC.currentAppliedFilters, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
             self.contentsMC.updateFilters(newFilters: self.filters)
           }
@@ -161,6 +163,7 @@ struct LibraryView: View {
         }
       }
     }
+    return view
   }
 
   private func updateFilters() {

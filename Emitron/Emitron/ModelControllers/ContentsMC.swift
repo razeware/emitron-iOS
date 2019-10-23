@@ -62,9 +62,15 @@ class ContentsMC: NSObject, ObservableObject {
     }
   }
   
+  private(set) var currentFilters: Set<Filter> = []
+  var currentAppliedFilters: [Filter] {
+    return currentFilters.filter { $0.isOn }
+  }
+  
   private(set) var filters: Filters {
     didSet {
       currentParameters = filters.appliedParameters
+      currentFilters = filters.all
     }
   }
     
@@ -74,8 +80,9 @@ class ContentsMC: NSObject, ObservableObject {
     
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.filters = filters
+    self.filters = Filters()
     self.currentParameters = filters.appliedParameters
+    self.currentFilters = filters.all
     self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     
     super.init()
@@ -85,6 +92,12 @@ class ContentsMC: NSObject, ObservableObject {
   
   func updateFilters(newFilters: Filters) {
     self.filters = newFilters
+  }
+  
+  func updateParameters(newFilters: Filters) {
+    currentFilters = newFilters.all
+    //let params = filters.appliedParamteresWithCurrentSortAndSearch(from: newFilters)
+    //currentParameters = params
   }
   
   func loadMore() {

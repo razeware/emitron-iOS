@@ -53,7 +53,6 @@ private enum Layout {
   static let imageSize: CGFloat = 15
 }
 
-// TODO: Should make this more reuse-friendly
 struct AppliedFilterView: View {
   
   @EnvironmentObject var filters: Filters
