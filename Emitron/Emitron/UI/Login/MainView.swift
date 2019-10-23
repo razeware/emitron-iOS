@@ -48,12 +48,6 @@ struct MainView: View {
     let filters = dataManager.filters
     let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     
-    switch userMC.state {
-    case <#pattern#>:
-      <#code#>
-    default:
-      <#code#>
-    }
     if let permissions = user.permissions, [Permission.beginner, .pro].contains(permissions.tag) {
       return tabBarView(with: contentsMC)
     } else {
