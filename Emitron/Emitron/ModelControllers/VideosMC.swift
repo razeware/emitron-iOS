@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 
 class VideosMC: NSObject, ObservableObject {
-  
+
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -39,7 +39,7 @@ class VideosMC: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
-  
+
   private let client: RWAPI
   private let user: UserModel
   private let videoService: VideosService
@@ -47,7 +47,7 @@ class VideosMC: NSObject, ObservableObject {
   private var token: String?
   private(set) var data: AttachmentModel?
   private(set) var streamURL: URL?
-  
+
   // MARK: - Initializers
   init(user: UserModel) {
     self.user = user
@@ -56,10 +56,10 @@ class VideosMC: NSObject, ObservableObject {
     self.videoService = VideosService(client: self.client)
     self.contentsService = ContentsService(client: self.client)
     self.token = UserDefaults.standard.playbackToken
-    
-    super.init()    
+
+    super.init()
   }
-  
+
   // MARK: - Internal
   func fetchBeginPlaybackToken(completion: @escaping (Bool, String?) -> Void) {
     contentsService.getBeginPlaybackToken { result in
@@ -77,9 +77,9 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
+
   @objc func reportUsageStatistics(progress: Int, contentID: Int) {
-    
+
     guard let playbackToken = token else {
       fetchBeginPlaybackToken { [weak self] (success, token) in
         guard let self = self else { return }
@@ -91,27 +91,27 @@ class VideosMC: NSObject, ObservableObject {
       }
       return
     }
-    
+
     contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { result in
       switch result {
       case .failure(let error):
         Failure
         .fetch(from: "VideosMC_PlaybackUsage", reason: error.localizedDescription)
         .log(additionalParams: nil)
-        
+
         //TODO: Stop playback, ask use to re-play the video
       case .success(_): break
         //TODO: Anything to do when we get back usage statistics?
       }
     }
   }
-  
+
   func loadVideoStream(for id: Int, completion: (() -> Void)? = nil) {
     if case(.loading) = state {
       completion?()
       return
     }
-    
+
     state = .loading
 
     videoService.getVideoStream(for: id) { [weak self] result in
@@ -119,7 +119,7 @@ class VideosMC: NSObject, ObservableObject {
         completion?()
         return
       }
-      
+
       switch result {
       case .failure(let error):
         self.state = .failed
@@ -135,21 +135,21 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
+
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
     if case(.loading) = state {
       return
     }
-    
+
     state = .loading
     videoService.getVideoStream(for: id) { [weak self] result in
       completion(result)
-      
+
       guard let self = self else {
         return
       }
-      
+
       switch result {
       case .failure(let error):
         self.state = .failed
@@ -163,7 +163,7 @@ class VideosMC: NSObject, ObservableObject {
       }
     }
   }
-  
+
   func getDownloadVideofor(id: Int,
                            completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
     state = .loading
@@ -181,7 +181,11 @@ class VideosMC: NSObject, ObservableObject {
           .fetch(from: "VideosMC", reason: error.localizedDescription)
           .log(additionalParams: ["VideoID": "\(id)"])
       case .success(let attachment):
-        self.data = attachment.first
+        if let selectedDownloadQuality = UserDefaults.standard.downloadQuality {
+          self.data = attachment.first(where: { $0.kind.rawValue == selectedDownloadQuality })
+        } else if let defaultHD = attachment.first(where: { $0.kind.rawValue == AttachmentKind.hdVideoFile.rawValue }) {
+          self.data = defaultHD
+        }
         self.state = .hasData
       }
     }

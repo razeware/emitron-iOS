@@ -29,6 +29,7 @@
 import SwiftUI
 import Kingfisher
 import UIKit
+import Network
 
 struct CardView: SwiftUI.View {
   private var onRightIconTap: (() -> Void)?
@@ -38,7 +39,8 @@ struct CardView: SwiftUI.View {
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: ContentDetailsModel
   private let animation: Animation = .easeIn
-  
+  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
+
   init(model: ContentDetailsModel, contentScreen: ContentScreen, onLeftIconTap: ((Bool) -> Void)? = nil, onRightIconTap: (() -> Void)? = nil) {
     self.model = model
     self.onRightIconTap = onRightIconTap
@@ -49,6 +51,8 @@ struct CardView: SwiftUI.View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
+
+    setUpNetworkMonitor()
 
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
@@ -114,7 +118,7 @@ struct CardView: SwiftUI.View {
 
       Group {
         if model.progress > 0 && model.progress < 1 {
-          ProgressBarView(progress: model.progress)
+          ProgressBarView(progress: model.progress, isRounded: true)
             .padding([.top, .bottom], 0)
         } else {
           Rectangle()
@@ -140,7 +144,7 @@ struct CardView: SwiftUI.View {
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
+
     guard model.bookmarked || self.contentScreen.isMyTutorials else { return nil }
 
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
@@ -155,9 +159,9 @@ struct CardView: SwiftUI.View {
     )
   }
 
-  private func download() {
-    let success = downloadImageName() != DownloadImageName.inActive
-    onLeftIconTap?(success)
+  private func setUpNetworkMonitor() {
+    let queue = DispatchQueue(label: "Monitor")
+    monitor.start(queue: queue)
   }
 
   private func loadImage() {
@@ -217,7 +221,7 @@ struct CardView: SwiftUI.View {
   private func addDetailText() -> AnyView? {
     let stack = HStack {
       Spacer()
-      
+
       Text(contentScreen.detailMesage)
         .font(.uiHeadline)
         .foregroundColor(.contentText)
