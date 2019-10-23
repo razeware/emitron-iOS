@@ -134,6 +134,7 @@ struct ContentListView: View {
         loadMoreView
       }
     }
+    .edgesIgnoringSafeArea([])
   }
 
   private func openSettings() {
@@ -273,6 +274,7 @@ struct ContentListView: View {
         .padding([.leading, .trailing, .bottom], 20)
     }
     .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea(.top)
   }
 
   private var emptyView: some View {
@@ -302,6 +304,7 @@ struct ContentListView: View {
       exploreButton
     }
     .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea(.top)
   }
 
   private var exploreButton: AnyView? {
@@ -320,6 +323,7 @@ struct ContentListView: View {
       headerView
       Spacer()
     }
+    .edgesIgnoringSafeArea(.top)
     .background(Color.backgroundColor)
     .overlay(ActivityIndicator())
   }
