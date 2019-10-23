@@ -35,6 +35,7 @@ struct LoginView: View {
   
   var body: some View {
     return contentView
+      .background(Color.backgroundColor)
   }
   
   private var contentView: AnyView {
@@ -52,6 +53,10 @@ struct LoginView: View {
         .background(Color.backgroundColor)
         .edgesIgnoringSafeArea([.all])
     )
+  }
+  
+  private var testView: some View {
+    Text("Hello")
   }
   
   private var loginView: some View {

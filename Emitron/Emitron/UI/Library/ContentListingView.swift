@@ -89,6 +89,7 @@ struct ContentListingView: View {
         .listRowBackground(Color.backgroundColor)
 
         self.courseDetailsSection
+        .background(Color.backgroundColor)
       }
     }
     .onAppear {
@@ -125,7 +126,7 @@ struct ContentListingView: View {
       }
 
     return scrollView
-      .navigationBarTitle(Text(content.name), displayMode: .inline)
+      .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
 
@@ -183,10 +184,13 @@ struct ContentListingView: View {
           .onTapGesture {
             self.isPresented = true
         }
+        .padding([.leading, .trailing], 20)
+        .padding([.bottom], 20)
       }
         //HACK: to remove navigation chevrons
         .padding(.trailing, -32.0)
     }
+    .listRowInsets(EdgeInsets())
     .listRowBackground(Color.backgroundColor)
   }
 
@@ -237,11 +241,11 @@ struct ContentListingView: View {
         Rectangle()
           .frame(width: 155, height: 75)
           .foregroundColor(.white)
-          .cornerRadius(11)
+          .cornerRadius(13)
         Rectangle()
           .frame(width: 145, height: 65)
           .foregroundColor(.appBlack)
-          .cornerRadius(9)
+          .cornerRadius(11)
 
         HStack {
           Image("materialIconPlay")
@@ -268,11 +272,11 @@ struct ContentListingView: View {
         Rectangle()
           .frame(maxWidth: 75, maxHeight: 75)
           .foregroundColor(.white)
-          .cornerRadius(11)
+          .cornerRadius(13)
         Rectangle()
           .frame(maxWidth: 65, maxHeight: 65)
           .foregroundColor(.appBlack)
-          .cornerRadius(9)
+          .cornerRadius(11)
         Image("materialIconPlay")
           .resizable()
           .frame(width: 40, height: 40)
@@ -312,49 +316,55 @@ struct ContentListingView: View {
   }
 
   private func opacityOverlay(for width: CGFloat) -> some View {
-    ZStack(alignment: .center) {
-      Image(uiImage: uiImage)
-        .resizable()
-        .frame(width: width, height: width * imageRatio)
-        .transition(.opacity)
-
-      Rectangle()
-        .foregroundColor(.appBlack)
-        .opacity(0.2)
-
-      GeometryReader { geometry in
-        HStack {
-          // If progress is between 0.0 and 1.0 show continue, otherwise show play
-          if self.content.progress > 0.0 && self.content.progress < 1.0 {
-            self.continueButton
-            //HACK: to center the button when it's in a NavigationLink
-              .padding(.leading, geometry.size.width/2 - 74.5)
-          } else {
-            self.playButton
-            //HACK: to center the button when it's in a NavigationLink
-            .padding(.leading, geometry.size.width/2 - 32.0)
+    VStack(spacing: 0, content: {
+      ZStack(alignment: .center) {
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: width, height: width * imageRatio)
+          .transition(.opacity)
+        
+        Rectangle()
+          .foregroundColor(.appBlack)
+          .opacity(0.2)
+        
+        GeometryReader { geometry in
+          HStack {
+            // If progress is between 0.0 and 1.0 show continue, otherwise show play
+            if self.content.progress > 0.0 && self.content.progress < 1.0 {
+              self.continueButton
+                //HACK: to center the button when it's in a NavigationLink
+                .padding(.leading, geometry.size.width/2 - 74.5)
+            } else {
+              self.playButton
+                //HACK: to center the button when it's in a NavigationLink
+                .padding(.leading, geometry.size.width/2 - 32.0)
+            }
           }
+            //HACK: to remove navigation chevrons
+            .padding(.trailing, -32.0)
         }
-          //HACK: to remove navigation chevrons
-          .padding(.trailing, -32.0)
       }
-    }
+      ProgressBarView(progress: content.progress, isRounded: false)
+    })
   }
 
   private func blurOverlay(for width: CGFloat) -> some View {
-    ZStack {
-      Image(uiImage: uiImage)
-        .resizable()
-        .frame(width: width, height: width * imageRatio)
-        .transition(.opacity)
-        .blur(radius: 10)
-
-      Rectangle()
-        .foregroundColor(.appBlack)
-        .opacity(0.5)
-        .blur(radius: 10)
-
-      proView
+    VStack {
+      ZStack {
+        Image(uiImage: uiImage)
+          .resizable()
+          .frame(width: width, height: width * imageRatio)
+          .transition(.opacity)
+          .blur(radius: 10)
+        
+        Rectangle()
+          .foregroundColor(.appBlack)
+          .opacity(0.5)
+          .blur(radius: 10)
+        
+        proView
+      }
+      ProgressBarView(progress: content.progress, isRounded: false)
     }
   }
 
@@ -409,12 +419,15 @@ struct ContentListingView: View {
       return AnyView(loadingView)
     }
   }
-
+  
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
     GeometryReader { geometry in
       ActivityIndicator()
     }
+    .listRowInsets(EdgeInsets())
+    .listRowBackground(Color.backgroundColor)
+    .background(Color.backgroundColor)
   }
 
   private var reloadView: AnyView? {

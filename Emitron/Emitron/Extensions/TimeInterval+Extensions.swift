@@ -86,4 +86,11 @@ extension Int {
     
     return timeString
   }
+  
+  var minuteSecondTimeFromSeconds: String {
+    let minutes = Int(minutesFromSeconds)
+    let seconds = self - minutes * 60
+    
+    return "\(minutes):\(String(format: "%02d", seconds))"
+  }
 }
