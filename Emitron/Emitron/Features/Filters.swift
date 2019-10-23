@@ -47,7 +47,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case platforms = "Platforms"
   case categories = "Categories"
   case contentTypes = "Content Type"
-  case difficulties = "Difficulties"
+  case difficulties = "Difficulty"
   case search = "Search"
   case none = "" // For filters whose values aren't an array, for example the search query
   
@@ -203,7 +203,7 @@ class Filters: ObservableObject {
     // 3. If there are filters stored in UserDefaults, use those
     // 4. If there are no filters stores in UserDefaults, use the default filters and parameters
     
-    let freshFilters = Set(platforms.filters).union(categories.filters).union(contentTypes.filters).union(difficulties.filters).union(platforms.filters)
+    let freshFilters = Set(platforms.filters).union(contentTypes.filters).union(difficulties.filters).union(categories.filters)
     self.all = freshFilters
     
     // 1. Check if there is a sort in UserDefaults and use that
