@@ -117,7 +117,7 @@ struct MyTutorialView: View {
       }
     }
 
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
   }
 
   private var completedContentsView: some View {
@@ -125,7 +125,6 @@ struct MyTutorialView: View {
     progressionsMC.data.forEach { progressionModel in
       guard progressionModel.content?.contentType != .episode else { return }
       if progressionModel.finished, let content = progressionModel.content {
-        content.progression = progressionModel
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
         // update content on progressionModel with whether content should be bookmarked or not
         if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
@@ -135,18 +134,19 @@ struct MyTutorialView: View {
         dataToDisplay.append(content)
       }
     }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: progressionsMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
   }
 
   private var bookmarkedContentsView: some View {
     var dataToDisplay = [ContentDetailsModel]()
     bookmarksMC.data.forEach { bookmark in
       if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }){
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
         content.bookmark = bookmark
         dataToDisplay.append(content)
       }
     }
     
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: bookmarksMC.numTutorials)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: dataToDisplay.count)
   }
 }
