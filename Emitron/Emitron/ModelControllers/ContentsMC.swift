@@ -44,7 +44,7 @@ class ContentsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private let bookmarksMC: BookmarksMC
+  private lazy var bookmarksMC: BookmarksMC = DataManager.current!.bookmarksMC
   private(set) var data: [ContentDetailsModel] = []
   private(set) var numTutorials: Int = 0
   
@@ -62,9 +62,12 @@ class ContentsMC: NSObject, ObservableObject {
     }
   }
   
+  private(set) var currentAppliedFilters: [Filter] = []
+  
   private(set) var filters: Filters {
     didSet {
       currentParameters = filters.appliedParameters
+      currentAppliedFilters = filters.applied
     }
   }
     
@@ -74,9 +77,8 @@ class ContentsMC: NSObject, ObservableObject {
     
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.filters = filters
+    self.filters = Filters()
     self.currentParameters = filters.appliedParameters
-    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     
     super.init()
 

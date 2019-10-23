@@ -49,7 +49,6 @@ class ContentDetailsModel {
   private(set) var index: Int?
   private(set) var professional: Bool = false
 
-  private(set) var domains: [DomainModel] = []
   private(set) var childContents: [ContentDetailsModel] = []
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
@@ -62,6 +61,8 @@ class ContentDetailsModel {
   var bookmark: BookmarkModel?
   var shouldCancel = false
   var parentContentId: Int?
+  var domains: [DomainModel] = []
+  var domainIDs: [Int] = []
   var bookmarkId: Int? {
     bookmark?.id
   }
@@ -184,6 +185,7 @@ class ContentDetailsModel {
     self.technologyTripleString = summaryModel.technologyTripleString
     self.contributorString = summaryModel.contributorString
     self.videoID = summaryModel.videoID
+    self.domainIDs = summaryModel.domainIDs
   }
 
   /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**

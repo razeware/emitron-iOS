@@ -134,7 +134,6 @@ struct ContentListView: View {
         loadMoreView
       }
     }
-    .edgesIgnoringSafeArea([])
   }
 
   private func openSettings() {
@@ -163,6 +162,7 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
+    
     switch dataState {
     case .initial,
          .loading where contents.isEmpty:
@@ -171,7 +171,15 @@ struct ContentListView: View {
       return AnyView(emptyView)
     case .hasData,
          .loading where !contents.isEmpty:
-      return AnyView(listView)
+      
+      if dataState == .loading {
+        return AnyView(
+          listView
+          .overlay(ActivityIndicator())
+        )
+      } else {
+        return AnyView(listView)
+      }
     case .failed:
       return AnyView(failedView)
     default:
@@ -204,8 +212,8 @@ struct ContentListView: View {
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(Color.backgroundColor)
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -38.0)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -234,8 +242,8 @@ struct ContentListView: View {
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(Color.backgroundColor)
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -38.0)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -38.0)
   }
 
   private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
@@ -273,8 +281,6 @@ struct ContentListView: View {
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
-    .background(Color.backgroundColor)
-    .edgesIgnoringSafeArea(.top)
   }
 
   private var emptyView: some View {
@@ -285,6 +291,9 @@ struct ContentListView: View {
 
       Image(contentScreen.emptyImageName)
         .padding([.bottom], 30)
+        .padding([.top], 97)
+      // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
+      // we're ignoring the safe area edges, so that the status bar can be the right color
 
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
@@ -304,7 +313,6 @@ struct ContentListView: View {
       exploreButton
     }
     .background(Color.backgroundColor)
-    .edgesIgnoringSafeArea(.top)
   }
 
   private var exploreButton: AnyView? {
@@ -323,7 +331,6 @@ struct ContentListView: View {
       headerView
       Spacer()
     }
-    .edgesIgnoringSafeArea(.top)
     .background(Color.backgroundColor)
     .overlay(ActivityIndicator())
   }

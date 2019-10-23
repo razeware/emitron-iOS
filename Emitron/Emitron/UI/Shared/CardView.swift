@@ -70,6 +70,7 @@ struct CardView: SwiftUI.View {
 
             Image(uiImage: self.image)
               .resizable()
+              .aspectRatio(contentMode: .fill)
               .frame(width: 60, height: 60)
               .onAppear(perform: self.loadImage)
               .transition(.opacity)
@@ -87,8 +88,8 @@ struct CardView: SwiftUI.View {
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
+          .lineSpacing(3)
           .foregroundColor(.contentText)
-
 
         HStack {
 
@@ -144,8 +145,8 @@ struct CardView: SwiftUI.View {
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-
-    guard model.bookmarked || self.contentScreen.isMyTutorials else { return nil }
+    
+    guard model.bookmarked else { return nil }
 
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
 
@@ -176,25 +177,10 @@ struct CardView: SwiftUI.View {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
       case .success(let imageResult):
-        withAnimation(self.animation) {
-          self.image = imageResult.image
-        }
+        self.image = imageResult.image
       case .failure:
         break
       }
-    }
-  }
-
-  private func downloadImageName() -> String {
-
-    if model.isInCollection {
-
-      return downloadsMC.data.contains { downloadModel in
-
-        return downloadModel.content.parentContentId == model.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
