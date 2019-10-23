@@ -108,7 +108,7 @@ class Filters: ObservableObject {
   
   // This decides the order in which the filter groups are displayed
   var filterGroups: [FilterGroup] {
-    return [platforms, difficulties, contentTypes, difficulties]
+    return [platforms, difficulties, contentTypes, categories]
   }
   
   var appliedParameters: [Parameter] {

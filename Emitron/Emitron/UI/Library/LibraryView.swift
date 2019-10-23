@@ -75,7 +75,7 @@ struct LibraryView: View {
       searchAndFilterControls
         .padding([.top], 15)
       
-      if !contentsMC.currentFilters.isEmpty {
+      if !contentsMC.currentAppliedFilters.isEmpty {
         filtersView
           .padding([.top], 10)
       }
@@ -155,7 +155,7 @@ struct LibraryView: View {
         }
         .environmentObject(self.filters)
 
-        ForEach(contentsMC.currentAppliedFilters, id: \.self) { filter in
+        ForEach(self.contentsMC.currentAppliedFilters, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
             self.contentsMC.updateFilters(newFilters: self.filters)
           }
