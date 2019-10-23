@@ -87,20 +87,15 @@ struct LibraryView: View {
   }
 
   private var searchField: some View {
-    //TODO: Need to figure out how to erase the textField
-    
+
     TextField(Constants.search,
-              text: $filters.searchStr,
-              onEditingChanged: { change in
-                print("Editing changed: \(self.filters.searchStr)")
-    }) {
+              text: $filters.searchStr) {
       self.updateFilters()
     }
     .textFieldStyle(RoundedBorderTextFieldStyle())
     .modifier(ClearButton(text: $filters.searchStr, action: {
       self.updateFilters()
-    }))
-
+    }))s
   }
 
   private var searchAndFilterControls: some View {
@@ -153,7 +148,7 @@ struct LibraryView: View {
         }
         .environmentObject(self.filters)
 
-        ForEach(self.contentsMC.currentAppliedFilters, id: \.self) { filter in
+        ForEach(self.filters.applied, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
             self.contentsMC.updateFilters(newFilters: self.filters)
           }

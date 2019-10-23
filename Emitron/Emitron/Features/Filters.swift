@@ -145,11 +145,7 @@ class Filters: ObservableObject {
     return Array(contentFilters)
   }
   
-  @Published var searchStr: String = "" {
-    didSet {
-      print("Setting search!!!")
-    }
-  }
+  @Published var searchStr: String = "" 
   
   var searchQuery: String? {
     didSet {
