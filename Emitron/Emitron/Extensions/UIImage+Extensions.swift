@@ -30,27 +30,6 @@ import Foundation
 import UIKit
 
 extension UIImage {
-  func square() -> UIImage? {
-      if size.width == size.height {
-          return self
-      }
-
-      let cropWidth = min(size.width, size.height)
-
-      let cropRect = CGRect(
-          x: (size.width - cropWidth) * scale / 2.0,
-          y: (size.height - cropWidth) * scale / 2.0,
-          width: cropWidth * scale,
-          height: cropWidth * scale
-      )
-
-      guard let imageRef = cgImage?.cropping(to: cropRect) else {
-          return nil
-      }
-
-      return UIImage(cgImage: imageRef, scale: scale, orientation: imageOrientation)
-  }
-  
   var croppedCenterRect: UIImage? {
 
     let center = CGPoint(x: size.width/2, y: size.height/2)

@@ -87,8 +87,8 @@ struct CardView: SwiftUI.View {
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
+          .lineSpacing(3)
           .foregroundColor(.contentText)
-
 
         HStack {
 

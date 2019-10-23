@@ -170,7 +170,15 @@ struct ContentListView: View {
       return AnyView(emptyView)
     case .hasData,
          .loading where !contents.isEmpty:
-      return AnyView(listView)
+      
+      if dataState == .loading {
+        return AnyView(
+          listView
+          .overlay(ActivityIndicator())
+        )
+      } else {
+        return AnyView(listView)
+      }
     case .failed:
       return AnyView(failedView)
     default:
