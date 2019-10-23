@@ -17,7 +17,6 @@
 		8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */; };
 		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
 		8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */; };
-		8BE143D523604E09004CE6E6 /* UIImage+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BE143D423604E08004CE6E6 /* UIImage+Extensions.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -176,7 +175,6 @@
 		8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModifiers.swift; sourceTree = "<group>"; };
 		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
 		8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTag.swift; sourceTree = "<group>"; };
-		8BE143D423604E08004CE6E6 /* UIImage+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIImage+Extensions.swift"; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -529,7 +527,6 @@
 				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
 				B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */,
 				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
-				8BE143D423604E08004CE6E6 /* UIImage+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1167,7 +1164,6 @@
 				B6FC15D522CB68E20078CEDB /* Service.swift in Sources */,
 				B6DF2FAF22CA498B0081A3A3 /* UserModel.swift in Sources */,
 				B6DF2FA622CA055A0081A3A3 /* VideoModel.swift in Sources */,
-				8BE143D523604E09004CE6E6 /* UIImage+Extensions.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1363,7 +1359,7 @@
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

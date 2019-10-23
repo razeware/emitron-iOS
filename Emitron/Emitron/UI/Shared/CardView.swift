@@ -70,6 +70,7 @@ struct CardView: SwiftUI.View {
 
             Image(uiImage: self.image)
               .resizable()
+              .aspectRatio(contentMode: .fill)
               .frame(width: 60, height: 60)
               .onAppear(perform: self.loadImage)
               .transition(.opacity)
@@ -176,11 +177,7 @@ struct CardView: SwiftUI.View {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
       case .success(let imageResult):
-        withAnimation(self.animation) {
-          if let cropped = imageResult.image.croppedCenterRect {
-            self.image = cropped
-          }
-        }
+        self.image = imageResult.image
       case .failure:
         break
       }
