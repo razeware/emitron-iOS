@@ -129,6 +129,10 @@ public class Guardpost {
     persistentStore.removeUserFromKeychain()
     _currentUser = .none
   }
+  
+  public func updateUser(with user: UserModel?) {
+    _currentUser = user
+  }
 
   private func asyncResponse(callback: @escaping (Result<UserModel, LoginError>) -> Void,
                              result: Result<UserModel, LoginError>) {

@@ -146,13 +146,13 @@ struct TextListItemView: View {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide)
         .foregroundColor(Color.accent)
+        .cornerRadius(6)
       
       Image("checkmark")
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
         .foregroundColor(Color.buttonText)
     }
-    .cornerRadius(6)
     
     guard let progression = contentSummary.progression, progression.finished else {
       return AnyView(numberView)

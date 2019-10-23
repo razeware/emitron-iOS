@@ -48,10 +48,18 @@ struct MainView: View {
     let filters = dataManager.filters
     let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     
-    if let permissions = user.permissions, [Permission.beginner, .pro].contains(permissions.tag) {
+    switch userMC.state {
+    case .failed:
+      return loginView
+    case .initial, .loading:
+      userMC.fetchPermissions()
       return tabBarView(with: contentsMC)
-    } else {
-      return logoutView
+    case .hasData:
+      if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {
+        return tabBarView(with: contentsMC)
+      } else {
+        return logoutView
+      }
     }
   }
   

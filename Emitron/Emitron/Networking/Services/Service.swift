@@ -105,7 +105,6 @@ class Service {
                                                          authTokenHeader)
     headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
 
-
     return urlRequest
   }
 }
