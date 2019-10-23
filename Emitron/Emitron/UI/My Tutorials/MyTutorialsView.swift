@@ -76,12 +76,13 @@ struct MyTutorialView: View {
     AnyView(
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
+          self.progressionsMC.loadContents()
           self.state = .inProgress
-          self.progressionsMC.loadContents()
         }, completedClosure: {
-          self.state = .completed
           self.progressionsMC.loadContents()
+          self.state = .completed
         }, bookmarkedClosure: {
+          self.bookmarksMC.loadContents()
           self.state = .bookmarked
         })
           .padding([.top], .sidePadding)
