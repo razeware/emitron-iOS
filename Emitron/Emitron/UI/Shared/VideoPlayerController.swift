@@ -43,20 +43,38 @@ class VideoPlayerController: AVPlayerViewController {
       self.player = avQueuePlayer
     }
   }
+  private var currentPlayerItem: AVPlayerItem?
+  
+  private var playRateObserver: NSKeyValueObservation?
+  private var closedCaptionsObserver: NSKeyValueObservation?
 
   init(with content: [ContentDetailsModel], videosMC: VideosMC) {
     self.videosMC = videosMC
     self.content = content
     super.init(nibName: nil, bundle: nil)
-    setupNotification()
+    setupNotifications()
   }
 
-  private func setupNotification() {
+  private func setupNotifications() {
     NotificationCenter.default.addObserver(forName: UIDevice.orientationDidChangeNotification,
                                            object: nil,
                                            queue: .main,
                                            using: didRotate)
+    
+    playRateObserver = UserDefaults.standard.observe(\.playSpeed, options: [.initial, .new], changeHandler: { [weak self] (_, value) in
+      guard let self = self else { return }
+      
+      //self.avQueuePlayer?.pause()
+      self.avQueuePlayer?.rate = UserDefaults.standard.playSpeed
+      //self.avQueuePlayer?.play()
+    })
 
+    closedCaptionsObserver = UserDefaults.standard.observe(\.closedCaptionOn, changeHandler: { [weak self] (_, value) in
+      guard let self = self,
+        let playerItem = self.currentPlayerItem else { return }
+      
+      self.addClosedCaption(for: playerItem)
+    })
   }
 
   var didRotate: (Notification) -> Void = { notification in
@@ -90,6 +108,8 @@ class VideoPlayerController: AVPlayerViewController {
   deinit {
 
     NotificationCenter.default.removeObserver(self)
+    playRateObserver?.invalidate()
+    closedCaptionsObserver?.invalidate()
     removeUsageObserverToken()
   }
 
@@ -212,6 +232,7 @@ class VideoPlayerController: AVPlayerViewController {
       startProgressObservation(for: contentDetails.id)
     }
     // Remove the played item from the contents array
+    currentPlayerItem = playerItem
     content.removeFirst()
   }
 
@@ -224,7 +245,13 @@ class VideoPlayerController: AVPlayerViewController {
                                            name: .AVPlayerItemDidPlayToEndTime,
                                            object: playerItem)
 
-    if let group = asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
+    addClosedCaption(for: playerItem)
+    
+    return playerItem
+  }
+  
+  private func addClosedCaption(for playerItem: AVPlayerItem) {
+    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
       let locale = Locale(identifier: "en")
       let options =
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
@@ -232,7 +259,6 @@ class VideoPlayerController: AVPlayerViewController {
         playerItem.select(option, in: group)
       }
     }
-    return playerItem
   }
 
   private func startProgressObservation(for contentID: Int) {

@@ -44,7 +44,6 @@ struct LibraryView: View {
   var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
-  @State private var searchText = ""
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
 
@@ -88,21 +87,15 @@ struct LibraryView: View {
   }
 
   private var searchField: some View {
-    //TODO: Need to figure out how to erase the textField
 
     TextField(Constants.search,
-              text: $searchText,
-              onEditingChanged: { _ in
-                print("Editing changed:  \(self.searchText)")
-    }, onCommit: { () in
-      UIApplication.shared.keyWindow?.endEditing(true)
+              text: $filters.searchStr) {
       self.updateFilters()
-    })
-      .textFieldStyle(RoundedBorderTextFieldStyle())
-      .modifier(ClearButton(text: $searchText, action: {
-        UIApplication.shared.keyWindow?.endEditing(true)
-        self.updateFilters()
-      }))
+    }
+    .textFieldStyle(RoundedBorderTextFieldStyle())
+    .modifier(ClearButton(text: $filters.searchStr, action: {
+      self.updateFilters()
+    }))
   }
 
   private var searchAndFilterControls: some View {
@@ -155,7 +148,7 @@ struct LibraryView: View {
         }
         .environmentObject(self.filters)
 
-        ForEach(self.contentsMC.currentAppliedFilters, id: \.self) { filter in
+        ForEach(self.filters.applied, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
             self.contentsMC.updateFilters(newFilters: self.filters)
           }
@@ -167,7 +160,7 @@ struct LibraryView: View {
   }
 
   private func updateFilters() {
-    filters.searchQuery = self.searchText
+    filters.searchQuery = filters.searchStr
     contentsMC.updateFilters(newFilters: filters)
   }
 

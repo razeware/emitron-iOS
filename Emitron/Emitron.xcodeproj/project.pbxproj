@@ -78,7 +78,6 @@
 		B6C0F0E122D624D400012839 /* VideoPlayerController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0E022D624D400012839 /* VideoPlayerController.swift */; };
 		B6C4F3BD22E668FC0087ED10 /* FiltersView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3BC22E668FC0087ED10 /* FiltersView.swift */; };
 		B6C4F3C122E66A7E0087ED10 /* AppliedFilterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3C022E66A7E0087ED10 /* AppliedFilterView.swift */; };
-		B6C4F3C522E66BFD0087ED10 /* SearchView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3C422E66BFD0087ED10 /* SearchView.swift */; };
 		B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3CA22E6E44A0087ED10 /* TitleCheckmarkView.swift */; };
 		B6C4F3CD22E6E4640087ED10 /* FiltersHeaderView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3CC22E6E4640087ED10 /* FiltersHeaderView.swift */; };
 		B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */; };
@@ -235,7 +234,6 @@
 		B6C0F0E022D624D400012839 /* VideoPlayerController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoPlayerController.swift; sourceTree = "<group>"; };
 		B6C4F3BC22E668FC0087ED10 /* FiltersView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersView.swift; sourceTree = "<group>"; };
 		B6C4F3C022E66A7E0087ED10 /* AppliedFilterView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppliedFilterView.swift; sourceTree = "<group>"; };
-		B6C4F3C422E66BFD0087ED10 /* SearchView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SearchView.swift; sourceTree = "<group>"; };
 		B6C4F3CA22E6E44A0087ED10 /* TitleCheckmarkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TitleCheckmarkView.swift; sourceTree = "<group>"; };
 		B6C4F3CC22E6E4640087ED10 /* FiltersHeaderView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FiltersHeaderView.swift; sourceTree = "<group>"; };
 		B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CheckmarkView.swift; sourceTree = "<group>"; };
@@ -722,7 +720,6 @@
 				B6FC15B422CB53730078CEDB /* ContentListingView.swift */,
 				B6FC15BA22CB55160078CEDB /* VideoView.swift */,
 				B6C0F0D422D5D47600012839 /* LibraryView.swift */,
-				B6C4F3C422E66BFD0087ED10 /* SearchView.swift */,
 			);
 			path = Library;
 			sourceTree = "<group>";
@@ -1121,7 +1118,6 @@
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
 				B6DF2FA222CA05460081A3A3 /* GroupModel.swift in Sources */,
-				B6C4F3C522E66BFD0087ED10 /* SearchView.swift in Sources */,
 				B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */,
 				B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */,
 				8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */,
@@ -1363,7 +1359,7 @@
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = 2HG8AL7F4U;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 13.0;

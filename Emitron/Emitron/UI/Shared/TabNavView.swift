@@ -61,6 +61,7 @@ struct TabNavView: View {
       }
       .tag(2)
     }
+    .edgesIgnoringSafeArea([.top])
     .background(Color.backgroundColor)
   }
 

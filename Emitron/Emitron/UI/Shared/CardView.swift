@@ -70,6 +70,7 @@ struct CardView: SwiftUI.View {
 
             Image(uiImage: self.image)
               .resizable()
+              .aspectRatio(contentMode: .fill)
               .frame(width: 60, height: 60)
               .onAppear(perform: self.loadImage)
               .transition(.opacity)
@@ -87,8 +88,8 @@ struct CardView: SwiftUI.View {
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
+          .lineSpacing(3)
           .foregroundColor(.contentText)
-
 
         HStack {
 
@@ -176,9 +177,7 @@ struct CardView: SwiftUI.View {
     KingfisherManager.shared.retrieveImage(with: url) { result in
       switch result {
       case .success(let imageResult):
-        withAnimation(self.animation) {
-          self.image = imageResult.image
-        }
+        self.image = imageResult.image
       case .failure:
         break
       }
