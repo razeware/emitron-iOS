@@ -162,6 +162,7 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
+    
     switch dataState {
     case .initial,
          .loading where contents.isEmpty:

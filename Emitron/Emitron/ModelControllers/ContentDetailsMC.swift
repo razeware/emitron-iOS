@@ -50,13 +50,14 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentDetailsModel) {
+       partialContentDetail: ContentDetailsModel,
+       bookmarksMC: BookmarksMC) {
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
     self.data.isDownloaded = partialContentDetail.isDownloaded
-    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
+    self.bookmarksMC = bookmarksMC
 
     super.init()
     
