@@ -51,7 +51,7 @@ struct ContentListingView: View {
   init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
-    self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content)
+    self.contentSummaryMC = ContentSummaryMC(guardpost: Guardpost.current, partialContentDetail: content, bookmarksMC: DataManager.current!.bookmarksMC)
     self.downloadsMC = downloadsMC
   }
 
@@ -382,12 +382,7 @@ struct ContentListingView: View {
     return
       VStack {
         HStack {
-          Button(action: {}) {
-            Image("padlock")
-            .resizable()
-            .frame(width: 20, height: 29)
-          }
-          .foregroundColor(.white)
+          Image("padlock")
 
           Text("Pro Course")
             .font(.uiTitle1)
@@ -466,7 +461,7 @@ struct ContentListingView: View {
     self.contentSummaryMC.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
       guard let index = self.contentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
-      self.contentsMC.updateEntry(at: index, with: model)
+      //self.contentsMC.updateEntry(at: index, with: model)
     }
   }
 

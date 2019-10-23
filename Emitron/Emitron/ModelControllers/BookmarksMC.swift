@@ -130,6 +130,8 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(let bookmark):
+          bookmark.content = content
+          self.data.append(bookmark)
           content.bookmark = bookmark
           completion(content)
         }
@@ -144,7 +146,11 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(_):
-          content.bookmark = nil
+          if let index = self.data.firstIndex(where: { $0.id == id }) {
+            self.data.remove(at: index)
+            content.bookmark = nil
+          }
+          
           completion(content)
         }
       }

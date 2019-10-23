@@ -47,14 +47,15 @@ enum MyTutorialsState: String {
 }
 
 struct MyTutorialView: View {
-  
+
+  @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @EnvironmentObject var userMC: UserMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
-  
+
   var body: some View {
     contentView
       .navigationBarTitle(Text(Constants.myTutorials))
@@ -70,22 +71,19 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: true).environmentObject(self.userMC)
       }
-    .onAppear {
-      switch self.state {
-      case .inProgress, .completed: self.progressionsMC.loadContents()
-      case .bookmarked: self.bookmarksMC.loadContents()
-      }
-    }
   }
-  
+
   private var toggleControl: AnyView {
     AnyView(
       VStack {
-        ToggleControlView(inProgressClosure: {
+        ToggleControlView(toggleState: state, inProgressClosure: {
+          self.progressionsMC.loadContents()
           self.state = .inProgress
         }, completedClosure: {
+          self.progressionsMC.loadContents()
           self.state = .completed
         }, bookmarkedClosure: {
+          self.bookmarksMC.loadContents()
           self.state = .bookmarked
         })
           .padding([.top], .sidePadding)
@@ -95,47 +93,70 @@ struct MyTutorialView: View {
       .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
     )
   }
-  
+
   private var contentView: AnyView? {
-    var dataToDisplay: [ContentDetailsModel] = []
-    var stateToUse: DataState
-    var numTutorials: Int
-    
     switch state {
-    case .inProgress, .completed:
-      stateToUse = progressionsMC.state
-      numTutorials = progressionsMC.numTutorials
-      
-      switch progressionsMC.state {
-      case .hasData,
-           .loading where !progressionsMC.data.isEmpty:
-        if state == .inProgress {
-          let inProgressData = progressionsMC.data.filter { $0.percentComplete > 0 && !$0.finished }
-          let contents = inProgressData.compactMap { $0.content }
-          dataToDisplay = contents
-        } else {
-          let completedData = progressionsMC.data.filter { $0.finished == true }
-          let contents = completedData.compactMap { $0.content }
-          dataToDisplay = contents
+    case .inProgress: return inProgressContentsView
+    case .completed: return completedContentsView
+    case .bookmarked: return bookmarkedContentsView
+    }
+  }
+
+  private var inProgressContentsView: AnyView? {
+    var dataToDisplay = [ContentDetailsModel]()
+    progressionsMC.data.forEach { progressionModel in
+      // only show parent of collection or screencast
+      guard progressionModel.content?.contentType != .episode else { return }
+      if progressionModel.progress > 0 && !progressionModel.finished, let content = progressionModel.content {
+        content.progression = progressionModel
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        // update content on progressionModel with whether content should be bookmarked or not
+        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
+          content.bookmark = bookmark
         }
-      default: break
+        
+        dataToDisplay.append(content)
       }
-      
-    case .bookmarked:
-      stateToUse = bookmarksMC.state
-      numTutorials = bookmarksMC.numTutorials
-      
-      switch bookmarksMC.state {
-      case .hasData,
-           .loading where !bookmarksMC.data.isEmpty:
-        let content = bookmarksMC.data.compactMap { $0.content }
-        dataToDisplay = content
-      default: break
+    }
+
+    return contentView(with: progressionsMC.state, data: dataToDisplay)
+  }
+
+  private var completedContentsView: AnyView? {
+    var dataToDisplay = [ContentDetailsModel]()
+    progressionsMC.data.forEach { progressionModel in
+      guard progressionModel.content?.contentType != .episode else { return }
+      if progressionModel.finished, let content = progressionModel.content {
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        // update content on progressionModel with whether content should be bookmarked or not
+        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
+          content.bookmark = bookmark
+        }
+        
+        dataToDisplay.append(content)
       }
     }
     
+    return contentView(with: progressionsMC.state, data: dataToDisplay)
+  }
+
+  private var bookmarkedContentsView: AnyView? {
+    var dataToDisplay = [ContentDetailsModel]()
+    bookmarksMC.data.forEach { bookmark in
+      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
+        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+        content.bookmark = bookmark
+        dataToDisplay.append(content)
+      }
+    }
+    
+    return contentView(with: bookmarksMC.state, data: dataToDisplay)
+  }
+  
+  private func contentView(with dataState: DataState, data: [ContentDetailsModel]) -> AnyView? {
+    
     if let dataManager = DataManager.current {
-      let contentView = ContentListView(downloadsMC: dataManager.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+      let contentView = ContentListView(downloadsMC: dataManager.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: dataState, totalContentNum: data.count)
       return AnyView(contentView)
     } else {
       return nil

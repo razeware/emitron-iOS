@@ -30,10 +30,7 @@ import SwiftUI
 
 struct ToggleControlView: View {
   
-  @State var inProgressSelected: Bool = true
-  @State var completedSelected: Bool = false
-  @State var bookmarkedSelected: Bool = false
-  
+  @State var toggleState: MyTutorialsState
   var inProgressClosure: (()->())?
   var completedClosure: (()->())?
   var bookmarkedClosure: (()->())?
@@ -42,15 +39,13 @@ struct ToggleControlView: View {
     HStack {
       
       Button(action: {
-        self.inProgressSelected = true
-        self.completedSelected = false
-        self.bookmarkedSelected = false
+        self.toggleState = .inProgress
         self.inProgress()
       }) {
         
         VStack {
           
-          if self.inProgressSelected {
+          if self.toggleState == .inProgress {
             self.updateToggleToOn(with: "In Progress")
           } else {
             self.updateToggleToOff(with: "In Progress")
@@ -59,14 +54,12 @@ struct ToggleControlView: View {
       }
       
       Button(action: {
-        self.inProgressSelected = false
-        self.completedSelected = true
-        self.bookmarkedSelected = false
+        self.toggleState = .completed
         self.completed()
       }, label: {
         VStack {
           
-          if self.completedSelected {
+          if self.toggleState == .completed {
             self.updateToggleToOn(with: "Completed")
             } else {
               self.updateToggleToOff(with: "Completed")
@@ -75,15 +68,13 @@ struct ToggleControlView: View {
       })
       
       Button(action: {
-        self.inProgressSelected = false
-        self.completedSelected = false
-        self.bookmarkedSelected = true
+        self.toggleState = .bookmarked
         self.bookmarked()
       }, label: {
         
         VStack {
           
-          if self.bookmarkedSelected {
+          if self.toggleState == .bookmarked {
             self.updateToggleToOn(with: "Bookmarks")
             } else {
               self.updateToggleToOff(with: "Bookmarks")
@@ -143,7 +134,7 @@ struct ToggleControlView: View {
 #if DEBUG
 struct ToggleControlView_Previews: PreviewProvider {
     static var previews: some View {
-        ToggleControlView()
+      ToggleControlView(toggleState: .inProgress)
     }
 }
 #endif

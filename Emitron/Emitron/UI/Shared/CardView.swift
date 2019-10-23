@@ -145,8 +145,8 @@ struct CardView: SwiftUI.View {
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-
-    guard model.bookmarked || self.contentScreen.isMyTutorials else { return nil }
+    
+    guard model.bookmarked else { return nil }
 
     let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
 
@@ -181,19 +181,6 @@ struct CardView: SwiftUI.View {
       case .failure:
         break
       }
-    }
-  }
-
-  private func downloadImageName() -> String {
-
-    if model.isInCollection {
-
-      return downloadsMC.data.contains { downloadModel in
-
-        return downloadModel.content.parentContentId == model.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0.content.id == model.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 

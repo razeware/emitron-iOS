@@ -69,7 +69,11 @@ class UserMC: NSObject, ObservableObject {
     guardpost.presentationContextDelegate = self
     
     if user != nil {
-      state = .hasData
+      if user?.permissions == nil {
+        fetchPermissions()
+      } else {
+        state = .hasData
+      }
     } else {
       guardpost.login { [weak self] result in
         
@@ -109,7 +113,7 @@ class UserMC: NSObject, ObservableObject {
         .fetch(from: "UserMC_Permissions", reason: error.localizedDescription)
         .log(additionalParams: nil)
         
-        self.state = .hasData
+        self.state = .failed
       case .success(let permissions):
         self.user?.permissions = permissions
         
