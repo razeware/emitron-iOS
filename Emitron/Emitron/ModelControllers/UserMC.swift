@@ -128,6 +128,8 @@ class UserMC: NSObject, ObservableObject {
   }
   
   private func removeDownloadedContent() {
+    guard let permissions = user?.permissions, !permissions.contains(where: { $0.tag == .pro } ) else { return }
+    
     DataManager.current?.downloadsMC.deleteAllDownloadedContent()
   }
 }

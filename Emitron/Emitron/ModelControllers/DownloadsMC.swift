@@ -441,8 +441,6 @@ class DownloadsMC: NSObject, ObservableObject {
       Failure
       .fetch(from: "DownloadsMC", reason: error.localizedDescription)
       .log(additionalParams: nil)
-      
-      print("Sad issue...\(error.localizedDescription)")
     }
   }
 
