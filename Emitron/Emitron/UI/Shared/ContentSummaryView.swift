@@ -133,11 +133,9 @@ struct ContentSummaryView: View {
   }
 
   private var completeDownloadButton: some View {
-    let imageColor: Color = downloadImageColor
-    let image = Image("downloadActive")
+    let image = Image(downloadImageName)
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      .foregroundColor(imageColor)
       .onTapGesture {
         self.download()
     }
@@ -169,14 +167,14 @@ struct ContentSummaryView: View {
     }
   }
 
-  private var downloadImageColor: Color {
+  private var downloadImageName: String {
 
     if contentSummaryMC.data.isInCollection {
       return downloadsMC.data.contains { downloadModel in
         return downloadModel.content.id == contentSummaryMC.data.id
-        } ? .inactiveIcon : .activeIcon
+        } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
-      return downloadsMC.data.contains(where: { $0.content.id == contentSummaryMC.data.id }) ? .inactiveIcon : .activeIcon
+      return downloadsMC.data.contains(where: { $0.content.id == contentSummaryMC.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
@@ -184,7 +182,7 @@ struct ContentSummaryView: View {
     if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
       callback?(contentSummaryMC.data, .notOnWifi)
     } else {
-      let success = downloadImageColor != .inactiveIcon
+      let success = downloadImageName != DownloadImageName.inActive
       let hudOption: HudOption = success ? .success : .error
       callback?(contentSummaryMC.data, hudOption)
     }

@@ -33,6 +33,8 @@ private extension CGFloat {
 }
 
 struct DownloadsView: View {
+  
+  @State var showActivityIndicator = false
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
   @EnvironmentObject var emitron: AppState
@@ -45,18 +47,34 @@ struct DownloadsView: View {
   }
 
   var body: some View {
-    VStack {
+    ZStack(alignment: .center) {
       contentView
+      
+      if showActivityIndicator {
+        ActivityIndicator()
+      }
     }
     .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
   }
 
   private var contentView: some View {
-    ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
-      self.contentsMC.getContentSummary(with: content.id) { details in
-        guard let details = details else { return }
-        self.handleAction(with: action, content: details)
+    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+      self.showActivityIndicator = true
+      
+      // need to get groups & child contents for collection
+      if content.isInCollection {
+        // if an episode, don't need group & child contents
+        if !self.downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
+          self.handleAction(with: action, content: content)
+        } else {
+          self.contentsMC.getContentSummary(with: content.id) { details in
+            guard let details = details else { return }
+            self.handleAction(with: action, content: details)
+          }
+        }
+      } else {
+        self.handleAction(with: action, content: content)
       }
     }
   }
@@ -85,11 +103,14 @@ struct DownloadsView: View {
         // if an episode, only delete the specific episode
         if !downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
           downloadsMC.deleteDownload(with: content)
+          self.showActivityIndicator = false
         } else {
           downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
+          self.showActivityIndicator = false
         }
       } else {
         downloadsMC.deleteDownload(with: content)
+        self.showActivityIndicator = false
       }
 
     case .save:
