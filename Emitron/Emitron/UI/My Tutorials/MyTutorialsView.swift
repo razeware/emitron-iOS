@@ -140,7 +140,7 @@ struct MyTutorialView: View {
   private var bookmarkedContentsView: some View {
     var dataToDisplay = [ContentDetailsModel]()
     bookmarksMC.data.forEach { bookmark in
-      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }){
+      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
         content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
         content.bookmark = bookmark
         dataToDisplay.append(content)
