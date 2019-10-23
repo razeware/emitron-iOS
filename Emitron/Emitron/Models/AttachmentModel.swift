@@ -33,6 +33,26 @@ enum AttachmentKind: String {
   case stream
   case sdVideoFile = "sd_video_file"
   case hdVideoFile = "hd_video_file"
+  
+  static func getDetail(value: String) -> String {
+    if value == AttachmentKind.sdVideoFile.rawValue {
+      return "SD"
+    } else if value == AttachmentKind.hdVideoFile.rawValue {
+      return "HD"
+    } else {
+      return value
+    }
+  }
+  
+  static func getValue(detail: String) -> String {
+    if detail == "SD" {
+      return AttachmentKind.sdVideoFile.rawValue
+    } else if detail == "HD" {
+      return AttachmentKind.hdVideoFile.rawValue
+    } else {
+      return detail
+    }
+  }
 }
 
 class AttachmentModel {
