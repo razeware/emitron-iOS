@@ -131,7 +131,7 @@ extension UserDefaults {
     return UserDefaults.standard.object(forKey: UserDefaultsKey.playbackToken.rawValue) as? String
   }
   
-  var playSpeed: Float {
+  @objc dynamic var playSpeed: Float {
     if let speedString = UserDefaults.standard.object(forKey: UserDefaultsKey.playSpeed.rawValue) as? String,
       let speed = Double(speedString) {
       return Float(speed)
@@ -148,7 +148,7 @@ extension UserDefaults {
     return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? AttachmentKind.hdVideoFile.rawValue
   }
   
-  var closedCaptionOn: Bool {
+  @objc dynamic var closedCaptionOn: Bool {
     return UserDefaults.standard.object(forKey: UserDefaultsKey.closedCaptionOn.rawValue) as? Bool ?? false
   }
 }
