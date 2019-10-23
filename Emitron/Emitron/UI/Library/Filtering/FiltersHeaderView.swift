@@ -31,7 +31,7 @@ import SwiftUI
 private enum Layout {
   struct Padding {
     let overall: CGFloat = 12
-    let textTrailing: CGFloat = 2
+    let textTrailing: CGFloat = 15
   }
   
   static let padding = Padding()
@@ -63,7 +63,6 @@ struct FiltersHeaderView: View {
           Text(filterGroup.type.name)
             .foregroundColor(.titleText)
             .font(.uiLabelBold)
-            .padding([.trailing], Layout.padding.textTrailing)
           
           Spacer()
           
@@ -75,7 +74,8 @@ struct FiltersHeaderView: View {
               .font(.uiLabelBold)
           }
         }
-        .padding(.all, Layout.padding.overall)
+        .padding([.top, .bottom], Layout.padding.overall)
+        .padding([.trailing, .leading], Layout.padding.textTrailing)
       }
       .onTapGesture {
         self.isExpanded.toggle()
@@ -101,7 +101,7 @@ struct FiltersHeaderView: View {
             self.filters.all.update(with: filter)
             self.filters.commitUpdates()
           })
-            .padding([.leading, .trailing], 13)
+            .padding([.leading, .trailing], 14)
         }
     }
   }

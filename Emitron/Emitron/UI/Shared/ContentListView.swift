@@ -103,8 +103,8 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-      // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
-      //.background(Color.backgroundColor)
+    // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
+    //.background(Color.backgroundColor)
   }
 
   private var listView: some View {
@@ -119,15 +119,15 @@ struct ContentListView: View {
           loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
-
+        
         if contentScreen == .downloads {
-
+          
           if contents.isEmpty || downloadsMC.data.isEmpty {
             emptyView
           } else {
             cardsTableViewWithDelete
           }
-
+          
         } else {
           cardTableNavView
         }
@@ -178,34 +178,6 @@ struct ContentListView: View {
     }
   }
 
-  private var failedView: some View {
-    VStack {
-      headerView
-
-      Spacer()
-
-      Image("emojiCrying")
-        .padding([.bottom], 30)
-
-      Text("Something went wrong.")
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], 20)
-
-      Text("Please try again.")
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 20)
-
-      Spacer()
-
-      reloadButton
-        .padding([.leading, .trailing, .bottom], 20)
-    }
-  }
-
   private var cardTableNavView: some View {
     let guardpost = Guardpost.current
     let user = guardpost.currentUser
@@ -231,8 +203,8 @@ struct ContentListView: View {
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(Color.backgroundColor)
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -38.0)
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -38.0)
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
@@ -271,6 +243,37 @@ struct ContentListView: View {
                      onLeftIconTap: onLeftTap,
                      onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
+  
+  // ISSUE: To make the status bar the same color as the rest of thee backgrounds, we have to make all of the views into Lists
+  private var failedView: some View {
+    VStack {
+      
+      headerView
+      
+      Spacer()
+      
+      Image("emojiCrying")
+        .padding([.bottom], 30)
+      
+      Text("Something went wrong.")
+        .font(.uiTitle2)
+        .foregroundColor(.titleText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+      
+      Text("Please try again.")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
+      
+      Spacer()
+      
+      reloadButton
+        .padding([.leading, .trailing, .bottom], 20)
+    }
+    .background(Color.backgroundColor)
+  }
 
   private var emptyView: some View {
     VStack {
@@ -279,7 +282,7 @@ struct ContentListView: View {
       Spacer()
 
       Image(contentScreen.emptyImageName)
-      .padding([.bottom], 30)
+        .padding([.bottom], 30)
 
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
@@ -311,15 +314,16 @@ struct ContentListView: View {
 
     return AnyView(button)
   }
-
+  
   private var loadingView: some View {
     VStack {
       headerView
       Spacer()
     }
+    .background(Color.backgroundColor)
     .overlay(ActivityIndicator())
   }
-
+  
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
@@ -344,7 +348,7 @@ struct ContentListView: View {
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
-
+  
   func toggleBookmark(model: ContentDetailsModel) {
     DataManager.current?.contentsMC.toggleBookmark(for: model)
   }
