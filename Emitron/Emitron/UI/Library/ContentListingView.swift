@@ -382,18 +382,25 @@ struct ContentListingView: View {
     return
       VStack {
         HStack {
-          Image("padlock")
-            .foregroundColor(.white)
+          Button(action: {}) {
+            Image("padlock")
+            .resizable()
+            .frame(width: 20, height: 29)
+          }
+          .foregroundColor(.white)
+
           Text("Pro Course")
             .font(.uiTitle1)
             .foregroundColor(.white)
         }
 
-        Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
+        Text("To unlock this course visit raywenderlich.com/subscription for more information")
           .multilineTextAlignment(.center)
-          .font(.uiLabelBold)
+          .font(.uiLabel)
           .foregroundColor(.white)
+          .padding([.leading, .trailing], 20)
           .lineLimit(3)
+          .fixedSize(horizontal: false, vertical: true)
     }
   }
 

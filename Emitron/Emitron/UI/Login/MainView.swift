@@ -28,10 +28,10 @@
 
 import SwiftUI
 
-struct LoginView: View {
+struct MainView: View {
   
-  @ObservedObject var userMC: UserMC
-  @State var showModal: Bool = false
+  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var appState: AppState
   
   var body: some View {
     return contentView
@@ -43,9 +43,13 @@ struct LoginView: View {
       let guardpost = Guardpost.current
       let filters = DataManager.current!.filters
       let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-      let emitronState = AppState()
       
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+      return AnyView(
+        TabNavView()
+          .environmentObject(contentsMC)
+          .environmentObject(AppState())
+          .environmentObject(userMC)
+      )
     }
     
     return AnyView(
@@ -53,10 +57,6 @@ struct LoginView: View {
         .background(Color.backgroundColor)
         .edgesIgnoringSafeArea([.all])
     )
-  }
-  
-  private var testView: some View {
-    Text("Hello")
   }
   
   private var loginView: some View {
@@ -91,15 +91,3 @@ struct LoginView: View {
     }
   }
 }
-
-#if DEBUG
-struct LoginView_Previews: PreviewProvider {
-
-  static var previews: some View {
-    let guardpost = Guardpost.current
-    let userMC = UserMC(guardpost: guardpost)
-    
-    return LoginView(userMC: userMC)
-  }
-}
-#endif

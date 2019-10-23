@@ -39,12 +39,11 @@ public struct UserModel: Codable {
   public let token: String
   var permissions: PermissionsModel?
   
-//  public var isPro: Bool {
-//    guard let permissions = permissions else { return false }
-//    return permissions.tag == .pro
-//  }
-  public var isPro = true
-
+  public var isPro: Bool {
+    guard let permissions = permissions else { return false }
+    return permissions.tag == .pro
+  }
+  
   // MARK: - Initializers
   init?(dictionary: [String: String]) {
     guard

@@ -31,7 +31,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+//let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
 
 class UserMC: NSObject, ObservableObject {
   
@@ -88,7 +88,7 @@ class UserMC: NSObject, ObservableObject {
           
           //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
           //probably using Combine or Notifications
-          NotificationCenter.default.post(name: successfulSignInNotification, object: nil)
+          //NotificationCenter.default.post(name: successfulSignInNotification, object: nil)
           
           Event
             .login(from: "UserMC")
@@ -116,6 +116,12 @@ class UserMC: NSObject, ObservableObject {
         self.state = .hasData
       }
     }
+  }
+  
+  func logout() {
+    guardpost.logout()
+    user = nil
+    objectWillChange.send(())
   }
 }
 

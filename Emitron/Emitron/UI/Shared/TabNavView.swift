@@ -33,6 +33,7 @@ struct TabNavView: View {
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var userMC: UserMC
 
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
@@ -80,7 +81,7 @@ struct TabNavView: View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC)
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(userMC)
   }
 
   private var downloadsView: some View {

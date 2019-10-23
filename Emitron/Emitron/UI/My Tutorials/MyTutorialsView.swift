@@ -51,6 +51,7 @@ struct MyTutorialView: View {
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
+  @EnvironmentObject var userMC: UserMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
   
@@ -67,7 +68,7 @@ struct MyTutorialView: View {
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView(showLogoutButton: true)
+        SettingsView(showLogoutButton: true).environmentObject(self.userMC)
       }
     .onAppear {
       switch self.state {
@@ -95,7 +96,7 @@ struct MyTutorialView: View {
     )
   }
   
-  private var contentView: some View {
+  private var contentView: AnyView? {
     var dataToDisplay: [ContentDetailsModel] = []
     var stateToUse: DataState
     var numTutorials: Int
@@ -133,8 +134,11 @@ struct MyTutorialView: View {
       }
     }
     
-    let contentView = ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
-        
-    return AnyView(contentView)
+    if let dataManager = DataManager.current {
+      let contentView = ContentListView(downloadsMC: dataManager.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: stateToUse, totalContentNum: numTutorials)
+      return AnyView(contentView)
+    } else {
+      return nil
+    }
   }
 }

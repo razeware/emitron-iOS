@@ -38,4 +38,6 @@ class AppState: NSObject, ObservableObject {
       objectWillChange.send(())
     }
   }
+  
+  @Published var loggedIn: Bool = false
 }
