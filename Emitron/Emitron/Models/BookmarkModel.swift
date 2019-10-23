@@ -80,7 +80,6 @@ class BookmarkModel {
         }
         
       default:
-        print(relationship.type)
         break
       }
       
