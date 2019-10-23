@@ -94,12 +94,10 @@ struct LibraryView: View {
               onEditingChanged: { change in
                 print("Editing changed: \(self.filters.searchStr)")
     }) {
-      //UIApplication.shared.keyWindow?.endEditing(true)
       self.updateFilters()
     }
     .textFieldStyle(RoundedBorderTextFieldStyle())
     .modifier(ClearButton(text: $filters.searchStr, action: {
-      //UIApplication.shared.keyWindow?.endEditing(true)
       self.updateFilters()
     }))
 
