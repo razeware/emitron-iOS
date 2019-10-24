@@ -101,7 +101,6 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(free, forKey: .contentFreeKey)
     aCoder.encode(duration, forKey: .contentDurationKey)
     aCoder.encode(bookmarked, forKey: .contentBookmarkedKey)
-    aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
     aCoder.encode(technologyTripleString, forKey: .contentTechnologyTripleStringKey)
     aCoder.encode(contributorString, forKey: .contentContributorStringKey)
     aCoder.encode(videoID, forKey: .contentVideoIDKey)
@@ -110,6 +109,10 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(difficulty, forKey: .contentDifficultyKey)
     aCoder.encode(contentType, forKey: .contentTypeKey)
     aCoder.encode(parentContentId, forKey: .contentParentContentId)
+    
+    if let cardArtworkURL = cardArtworkURL {
+      aCoder.encode(cardArtworkURL.absoluteString, forKey: .contentCardArtworkURLKey)
+    }
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -152,8 +155,8 @@ class ContentsData: NSObject, NSCoding {
       self.bookmarked = bookmarked
     }
     
-    if let cardArtworkURL = aDecoder.decodeObject(forKey: .contentCardArtworkURLKey) as? URL {
-      self.cardArtworkURL = cardArtworkURL
+    if let cardArtworkURL = aDecoder.decodeObject(forKey: .contentCardArtworkURLKey) as? String {
+      self.cardArtworkURL = URL(string: cardArtworkURL)
     }
     
     if let technologyTripleString = aDecoder.decodeObject(forKey: .contentTechnologyTripleStringKey) as? String {
