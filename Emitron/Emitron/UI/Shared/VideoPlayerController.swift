@@ -185,6 +185,7 @@ class VideoPlayerController: AVPlayerViewController {
   }
 
   private func playFromLocalStorage(with url: URL, contentDetails: ContentDetailsModel) {
+    
     let doc = Document(fileURL: url)
     doc.open { [weak self] success in
       guard let self = self else { return }
@@ -193,6 +194,11 @@ class VideoPlayerController: AVPlayerViewController {
       }
 
       if let url = doc.videoData.url {
+        print("url: \(url)")
+        let data = FileManager.default.contents(atPath: url.path)
+        print("data: \(data)")
+        
+        
         self.insertVideoStream(for: url, contentDetails: contentDetails)
       }
     }

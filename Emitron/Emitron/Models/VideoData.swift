@@ -53,11 +53,16 @@ class VideoData: NSObject, NSCoding {
     aDecoder.decodeInteger(forKey: .versionKey)
     if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
       self.url = URL(string: videoURL)
+      
+      self.data = try? Data(contentsOf: self.url!)
+      
+      print("data???: \(try? Data(contentsOf: self.url!))")
     }
     
     if let data = aDecoder.decodeData() {
       print("data: \(data) & videoURL: \(url)")
-      self.data = data
+//      self.data = data
+      
     }
     
     if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {

@@ -232,6 +232,10 @@ class DownloadsMC: NSObject, ObservableObject {
       completion?()
     }
   }
+  
+  private func localFilePath(for url: URL) -> URL {
+    return localRoot!.appendingPathComponent(url.lastPathComponent)
+  }
 
   // MARK: Save
   func saveDownload(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
@@ -590,15 +594,29 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       return
     }
     
+    guard let sourceURL = downloadTask.originalRequest?.url else { return }
+    let newLocation = localFilePath(for: sourceURL)
+    
+    
+    try? FileManager.default.removeItem(at: newLocation)
+    
+    do {
+      try FileManager.default.copyItem(at: location, to: newLocation)
+    } catch let error as NSError {
+      print("Error: \(error.description)")
+      self.state = .failed
+    }
+    
+    
     if let url = self.attachmentModel?.url {
       downloadsSession.dataTask(with: url) { (data, response, error) in
 
-        if let url = downloadTask.response?.url, let content = self.downloadedModel?.content {
+        if let content = self.downloadedModel?.content {
           DispatchQueue.main.async {
-            self.saveNewDocument(with: destinationUrl, location: url, data: data, content: content, attachment: nil, isEpisodeOnly: true)
+            self.saveNewDocument(with: destinationUrl, location: newLocation, data: data, content: content, attachment: nil, isEpisodeOnly: true)
           }
         }
-      }.resume()
+      }.resume() 
     }
   }
 
