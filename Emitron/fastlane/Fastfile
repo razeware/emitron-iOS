@@ -26,6 +26,6 @@ platform :ios do
   end
 
   lane :tests do
-    run_tests(scheme: 'Emitron')
+    run_tests(scheme: 'Emitron', reset_simulator: true, clean: true)
   end
 end
