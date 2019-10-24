@@ -101,24 +101,15 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(free, forKey: .contentFreeKey)
     aCoder.encode(duration, forKey: .contentDurationKey)
     aCoder.encode(bookmarked, forKey: .contentBookmarkedKey)
+    aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
     aCoder.encode(technologyTripleString, forKey: .contentTechnologyTripleStringKey)
     aCoder.encode(contributorString, forKey: .contentContributorStringKey)
+    aCoder.encode(videoID, forKey: .contentVideoIDKey)
+    aCoder.encode(index, forKey: .contentIndexKey)
     aCoder.encode(professional, forKey: .contentProfessionalKey)
     aCoder.encode(difficulty, forKey: .contentDifficultyKey)
     aCoder.encode(contentType, forKey: .contentTypeKey)
     aCoder.encode(parentContentId, forKey: .contentParentContentId)
-    
-    if let cardArtworkURL = cardArtworkURL {
-      aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
-    }
-    
-    if let videoID = videoID {
-      aCoder.encode(videoID, forKey: .contentVideoIDKey)
-    }
-    
-    if let index = index {
-      aCoder.encode(index, forKey: .contentIndexKey)
-    }
   }
   
   required init?(coder aDecoder: NSCoder) {
@@ -171,6 +162,10 @@ class ContentsData: NSObject, NSCoding {
     
     if let contributorString = aDecoder.decodeObject(forKey: .contentContributorStringKey) as? String {
       self.contributorString = contributorString
+    }
+    
+    if let videoID = aDecoder.decodeObject(forKey: .contentVideoIDKey) as? Int {
+      self.videoID = videoID
     }
     
     if let index = aDecoder.decodeObject(forKey: .contentIndexKey) as? Int {
