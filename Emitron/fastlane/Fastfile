@@ -26,6 +26,6 @@ platform :ios do
   end
 
   lane :tests do
-    run_tests(scheme: 'Emitron', device: 'iPhone 11')
+    run_tests(scheme: 'Emitron')
   end
 end
