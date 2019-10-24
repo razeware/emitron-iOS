@@ -114,7 +114,7 @@ class UserMC: NSObject, ObservableObject {
         self.user?.permissions = permissions
         
         // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
-        self.removeDownloadedContent()
+        self.removeDownloadedContentIfNecessary()
         self.guardpost.updateUser(with: self.user)
         self.state = .hasData
       }
@@ -124,11 +124,16 @@ class UserMC: NSObject, ObservableObject {
   func logout() {
     guardpost.logout()
     user = nil
+    removeDownloadedContentIfNecessary()
     objectWillChange.send(())
   }
   
-  private func removeDownloadedContent() {
-    guard let permissions = user?.permissions, !permissions.contains(where: { $0.tag == .pro } ) else { return }
+  // If the user is nil, or if they don't have download permissions, delete all downloaded content
+  private func removeDownloadedContentIfNecessary() {
+    guard let user = user, !user.canDownload else {
+      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      return
+    }
     
     DataManager.current?.downloadsMC.deleteAllDownloadedContent()
   }

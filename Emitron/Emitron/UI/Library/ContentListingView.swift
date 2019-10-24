@@ -41,6 +41,10 @@ struct ContentListingView: View {
   @EnvironmentObject var contentsMC: ContentsMC
   var content: ContentDetailsModel
   var user: UserModel
+  
+  private var canStreamPro: Bool {
+    return user.canStreamPro
+  }
 
   // These should be private
   @State var isPresented = false
@@ -61,7 +65,7 @@ struct ContentListingView: View {
       List {
         Section {
 
-          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
+          if self.contentSummaryMC.data.professional && self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)

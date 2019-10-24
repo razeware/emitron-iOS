@@ -30,8 +30,8 @@ import Foundation
 import SwiftyJSON
 
 enum Permission: String, Codable {
-  case beginner = "stream-beginner-videos"
-  case pro = "stream-professional-videos"
+  case streamBeginner = "stream-beginner-videos"
+  case streamPro = "stream-professional-videos"
   case download = "download-videos"
   case none = ""
 }

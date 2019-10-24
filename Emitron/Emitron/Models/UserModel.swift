@@ -39,9 +39,14 @@ public struct UserModel: Codable {
   public let token: String
   var permissions: [PermissionsModel]?
   
-  public var isPro: Bool {
+  public var canStreamPro: Bool {
     guard let permissions = permissions else { return false }
-    return !permissions.filter { $0.tag == .pro }.isEmpty
+    return !permissions.filter { $0.tag == .streamPro }.isEmpty
+  }
+  
+  public var canStream: Bool {
+    guard let permissions = permissions else { return false }
+    return !permissions.filter { $0.tag == .streamBeginner }.isEmpty
   }
   
   public var canDownload: Bool {

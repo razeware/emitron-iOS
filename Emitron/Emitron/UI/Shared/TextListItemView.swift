@@ -40,11 +40,12 @@ struct TextListItemView: View {
   var buttonAction: (Bool) -> Void
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var progressionsMC: ProgressionsMC
-  var isPro: Bool {
-    return Guardpost.current.currentUser!.isPro
+  
+  var canStreamPro: Bool {
+    return Guardpost.current.currentUser?.canStream ?? false
   }
   var canDownload: Bool {
-    return Guardpost.current.currentUser!.canDownload
+    return Guardpost.current.currentUser?.canDownload ?? false
   }
   
   var body: some View {
@@ -137,7 +138,7 @@ struct TextListItemView: View {
   
   private var doneCheckbox: AnyView {
     
-    if !isPro && contentSummary.professional {
+    if !canDownload && contentSummary.professional {
       return AnyView(ZStack {
         Rectangle()
           .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
