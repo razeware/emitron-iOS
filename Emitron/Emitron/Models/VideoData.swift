@@ -42,14 +42,14 @@ class VideoData: NSObject, NSCoding {
     
     let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.description, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty.rawValue, contentType: savedContent.contentType.rawValue, parentContentId: savedContent.parentContentId)
     
-    aCoder.encode(videoURL, forKey: .videoKey)
+    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
     aCoder.encode(contentsData, forKey: .contentKey)
   }
   
   required init?(coder aDecoder: NSCoder) {
     aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? URL {
-      self.url = videoURL
+    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
+      self.url = URL(string: videoURL)
     }
     
     if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {

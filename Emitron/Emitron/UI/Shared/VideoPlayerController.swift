@@ -153,6 +153,10 @@ class VideoPlayerController: AVPlayerViewController {
 
       } else {
         // TODO: Show failure message/view
+        
+        DispatchQueue.main.async {
+          self.playFromLocalIfPossible()
+        }
       }
     }
 
