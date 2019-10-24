@@ -133,6 +133,7 @@ class BookmarksMC: NSObject, ObservableObject {
           bookmark.content = content
           self.data.append(bookmark)
           content.bookmark = bookmark
+          self.state = .hasData
           completion(content)
         }
       }
@@ -150,7 +151,7 @@ class BookmarksMC: NSObject, ObservableObject {
             self.data.remove(at: index)
             content.bookmark = nil
           }
-          
+          self.state = .hasData
           completion(content)
         }
       }
