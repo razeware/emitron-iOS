@@ -52,6 +52,7 @@ struct MyTutorialView: View {
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
+  @EnvironmentObject var userMC: UserMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
 
@@ -68,7 +69,7 @@ struct MyTutorialView: View {
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView(showLogoutButton: true)
+        SettingsView(showLogoutButton: true).environmentObject(self.userMC)
       }
   }
 
@@ -93,15 +94,15 @@ struct MyTutorialView: View {
     )
   }
 
-  private var contentView: some View {
+  private var contentView: AnyView? {
     switch state {
-    case .inProgress: return AnyView(inProgressContentsView)
-    case .completed: return AnyView(completedContentsView)
-    case .bookmarked: return AnyView(bookmarkedContentsView)
+    case .inProgress: return inProgressContentsView
+    case .completed: return completedContentsView
+    case .bookmarked: return bookmarkedContentsView
     }
   }
 
-  private var inProgressContentsView: some View {
+  private var inProgressContentsView: AnyView? {
     var dataToDisplay = [ContentDetailsModel]()
     progressionsMC.data.forEach { progressionModel in
       // only show parent of collection or screencast
@@ -118,10 +119,10 @@ struct MyTutorialView: View {
       }
     }
 
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
+    return contentView(with: progressionsMC.state, data: dataToDisplay)
   }
 
-  private var completedContentsView: some View {
+  private var completedContentsView: AnyView? {
     var dataToDisplay = [ContentDetailsModel]()
     progressionsMC.data.forEach { progressionModel in
       guard progressionModel.content?.contentType != .episode else { return }
@@ -135,10 +136,11 @@ struct MyTutorialView: View {
         dataToDisplay.append(content)
       }
     }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
+    
+    return contentView(with: progressionsMC.state, data: dataToDisplay)
   }
 
-  private var bookmarkedContentsView: some View {
+  private var bookmarkedContentsView: AnyView? {
     var dataToDisplay = [ContentDetailsModel]()
     bookmarksMC.data.forEach { bookmark in
       if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
@@ -148,6 +150,16 @@ struct MyTutorialView: View {
       }
     }
     
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: dataToDisplay.count)
+    return contentView(with: bookmarksMC.state, data: dataToDisplay)
+  }
+  
+  private func contentView(with dataState: DataState, data: [ContentDetailsModel]) -> AnyView? {
+    
+    if let dataManager = DataManager.current {
+      let contentView = ContentListView(downloadsMC: dataManager.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: dataState, totalContentNum: data.count)
+      return AnyView(contentView)
+    } else {
+      return nil
+    }
   }
 }

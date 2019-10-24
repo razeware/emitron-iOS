@@ -41,6 +41,10 @@ struct ContentListingView: View {
   @EnvironmentObject var contentsMC: ContentsMC
   var content: ContentDetailsModel
   var user: UserModel
+  
+  private var canStreamPro: Bool {
+    return user.canStreamPro
+  }
 
   // These should be private
   @State var isPresented = false
@@ -61,7 +65,7 @@ struct ContentListingView: View {
       List {
         Section {
 
-          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
+          if self.contentSummaryMC.data.professional && self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
@@ -383,17 +387,19 @@ struct ContentListingView: View {
       VStack {
         HStack {
           Image("padlock")
-            .foregroundColor(.white)
+
           Text("Pro Course")
             .font(.uiTitle1)
             .foregroundColor(.white)
         }
 
-        Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
+        Text("To unlock this course visit raywenderlich.com/subscription for more information")
           .multilineTextAlignment(.center)
-          .font(.uiLabelBold)
+          .font(.uiLabel)
           .foregroundColor(.white)
+          .padding([.leading, .trailing], 20)
           .lineLimit(3)
+          .fixedSize(horizontal: false, vertical: true)
     }
   }
 

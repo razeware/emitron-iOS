@@ -54,8 +54,8 @@ struct DownloadsView: View {
         ActivityIndicator()
       }
     }
-    .background(Color.backgroundColor)
     .navigationBarTitle(Text(Constants.downloads))
+    //.background(Color.backgroundColor) (If this is uncommented than the status bar becomes clear, and the large title doesn't become small)
   }
 
   private var contentView: some View {

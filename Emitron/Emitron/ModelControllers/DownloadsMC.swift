@@ -423,6 +423,26 @@ class DownloadsMC: NSObject, ObservableObject {
       }
     }
   }
+  
+  func deleteAllDownloadedContent() {
+    
+    guard let root = localRoot else { return }
+
+    do {
+      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
+
+      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        try FileManager.default.removeItem(at: localDoc)
+      }
+
+      self.data = []
+
+    } catch let error {
+      Failure
+      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
+    }
+  }
 
   private func loadDownloads() {
 

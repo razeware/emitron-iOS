@@ -28,10 +28,10 @@
 
 import SwiftUI
 
-struct LoginView: View {
+struct MainView: View {
   
-  @ObservedObject var userMC: UserMC
-  @State var showModal: Bool = false
+  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var appState: AppState
   
   var body: some View {
     return contentView
@@ -39,28 +39,74 @@ struct LoginView: View {
   }
   
   private var contentView: AnyView {
-    guard userMC.user == nil else {
-      let guardpost = Guardpost.current
-      let filters = DataManager.current!.filters
-      let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
-      let emitronState = AppState()
-      
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+    guard let user = userMC.user,
+      let dataManager = DataManager.current else {
+      return loginView
     }
     
+    let guardpost = Guardpost.current
+    let filters = dataManager.filters
+    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
+    
+    switch userMC.state {
+    case .failed:
+      return loginView
+    case .initial, .loading:
+      userMC.fetchPermissions()
+      return tabBarView(with: contentsMC)
+    case .hasData:
+      if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {
+        return tabBarView(with: contentsMC)
+      } else {
+        return logoutView
+      }
+    }
+  }
+  
+  private func tabBarView(with contentsMC: ContentsMC) -> AnyView {
     return AnyView(
-      loginView
-        .background(Color.backgroundColor)
-        .edgesIgnoringSafeArea([.all])
+      TabNavView()
+        .environmentObject(contentsMC)
+        .environmentObject(AppState())
+        .environmentObject(userMC)
     )
   }
   
-  private var testView: some View {
-    Text("Hello")
+  private var logoutView: AnyView {
+    AnyView(VStack {
+      
+      Image("logo")
+        .padding([.top], 88)
+      
+      Spacer()
+      
+      Text("No access")
+        .font(.uiTitle1)
+        .foregroundColor(.titleText)
+        .padding([.bottom], 15)
+        .multilineTextAlignment(.center)
+      
+      Text("The raywenderlich.com mobile app is only available to subscribers. ")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 55)
+      
+      Spacer()
+      
+      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+        self.userMC.logout()
+      }
+      .padding([.leading, .trailing], 18)
+      .padding([.bottom], 38)
+    }
+    .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea([.all])
+    )
   }
   
-  private var loginView: some View {
-    VStack {
+  private var loginView: AnyView {
+    AnyView(VStack {
       
       Image("logo")
         .padding([.top], 88)
@@ -89,17 +135,8 @@ struct LoginView: View {
       .padding([.leading, .trailing], 18)
       .padding([.bottom], 38)
     }
+    .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea([.all])
+    )
   }
 }
-
-#if DEBUG
-struct LoginView_Previews: PreviewProvider {
-
-  static var previews: some View {
-    let guardpost = Guardpost.current
-    let userMC = UserMC(guardpost: guardpost)
-    
-    return LoginView(userMC: userMC)
-  }
-}
-#endif

@@ -67,6 +67,7 @@ class DataManager: NSObject {
        user: UserModel,
        persistenceStore: PersistenceStore) {
 
+    
     self.domainsMC = DomainsMC(guardpost: guardpost,
                                user: user,
                                persistentStore: persistenceStore)

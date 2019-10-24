@@ -184,42 +184,6 @@ struct CardView: SwiftUI.View {
     }
   }
 
-  private func createEmptyView() -> AnyView {
-    let vStack = VStack {
-      HStack {
-        Spacer()
-
-        Text(contentScreen.titleMessage)
-          .font(.uiTitle2)
-          .foregroundColor(.titleText)
-          .multilineTextAlignment(.center)
-          .lineLimit(nil)
-
-        Spacer()
-      }
-
-      addDetailText()
-    }
-
-    return AnyView(vStack)
-  }
-
-  private func addDetailText() -> AnyView? {
-    let stack = HStack {
-      Spacer()
-
-      Text(contentScreen.detailMesage)
-        .font(.uiHeadline)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
-
-      Spacer()
-    }
-
-    return AnyView(stack)
-  }
-
   private func bookmark() {
     onRightIconTap?()
   }

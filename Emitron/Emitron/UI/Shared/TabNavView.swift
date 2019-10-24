@@ -33,6 +33,7 @@ struct TabNavView: View {
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var userMC: UserMC
 
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
@@ -71,8 +72,6 @@ struct TabNavView: View {
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
 
-    UserMC(guardpost: Guardpost.current).fetchPermissions()
-
     return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
   }
 
@@ -81,7 +80,8 @@ struct TabNavView: View {
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
     let domainsMC = dataManager.domainsMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC)
+    
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(userMC).environmentObject(domainsMC)
   }
 
   private var downloadsView: some View {

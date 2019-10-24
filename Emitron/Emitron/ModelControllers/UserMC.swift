@@ -31,7 +31,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+//let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
 
 class UserMC: NSObject, ObservableObject {
   
@@ -69,7 +69,11 @@ class UserMC: NSObject, ObservableObject {
     guardpost.presentationContextDelegate = self
     
     if user != nil {
-      state = .hasData
+      if user?.permissions == nil {
+        fetchPermissions()
+      } else {
+        state = .hasData
+      }
     } else {
       guardpost.login { [weak self] result in
         
@@ -86,14 +90,10 @@ class UserMC: NSObject, ObservableObject {
         case .success(let user):
           self.user = user
           
-          //TODO: Here temporarily, will move to a separate part of the app, that manages the setup of data/pulling
-          //probably using Combine or Notifications
-          NotificationCenter.default.post(name: successfulSignInNotification, object: nil)
-          
           Event
             .login(from: "UserMC")
             .log(additionalParams: nil)
-          
+
           self.fetchPermissions()
           
         }
@@ -109,13 +109,33 @@ class UserMC: NSObject, ObservableObject {
         .fetch(from: "UserMC_Permissions", reason: error.localizedDescription)
         .log(additionalParams: nil)
         
-        self.state = .hasData
+        self.state = .failed
       case .success(let permissions):
         self.user?.permissions = permissions
         
+        // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
+        self.removeDownloadedContentIfNecessary()
+        self.guardpost.updateUser(with: self.user)
         self.state = .hasData
       }
     }
+  }
+  
+  func logout() {
+    guardpost.logout()
+    user = nil
+    removeDownloadedContentIfNecessary()
+    objectWillChange.send(())
+  }
+  
+  // If the user is nil, or if they don't have download permissions, delete all downloaded content
+  private func removeDownloadedContentIfNecessary() {
+    guard let user = user, !user.canDownload else {
+      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      return
+    }
+    
+    DataManager.current?.downloadsMC.deleteAllDownloadedContent()
   }
 }
 

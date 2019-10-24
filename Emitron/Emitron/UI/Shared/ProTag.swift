@@ -34,7 +34,7 @@ struct ProTag: View {
       Rectangle()
         .foregroundColor(.tagBackground)
         .cornerRadius(6)
-        .frame(width: 36, height: 22) // ISSUE: Commenting out this line causes the entire app to crash, yay
+        .frame(width: 36, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
 
       Text("PRO")
         .foregroundColor(.tagForeground)

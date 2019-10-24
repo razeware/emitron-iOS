@@ -30,18 +30,18 @@ import Foundation
 import SwiftyJSON
 
 struct PermissionsRequest: Request {
-  typealias Response = PermissionsModel
+  typealias Response = [PermissionsModel]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
-  var path: String { return "/permissions)" }
+  var path: String { return "/permissions" }
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> PermissionsModel {
+  func handle(response: Data) throws -> [PermissionsModel] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { PermissionsModel($0, metadata: nil) }.first!
+    return doc.data.compactMap { PermissionsModel($0, metadata: nil) }
   }
 }
