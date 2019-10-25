@@ -597,17 +597,6 @@ extension DownloadsMC: URLSessionDownloadDelegate {
     guard let sourceURL = downloadTask.originalRequest?.url else { return }
     let newLocation = localFilePath(for: sourceURL)
     
-    
-    try? FileManager.default.removeItem(at: newLocation)
-    
-    do {
-      try FileManager.default.copyItem(at: location, to: newLocation)
-    } catch let error as NSError {
-      print("Error: \(error.description)")
-      self.state = .failed
-    }
-    
-    
     if let url = self.attachmentModel?.url {
       downloadsSession.dataTask(with: url) { (data, response, error) in
 

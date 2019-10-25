@@ -43,7 +43,6 @@ class VideoData: NSObject, NSCoding {
     
     let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.description, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty.rawValue, contentType: savedContent.contentType.rawValue, parentContentId: savedContent.parentContentId)
     
-    print("videoURL: \(videoURL)")
     aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
     aCoder.encode(data)
     aCoder.encode(contentsData, forKey: .contentKey)
@@ -53,16 +52,10 @@ class VideoData: NSObject, NSCoding {
     aDecoder.decodeInteger(forKey: .versionKey)
     if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
       self.url = URL(string: videoURL)
-      
-      self.data = try? Data(contentsOf: self.url!)
-      
-      print("data???: \(try? Data(contentsOf: self.url!))")
     }
     
     if let data = aDecoder.decodeData() {
-      print("data: \(data) & videoURL: \(url)")
-//      self.data = data
-      
+      self.data = data
     }
     
     if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {

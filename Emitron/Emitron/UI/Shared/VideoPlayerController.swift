@@ -192,14 +192,14 @@ class VideoPlayerController: AVPlayerViewController {
       guard success else {
         fatalError("Failed to open doc.")
       }
-
-      if let url = doc.videoData.url {
-        print("url: \(url)")
-        let data = FileManager.default.contents(atPath: url.path)
-        print("data: \(data)")
+      
+      if let url = doc.videoData.url,
+         let lastComponent = url.pathComponents.last,
+         let data = doc.videoData.data {
         
-        
-        self.insertVideoStream(for: url, contentDetails: contentDetails)
+        let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(lastComponent).appendingPathExtension("mp4")
+        try? data.write(to: tmpFileURL, options: [.atomic])
+        self.insertVideoStream(for: tmpFileURL, contentDetails: contentDetails)
       }
     }
   }
