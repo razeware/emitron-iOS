@@ -170,6 +170,8 @@ struct CardView: SwiftUI.View {
     // is causing this file to not compile
     if let imageURL = model.cardArtworkURL {
       fishImage(url: imageURL)
+    } else if let data = model.cardArtworkData, let uiImage = UIImage(data: data) {
+      self.image = uiImage
     }
   }
 

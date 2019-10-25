@@ -60,6 +60,7 @@ class ContentsData: NSObject, NSCoding {
   var popularity: Double = 0.0
   var bookmarked: Bool = false
   var cardArtworkURL: URL?
+  var cardArtworkData: Data?
   var technologyTripleString: String = ""
   var contributorString: String = ""
   var videoID: Int?
@@ -110,8 +111,8 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(contentType, forKey: .contentTypeKey)
     aCoder.encode(parentContentId, forKey: .contentParentContentId)
     
-    if let cardArtworkURL = cardArtworkURL {
-      aCoder.encode(cardArtworkURL.absoluteString, forKey: .contentCardArtworkURLKey)
+    if let cardArtworkURL = cardArtworkURL, let imageData = try? Data(contentsOf: cardArtworkURL) {
+      aCoder.encode(imageData)
     }
   }
   
@@ -155,8 +156,8 @@ class ContentsData: NSObject, NSCoding {
       self.bookmarked = bookmarked
     }
     
-    if let cardArtworkURL = aDecoder.decodeObject(forKey: .contentCardArtworkURLKey) as? String {
-      self.cardArtworkURL = URL(string: cardArtworkURL)
+    if let cardArtworkData = aDecoder.decodeData() {
+      self.cardArtworkData = cardArtworkData
     }
     
     if let technologyTripleString = aDecoder.decodeObject(forKey: .contentTechnologyTripleStringKey) as? String {

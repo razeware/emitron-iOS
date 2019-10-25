@@ -445,9 +445,15 @@ struct ContentListingView: View {
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-
-    guard let url = contentSummaryMC.data.cardArtworkURL else {
-      return
+    let url: URL
+    if let imageURL = contentSummaryMC.data.cardArtworkURL {
+      url = imageURL
+    } else if let data = contentSummaryMC.data.cardArtworkData {
+      let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(contentSummaryMC.data.name).appendingPathExtension("png")
+      try? data.write(to: tmpFileURL, options: [.atomic])
+      url = tmpFileURL
+    } else {
+      return 
     }
 
     DispatchQueue.global().async {
