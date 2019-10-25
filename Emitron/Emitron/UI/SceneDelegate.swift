@@ -63,7 +63,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       let guardpost = Guardpost.current
       let userMC = UserMC(guardpost: guardpost)
-      let mainView = MainView().environmentObject(userMC)
+      let appState = AppState()
+      let mainView = MainView().environmentObject(userMC).environmentObject(appState)
       
       window.rootViewController = UIHostingController(rootView: mainView)
       self.window = window
