@@ -153,6 +153,10 @@ class VideoPlayerController: AVPlayerViewController {
 
       } else {
         // TODO: Show failure message/view
+        
+        DispatchQueue.main.async {
+          self.playFromLocalIfPossible()
+        }
       }
     }
 
@@ -181,15 +185,21 @@ class VideoPlayerController: AVPlayerViewController {
   }
 
   private func playFromLocalStorage(with url: URL, contentDetails: ContentDetailsModel) {
+    
     let doc = Document(fileURL: url)
     doc.open { [weak self] success in
       guard let self = self else { return }
       guard success else {
         fatalError("Failed to open doc.")
       }
-
-      if let url = doc.videoData.url {
-        self.insertVideoStream(for: url, contentDetails: contentDetails)
+      
+      if let url = doc.videoData.url,
+         let lastComponent = url.pathComponents.last,
+         let data = doc.videoData.data {
+        
+        let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(lastComponent).appendingPathExtension("mp4")
+        try? data.write(to: tmpFileURL, options: [.atomic])
+        self.insertVideoStream(for: tmpFileURL, contentDetails: contentDetails)
       }
     }
   }

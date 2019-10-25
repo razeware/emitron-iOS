@@ -58,6 +58,12 @@ class Document: UIDocument {
     }
   }
   
+  var data: Data? {
+    didSet {
+      videoData.data = data
+    }
+  }
+  
   private func encodeToWrapper(object: NSCoding) -> FileWrapper {
     let archiver = NSKeyedArchiver(requiringSecureCoding: false)
     archiver.encode(object, forKey: .dataKey)

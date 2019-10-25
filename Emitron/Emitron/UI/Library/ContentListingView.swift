@@ -82,6 +82,7 @@ struct ContentListingView: View {
               self.showHudView = true
             case .notOnWifi:
               self.showAlert = true
+              self.showingSheet = true
             }
 
             self.hudOption = hudOption
@@ -108,25 +109,11 @@ struct ContentListingView: View {
             .foregroundColor(.iconButton)
         }
     })
+      .actionSheet(isPresented: $showingSheet) {
+        actionSheet
+      }
       .hud(isShowing: $showHudView, hudOption: $hudOption) {
         self.showHudView = false
-    }
-    .actionSheet(isPresented: $showingSheet) {
-      actionSheet
-    }
-    .actionSheet(isPresented: self.$showAlert) {
-        ActionSheet(
-          title: Text("You are not connected to Wi-Fi"),
-          message: Text("Turn on Wi-Fi to access data."),
-          buttons: [
-            .default(Text("Settings"), action: {
-              self.openSettings()
-            }),
-            .default(Text("OK"), action: {
-              self.showAlert.toggle()
-            })
-          ]
-        )
       }
 
     return scrollView
@@ -371,13 +358,33 @@ struct ContentListingView: View {
       ProgressBarView(progress: content.progress, isRounded: false)
     }
   }
+  
+  private var wifiActionSheet: ActionSheet {
+    return ActionSheet(
+      title: Text("You are not connected to Wi-Fi"),
+      message: Text("Turn on Wi-Fi to access data."),
+      buttons: [
+        .default(Text("Settings"), action: {
+          self.openSettings()
+        }),
+        .default(Text("OK"), action: {
+          self.showAlert.toggle()
+          self.showingSheet.toggle()
+        })
+      ]
+    )
+  }
 
   private var actionSheet: ActionSheet {
-    return showActionSheet(for: .cancel) { action in
-      if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-        self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
-        self.showingSheet = false
-//        self.showHudView = false
+    if showAlert {
+      return wifiActionSheet
+    } else {
+      return showActionSheet(for: .cancel) { action in
+        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
+          self.showingSheet = false
+          self.showHudView = false
+        }
       }
     }
   }
@@ -445,9 +452,15 @@ struct ContentListingView: View {
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-
-    guard let url = contentSummaryMC.data.cardArtworkURL else {
-      return
+    let url: URL
+    if let imageURL = contentSummaryMC.data.cardArtworkURL {
+      url = imageURL
+    } else if let data = contentSummaryMC.data.cardArtworkData {
+      let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(contentSummaryMC.data.name).appendingPathExtension("png")
+      try? data.write(to: tmpFileURL, options: [.atomic])
+      url = tmpFileURL
+    } else {
+      return 
     }
 
     DispatchQueue.global().async {

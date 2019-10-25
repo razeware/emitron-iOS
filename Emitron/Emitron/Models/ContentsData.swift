@@ -60,6 +60,7 @@ class ContentsData: NSObject, NSCoding {
   var popularity: Double = 0.0
   var bookmarked: Bool = false
   var cardArtworkURL: URL?
+  var cardArtworkData: Data?
   var technologyTripleString: String = ""
   var contributorString: String = ""
   var videoID: Int?
@@ -103,21 +104,15 @@ class ContentsData: NSObject, NSCoding {
     aCoder.encode(bookmarked, forKey: .contentBookmarkedKey)
     aCoder.encode(technologyTripleString, forKey: .contentTechnologyTripleStringKey)
     aCoder.encode(contributorString, forKey: .contentContributorStringKey)
+    aCoder.encode(videoID, forKey: .contentVideoIDKey)
+    aCoder.encode(index, forKey: .contentIndexKey)
     aCoder.encode(professional, forKey: .contentProfessionalKey)
     aCoder.encode(difficulty, forKey: .contentDifficultyKey)
     aCoder.encode(contentType, forKey: .contentTypeKey)
     aCoder.encode(parentContentId, forKey: .contentParentContentId)
     
-    if let cardArtworkURL = cardArtworkURL {
-      aCoder.encode(cardArtworkURL, forKey: .contentCardArtworkURLKey)
-    }
-    
-    if let videoID = videoID {
-      aCoder.encode(videoID, forKey: .contentVideoIDKey)
-    }
-    
-    if let index = index {
-      aCoder.encode(index, forKey: .contentIndexKey)
+    if let cardArtworkURL = cardArtworkURL, let imageData = try? Data(contentsOf: cardArtworkURL) {
+      aCoder.encode(imageData)
     }
   }
   
@@ -161,8 +156,8 @@ class ContentsData: NSObject, NSCoding {
       self.bookmarked = bookmarked
     }
     
-    if let cardArtworkURL = aDecoder.decodeObject(forKey: .contentCardArtworkURLKey) as? URL {
-      self.cardArtworkURL = cardArtworkURL
+    if let cardArtworkData = aDecoder.decodeData() {
+      self.cardArtworkData = cardArtworkData
     }
     
     if let technologyTripleString = aDecoder.decodeObject(forKey: .contentTechnologyTripleStringKey) as? String {
@@ -171,6 +166,10 @@ class ContentsData: NSObject, NSCoding {
     
     if let contributorString = aDecoder.decodeObject(forKey: .contentContributorStringKey) as? String {
       self.contributorString = contributorString
+    }
+    
+    if let videoID = aDecoder.decodeObject(forKey: .contentVideoIDKey) as? Int {
+      self.videoID = videoID
     }
     
     if let index = aDecoder.decodeObject(forKey: .contentIndexKey) as? Int {
