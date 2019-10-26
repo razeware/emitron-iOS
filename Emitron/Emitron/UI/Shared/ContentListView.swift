@@ -154,8 +154,9 @@ struct ContentListView: View {
           ActivityIndicator()
             .onAppear {
               // Load more from the appropriate MC conforming to updatable protocol
-              print("I should be loading more here...")
-              //self.contentsMC.loadMore()
+              if let paginatedContentsMC = self.contentMC {
+                paginatedContentsMC.loadMore()
+              }
           }
         }
       )
@@ -179,12 +180,24 @@ struct ContentListView: View {
     case .hasData,
          .loading where !contents.isEmpty:
       
-      // If we're RE-loading but not loading more, show the activity indicator in the middle
+      // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
+      // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
       if dataState == .loading {
-        return AnyView(
-          listView
-          .overlay(ActivityIndicator())
-        )
+        if let paginatedContentsMC = contentMC {
+          if paginatedContentsMC.isLoadingMore {
+            return AnyView(listView)
+          } else {
+            return AnyView(
+              listView
+              .overlay(ActivityIndicator())
+            )
+          }
+        } else {
+          return AnyView(
+            listView
+            .overlay(ActivityIndicator())
+          )
+        }
       } else {
         return AnyView(listView)
       }
