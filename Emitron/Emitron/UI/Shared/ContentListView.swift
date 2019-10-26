@@ -69,7 +69,7 @@ struct ContentListView: View {
         
         if contentsVM.contentScreen == .downloads {
           
-          if contentsVM.data.isEmpty || downloadsMC.data.isEmpty {
+          if contentsVM.data.isEmpty {
             emptyView
           } else {
             cardsTableViewWithDelete
@@ -151,14 +151,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onLeftTap: { success in
-            if success {
-              self.callback?(.save, partialContent)
-            }
-          }, onRightTap: {
-            // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
-            //self.toggleBookmark(model: partialContent)
-          })
+          CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
@@ -181,14 +174,7 @@ struct ContentListView: View {
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onLeftTap: { success in
-            if success {
-              self.callback?(.save, partialContent)
-            }
-          }, onRightTap: {
-            print("Should be toggling the bookmark here...")
-            //self.toggleBookmark(model: partialContent)
-          })
+          CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
@@ -199,13 +185,6 @@ struct ContentListView: View {
       .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
-  }
-
-  private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
-    AnyView(CardView(model: content,
-                     contentScreen: contentsVM.contentScreen,
-                     onLeftIconTap: onLeftTap,
-                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
   
   // ISSUE: To make the status bar the same color as the rest of thee backgrounds, we have to make all of the views into Lists

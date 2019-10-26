@@ -53,8 +53,8 @@ class DownloadsMC: NSObject, ObservableObject, Paginatable {
   
   func loadMore() { } // NOT IN USE
   func reload() { } // NOT IN USE
-  func updateEntryIfItExists(for content: ContentDetailsModel) { } // NOT IN USE
-  
+  // TODO: Felicity?
+  func updateEntryIfItExists(for content: ContentDetailsModel) { }
 
   // MARK: - Public Properties
   @Published var collectionProgress: CGFloat = 1.0

@@ -29,7 +29,7 @@
 import SwiftUI
 import UIKit
 
-struct ContentListingView: View {
+struct ContentListingView: SwiftUI.View {
 
   @State private var isEpisodeOnly = false
   @State private var showingSheet = false
@@ -38,7 +38,6 @@ struct ContentListingView: View {
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @ObservedObject var downloadsMC: DownloadsMC
-  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
   var content: ContentDetailsModel
   var user: UserModel
   @State var imageData: Data?
@@ -451,9 +450,7 @@ struct ContentListingView: View {
   }
 
   private func loadImage() {
-    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-    // is causing this file to not compile
-    
+
     // first check if image data has already been saved
     if let data = contentSummaryMC.data.cardArtworkData,
        let uiImage = UIImage(data: data) {
@@ -464,8 +461,7 @@ struct ContentListingView: View {
       DispatchQueue.global().async {
         let data = try? Data(contentsOf: imageURL)
         DispatchQueue.main.async {
-          if let data = data,
-            let img = UIImage(data: data) {
+          if let data = data, let img = UIImage(data: data) {
             self.uiImage = img
             self.imageData = data
           }
@@ -477,8 +473,7 @@ struct ContentListingView: View {
   private func refreshContentDetails() {
     self.contentSummaryMC.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
-      guard let index = self.libraryContentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
-      //self.contentsMC.updateEntry(at: index, with: model)
+      print("Refreshing content...")
     }
   }
 

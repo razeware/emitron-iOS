@@ -32,20 +32,13 @@ import UIKit
 import Network
 
 struct CardView: SwiftUI.View {
-  private var onRightIconTap: (() -> Void)?
-  private var onLeftIconTap: ((Bool) -> Void)?
-  @EnvironmentObject var downloadsMC: DownloadsMC
-  var contentScreen: ContentScreen
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: ContentDetailsModel
   private let animation: Animation = .easeIn
   private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
 
-  init(model: ContentDetailsModel, contentScreen: ContentScreen, onLeftIconTap: ((Bool) -> Void)? = nil, onRightIconTap: (() -> Void)? = nil) {
+  init(model: ContentDetailsModel) {
     self.model = model
-    self.onRightIconTap = onRightIconTap
-    self.onLeftIconTap = onLeftIconTap
-    self.contentScreen = contentScreen
   }
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
@@ -154,9 +147,6 @@ struct CardView: SwiftUI.View {
       Image(imageName)
         .resizable()
         .frame(width: 21, height: 21)
-        .onTapGesture {
-          self.bookmark()
-      }
     )
   }
 
@@ -184,9 +174,5 @@ struct CardView: SwiftUI.View {
         break
       }
     }
-  }
-
-  private func bookmark() {
-    onRightIconTap?()
   }
 }
