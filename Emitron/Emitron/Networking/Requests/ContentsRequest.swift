@@ -66,7 +66,11 @@ struct ContentDetailsRequest: Request {
   func handle(response: Data) throws -> ContentDetailsModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let content = doc.data.compactMap { ContentDetailsModel($0, metadata: nil) }
+    let content = doc.data.compactMap { resource -> ContentDetailsModel? in
+      let model = ContentDetailsModel(resource, metadata: resource.meta)
+      model?.addRelationships(for: resource)
+      return model
+    }
     guard let contentSummary = content.first,
       content.count == 1 else {
         throw RWAPIError.processingError(nil)

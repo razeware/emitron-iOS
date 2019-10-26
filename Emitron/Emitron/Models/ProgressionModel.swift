@@ -29,7 +29,8 @@
 import Foundation
 import SwiftyJSON
 
-class ProgressionModel {
+class ProgressionModel: ContentRelatable {
+  var type: ContentRelationship = .progression
   
   // MARK: - Properties
   private(set) var id: Int = 0
@@ -67,11 +68,12 @@ class ProgressionModel {
     for relationship in jsonResource.relationships where relationship.type == "content" {
       let ids = relationship.data.compactMap { $0.id }
       let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-      let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, progression: self) }
-      let detailContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
-      if let content = detailContent?.first {
-        self.content = content
-      }
+      self.content = included?.compactMap({ resource -> ContentDetailsModel? in
+        let model = ContentDetailsModel(resource, metadata: nil)
+        model?.addRelationships(for: [self])
+        return model
+      }).first
+
     }
   }
 }

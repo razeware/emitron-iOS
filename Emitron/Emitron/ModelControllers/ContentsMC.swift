@@ -103,6 +103,11 @@ class ContentsMC: NSObject, ObservableObject {
     var allParams = currentParameters
     allParams.append(pageParam)
     
+    // Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= numTutorials else {
+      return
+    }
+    
     contentsService.allContents(parameters: allParams) { [weak self] result in
       
       guard let self = self else {
@@ -132,11 +137,6 @@ class ContentsMC: NSObject, ObservableObject {
     }
     
     state = .loading
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
-      return
-    }
     
     // Reset current page to 1
     currentPage = startingPage

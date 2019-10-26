@@ -17,6 +17,8 @@
 		8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */; };
 		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
 		8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */; };
+		8BFC74B8236451BE001979F1 /* ProgressionsContentMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */; };
+		8BFC74BA236451F8001979F1 /* CompletedContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74B9236451F8001979F1 /* CompletedContentsMC.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -175,6 +177,8 @@
 		8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextViewModifiers.swift; sourceTree = "<group>"; };
 		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
 		8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTag.swift; sourceTree = "<group>"; };
+		8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsContentMC.swift; sourceTree = "<group>"; };
+		8BFC74B9236451F8001979F1 /* CompletedContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedContentsMC.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -779,6 +783,8 @@
 				95A4513322E224B500D24E56 /* UserMC.swift */,
 				95A4513422E224B500D24E56 /* VideosMC.swift */,
 				B595654D231B4EDB00A3FF44 /* DownloadsMC.swift */,
+				8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */,
+				8BFC74B9236451F8001979F1 /* CompletedContentsMC.swift */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -1081,6 +1087,7 @@
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
 				95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */,
 				B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */,
+				8BFC74BA236451F8001979F1 /* CompletedContentsMC.swift in Sources */,
 				B682F8C722EB096300CBF2CC /* Filters.swift in Sources */,
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
 				22D17708235078030038333D /* Configuration.swift in Sources */,
@@ -1113,6 +1120,7 @@
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
+				8BFC74B8236451BE001979F1 /* ProgressionsContentMC.swift in Sources */,
 				B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,

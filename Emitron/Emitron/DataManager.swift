@@ -53,6 +53,12 @@ class DataManager: NSObject {
   let categoriesMC: CategoriesMC
 
   // TODO: ContentsMC shouldn't be here; reeconsider
+//  let libraryContentsMC: ContentsMC
+//  let progressionsContentsMC: ProgressionsMC
+//  let coopmletedContentMC: ProgressionsMC
+//  let bookmarksContentMC: BookmarksMC
+//  let downloadedContentMC: DownloadsMC
+  
   let contentsMC: ContentsMC
   let progressionsMC: ProgressionsMC
   let bookmarksMC: BookmarksMC

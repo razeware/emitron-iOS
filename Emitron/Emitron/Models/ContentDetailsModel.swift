@@ -29,6 +29,18 @@
 import Foundation
 import SwiftyJSON
 
+enum ContentRelationship: String {
+  case domains
+  case groups
+  case progression
+  case bookmark
+  case childContents = "child_contents"
+}
+
+protocol ContentRelatable {
+  var type: ContentRelationship { get }
+}
+
 class ContentDetailsModel {
 
   // MARK: - Properties
@@ -60,9 +72,11 @@ class ContentDetailsModel {
   var progressionId: Int?
   var bookmark: BookmarkModel?
   var shouldCancel = false
-  var parentContentId: Int?
   var domains: [DomainModel] = []
   var domainIDs: [Int] = []
+  
+  var parentContentId: Int?
+  
   var bookmarkId: Int? {
     bookmark?.id
   }
@@ -76,8 +90,7 @@ class ContentDetailsModel {
   }
 
   // MARK: - Initializers
-  init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any]?) {
+  init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
 
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
@@ -108,11 +121,32 @@ class ContentDetailsModel {
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.videoID = jsonResource["video_identifier"] as? Int
-    self.parentContent = self
-
-    for relationship in jsonResource.relationships {
+    self.url = jsonResource.links["self"]
+  }
+  
+  // Bookmarks and progressionos can be full-fledged models when we create the relationships, so we don't want a circular dependency between them
+  
+  func addRelationships(for contentRelatable: [ContentRelatable]) {
+    for relationship in contentRelatable {
       switch relationship.type {
-      case "domains":
+      case .bookmark:
+        guard let bookmark = relationship as? BookmarkModel else { return }
+        self.bookmark = bookmark
+      case .progression:
+        guard let progression = relationship as? ProgressionModel else { return }
+        self.progression = progression
+      default:
+        print("Don't have a two way binding for this model yet...")
+      }
+    }
+  }
+  
+  func addRelationships(for jsonResource: JSONAPIResource) {
+    
+    for relationship in jsonResource.relationships {
+      guard let relatinoshipType = ContentRelationship(rawValue: relationship.type) else { return }
+      switch relatinoshipType {
+      case .domains:
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
@@ -122,7 +156,7 @@ class ContentDetailsModel {
 
       //TODO: This will be improved when the API returns enough info to render the video listing, currently
       // picking up the bits and pieces of info from separate parts
-      case "groups": // this is where we get our video list
+      case .groups: // this is where we get our video list
         let ids = relationship.data.compactMap { $0.id }
         let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
 
@@ -147,17 +181,18 @@ class ContentDetailsModel {
         }
 
         self.groups = groups
-      case "progression":
+      case .progression where self.progression == nil:
         let ids = relationship.data.compactMap { $0.id }
         self.progressionId = ids.first
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
         let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
         self.progression = progressions?.first
-      case "bookmark":
+      case .bookmark where self.bookmark == nil:
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
         let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
         self.bookmark = bookmarks?.first
+        
         // We can simply make a Bookmark with just an ID
         if let id = ids.first, self.bookmark != nil {
           self.bookmark = BookmarkModel(id: id)
@@ -166,8 +201,6 @@ class ContentDetailsModel {
         break
       }
     }
-
-    self.url = jsonResource.links["self"]
   }
 
   init(summaryModel: ContentSummaryModel) {

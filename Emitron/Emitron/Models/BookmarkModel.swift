@@ -29,7 +29,9 @@
 import Foundation
 import SwiftyJSON
 
-class BookmarkModel {
+class BookmarkModel: ContentRelatable {
+  
+  var type: ContentRelationship = .bookmark
 
   // MARK: - Properties
   private(set) var id: Int
@@ -40,8 +42,7 @@ class BookmarkModel {
   var content: ContentDetailsModel?
 
   // MARK: - Initializers
-  init?(resource: JSONAPIResource,
-        metadata: [String: Any]?) {
+  init?(resource: JSONAPIResource, metadata: [String: Any]?) {
     self.id = resource.id
 
     if let createdAtStr = resource["created_at"] as? String {
@@ -50,7 +51,7 @@ class BookmarkModel {
       self.createdAt = Date()
     }
 
-    var details: ContentDetailsModel?
+    var relationships: [ContentRelatable] = [self]
     var progression: ProgressionModel?
     
     for relationship in resource.relationships {
@@ -73,18 +74,16 @@ class BookmarkModel {
           }
         }
         
-        let includedContent = included?.compactMap { ContentSummaryModel($0, metadata: $0.meta, bookmark: self) }
-        let detailsContent = includedContent?.compactMap { ContentDetailsModel(summaryModel: $0) }
-        if let content = detailsContent?.first {
-          details = content
-        }
+        self.content = included?.compactMap { ContentDetailsModel($0, metadata: $0.meta) }.first
         
       default:
         break
       }
       
-      details?.progression = progression
-      content = details
+      if let progression = progression {
+        relationships.append(progression)
+      }
+      self.content?.addRelationships(for: relationships)
     }
   }
   

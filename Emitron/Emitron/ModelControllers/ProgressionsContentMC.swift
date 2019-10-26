@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ProgressionsMC: NSObject, ObservableObject {
+class ProgressionsContentMC: NSObject, ObservableObject {
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -44,7 +44,7 @@ class ProgressionsMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let progressionsService: ProgressionsService
-  private(set) var data: [ProgressionModel] = []
+  private(set) var data: [ContentDetailsModel] = []
   private(set) var numTutorials: Int = 0
   
   // Pagination
@@ -99,11 +99,11 @@ class ProgressionsMC: NSObject, ObservableObject {
         Failure
           .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let progressionsTuple):
+      case .success(let progressions):
         // When filtering, do we just re-do the request, or append?
         let currentContents = self.data
-        self.data = currentContents + progressionsTuple
-        self.numTutorials = progressionsTuple.count
+        self.data = currentContents + progressions.compactMap { $0.content }
+        self.numTutorials = progressions.count
         self.state = .hasData
       }
     }
@@ -132,11 +132,10 @@ class ProgressionsMC: NSObject, ObservableObject {
           .fetch(from: "ProressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let progressions):
-        self.data = progressions
+        self.data = progressions.compactMap { $0.content }
         self.numTutorials = progressions.count
         self.state = .hasData
       }
     }
   }
 }
-

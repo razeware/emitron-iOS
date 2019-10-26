@@ -54,6 +54,8 @@ struct MyTutorialView: View {
   @EnvironmentObject var bookmarksMC: BookmarksMC
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
+  @State private var reloadProgression: Bool = true
+  @State private var reloadBookmarks: Bool = true
 
   var body: some View {
     contentView
@@ -70,19 +72,33 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: true)
       }
+    .onDisappear {
+      self.reloadProgression = true
+      self.reloadBookmarks = true
+    }
   }
 
   private var toggleControl: AnyView {
     AnyView(
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
-          self.progressionsMC.loadContents()
+          // Should only call load contents if we have just switched to the My Tutorials tab
+          if self.reloadProgression {
+            self.progressionsMC.reloadContents()
+            self.reloadProgression = false
+          }
           self.state = .inProgress
         }, completedClosure: {
-          self.progressionsMC.loadContents()
+          if self.reloadProgression {
+            self.progressionsMC.reloadContents()
+            self.reloadProgression = false
+          }
           self.state = .completed
         }, bookmarkedClosure: {
-          self.bookmarksMC.loadContents()
+          if self.reloadBookmarks {
+            self.bookmarksMC.loadContents()
+            self.reloadBookmarks = false
+          }
           self.state = .bookmarked
         })
           .padding([.top], .sidePadding)
