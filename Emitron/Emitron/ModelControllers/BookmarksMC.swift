@@ -31,93 +31,20 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarksMC: NSObject, ObservableObject {
+class BookmarksMC: NSObject {
   
   // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
-  
   private let client: RWAPI
   private let guardpost: Guardpost
   private let bookmarksService: BookmarksService
-  private(set) var data: [BookmarkModel] = []
-  private(set) var numTutorials: Int = 0
-  
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-  
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
-  
-  private(set) var currentParameters: [Parameter] = [] {
-    didSet {
-      if oldValue != currentParameters {
-        loadContents()
-      }
-    }
-  }
     
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
-    
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
-
-    currentParameters = defaultParameters
-    loadContents()
-  }
-  
-  func loadContents() {
-    
-    if case(.loading) = state {
-      return
-    }
-    
-    state = .loading
-    
-    let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = currentParameters
-    allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count < numTutorials else {
-      return
-    }
-    
-    bookmarksService.bookmarks { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let bookmarksTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + bookmarksTuple.bookmarks
-        } else {
-          self.data = bookmarksTuple.bookmarks
-        }
-        self.numTutorials = bookmarksTuple.totalNumber
-        self.state = .hasData
-      }
-    }
   }
   
   func toggleBookmark(for content: ContentDetailsModel) {
@@ -130,8 +57,6 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(let bookmark):
-          bookmark.content = content
-          self.data.append(bookmark)
           content.bookmark = bookmark
           content.bookmarked = true
           
@@ -148,11 +73,8 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(_):
-          if let index = self.data.firstIndex(where: { $0.id == id }) {
-            self.data.remove(at: index)
-            content.bookmark = nil
-            content.bookmarked = false
-          }
+          content.bookmark = nil
+          content.bookmarked = false
           self.disseminateUpdates(for: content)
         }
       }
