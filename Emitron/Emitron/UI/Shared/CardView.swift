@@ -170,6 +170,8 @@ struct CardView: SwiftUI.View {
     // is causing this file to not compile
     if let imageURL = model.cardArtworkURL {
       fishImage(url: imageURL)
+    } else if let data = model.cardArtworkData, let uiImage = UIImage(data: data) {
+      self.image = uiImage
     }
   }
 
@@ -182,42 +184,6 @@ struct CardView: SwiftUI.View {
         break
       }
     }
-  }
-
-  private func createEmptyView() -> AnyView {
-    let vStack = VStack {
-      HStack {
-        Spacer()
-
-        Text(contentScreen.titleMessage)
-          .font(.uiTitle2)
-          .foregroundColor(.titleText)
-          .multilineTextAlignment(.center)
-          .lineLimit(nil)
-
-        Spacer()
-      }
-
-      addDetailText()
-    }
-
-    return AnyView(vStack)
-  }
-
-  private func addDetailText() -> AnyView? {
-    let stack = HStack {
-      Spacer()
-
-      Text(contentScreen.detailMesage)
-        .font(.uiHeadline)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .lineLimit(nil)
-
-      Spacer()
-    }
-
-    return AnyView(stack)
   }
 
   private func bookmark() {

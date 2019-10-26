@@ -63,9 +63,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       let guardpost = Guardpost.current
       let userMC = UserMC(guardpost: guardpost)
-      let loginView = LoginView(userMC: userMC)
+      let appState = AppState()
+      let mainView = MainView().environmentObject(userMC).environmentObject(appState)
       
-      window.rootViewController = UIHostingController(rootView: loginView)
+      window.rootViewController = UIHostingController(rootView: mainView)
       self.window = window
       window.rootViewController?.view.backgroundColor = UIColor.backgroundColor
       // TODO: When a modifier is available this should be refactored

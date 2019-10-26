@@ -54,8 +54,8 @@ struct MyTutorialView: View {
   @EnvironmentObject var bookmarkContentMC: BookmarkContentsMC
   @EnvironmentObject var inProgressContentMC: InProgressContentMC
   @EnvironmentObject var completedContentMC: CompletedContentMC
-  //@EnvironmentObject var bookmarksContentMC: CompletedContentMC
-  
+  @EnvironmentObject var userMC: UserMC
+
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
   @State private var reloadProgression: Bool = true
@@ -74,7 +74,7 @@ struct MyTutorialView: View {
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView(showLogoutButton: true)
+        SettingsView(showLogoutButton: true).environmentObject(self.userMC)
       }
     .onDisappear {
       self.reloadProgression = true
@@ -113,7 +113,7 @@ struct MyTutorialView: View {
     )
   }
 
-  private var contentView: some View {
+  private var contentView: AnyView? {
     switch state {
     case .inProgress: return AnyView(inProgressContentsView)
     case .completed: return AnyView(completedContentsView)

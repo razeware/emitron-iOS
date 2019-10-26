@@ -37,14 +37,23 @@ public struct UserModel: Codable {
   public let avatarUrl: URL
   public let name: String
   public let token: String
-  var permissions: PermissionsModel?
+  var permissions: [PermissionsModel]?
   
-//  public var isPro: Bool {
-//    guard let permissions = permissions else { return false }
-//    return permissions.tag == .pro
-//  }
-  public var isPro = true
-
+  public var canStreamPro: Bool {
+    guard let permissions = permissions else { return false }
+    return !permissions.filter { $0.tag == .streamPro }.isEmpty
+  }
+  
+  public var canStream: Bool {
+    guard let permissions = permissions else { return false }
+    return !permissions.filter { $0.tag == .streamBeginner }.isEmpty
+  }
+  
+  public var canDownload: Bool {
+    guard let permissions = permissions else { return false }
+    return !permissions.filter { $0.tag == .download }.isEmpty
+  }
+  
   // MARK: - Initializers
   init?(dictionary: [String: String]) {
     guard

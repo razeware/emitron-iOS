@@ -41,6 +41,11 @@ struct ContentListingView: View {
   @EnvironmentObject var libraryContentsMC: LibraryContentsMC
   var content: ContentDetailsModel
   var user: UserModel
+  @State var imageData: Data?
+  
+  private var canStreamPro: Bool {
+    return user.canStreamPro
+  }
 
   // These should be private
   @State var isPresented = false
@@ -61,7 +66,7 @@ struct ContentListingView: View {
       List {
         Section {
 
-          if self.contentSummaryMC.data.professional && !Guardpost.current.currentUser!.isPro {
+          if self.contentSummaryMC.data.professional && !self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
@@ -78,6 +83,7 @@ struct ContentListingView: View {
               self.showHudView = true
             case .notOnWifi:
               self.showAlert = true
+              self.showingSheet = true
             }
 
             self.hudOption = hudOption
@@ -104,25 +110,11 @@ struct ContentListingView: View {
             .foregroundColor(.iconButton)
         }
     })
+      .actionSheet(isPresented: $showingSheet) {
+        actionSheet
+      }
       .hud(isShowing: $showHudView, hudOption: $hudOption) {
         self.showHudView = false
-    }
-    .actionSheet(isPresented: $showingSheet) {
-      actionSheet
-    }
-    .actionSheet(isPresented: self.$showAlert) {
-        ActionSheet(
-          title: Text("You are not connected to Wi-Fi"),
-          message: Text("Turn on Wi-Fi to access data."),
-          buttons: [
-            .default(Text("Settings"), action: {
-              self.openSettings()
-            }),
-            .default(Text("OK"), action: {
-              self.showAlert.toggle()
-            })
-          ]
-        )
       }
 
     return scrollView
@@ -367,13 +359,33 @@ struct ContentListingView: View {
       ProgressBarView(progress: content.progress, isRounded: false)
     }
   }
+  
+  private var wifiActionSheet: ActionSheet {
+    return ActionSheet(
+      title: Text("You are not connected to Wi-Fi"),
+      message: Text("Turn on Wi-Fi to access data."),
+      buttons: [
+        .default(Text("Settings"), action: {
+          self.openSettings()
+        }),
+        .default(Text("OK"), action: {
+          self.showAlert.toggle()
+          self.showingSheet.toggle()
+        })
+      ]
+    )
+  }
 
   private var actionSheet: ActionSheet {
-    return showActionSheet(for: .cancel) { action in
-      if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-        self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
-        self.showingSheet = false
-//        self.showHudView = false
+    if showAlert {
+      return wifiActionSheet
+    } else {
+      return showActionSheet(for: .cancel) { action in
+        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
+          self.showingSheet = false
+          self.showHudView = false
+        }
       }
     }
   }
@@ -383,17 +395,19 @@ struct ContentListingView: View {
       VStack {
         HStack {
           Image("padlock")
-            .foregroundColor(.white)
+
           Text("Pro Course")
             .font(.uiTitle1)
             .foregroundColor(.white)
         }
 
-        Text("To unlock this course visit\nraywenderlich.com/subscription\nfor more information")
+        Text("To unlock this course visit raywenderlich.com/subscription for more information")
           .multilineTextAlignment(.center)
-          .font(.uiLabelBold)
+          .font(.uiLabel)
           .foregroundColor(.white)
+          .padding([.leading, .trailing], 20)
           .lineLimit(3)
+          .fixedSize(horizontal: false, vertical: true)
     }
   }
 
@@ -439,17 +453,22 @@ struct ContentListingView: View {
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-
-    guard let url = contentSummaryMC.data.cardArtworkURL else {
-      return
-    }
-
-    DispatchQueue.global().async {
-      let data = try? Data(contentsOf: url)
-      DispatchQueue.main.async {
-        if let data = data,
-          let img = UIImage(data: data) {
-          self.uiImage = img
+    
+    // first check if image data has already been saved
+    if let data = contentSummaryMC.data.cardArtworkData,
+       let uiImage = UIImage(data: data) {
+        self.uiImage = uiImage
+      
+      // otherwise use the imageURL
+    } else if let imageURL = contentSummaryMC.data.cardArtworkURL {
+      DispatchQueue.global().async {
+        let data = try? Data(contentsOf: imageURL)
+        DispatchQueue.main.async {
+          if let data = data,
+            let img = UIImage(data: data) {
+            self.uiImage = img
+            self.imageData = data
+          }
         }
       }
     }
@@ -464,6 +483,9 @@ struct ContentListingView: View {
   }
 
   private func save(for content: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // update content to save with image data
+    content.cardArtworkData = imageData
+    
     // update bool so can cancel either entire collection or episode based on bool
     self.isEpisodeOnly = isEpisodeOnly
     downloadsMC.isEpisodeOnly = isEpisodeOnly

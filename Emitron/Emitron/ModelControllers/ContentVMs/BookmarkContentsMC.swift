@@ -200,10 +200,6 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
       let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
       relationships.append(contentsOf: domains)
       
-      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
-        relationships.append(bookmark)
-      }
-      
       model.addRelationships(for: relationships)
     }
   }

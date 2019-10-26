@@ -36,6 +36,7 @@ extension String {
   static let videoIDKey: String = "videoID"
   static let versionKey: String = "Version"
   static let videoKey: String = "Video"
+  static let videoMP4Key: String = "Video.mp4"
   static let contentKey: String = "Content"
   static let dataKey: String = "Data"
   static let dataFilename: String = "video.data"
@@ -228,6 +229,10 @@ class DownloadsMC: NSObject, ObservableObject {
       completion?()
     }
   }
+  
+  private func localFilePath(for url: URL) -> URL {
+    return localRoot!.appendingPathComponent(url.lastPathComponent)
+  }
 
   // MARK: Save
   func saveDownload(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
@@ -319,7 +324,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
     downloadedContent = content
     episodesCounter += 1
-    saveNewDocument(with: destinationUrl, location: destinationUrl, content: content, attachment: nil, isEpisodeOnly: false, completion: nil)
+    saveNewDocument(with: destinationUrl, location: destinationUrl, data: nil, content: content, attachment: nil, isEpisodeOnly: false, completion: nil)
   }
 
   // MARK: Cancel
@@ -354,22 +359,19 @@ class DownloadsMC: NSObject, ObservableObject {
       case let .success(attachment):
         if let attachment = attachment.first, let streamURL = attachment.url {
           self.attachmentModel = attachment
-          self.downloadTask = self.downloadsSession.downloadTask(with: streamURL, completionHandler: { (url, response, error) in
-
+          self.downloadsSession.dataTask(with: streamURL) { (data, response, error) in
             DispatchQueue.main.async {
               self.state = .loading
             }
 
             if let url = response?.url {
               DispatchQueue.main.async {
-                self.saveNewDocument(with: localPath, location: url, content: content, attachment: attachment, isEpisodeOnly: isEpisodeOnly) { downloadedContent in
+                self.saveNewDocument(with: localPath, location: url, data: data, content: content, attachment: attachment, isEpisodeOnly: isEpisodeOnly) { downloadedContent in
                   self.handleSavedCompletion(of: downloadedContent)
                 }
               }
             }
-          })
-
-          self.downloadTask?.resume()
+          }.resume()
         }
 
       case let .failure(error):
@@ -418,6 +420,26 @@ class DownloadsMC: NSObject, ObservableObject {
         self.state = .failed
         self.callback?(false)
       }
+    }
+  }
+  
+  func deleteAllDownloadedContent() {
+    
+    guard let root = localRoot else { return }
+
+    do {
+      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
+
+      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        try FileManager.default.removeItem(at: localDoc)
+      }
+
+      self.data = []
+
+    } catch let error {
+      Failure
+      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
     }
   }
 
@@ -493,7 +515,7 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private func saveNewDocument(with fileURL: URL, location: URL, content: ContentDetailsModel, attachment: AttachmentModel?, isEpisodeOnly: Bool, completion: ((ContentDetailsModel)-> Void)? = nil) {
+  private func saveNewDocument(with fileURL: URL, location: URL, data: Data?, content: ContentDetailsModel, attachment: AttachmentModel?, isEpisodeOnly: Bool, completion: ((ContentDetailsModel)-> Void)? = nil) {
 
     guard !cancelDownload, !content.shouldCancel else {
       completion?(content)
@@ -506,6 +528,7 @@ class DownloadsMC: NSObject, ObservableObject {
     let doc = Document(fileURL: fileURL)
     doc.url = location
     doc.content = content
+    doc.data = data
 
     doc.save(to: fileURL, for: .forCreating) {
       [weak self] success in
@@ -567,11 +590,19 @@ extension DownloadsMC: URLSessionDownloadDelegate {
       }
       return
     }
+    
+    guard let sourceURL = downloadTask.originalRequest?.url else { return }
+    let newLocation = localFilePath(for: sourceURL)
+    
+    if let url = self.attachmentModel?.url {
+      downloadsSession.dataTask(with: url) { (data, response, error) in
 
-    if let url = downloadTask.response?.url, let content = self.downloadedModel?.content {
-      DispatchQueue.main.async {
-        self.saveNewDocument(with: destinationUrl, location: url, content: content, attachment: nil, isEpisodeOnly: true)
-      }
+        if let content = self.downloadedModel?.content {
+          DispatchQueue.main.async {
+            self.saveNewDocument(with: destinationUrl, location: newLocation, data: data, content: content, attachment: nil, isEpisodeOnly: true)
+          }
+        }
+      }.resume() 
     }
   }
 

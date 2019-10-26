@@ -84,6 +84,7 @@ class ContentDetailsModel {
   }
   
   lazy var bookmarked: Bool = bookmark != nil
+  var cardArtworkData: Data?
 
   // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
   var needsDetails: Bool {
@@ -280,6 +281,7 @@ class ContentDetailsModel {
     self.duration = content.duration
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkURL
+    self.cardArtworkData = content.cardArtworkData
     self.technologyTripleString = content.technologyTripleString
     self.contributorString = content.contributorString
     self.videoID = content.videoID

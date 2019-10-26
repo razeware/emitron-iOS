@@ -59,7 +59,6 @@ class BookmarksMC: NSObject {
         case .success(let bookmark):
           content.bookmark = bookmark
           content.bookmarked = true
-          
           self.disseminateUpdates(for: content)
         }
       }

@@ -41,6 +41,13 @@ struct TextListItemView: View {
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var progressionsMC: ProgressionsMC
   
+  var canStreamPro: Bool {
+    return Guardpost.current.currentUser?.canStream ?? false
+  }
+  var canDownload: Bool {
+    return Guardpost.current.currentUser?.canDownload ?? false
+  }
+  
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .center, spacing: .horizontalSpacing) {
@@ -53,8 +60,10 @@ struct TextListItemView: View {
         
         Spacer()
         
-        setUpImageAndProgress()
-          .padding([.trailing], 20)
+        if canDownload {
+          setUpImageAndProgress()
+            .padding([.trailing], 20)
+        }
       }
       
       Text(contentSummary.duration.minuteSecondTimeFromSeconds)
@@ -126,8 +135,21 @@ struct TextListItemView: View {
     let success = downloadImageName != DownloadImageName.inActive
     buttonAction(success)
   }
-
+  
   private var doneCheckbox: AnyView {
+    
+    if !canDownload && contentSummary.professional {
+      return AnyView(ZStack {
+        Rectangle()
+          .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
+          .foregroundColor(.secondaryButtonBackground)
+          .cornerRadius(6)
+        
+        Image("padlock")
+          .frame(width: 10, height: 15, alignment: .center)
+      })
+    }
+
     let numberView = ZStack {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
@@ -146,13 +168,13 @@ struct TextListItemView: View {
       Rectangle()
         .frame(width: .buttonSide, height: .buttonSide)
         .foregroundColor(Color.accent)
+        .cornerRadius(6)
       
       Image("checkmark")
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
         .foregroundColor(Color.buttonText)
     }
-    .cornerRadius(6)
     
     guard let progression = contentSummary.progression, progression.finished else {
       return AnyView(numberView)
