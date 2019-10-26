@@ -40,6 +40,7 @@ protocol Paginatable {
   
   func loadMore()
   func reload()
+  func updateEntryIfItExists(for content: ContentDetailsModel)
 }
 
 extension Paginatable {

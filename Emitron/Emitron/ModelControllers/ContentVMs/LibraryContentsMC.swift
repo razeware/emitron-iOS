@@ -184,22 +184,11 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
     }
   }
   
-  func toggleBookmark(for model: ContentDetailsModel) {
+  func updateEntryIfItExists(for content: ContentDetailsModel) {
+    print("Should update entry in LIBRARY")
+    guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
-    state = .loading
-    bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
-      guard let self = self,
-        let index = self.data.firstIndex(where: { $0.id == model.id } ) else {
-          return
-      }
-      
-      self.data[index] = newModel
-      self.state = .hasData
-    }
-  }
-  
-  func updateEntry(at index: Int, with model: ContentDetailsModel) {
-    data[index] = model
-    objectWillChange.send(())
+    data[index] = content
+    reload()
   }
 }

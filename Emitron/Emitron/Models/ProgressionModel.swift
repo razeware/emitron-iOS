@@ -70,6 +70,7 @@ class ProgressionModel: ContentRelatable {
       let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
       self.content = included?.compactMap({ resource -> ContentDetailsModel? in
         guard let model = ContentDetailsModel(resource, metadata: nil) else { return nil}
+
         model.addRelationships(for: [self])
         return model
       }).first

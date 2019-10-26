@@ -45,6 +45,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let contentsService: ContentsService
   private let bookmarksMC: BookmarksMC
   private(set) var data: ContentDetailsModel
+  private var shouldLocallyBookmark: Bool = false
   
   private var bookmarksSubscriber: AnyCancellable?
 
@@ -90,19 +91,19 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
+        self.data.bookmarked = self.shouldLocallyBookmark
         self.state = .hasData
         completion?(contentDetails)
       }
     }
   }
   
-  func toggleBookmark(for model: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
-    bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
-      guard let self = self else { return }
-      
-      self.data = newModel
-      self.objectWillChange.send(())
-      completion(newModel)
-    }
+  func toggleBookmark() {
+    // If we're loading, we send the request
+    bookmarksMC.toggleBookmark(for: data)
+    // Locally updating the bookmark for UI purposes, but once the request succeeds, it will be dissemenated across all the relevant VMs
+    data.bookmarked = !data.bookmarked
+    shouldLocallyBookmark = data.bookmarked
+    objectWillChange.send(())
   }
 }

@@ -120,7 +120,7 @@ class BookmarksMC: NSObject, ObservableObject {
     }
   }
   
-  func toggleBookmark(for content: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
+  func toggleBookmark(for content: ContentDetailsModel) {
 
     if !content.bookmarked {
       bookmarksService.makeBookmark(for: content.id) { result in
@@ -133,7 +133,9 @@ class BookmarksMC: NSObject, ObservableObject {
           bookmark.content = content
           self.data.append(bookmark)
           content.bookmark = bookmark
-          completion(content)
+          content.bookmarked = true
+          
+          self.disseminateUpdates(for: content)
         }
       }
     } else {
@@ -149,12 +151,20 @@ class BookmarksMC: NSObject, ObservableObject {
           if let index = self.data.firstIndex(where: { $0.id == id }) {
             self.data.remove(at: index)
             content.bookmark = nil
+            content.bookmarked = false
           }
-          
-          completion(content)
+          self.disseminateUpdates(for: content)
         }
       }
     }
+  }
+  
+  private func disseminateUpdates(for content: ContentDetailsModel) {
+    guard let dataManager = DataManager.current else { return }
+    dataManager.bookmarkContentMC.updateEntryIfItExists(for: content)
+    dataManager.libraryContentsMC.updateEntryIfItExists(for: content)
+    dataManager.inProgressContentMC.updateEntryIfItExists(for: content)
+    dataManager.completedContentMC.updateEntryIfItExists(for: content)
   }
 }
 

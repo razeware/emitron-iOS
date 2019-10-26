@@ -82,9 +82,8 @@ class ContentDetailsModel {
   var bookmarkId: Int? {
     bookmark?.id
   }
-  var bookmarked: Bool {
-    bookmark != nil
-  }
+  
+  lazy var bookmarked: Bool = bookmark != nil
 
   // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
   var needsDetails: Bool {
@@ -128,6 +127,13 @@ class ContentDetailsModel {
     for relationship in jsonResource.relationships where relationship.type == "domains" {
       let ids = relationship.data.compactMap { $0.id }
       self.domainIDs = ids
+    }
+    
+    for relationship in jsonResource.relationships where relationship.type == "bookmark" {
+      let ids = relationship.data.compactMap { $0.id }
+      if let id = ids.first, id != 0 {
+        self.bookmark = BookmarkModel(id: id)
+      }
     }
   }
   

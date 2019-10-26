@@ -163,11 +163,19 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
       let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
       relationships.append(contentsOf: domains)
       
-      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
-        relationships.append(bookmark)
-      }
+//      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
+//        relationships.append(bookmark)
+//      }
       
       model.addRelationships(for: relationships)
     }
+  }
+  
+  func updateEntryIfItExists(for content: ContentDetailsModel) {
+    print("Should update entry in progressions + \(completionStatus.rawValue)")
+    guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
+    
+    data[index] = content
+    reload()
   }
 }
