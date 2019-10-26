@@ -130,12 +130,10 @@ class UserMC: NSObject, ObservableObject {
   
   // If the user is nil, or if they don't have download permissions, delete all downloaded content
   private func removeDownloadedContentIfNecessary() {
-    guard let user = user, !user.canDownload else {
+    guard let user = user, user.canDownload else {
       DataManager.current?.downloadsMC.deleteAllDownloadedContent()
       return
     }
-    
-    DataManager.current?.downloadsMC.deleteAllDownloadedContent()
   }
 }
 
