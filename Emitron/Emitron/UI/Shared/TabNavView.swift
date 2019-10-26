@@ -32,7 +32,7 @@ struct TabNavView: View {
 
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
 
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
@@ -67,14 +67,14 @@ struct TabNavView: View {
 
   private var libraryView: some View {
     guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
-    let contentsMC = dataManager.contentsMC
+    let libraryContentsMC = dataManager.libraryContentsMC
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
 
     UserMC(guardpost: Guardpost.current).fetchPermissions()
 
     return LibraryView(downloadsMC: downloadsMC)
-      .environmentObject(contentsMC)
+      .environmentObject(libraryContentsMC)
       .environmentObject(filters)
   }
 

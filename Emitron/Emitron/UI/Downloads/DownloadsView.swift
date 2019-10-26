@@ -38,8 +38,8 @@ struct DownloadsView: View {
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
   @EnvironmentObject var emitron: AppState
-  var contentsMC: ContentsMC {
-    return DataManager.current!.contentsMC
+  var libraryContentsMC: LibraryContentsMC {
+    return DataManager.current!.libraryContentsMC
   }
 
   var contents: [ContentDetailsModel] {

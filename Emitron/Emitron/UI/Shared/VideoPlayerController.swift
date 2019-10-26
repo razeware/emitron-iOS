@@ -128,10 +128,10 @@ class VideoPlayerController: AVPlayerViewController {
 
     }
 
-    if let contentsMC = DataManager.current?.contentsMC,
+    if let libraryContentsMC = DataManager.current?.libraryContentsMC,
       let current = currentContent,
-      let firstIndex = contentsMC.data.firstIndex(where: { $0.id == current.id } ) {
-        DataManager.current?.contentsMC.updateEntry(at: firstIndex, with: current)
+      let firstIndex = libraryContentsMC.data.firstIndex(where: { $0.id == current.id } ) {
+        DataManager.current?.libraryContentsMC.updateEntry(at: firstIndex, with: current)
     }
   }
 

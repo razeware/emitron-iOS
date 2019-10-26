@@ -33,56 +33,6 @@ private struct Layout {
   static let heightDivisor: CGFloat = 3
 }
 
-enum ContentScreen {
-  case library, downloads, inProgress, completed, bookmarked
-
-  var isMyTutorials: Bool {
-    switch self {
-    case .bookmarked, .inProgress, .completed: return true
-    default: return false
-    }
-  }
-
-  var titleMessage: String {
-    switch self {
-    // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything with that search criteria."
-    case .downloads: return "You haven't downloaded any tutorials yet."
-    case .bookmarked: return "You haven't bookmarked any tutorials yet."
-    case .inProgress: return "You don't have any tutorials in progress yet."
-    case .completed: return "You haven't completed any tutorials yet."
-
-    }
-  }
-
-  var detailMesage: String {
-    switch self {
-    case .library: return "Try removing some filters or checking your WiFi settings."
-    case .bookmarked: return "Tap the bookmark icon to bookmark a video course or screencast."
-    case .inProgress: return "When you start a video course you can quickly resume it from here."
-    case .completed: return "Watch all the episodes of a video course or screencast to complete it."
-    case .downloads: return "Tap the download icon to download a video course or episode to watch offline."
-    }
-  }
-
-  var buttonText: String? {
-    switch self {
-    case .downloads, .inProgress, .completed, .bookmarked: return "Explore Tutorials"
-    default: return "Reload"
-    }
-  }
-
-  var emptyImageName: String {
-    switch self {
-    case .downloads: return "artworkEmptySuitcase"
-    case .bookmarked: return "artworkBookmarks"
-    case .inProgress: return "artworkInProgress"
-    case .completed: return "artworkCompleted"
-    case .library: return "emojiCrying"
-    }
-  }
-}
-
 struct ContentListView: View {
 
   @State var showHudView: Bool = false

@@ -42,10 +42,10 @@ struct LoginView: View {
     guard userMC.user == nil else {
       let guardpost = Guardpost.current
       let filters = DataManager.current!.filters
-      let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
+      let libraryContentsMC = LibraryContentsMC(guardpost: guardpost, filters: filters)
       let emitronState = AppState()
       
-      return AnyView(TabNavView().environmentObject(contentsMC).environmentObject(emitronState))
+      return AnyView(TabNavView().environmentObject(libraryContentsMC).environmentObject(emitronState))
     }
     
     return AnyView(

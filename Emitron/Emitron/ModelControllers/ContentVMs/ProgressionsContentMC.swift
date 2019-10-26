@@ -148,7 +148,6 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
           .log(additionalParams: nil)
       case .success(let progressionsTuple):
         self.data = progressionsTuple.progressions.compactMap { $0.content }
-        print( self.data.map{ $0.contentType.displayString })
         self.addRelevantDetailsToContent()
         self.totalContentNum = progressionsTuple.totalNumber
         self.state = .hasData

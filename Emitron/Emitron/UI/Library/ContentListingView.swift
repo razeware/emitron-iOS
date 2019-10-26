@@ -38,7 +38,7 @@ struct ContentListingView: View {
   @State var hudOption: HudOption = .success
   @ObservedObject var contentSummaryMC: ContentSummaryMC
   @ObservedObject var downloadsMC: DownloadsMC
-  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
   var content: ContentDetailsModel
   var user: UserModel
 
@@ -458,7 +458,7 @@ struct ContentListingView: View {
   private func refreshContentDetails() {
     self.contentSummaryMC.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
-      guard let index = self.contentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
+      guard let index = self.libraryContentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
       //self.contentsMC.updateEntry(at: index, with: model)
     }
   }

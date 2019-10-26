@@ -192,7 +192,7 @@ struct ContentSummaryView: View {
     contentSummaryMC.toggleBookmark(for: contentSummaryMC.data) { newModel in
 
       // Update the content in the global contentsMC, to re-render library view
-      guard let dataManager = DataManager.current, let index = dataManager.contentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
+      guard let dataManager = DataManager.current, let index = dataManager.libraryContentsMC.data.firstIndex(where: { newModel.id == $0.id } ) else { return }
       //dataManager.contentsMC.updateEntry(at: index, with: newModel)
     }
   }

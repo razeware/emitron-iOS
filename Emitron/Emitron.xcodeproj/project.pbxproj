@@ -21,6 +21,7 @@
 		8BFC74BC23648DF3001979F1 /* Paginatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BB23648DF3001979F1 /* Paginatable.swift */; };
 		8BFC74BE23648E1D001979F1 /* Updatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BD23648E1D001979F1 /* Updatable.swift */; };
 		8BFC74C123649FD2001979F1 /* BookmarkContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */; };
+		8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C22364A9BE001979F1 /* ContentScreen.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -144,7 +145,7 @@
 		B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */; };
 		B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */; };
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
-		B6FC15CC22CB5DC00078CEDB /* ContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */; };
+		B6FC15CC22CB5DC00078CEDB /* LibraryContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CB22CB5DC00078CEDB /* LibraryContentsMC.swift */; };
 		B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */; };
 		B6FC15D222CB65880078CEDB /* DownloadModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D122CB65880078CEDB /* DownloadModel.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
@@ -183,6 +184,7 @@
 		8BFC74BB23648DF3001979F1 /* Paginatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paginatable.swift; sourceTree = "<group>"; };
 		8BFC74BD23648E1D001979F1 /* Updatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updatable.swift; sourceTree = "<group>"; };
 		8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkContentsMC.swift; sourceTree = "<group>"; };
+		8BFC74C22364A9BE001979F1 /* ContentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentScreen.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -310,7 +312,7 @@
 		B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIRelationship.swift; sourceTree = "<group>"; };
 		B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIError.swift; sourceTree = "<group>"; };
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
-		B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsMC.swift; sourceTree = "<group>"; };
+		B6FC15CB22CB5DC00078CEDB /* LibraryContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryContentsMC.swift; sourceTree = "<group>"; };
 		B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		B6FC15D122CB65880078CEDB /* DownloadModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadModel.swift; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
@@ -412,9 +414,10 @@
 		8BFC74BF23649FB4001979F1 /* ContentVMs */ = {
 			isa = PBXGroup;
 			children = (
-				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
+				B6FC15CB22CB5DC00078CEDB /* LibraryContentsMC.swift */,
 				8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */,
 				8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */,
+				8BFC74C22364A9BE001979F1 /* ContentScreen.swift */,
 			);
 			path = ContentVMs;
 			sourceTree = "<group>";
@@ -1080,6 +1083,7 @@
 				B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */,
 				95A4513522E224B500D24E56 /* UserMC.swift in Sources */,
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
+				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
 				8BFC74BE23648E1D001979F1 /* Updatable.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
 				B66778A223044BDF003EEBAB /* Progression.swift in Sources */,
@@ -1173,7 +1177,7 @@
 				B6DF2F9A22CA05230081A3A3 /* CategoryModel.swift in Sources */,
 				B6C4F3D722E6EE5B0087ED10 /* Filter.swift in Sources */,
 				B621DD5122F5EEC500A1F27A /* DataManager.swift in Sources */,
-				B6FC15CC22CB5DC00078CEDB /* ContentsMC.swift in Sources */,
+				B6FC15CC22CB5DC00078CEDB /* LibraryContentsMC.swift in Sources */,
 				B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */,
 				8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */,
 				B6DF2FA422CA05530081A3A3 /* ProgressionModel.swift in Sources */,

@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ContentsMC: NSObject, ObservableObject, Paginatable {
+class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
   var contentScreen: ContentScreen = .library
   
   // MARK: - Properties
@@ -122,7 +122,7 @@ class ContentsMC: NSObject, ObservableObject, Paginatable {
         self.isLoadingMore = false
         self.state = .failed
         Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentsTuple):
         let currentContents = self.data
@@ -156,7 +156,7 @@ class ContentsMC: NSObject, ObservableObject, Paginatable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
         self.data = []
       case .success(let contentsTuple):
@@ -175,7 +175,7 @@ class ContentsMC: NSObject, ObservableObject, Paginatable {
         self.state = .failed
         completion?(nil)
         Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.state = .hasData

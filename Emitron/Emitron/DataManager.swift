@@ -52,14 +52,14 @@ class DataManager: NSObject {
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
 
-  // TODO: ContentsMC shouldn't be here; reeconsider
+  // TODO: LibraryContentsMC shouldn't be here; reeconsider
 //  let libraryContentsMC: ContentsMC
   let inProgressContentMC: InProgressContentMC
   let completedContentMC: CompletedContentMC
   let bookmarkContentMC: BookmarkContentsMC
 //  let downloadedContentMC: DownloadsMC
   
-  let contentsMC: ContentsMC
+  let libraryContentsMC: LibraryContentsMC
   let progressionsMC: ProgressionsMC
   let bookmarksMC: BookmarksMC
   let downloadsMC: DownloadsMC
@@ -83,7 +83,7 @@ class DataManager: NSObject {
 
     self.filters = Filters()
 
-    self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
+    self.libraryContentsMC = LibraryContentsMC(guardpost: guardpost, filters: self.filters)
 
     self.inProgressContentMC = InProgressContentMC(guardpost: guardpost, completionStatus: .inProgress)
     self.completedContentMC = CompletedContentMC(guardpost: guardpost, completionStatus: .completed)
