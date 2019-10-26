@@ -27,7 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
-import CoreData
 
+protocol Updatable {
+  func updateEntry()
+}

@@ -81,7 +81,10 @@ struct TabNavView: View {
     let progressionsMC = dataManager.progressionsMC
     let bookmarksMC = dataManager.bookmarksMC
     let domainsMC = dataManager.domainsMC
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC)
+    let inProgressContentMC = dataManager.inProgressContentMC
+    let completedContentMC = dataManager.completedContentMC
+    
+    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(domainsMC).environmentObject(inProgressContentMC).environmentObject(completedContentMC)
   }
 
   private var downloadsView: some View {

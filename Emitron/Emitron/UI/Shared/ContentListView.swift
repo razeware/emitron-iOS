@@ -89,16 +89,17 @@ struct ContentListView: View {
   @State var showAlert: Bool = false
   @State private var showSettings = false
   @State var hudOption: HudOption = .success
+  @State var isPresenting: Bool = false
+  
+  @EnvironmentObject var emitron: AppState
+  
   var downloadsMC: DownloadsMC
   var contentScreen: ContentScreen
-  @State var isPresenting: Bool = false
   var contents: [ContentDetailsModel] = []
-  @State var selectedMC: ContentSummaryMC?
-  @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var contentsMC: ContentsMC
   var headerView: AnyView?
   var dataState: DataState
   var totalContentNum: Int
+  var contentMC: Paginatable?
   var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
 
   var body: some View {
@@ -152,7 +153,9 @@ struct ContentListView: View {
         GeometryReader { geometry in
           ActivityIndicator()
             .onAppear {
-              self.contentsMC.loadMore()
+              // Load more from the appropriate MC conforming to updatable protocol
+              print("I should be loading more here...")
+              //self.contentsMC.loadMore()
           }
         }
       )
@@ -176,6 +179,7 @@ struct ContentListView: View {
     case .hasData,
          .loading where !contents.isEmpty:
       
+      // If we're RE-loading but not loading more, show the activity indicator in the middle
       if dataState == .loading {
         return AnyView(
           listView
@@ -236,7 +240,8 @@ struct ContentListView: View {
               self.callback?(.save, partialContent)
             }
           }, onRightTap: {
-            self.toggleBookmark(model: partialContent)
+            print("Should be toggling the bookmark here...")
+            //self.toggleBookmark(model: partialContent)
           })
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
@@ -343,14 +348,11 @@ struct ContentListView: View {
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.contentsMC.reloadContents()
+      print("I should be reloading the content...")
+      //self.contentsMC.reloadContents()
     }
 
     return AnyView(button)
-  }
-
-  private func loadMoreContents() {
-    contentsMC.loadMore()
   }
 
   func delete(at offsets: IndexSet) {
@@ -364,16 +366,5 @@ struct ContentListView: View {
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
     self.contents = newContents
   }
-  
-  func toggleBookmark(model: ContentDetailsModel) {
-    DataManager.current?.contentsMC.toggleBookmark(for: model)
-  }
-}
 
-#if DEBUG
-struct ContentListView_Previews: PreviewProvider {
-  static var previews: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], dataState: .hasData, totalContentNum: 5)
-  }
 }
-#endif

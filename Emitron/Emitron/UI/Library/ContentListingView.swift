@@ -459,7 +459,7 @@ struct ContentListingView: View {
     self.contentSummaryMC.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
       guard let index = self.contentsMC.data.firstIndex(where: { model.id == $0.id } ) else { return }
-      self.contentsMC.updateEntry(at: index, with: model)
+      //self.contentsMC.updateEntry(at: index, with: model)
     }
   }
 

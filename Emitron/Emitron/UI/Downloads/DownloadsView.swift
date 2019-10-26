@@ -59,7 +59,7 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials, contentMC: nil) { (action, content) in
       self.showActivityIndicator = true
       
       // need to get groups & child contents for collection

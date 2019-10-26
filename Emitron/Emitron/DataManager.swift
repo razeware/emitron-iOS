@@ -54,8 +54,8 @@ class DataManager: NSObject {
 
   // TODO: ContentsMC shouldn't be here; reeconsider
 //  let libraryContentsMC: ContentsMC
-//  let progressionsContentsMC: ProgressionsMC
-//  let coopmletedContentMC: ProgressionsMC
+  let inProgressContentMC: InProgressContentMC
+  let completedContentMC: CompletedContentMC
 //  let bookmarksContentMC: BookmarksMC
 //  let downloadedContentMC: DownloadsMC
   
@@ -85,9 +85,11 @@ class DataManager: NSObject {
 
     self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
 
-    self.progressionsMC = ProgressionsMC(guardpost: guardpost)
+    self.inProgressContentMC = InProgressContentMC(guardpost: guardpost, completionStatus: .inProgress)
+    self.completedContentMC = CompletedContentMC(guardpost: guardpost, completionStatus: .completed)
     self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     self.downloadsMC = DownloadsMC(user: user)
+    self.progressionsMC = ProgressionsMC(guardpost: guardpost)
 
     super.init()
     createSubscribers()

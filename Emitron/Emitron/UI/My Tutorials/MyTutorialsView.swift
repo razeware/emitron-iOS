@@ -52,6 +52,10 @@ struct MyTutorialView: View {
   @EnvironmentObject var emitron: AppState
   @EnvironmentObject var progressionsMC: ProgressionsMC
   @EnvironmentObject var bookmarksMC: BookmarksMC
+  @EnvironmentObject var inProgressContentMC: InProgressContentMC
+  @EnvironmentObject var completedContentMC: CompletedContentMC
+  //@EnvironmentObject var bookmarksContentMC: CompletedContentMC
+  
   @State private var settingsPresented: Bool = false
   @State private var state: MyTutorialsState = .inProgress
   @State private var reloadProgression: Bool = true
@@ -84,13 +88,13 @@ struct MyTutorialView: View {
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab
           if self.reloadProgression {
-            self.progressionsMC.reloadContents()
+            self.inProgressContentMC.reload()
             self.reloadProgression = false
           }
           self.state = .inProgress
         }, completedClosure: {
           if self.reloadProgression {
-            self.progressionsMC.reloadContents()
+            self.completedContentMC.reload()
             self.reloadProgression = false
           }
           self.state = .completed
@@ -118,52 +122,26 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: some View {
-    var dataToDisplay = [ContentDetailsModel]()
-    progressionsMC.data.forEach { progressionModel in
-      // only show parent of collection or screencast
-      guard progressionModel.content?.contentType != .episode else { return }
-      if progressionModel.progress > 0 && !progressionModel.finished, let content = progressionModel.content {
-        content.progression = progressionModel
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
-          content.bookmark = bookmark
-        }
-        
-        dataToDisplay.append(content)
-      }
-    }
-
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
+    let data = inProgressContentMC.data
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: inProgressContentMC.state, totalContentNum: data.count)
   }
 
   private var completedContentsView: some View {
-    var dataToDisplay = [ContentDetailsModel]()
-    progressionsMC.data.forEach { progressionModel in
-      guard progressionModel.content?.contentType != .episode else { return }
-      if progressionModel.finished, let content = progressionModel.content {
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
-          content.bookmark = bookmark
-        }
-        
-        dataToDisplay.append(content)
-      }
-    }
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: progressionsMC.state, totalContentNum: dataToDisplay.count)
+    let data = completedContentMC.data
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: completedContentMC.state, totalContentNum: data.count)
   }
 
   private var bookmarkedContentsView: some View {
-    var dataToDisplay = [ContentDetailsModel]()
-    bookmarksMC.data.forEach { bookmark in
-      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        content.bookmark = bookmark
-        dataToDisplay.append(content)
-      }
-    }
-    
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: dataToDisplay.count)
+    return Text("Bookmarks...")
+//    var dataToDisplay = [ContentDetailsModel]()
+//    bookmarksMC.data.forEach { bookmark in
+//      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
+//        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
+//        content.bookmark = bookmark
+//        dataToDisplay.append(content)
+//      }
+//    }
+//
+//    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: dataToDisplay.count)
   }
 }

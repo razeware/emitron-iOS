@@ -30,11 +30,13 @@ import Foundation
 import SwiftyJSON
 
 enum ContentRelationship: String {
-  case domains
+  case domains // When relating multiple domains, used when adding relationships from the resource itself
+  case domain // When only relating one domain, used when adding relationships from DomainModel
   case groups
   case progression
   case bookmark
   case childContents = "child_contents"
+  case none
 }
 
 protocol ContentRelatable {
@@ -122,6 +124,11 @@ class ContentDetailsModel {
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
     self.videoID = jsonResource["video_identifier"] as? Int
     self.url = jsonResource.links["self"]
+    
+    for relationship in jsonResource.relationships where relationship.type == "domains" {
+      let ids = relationship.data.compactMap { $0.id }
+      self.domainIDs = ids
+    }
   }
   
   // Bookmarks and progressionos can be full-fledged models when we create the relationships, so we don't want a circular dependency between them
@@ -130,11 +137,17 @@ class ContentDetailsModel {
     for relationship in contentRelatable {
       switch relationship.type {
       case .bookmark:
-        guard let bookmark = relationship as? BookmarkModel else { return }
-        self.bookmark = bookmark
+        if let bookmark = relationship as? BookmarkModel {
+          self.bookmark = bookmark
+        }
       case .progression:
-        guard let progression = relationship as? ProgressionModel else { return }
-        self.progression = progression
+        if let progression = relationship as? ProgressionModel {
+          self.progression = progression
+        }
+      case .domain:
+        if let domain = relationship as? DomainModel, !domains.contains(domain) {
+          self.domains.append(domain)
+        }
       default:
         print("Don't have a two way binding for this model yet...")
       }
@@ -144,7 +157,8 @@ class ContentDetailsModel {
   func addRelationships(for jsonResource: JSONAPIResource) {
     
     for relationship in jsonResource.relationships {
-      guard let relatinoshipType = ContentRelationship(rawValue: relationship.type) else { return }
+      let relatinoshipType = ContentRelationship(rawValue: relationship.type) ?? .none
+      
       switch relatinoshipType {
       case .domains:
         let ids = relationship.data.compactMap { $0.id }
@@ -152,6 +166,7 @@ class ContentDetailsModel {
         let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
 
         // If a domain comes through that doesn't match any of the domains we have, make a new domain request.
+        self.domainIDs = ids
         self.domains = domains ?? []
 
       //TODO: This will be improved when the API returns enough info to render the video listing, currently
@@ -168,8 +183,9 @@ class ContentDetailsModel {
               let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
               // This is an ugly hack for now
               let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
-                let content = ContentDetailsModel(summary.element, metadata: [:])
-                content?.parentContent = self
+                guard let content = ContentDetailsModel(summary.element, metadata: [:]) else { return nil }
+                content.addRelationships(for: summary.element)
+                content.parentContent = self
                 return content
               })
 

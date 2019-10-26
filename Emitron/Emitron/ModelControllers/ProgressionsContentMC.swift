@@ -31,7 +31,15 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ProgressionsContentMC: NSObject, ObservableObject {
+// These classes are here as "wrappers" because I'm not sure how else to insert different objects of the same type into the environment
+
+class InProgressContentMC: ProgressionsContentMC { }
+class CompletedContentMC: ProgressionsContentMC { }
+
+class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
+  var contentScreen: ContentScreen
+  
+  var isLoadingMore: Bool = false
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -45,31 +53,33 @@ class ProgressionsContentMC: NSObject, ObservableObject {
   private let guardpost: Guardpost
   private let progressionsService: ProgressionsService
   private(set) var data: [ContentDetailsModel] = []
-  private(set) var numTutorials: Int = 0
+  private(set) var totalContentNum: Int = 0
   
   // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
+  internal var currentPage: Int = 1
   
   // Parameters
+  private let completionStatus: CompletionStatus
   private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
+    return filters + [completionFilter]
   }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
+  init(guardpost: Guardpost, completionStatus: CompletionStatus) {
     self.guardpost = guardpost
-    
+    self.completionStatus = completionStatus
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.progressionsService = ProgressionsService(client: self.client)
+    self.contentScreen = completionStatus == .inProgress ? ContentScreen.inProgress : .completed
     
     super.init()
 
-    loadMoreContents()
+    reload()
   }
   
-  func loadMoreContents() {
+  func loadMore() {
     
     if case(.loading) = state {
       return
@@ -77,13 +87,14 @@ class ProgressionsContentMC: NSObject, ObservableObject {
     
     state = .loading
     currentPage += 1
+    isLoadingMore = true
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = defaultParameters
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
+    guard data.isEmpty || data.count <= totalContentNum else {
       return
     }
     
@@ -94,8 +105,9 @@ class ProgressionsContentMC: NSObject, ObservableObject {
       
       switch result {
       case .failure(let error):
-        self.state = .failed
+        self.isLoadingMore = false
         self.currentPage = -1
+        self.state = .failed
         Failure
           .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
@@ -103,19 +115,22 @@ class ProgressionsContentMC: NSObject, ObservableObject {
         // When filtering, do we just re-do the request, or append?
         let currentContents = self.data
         self.data = currentContents + progressions.compactMap { $0.content }
-        self.numTutorials = progressions.count
+        self.addRelevantDetailsToContent()
+        self.totalContentNum = progressions.count
+        self.isLoadingMore = false
         self.state = .hasData
       }
     }
   }
   
-  func reloadContents() {
+  func reload() {
     
     if case(.loading) = state {
       return
     }
     
     state = .loading
+    isLoadingMore = false
     
     // Reset current page to 1
     currentPage = startingPage
@@ -129,13 +144,31 @@ class ProgressionsContentMC: NSObject, ObservableObject {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ProressionsMC", reason: error.localizedDescription)
+          .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let progressions):
         self.data = progressions.compactMap { $0.content }
-        self.numTutorials = progressions.count
+        print( self.data.map{ $0.contentType.displayString })
+        self.addRelevantDetailsToContent()
+        self.totalContentNum = progressions.count
         self.state = .hasData
       }
+    }
+  }
+  
+  private func addRelevantDetailsToContent() {
+    
+    data.forEach { model in
+      guard let dataManager = DataManager.current, model.contentType != .episode else { return }
+      var relationships: [ContentRelatable] = []
+      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
+      relationships.append(contentsOf: domains)
+      
+      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
+        relationships.append(bookmark)
+      }
+      
+      model.addRelationships(for: relationships)
     }
   }
 }

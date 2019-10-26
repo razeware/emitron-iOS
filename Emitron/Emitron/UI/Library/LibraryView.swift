@@ -54,7 +54,7 @@ struct LibraryView: View {
       .navigationBarItems(trailing:
         Group {
           Button(action: {
-            self.contentsMC.reloadContents()
+            self.contentsMC.reload()
           }) {
             Image(systemName: "arrow.clockwise")
               .foregroundColor(.iconButton)
@@ -115,7 +115,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(contentsMC.numTutorials) \(Constants.tutorials)")
+      Text("\(contentsMC.totalContentNum) \(Constants.tutorials)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
@@ -171,7 +171,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: .library, contents: contentsMC.data, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.numTutorials) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, contentScreen: ContentScreen.library, contents: contentsMC.data, headerView: header, dataState: contentsMC.state, totalContentNum: contentsMC.totalContentNum, contentMC: contentsMC as Paginatable) { (action, content) in
       switch action {
         case .delete:
           self.delete(for: content)

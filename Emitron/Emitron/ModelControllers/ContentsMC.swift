@@ -31,7 +31,8 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ContentsMC: NSObject, ObservableObject {
+class ContentsMC: NSObject, ObservableObject, Paginatable {
+  var contentScreen: ContentScreen = .library
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -46,18 +47,17 @@ class ContentsMC: NSObject, ObservableObject {
   private let contentsService: ContentsService
   private lazy var bookmarksMC: BookmarksMC = DataManager.current!.bookmarksMC
   private(set) var data: [ContentDetailsModel] = []
-  private(set) var numTutorials: Int = 0
+  private(set) var totalContentNum: Int = 0
+  private(set) var isLoadingMore: Bool = false // A flag to let use know whether we're reloading from scratch, ie the first 20 results, or doing a paginated call where we append content, so that we can render the appropriate UI
   
   // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
+  internal var currentPage: Int = 1
   
   // Parameters
   private(set) var currentParameters: [Parameter] = [] {
     didSet {
       if oldValue != currentParameters {
-        reloadContents()
+        reload()
       }
     }
   }
@@ -79,10 +79,11 @@ class ContentsMC: NSObject, ObservableObject {
     self.contentsService = ContentsService(client: self.client)
     self.filters = Filters()
     self.currentParameters = filters.appliedParameters
+    self.currentAppliedFilters = filters.applied
     
     super.init()
 
-    reloadContents()
+    reload()
   }
   
   func updateFilters(newFilters: Filters) {
@@ -96,6 +97,7 @@ class ContentsMC: NSObject, ObservableObject {
     }
     
     state = .loading
+    isLoadingMore = true
     
     currentPage += 1
     
@@ -104,7 +106,7 @@ class ContentsMC: NSObject, ObservableObject {
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
+    guard data.isEmpty || data.count <= totalContentNum else {
       return
     }
     
@@ -116,27 +118,30 @@ class ContentsMC: NSObject, ObservableObject {
       
       switch result {
       case .failure(let error):
-        self.state = .failed
         self.currentPage = -1
+        self.isLoadingMore = false
+        self.state = .failed
         Failure
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentsTuple):
         let currentContents = self.data
         self.data = currentContents + contentsTuple.contents
-        self.numTutorials = contentsTuple.totalNumber
+        self.totalContentNum = contentsTuple.totalNumber
         self.state = .hasData
+        self.isLoadingMore = false
       }
     }
   }
   
-  func reloadContents() {
+  func reload() {
     
     if case(.loading) = state {
       return
     }
     
     state = .loading
+    isLoadingMore = false
     
     // Reset current page to 1
     currentPage = startingPage
@@ -156,7 +161,7 @@ class ContentsMC: NSObject, ObservableObject {
         self.data = []
       case .success(let contentsTuple):
         self.data = contentsTuple.contents
-        self.numTutorials = contentsTuple.totalNumber
+        self.totalContentNum = contentsTuple.totalNumber
         self.state = .hasData
       }
     }
