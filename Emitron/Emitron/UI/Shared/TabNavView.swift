@@ -73,7 +73,9 @@ struct TabNavView: View {
 
     UserMC(guardpost: Guardpost.current).fetchPermissions()
 
-    return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
+    return LibraryView(downloadsMC: downloadsMC)
+      .environmentObject(contentsMC)
+      .environmentObject(filters)
   }
 
   private var myTutorialsView: some View {
@@ -86,7 +88,12 @@ struct TabNavView: View {
     let inProgressContentMC = dataManager.inProgressContentMC
     let completedContentMC = dataManager.completedContentMC
     
-    return MyTutorialView().environmentObject(bookmarksMC).environmentObject(domainsMC).environmentObject(inProgressContentMC).environmentObject(completedContentMC).environmentObject(bookmarkContentsMC)
+    return MyTutorialView()
+      .environmentObject(bookmarksMC)
+      .environmentObject(domainsMC)
+      .environmentObject(inProgressContentMC)
+      .environmentObject(completedContentMC)
+      .environmentObject(bookmarkContentsMC)
   }
 
   private var downloadsView: some View {
