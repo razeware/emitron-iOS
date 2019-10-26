@@ -111,12 +111,12 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
         Failure
           .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let progressions):
+      case .success(let progressionsTuple):
         // When filtering, do we just re-do the request, or append?
         let currentContents = self.data
-        self.data = currentContents + progressions.compactMap { $0.content }
+        self.data = currentContents + progressionsTuple.progressions.compactMap { $0.content }
         self.addRelevantDetailsToContent()
-        self.totalContentNum = progressions.count
+        self.totalContentNum = progressionsTuple.totalNumber
         self.isLoadingMore = false
         self.state = .hasData
       }
@@ -146,11 +146,11 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
         Failure
           .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let progressions):
-        self.data = progressions.compactMap { $0.content }
+      case .success(let progressionsTuple):
+        self.data = progressionsTuple.progressions.compactMap { $0.content }
         print( self.data.map{ $0.contentType.displayString })
         self.addRelevantDetailsToContent()
-        self.totalContentNum = progressions.count
+        self.totalContentNum = progressionsTuple.totalNumber
         self.state = .hasData
       }
     }

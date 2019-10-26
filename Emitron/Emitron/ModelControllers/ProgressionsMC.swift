@@ -102,8 +102,8 @@ class ProgressionsMC: NSObject, ObservableObject {
       case .success(let progressionsTuple):
         // When filtering, do we just re-do the request, or append?
         let currentContents = self.data
-        self.data = currentContents + progressionsTuple
-        self.numTutorials = progressionsTuple.count
+        self.data = currentContents + progressionsTuple.progressions
+        self.numTutorials = progressionsTuple.totalNumber
         self.state = .hasData
       }
     }
@@ -131,9 +131,9 @@ class ProgressionsMC: NSObject, ObservableObject {
         Failure
           .fetch(from: "ProressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let progressions):
-        self.data = progressions
-        self.numTutorials = progressions.count
+      case .success(let progressionsTuple):
+        self.data = progressionsTuple.progressions
+        self.numTutorials = progressionsTuple.totalNumber
         self.state = .hasData
       }
     }

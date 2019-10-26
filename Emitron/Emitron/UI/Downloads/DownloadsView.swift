@@ -59,24 +59,25 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials, contentMC: nil) { (action, content) in
-      self.showActivityIndicator = true
-      
-      // need to get groups & child contents for collection
-      if content.isInCollection {
-        // if an episode, don't need group & child contents
-        if !self.downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
-          self.handleAction(with: action, content: content)
-        } else {
-          self.contentsMC.getContentSummary(with: content.id) { details in
-            guard let details = details else { return }
-            self.handleAction(with: action, content: details)
-          }
-        }
-      } else {
-        self.handleAction(with: action, content: content)
-      }
-    }
+    return Text("Hello...")
+//    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials, contentMC: nil) { (action, content) in
+//      self.showActivityIndicator = true
+//
+//      // need to get groups & child contents for collection
+//      if content.isInCollection {
+//        // if an episode, don't need group & child contents
+//        if !self.downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
+//          self.handleAction(with: action, content: content)
+//        } else {
+//          self.contentsMC.getContentSummary(with: content.id) { details in
+//            guard let details = details else { return }
+//            self.handleAction(with: action, content: details)
+//          }
+//        }
+//      } else {
+//        self.handleAction(with: action, content: content)
+//      }
+//    }
   }
 
   private func getContents() -> [ContentDetailsModel] {

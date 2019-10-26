@@ -122,13 +122,11 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: some View {
-    let data = inProgressContentMC.data
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: inProgressContentMC.state, totalContentNum: data.count)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, headerView: toggleControl, contentsVM: inProgressContentMC as Paginatable)
   }
 
   private var completedContentsView: some View {
-    let data = completedContentMC.data
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: completedContentMC.state, totalContentNum: data.count)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, headerView: toggleControl, contentsVM: completedContentMC as Paginatable)
   }
 
   private var bookmarkedContentsView: some View {

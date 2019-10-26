@@ -94,12 +94,8 @@ struct ContentListView: View {
   @EnvironmentObject var emitron: AppState
   
   var downloadsMC: DownloadsMC
-  var contentScreen: ContentScreen
-  var contents: [ContentDetailsModel] = []
   var headerView: AnyView?
-  var dataState: DataState
-  var totalContentNum: Int
-  var contentMC: Paginatable?
+  var contentsVM: Paginatable
   var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
 
   var body: some View {
@@ -112,7 +108,7 @@ struct ContentListView: View {
     List {
       if headerView != nil {
         Section(header: headerView) {
-          if contentScreen == .downloads {
+          if contentsVM.contentScreen == .downloads {
             cardsTableViewWithDelete
           } else {
             cardTableNavView
@@ -121,9 +117,9 @@ struct ContentListView: View {
         }.listRowInsets(EdgeInsets())
       } else {
         
-        if contentScreen == .downloads {
+        if contentsVM.contentScreen == .downloads {
           
-          if contents.isEmpty || downloadsMC.data.isEmpty {
+          if contentsVM.data.isEmpty || downloadsMC.data.isEmpty {
             emptyView
           } else {
             cardsTableViewWithDelete
@@ -147,16 +143,14 @@ struct ContentListView: View {
   }
 
   private var loadMoreView: AnyView? {
-    if totalContentNum > contents.count {
+    if contentsVM.totalContentNum > contentsVM.data.count {
       return AnyView(
         // HACK: To put it in the middle we have to wrap it in Geometry Reader
         GeometryReader { geometry in
           ActivityIndicator()
             .onAppear {
               // Load more from the appropriate MC conforming to updatable protocol
-              if let paginatedContentsMC = self.contentMC {
-                paginatedContentsMC.loadMore()
-              }
+              self.contentsVM.loadMore()
           }
         }
       )
@@ -167,31 +161,24 @@ struct ContentListView: View {
 
   private var contentView: AnyView {
     // downlaods screen handles empty screen separately 
-    guard contentScreen != .downloads else {
+    guard contentsVM.contentScreen != .downloads else {
       return AnyView(listView)
     }
     
-    switch dataState {
+    switch contentsVM.state {
     case .initial,
-         .loading where contents.isEmpty:
+         .loading where contentsVM.data.isEmpty:
       return AnyView(loadingView)
-    case .hasData where contents.isEmpty:
+    case .hasData where contentsVM.data.isEmpty:
       return AnyView(emptyView)
     case .hasData,
-         .loading where !contents.isEmpty:
+         .loading where !contentsVM.data.isEmpty:
       
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
-      if dataState == .loading {
-        if let paginatedContentsMC = contentMC {
-          if paginatedContentsMC.isLoadingMore {
-            return AnyView(listView)
-          } else {
-            return AnyView(
-              listView
-              .overlay(ActivityIndicator())
-            )
-          }
+      if contentsVM.state == .loading {
+        if contentsVM.isLoadingMore {
+          return AnyView(listView)
         } else {
           return AnyView(
             listView
@@ -213,7 +200,7 @@ struct ContentListView: View {
     let user = guardpost.currentUser
 
     return
-      ForEach(contents, id: \.id) { partialContent in
+      ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
@@ -243,7 +230,7 @@ struct ContentListView: View {
     let user = guardpost.currentUser
 
     return
-      ForEach(contents, id: \.id) { partialContent in
+      ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
           ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
@@ -270,7 +257,7 @@ struct ContentListView: View {
 
   private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
     AnyView(CardView(model: content,
-                     contentScreen: contentScreen,
+                     contentScreen: contentsVM.contentScreen,
                      onLeftIconTap: onLeftTap,
                      onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
   }
@@ -312,20 +299,20 @@ struct ContentListView: View {
 
       Spacer()
 
-      Image(contentScreen.emptyImageName)
+      Image(contentsVM.contentScreen.emptyImageName)
         .padding([.bottom], 30)
         .padding([.top], 97)
       // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
       // we're ignoring the safe area edges, so that the status bar can be the right color
 
-      Text(contentScreen.titleMessage)
+      Text(contentsVM.contentScreen.titleMessage)
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.bottom], 20)
         .padding([.leading, .trailing], 55)
 
-      Text(contentScreen.detailMesage)
+      Text(contentsVM.contentScreen.detailMesage)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
@@ -339,7 +326,7 @@ struct ContentListView: View {
   }
 
   private var exploreButton: AnyView? {
-    guard let buttonText = contentScreen.buttonText, contents.isEmpty && contentScreen != .library else { return nil }
+    guard let buttonText = contentsVM.contentScreen.buttonText, contentsVM.data.isEmpty && contentsVM.contentScreen != .library else { return nil }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
       self.emitron.selectedTab = 0
@@ -371,13 +358,14 @@ struct ContentListView: View {
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
-      let content = self.contents[index]
+      let content = self.contentsVM.data[index]
       self.callback?(.delete, content)
     }
   }
 
   mutating func updateContents(with newContents: [ContentDetailsModel]) {
-    self.contents = newContents
+    //self.contentsVM.data = newContents
+    print("Need to figure out how to update contents here...")
   }
 
 }
