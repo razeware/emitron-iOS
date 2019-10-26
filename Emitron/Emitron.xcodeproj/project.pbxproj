@@ -22,6 +22,7 @@
 		8BFC74BE23648E1D001979F1 /* Updatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BD23648E1D001979F1 /* Updatable.swift */; };
 		8BFC74C123649FD2001979F1 /* BookmarkContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */; };
 		8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C22364A9BE001979F1 /* ContentScreen.swift */; };
+		8BFC74C52364D246001979F1 /* DownloadContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C42364D246001979F1 /* DownloadContentsMC.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -184,6 +185,7 @@
 		8BFC74BD23648E1D001979F1 /* Updatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updatable.swift; sourceTree = "<group>"; };
 		8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkContentsMC.swift; sourceTree = "<group>"; };
 		8BFC74C22364A9BE001979F1 /* ContentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentScreen.swift; sourceTree = "<group>"; };
+		8BFC74C42364D246001979F1 /* DownloadContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadContentsMC.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -416,6 +418,7 @@
 				8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */,
 				8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */,
 				8BFC74C22364A9BE001979F1 /* ContentScreen.swift */,
+				8BFC74C42364D246001979F1 /* DownloadContentsMC.swift */,
 			);
 			path = ContentVMs;
 			sourceTree = "<group>";
@@ -1090,6 +1093,7 @@
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				B595653F230953EF00A3FF44 /* BookmarksMC.swift in Sources */,
+				8BFC74C52364D246001979F1 /* DownloadContentsMC.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
