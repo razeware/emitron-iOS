@@ -88,7 +88,7 @@ struct ContentSummaryView: View {
       })
       .padding([.top], 15)
 
-      Text(contentSummaryMC.data.description)
+      Text(contentSummaryMC.data.desc)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
@@ -154,7 +154,7 @@ struct ContentSummaryView: View {
 
       } else {
         // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummaryMC.data.id }),
+        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummaryMC.data.id }),
           downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
             return AnyView(image)
         }
@@ -171,10 +171,10 @@ struct ContentSummaryView: View {
 
     if contentSummaryMC.data.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        return downloadModel.content.id == contentSummaryMC.data.id
+        return downloadModel.id == contentSummaryMC.data.id
         } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
-      return downloadsMC.data.contains(where: { $0.content.id == contentSummaryMC.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0.id == contentSummaryMC.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 

@@ -84,7 +84,7 @@ struct CardView: SwiftUI.View {
             .foregroundColor(.contentText)
         }
 
-        Text(model.description)
+        Text(model.desc)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)

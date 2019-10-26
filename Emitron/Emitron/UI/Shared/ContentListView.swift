@@ -110,11 +110,6 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
-    // downlaods screen handles empty screen separately 
-
-    guard contentsVM.contentScreen != .downloads else {
-      return AnyView(listView)
-    }
     
     switch contentsVM.state {
     case .initial,

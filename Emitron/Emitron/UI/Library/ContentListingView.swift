@@ -489,7 +489,7 @@ struct ContentListingView: View {
     // update bool so can cancel either entire collection or episode based on bool
     self.isEpisodeOnly = isEpisodeOnly
     downloadsMC.isEpisodeOnly = isEpisodeOnly
-    guard !downloadsMC.data.contains(where: { $0.content.id == content.id }) else {
+    guard !downloadsMC.data.contains(where: { $0.id == content.id }) else {
       if self.showHudView {
         // dismiss hud currently showing
         self.showHudView.toggle()

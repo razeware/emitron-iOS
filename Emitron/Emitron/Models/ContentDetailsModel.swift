@@ -255,7 +255,7 @@ class ContentDetailsModel: NSObject {
     self.id = content.id ?? 0
     self.name = content.name
     self.uri = content.uri
-    self.desc = content.description
+    self.desc = content.contentDescription
     self.releasedAt = content.releasedAt
     self.free = content.free
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none

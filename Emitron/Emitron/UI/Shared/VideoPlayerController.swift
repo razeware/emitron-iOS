@@ -166,7 +166,7 @@ class VideoPlayerController: AVPlayerViewController {
     guard let firstContent = currentContent else { return }
 
     if let downloadsMC = DataManager.current?.downloadsMC,
-      let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == firstContent.videoID }) {
+      let downloadModel = downloadsMC.downloadData.first(where: { $0.content.videoID == firstContent.videoID }) {
       playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
     } else  {
       fetchAndInsertFromVideosRemote(for: firstContent)

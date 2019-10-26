@@ -108,8 +108,8 @@ struct TextListItemView: View {
 
       } else {
         // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.data.first(where: { $0.content.id == contentSummary.id }),
-              downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummary.id }),
+          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
           return AnyView(image)
         }
         
@@ -124,10 +124,10 @@ struct TextListItemView: View {
   private var downloadImageName: String {
     if contentSummary.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        return downloadModel.content.id == contentSummary.id
+        return downloadModel.id == contentSummary.id
         } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
-      return downloadsMC.data.contains(where: { $0.content.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
   

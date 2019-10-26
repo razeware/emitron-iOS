@@ -42,10 +42,6 @@ struct DownloadsView: View {
     return DataManager.current!.libraryContentsMC
   }
 
-  var contents: [ContentDetailsModel] {
-    return getContents()
-  }
-
   var body: some View {
     ZStack(alignment: .center) {
       contentView
@@ -59,41 +55,25 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    return Text("Hello...")
-//    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials, contentMC: nil) { (action, content) in
-//      self.showActivityIndicator = true
-//
-//      // need to get groups & child contents for collection
-//      if content.isInCollection {
-//        // if an episode, don't need group & child contents
-//        if !self.downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
-//          self.handleAction(with: action, content: content)
-//        } else {
+    return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as Paginatable) { (action, content) in
+      self.showActivityIndicator = true
+
+      // need to get groups & child contents for collection
+      if content.isInCollection {
+        // if an episode, don't need group & child contents
+        if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
+          self.handleAction(with: action, content: content)
+        } else {
+          print("Not sure why this is even here...")
 //          self.contentsMC.getContentSummary(with: content.id) { details in
 //            guard let details = details else { return }
 //            self.handleAction(with: action, content: details)
 //          }
-//        }
-//      } else {
-//        self.handleAction(with: action, content: content)
-//      }
-//    }
-  }
-
-  private func getContents() -> [ContentDetailsModel] {
-    var contents = [ContentDetailsModel]()
-    let downloadedContents = downloadsMC.data.map { $0.content }
-
-    downloadedContents.forEach { download in
-      if download.contentType != .episode {
-        contents.append(download)
-        // only show episodes in downloads view if the parent hasn't also been downloaded
-      } else if !downloadedContents.contains(where: { $0.id == download.parentContentId }) {
-          contents.append(download)
+        }
+      } else {
+        self.handleAction(with: action, content: content)
       }
     }
-
-    return !contents.isEmpty ? contents : []
   }
 
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
@@ -102,7 +82,7 @@ struct DownloadsView: View {
     case .delete:
       if content.isInCollection {
         // if an episode, only delete the specific episode
-        if !downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
+        if !downloadsMC.downloadData.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
           downloadsMC.deleteDownload(with: content)
           self.showActivityIndicator = false
         } else {
