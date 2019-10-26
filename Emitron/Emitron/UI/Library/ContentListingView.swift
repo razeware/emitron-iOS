@@ -29,7 +29,7 @@
 import SwiftUI
 import UIKit
 
-struct ContentListingView: SwiftUI.View {
+struct ContentListingView: View {
 
   @State private var isEpisodeOnly = false
   @State private var showingSheet = false
@@ -208,7 +208,7 @@ struct ContentListingView: SwiftUI.View {
       let allContentModels = contentSummaryMC.data.groups.flatMap { $0.childContents }
       let firstUnplayedConsecutive = allContentModels.first { model -> Bool in
         guard let progression = model.progression else { return true }
-        return progression.target > progression.progress
+        return progression.target > progression.progress && !progression.finished
       }
 
       return firstUnplayedConsecutive ?? nil
