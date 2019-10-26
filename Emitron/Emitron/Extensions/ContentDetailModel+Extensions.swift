@@ -57,14 +57,3 @@ extension ContentDetailsModel {
     return progress
   }
 }
-
-extension ContentSummaryModel {
-  var releasedAtDateTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
-  }
-}

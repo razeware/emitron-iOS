@@ -172,10 +172,9 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
   }
   
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    print("Should update entry in progressions + \(completionStatus.rawValue)")
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
     data[index] = content
-    reload()
+    //reload()
   }
 }

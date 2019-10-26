@@ -43,13 +43,13 @@ protocol ContentRelatable {
   var type: ContentRelationship { get }
 }
 
-class ContentDetailsModel {
+class ContentDetailsModel: NSObject {
 
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
-  private(set) var description: String = ""
+  private(set) var desc: String = ""
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
   private(set) var difficulty: ContentDifficulty = .none
@@ -98,7 +98,7 @@ class ContentDetailsModel {
     self.index = jsonResource["ordinal"] as? Int
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
-    self.description = jsonResource["description_plain_text"] as? String ?? ""
+    self.desc = jsonResource["description_plain_text"] as? String ?? ""
 
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
@@ -226,24 +226,6 @@ class ContentDetailsModel {
     }
   }
 
-  init(summaryModel: ContentSummaryModel) {
-    self.id = summaryModel.id
-    self.name = summaryModel.name
-    self.uri = summaryModel.uri
-    self.description = summaryModel.description
-    self.releasedAt = summaryModel.releasedAt
-    self.free = summaryModel.free
-    self.difficulty = summaryModel.difficulty
-    self.contentType = summaryModel.contentType
-    self.duration = summaryModel.duration
-    self.popularity = summaryModel.popularity
-    self.cardArtworkURL = summaryModel.cardArtworkURL
-    self.technologyTripleString = summaryModel.technologyTripleString
-    self.contributorString = summaryModel.contributorString
-    self.videoID = summaryModel.videoID
-    self.domainIDs = summaryModel.domainIDs
-  }
-
   /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
   ///
   /// - parameters:
@@ -252,7 +234,7 @@ class ContentDetailsModel {
     self.id = content.id.intValue
     self.name = content.name
     self.uri = content.uri
-    self.description = content.desc
+    self.desc = content.desc
     self.releasedAt = content.releasedAt
     self.free = content.free
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
@@ -273,7 +255,7 @@ class ContentDetailsModel {
     self.id = content.id ?? 0
     self.name = content.name
     self.uri = content.uri
-    self.description = content.contentDescription
+    self.desc = content.description
     self.releasedAt = content.releasedAt
     self.free = content.free
     self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none

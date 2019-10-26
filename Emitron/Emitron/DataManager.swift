@@ -64,6 +64,13 @@ class DataManager: NSObject {
   let bookmarksMC: BookmarksMC
   let downloadsMC: DownloadsMC
   var filters: Filters
+  
+  private var globalDataStore: [ContentDetailsModel] {
+    return Array(Set(inProgressContentMC.data)
+      .union(Set(completedContentMC.data))
+      .union(Set(bookmarkContentMC.data))
+      .union(Set(libraryContentsMC.data)))
+  }
 
   private var domainsSubscriber: AnyCancellable?
   private var categoriesSubsciber: AnyCancellable?

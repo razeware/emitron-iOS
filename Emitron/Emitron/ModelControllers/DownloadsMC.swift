@@ -89,17 +89,6 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   private(set) var data: [DownloadModel] = []
-  private(set) var numTutorials: Int = 0
-
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
 
   // MARK: - Initializers
   init(user: UserModel) {

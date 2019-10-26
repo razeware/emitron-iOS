@@ -45,7 +45,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let contentsService: ContentsService
   private let bookmarksMC: BookmarksMC
   private(set) var data: ContentDetailsModel
-  private var shouldLocallyBookmark: Bool = false
+  private var shouldLocallyBookmark: Bool?
   
   private var bookmarksSubscriber: AnyCancellable?
 
@@ -91,7 +91,9 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
-        self.data.bookmarked = self.shouldLocallyBookmark
+        if let shouldLocallyChangeBookmark = self.shouldLocallyBookmark {
+          self.data.bookmarked = shouldLocallyChangeBookmark
+        }
         self.state = .hasData
         completion?(contentDetails)
       }

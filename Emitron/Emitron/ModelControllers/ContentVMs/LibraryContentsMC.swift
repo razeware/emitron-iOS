@@ -185,10 +185,13 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
   }
   
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    print("Should update entry in LIBRARY")
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
     data[index] = content
-    reload()
+    // Trigger re-render without pulling down data
+    objectWillChange.send(())
+    
+    // Trigger re-render WITH pulling down data
+    //reload()
   }
 }

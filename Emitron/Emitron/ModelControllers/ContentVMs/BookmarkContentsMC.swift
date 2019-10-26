@@ -146,51 +146,6 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
     }
   }
   
-  func toggleBookmark(for content: ContentDetailsModel) {
-
-    if !content.bookmarked {
-      bookmarksService.makeBookmark(for: content.id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(let bookmark):
-          content.bookmark = bookmark
-          self.data.append(content)
-          // Disseminate boookmark update to others
-          guard let dataManager = DataManager.current else { return }
-          dataManager.bookmarkContentMC.updateEntryIfItExists(for: content)
-          dataManager.libraryContentsMC.updateEntryIfItExists(for: content)
-          dataManager.inProgressContentMC.updateEntryIfItExists(for: content)
-          dataManager.completedContentMC.updateEntryIfItExists(for: content)
-        }
-      }
-    } else {
-      guard let id = content.bookmarkId else { return }
-      // For deleting the bookmark, we have to use the original bookmark id
-      bookmarksService.destroyBookmark(for: id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(_):
-          if let index = self.data.firstIndex(where: { $0.id == id }) {
-            content.bookmark = nil
-            self.data.remove(at: index)
-          }
-          // Disseminate boookmark update to others
-          guard let dataManager = DataManager.current else { return }
-          dataManager.bookmarkContentMC.updateEntryIfItExists(for: content)
-          dataManager.libraryContentsMC.updateEntryIfItExists(for: content)
-          dataManager.inProgressContentMC.updateEntryIfItExists(for: content)
-          dataManager.completedContentMC.updateEntryIfItExists(for: content)
-        }
-      }
-    }
-  }
-  
   private func addRelevantDetailsToContent() {
     
     data.forEach { model in
@@ -205,11 +160,10 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
   }
   
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    print("Should update entry in BOOKMARKS")
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
     data[index] = content
-    reload()
+    //reload()
   }
 }
 
