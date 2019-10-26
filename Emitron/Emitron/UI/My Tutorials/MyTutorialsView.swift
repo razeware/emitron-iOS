@@ -50,8 +50,8 @@ struct MyTutorialView: View {
 
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var progressionsMC: ProgressionsMC
-  @EnvironmentObject var bookmarksMC: BookmarksMC
+  
+  @EnvironmentObject var bookmarkContentMC: BookmarkContentsMC
   @EnvironmentObject var inProgressContentMC: InProgressContentMC
   @EnvironmentObject var completedContentMC: CompletedContentMC
   //@EnvironmentObject var bookmarksContentMC: CompletedContentMC
@@ -100,7 +100,7 @@ struct MyTutorialView: View {
           self.state = .completed
         }, bookmarkedClosure: {
           if self.reloadBookmarks {
-            self.bookmarksMC.loadContents()
+            self.bookmarkContentMC.reload()
             self.reloadBookmarks = false
           }
           self.state = .bookmarked
@@ -122,24 +122,20 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, headerView: toggleControl, contentsVM: inProgressContentMC as Paginatable)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: inProgressContentMC as Paginatable)
   }
 
   private var completedContentsView: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, headerView: toggleControl, contentsVM: completedContentMC as Paginatable)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: completedContentMC as Paginatable)
   }
 
   private var bookmarkedContentsView: some View {
-    return Text("Bookmarks...")
-//    var dataToDisplay = [ContentDetailsModel]()
-//    bookmarksMC.data.forEach { bookmark in
-//      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
-//        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-//        content.bookmark = bookmark
-//        dataToDisplay.append(content)
-//      }
-//    }
-//
-//    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: state.contentScreen, contents: dataToDisplay, headerView: toggleControl, dataState: bookmarksMC.state, totalContentNum: dataToDisplay.count)
+    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: bookmarkContentMC as Paginatable)
   }
 }

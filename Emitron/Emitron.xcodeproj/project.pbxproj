@@ -20,6 +20,7 @@
 		8BFC74B8236451BE001979F1 /* ProgressionsContentMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */; };
 		8BFC74BC23648DF3001979F1 /* Paginatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BB23648DF3001979F1 /* Paginatable.swift */; };
 		8BFC74BE23648E1D001979F1 /* Updatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BD23648E1D001979F1 /* Updatable.swift */; };
+		8BFC74C123649FD2001979F1 /* BookmarkContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -181,6 +182,7 @@
 		8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionsContentMC.swift; sourceTree = "<group>"; };
 		8BFC74BB23648DF3001979F1 /* Paginatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Paginatable.swift; sourceTree = "<group>"; };
 		8BFC74BD23648E1D001979F1 /* Updatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Updatable.swift; sourceTree = "<group>"; };
+		8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkContentsMC.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -405,6 +407,16 @@
 				8B6FB4432332174B00185BF5 /* TextViewModifiers.swift */,
 			);
 			path = "View Modifiers";
+			sourceTree = "<group>";
+		};
+		8BFC74BF23649FB4001979F1 /* ContentVMs */ = {
+			isa = PBXGroup;
+			children = (
+				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
+				8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */,
+				8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */,
+			);
+			path = ContentVMs;
 			sourceTree = "<group>";
 		};
 		9535A4FF22D657B0000DA861 /* Persistence */ = {
@@ -775,9 +787,9 @@
 		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
+				8BFC74BF23649FB4001979F1 /* ContentVMs */,
 				B6E21A2C22F60AC5006CB22F /* CategoriesMC.swift */,
 				B63834C022DFD2E60096D9F8 /* ContentDetailsMC.swift */,
-				B6FC15CB22CB5DC00078CEDB /* ContentsMC.swift */,
 				B595653C23094E3100A3FF44 /* ProgressionsMC.swift */,
 				B595653E230953EF00A3FF44 /* BookmarksMC.swift */,
 				B6419BB422EF59F5003AC14E /* DomainsMC.swift */,
@@ -785,7 +797,6 @@
 				95A4513322E224B500D24E56 /* UserMC.swift */,
 				95A4513422E224B500D24E56 /* VideosMC.swift */,
 				B595654D231B4EDB00A3FF44 /* DownloadsMC.swift */,
-				8BFC74B7236451BE001979F1 /* ProgressionsContentMC.swift */,
 				8BFC74BB23648DF3001979F1 /* Paginatable.swift */,
 				8BFC74BD23648E1D001979F1 /* Updatable.swift */,
 			);
@@ -1172,6 +1183,7 @@
 				B6E21A2D22F60AC5006CB22F /* CategoriesMC.swift in Sources */,
 				B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */,
 				95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */,
+				8BFC74C123649FD2001979F1 /* BookmarkContentsMC.swift in Sources */,
 				B6C0F0DF22D5FD4C00012839 /* TimeInterval+Extensions.swift in Sources */,
 				B6FC15D522CB68E20078CEDB /* Service.swift in Sources */,
 				B6DF2FAF22CA498B0081A3A3 /* UserModel.swift in Sources */,

@@ -31,7 +31,10 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarksMC: NSObject, ObservableObject {
+class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
+  var contentScreen: ContentScreen = .bookmarked
+  
+  var isLoadingMore: Bool = false
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -44,58 +47,85 @@ class BookmarksMC: NSObject, ObservableObject {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let bookmarksService: BookmarksService
-  private(set) var data: [BookmarkModel] = []
-  private(set) var numTutorials: Int = 0
+  private(set) var data: [ContentDetailsModel] = []
+  private(set) var totalContentNum: Int = 0
   
   // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
+  internal var currentPage: Int = 1
   
   // Parameters
   private var defaultParameters: [Parameter] {
     return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
   }
-  
-  private(set) var currentParameters: [Parameter] = [] {
-    didSet {
-      if oldValue != currentParameters {
-        loadContents()
-      }
-    }
-  }
     
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
-    
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
 
-    currentParameters = defaultParameters
-    loadContents()
+    reload()
   }
   
-  func loadContents() {
+  func loadMore() {
     
     if case(.loading) = state {
       return
     }
     
     state = .loading
+    currentPage += 1
+    isLoadingMore = true
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = currentParameters
+    var allParams = defaultParameters
     allParams.append(pageParam)
     
     // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count < numTutorials else {
+    guard data.isEmpty || data.count <= totalContentNum else {
       return
     }
     
-    bookmarksService.bookmarks { [weak self] result in
+    bookmarksService.bookmarks(parameters: allParams) { [weak self] result in
+      guard let self = self else {
+        return
+      }
+      
+      switch result {
+      case .failure(let error):
+        self.isLoadingMore = false
+        self.currentPage = -1
+        self.state = .failed
+        Failure
+          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let bookmarksTuple):
+        // When filtering, do we just re-do the request, or append?
+        let currentContents = self.data
+        self.data = currentContents + bookmarksTuple.bookmarks.compactMap { $0.content }
+        self.addRelevantDetailsToContent()
+        self.totalContentNum = bookmarksTuple.totalNumber
+        self.isLoadingMore = false
+        self.state = .hasData
+      }
+    }
+  }
+  
+  func reload() {
+    
+    if case(.loading) = state {
+      return
+    }
+    
+    state = .loading
+    isLoadingMore = false
+    
+    // Reset current page to 1
+    currentPage = startingPage
+    
+    bookmarksService.bookmarks(parameters: defaultParameters) { [weak self] result in
       guard let self = self else {
         return
       }
@@ -107,53 +137,29 @@ class BookmarksMC: NSObject, ObservableObject {
           .fetch(from: "BookmarksMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let bookmarksTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + bookmarksTuple.bookmarks
-        } else {
-          self.data = bookmarksTuple.bookmarks
-        }
-        self.numTutorials = bookmarksTuple.totalNumber
+        self.data = bookmarksTuple.bookmarks.compactMap { $0.content }
+        print( self.data.map{ $0.contentType.displayString })
+        self.addRelevantDetailsToContent()
+        self.totalContentNum = bookmarksTuple.totalNumber
         self.state = .hasData
       }
     }
   }
   
-  func toggleBookmark(for content: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
-
-    if !content.bookmarked {
-      bookmarksService.makeBookmark(for: content.id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(let bookmark):
-          bookmark.content = content
-          self.data.append(bookmark)
-          content.bookmark = bookmark
-          completion(content)
-        }
+  private func addRelevantDetailsToContent() {
+    
+    data.forEach { model in
+      guard let dataManager = DataManager.current else { return }
+      var relationships: [ContentRelatable] = []
+      
+      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
+      relationships.append(contentsOf: domains)
+      
+      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
+        relationships.append(bookmark)
       }
-    } else {
-      guard let id = content.bookmarkId else { return }
-      // For deleting the bookmark, we have to use the original bookmark id
-      bookmarksService.destroyBookmark(for: id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(_):
-          if let index = self.data.firstIndex(where: { $0.id == id }) {
-            self.data.remove(at: index)
-            content.bookmark = nil
-          }
-          
-          completion(content)
-        }
-      }
+      
+      model.addRelationships(for: relationships)
     }
   }
 }

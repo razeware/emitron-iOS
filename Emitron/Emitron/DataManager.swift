@@ -56,7 +56,7 @@ class DataManager: NSObject {
 //  let libraryContentsMC: ContentsMC
   let inProgressContentMC: InProgressContentMC
   let completedContentMC: CompletedContentMC
-//  let bookmarksContentMC: BookmarksMC
+  let bookmarkContentMC: BookmarkContentsMC
 //  let downloadedContentMC: DownloadsMC
   
   let contentsMC: ContentsMC
@@ -90,6 +90,7 @@ class DataManager: NSObject {
     self.bookmarksMC = BookmarksMC(guardpost: guardpost)
     self.downloadsMC = DownloadsMC(user: user)
     self.progressionsMC = ProgressionsMC(guardpost: guardpost)
+    self.bookmarkContentMC = BookmarkContentsMC(guardpost: guardpost)
 
     super.init()
     createSubscribers()
