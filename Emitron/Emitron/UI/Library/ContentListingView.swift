@@ -41,6 +41,7 @@ struct ContentListingView: View {
   @EnvironmentObject var contentsMC: ContentsMC
   var content: ContentDetailsModel
   var user: UserModel
+  @State var imageData: Data?
   
   private var canStreamPro: Bool {
     return user.canStreamPro
@@ -452,23 +453,22 @@ struct ContentListingView: View {
   private func loadImage() {
     //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
     // is causing this file to not compile
-    let url: URL
-    if let imageURL = contentSummaryMC.data.cardArtworkURL {
-      url = imageURL
-    } else if let data = contentSummaryMC.data.cardArtworkData {
-      let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(contentSummaryMC.data.name).appendingPathExtension("png")
-      try? data.write(to: tmpFileURL, options: [.atomic])
-      url = tmpFileURL
-    } else {
-      return 
-    }
-
-    DispatchQueue.global().async {
-      let data = try? Data(contentsOf: url)
-      DispatchQueue.main.async {
-        if let data = data,
-          let img = UIImage(data: data) {
-          self.uiImage = img
+    
+    // first check if image data has already been saved
+    if let data = contentSummaryMC.data.cardArtworkData,
+       let uiImage = UIImage(data: data) {
+        self.uiImage = uiImage
+      
+      // otherwise use the imageURL
+    } else if let imageURL = contentSummaryMC.data.cardArtworkURL {
+      DispatchQueue.global().async {
+        let data = try? Data(contentsOf: imageURL)
+        DispatchQueue.main.async {
+          if let data = data,
+            let img = UIImage(data: data) {
+            self.uiImage = img
+            self.imageData = data
+          }
         }
       }
     }
@@ -483,6 +483,9 @@ struct ContentListingView: View {
   }
 
   private func save(for content: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // update content to save with image data
+    content.cardArtworkData = imageData
+    
     // update bool so can cancel either entire collection or episode based on bool
     self.isEpisodeOnly = isEpisodeOnly
     downloadsMC.isEpisodeOnly = isEpisodeOnly
