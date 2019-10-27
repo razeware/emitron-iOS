@@ -31,9 +31,13 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
-  
-  var contentScreen: ContentScreen = .bookmarked
+// These classes are here as "wrappers" because I'm not sure how else to insert different objects of the same type into the environment
+
+class InProgressContentVM: ProgressionsContentVM { }
+class CompletedContentVM: ProgressionsContentVM { }
+
+class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
+  var contentScreen: ContentScreen
   
   var isLoadingMore: Bool = false
   
@@ -46,7 +50,7 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
   }
   
   private let client: RWAPI
-  private let bookmarksService: BookmarksService
+  private let progressionsService: ProgressionsService
   private(set) var data: [ContentDetailsModel] = []
   private(set) var totalContentNum: Int = 0
   
@@ -54,14 +58,19 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
   internal var currentPage: Int = 1
   
   // Parameters
+  private let completionStatus: CompletionStatus
   private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
+    return filters + [completionFilter]
   }
     
   // MARK: - Initializers
-  init(user: UserModel) {
+  init(user: UserModel, completionStatus: CompletionStatus) {
+    self.completionStatus = completionStatus
     self.client = RWAPI(authToken: user.token)
-    self.bookmarksService = BookmarksService(client: self.client)
+    self.progressionsService = ProgressionsService(client: self.client)
+    self.contentScreen = completionStatus == .inProgress ? ContentScreen.inProgress : .completed
     
     super.init()
   }
@@ -85,7 +94,7 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
       return
     }
     
-    bookmarksService.bookmarks(parameters: allParams) { [weak self] result in
+    progressionsService.progressions(parameters: allParams) { [weak self] result in
       guard let self = self else {
         return
       }
@@ -96,14 +105,14 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
         self.currentPage = -1
         self.state = .failed
         Failure
-          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
+          .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let bookmarksTuple):
+      case .success(let progressionsTuple):
         // When filtering, do we just re-do the request, or append?
         let currentContents = self.data
-        self.data = currentContents + bookmarksTuple.bookmarks.compactMap { $0.content }
+        self.data = currentContents + progressionsTuple.progressions.compactMap { $0.content }
         self.addRelevantDetailsToContent()
-        self.totalContentNum = bookmarksTuple.totalNumber
+        self.totalContentNum = progressionsTuple.totalNumber
         self.isLoadingMore = false
         self.state = .hasData
       }
@@ -121,8 +130,8 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
     
     // Reset current page to 1
     currentPage = startingPage
-    
-    bookmarksService.bookmarks(parameters: defaultParameters) { [weak self] result in
+
+    progressionsService.progressions(parameters: defaultParameters) { [weak self] result in
       guard let self = self else {
         return
       }
@@ -131,12 +140,12 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
+          .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let bookmarksTuple):
-        self.data = bookmarksTuple.bookmarks.compactMap { $0.content }
+      case .success(let progressionsTuple):
+        self.data = progressionsTuple.progressions.compactMap { $0.content }
         self.addRelevantDetailsToContent()
-        self.totalContentNum = bookmarksTuple.totalNumber
+        self.totalContentNum = progressionsTuple.totalNumber
         self.state = .hasData
       }
     }
@@ -145,9 +154,8 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
   private func addRelevantDetailsToContent() {
     
     data.forEach { model in
-      guard let dataManager = DataManager.current else { return }
+      guard let dataManager = DataManager.current, model.contentType != .episode else { return }
       var relationships: [ContentRelatable] = []
-      
       let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
       relationships.append(contentsOf: domains)
       
@@ -156,32 +164,11 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
   }
 }
 
-extension BookmarkContentsMC: ContentUpdatable {
+extension ProgressionsContentVM: ContentUpdatable {
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    guard let index = data.firstIndex(where: { $0.id == content.id } ) else {
-      if content.bookmarked {
-        // If the entry doesn't exist and it has been bookmarked, add it at the front (so that when it reloads, it doesn't look janky)
-        data.insert(content, at: 0)
-        
-        // Update the total number of bookmarked content locally, so that we properly present the loading view and keep things in sync
-        totalContentNum += 1
-      }
-      return
-    }
+    guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
-    // If the entry exists, and it's been un-bookmarked, remove it
-    if !content.bookmarked {
-      data.remove(at: index)
-      totalContentNum -= 1
-    }
-    
-    // If the entry exists, and it is still bookmarked, that means another update to it has happened, in which case, replace
-    // the entry at that index with the new content
-    else {
-      data[index] = content
-    }
-    
+    data[index] = content
     state = .hasData
   }
 }
-

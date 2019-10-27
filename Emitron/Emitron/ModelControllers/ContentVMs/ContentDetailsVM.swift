@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentDetailsMC: NSObject, ObservableObject, Identifiable {
+class ContentDetailsVM: NSObject, ObservableObject, Identifiable {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()

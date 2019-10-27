@@ -30,7 +30,7 @@ import SwiftUI
 
 struct FiltersView: View {
   
-  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
+  @EnvironmentObject var libraryContentsMC: LibraryContentsVM
   @EnvironmentObject var filters: Filters
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   

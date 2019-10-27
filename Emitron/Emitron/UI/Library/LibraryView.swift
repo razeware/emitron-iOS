@@ -40,7 +40,7 @@ private extension CGFloat {
 
 struct LibraryView: View {
 
-  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
+  @EnvironmentObject var libraryContentsMC: LibraryContentsVM
   var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false

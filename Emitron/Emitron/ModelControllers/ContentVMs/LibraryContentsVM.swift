@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
+class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
   var contentScreen: ContentScreen = .library
   
   // MARK: - Properties
@@ -116,7 +116,7 @@ class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
         self.isLoadingMore = false
         self.state = .failed
         Failure
-          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
+          .fetch(from: "LibraryContentsVM", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentsTuple):
         let currentContents = self.data
@@ -150,7 +150,7 @@ class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
+          .fetch(from: "LibraryContentsVM", reason: error.localizedDescription)
           .log(additionalParams: nil)
         self.data = []
       case .success(let contentsTuple):
@@ -162,7 +162,7 @@ class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
   }
 }
 
-extension LibraryContentsMC: ContentUpdatable {
+extension LibraryContentsVM: ContentUpdatable {
   // We should never add or remove content here, because it needs to reflect the current filterss
   func updateEntryIfItExists(for content: ContentDetailsModel) {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }

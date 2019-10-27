@@ -58,10 +58,10 @@ class DataManager: NSObject {
   var filters: Filters
 
   // Content holders
-  let inProgressContentMC: InProgressContentMC
-  let completedContentMC: CompletedContentMC
-  let bookmarkContentMC: BookmarkContentsMC
-  let libraryContentsMC: LibraryContentsMC
+  let inProgressContentMC: InProgressContentVM
+  let completedContentMC: CompletedContentVM
+  let bookmarkContentMC: BookmarkContentsVM
+  let libraryContentsMC: LibraryContentsVM
   
   // Services
   private(set) var progressionsMC: ProgressionsMC?
@@ -90,16 +90,16 @@ class DataManager: NSObject {
 
     self.filters = Filters()
 
-    self.libraryContentsMC = LibraryContentsMC(user: user,
+    self.libraryContentsMC = LibraryContentsVM(user: user,
                                                filters: self.filters)
 
-    self.inProgressContentMC = InProgressContentMC(user: user,
+    self.inProgressContentMC = InProgressContentVM(user: user,
                                                    completionStatus: .inProgress)
     
-    self.completedContentMC = CompletedContentMC(user: user,
+    self.completedContentMC = CompletedContentVM(user: user,
                                                  completionStatus: .completed)
     
-    self.bookmarkContentMC = BookmarkContentsMC(user: user)
+    self.bookmarkContentMC = BookmarkContentsVM(user: user)
     self.downloadsMC = DownloadsMC(user: user)
 
     super.init()

@@ -53,9 +53,9 @@ struct MyTutorialView: View {
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
   
-  @EnvironmentObject var bookmarkContentMC: BookmarkContentsMC
-  @EnvironmentObject var inProgressContentMC: InProgressContentMC
-  @EnvironmentObject var completedContentMC: CompletedContentMC
+  @EnvironmentObject var bookmarkContentMC: BookmarkContentsVM
+  @EnvironmentObject var inProgressContentMC: InProgressContentVM
+  @EnvironmentObject var completedContentMC: CompletedContentVM
   @EnvironmentObject var userMC: UserMC
 
   @State private var settingsPresented: Bool = false
