@@ -48,9 +48,6 @@ class UserMC: NSObject, ObservableObject {
   private let guardpost: Guardpost
   private(set) var user: UserModel? {
     didSet {
-      if let user = user {
-        print("Token in user: \(user.token)")
-      }
       self.client = RWAPI(authToken: self.user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)
     }
