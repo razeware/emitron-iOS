@@ -183,6 +183,6 @@ struct TextListItemView: View {
   }
   
   private func toggleCompleteness() {
-    print("Make me complete!!!")
+    // TODO: Toggle Complete
   }
 }

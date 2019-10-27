@@ -47,7 +47,6 @@ struct ContentListingView: View {
   }
 
   // These should be private
-  @State var isPresented = false
   @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
 
   var imageRatio: CGFloat = 283/375
@@ -151,40 +150,42 @@ struct ContentListingView: View {
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
 
       NavigationLink(destination:
-        VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
-                  user: self.user,
-                  onDisappear: {
-                    self.refreshContentDetails()
-        })
-
+        self.videoView(for: model)
       ) {
-
-        TextListItemView(contentSummary: model, buttonAction: { success in
-          if success {
-            self.save(for: model, isEpisodeOnly: true)
-          } else {
-            if self.showHudView {
-              self.showHudView.toggle()
-            }
-
-            self.hudOption = success ? .success : .error
-            self.showHudView = true
-          }
-        }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(user: Guardpost.current.currentUser!))
-
-          .onTapGesture {
-            self.isPresented = true
-        }
+        self.rowItem(for: model)
         .padding([.leading, .trailing], 20)
         .padding([.bottom], 20)
       }
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -32.0)
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
     }
     .listRowInsets(EdgeInsets())
     .listRowBackground(Color.backgroundColor)
   }
+  
+  private func rowItem(for model: ContentDetailsModel) -> some View {
+    TextListItemView(contentSummary: model, buttonAction: { success in
+      if success {
+        self.save(for: model, isEpisodeOnly: true)
+      } else {
+        if self.showHudView {
+          self.showHudView.toggle()
+        }
 
+        self.hudOption = success ? .success : .error
+        self.showHudView = true
+      }
+    }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(user: Guardpost.current.currentUser!))
+  }
+  
+  private func videoView(for model: ContentDetailsModel) -> some View {
+    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
+              user: self.user,
+              showingProSheet: self.user.canStream && model.professional) {
+                self.refreshContentDetails()
+    }
+  }
+  
   private var contentModelForPlayButton: ContentDetailsModel? {
     // If the content is an episode, rather than a collection, it will have a videoID associated with it,
     // so return the content itself

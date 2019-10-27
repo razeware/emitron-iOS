@@ -138,13 +138,12 @@ class VideoPlayerController: AVPlayerViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    entersFullScreenWhenPlaybackBegins = true
-
+    fetchPlaybackToken()
+  }
+  
+  private func fetchPlaybackToken() {
     videosMC.fetchBeginPlaybackToken { [weak self] (success, token)  in
-      guard let self = self else {
-        // TODO: Show failure message/view
-        return
-      }
+      guard let self = self else { return }
       if success {
         // Start playback from local, if not fetch from remote
         DispatchQueue.main.async {
@@ -158,7 +157,6 @@ class VideoPlayerController: AVPlayerViewController {
         }
       }
     }
-
   }
 
   private func playFromLocalIfPossible() {

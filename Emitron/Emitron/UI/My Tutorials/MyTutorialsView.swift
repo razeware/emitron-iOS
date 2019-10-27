@@ -86,10 +86,6 @@ struct MyTutorialView: View {
   }
 
   private var toggleControl: AnyView {
-    print("State is ... \(state.rawValue)")
-    print("reloadProgression is ... \(reloadProgression)")
-    print("reloadCompleted is ... \(reloadCompleted)")
-    print("reloadBookmarks is ... \(reloadBookmarks)")
     return AnyView(
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
