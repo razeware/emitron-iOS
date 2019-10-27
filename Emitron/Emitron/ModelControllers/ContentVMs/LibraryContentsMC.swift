@@ -43,7 +43,6 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
   }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let contentsService: ContentsService
   private lazy var bookmarksMC: BookmarksMC = DataManager.current!.bookmarksMC
   private(set) var data: [ContentDetailsModel] = []
@@ -72,10 +71,8 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
   }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost, filters: Filters) {
-    self.guardpost = guardpost
-    
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel, filters: Filters) {
+    self.client = RWAPI(authToken: user.token)
     self.contentsService = ContentsService(client: self.client)
     self.filters = Filters()
     self.currentParameters = filters.appliedParameters

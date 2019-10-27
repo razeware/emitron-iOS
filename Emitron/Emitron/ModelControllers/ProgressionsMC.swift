@@ -42,7 +42,6 @@ class ProgressionsMC: NSObject, ObservableObject {
   }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let progressionsService: ProgressionsService
   private(set) var data: [ProgressionModel] = []
   private(set) var numTutorials: Int = 0
@@ -58,10 +57,8 @@ class ProgressionsMC: NSObject, ObservableObject {
   }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel) {
+    self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
     
     super.init()

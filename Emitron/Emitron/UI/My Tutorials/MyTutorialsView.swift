@@ -115,27 +115,30 @@ struct MyTutorialView: View {
 
   private var contentView: AnyView? {
     switch state {
-    case .inProgress: return AnyView(inProgressContentsView)
-    case .completed: return AnyView(completedContentsView)
-    case .bookmarked: return AnyView(bookmarkedContentsView)
+    case .inProgress: return inProgressContentsView
+    case .completed: return completedContentsView
+    case .bookmarked: return bookmarkedContentsView
     }
   }
 
-  private var inProgressContentsView: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+  private var inProgressContentsView: AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: inProgressContentMC as Paginatable)
+                           contentsVM: inProgressContentMC as Paginatable))
   }
 
-  private var completedContentsView: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+  private var completedContentsView: AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: completedContentMC as Paginatable)
+                           contentsVM: completedContentMC as Paginatable))
   }
 
-  private var bookmarkedContentsView: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC,
+  private var bookmarkedContentsView: AnyView? {
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: bookmarkContentMC as Paginatable)
+                           contentsVM: bookmarkContentMC as Paginatable))
   }
 }

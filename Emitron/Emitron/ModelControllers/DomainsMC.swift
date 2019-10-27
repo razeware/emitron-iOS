@@ -51,11 +51,9 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
   private let persistentStore: PersistenceStore
   
   // MARK: - Initializers
-  init(guardpost: Guardpost,
-       user: UserModel,
+  init(user: UserModel,
        persistentStore: PersistenceStore) {
     self.user = user
-    //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
     self.service = DomainsService(client: self.client)
     self.persistentStore = persistentStore

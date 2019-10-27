@@ -50,7 +50,6 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
   }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let progressionsService: ProgressionsService
   private(set) var data: [ContentDetailsModel] = []
   private(set) var totalContentNum: Int = 0
@@ -67,10 +66,9 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
   }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost, completionStatus: CompletionStatus) {
-    self.guardpost = guardpost
+  init(user: UserModel, completionStatus: CompletionStatus) {
     self.completionStatus = completionStatus
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+    self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
     self.contentScreen = completionStatus == .inProgress ? ContentScreen.inProgress : .completed
     

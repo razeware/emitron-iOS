@@ -170,7 +170,7 @@ struct ContentListingView: View {
             self.hudOption = success ? .success : .error
             self.showHudView = true
           }
-        }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(guardpost: Guardpost.current))
+        }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(user: Guardpost.current.currentUser!))
 
           .onTapGesture {
             self.isPresented = true

@@ -23,6 +23,7 @@
 		8BFC74C123649FD2001979F1 /* BookmarkContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */; };
 		8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C22364A9BE001979F1 /* ContentScreen.swift */; };
 		8BFC74C52364D246001979F1 /* DownloadContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C42364D246001979F1 /* DownloadContentsMC.swift */; };
+		8BFC74C723650715001979F1 /* DocumentManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C623650715001979F1 /* DocumentManager.swift */; };
 		8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1C23411817003FF72F /* PermissionsService.swift */; };
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF202341187C003FF72F /* PermissionsModel.swift */; };
@@ -186,6 +187,7 @@
 		8BFC74C023649FD2001979F1 /* BookmarkContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkContentsMC.swift; sourceTree = "<group>"; };
 		8BFC74C22364A9BE001979F1 /* ContentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentScreen.swift; sourceTree = "<group>"; };
 		8BFC74C42364D246001979F1 /* DownloadContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadContentsMC.swift; sourceTree = "<group>"; };
+		8BFC74C623650715001979F1 /* DocumentManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DocumentManager.swift; sourceTree = "<group>"; };
 		8BFCEF1C23411817003FF72F /* PermissionsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsService.swift; sourceTree = "<group>"; };
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
@@ -430,6 +432,7 @@
 				95BAF69522EF5FB200D17323 /* Emitron.xcdatamodeld */,
 				95BAF69822EF610F00D17323 /* NSManagedObjects */,
 				B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */,
+				8BFC74C623650715001979F1 /* DocumentManager.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1105,6 +1108,7 @@
 				B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
 				8BFF36AA233C9AB7001B7420 /* AppState.swift in Sources */,
+				8BFC74C723650715001979F1 /* DocumentManager.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
 				95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */,
 				B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */,

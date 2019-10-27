@@ -46,7 +46,6 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
   }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let bookmarksService: BookmarksService
   private(set) var data: [ContentDetailsModel] = []
   private(set) var totalContentNum: Int = 0
@@ -60,9 +59,8 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
   }
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel) {
+    self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
@@ -160,10 +158,26 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
   }
   
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
+    // If the entry doesn't exist and it has been bookmarked, add it
+    guard let index = data.firstIndex(where: { $0.id == content.id } ) else {
+      if content.bookmarked {
+        data.append(content)
+      }
+      return
+    }
     
-    data[index] = content
-    //reload()
+    // If the entry exists, and it's been un-bookmarked, remove it
+    if !content.bookmarked {
+      data.remove(at: index)
+    }
+    
+    // If the entry exists, and it is still bookmarked, that means another update to it has happened, in which case, replace
+    // the entry at that index with the new content
+    else {
+      data[index] = content
+    }
+    
+    objectWillChange.send(())
   }
 }
 

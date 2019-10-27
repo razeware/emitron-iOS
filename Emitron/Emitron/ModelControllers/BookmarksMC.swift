@@ -35,13 +35,11 @@ class BookmarksMC: NSObject {
   
   // MARK: - Properties
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let bookmarksService: BookmarksService
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel) {
+    self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()

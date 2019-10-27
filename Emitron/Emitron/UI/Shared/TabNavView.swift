@@ -32,7 +32,6 @@ struct TabNavView: View {
 
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var libraryContentsMC: LibraryContentsMC
   @EnvironmentObject var userMC: UserMC
 
   var body: some View {

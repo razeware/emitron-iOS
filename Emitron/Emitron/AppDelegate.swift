@@ -61,8 +61,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     guard let guardpost = guardpost,
       let user = guardpost.currentUser  else { return true }
     
-    self.dataManager = DataManager(guardpost: guardpost,
-                                   user: user,
+    self.dataManager = DataManager(user: user,
                                    persistenceStore: persistentStore)
     
     return true

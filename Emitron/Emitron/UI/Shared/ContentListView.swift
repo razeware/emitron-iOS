@@ -141,15 +141,15 @@ struct ContentListView: View {
     }
   }
 
-  private var cardTableNavView: some View {
+  private var cardTableNavView: AnyView? {
     let guardpost = Guardpost.current
-    let user = guardpost.currentUser
+    guard let user = guardpost.currentUser else { return nil }
 
     return
-      ForEach(contentsVM.data, id: \.id) { partialContent in
+      AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
           CardView(model: partialContent)
             .padding([.leading], 10)
@@ -161,18 +161,19 @@ struct ContentListView: View {
       .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
+    )
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
-  private var cardsTableViewWithDelete: some View {
+  private var cardsTableViewWithDelete: AnyView? {
     let guardpost = Guardpost.current
-    let user = guardpost.currentUser
+    guard let user = guardpost.currentUser else { return nil }
 
     return
-      ForEach(contentsVM.data, id: \.id) { partialContent in
+      AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
           CardView(model: partialContent)
             .padding([.leading], 10)
@@ -185,6 +186,7 @@ struct ContentListView: View {
       .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
+    )
   }
   
   // ISSUE: To make the status bar the same color as the rest of thee backgrounds, we have to make all of the views into Lists

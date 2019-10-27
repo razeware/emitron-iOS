@@ -45,6 +45,7 @@ struct DownloadsView: View {
   var body: some View {
     ZStack(alignment: .center) {
       contentView
+      .background(Color.backgroundColor)
       
       if showActivityIndicator {
         ActivityIndicator()
@@ -55,6 +56,7 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
+    // The issue IS that downlaodsMC gets initialized BEFORE we delete the content... (probably)
     return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as Paginatable) { (action, content) in
       self.showActivityIndicator = true
 

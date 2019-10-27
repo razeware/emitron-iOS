@@ -33,37 +33,40 @@ class DataManager: NSObject {
 
   // MARK: - Properties
   static var current: DataManager? {
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-      let user = Guardpost.current.currentUser else { return nil }
 
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     guard let existingManager = appDelegate.dataManager else {
         // Create and assign new data manager to the AppDelegate
 
-      let dataManager = DataManager(guardpost: Guardpost.current,
-                                    user: user,
-                                    persistenceStore: PersistenceStore())
-      appDelegate.dataManager = dataManager
-      return dataManager
+      if let user = Guardpost.current.currentUser {
+        let dataManager = DataManager(user: user, persistenceStore: PersistenceStore())
+        appDelegate.dataManager = dataManager
+      } else {
+        appDelegate.dataManager = nil
+      }
+
+      return appDelegate.dataManager
     }
 
     return existingManager
   }
 
+  // Persisted informationo
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
+  var filters: Filters
 
-  // TODO: LibraryContentsMC shouldn't be here; reeconsider
-//  let libraryContentsMC: ContentsMC
+  // Content holders
   let inProgressContentMC: InProgressContentMC
   let completedContentMC: CompletedContentMC
   let bookmarkContentMC: BookmarkContentsMC
-//  let downloadedContentMC: DownloadsMC
-  
   let libraryContentsMC: LibraryContentsMC
+  
+  // Services
   let progressionsMC: ProgressionsMC
   let bookmarksMC: BookmarksMC
   let downloadsMC: DownloadsMC
-  var filters: Filters
   
   private var globalDataStore: [ContentDetailsModel] {
     return Array(Set(inProgressContentMC.data)
@@ -76,29 +79,30 @@ class DataManager: NSObject {
   private var categoriesSubsciber: AnyCancellable?
 
   // MARK: - Initializers
-  init(guardpost: Guardpost,
-       user: UserModel,
+  init(user: UserModel,
        persistenceStore: PersistenceStore) {
-
     
-    self.domainsMC = DomainsMC(guardpost: guardpost,
-                               user: user,
+    self.domainsMC = DomainsMC(user: user,
                                persistentStore: persistenceStore)
 
-    self.categoriesMC = CategoriesMC(guardpost: guardpost,
-                                     user: user,
+    self.categoriesMC = CategoriesMC(user: user,
                                      persistentStore: persistenceStore)
 
     self.filters = Filters()
 
-    self.libraryContentsMC = LibraryContentsMC(guardpost: guardpost, filters: self.filters)
+    self.libraryContentsMC = LibraryContentsMC(user: user,
+                                               filters: self.filters)
 
-    self.inProgressContentMC = InProgressContentMC(guardpost: guardpost, completionStatus: .inProgress)
-    self.completedContentMC = CompletedContentMC(guardpost: guardpost, completionStatus: .completed)
-    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
+    self.inProgressContentMC = InProgressContentMC(user: user,
+                                                   completionStatus: .inProgress)
+    
+    self.completedContentMC = CompletedContentMC(user: user,
+                                                 completionStatus: .completed)
+    
+    self.bookmarksMC = BookmarksMC(user: user)
     self.downloadsMC = DownloadsMC(user: user)
-    self.progressionsMC = ProgressionsMC(guardpost: guardpost)
-    self.bookmarkContentMC = BookmarkContentsMC(guardpost: guardpost)
+    self.progressionsMC = ProgressionsMC(user: user)
+    self.bookmarkContentMC = BookmarkContentsMC(user: user)
 
     super.init()
     createSubscribers()

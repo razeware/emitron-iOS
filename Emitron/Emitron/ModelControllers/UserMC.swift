@@ -125,18 +125,20 @@ class UserMC: NSObject, ObservableObject {
     guardpost.logout()
     user = nil
     removeDownloadedContentIfNecessary()
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    appDelegate.dataManager = nil
     objectWillChange.send(())
   }
   
   // If the user is nil, or if they don't have download permissions, delete all downloaded content
   private func removeDownloadedContentIfNecessary() {
     guard let user = user else {
-      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      DocumentManager.deleteAllDownloadedContent()
       return
     }
     
     if !user.canDownload {
-      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      DocumentManager.deleteAllDownloadedContent()
     }
   }
 }

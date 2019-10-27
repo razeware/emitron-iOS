@@ -178,6 +178,24 @@ class DownloadsMC: NSObject, ObservableObject, Paginatable {
       completion?(false)
     }
   }
+  
+  func deleteAllDownloadedContent() {
+    
+    guard let root = localRoot else { return }
+
+    do {
+      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
+
+      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        try FileManager.default.removeItem(at: localDoc)
+      }
+
+    } catch let error {
+      Failure
+      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
+    }
+  }
 
   func deleteCollectionContents(withParent content: ContentDetailsModel, showCallback: Bool, completion: (() -> Void)? = nil) {
 
@@ -434,26 +452,6 @@ class DownloadsMC: NSObject, ObservableObject, Paginatable {
         self.state = .failed
         self.callback?(false)
       }
-    }
-  }
-  
-  func deleteAllDownloadedContent() {
-    
-    guard let root = localRoot else { return }
-
-    do {
-      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
-
-      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
-        try FileManager.default.removeItem(at: localDoc)
-      }
-
-      self.downloadData = []
-
-    } catch let error {
-      Failure
-      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
-      .log(additionalParams: nil)
     }
   }
 

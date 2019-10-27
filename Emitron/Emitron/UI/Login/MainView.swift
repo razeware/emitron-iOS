@@ -44,29 +44,24 @@ struct MainView: View {
       return loginView
     }
     
-    let guardpost = Guardpost.current
-    let filters = dataManager.filters
-    let libraryContentsMC = LibraryContentsMC(guardpost: guardpost, filters: filters)
-    
     switch userMC.state {
     case .failed:
       return loginView
     case .initial, .loading:
       userMC.fetchPermissions()
-      return tabBarView(with: libraryContentsMC)
+      return tabBarView()
     case .hasData:
       if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {
-        return tabBarView(with: libraryContentsMC)
+        return tabBarView()
       } else {
         return logoutView
       }
     }
   }
   
-  private func tabBarView(with libraryCoontentsMC: LibraryContentsMC) -> AnyView {
+  private func tabBarView() -> AnyView {
     return AnyView(
       TabNavView()
-        .environmentObject(libraryCoontentsMC)
         .environmentObject(AppState())
         .environmentObject(userMC)
     )
