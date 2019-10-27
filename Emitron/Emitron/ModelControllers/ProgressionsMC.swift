@@ -34,106 +34,18 @@ import CoreData
 class ProgressionsMC: NSObject, ObservableObject {
   
   // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
   
   private let client: RWAPI
   private let progressionsService: ProgressionsService
-  private(set) var data: [ProgressionModel] = []
-  private(set) var numTutorials: Int = 0
-  
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-  
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
+  private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(user: UserModel) {
+  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
     self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
+    self.dataManager = dataManager
     
     super.init()
-
-    loadMoreContents()
-  }
-  
-  func loadMoreContents() {
-    
-    if case(.loading) = state {
-      return
-    }
-    
-    state = .loading
-    currentPage += 1
-    
-    let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = defaultParameters
-    allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
-      return
-    }
-    
-    progressionsService.progressions(parameters: allParams) { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        self.currentPage = -1
-        Failure
-          .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let progressionsTuple):
-        // When filtering, do we just re-do the request, or append?
-        let currentContents = self.data
-        self.data = currentContents + progressionsTuple.progressions
-        self.numTutorials = progressionsTuple.totalNumber
-        self.state = .hasData
-      }
-    }
-  }
-  
-  func reloadContents() {
-    
-    if case(.loading) = state {
-      return
-    }
-    
-    state = .loading
-    
-    // Reset current page to 1
-    currentPage = startingPage
-
-    progressionsService.progressions(parameters: defaultParameters) { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: "ProressionsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let progressionsTuple):
-        self.data = progressionsTuple.progressions
-        self.numTutorials = progressionsTuple.totalNumber
-        self.state = .hasData
-      }
-    }
   }
 }
 

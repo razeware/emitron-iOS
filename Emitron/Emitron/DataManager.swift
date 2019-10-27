@@ -64,8 +64,8 @@ class DataManager: NSObject {
   let libraryContentsMC: LibraryContentsMC
   
   // Services
-  let progressionsMC: ProgressionsMC
-  let bookmarksMC: BookmarksMC
+  private(set) var progressionsMC: ProgressionsMC?
+  private(set) var bookmarksMC: BookmarksMC?
   let downloadsMC: DownloadsMC
   
   private var globalDataStore: [ContentDetailsModel] {
@@ -99,14 +99,16 @@ class DataManager: NSObject {
     self.completedContentMC = CompletedContentMC(user: user,
                                                  completionStatus: .completed)
     
-    self.bookmarksMC = BookmarksMC(user: user)
-    self.downloadsMC = DownloadsMC(user: user)
-    self.progressionsMC = ProgressionsMC(user: user)
     self.bookmarkContentMC = BookmarkContentsMC(user: user)
+    self.downloadsMC = DownloadsMC(user: user)
 
     super.init()
     createSubscribers()
     loadInitial()
+    
+    // These two need the dataManager to function, so we're initializing them after we've created it
+    bookmarksMC = BookmarksMC(user: user, dataManager: self)
+    progressionsMC = ProgressionsMC(user: user, dataManager: self)
   }
   
   func disseminateUpdates(for content: ContentDetailsModel) {
