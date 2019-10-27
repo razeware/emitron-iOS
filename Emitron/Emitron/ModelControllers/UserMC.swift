@@ -30,8 +30,7 @@ import AuthenticationServices
 import Foundation
 import SwiftUI
 import Combine
-
-//let successfulSignInNotification = Notification.Name("SuccessfulSignInNotification")
+import Network
 
 class UserMC: NSObject, ObservableObject {
   
@@ -54,6 +53,7 @@ class UserMC: NSObject, ObservableObject {
     }
   }
   private(set) var permissionsService: PermissionsService
+  private let connectionMonitor = NWPathMonitor()
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
@@ -61,6 +61,9 @@ class UserMC: NSObject, ObservableObject {
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
+    
+    let queue = DispatchQueue(label: "Monitor")
+    connectionMonitor.start(queue: queue)
   }
   
   // MARK: - Internal
@@ -102,6 +105,10 @@ class UserMC: NSObject, ObservableObject {
   }
   
   func fetchPermissions() {
+    // If there's no connection, use the persisted permissions
+    // The re-fetch/re-store will be done the next time they open the app
+    guard connectionMonitor.currentPath.status == .satisfied else { return }
+    
     permissionsService.permissions { result in
       switch result {
       case .failure(let error):
@@ -112,6 +119,11 @@ class UserMC: NSObject, ObservableObject {
         self.state = .failed
       case .success(let permissions):
         self.user?.permissions = permissions
+        
+        // Update user to keychain
+        if let user = self.user {
+          PersistenceStore.current.persistUserToKeychain(user: user)
+        }
         
         // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
         self.removeDownloadedContentIfNecessary()
