@@ -36,11 +36,13 @@ class BookmarksMC: NSObject {
   // MARK: - Properties
   private let client: RWAPI
   private let bookmarksService: BookmarksService
+  private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(user: UserModel) {
+  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
     self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
+    self.dataManager = dataManager
     
     super.init()
   }
@@ -57,7 +59,8 @@ class BookmarksMC: NSObject {
         case .success(let bookmark):
           content.bookmark = bookmark
           content.bookmarked = true
-          self.disseminateUpdates(for: content)
+          guard let dataManager = self.dataManager else { return }
+          dataManager.disseminateUpdates(for: content)
         }
       }
     } else {
@@ -72,18 +75,11 @@ class BookmarksMC: NSObject {
         case .success(_):
           content.bookmark = nil
           content.bookmarked = false
-          self.disseminateUpdates(for: content)
+          guard let dataManager = self.dataManager else { return }
+          dataManager.disseminateUpdates(for: content)
         }
       }
     }
-  }
-  
-  private func disseminateUpdates(for content: ContentDetailsModel) {
-    guard let dataManager = DataManager.current else { return }
-    dataManager.bookmarkContentMC.updateEntryIfItExists(for: content)
-    dataManager.libraryContentsMC.updateEntryIfItExists(for: content)
-    dataManager.inProgressContentMC.updateEntryIfItExists(for: content)
-    dataManager.completedContentMC.updateEntryIfItExists(for: content)
   }
 }
 

@@ -175,6 +175,6 @@ extension ProgressionsContentMC: ContentUpdatable {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
     data[index] = content
-    //reload()
+    objectWillChange.send(())
   }
 }

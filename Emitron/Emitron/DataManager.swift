@@ -108,6 +108,13 @@ class DataManager: NSObject {
     createSubscribers()
     loadInitial()
   }
+  
+  func disseminateUpdates(for content: ContentDetailsModel) {
+    bookmarkContentMC.updateEntryIfItExists(for: content)
+    libraryContentsMC.updateEntryIfItExists(for: content)
+    inProgressContentMC.updateEntryIfItExists(for: content)
+    completedContentMC.updateEntryIfItExists(for: content)
+  }
 
   private func createSubscribers() {
     domainsSubscriber = domainsMC.objectWillChange
