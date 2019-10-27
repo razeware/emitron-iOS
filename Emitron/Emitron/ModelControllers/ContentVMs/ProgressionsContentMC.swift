@@ -73,8 +73,6 @@ class ProgressionsContentMC: NSObject, ObservableObject, ContentPaginatable {
     self.contentScreen = completionStatus == .inProgress ? ContentScreen.inProgress : .completed
     
     super.init()
-
-    reload()
   }
   
   func loadMore() {

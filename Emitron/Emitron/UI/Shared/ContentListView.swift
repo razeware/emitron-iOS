@@ -112,28 +112,26 @@ struct ContentListView: View {
   private var contentView: AnyView {
     
     switch contentsVM.state {
-    case .initial,
-         .loading where contentsVM.data.isEmpty:
+    case .initial:
+      contentsVM.reload()
       return AnyView(loadingView)
-    case .hasData where contentsVM.data.isEmpty:
-      return AnyView(emptyView)
-    case .hasData,
-         .loading where !contentsVM.data.isEmpty:
-      
+    case .loading where contentsVM.data.isEmpty:
+      return AnyView(loadingView)
+    case .loading where !contentsVM.data.isEmpty:
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
-      if contentsVM.state == .loading {
-        if contentsVM.isLoadingMore {
-          return AnyView(listView)
-        } else {
-          return AnyView(
-            listView
-            .overlay(ActivityIndicator())
-          )
-        }
-      } else {
+      if contentsVM.isLoadingMore {
         return AnyView(listView)
+      } else {
+        return AnyView(
+          listView
+          .overlay(ActivityIndicator())
+        )
       }
+    case .hasData where contentsVM.data.isEmpty:
+      return AnyView(emptyView)
+    case .hasData:
+      return AnyView(listView)
     case .failed:
       return AnyView(failedView)
     default:

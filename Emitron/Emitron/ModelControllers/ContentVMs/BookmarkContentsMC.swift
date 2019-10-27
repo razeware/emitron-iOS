@@ -64,8 +64,6 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
     self.bookmarksService = BookmarksService(client: self.client)
     
     super.init()
-
-    reload()
   }
   
   func loadMore() {

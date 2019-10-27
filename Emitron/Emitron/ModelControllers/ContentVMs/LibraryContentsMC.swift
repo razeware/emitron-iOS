@@ -78,8 +78,6 @@ class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
     self.currentAppliedFilters = filters.applied
     
     super.init()
-
-    reload()
   }
   
   func updateFilters(newFilters: Filters) {
