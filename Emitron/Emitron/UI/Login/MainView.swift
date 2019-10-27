@@ -39,8 +39,7 @@ struct MainView: View {
   }
   
   private var contentView: AnyView {
-    guard let user = userMC.user,
-      let dataManager = DataManager.current else {
+    guard let user = userMC.user else {
       return loginView
     }
     
@@ -60,10 +59,34 @@ struct MainView: View {
   }
   
   private func tabBarView() -> AnyView {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in MainView") }
+    
+    let libraryContentsMC = dataManager.libraryContentsMC
+    let downloadsMC = dataManager.downloadsMC
+    let filters = dataManager.filters
+
+    let libraryView = LibraryView(downloadsMC: downloadsMC)
+      .environmentObject(libraryContentsMC)
+      .environmentObject(filters)
+    
+    let domainsMC = dataManager.domainsMC
+    let bookmarkContentsMC = dataManager.bookmarkContentMC
+    let inProgressContentMC = dataManager.inProgressContentMC
+    let completedContentMC = dataManager.completedContentMC
+    
+    let myTutorialsView = MyTutorialView(state: .inProgress)
+      .environmentObject(domainsMC)
+      .environmentObject(inProgressContentMC)
+      .environmentObject(completedContentMC)
+      .environmentObject(bookmarkContentsMC)
+    
+    let downloadsView = DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
+    
     return AnyView(
-      TabNavView()
+      TabNavView(libraryView: AnyView(libraryView),
+                 myTutorialsView: AnyView(myTutorialsView),
+                 downloadsView: AnyView(downloadsView))
         .environmentObject(AppState())
-        .environmentObject(userMC)
     )
   }
   

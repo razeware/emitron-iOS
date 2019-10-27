@@ -473,7 +473,8 @@ struct ContentListingView: View {
   private func refreshContentDetails() {
     self.contentDetailsMC.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
-      print("Refreshing content...")
+      guard let dataManager = DataManager.current else { return }
+      dataManager.disseminateUpdates(for: model)
     }
   }
 

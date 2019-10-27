@@ -159,10 +159,6 @@ class ProgressionsContentMC: NSObject, ObservableObject, ContentPaginatable {
       let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
       relationships.append(contentsOf: domains)
       
-//      if let bookmark = dataManager.bookmarksMC.data.first(where: { $0.content?.id == model.id }) {
-//        relationships.append(bookmark)
-//      }
-      
       model.addRelationships(for: relationships)
     }
   }
@@ -173,6 +169,6 @@ extension ProgressionsContentMC: ContentUpdatable {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     
     data[index] = content
-    objectWillChange.send(())
+    state = .hasData
   }
 }

@@ -47,7 +47,9 @@ enum MyTutorialsState: String {
 }
 
 struct MyTutorialView: View {
-
+  
+  // Initialization
+  @State var state: MyTutorialsState
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
   
@@ -57,8 +59,8 @@ struct MyTutorialView: View {
   @EnvironmentObject var userMC: UserMC
 
   @State private var settingsPresented: Bool = false
-  @State private var state: MyTutorialsState = .inProgress
   @State private var reloadProgression: Bool = true
+  @State private var reloadCompleted: Bool = true
   @State private var reloadBookmarks: Bool = true
 
   var body: some View {
@@ -78,29 +80,33 @@ struct MyTutorialView: View {
       }
     .onDisappear {
       self.reloadProgression = true
+      self.reloadCompleted = true
       self.reloadBookmarks = true
     }
   }
 
   private var toggleControl: AnyView {
-    AnyView(
+    print("State is ... \(state.rawValue)")
+    print("reloadProgression is ... \(reloadProgression)")
+    print("reloadCompleted is ... \(reloadCompleted)")
+    print("reloadBookmarks is ... \(reloadBookmarks)")
+    return AnyView(
       VStack {
-        // If they press on the same toggle again, reload that page
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab
-          if self.reloadProgression || self.state == .inProgress {
+          if self.reloadProgression {
             self.inProgressContentMC.reload()
             self.reloadProgression = false
           }
           self.state = .inProgress
         }, completedClosure: {
-          if self.reloadProgression || self.state == .completed {
+          if self.reloadCompleted {
             self.completedContentMC.reload()
-            self.reloadProgression = false
+            self.reloadCompleted = false
           }
           self.state = .completed
         }, bookmarkedClosure: {
-          if self.reloadBookmarks || self.state == .bookmarked {
+          if self.reloadBookmarks {
             self.bookmarkContentMC.reload()
             self.reloadBookmarks = false
           }

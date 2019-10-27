@@ -158,10 +158,13 @@ class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
 
 extension BookmarkContentsMC: ContentUpdatable {
   func updateEntryIfItExists(for content: ContentDetailsModel) {
-    // If the entry doesn't exist and it has been bookmarked, add it
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else {
       if content.bookmarked {
-        data.append(content)
+        // If the entry doesn't exist and it has been bookmarked, add it at the front (so that when it reloads, it doesn't look janky)
+        data.insert(content, at: 0)
+        
+        // Update the total number of bookmarked content locally, so that we properly present the loading view and keep things in sync
+        totalContentNum += 1
       }
       return
     }
@@ -169,6 +172,7 @@ extension BookmarkContentsMC: ContentUpdatable {
     // If the entry exists, and it's been un-bookmarked, remove it
     if !content.bookmarked {
       data.remove(at: index)
+      totalContentNum -= 1
     }
     
     // If the entry exists, and it is still bookmarked, that means another update to it has happened, in which case, replace
@@ -177,7 +181,7 @@ extension BookmarkContentsMC: ContentUpdatable {
       data[index] = content
     }
     
-    objectWillChange.send(())
+    state = .hasData
   }
 }
 

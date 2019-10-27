@@ -169,9 +169,6 @@ extension LibraryContentsMC: ContentUpdatable {
     
     data[index] = content
     // Trigger re-render without pulling down data
-    objectWillChange.send(())
-    
-    // Trigger re-render WITH pulling down data
-    //reload()
+    state = .hasData
   }
 }

@@ -100,7 +100,8 @@ struct ContentListView: View {
           ActivityIndicator()
             .onAppear {
               // Load more from the appropriate MC conforming to updatable protocol
-              self.contentsVM.loadMore()
+              //self.contentsVM.
+              //self.contentsVM.loadMore()
           }
         }
       )
