@@ -286,6 +286,7 @@ struct ContentListView: View {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
       let content = self.contentsVM.data[index]
+      
       self.callback?(.delete, content)
     }
   }

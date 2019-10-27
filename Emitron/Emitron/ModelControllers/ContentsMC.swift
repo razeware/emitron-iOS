@@ -28,6 +28,29 @@
 
 import Foundation
 
-protocol Updatable {
-  func updateEntry()
+class ContentsMC: NSObject {
+  private let client: RWAPI
+  private let contentsService: ContentsService
+  
+  // MARK: - Initializers
+  init(user: UserModel) {
+    self.client = RWAPI(authToken: user.token)
+    self.contentsService = ContentsService(client: self.client)
+    
+    super.init()
+  }
+  
+  func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
+    contentsService.contentDetails(for: id) { result in
+      switch result {
+      case .failure(let error):
+        completion?(nil)
+        Failure
+          .fetch(from: "ContentsMC", reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let contentDetails):
+        completion?(contentDetails)
+      }
+    }
+  }
 }

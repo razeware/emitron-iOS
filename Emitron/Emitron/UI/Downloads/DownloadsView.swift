@@ -37,10 +37,6 @@ struct DownloadsView: View {
   @State var showActivityIndicator = false
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
-  @EnvironmentObject var emitron: AppState
-  var libraryContentsMC: LibraryContentsMC {
-    return DataManager.current!.libraryContentsMC
-  }
 
   var body: some View {
     ZStack(alignment: .center) {
@@ -56,21 +52,24 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    // The issue IS that downlaodsMC gets initialized BEFORE we delete the content... (probably)
+    
     return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as Paginatable) { (action, content) in
       self.showActivityIndicator = true
 
       // need to get groups & child contents for collection
       if content.isInCollection {
+        // DELETING
         // if an episode, don't need group & child contents
         if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
           self.handleAction(with: action, content: content)
         } else {
-          print("Not sure why this is even here...")
-//          self.contentsMC.getContentSummary(with: content.id) { details in
-//            guard let details = details else { return }
-//            self.handleAction(with: action, content: details)
-//          }
+          // Handles deleting
+          guard let user = Guardpost.current.currentUser else { return }
+          let contentsMC = ContentsMC(user: user)
+          contentsMC.getContentDetails(with: content.id) { contentDetails in
+            guard let contentDetails = contentDetails else { return }
+            self.handleAction(with: action, content: contentDetails)
+          }
         }
       } else {
         self.handleAction(with: action, content: content)

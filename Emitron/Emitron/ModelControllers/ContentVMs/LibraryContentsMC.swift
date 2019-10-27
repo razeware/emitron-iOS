@@ -44,7 +44,6 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
   
   private let client: RWAPI
   private let contentsService: ContentsService
-  private lazy var bookmarksMC: BookmarksMC = DataManager.current!.bookmarksMC
   private(set) var data: [ContentDetailsModel] = []
   private(set) var totalContentNum: Int = 0
   private(set) var isLoadingMore: Bool = false // A flag to let use know whether we're reloading from scratch, ie the first 20 results, or doing a paginated call where we append content, so that we can render the appropriate UI
@@ -164,23 +163,7 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
     }
   }
   
-  func getContentSummary(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
-    state = .loading
-    contentsService.contentDetails(for: id) { result in
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        completion?(nil)
-        Failure
-          .fetch(from: "LibraryContentsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let contentDetails):
-        self.state = .hasData
-        completion?(contentDetails)
-      }
-    }
-  }
-  
+  // We should never add or remove content here, because it needs to reflect the current filterss
   func updateEntryIfItExists(for content: ContentDetailsModel) {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     

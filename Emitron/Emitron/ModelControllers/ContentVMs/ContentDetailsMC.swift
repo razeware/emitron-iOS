@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
+class ContentDetailsMC: NSObject, ObservableObject, Identifiable {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -43,16 +43,15 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private let bookmarksMC: BookmarksMC
   private(set) var data: ContentDetailsModel
   private var shouldLocallyBookmark: Bool?
-  
-  private var bookmarksSubscriber: AnyCancellable?
+  private var bookmarksMC: BookmarksMC?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
        partialContentDetail: ContentDetailsModel,
-       bookmarksMC: BookmarksMC) {
+       bookmarksMC: BookmarksMC? = DataManager.current?.bookmarksMC) {
+    
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
@@ -101,6 +100,7 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   }
   
   func toggleBookmark() {
+    guard let bookmarksMC = bookmarksMC else { return }
     // If we're loading, we send the request
     bookmarksMC.toggleBookmark(for: data)
     // Locally updating the bookmark for UI purposes, but once the request succeeds, it will be dissemenated across all the relevant VMs
