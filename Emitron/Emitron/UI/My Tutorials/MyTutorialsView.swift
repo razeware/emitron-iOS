@@ -85,21 +85,22 @@ struct MyTutorialView: View {
   private var toggleControl: AnyView {
     AnyView(
       VStack {
+        // If they press on the same toggle again, reload that page
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab
-          if self.reloadProgression {
+          if self.reloadProgression || self.state == .inProgress {
             self.inProgressContentMC.reload()
             self.reloadProgression = false
           }
           self.state = .inProgress
         }, completedClosure: {
-          if self.reloadProgression {
+          if self.reloadProgression || self.state == .completed {
             self.completedContentMC.reload()
             self.reloadProgression = false
           }
           self.state = .completed
         }, bookmarkedClosure: {
-          if self.reloadBookmarks {
+          if self.reloadBookmarks || self.state == .bookmarked {
             self.bookmarkContentMC.reload()
             self.reloadBookmarks = false
           }

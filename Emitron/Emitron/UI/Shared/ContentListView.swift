@@ -273,8 +273,7 @@ struct ContentListView: View {
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      print("I should be reloading the content...")
-      //self.contentsMC.reloadContents()
+      self.contentsVM.reload()
     }
 
     return AnyView(button)
@@ -288,10 +287,4 @@ struct ContentListView: View {
       self.callback?(.delete, content)
     }
   }
-
-  mutating func updateContents(with newContents: [ContentDetailsModel]) {
-    //self.contentsVM.data = newContents
-    print("Need to figure out how to update contents here...")
-  }
-
 }
