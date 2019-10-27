@@ -66,7 +66,7 @@ struct ContentListingView: View {
       List {
         Section {
 
-          if self.contentSummaryMC.data.professional && self.canStreamPro {
+          if self.contentSummaryMC.data.professional && !self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
