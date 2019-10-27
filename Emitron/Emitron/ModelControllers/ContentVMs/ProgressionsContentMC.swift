@@ -36,7 +36,7 @@ import CoreData
 class InProgressContentMC: ProgressionsContentMC { }
 class CompletedContentMC: ProgressionsContentMC { }
 
-class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
+class ProgressionsContentMC: NSObject, ObservableObject, ContentPaginatable {
   var contentScreen: ContentScreen
   
   var isLoadingMore: Bool = false
@@ -168,7 +168,9 @@ class ProgressionsContentMC: NSObject, ObservableObject, Paginatable {
       model.addRelationships(for: relationships)
     }
   }
-  
+}
+
+extension ProgressionsContentMC: ContentUpdatable {
   func updateEntryIfItExists(for content: ContentDetailsModel) {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }
     

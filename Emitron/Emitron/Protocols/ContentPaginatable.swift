@@ -28,7 +28,7 @@
 
 import Foundation
 
-protocol Paginatable {
+protocol ContentPaginatable {
   var contentScreen: ContentScreen { get }
   var currentPage: Int { get }
   var startingPage: Int { get }
@@ -40,10 +40,9 @@ protocol Paginatable {
   
   func loadMore()
   func reload()
-  func updateEntryIfItExists(for content: ContentDetailsModel)
 }
 
-extension Paginatable {
+extension ContentPaginatable {
   var startingPage: Int {
     return 1
   }

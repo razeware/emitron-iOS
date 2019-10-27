@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
+class BookmarkContentsMC: NSObject, ObservableObject, ContentPaginatable {
   
   var contentScreen: ContentScreen = .bookmarked
   
@@ -156,7 +156,9 @@ class BookmarkContentsMC: NSObject, ObservableObject, Paginatable {
       model.addRelationships(for: relationships)
     }
   }
-  
+}
+
+extension BookmarkContentsMC: ContentUpdatable {
   func updateEntryIfItExists(for content: ContentDetailsModel) {
     // If the entry doesn't exist and it has been bookmarked, add it
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else {

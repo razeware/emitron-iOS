@@ -171,7 +171,7 @@ struct LibraryView: View {
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsMC as Paginatable) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsMC as ContentPaginatable) { (action, content) in
       switch action {
         case .delete:
           self.delete(for: content)

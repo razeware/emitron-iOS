@@ -46,7 +46,7 @@ enum DownloadsAction {
   case save, delete, cancel
 }
 
-class DownloadsMC: NSObject, ObservableObject, Paginatable {
+class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   
   var currentPage: Int = 0 // NOT IN USE
   var isLoadingMore: Bool = false // NOT IN USE

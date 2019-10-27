@@ -53,7 +53,7 @@ struct DownloadsView: View {
 
   private var contentView: some View {
     
-    return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as Paginatable) { (action, content) in
+    return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as ContentPaginatable) { (action, content) in
       self.showActivityIndicator = true
 
       // need to get groups & child contents for collection

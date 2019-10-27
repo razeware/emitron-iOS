@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
+class LibraryContentsMC: NSObject, ObservableObject, ContentPaginatable {
   var contentScreen: ContentScreen = .library
   
   // MARK: - Properties
@@ -162,7 +162,9 @@ class LibraryContentsMC: NSObject, ObservableObject, Paginatable {
       }
     }
   }
-  
+}
+
+extension LibraryContentsMC: ContentUpdatable {
   // We should never add or remove content here, because it needs to reflect the current filterss
   func updateEntryIfItExists(for content: ContentDetailsModel) {
     guard let index = data.firstIndex(where: { $0.id == content.id } ) else { return }

@@ -125,20 +125,20 @@ struct MyTutorialView: View {
     guard let dataManager = DataManager.current else { return nil }
     return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: inProgressContentMC as Paginatable))
+                           contentsVM: inProgressContentMC as ContentPaginatable))
   }
 
   private var completedContentsView: AnyView? {
     guard let dataManager = DataManager.current else { return nil }
     return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: completedContentMC as Paginatable))
+                           contentsVM: completedContentMC as ContentPaginatable))
   }
 
   private var bookmarkedContentsView: AnyView? {
     guard let dataManager = DataManager.current else { return nil }
     return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: bookmarkContentMC as Paginatable))
+                           contentsVM: bookmarkContentMC as ContentPaginatable))
   }
 }
