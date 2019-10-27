@@ -36,7 +36,7 @@ struct ContentListingView: View {
   @State var showAlert: Bool = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
-  @ObservedObject var contentDetailsMC: ContentDetailsMC
+  @ObservedObject var contentDetailsVM: ContentDetailsVM
   @ObservedObject var downloadsMC: DownloadsMC
   var content: ContentDetailsModel
   var user: UserModel
@@ -55,7 +55,7 @@ struct ContentListingView: View {
   init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
-    self.contentDetailsMC = ContentDetailsMC(guardpost: Guardpost.current, partialContentDetail: content)
+    self.contentDetailsVM = ContentDetailsVM(guardpost: Guardpost.current, partialContentDetail: content)
     self.downloadsMC = downloadsMC
   }
 
@@ -65,7 +65,7 @@ struct ContentListingView: View {
       List {
         Section {
 
-          if self.contentDetailsMC.data.professional && !self.canStreamPro {
+          if self.contentDetailsVM.data.professional && !self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
@@ -86,7 +86,7 @@ struct ContentListingView: View {
             }
 
             self.hudOption = hudOption
-          }, downloadsMC: self.downloadsMC, contentDetailsMC: self.contentDetailsMC)
+          }, downloadsMC: self.downloadsMC, contentDetailsVM: self.contentDetailsVM)
             .padding([.leading, .trailing], 20)
             .padding([.bottom], 37)
         }
@@ -133,11 +133,11 @@ struct ContentListingView: View {
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
 
     // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
-    if contentDetailsMC.data.videoID != nil {
-      return [contentDetailsMC.data]
+    if contentDetailsVM.data.videoID != nil {
+      return [contentDetailsVM.data]
     }
 
-    let allContents = contentDetailsMC.data.groups.flatMap { $0.childContents }
+    let allContents = contentDetailsVM.data.groups.flatMap { $0.childContents }
 
     guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
       else { return [] }
@@ -188,24 +188,24 @@ struct ContentListingView: View {
   private var contentModelForPlayButton: ContentDetailsModel? {
     // If the content is an episode, rather than a collection, it will have a videoID associated with it,
     // so return the content itself
-    if contentDetailsMC.data.contentType != .collection {
-      return contentDetailsMC.data
+    if contentDetailsVM.data.contentType != .collection {
+      return contentDetailsVM.data
     }
 
-    guard let progression = contentDetailsMC.data.progression else {
-      return contentDetailsMC.data.groups.first?.childContents.first ?? nil
+    guard let progression = contentDetailsVM.data.progression else {
+      return contentDetailsVM.data.groups.first?.childContents.first ?? nil
     }
 
     // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
     if progression.finished || progression.percentComplete == 0.0 {
-      return contentDetailsMC.data.groups.first?.childContents.first ?? nil
+      return contentDetailsVM.data.groups.first?.childContents.first ?? nil
     }
 
       // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
       // This means that we return true for when the first progression is nil, or when the target > the progress
 
     else {
-      let allContentModels = contentDetailsMC.data.groups.flatMap { $0.childContents }
+      let allContentModels = contentDetailsVM.data.groups.flatMap { $0.childContents }
       let firstUnplayedConsecutive = allContentModels.first { model -> Bool in
         guard let progression = model.progression else { return true }
         return progression.target > progression.progress && !progression.finished
@@ -277,9 +277,9 @@ struct ContentListingView: View {
   }
 
   var coursesSection: AnyView? {
-    let groups = contentDetailsMC.data.groups
+    let groups = contentDetailsVM.data.groups
 
-    guard contentDetailsMC.data.contentType == .collection else {
+    guard contentDetailsVM.data.contentType == .collection else {
       return nil
     }
 
@@ -414,19 +414,19 @@ struct ContentListingView: View {
   // side effects, but can't think of a cleaner way, other than callbacks...
   private var courseDetailsSection: AnyView {
 
-    switch contentDetailsMC.state {
+    switch contentDetailsVM.state {
     case .failed:
       return AnyView(reloadView)
     case .hasData:
       return AnyView(coursesSection)
     case .loading:
-      if !contentDetailsMC.data.needsDetails {
+      if !contentDetailsVM.data.needsDetails {
         return AnyView(coursesSection)
       } else {
         return AnyView(loadingView)
       }
     case .initial:
-      if contentDetailsMC.data.needsDetails {
+      if contentDetailsVM.data.needsDetails {
         refreshContentDetails()
       }
       return AnyView(loadingView)
@@ -445,19 +445,19 @@ struct ContentListingView: View {
 
   private var reloadView: AnyView? {
     AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.contentDetailsMC.getContentSummary()
+      self.contentDetailsVM.getContentSummary()
     })
   }
 
   private func loadImage() {
 
     // first check if image data has already been saved
-    if let data = contentDetailsMC.data.cardArtworkData,
+    if let data = contentDetailsVM.data.cardArtworkData,
        let uiImage = UIImage(data: data) {
         self.uiImage = uiImage
       
       // otherwise use the imageURL
-    } else if let imageURL = contentDetailsMC.data.cardArtworkURL {
+    } else if let imageURL = contentDetailsVM.data.cardArtworkURL {
       DispatchQueue.global().async {
         let data = try? Data(contentsOf: imageURL)
         DispatchQueue.main.async {
@@ -471,7 +471,7 @@ struct ContentListingView: View {
   }
 
   private func refreshContentDetails() {
-    self.contentDetailsMC.getContentSummary { model in
+    self.contentDetailsVM.getContentSummary { model in
       // Update the content in the global contentsMC, to keep all the data in sync
       guard let dataManager = DataManager.current else { return }
       dataManager.disseminateUpdates(for: model)

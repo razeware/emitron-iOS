@@ -86,7 +86,7 @@ class ContentDetailsVM: NSObject, ObservableObject, Identifiable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails

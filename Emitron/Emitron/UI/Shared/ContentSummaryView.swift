@@ -44,7 +44,7 @@ struct ContentSummaryView: View {
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, HudOption) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
-  @ObservedObject var contentDetailsMC: ContentDetailsMC
+  @ObservedObject var contentDetailsVM: ContentDetailsVM
   private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
 
   var body: some View {
@@ -56,20 +56,20 @@ struct ContentSummaryView: View {
   private var contentView: some View {
     VStack(alignment: .leading) {
       HStack {
-        Text(contentDetailsMC.data.technologyTripleString.uppercased())
+        Text(contentDetailsVM.data.technologyTripleString.uppercased())
           .font(.uiUppercase)
           .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
 
-        if contentDetailsMC.data.professional {
+        if contentDetailsVM.data.professional {
           ProTag()
         }
       }
       .padding([.top], 20)
 
-      Text(contentDetailsMC.data.name)
+      Text(contentDetailsVM.data.name)
         .font(.uiTitle1)
         .lineLimit(nil)
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
@@ -82,13 +82,13 @@ struct ContentSummaryView: View {
         downloadButton
         bookmarkButton
 
-        if contentDetailsMC.data.progression?.finished ?? false {
+        if contentDetailsVM.data.progression?.finished ?? false {
           CompletedTag()
         }
       })
       .padding([.top], 15)
 
-      Text(contentDetailsMC.data.desc)
+      Text(contentDetailsVM.data.desc)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
@@ -99,7 +99,7 @@ struct ContentSummaryView: View {
         .lineLimit(nil)
         .lineSpacing(3)
 
-      Text("By \(contentDetailsMC.data.contributorString)")
+      Text("By \(contentDetailsVM.data.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.contentText)
         .lineLimit(2)
@@ -120,7 +120,7 @@ struct ContentSummaryView: View {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
 
-    let imageName = contentDetailsMC.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    let imageName = contentDetailsVM.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
 
     return AnyView(
       Image(imageName)
@@ -143,10 +143,10 @@ struct ContentSummaryView: View {
     switch downloadsMC.state {
     case .loading:
 
-      if contentDetailsMC.data.isInCollection {
+      if contentDetailsVM.data.isInCollection {
 
         guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.parentContent?.id == contentDetailsMC.data.id else {
+          downloadedContent.parentContent?.id == contentDetailsVM.data.id else {
             return AnyView(image)
         }
 
@@ -154,7 +154,7 @@ struct ContentSummaryView: View {
 
       } else {
         // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentDetailsMC.data.id }),
+        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentDetailsVM.data.id }),
           downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
             return AnyView(image)
         }
@@ -169,26 +169,26 @@ struct ContentSummaryView: View {
 
   private var downloadImageName: String {
 
-    if contentDetailsMC.data.isInCollection {
+    if contentDetailsVM.data.isInCollection {
       return downloadsMC.data.contains { downloadModel in
-        return downloadModel.id == contentDetailsMC.data.id
+        return downloadModel.id == contentDetailsVM.data.id
         } ? DownloadImageName.inActive : DownloadImageName.active
     } else {
-      return downloadsMC.data.contains(where: { $0.id == contentDetailsMC.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
+      return downloadsMC.data.contains(where: { $0.id == contentDetailsVM.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
 
   private func download() {
     if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
-      callback?(contentDetailsMC.data, .notOnWifi)
+      callback?(contentDetailsVM.data, .notOnWifi)
     } else {
       let success = downloadImageName != DownloadImageName.inActive
       let hudOption: HudOption = success ? .success : .error
-      callback?(contentDetailsMC.data, hudOption)
+      callback?(contentDetailsVM.data, hudOption)
     }
   }
 
   private func bookmark() {
-    contentDetailsMC.toggleBookmark()
+    contentDetailsVM.toggleBookmark()
   }
 }

@@ -54,7 +54,7 @@ class BookmarksMC: NSObject {
         switch result {
         case .failure(let error):
           Failure
-          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM_makeBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(let bookmark):
           content.bookmark = bookmark
@@ -70,7 +70,7 @@ class BookmarksMC: NSObject {
         switch result {
         case .failure(let error):
           Failure
-          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(_):
           content.bookmark = nil
