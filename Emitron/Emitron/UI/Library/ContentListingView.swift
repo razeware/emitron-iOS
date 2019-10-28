@@ -181,7 +181,7 @@ struct ContentListingView: View {
   private func videoView(for model: ContentDetailsModel) -> some View {
     VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
               user: self.user,
-              showingProSheet: self.user.canStream && model.professional) {
+              showingProSheet: !self.user.canStreamPro && model.professional) {
                 self.refreshContentDetails()
     }
   }
