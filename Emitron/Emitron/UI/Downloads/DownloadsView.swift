@@ -37,18 +37,11 @@ struct DownloadsView: View {
   @State var showActivityIndicator = false
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadsMC: DownloadsMC
-  @EnvironmentObject var emitron: AppState
-  var contentsMC: ContentsMC {
-    return DataManager.current!.contentsMC
-  }
-
-  var contents: [ContentDetailsModel] {
-    return getContents()
-  }
 
   var body: some View {
     ZStack(alignment: .center) {
       contentView
+      .background(Color.backgroundColor)
       
       if showActivityIndicator {
         ActivityIndicator()
@@ -59,18 +52,23 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    return ContentListView(downloadsMC: downloadsMC, contentScreen: .downloads, contents: contents, headerView: nil, dataState: downloadsMC.state, totalContentNum: downloadsMC.numTutorials) { (action, content) in
+    
+    return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as ContentPaginatable) { (action, content) in
       self.showActivityIndicator = true
-      
+
       // need to get groups & child contents for collection
       if content.isInCollection {
+        // DELETING
         // if an episode, don't need group & child contents
-        if !self.downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
+        if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
           self.handleAction(with: action, content: content)
         } else {
-          self.contentsMC.getContentSummary(with: content.id) { details in
-            guard let details = details else { return }
-            self.handleAction(with: action, content: details)
+          // Handles deleting
+          guard let user = Guardpost.current.currentUser else { return }
+          let contentsMC = ContentsMC(user: user)
+          contentsMC.getContentDetails(with: content.id) { contentDetails in
+            guard let contentDetails = contentDetails else { return }
+            self.handleAction(with: action, content: contentDetails)
           }
         }
       } else {
@@ -79,29 +77,13 @@ struct DownloadsView: View {
     }
   }
 
-  private func getContents() -> [ContentDetailsModel] {
-    var contents = [ContentDetailsModel]()
-    let downloadedContents = downloadsMC.data.map { $0.content }
-
-    downloadedContents.forEach { download in
-      if download.contentType != .episode {
-        contents.append(download)
-        // only show episodes in downloads view if the parent hasn't also been downloaded
-      } else if !downloadedContents.contains(where: { $0.id == download.parentContentId }) {
-          contents.append(download)
-      }
-    }
-
-    return !contents.isEmpty ? contents : []
-  }
-
   private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
 
     switch action {
     case .delete:
       if content.isInCollection {
         // if an episode, only delete the specific episode
-        if !downloadsMC.data.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
+        if !downloadsMC.downloadData.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
           downloadsMC.deleteDownload(with: content)
           self.showActivityIndicator = false
         } else {

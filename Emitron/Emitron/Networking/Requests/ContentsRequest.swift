@@ -42,7 +42,11 @@ struct ContentsRequest: Request {
   func handle(response: Data) throws -> (contents: [ContentDetailsModel], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let contents = doc.data.compactMap { ContentDetailsModel($0, metadata: nil) }
+    let contents = doc.data.compactMap { resource -> ContentDetailsModel? in
+      guard let model = ContentDetailsModel(resource, metadata: resource.meta) else { return nil }
+      model.addRelationships(for: resource)
+      return model
+    }
     return (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }
@@ -66,7 +70,12 @@ struct ContentDetailsRequest: Request {
   func handle(response: Data) throws -> ContentDetailsModel {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let content = doc.data.compactMap { ContentDetailsModel($0, metadata: nil) }
+    let content = doc.data.compactMap { resource -> ContentDetailsModel? in
+      guard let model = ContentDetailsModel(resource, metadata: resource.meta) else { return nil }
+      model.addRelationships(for: resource)
+      return model
+    }
+    
     guard let contentSummary = content.first,
       content.count == 1 else {
         throw RWAPIError.processingError(nil)

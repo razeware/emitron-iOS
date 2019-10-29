@@ -28,12 +28,12 @@
 
 import Foundation
 
-class GroupModel {
+class GroupModel: NSObject {
 
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var name: String = ""
-  private(set) var description: String = ""
+  private(set) var desc: String = ""
   private(set) var ordinal: Int = 0
   private(set) var childContents: [ContentDetailsModel] = []
 
@@ -44,7 +44,7 @@ class GroupModel {
 
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""
-    self.description = jsonResource["description"] as? String ?? ""
+    self.desc = jsonResource["description"] as? String ?? ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0
     self.childContents = childContents
   }

@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ProgressionsRequest: Request {
-  typealias Response = [ProgressionModel]
+  typealias Response = (progressions: [ProgressionModel], totalNumber: Int)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,10 +39,11 @@ struct ProgressionsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [ProgressionModel] {
+  func handle(response: Data) throws -> (progressions: [ProgressionModel], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    return (progressions: progressions, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }
 

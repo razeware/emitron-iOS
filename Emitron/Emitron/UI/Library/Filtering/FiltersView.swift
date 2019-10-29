@@ -30,7 +30,7 @@ import SwiftUI
 
 struct FiltersView: View {
   
-  @EnvironmentObject var contentsMC: ContentsMC
+  @EnvironmentObject var libraryContentsVM: LibraryContentsVM
   @EnvironmentObject var filters: Filters
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   
@@ -53,7 +53,7 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
-          if Set(self.contentsMC.currentParameters) != Set(self.filters.appliedParameters) {
+          if Set(self.libraryContentsVM.currentParameters) != Set(self.filters.appliedParameters) {
             self.revertBackToPreviousFilters()
           }
           self.presentationMode.wrappedValue.dismiss()
@@ -73,7 +73,7 @@ struct FiltersView: View {
         
         MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
           self.filters.removeAll()
-          self.contentsMC.updateFilters(newFilters: self.filters)
+          self.libraryContentsVM.updateFilters(newFilters: self.filters)
           self.presentationMode.wrappedValue.dismiss()
         }
         .padding([.trailing], 10)
@@ -108,11 +108,11 @@ struct FiltersView: View {
   
   private func applyOrCloseButton() -> MainButtonView {
     
-    let equalSets = Set(contentsMC.currentParameters) == Set(filters.appliedParameters)
+    let equalSets = Set(libraryContentsVM.currentParameters) == Set(filters.appliedParameters)
     let title = equalSets ? "Close" : "Apply"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
-      self.contentsMC.updateFilters(newFilters: self.filters)
+      self.libraryContentsVM.updateFilters(newFilters: self.filters)
       self.presentationMode.wrappedValue.dismiss()
     }
     
@@ -129,7 +129,7 @@ struct FiltersView: View {
     }
     
     // Then, turn all the currentAppliedFilters things on
-    self.contentsMC.currentAppliedFilters.forEach { filter in
+    self.libraryContentsVM.currentAppliedFilters.forEach { filter in
       filter.isOn = true
       self.filters.all.update(with: filter)
     }

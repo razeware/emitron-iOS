@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
+class ContentDetailsVM: ObservableObject, Identifiable {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -43,23 +43,21 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private let bookmarksMC: BookmarksMC
   private(set) var data: ContentDetailsModel
-  
-  private var bookmarksSubscriber: AnyCancellable?
+  private var shouldLocallyBookmark: Bool?
+  private var bookmarksMC: BookmarksMC?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
        partialContentDetail: ContentDetailsModel,
-       bookmarksMC: BookmarksMC) {
+       bookmarksMC: BookmarksMC? = DataManager.current?.bookmarksMC) {
+    
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
     self.data = partialContentDetail
     self.data.isDownloaded = partialContentDetail.isDownloaded
     self.bookmarksMC = bookmarksMC
-
-    super.init()
     
     // If the partial content detail is actually the full details model; don't reload
     // If childContents > 0 AND there are groupd on the content, it's been fully loadeed
@@ -86,23 +84,28 @@ class ContentSummaryMC: NSObject, ObservableObject, Identifiable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "ContentDetailsMC", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
         self.data = contentDetails
+        if let shouldLocallyChangeBookmark = self.shouldLocallyBookmark {
+          self.data.bookmarked = shouldLocallyChangeBookmark
+        }
         self.state = .hasData
         completion?(contentDetails)
       }
     }
   }
   
-  func toggleBookmark(for model: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
-    bookmarksMC.toggleBookmark(for: model) { [weak self] newModel in
-      guard let self = self else { return }
-      
-      self.data = newModel
-      self.objectWillChange.send(())
-      completion(newModel)
-    }
+  func toggleBookmark() {
+    guard let bookmarksMC = bookmarksMC else { return }
+		bookmarksMC.toggleBookmark(for: data)
+		
+    // If we're loading, we send the request
+    // Locally updating the bookmark for UI purposes, but once the request succeeds, it will be dissemenated across all the relevant VMs
+    data.bookmarked = !data.bookmarked
+    shouldLocallyBookmark = data.bookmarked
+		
+		state = .hasData
   }
 }

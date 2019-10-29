@@ -52,38 +52,56 @@ struct VideoView: View {
   
   let contentDetails: [ContentDetailsModel]
   let user: UserModel
+  @State var showingProSheet = false
   var onDisappear: (() -> Void)?
   @State private var settingsPresented: Bool = false
   
   var body: some View {
-    VideoPlayerControllerRepresentable(with: contentDetails, user: user)
+    contentView
       .onDisappear {
         // When the VideoView disappears, we trigger a reload of the content details, so that the
         // progressions are shown correctly.
         self.onDisappear?()
+      }
+      .navigationBarItems(trailing:
+        Group {
+          Button(action: {
+            self.settingsPresented = true
+          }) {
+            Image("settings")
+              .foregroundColor(.iconButton)
+          }
+      })
+        .sheet(isPresented: self.$settingsPresented) {
+          SettingsView(showLogoutButton: false)
+      }
+      .alert(isPresented: $showingProSheet) {
+        notProAlert
+      }
+  }
+  
+  private var contentView: AnyView {
+    if !user.canStreamPro && contentDetails.first?.professional ?? true {
+      return AnyView(Color.backgroundColor)
+    } else {
+      return videoView
     }
-    .navigationBarItems(trailing:
-      Group {
-        Button(action: {
-          self.settingsPresented = true
-        }) {
-          Image("settings")
-            .foregroundColor(.iconButton)
-        }
-    })
-      .sheet(isPresented: self.$settingsPresented) {
-        SettingsView(showLogoutButton: false)
-    }
+  }
+  
+  private var videoView: AnyView {
+    AnyView(VideoPlayerControllerRepresentable(with: contentDetails, user: user))
+  }
+  
+  private var notProAlert: Alert {
+    return Alert(
+      title: Text("PRO Course!"),
+      message: Text("You're not a PRO subscriber."),
+      dismissButton:
+        .default(Text("OK"), action: {
+          self.showingProSheet.toggle()
+        })
+    )
   }
 }
 
-#if DEBUG
-struct VideoView_Previews: PreviewProvider {
 
-  static var previews: some View {
-    let user = Guardpost.current.currentUser!
-    let contentDetail = ContentDetailsModel.test
-    return VideoView(contentDetails: [contentDetail], user: user, onDisappear: nil)
-  }
-}
-#endif

@@ -39,36 +39,54 @@ struct MainView: View {
   }
   
   private var contentView: AnyView {
-    guard let user = userMC.user,
-      let dataManager = DataManager.current else {
+    guard let user = userMC.user else {
       return loginView
     }
-    
-    let guardpost = Guardpost.current
-    let filters = dataManager.filters
-    let contentsMC = ContentsMC(guardpost: guardpost, filters: filters)
     
     switch userMC.state {
     case .failed:
       return loginView
     case .initial, .loading:
       userMC.fetchPermissions()
-      return tabBarView(with: contentsMC)
+      return tabBarView()
     case .hasData:
       if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {
-        return tabBarView(with: contentsMC)
+        return tabBarView()
       } else {
         return logoutView
       }
     }
   }
   
-  private func tabBarView(with contentsMC: ContentsMC) -> AnyView {
+  private func tabBarView() -> AnyView {
+    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in MainView") }
+    
+    let libraryContentsVM = dataManager.libraryContentsVM
+    let downloadsMC = dataManager.downloadsMC
+    let filters = dataManager.filters
+
+    let libraryView = LibraryView(downloadsMC: downloadsMC)
+      .environmentObject(libraryContentsVM)
+      .environmentObject(filters)
+    
+    let domainsMC = dataManager.domainsMC
+    let bookmarkContentsMC = dataManager.bookmarkContentMC
+    let inProgressContentVM = dataManager.inProgressContentVM
+    let completedContentVM = dataManager.completedContentVM
+    
+    let myTutorialsView = MyTutorialView(state: .inProgress)
+      .environmentObject(domainsMC)
+      .environmentObject(inProgressContentVM)
+      .environmentObject(completedContentVM)
+      .environmentObject(bookmarkContentsMC)
+    
+    let downloadsView = DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
+    
     return AnyView(
-      TabNavView()
-        .environmentObject(contentsMC)
+      TabNavView(libraryView: AnyView(libraryView),
+                 myTutorialsView: AnyView(myTutorialsView),
+                 downloadsView: AnyView(downloadsView))
         .environmentObject(AppState())
-        .environmentObject(userMC)
     )
   }
   

@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class CategoriesMC: NSObject, ObservableObject, Refreshable {
+class CategoriesMC: ObservableObject, Refreshable {
   
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoriesMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
@@ -48,19 +48,15 @@ class CategoriesMC: NSObject, ObservableObject, Refreshable {
   private let user: UserModel
   private let service: CategoriesService
   private(set) var data: [CategoryModel] = []
-  private let persistentStore: PersistenceStore
+  private let persistenceStore: PersistenceStore
   
   // MARK: - Initializers
-  init(guardpost: Guardpost,
-       user: UserModel,
-       persistentStore: PersistenceStore) {
+  init(user: UserModel,
+       persistenceStore: PersistenceStore) {
     self.user = user
-    //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
     self.service = CategoriesService(client: self.client)
-    self.persistentStore = persistentStore
-    
-    super.init()
+    self.persistenceStore = persistenceStore    
   }
   
   func populate() {
@@ -82,7 +78,7 @@ private extension CategoriesMC {
     
     do {
       let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
-      let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
+      let result = try persistenceStore.coreDataStack.viewContext.fetch(fetchRequest)
       let categoryModels = result.map(CategoryModel.init)
       data = categoryModels
       state = .hasData
@@ -96,7 +92,7 @@ private extension CategoriesMC {
   }
   
   func saveToPersistentStore() {
-    let viewContext = persistentStore.coreDataStack.viewContext    
+    let viewContext = persistenceStore.coreDataStack.viewContext    
     for entry in data {
       let category = Category(context: viewContext)
 

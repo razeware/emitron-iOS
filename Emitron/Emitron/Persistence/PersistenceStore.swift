@@ -34,7 +34,7 @@ import KeychainSwift
 final class PersistenceStore {
   
   static var current: PersistenceStore {
-    return (UIApplication.shared.delegate as! AppDelegate).persistentStore
+    return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
   }
   
   let coreDataStack = CoreDataStack()
@@ -106,6 +106,11 @@ extension UserDefaults {
     set(encodedFilterArray, forKey: UserDefaultsKey.filters.rawValue)
   }
   
+  func deleteAllFilters() {
+    UserDefaults.standard.removeObject(forKey: UserDefaultsKey.filters.rawValue)
+    UserDefaults.standard.removeObject(forKey: UserDefaultsKey.sort.rawValue)
+  }
+  
   var sort: SortFilter {
     guard let sortFilterData = UserDefaults.standard.object(forKey: UserDefaultsKey.sort.rawValue) as? Data else {
       return SortFilter.newest
@@ -151,10 +156,6 @@ extension UserDefaults {
   @objc dynamic var closedCaptionOn: Bool {
     return UserDefaults.standard.object(forKey: UserDefaultsKey.closedCaptionOn.rawValue) as? Bool ?? false
   }
-}
-
-extension PersistenceStore {
-  
 }
 
 // MARK: Keychain

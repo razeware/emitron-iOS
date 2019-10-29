@@ -33,60 +33,89 @@ class DataManager: NSObject {
 
   // MARK: - Properties
   static var current: DataManager? {
-    guard let appDelegate = UIApplication.shared.delegate as? AppDelegate,
-      let user = Guardpost.current.currentUser else { return nil }
 
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    
     guard let existingManager = appDelegate.dataManager else {
         // Create and assign new data manager to the AppDelegate
 
-      let dataManager = DataManager(guardpost: Guardpost.current,
-                                    user: user,
-                                    persistenceStore: PersistenceStore())
-      appDelegate.dataManager = dataManager
-      return dataManager
+      if let user = Guardpost.current.currentUser {
+				let dataManager = DataManager(user: user, persistenceStore: appDelegate.persistenceStore)
+        appDelegate.dataManager = dataManager
+      } else {
+        appDelegate.dataManager = nil
+      }
+
+      return appDelegate.dataManager
     }
 
     return existingManager
   }
 
+  // Persisted informationo
   let domainsMC: DomainsMC
   let categoriesMC: CategoriesMC
-
-  // TODO: ContentsMC shouldn't be here; reeconsider
-  let contentsMC: ContentsMC
-  let progressionsMC: ProgressionsMC
-  let bookmarksMC: BookmarksMC
-  let downloadsMC: DownloadsMC
   var filters: Filters
+
+  // Content holders
+  let inProgressContentVM: InProgressContentVM
+  let completedContentVM: CompletedContentVM
+  let bookmarkContentMC: BookmarkContentsVM
+  let libraryContentsVM: LibraryContentsVM
+  
+  // Services
+  private(set) var progressionsMC: ProgressionsMC?
+  private(set) var bookmarksMC: BookmarksMC?
+  let downloadsMC: DownloadsMC
+  
+  private var globalDataStore: [ContentDetailsModel] {
+    return Array(Set(inProgressContentVM.data)
+      .union(Set(completedContentVM.data))
+      .union(Set(bookmarkContentMC.data))
+      .union(Set(libraryContentsVM.data)))
+  }
 
   private var domainsSubscriber: AnyCancellable?
   private var categoriesSubsciber: AnyCancellable?
 
   // MARK: - Initializers
-  init(guardpost: Guardpost,
-       user: UserModel,
+  init(user: UserModel,
        persistenceStore: PersistenceStore) {
-
     
-    self.domainsMC = DomainsMC(guardpost: guardpost,
-                               user: user,
-                               persistentStore: persistenceStore)
+    self.domainsMC = DomainsMC(user: user,
+                               persistenceStore: persistenceStore)
 
-    self.categoriesMC = CategoriesMC(guardpost: guardpost,
-                                     user: user,
-                                     persistentStore: persistenceStore)
+    self.categoriesMC = CategoriesMC(user: user,
+                                     persistenceStore: persistenceStore)
 
     self.filters = Filters()
 
-    self.contentsMC = ContentsMC(guardpost: guardpost, filters: self.filters)
+    self.libraryContentsVM = LibraryContentsVM(user: user,
+                                               filters: self.filters)
 
-    self.progressionsMC = ProgressionsMC(guardpost: guardpost)
-    self.bookmarksMC = BookmarksMC(guardpost: guardpost)
+    self.inProgressContentVM = InProgressContentVM(user: user,
+                                                   completionStatus: .inProgress)
+    
+    self.completedContentVM = CompletedContentVM(user: user,
+                                                 completionStatus: .completed)
+    
+    self.bookmarkContentMC = BookmarkContentsVM(user: user)
     self.downloadsMC = DownloadsMC(user: user)
 
     super.init()
     createSubscribers()
     loadInitial()
+    
+    // These two need the dataManager to function, so we're initializing them after we've created it
+    bookmarksMC = BookmarksMC(user: user, dataManager: self)
+    progressionsMC = ProgressionsMC(user: user, dataManager: self)
+  }
+  
+  func disseminateUpdates(for content: ContentDetailsModel) {
+    bookmarkContentMC.updateEntryIfItExists(for: content)
+    libraryContentsVM.updateEntryIfItExists(for: content)
+    inProgressContentVM.updateEntryIfItExists(for: content)
+    completedContentVM.updateEntryIfItExists(for: content)
   }
 
   private func createSubscribers() {

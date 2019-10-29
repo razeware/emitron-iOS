@@ -46,7 +46,16 @@ enum DownloadsAction {
   case save, delete, cancel
 }
 
-class DownloadsMC: NSObject, ObservableObject {
+// Conforming to NSObject so that we can conform to URLSessionDownloadDelegate
+class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
+  
+  var currentPage: Int = 0 // NOT IN USE
+  var isLoadingMore: Bool = false // NOT IN USE
+  
+  func loadMore() { } // NOT IN USE
+  func reload() { } // NOT IN USE
+  // TODO: Felicity?
+  func updateEntryIfItExists(for content: ContentDetailsModel) { }
 
   // MARK: - Public Properties
   @Published var collectionProgress: CGFloat = 1.0
@@ -79,10 +88,7 @@ class DownloadsMC: NSObject, ObservableObject {
   private var cancelDownload = false
   private let user: UserModel
   private let videosMC: VideosMC
-  private var contentsMC: ContentsMC? {
-    guard let dataManager = DataManager.current else { return nil }
-    return dataManager.contentsMC
-  }
+  
   private(set) var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -91,25 +97,31 @@ class DownloadsMC: NSObject, ObservableObject {
     }
   }
 
-  private(set) var data: [DownloadModel] = []
-  private(set) var numTutorials: Int = 0
-
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+  let contentScreen: ContentScreen = .downloads
+  
+  // ISSUE: Probably don't re-compute this all the time...
+  var data: [ContentDetailsModel] {
+    let downloadedContents = downloadData.map { $0.content }.filter { model -> Bool in
+      let isNotEpisode = model.contentType != .episode
+      // Only allow episodes in ContentDetailData if the parent hasn't also been downloaded
+      let isEpisodeWithoutParent = !downloadData.contains(where: { $0.content.id == model.parentContentId } )
+      return isNotEpisode || isEpisodeWithoutParent
+    }    
+    return downloadedContents
   }
+  
+  var totalContentNum: Int {
+    return data.count
+  }
+  
+  private(set) var downloadData: [DownloadModel] = []
 
   // MARK: - Initializers
   init(user: UserModel) {
     self.user = user
     self.videosMC = VideosMC(user: self.user)
-    super.init()
-
+		super.init()
+		
     loadDownloads()
   }
 
@@ -119,9 +131,9 @@ class DownloadsMC: NSObject, ObservableObject {
   func deleteDownload(with content: ContentDetailsModel, showCallback: Bool = true, completion: ((Bool) -> Void)? = nil) {
 
     let contentId: Int
-    if let selectedDownload = data.first(where: { $0.content.id == content.id }) {
+    if let selectedDownload = downloadData.first(where: { $0.content.id == content.id }) {
       contentId = selectedDownload.content.id
-    } else if let parent = data.first(where: { $0.content.parentContent?.id == content.parentContent?.id }) {
+    } else if let parent = downloadData.first(where: { $0.content.parentContent?.id == content.parentContent?.id }) {
       contentId = parent.content.id
     } else {
       completion?(false)
@@ -136,11 +148,11 @@ class DownloadsMC: NSObject, ObservableObject {
     }
 
     guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
-          let index = data.firstIndex(where: { $0.content.id == contentId }) else { return }
+          let index = downloadData.firstIndex(where: { $0.content.id == contentId }) else { return }
 
     // If content is not yet saved in files, only need to remove it from data
     guard FileManager.default.fileExists(atPath: fileURL.path) else {
-      self.data.remove(at: index)
+      self.downloadData.remove(at: index)
       self.state = .hasData
       return
     }
@@ -149,7 +161,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
     do {
       try FileManager.default.removeItem(at: fileURL)
-      self.data.remove(at: index)
+      self.downloadData.remove(at: index)
       self.state = .hasData
       if showCallback {
         self.callback?(true)
@@ -165,6 +177,24 @@ class DownloadsMC: NSObject, ObservableObject {
       }
 
       completion?(false)
+    }
+  }
+  
+  func deleteAllDownloadedContent() {
+    
+    guard let root = localRoot else { return }
+
+    do {
+      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
+
+      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        try FileManager.default.removeItem(at: localDoc)
+      }
+
+    } catch let error {
+      Failure
+      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
     }
   }
 
@@ -184,7 +214,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
         let fileName = "\(child.id).\(videoId).\(String.appExtension)"
         guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
-          let index = data.firstIndex(where: { $0.content.id == child.id }) else {
+          let index = downloadData.firstIndex(where: { $0.content.id == child.id }) else {
             completion?()
             return
         }
@@ -193,7 +223,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
         do {
           try FileManager.default.removeItem(at: fileURL)
-          self.data.remove(at: index)
+          self.downloadData.remove(at: index)
           self.state = .hasData
 
         } catch let error as NSError {
@@ -207,10 +237,10 @@ class DownloadsMC: NSObject, ObservableObject {
   }
 
   private func deleteParent(with content: ContentDetailsModel, completion: (() -> Void)?) {
-    if let parent = self.data.first(where: { $0.content.id == content.id }) {
+    if let parent = self.downloadData.first(where: { $0.content.id == content.id }) {
       let fileName = "\(parent.content.id).\(String.appExtension)"
       guard let fileURL = localRoot?.appendingPathComponent(fileName, isDirectory: true),
-        let index = data.firstIndex(where: { $0.content.id == parent.content.id }) else {
+        let index = downloadData.firstIndex(where: { $0.content.id == parent.content.id }) else {
             completion?()
             return
         }
@@ -219,7 +249,7 @@ class DownloadsMC: NSObject, ObservableObject {
 
       do {
         try FileManager.default.removeItem(at: fileURL)
-        self.data.remove(at: index)
+        self.downloadData.remove(at: index)
         self.state = .hasData
         completion?()
 
@@ -334,13 +364,13 @@ class DownloadsMC: NSObject, ObservableObject {
   func cancelDownload(with content: ContentDetailsModel, isEpisodeOnly: Bool) {
     cancelDownload = true
 
-    data.forEach { download in
+    downloadData.forEach { download in
       if download.content.parentContent?.id == content.parentContent?.id {
         download.content.shouldCancel = true
       }
     }
 
-    data.forEach { download in
+    downloadData.forEach { download in
       if download.content.shouldCancel {
         deleteDownload(with: download.content, showCallback: false, completion: nil)
       }
@@ -390,13 +420,13 @@ class DownloadsMC: NSObject, ObservableObject {
   private func handleSavedCompletion(of content: ContentDetailsModel) {
     guard content.shouldCancel else { return }
 
-    data.forEach { download in
+    downloadData.forEach { download in
       if download.content.shouldCancel {
         self.deleteDownload(with: download.content, showCallback: false, completion: nil)
       }
     }
 
-    if !self.data.contains(where: { $0.content.shouldCancel }) {
+    if !self.downloadData.contains(where: { $0.content.shouldCancel }) {
       self.cancelDownload = false
       self.state = .hasData
     }
@@ -423,26 +453,6 @@ class DownloadsMC: NSObject, ObservableObject {
         self.state = .failed
         self.callback?(false)
       }
-    }
-  }
-  
-  func deleteAllDownloadedContent() {
-    
-    guard let root = localRoot else { return }
-
-    do {
-      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
-
-      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
-        try FileManager.default.removeItem(at: localDoc)
-      }
-
-      self.data = []
-
-    } catch let error {
-      Failure
-      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
-      .log(additionalParams: nil)
     }
   }
 
@@ -500,9 +510,9 @@ class DownloadsMC: NSObject, ObservableObject {
   private func createDownloadModel(with attachmentModel: AttachmentModel?, content: ContentDetailsModel, isDownloaded: Bool, localPath: URL) {
     let downloadModel = DownloadModel(attachmentModel: attachmentModel, content: content, isDownloaded: isDownloaded, localPath: localPath)
 
-    if !data.contains(where: { $0.content.id == content.id }) && !cancelDownload {
+    if !downloadData.contains(where: { $0.content.id == content.id }) && !cancelDownload {
       self.downloadedModel = downloadModel
-      data.append(downloadModel)
+      downloadData.append(downloadModel)
     }
 
     self.state = .loading
@@ -511,9 +521,9 @@ class DownloadsMC: NSObject, ObservableObject {
   private func updateModel(with id: Int,
                            progress: CGFloat) {
 
-    if let downloadedModel = downloadedModel, let index = data.firstIndex(where: { $0.content.id == id }) {
+    if let downloadedModel = downloadedModel, let index = downloadData.firstIndex(where: { $0.content.id == id }) {
       downloadedModel.downloadProgress = progress
-      data[index] = downloadedModel
+      downloadData[index] = downloadedModel
       self.state = .loading
     }
   }

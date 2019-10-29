@@ -128,23 +128,21 @@ class VideoPlayerController: AVPlayerViewController {
 
     }
 
-    if let contentsMC = DataManager.current?.contentsMC,
+    if let libraryContentsVM = DataManager.current?.libraryContentsVM,
       let current = currentContent,
-      let firstIndex = contentsMC.data.firstIndex(where: { $0.id == current.id } ) {
-        DataManager.current?.contentsMC.updateEntry(at: firstIndex, with: current)
+      let firstIndex = libraryContentsVM.data.firstIndex(where: { $0.id == current.id } ) {
     }
   }
 
   override func viewDidLoad() {
     super.viewDidLoad()
 
-    entersFullScreenWhenPlaybackBegins = true
-
+    fetchPlaybackToken()
+  }
+  
+  private func fetchPlaybackToken() {
     videosMC.fetchBeginPlaybackToken { [weak self] (success, token)  in
-      guard let self = self else {
-        // TODO: Show failure message/view
-        return
-      }
+      guard let self = self else { return }
       if success {
         // Start playback from local, if not fetch from remote
         DispatchQueue.main.async {
@@ -153,13 +151,11 @@ class VideoPlayerController: AVPlayerViewController {
 
       } else {
         // TODO: Show failure message/view
-        
         DispatchQueue.main.async {
           self.playFromLocalIfPossible()
         }
       }
     }
-
   }
 
   private func playFromLocalIfPossible() {
@@ -167,7 +163,7 @@ class VideoPlayerController: AVPlayerViewController {
     guard let firstContent = currentContent else { return }
 
     if let downloadsMC = DataManager.current?.downloadsMC,
-      let downloadModel = downloadsMC.data.first(where: { $0.content.videoID == firstContent.videoID }) {
+      let downloadModel = downloadsMC.downloadData.first(where: { $0.content.videoID == firstContent.videoID }) {
       playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
     } else  {
       fetchAndInsertFromVideosRemote(for: firstContent)

@@ -31,110 +31,34 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarksMC: NSObject, ObservableObject {
+class BookmarksMC {
   
   // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
-  
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let bookmarksService: BookmarksService
-  private(set) var data: [BookmarkModel] = []
-  private(set) var numTutorials: Int = 0
-  
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-  
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
-  
-  private(set) var currentParameters: [Parameter] = [] {
-    didSet {
-      if oldValue != currentParameters {
-        loadContents()
-      }
-    }
-  }
+  private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
+    self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
-    
-    super.init()
-
-    currentParameters = defaultParameters
-    loadContents()
+    self.dataManager = dataManager
   }
   
-  func loadContents() {
-    
-    if case(.loading) = state {
-      return
-    }
-    
-    state = .loading
-    
-    let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = currentParameters
-    allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count < numTutorials else {
-      return
-    }
-    
-    bookmarksService.bookmarks { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: "BookmarksMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let bookmarksTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + bookmarksTuple
-        } else {
-          self.data = bookmarksTuple
-        }
-        self.numTutorials = bookmarksTuple.count
-        self.state = .hasData
-      }
-    }
-  }
-  
-  func toggleBookmark(for content: ContentDetailsModel, completion: @escaping (ContentDetailsModel) -> Void) {
+  func toggleBookmark(for content: ContentDetailsModel) {
 
     if !content.bookmarked {
       bookmarksService.makeBookmark(for: content.id) { result in
         switch result {
         case .failure(let error):
           Failure
-          .fetch(from: "ContentDetailsMC_makeBookmark", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM_makeBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(let bookmark):
-          bookmark.content = content
-          self.data.append(bookmark)
           content.bookmark = bookmark
-          self.state = .hasData
-          completion(content)
+          content.bookmarked = true
+          guard let dataManager = self.dataManager else { return }
+          dataManager.disseminateUpdates(for: content)
         }
       }
     } else {
@@ -144,15 +68,13 @@ class BookmarksMC: NSObject, ObservableObject {
         switch result {
         case .failure(let error):
           Failure
-          .fetch(from: "ContentDetailsMC_destroyBookmark", reason: error.localizedDescription)
+          .fetch(from: "ContentDetailsVM_destroyBookmark", reason: error.localizedDescription)
           .log(additionalParams: nil)
         case .success(_):
-          if let index = self.data.firstIndex(where: { $0.id == id }) {
-            self.data.remove(at: index)
-            content.bookmark = nil
-          }
-          self.state = .hasData
-          completion(content)
+          content.bookmark = nil
+          content.bookmarked = false
+          guard let dataManager = self.dataManager else { return }
+          dataManager.disseminateUpdates(for: content)
         }
       }
     }

@@ -44,7 +44,9 @@ enum DomainLevel: String, Equatable {
   }
 }
 
-class DomainModel: Equatable {
+class DomainModel: Equatable, ContentRelatable {
+  var type: ContentRelationship = .domain
+  
   static func == (lhs: DomainModel, rhs: DomainModel) -> Bool {
     return lhs.id == rhs.id
     && lhs.name == rhs.name
@@ -52,7 +54,6 @@ class DomainModel: Equatable {
     && lhs.description == rhs.description
     && lhs.level == rhs.level
   }
-  
 
   // MARK: - Properties
   private(set) var id: Int = 0

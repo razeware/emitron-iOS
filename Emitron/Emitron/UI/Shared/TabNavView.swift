@@ -32,8 +32,9 @@ struct TabNavView: View {
 
   @State var selection = 0
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var contentsMC: ContentsMC
-  @EnvironmentObject var userMC: UserMC
+  var libraryView: AnyView
+  var myTutorialsView: AnyView
+  var downloadsView: AnyView
 
   var body: some View {
     TabView(selection: $emitron.selectedTab) {
@@ -65,36 +66,5 @@ struct TabNavView: View {
     .edgesIgnoringSafeArea([.top])
     .background(Color.backgroundColor)
   }
-
-  private var libraryView: some View {
-    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
-    let contentsMC = dataManager.contentsMC
-    let downloadsMC = dataManager.downloadsMC
-    let filters = dataManager.filters
-
-    return LibraryView(downloadsMC: downloadsMC).environmentObject(contentsMC).environmentObject(filters)
-  }
-
-  private var myTutorialsView: some View {
-    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
-    let progressionsMC = dataManager.progressionsMC
-    let bookmarksMC = dataManager.bookmarksMC
-    let domainsMC = dataManager.domainsMC
-    
-    return MyTutorialView().environmentObject(progressionsMC).environmentObject(bookmarksMC).environmentObject(userMC).environmentObject(domainsMC)
-  }
-
-  private var downloadsView: some View {
-    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in tabNavView") }
-    let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
-  }
 }
 
-#if DEBUG
-struct TabNavView_Previews: PreviewProvider {
-  static var previews: some View {
-    TabNavView()
-  }
-}
-#endif

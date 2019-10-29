@@ -47,14 +47,21 @@ enum MyTutorialsState: String {
 }
 
 struct MyTutorialView: View {
-
+  
+  // Initialization
+  @State var state: MyTutorialsState
   @EnvironmentObject var domainsMC: DomainsMC
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var progressionsMC: ProgressionsMC
-  @EnvironmentObject var bookmarksMC: BookmarksMC
+  
+  @EnvironmentObject var bookmarkContentMC: BookmarkContentsVM
+  @EnvironmentObject var inProgressContentVM: InProgressContentVM
+  @EnvironmentObject var completedContentVM: CompletedContentVM
   @EnvironmentObject var userMC: UserMC
+
   @State private var settingsPresented: Bool = false
-  @State private var state: MyTutorialsState = .inProgress
+  @State private var reloadProgression: Bool = true
+  @State private var reloadCompleted: Bool = true
+  @State private var reloadBookmarks: Bool = true
 
   var body: some View {
     contentView
@@ -71,19 +78,34 @@ struct MyTutorialView: View {
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: true).environmentObject(self.userMC)
       }
+    .onDisappear {
+      self.reloadProgression = true
+      self.reloadCompleted = true
+      self.reloadBookmarks = true
+    }
   }
 
   private var toggleControl: AnyView {
-    AnyView(
+    return AnyView(
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
-          self.progressionsMC.loadContents()
+          // Should only call load contents if we have just switched to the My Tutorials tab
+          if self.reloadProgression {
+            self.inProgressContentVM.reload()
+            self.reloadProgression = false
+          }
           self.state = .inProgress
         }, completedClosure: {
-          self.progressionsMC.loadContents()
+          if self.reloadCompleted {
+            self.completedContentVM.reload()
+            self.reloadCompleted = false
+          }
           self.state = .completed
         }, bookmarkedClosure: {
-          self.bookmarksMC.loadContents()
+          if self.reloadBookmarks {
+            self.bookmarkContentMC.reload()
+            self.reloadBookmarks = false
+          }
           self.state = .bookmarked
         })
           .padding([.top], .sidePadding)
@@ -103,63 +125,23 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: AnyView? {
-    var dataToDisplay = [ContentDetailsModel]()
-    progressionsMC.data.forEach { progressionModel in
-      // only show parent of collection or screencast
-      guard progressionModel.content?.contentType != .episode else { return }
-      if progressionModel.progress > 0 && !progressionModel.finished, let content = progressionModel.content {
-        content.progression = progressionModel
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
-          content.bookmark = bookmark
-        }
-        
-        dataToDisplay.append(content)
-      }
-    }
-
-    return contentView(with: progressionsMC.state, data: dataToDisplay)
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: inProgressContentVM as ContentPaginatable))
   }
 
   private var completedContentsView: AnyView? {
-    var dataToDisplay = [ContentDetailsModel]()
-    progressionsMC.data.forEach { progressionModel in
-      guard progressionModel.content?.contentType != .episode else { return }
-      if progressionModel.finished, let content = progressionModel.content {
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        // update content on progressionModel with whether content should be bookmarked or not
-        if let bookmark = bookmarksMC.data.first(where: { $0.content?.id == content.id }) {
-          content.bookmark = bookmark
-        }
-        
-        dataToDisplay.append(content)
-      }
-    }
-    
-    return contentView(with: progressionsMC.state, data: dataToDisplay)
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: completedContentVM as ContentPaginatable))
   }
 
   private var bookmarkedContentsView: AnyView? {
-    var dataToDisplay = [ContentDetailsModel]()
-    bookmarksMC.data.forEach { bookmark in
-      if let content = bookmark.content, !dataToDisplay.contains(where: { $0.id == content.id }), content.contentType == .collection || content.contentType == .screencast {
-        content.domains = domainsMC.data.filter { content.domainIDs.contains($0.id) }
-        content.bookmark = bookmark
-        dataToDisplay.append(content)
-      }
-    }
-    
-    return contentView(with: bookmarksMC.state, data: dataToDisplay)
-  }
-  
-  private func contentView(with dataState: DataState, data: [ContentDetailsModel]) -> AnyView? {
-    
-    if let dataManager = DataManager.current {
-      let contentView = ContentListView(downloadsMC: dataManager.downloadsMC, contentScreen: state.contentScreen, contents: data, headerView: toggleControl, dataState: dataState, totalContentNum: data.count)
-      return AnyView(contentView)
-    } else {
-      return nil
-    }
+    guard let dataManager = DataManager.current else { return nil }
+    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
+                           headerView: toggleControl,
+                           contentsVM: bookmarkContentMC as ContentPaginatable))
   }
 }

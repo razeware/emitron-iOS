@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class VideosMC: NSObject, ObservableObject {
+class VideosMC: ObservableObject {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -56,12 +56,14 @@ class VideosMC: NSObject, ObservableObject {
     self.videoService = VideosService(client: self.client)
     self.contentsService = ContentsService(client: self.client)
     self.token = UserDefaults.standard.playbackToken
-
-    super.init()
   }
 
   // MARK: - Internal
   func fetchBeginPlaybackToken(completion: @escaping (Bool, String?) -> Void) {
+    if let playbackToken = token {
+      completion(true, playbackToken)
+    }
+    
     contentsService.getBeginPlaybackToken { result in
       switch result {
       case .failure(let error):
@@ -72,7 +74,6 @@ class VideosMC: NSObject, ObservableObject {
         completion(false, nil)
       case .success(let token):
         UserDefaults.standard.setPlaybackToken(token: token)
-        self.token = token
         completion(true, token)
       }
     }
@@ -92,14 +93,20 @@ class VideosMC: NSObject, ObservableObject {
       return
     }
 
-    contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { result in
+    contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { [weak self] result in
       switch result {
       case .failure(let error):
         Failure
         .fetch(from: "VideosMC_PlaybackUsage", reason: error.localizedDescription)
         .log(additionalParams: nil)
 
-        //TODO: Stop playback, ask use to re-play the video
+        //TODO: Stop playback, ask use to re-play the video, if this fails, try to re-request playback token
+        // If this is failing, that means the playback token needs to be regenerated, so delete it from user defaults
+        // And try again...
+        UserDefaults.standard.removeObject(forKey: UserDefaultsKey.playbackToken.rawValue)
+        guard let self = self else { return }
+        self.reportUsageStatistics(progress: progress, contentID: contentID)
+        
       case .success(_): break
         //TODO: Anything to do when we get back usage statistics?
       }

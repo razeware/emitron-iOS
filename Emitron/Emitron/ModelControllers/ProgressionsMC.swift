@@ -31,93 +31,19 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ProgressionsMC: NSObject, ObservableObject {
+class ProgressionsMC: ObservableObject {
   
   // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
   
   private let client: RWAPI
-  private let guardpost: Guardpost
   private let progressionsService: ProgressionsService
-  private(set) var data: [ProgressionModel] = []
-  private(set) var numTutorials: Int = 0
-  
-  // Pagination
-  private var currentPage: Int = 1
-  private let startingPage: Int = 1
-  private(set) var defaultPageSize: Int = 20
-  
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-  }
-  
-  private(set) var currentParameters: [Parameter] = [] {
-    didSet {
-      if oldValue != currentParameters {
-        loadContents()
-      }
-    }
-  }
+  private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    self.guardpost = guardpost
-    
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
+    self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
-    
-    super.init()
-
-    currentParameters = defaultParameters
-    loadContents()
-  }
-  
-  func loadContents() {
-    
-    if case(.loading) = state {
-      return
-    }
-    
-    state = .loading
-    
-    let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    var allParams = currentParameters
-    allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= numTutorials else {
-      return
-    }
-    
-    progressionsService.progressions { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: "ProressionsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let progressionsTuple):
-        // When filtering, do we just re-do the request, or append?
-        if allParams == self.currentParameters {
-          let currentContents = self.data
-          self.data = currentContents + progressionsTuple
-        } else {
-          self.data = progressionsTuple
-        }
-        self.numTutorials = progressionsTuple.count
-        self.state = .hasData
-      }
-    }
+    self.dataManager = dataManager
   }
 }
 

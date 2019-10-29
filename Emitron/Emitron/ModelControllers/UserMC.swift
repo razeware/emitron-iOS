@@ -32,6 +32,7 @@ import SwiftUI
 import Combine
 import Network
 
+// Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
 class UserMC: NSObject, ObservableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
@@ -61,7 +62,8 @@ class UserMC: NSObject, ObservableObject {
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
-    
+    super.init()
+		
     let queue = DispatchQueue(label: "Monitor")
     connectionMonitor.start(queue: queue)
   }
@@ -137,18 +139,22 @@ class UserMC: NSObject, ObservableObject {
     guardpost.logout()
     user = nil
     removeDownloadedContentIfNecessary()
+    let appDelegate = UIApplication.shared.delegate as! AppDelegate
+    appDelegate.dataManager = nil
+    UserDefaults.standard.deleteAllFilters()
+    // TODO: Should all the stores user defaults be removed at this point, aka the Settings?
     objectWillChange.send(())
   }
   
   // If the user is nil, or if they don't have download permissions, delete all downloaded content
   private func removeDownloadedContentIfNecessary() {
     guard let user = user else {
-      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      DocumentManager.deleteAllDownloadedContent()
       return
     }
     
     if !user.canDownload {
-      DataManager.current?.downloadsMC.deleteAllDownloadedContent()
+      DocumentManager.deleteAllDownloadedContent()
     }
   }
 }

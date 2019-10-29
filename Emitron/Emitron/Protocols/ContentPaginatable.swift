@@ -28,27 +28,31 @@
 
 import Foundation
 
-class ContentsMC {
-  private let client: RWAPI
-  private let contentsService: ContentsService
+protocol ContentPaginatable {
+  var contentScreen: ContentScreen { get }
+  var currentPage: Int { get }
+  var startingPage: Int { get }
+  var defaultPageSize: Int { get }
+  var data: [ContentDetailsModel] { get }
+  var state: DataState { get }
+  var isLoadingMore: Bool { get }
+  var totalContentNum: Int { get }
   
-  // MARK: - Initializers
-  init(user: UserModel) {
-    self.client = RWAPI(authToken: user.token)
-    self.contentsService = ContentsService(client: self.client)
+  func loadMore()
+  func reload()
+}
+
+extension ContentPaginatable {
+	// All content that currently conforms to this prootocol is 1-indexed
+  var startingPage: Int {
+    return 1
   }
   
-  func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
-    contentsService.contentDetails(for: id) { result in
-      switch result {
-      case .failure(let error):
-        completion?(nil)
-        Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let contentDetails):
-        completion?(contentDetails)
-      }
-    }
+  var defaultPageSize: Int {
+    return 20
   }
+	
+	var isLoadingMore: Bool {
+		return state == .loading && currentPage > startingPage
+	}
 }

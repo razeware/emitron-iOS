@@ -28,27 +28,24 @@
 
 import Foundation
 
-class ContentsMC {
-  private let client: RWAPI
-  private let contentsService: ContentsService
+class DocumentManager {
+  private static var localRoot: URL? = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first
   
-  // MARK: - Initializers
-  init(user: UserModel) {
-    self.client = RWAPI(authToken: user.token)
-    self.contentsService = ContentsService(client: self.client)
-  }
-  
-  func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
-    contentsService.contentDetails(for: id) { result in
-      switch result {
-      case .failure(let error):
-        completion?(nil)
-        Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let contentDetails):
-        completion?(contentDetails)
+  static func deleteAllDownloadedContent() {
+    
+    guard let root = DocumentManager.localRoot else { return }
+
+    do {
+      let localDocs = try FileManager.default.contentsOfDirectory(at: root, includingPropertiesForKeys: nil, options: [])
+
+      for localDoc in localDocs where localDoc.pathExtension == .appExtension {
+        try FileManager.default.removeItem(at: localDoc)
       }
+
+    } catch let error {
+      Failure
+      .fetch(from: "DownloadsMC", reason: error.localizedDescription)
+      .log(additionalParams: nil)
     }
   }
 }

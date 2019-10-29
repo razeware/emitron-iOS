@@ -35,7 +35,7 @@ import AVFoundation
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  private (set) var persistentStore = PersistenceStore()
+  private (set) var persistenceStore = PersistenceStore()
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
   
@@ -56,14 +56,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
                                urlScheme: "com.razeware.emitron://",
                                ssoSecret: Configuration.ssoSecret,
-                               persistentStore: persistentStore)
+                               persistenceStore: persistenceStore)
     
     guard let guardpost = guardpost,
       let user = guardpost.currentUser  else { return true }
     
-    self.dataManager = DataManager(guardpost: guardpost,
-                                   user: user,
-                                   persistenceStore: persistentStore)
+    self.dataManager = DataManager(user: user,
+                                   persistenceStore: persistenceStore)
     
     return true
   }

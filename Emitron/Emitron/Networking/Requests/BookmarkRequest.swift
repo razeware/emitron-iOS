@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct GetBookmarksRequest: Request {
-  typealias Response = [BookmarkModel]
+  typealias Response = (bookmarks: [BookmarkModel], totalNumber: Int)
   
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -40,11 +40,12 @@ struct GetBookmarksRequest: Request {
   var parameters: [Parameter]? { return nil }
   
   // MARK: - Internal
-  func handle(response: Data) throws -> [BookmarkModel] {
+  func handle(response: Data) throws -> (bookmarks: [BookmarkModel], totalNumber: Int) {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let bookmarks = doc.data.compactMap { BookmarkModel(resource: $0, metadata: nil) }
-    return bookmarks
+    
+    return (bookmarks: bookmarks, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
   }
 }
 

@@ -105,14 +105,11 @@ enum CompletionStatus: String {
 
 // Parameter Keys
 enum ParameterKey {
-  case completionStatus(status: CompletionStatus)
   case pageNumber(number: Int)
   case pageSize(size: Int)
   
   var strKey: String {
     switch self {
-    case .completionStatus:
-      return "completion_status"
     case .pageNumber:
       return "page[number]"
     case .pageSize:
@@ -122,8 +119,6 @@ enum ParameterKey {
   
   var value: String {
     switch self {
-    case .completionStatus(status: let status):
-      return status.rawValue
     case .pageNumber(let number):
       return "\(number)"
     case .pageSize(let size):
@@ -147,6 +142,7 @@ enum ParameterFilterValue {
   case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
   case queryString(string: String)
+  case completionStatus(status: CompletionStatus)
   
   var strKey: String {
     switch self {
@@ -162,6 +158,8 @@ enum ParameterFilterValue {
       return "content_ids"
     case .queryString:
       return "q"
+    case .completionStatus:
+      return "completion_status"
     }
   }
   
@@ -179,6 +177,8 @@ enum ParameterFilterValue {
       return ids.map { (displayName: "\($0)", requestValue: "\($0)", ordinal: 0) }
     case .queryString(string: let str):
       return [(displayName: str, requestValue: str, ordinal: 0)]
+    case .completionStatus(let status):
+      return [(displayName: status.rawValue, requestValue: status.rawValue, ordinal: 0)]
     }
   }
     
@@ -190,15 +190,18 @@ enum ParameterFilterValue {
          .contentTypes,
          .domainTypes,
          .difficulties,
-         .categoryTypes:
+         .categoryTypes,
+         .completionStatus:
       return false
     }
   }
   
-  var searchValue: String {
+  var value: String {
     switch self {
     case .queryString(let str):
       return str
+    case .completionStatus(let status):
+      return status.rawValue
     case .contentIds,
          .contentTypes,
          .domainTypes,
@@ -244,10 +247,10 @@ enum Param {
     
     return allParams
   }
-  
+    
   // Only to be used for the search query filter
-  static func filter(for searchParam: ParameterFilterValue) -> Parameter {
-    return Parameter(key: "filter[\(searchParam.strKey)]", value: searchParam.searchValue, displayName: searchParam.searchValue, sortOrdinal: 0)
+  static func filter(for param: ParameterFilterValue) -> Parameter {
+    return Parameter(key: "filter[\(param.strKey)]", value: param.value, displayName: param.value, sortOrdinal: 0)
   }
   
   static func sort(for value: ParameterSortValue,

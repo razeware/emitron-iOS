@@ -33,72 +33,19 @@ private struct Layout {
   static let heightDivisor: CGFloat = 3
 }
 
-enum ContentScreen {
-  case library, downloads, inProgress, completed, bookmarked
-
-  var isMyTutorials: Bool {
-    switch self {
-    case .bookmarked, .inProgress, .completed: return true
-    default: return false
-    }
-  }
-
-  var titleMessage: String {
-    switch self {
-    // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
-    case .library: return "We couldn't find anything with that search criteria."
-    case .downloads: return "You haven't downloaded any tutorials yet."
-    case .bookmarked: return "You haven't bookmarked any tutorials yet."
-    case .inProgress: return "You don't have any tutorials in progress yet."
-    case .completed: return "You haven't completed any tutorials yet."
-
-    }
-  }
-
-  var detailMesage: String {
-    switch self {
-    case .library: return "Try removing some filters or checking your WiFi settings."
-    case .bookmarked: return "Tap the bookmark icon to bookmark a video course or screencast."
-    case .inProgress: return "When you start a video course you can quickly resume it from here."
-    case .completed: return "Watch all the episodes of a video course or screencast to complete it."
-    case .downloads: return "Tap the download icon to download a video course or episode to watch offline."
-    }
-  }
-
-  var buttonText: String? {
-    switch self {
-    case .downloads, .inProgress, .completed, .bookmarked: return "Explore Tutorials"
-    default: return "Reload"
-    }
-  }
-
-  var emptyImageName: String {
-    switch self {
-    case .downloads: return "artworkEmptySuitcase"
-    case .bookmarked: return "artworkBookmarks"
-    case .inProgress: return "artworkInProgress"
-    case .completed: return "artworkCompleted"
-    case .library: return "emojiCrying"
-    }
-  }
-}
-
 struct ContentListView: View {
 
   @State var showHudView: Bool = false
   @State var showAlert: Bool = false
   @State private var showSettings = false
   @State var hudOption: HudOption = .success
-  var downloadsMC: DownloadsMC
-  var contentScreen: ContentScreen
   @State var isPresenting: Bool = false
-  var contents: [ContentDetailsModel] = []
-  @State var selectedMC: ContentSummaryMC?
+  
   @EnvironmentObject var emitron: AppState
-  @EnvironmentObject var contentsMC: ContentsMC
+  
+  var downloadsMC: DownloadsMC
   var headerView: AnyView?
-  var dataState: DataState
-  var totalContentNum: Int
+  var contentsVM: ContentPaginatable
   var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
 
   var body: some View {
@@ -111,7 +58,7 @@ struct ContentListView: View {
     List {
       if headerView != nil {
         Section(header: headerView) {
-          if contentScreen == .downloads {
+          if contentsVM.contentScreen == .downloads {
             cardsTableViewWithDelete
           } else {
             cardTableNavView
@@ -120,9 +67,9 @@ struct ContentListView: View {
         }.listRowInsets(EdgeInsets())
       } else {
         
-        if contentScreen == .downloads {
+        if contentsVM.contentScreen == .downloads {
           
-          if contents.isEmpty || downloadsMC.data.isEmpty {
+          if contentsVM.data.isEmpty {
             emptyView
           } else {
             cardsTableViewWithDelete
@@ -146,13 +93,15 @@ struct ContentListView: View {
   }
 
   private var loadMoreView: AnyView? {
-    if totalContentNum > contents.count {
+    if contentsVM.totalContentNum > contentsVM.data.count {
       return AnyView(
         // HACK: To put it in the middle we have to wrap it in Geometry Reader
         GeometryReader { geometry in
           ActivityIndicator()
             .onAppear {
-              self.contentsMC.loadMore()
+              // Load more from the appropriate MC conforming to updatable protocol
+              //self.contentsVM.
+              //self.contentsVM.loadMore()
           }
         }
       )
@@ -162,25 +111,28 @@ struct ContentListView: View {
   }
 
   private var contentView: AnyView {
-    // downlaods screen handles empty screen separately 
     
-    switch dataState {
-    case .initial,
-         .loading where contents.isEmpty:
+    switch contentsVM.state {
+    case .initial:
+      contentsVM.reload()
       return AnyView(loadingView)
-    case .hasData where contents.isEmpty:
-      return AnyView(emptyView)
-    case .hasData,
-         .loading where !contents.isEmpty:
-      
-      if dataState == .loading {
+    case .loading where contentsVM.data.isEmpty:
+      return AnyView(loadingView)
+    case .loading where !contentsVM.data.isEmpty:
+      // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
+      // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
+      if contentsVM.isLoadingMore {
+        return AnyView(listView)
+      } else {
         return AnyView(
           listView
           .overlay(ActivityIndicator())
         )
-      } else {
-        return AnyView(listView)
       }
+    case .hasData where contentsVM.data.isEmpty:
+      return AnyView(emptyView)
+    case .hasData:
+      return AnyView(listView)
     case .failed:
       return AnyView(failedView)
     default:
@@ -188,24 +140,17 @@ struct ContentListView: View {
     }
   }
 
-  private var cardTableNavView: some View {
+  private var cardTableNavView: AnyView? {
     let guardpost = Guardpost.current
-    let user = guardpost.currentUser
+    guard let user = guardpost.currentUser else { return nil }
 
     return
-      ForEach(contents, id: \.id) { partialContent in
+      AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onLeftTap: { success in
-            if success {
-              self.callback?(.save, partialContent)
-            }
-          }, onRightTap: {
-            // ISSUE: Removing bookmark functionality from the card for the moment, it only shows if the content is bookmarked and can't be acted upon
-            //self.toggleBookmark(model: partialContent)
-          })
+          CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
@@ -215,26 +160,21 @@ struct ContentListView: View {
       .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
+    )
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
-  private var cardsTableViewWithDelete: some View {
+  private var cardsTableViewWithDelete: AnyView? {
     let guardpost = Guardpost.current
-    let user = guardpost.currentUser
+    guard let user = guardpost.currentUser else { return nil }
 
     return
-      ForEach(contents, id: \.id) { partialContent in
+      AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user!, downloadsMC: self.downloadsMC))
+          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
-          self.cardView(content: partialContent, onLeftTap: { success in
-            if success {
-              self.callback?(.save, partialContent)
-            }
-          }, onRightTap: {
-            self.toggleBookmark(model: partialContent)
-          })
+          CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
         }
@@ -245,13 +185,7 @@ struct ContentListView: View {
       .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
-  }
-
-  private func cardView(content: ContentDetailsModel, onLeftTap: ((Bool) -> Void)?, onRightTap: (() -> Void)?) -> AnyView? {
-    AnyView(CardView(model: content,
-                     contentScreen: contentScreen,
-                     onLeftIconTap: onLeftTap,
-                     onRightIconTap: onRightTap).environmentObject(self.downloadsMC))
+    )
   }
   
   // ISSUE: To make the status bar the same color as the rest of thee backgrounds, we have to make all of the views into Lists
@@ -282,6 +216,7 @@ struct ContentListView: View {
       reloadButton
         .padding([.leading, .trailing, .bottom], 20)
     }
+    .background(Color.backgroundColor)
   }
 
   private var emptyView: some View {
@@ -290,20 +225,20 @@ struct ContentListView: View {
 
       Spacer()
 
-      Image(contentScreen.emptyImageName)
+      Image(contentsVM.contentScreen.emptyImageName)
         .padding([.bottom], 30)
         .padding([.top], 97)
       // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
       // we're ignoring the safe area edges, so that the status bar can be the right color
 
-      Text(contentScreen.titleMessage)
+      Text(contentsVM.contentScreen.titleMessage)
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.bottom], 20)
         .padding([.leading, .trailing], 55)
 
-      Text(contentScreen.detailMesage)
+      Text(contentsVM.contentScreen.detailMesage)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
@@ -317,7 +252,7 @@ struct ContentListView: View {
   }
 
   private var exploreButton: AnyView? {
-    guard let buttonText = contentScreen.buttonText, contents.isEmpty && contentScreen != .library else { return nil }
+    guard let buttonText = contentsVM.contentScreen.buttonText, contentsVM.data.isEmpty && contentsVM.contentScreen != .library else { return nil }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
       self.emitron.selectedTab = 0
@@ -339,37 +274,18 @@ struct ContentListView: View {
   private var reloadButton: AnyView? {
 
     let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.contentsMC.reloadContents()
+      self.contentsVM.reload()
     }
 
     return AnyView(button)
   }
 
-  private func loadMoreContents() {
-    contentsMC.loadMore()
-  }
-
   func delete(at offsets: IndexSet) {
     guard let index = offsets.first else { return }
     DispatchQueue.main.async {
-      let content = self.contents[index]
+      let content = self.contentsVM.data[index]
+      
       self.callback?(.delete, content)
     }
   }
-
-  mutating func updateContents(with newContents: [ContentDetailsModel]) {
-    self.contents = newContents
-  }
-  
-  func toggleBookmark(model: ContentDetailsModel) {
-    DataManager.current?.contentsMC.toggleBookmark(for: model)
-  }
 }
-
-#if DEBUG
-struct ContentListView_Previews: PreviewProvider {
-  static var previews: some View {
-    return ContentListView(downloadsMC: DataManager.current!.downloadsMC, contentScreen: .library, contents: [], dataState: .hasData, totalContentNum: 5)
-  }
-}
-#endif
