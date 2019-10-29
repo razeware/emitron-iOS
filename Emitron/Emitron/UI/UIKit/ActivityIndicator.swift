@@ -32,7 +32,7 @@ import SwiftUI
 struct ActivityIndicator: UIViewRepresentable {
     
     func makeUIView(context: Context) -> UIActivityIndicatorView {
-        let view = UIActivityIndicatorView()
+			let view = UIActivityIndicatorView(style: .medium)
         return view
     }
     
