@@ -32,6 +32,7 @@ import SwiftUI
 import Combine
 import Network
 
+// Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
 class UserMC: NSObject, ObservableObject {
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
@@ -61,7 +62,8 @@ class UserMC: NSObject, ObservableObject {
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: self.user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
-    
+    super.init()
+		
     let queue = DispatchQueue(label: "Monitor")
     connectionMonitor.start(queue: queue)
   }

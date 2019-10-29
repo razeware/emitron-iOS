@@ -64,7 +64,7 @@
 		B629AB4E22E60F260037F4D8 /* ContentDetailsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */; };
 		B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7D22DF769000122CE8 /* Constants.swift */; };
 		B62B9A8022DF76A500122CE8 /* MainView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A7F22DF76A500122CE8 /* MainView.swift */; };
-		B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A8322DF771200122CE8 /* ModelController.swift */; };
+		B62B9A8422DF771200122CE8 /* DataState.swift in Sources */ = {isa = PBXBuildFile; fileRef = B62B9A8322DF771200122CE8 /* DataState.swift */; };
 		B63834C122DFD2E60096D9F8 /* ContentDetailsVM.swift in Sources */ = {isa = PBXBuildFile; fileRef = B63834C022DFD2E60096D9F8 /* ContentDetailsVM.swift */; };
 		B6419BB322EF5622003AC14E /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB222EF5622003AC14E /* Logger.swift */; };
 		B6419BB522EF59F5003AC14E /* DomainsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB422EF59F5003AC14E /* DomainsMC.swift */; };
@@ -230,7 +230,7 @@
 		B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ContentDetailsModelTest.json; sourceTree = "<group>"; };
 		B62B9A7D22DF769000122CE8 /* Constants.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Constants.swift; sourceTree = "<group>"; };
 		B62B9A7F22DF76A500122CE8 /* MainView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainView.swift; sourceTree = "<group>"; };
-		B62B9A8322DF771200122CE8 /* ModelController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ModelController.swift; sourceTree = "<group>"; };
+		B62B9A8322DF771200122CE8 /* DataState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataState.swift; sourceTree = "<group>"; };
 		B63834C022DFD2E60096D9F8 /* ContentDetailsVM.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailsVM.swift; sourceTree = "<group>"; };
 		B6419BB222EF5622003AC14E /* Logger.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Logger.swift; sourceTree = "<group>"; };
 		B6419BB422EF59F5003AC14E /* DomainsMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DomainsMC.swift; sourceTree = "<group>"; };
@@ -800,7 +800,7 @@
 				B595653C23094E3100A3FF44 /* ProgressionsMC.swift */,
 				B595653E230953EF00A3FF44 /* BookmarksMC.swift */,
 				B6419BB422EF59F5003AC14E /* DomainsMC.swift */,
-				B62B9A8322DF771200122CE8 /* ModelController.swift */,
+				B62B9A8322DF771200122CE8 /* DataState.swift */,
 				95A4513322E224B500D24E56 /* UserMC.swift */,
 				95A4513422E224B500D24E56 /* VideosMC.swift */,
 				B595654D231B4EDB00A3FF44 /* DownloadsMC.swift */,
@@ -1188,7 +1188,7 @@
 				B6FC15D222CB65880078CEDB /* DownloadModel.swift in Sources */,
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,
 				B6E21A2D22F60AC5006CB22F /* CategoriesMC.swift in Sources */,
-				B62B9A8422DF771200122CE8 /* ModelController.swift in Sources */,
+				B62B9A8422DF771200122CE8 /* DataState.swift in Sources */,
 				95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */,
 				8B4A90742365A02D0025AE05 /* ContentUpdatable.swift in Sources */,
 				8BFC74C123649FD2001979F1 /* BookmarkContentsVM.swift in Sources */,

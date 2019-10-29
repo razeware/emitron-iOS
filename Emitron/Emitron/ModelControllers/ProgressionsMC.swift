@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class ProgressionsMC: NSObject, ObservableObject {
+class ProgressionsMC: ObservableObject {
   
   // MARK: - Properties
   
@@ -44,8 +44,6 @@ class ProgressionsMC: NSObject, ObservableObject {
     self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
     self.dataManager = dataManager
-    
-    super.init()
   }
 }
 

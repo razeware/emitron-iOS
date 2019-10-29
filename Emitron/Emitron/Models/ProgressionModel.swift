@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 class ProgressionModel: ContentRelatable {
-  var type: ContentRelationship = .progression
+  let type: ContentRelationship = .progression
   
   // MARK: - Properties
   private(set) var id: Int = 0

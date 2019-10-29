@@ -36,11 +36,9 @@ import CoreData
 class InProgressContentVM: ProgressionsContentVM { }
 class CompletedContentVM: ProgressionsContentVM { }
 
-class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
+class ProgressionsContentVM: ObservableObject, ContentPaginatable {
   var contentScreen: ContentScreen
-  
-  var isLoadingMore: Bool = false
-  
+    
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -71,8 +69,6 @@ class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
     self.client = RWAPI(authToken: user.token)
     self.progressionsService = ProgressionsService(client: self.client)
     self.contentScreen = completionStatus == .inProgress ? ContentScreen.inProgress : .completed
-    
-    super.init()
   }
   
   func loadMore() {
@@ -80,19 +76,18 @@ class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
     if case(.loading) = state {
       return
     }
+		
+		// Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= totalContentNum else {
+      return
+    }
     
     state = .loading
     currentPage += 1
-    isLoadingMore = true
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = defaultParameters
     allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= totalContentNum else {
-      return
-    }
     
     progressionsService.progressions(parameters: allParams) { [weak self] result in
       guard let self = self else {
@@ -101,8 +96,7 @@ class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
       
       switch result {
       case .failure(let error):
-        self.isLoadingMore = false
-        self.currentPage = -1
+        self.currentPage -= 1
         self.state = .failed
         Failure
           .fetch(from: "ProgressionsMC", reason: error.localizedDescription)
@@ -113,7 +107,6 @@ class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
         self.data = currentContents + progressionsTuple.progressions.compactMap { $0.content }
         self.addRelevantDetailsToContent()
         self.totalContentNum = progressionsTuple.totalNumber
-        self.isLoadingMore = false
         self.state = .hasData
       }
     }
@@ -126,7 +119,6 @@ class ProgressionsContentVM: NSObject, ObservableObject, ContentPaginatable {
     }
     
     state = .loading
-    isLoadingMore = false
     
     // Reset current page to 1
     currentPage = startingPage

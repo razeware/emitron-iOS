@@ -54,8 +54,8 @@ struct MyTutorialView: View {
   @EnvironmentObject var emitron: AppState
   
   @EnvironmentObject var bookmarkContentMC: BookmarkContentsVM
-  @EnvironmentObject var inProgressContentMC: InProgressContentVM
-  @EnvironmentObject var completedContentMC: CompletedContentVM
+  @EnvironmentObject var inProgressContentVM: InProgressContentVM
+  @EnvironmentObject var completedContentVM: CompletedContentVM
   @EnvironmentObject var userMC: UserMC
 
   @State private var settingsPresented: Bool = false
@@ -91,13 +91,13 @@ struct MyTutorialView: View {
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab
           if self.reloadProgression {
-            self.inProgressContentMC.reload()
+            self.inProgressContentVM.reload()
             self.reloadProgression = false
           }
           self.state = .inProgress
         }, completedClosure: {
           if self.reloadCompleted {
-            self.completedContentMC.reload()
+            self.completedContentVM.reload()
             self.reloadCompleted = false
           }
           self.state = .completed
@@ -128,14 +128,14 @@ struct MyTutorialView: View {
     guard let dataManager = DataManager.current else { return nil }
     return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: inProgressContentMC as ContentPaginatable))
+                           contentsVM: inProgressContentVM as ContentPaginatable))
   }
 
   private var completedContentsView: AnyView? {
     guard let dataManager = DataManager.current else { return nil }
     return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
                            headerView: toggleControl,
-                           contentsVM: completedContentMC as ContentPaginatable))
+                           contentsVM: completedContentVM as ContentPaginatable))
   }
 
   private var bookmarkedContentsView: AnyView? {

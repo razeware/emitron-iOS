@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarksMC: NSObject {
+class BookmarksMC {
   
   // MARK: - Properties
   private let client: RWAPI
@@ -43,8 +43,6 @@ class BookmarksMC: NSObject {
     self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
     self.dataManager = dataManager
-    
-    super.init()
   }
   
   func toggleBookmark(for content: ContentDetailsModel) {

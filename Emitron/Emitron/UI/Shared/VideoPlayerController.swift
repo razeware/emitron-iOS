@@ -128,9 +128,9 @@ class VideoPlayerController: AVPlayerViewController {
 
     }
 
-    if let libraryContentsMC = DataManager.current?.libraryContentsMC,
+    if let libraryContentsVM = DataManager.current?.libraryContentsVM,
       let current = currentContent,
-      let firstIndex = libraryContentsMC.data.firstIndex(where: { $0.id == current.id } ) {
+      let firstIndex = libraryContentsVM.data.firstIndex(where: { $0.id == current.id } ) {
     }
   }
 

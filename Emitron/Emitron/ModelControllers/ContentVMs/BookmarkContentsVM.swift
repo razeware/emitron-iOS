@@ -31,12 +31,10 @@ import SwiftUI
 import Combine
 import CoreData
 
-class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
+class BookmarkContentsVM: ObservableObject, ContentPaginatable {
   
-  var contentScreen: ContentScreen = .bookmarked
-  
-  var isLoadingMore: Bool = false
-  
+  let contentScreen: ContentScreen = .bookmarked
+    
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   private(set) var state = DataState.initial {
@@ -61,9 +59,7 @@ class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
   // MARK: - Initializers
   init(user: UserModel) {
     self.client = RWAPI(authToken: user.token)
-    self.bookmarksService = BookmarksService(client: self.client)
-    
-    super.init()
+    self.bookmarksService = BookmarksService(client: self.client)    
   }
   
   func loadMore() {
@@ -71,19 +67,18 @@ class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
     if case(.loading) = state {
       return
     }
+		
+		// Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= totalContentNum else {
+      return
+    }
     
     state = .loading
     currentPage += 1
-    isLoadingMore = true
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = defaultParameters
     allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= totalContentNum else {
-      return
-    }
     
     bookmarksService.bookmarks(parameters: allParams) { [weak self] result in
       guard let self = self else {
@@ -92,8 +87,7 @@ class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
       
       switch result {
       case .failure(let error):
-        self.isLoadingMore = false
-        self.currentPage = -1
+        self.currentPage -= 1
         self.state = .failed
         Failure
           .fetch(from: "BookmarksMC", reason: error.localizedDescription)
@@ -104,7 +98,6 @@ class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
         self.data = currentContents + bookmarksTuple.bookmarks.compactMap { $0.content }
         self.addRelevantDetailsToContent()
         self.totalContentNum = bookmarksTuple.totalNumber
-        self.isLoadingMore = false
         self.state = .hasData
       }
     }
@@ -117,7 +110,6 @@ class BookmarkContentsVM: NSObject, ObservableObject, ContentPaginatable {
     }
     
     state = .loading
-    isLoadingMore = false
     
     // Reset current page to 1
     currentPage = startingPage

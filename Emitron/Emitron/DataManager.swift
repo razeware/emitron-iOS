@@ -40,7 +40,7 @@ class DataManager: NSObject {
         // Create and assign new data manager to the AppDelegate
 
       if let user = Guardpost.current.currentUser {
-        let dataManager = DataManager(user: user, persistenceStore: PersistenceStore())
+				let dataManager = DataManager(user: user, persistenceStore: appDelegate.persistenceStore)
         appDelegate.dataManager = dataManager
       } else {
         appDelegate.dataManager = nil
@@ -58,10 +58,10 @@ class DataManager: NSObject {
   var filters: Filters
 
   // Content holders
-  let inProgressContentMC: InProgressContentVM
-  let completedContentMC: CompletedContentVM
+  let inProgressContentVM: InProgressContentVM
+  let completedContentVM: CompletedContentVM
   let bookmarkContentMC: BookmarkContentsVM
-  let libraryContentsMC: LibraryContentsVM
+  let libraryContentsVM: LibraryContentsVM
   
   // Services
   private(set) var progressionsMC: ProgressionsMC?
@@ -69,10 +69,10 @@ class DataManager: NSObject {
   let downloadsMC: DownloadsMC
   
   private var globalDataStore: [ContentDetailsModel] {
-    return Array(Set(inProgressContentMC.data)
-      .union(Set(completedContentMC.data))
+    return Array(Set(inProgressContentVM.data)
+      .union(Set(completedContentVM.data))
       .union(Set(bookmarkContentMC.data))
-      .union(Set(libraryContentsMC.data)))
+      .union(Set(libraryContentsVM.data)))
   }
 
   private var domainsSubscriber: AnyCancellable?
@@ -83,20 +83,20 @@ class DataManager: NSObject {
        persistenceStore: PersistenceStore) {
     
     self.domainsMC = DomainsMC(user: user,
-                               persistentStore: persistenceStore)
+                               persistenceStore: persistenceStore)
 
     self.categoriesMC = CategoriesMC(user: user,
-                                     persistentStore: persistenceStore)
+                                     persistenceStore: persistenceStore)
 
     self.filters = Filters()
 
-    self.libraryContentsMC = LibraryContentsVM(user: user,
+    self.libraryContentsVM = LibraryContentsVM(user: user,
                                                filters: self.filters)
 
-    self.inProgressContentMC = InProgressContentVM(user: user,
+    self.inProgressContentVM = InProgressContentVM(user: user,
                                                    completionStatus: .inProgress)
     
-    self.completedContentMC = CompletedContentVM(user: user,
+    self.completedContentVM = CompletedContentVM(user: user,
                                                  completionStatus: .completed)
     
     self.bookmarkContentMC = BookmarkContentsVM(user: user)
@@ -113,9 +113,9 @@ class DataManager: NSObject {
   
   func disseminateUpdates(for content: ContentDetailsModel) {
     bookmarkContentMC.updateEntryIfItExists(for: content)
-    libraryContentsMC.updateEntryIfItExists(for: content)
-    inProgressContentMC.updateEntryIfItExists(for: content)
-    completedContentMC.updateEntryIfItExists(for: content)
+    libraryContentsVM.updateEntryIfItExists(for: content)
+    inProgressContentVM.updateEntryIfItExists(for: content)
+    completedContentVM.updateEntryIfItExists(for: content)
   }
 
   private func createSubscribers() {

@@ -34,7 +34,7 @@ import KeychainSwift
 final class PersistenceStore {
   
   static var current: PersistenceStore {
-    return (UIApplication.shared.delegate as! AppDelegate).persistentStore
+    return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
   }
   
   let coreDataStack = CoreDataStack()

@@ -164,9 +164,9 @@ class ContentDetailsModel: NSObject {
   func addRelationships(for jsonResource: JSONAPIResource) {
     
     for relationship in jsonResource.relationships {
-      let relatinoshipType = ContentRelationship(rawValue: relationship.type) ?? .none
+      let relationshipType = ContentRelationship(rawValue: relationship.type) ?? .none
       
-      switch relatinoshipType {
+      switch relationshipType {
       case .domains:
         let ids = relationship.data.compactMap { $0.id }
         let included = jsonResource.parent?.included.filter { ids.contains($0.id) }

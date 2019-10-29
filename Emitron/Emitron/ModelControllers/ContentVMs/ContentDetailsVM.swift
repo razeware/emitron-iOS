@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class ContentDetailsVM: NSObject, ObservableObject, Identifiable {
+class ContentDetailsVM: ObservableObject, Identifiable {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -58,8 +58,6 @@ class ContentDetailsVM: NSObject, ObservableObject, Identifiable {
     self.data = partialContentDetail
     self.data.isDownloaded = partialContentDetail.isDownloaded
     self.bookmarksMC = bookmarksMC
-
-    super.init()
     
     // If the partial content detail is actually the full details model; don't reload
     // If childContents > 0 AND there are groupd on the content, it's been fully loadeed
@@ -101,11 +99,13 @@ class ContentDetailsVM: NSObject, ObservableObject, Identifiable {
   
   func toggleBookmark() {
     guard let bookmarksMC = bookmarksMC else { return }
+		bookmarksMC.toggleBookmark(for: data)
+		
     // If we're loading, we send the request
-    bookmarksMC.toggleBookmark(for: data)
     // Locally updating the bookmark for UI purposes, but once the request succeeds, it will be dissemenated across all the relevant VMs
     data.bookmarked = !data.bookmarked
     shouldLocallyBookmark = data.bookmarked
-    objectWillChange.send(())
+		
+		state = .hasData
   }
 }

@@ -27,22 +27,10 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
 
 enum DataState {
   case initial
   case loading
   case hasData
   case failed
-}
-
-class ModelController<DataType, DataService>: NSObject, ObservableObject {
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var data: [DataType] = []
-  private(set) var state = DataState.initial {
-    didSet {
-      objectWillChange.send(())
-    }
-  }
 }

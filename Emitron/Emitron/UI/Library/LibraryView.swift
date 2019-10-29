@@ -40,7 +40,7 @@ private extension CGFloat {
 
 struct LibraryView: View {
 
-  @EnvironmentObject var libraryContentsMC: LibraryContentsVM
+  @EnvironmentObject var libraryContentsVM: LibraryContentsVM
   var downloadsMC: DownloadsMC
   @EnvironmentObject var filters: Filters
   @State var filtersPresented: Bool = false
@@ -54,14 +54,14 @@ struct LibraryView: View {
       .navigationBarItems(trailing:
         Group {
           Button(action: {
-            self.libraryContentsMC.reload()
+            self.libraryContentsVM.reload()
           }) {
             Image(systemName: "arrow.clockwise")
               .foregroundColor(.iconButton)
           }
       })
       .sheet(isPresented: $filtersPresented) {
-        FiltersView().environmentObject(self.filters).environmentObject(self.libraryContentsMC)
+        FiltersView().environmentObject(self.filters).environmentObject(self.libraryContentsVM)
       .background(Color.backgroundColor)
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
@@ -74,7 +74,7 @@ struct LibraryView: View {
       searchAndFilterControls
         .padding([.top], 15)
       
-      if !libraryContentsMC.currentAppliedFilters.isEmpty {
+      if !libraryContentsVM.currentAppliedFilters.isEmpty {
         filtersView
           .padding([.top], 10)
       }
@@ -115,7 +115,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryContentsMC.totalContentNum) \(Constants.tutorials)")
+      Text("\(libraryContentsVM.totalContentNum) \(Constants.tutorials)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
@@ -144,13 +144,13 @@ struct LibraryView: View {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
         AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
-          self.libraryContentsMC.updateFilters(newFilters: self.filters)
+          self.libraryContentsVM.updateFilters(newFilters: self.filters)
         }
         .environmentObject(self.filters)
 
         ForEach(self.filters.applied, id: \.self) { filter in
           AppliedFilterView(filter: filter, type: .default) {
-            self.libraryContentsMC.updateFilters(newFilters: self.filters)
+            self.libraryContentsVM.updateFilters(newFilters: self.filters)
           }
           .environmentObject(self.filters)
         }
@@ -161,17 +161,17 @@ struct LibraryView: View {
 
   private func updateFilters() {
     filters.searchQuery = filters.searchStr
-    libraryContentsMC.updateFilters(newFilters: filters)
+    libraryContentsVM.updateFilters(newFilters: filters)
   }
 
   private func changeSort() {
     filters.changeSortFilter()
-    libraryContentsMC.updateFilters(newFilters: filters)
+    libraryContentsVM.updateFilters(newFilters: filters)
   }
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsMC as ContentPaginatable) { (action, content) in
+    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsVM as ContentPaginatable) { (action, content) in
       switch action {
         case .delete:
           self.delete(for: content)

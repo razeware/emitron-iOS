@@ -43,6 +43,7 @@ protocol ContentPaginatable {
 }
 
 extension ContentPaginatable {
+	// All content that currently conforms to this prootocol is 1-indexed
   var startingPage: Int {
     return 1
   }
@@ -50,4 +51,8 @@ extension ContentPaginatable {
   var defaultPageSize: Int {
     return 20
   }
+	
+	var isLoadingMore: Bool {
+		return state == .loading && currentPage > startingPage
+	}
 }

@@ -46,6 +46,7 @@ enum DownloadsAction {
   case save, delete, cancel
 }
 
+// Conforming to NSObject so that we can conform to URLSessionDownloadDelegate
 class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   
   var currentPage: Int = 0 // NOT IN USE
@@ -96,7 +97,7 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
     }
   }
 
-  var contentScreen: ContentScreen = .downloads
+  let contentScreen: ContentScreen = .downloads
   
   // ISSUE: Probably don't re-compute this all the time...
   var data: [ContentDetailsModel] {
@@ -119,8 +120,8 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   init(user: UserModel) {
     self.user = user
     self.videosMC = VideosMC(user: self.user)
-    super.init()
-
+		super.init()
+		
     loadDownloads()
   }
 

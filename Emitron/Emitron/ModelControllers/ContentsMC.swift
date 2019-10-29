@@ -28,7 +28,7 @@
 
 import Foundation
 
-class ContentsMC: NSObject {
+class ContentsMC {
   private let client: RWAPI
   private let contentsService: ContentsService
   
@@ -36,8 +36,6 @@ class ContentsMC: NSObject {
   init(user: UserModel) {
     self.client = RWAPI(authToken: user.token)
     self.contentsService = ContentsService(client: self.client)
-    
-    super.init()
   }
   
   func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {

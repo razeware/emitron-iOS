@@ -31,7 +31,7 @@ import SwiftUI
 import Combine
 import CoreData
 
-class DomainsMC: NSObject, ObservableObject, Refreshable {
+class DomainsMC: ObservableObject, Refreshable {
   
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
@@ -48,18 +48,16 @@ class DomainsMC: NSObject, ObservableObject, Refreshable {
   private let user: UserModel
   private let service: DomainsService
   private(set) var data: [DomainModel] = []
-  private let persistentStore: PersistenceStore
+  private let persistenceStore: PersistenceStore
   
   // MARK: - Initializers
   init(user: UserModel,
-       persistentStore: PersistenceStore) {
+       persistenceStore: PersistenceStore) {
     self.user = user
     self.client = RWAPI(authToken: user.token)
     self.service = DomainsService(client: self.client)
-    self.persistentStore = persistentStore
-    
-    super.init()
-    
+    self.persistenceStore = persistenceStore
+        
     loadFromPersistentStore()
   }
   
@@ -82,7 +80,7 @@ private extension DomainsMC {
     
     do {
       let fetchRequest: NSFetchRequest<Domain> = Domain.fetchRequest()
-      let result = try persistentStore.coreDataStack.viewContext.fetch(fetchRequest)
+      let result = try persistenceStore.coreDataStack.viewContext.fetch(fetchRequest)
       let domainModels = result.map(DomainModel.init)
       data = domainModels
       state = .hasData
@@ -96,7 +94,7 @@ private extension DomainsMC {
   }
   
   func saveToPersistentStore() {
-    let viewContext = persistentStore.coreDataStack.viewContext
+    let viewContext = persistenceStore.coreDataStack.viewContext
     for entry in data {
       let domain = Domain(context: viewContext)
       domain.id = NSNumber(value: entry.id)

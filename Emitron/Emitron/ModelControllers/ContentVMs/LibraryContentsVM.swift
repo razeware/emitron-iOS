@@ -31,8 +31,8 @@ import SwiftUI
 import Combine
 import CoreData
 
-class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
-  var contentScreen: ContentScreen = .library
+class LibraryContentsVM: ObservableObject, ContentPaginatable {
+  let contentScreen: ContentScreen = .library
   
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -46,7 +46,6 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
   private let contentsService: ContentsService
   private(set) var data: [ContentDetailsModel] = []
   private(set) var totalContentNum: Int = 0
-  private(set) var isLoadingMore: Bool = false // A flag to let use know whether we're reloading from scratch, ie the first 20 results, or doing a paginated call where we append content, so that we can render the appropriate UI
   
   // Pagination
   internal var currentPage: Int = 1
@@ -76,8 +75,6 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
     self.filters = Filters()
     self.currentParameters = filters.appliedParameters
     self.currentAppliedFilters = filters.applied
-    
-    super.init()
   }
   
   func updateFilters(newFilters: Filters) {
@@ -89,20 +86,19 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
     if case(.loading) = state {
       return
     }
+		
+		// Don't load more contents if we've reached the end of the results
+    guard data.isEmpty || data.count <= totalContentNum else {
+      return
+    }
     
     state = .loading
-    isLoadingMore = true
     
     currentPage += 1
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     var allParams = currentParameters
     allParams.append(pageParam)
-    
-    // Don't load more contents if we've reached the end of the results
-    guard data.isEmpty || data.count <= totalContentNum else {
-      return
-    }
     
     contentsService.allContents(parameters: allParams) { [weak self] result in
       
@@ -112,8 +108,7 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
       
       switch result {
       case .failure(let error):
-        self.currentPage = -1
-        self.isLoadingMore = false
+        self.currentPage -= 1
         self.state = .failed
         Failure
           .fetch(from: "LibraryContentsVM", reason: error.localizedDescription)
@@ -123,7 +118,6 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
         self.data = currentContents + contentsTuple.contents
         self.totalContentNum = contentsTuple.totalNumber
         self.state = .hasData
-        self.isLoadingMore = false
       }
     }
   }
@@ -135,7 +129,6 @@ class LibraryContentsVM: NSObject, ObservableObject, ContentPaginatable {
     }
     
     state = .loading
-    isLoadingMore = false
     
     // Reset current page to 1
     currentPage = startingPage

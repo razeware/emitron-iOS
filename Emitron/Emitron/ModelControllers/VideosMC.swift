@@ -30,7 +30,7 @@ import Foundation
 import SwiftUI
 import Combine
 
-class VideosMC: NSObject, ObservableObject {
+class VideosMC: ObservableObject {
 
   // MARK: - Properties
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -56,8 +56,6 @@ class VideosMC: NSObject, ObservableObject {
     self.videoService = VideosService(client: self.client)
     self.contentsService = ContentsService(client: self.client)
     self.token = UserDefaults.standard.playbackToken
-
-    super.init()
   }
 
   // MARK: - Internal
