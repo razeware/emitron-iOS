@@ -77,6 +77,12 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .foregroundColor(.titleText)
+			
+			Text(contentDetailsVM.data.contentSummaryMetadataString)
+				.font(.uiCaption)
+				.foregroundColor(.contentText)
+				.lineSpacing(3)
+				.padding([.top], 10)
 
       HStack(spacing: 30, content: {
         downloadButton
@@ -91,13 +97,13 @@ struct ContentSummaryView: View {
       Text(contentDetailsVM.data.desc)
         .font(.uiCaption)
         .foregroundColor(.contentText)
+				.lineSpacing(3)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
-        .lineSpacing(3)
 
       Text("By \(contentDetailsVM.data.contributorString)")
         .font(.uiFootnote)
