@@ -52,7 +52,7 @@ struct CardView: SwiftUI.View {
         VStack(alignment: .leading, spacing: 0) {
           HStack(alignment: .center) {
 
-            Text(model.name)
+            Text(name)
               .font(.uiTitle4)
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
@@ -134,6 +134,14 @@ struct CardView: SwiftUI.View {
 
     return AnyView(stack)
   }
+	
+	private var name: String {
+		guard let parentName = model.parentName, model.contentType == .episode else {
+			return model.name
+		}
+		
+		return "\(parentName): \(model.name)"
+	}
 
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee

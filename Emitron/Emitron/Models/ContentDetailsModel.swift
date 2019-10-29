@@ -49,6 +49,7 @@ class ContentDetailsModel: NSObject {
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
+	private(set) var parentName: String? // Only set for .episode content
   private(set) var desc: String = ""
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
@@ -98,6 +99,7 @@ class ContentDetailsModel: NSObject {
     self.index = jsonResource["ordinal"] as? Int
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
+		self.parentName = jsonResource["parent_name"] as? String
     self.desc = jsonResource["description_plain_text"] as? String ?? ""
 
     if let releasedAtStr = jsonResource["released_at"] as? String {
