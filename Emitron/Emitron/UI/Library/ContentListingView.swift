@@ -336,7 +336,7 @@ struct ContentListingView: View {
             .padding(.trailing, -32.0)
         }
       }
-      ProgressBarView(progress: content.progress, isRounded: false)
+      progressBar
     })
   }
 
@@ -356,9 +356,14 @@ struct ContentListingView: View {
         
         proView
       }
-      ProgressBarView(progress: content.progress, isRounded: false)
+      progressBar
     }
   }
+	
+	private var progressBar: AnyView? {
+		guard let progression = content.progression, !progression.finished else { return nil }
+		return AnyView(ProgressBarView(progress: content.progress, isRounded: false))
+	}
   
   private var wifiActionSheet: ActionSheet {
     return ActionSheet(
