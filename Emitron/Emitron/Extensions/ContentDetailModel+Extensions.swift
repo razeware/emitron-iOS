@@ -56,8 +56,8 @@ extension ContentDetailsModel {
     }
     return progress
   }
-	
-	var contentSummaryMetadataString: String {
+  
+  var contentSummaryMetadataString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
       start = Constants.today

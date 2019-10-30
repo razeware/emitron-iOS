@@ -44,12 +44,12 @@ protocol ContentRelatable {
 }
 
 class ContentDetailsModel: NSObject {
-
+  
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
-	private(set) var parentName: String? // Only set for .episode content
+  private(set) var parentName: String? // Only set for .episode content
   private(set) var desc: String = ""
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
@@ -63,12 +63,12 @@ class ContentDetailsModel: NSObject {
   private(set) var videoID: Int?
   private(set) var index: Int?
   private(set) var professional: Bool = false
-
+  
   private(set) var childContents: [ContentDetailsModel] = []
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
-
+  
   var parentContent: ContentDetailsModel?
   var isDownloaded = false
   var progression: ProgressionModel?
@@ -86,38 +86,38 @@ class ContentDetailsModel: NSObject {
   
   lazy var bookmarked: Bool = bookmark != nil
   var cardArtworkData: Data?
-
+  
   // If content is a video collectiona and it doesn't have groups, then it needs to be fully loaded
   var needsDetails: Bool {
     contentType == .collection && !(groups.count > 0)
   }
-
+  
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
-
+    
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
-		self.parentName = jsonResource["parent_name"] as? String
+    self.parentName = jsonResource["parent_name"] as? String
     self.desc = jsonResource["description_plain_text"] as? String ?? ""
-
+    
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
     } else {
       self.releasedAt = Date()
     }
-
+    
     self.free = jsonResource["free"] as? Bool ?? false
-
+    
     if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? "") {
       self.difficulty = difficulty
     }
-
+    
     if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? "") {
       self.contentType = type
     }
-
+    
     self.duration = jsonResource["duration"] as? Int ?? 0
     self.popularity = jsonResource["popularity"] as? Double ?? 0.0
     self.professional = jsonResource["professional"] as? Bool ?? false
@@ -145,20 +145,20 @@ class ContentDetailsModel: NSObject {
   func addRelationships(for contentRelatable: [ContentRelatable]) {
     for relationship in contentRelatable {
       switch relationship.type {
-      case .bookmark:
-        if let bookmark = relationship as? BookmarkModel {
-          self.bookmark = bookmark
+        case .bookmark:
+          if let bookmark = relationship as? BookmarkModel {
+            self.bookmark = bookmark
         }
-      case .progression:
-        if let progression = relationship as? ProgressionModel {
-          self.progression = progression
+        case .progression:
+          if let progression = relationship as? ProgressionModel {
+            self.progression = progression
         }
-      case .domain:
-        if let domain = relationship as? DomainModel, !domains.contains(domain) {
-          self.domains.append(domain)
+        case .domain:
+          if let domain = relationship as? DomainModel, !domains.contains(domain) {
+            self.domains.append(domain)
         }
-      default:
-        print("Don't have a two way binding for this model yet...")
+        default:
+          print("Don't have a two way binding for this model yet...")
       }
     }
   }
@@ -169,65 +169,65 @@ class ContentDetailsModel: NSObject {
       let relationshipType = ContentRelationship(rawValue: relationship.type) ?? .none
       
       switch relationshipType {
-      case .domains:
-        let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
-
-        // If a domain comes through that doesn't match any of the domains we have, make a new domain request.
-        self.domainIDs = ids
-        self.domains = domains ?? []
-
-      //TODO: This will be improved when the API returns enough info to render the video listing, currently
-      // picking up the bits and pieces of info from separate parts
-      case .groups: // this is where we get our video list
-        let ids = relationship.data.compactMap { $0.id }
-        let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
-
-        var groups: [GroupModel] = []
-        if let included = maybeIncluded {
-          for resource in included {
-            for relationship in resource.relationships where relationship.type == "contents" {
-              let contentIds = relationship.data.compactMap { $0.id }
-              let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
-              // This is an ugly hack for now
-              let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
-                guard let content = ContentDetailsModel(summary.element, metadata: [:]) else { return nil }
-                content.addRelationships(for: summary.element)
-                content.parentContent = self
-                return content
-              })
-
-              if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
-                groups.append(group)
+        case .domains:
+          let ids = relationship.data.compactMap { $0.id }
+          let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+          let domains = included?.compactMap { DomainModel($0, metadata: $0.meta) }
+          
+          // If a domain comes through that doesn't match any of the domains we have, make a new domain request.
+          self.domainIDs = ids
+          self.domains = domains ?? []
+        
+        //TODO: This will be improved when the API returns enough info to render the video listing, currently
+        // picking up the bits and pieces of info from separate parts
+        case .groups: // this is where we get our video list
+          let ids = relationship.data.compactMap { $0.id }
+          let maybeIncluded = jsonResource.parent?.included.filter { ids.contains($0.id) }
+          
+          var groups: [GroupModel] = []
+          if let included = maybeIncluded {
+            for resource in included {
+              for relationship in resource.relationships where relationship.type == "contents" {
+                let contentIds = relationship.data.compactMap { $0.id }
+                let included = jsonResource.parent?.included.filter { contentIds.contains($0.id) }
+                // This is an ugly hack for now
+                let contentDetails = included?.enumerated().compactMap({ summary -> ContentDetailsModel? in
+                  guard let content = ContentDetailsModel(summary.element, metadata: [:]) else { return nil }
+                  content.addRelationships(for: summary.element)
+                  content.parentContent = self
+                  return content
+                })
+                
+                if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
+                  groups.append(group)
+                }
               }
             }
           }
+          
+          self.groups = groups
+        case .progression where self.progression == nil:
+          let ids = relationship.data.compactMap { $0.id }
+          self.progressionId = ids.first
+          let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
+          let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
+          self.progression = progressions?.first
+        case .bookmark where self.bookmark == nil:
+          let ids = relationship.data.compactMap { $0.id }
+          let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
+          let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
+          self.bookmark = bookmarks?.first
+          
+          // We can simply make a Bookmark with just an ID
+          if let id = ids.first, self.bookmark != nil {
+            self.bookmark = BookmarkModel(id: id)
         }
-
-        self.groups = groups
-      case .progression where self.progression == nil:
-        let ids = relationship.data.compactMap { $0.id }
-        self.progressionId = ids.first
-        let included = jsonResource.parent?.included.filter { ids.contains($0.id) }
-        let progressions = included?.compactMap { ProgressionModel($0, metadata: $0.meta) }
-        self.progression = progressions?.first
-      case .bookmark where self.bookmark == nil:
-        let ids = relationship.data.compactMap { $0.id }
-        let included = jsonResource.parent?.included.filter { _ in !ids.contains(0) }
-        let bookmarks = included?.compactMap { BookmarkModel(resource: $0, metadata: $0.meta) }
-        self.bookmark = bookmarks?.first
-        
-        // We can simply make a Bookmark with just an ID
-        if let id = ids.first, self.bookmark != nil {
-          self.bookmark = BookmarkModel(id: id)
-        }
-      default:
-        break
+        default:
+          break
       }
     }
   }
-
+  
   /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
   ///
   /// - parameters:
@@ -248,7 +248,7 @@ class ContentDetailsModel: NSObject {
     self.contributorString = content.contributorString
     self.videoID = content.videoID?.intValue
   }
-
+  
   /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
   ///
   /// - parameters:
@@ -279,7 +279,7 @@ extension ContentDetailsModel {
       let fileURL = Bundle.main.url(forResource: "ContentDetailsModelTest", withExtension: "json")
       let data = try Data(contentsOf: fileURL!)
       let json = try JSON(data: data)
-
+      
       let document = JSONAPIDocument(json)
       let resource = JSONAPIResource(json, parent: document)
       return ContentDetailsModel(resource, metadata: nil)!
@@ -291,7 +291,7 @@ extension ContentDetailsModel {
 }
 
 extension ContentDetailsModel {
-
+  
   var isInCollection: Bool {
     return contentType == .collection || contentType == .episode
   }

@@ -39,8 +39,8 @@ struct ProgressBarView: View {
   }
   
   var body: some View {
-		
-		let adjustedProgress: CGFloat = progress < 0.05 ? 0.05 : progress
+    
+    let adjustedProgress: CGFloat = progress < 0.05 ? 0.05 : progress
     
     return ZStack(alignment: .leading) {
       

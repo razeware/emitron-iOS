@@ -39,20 +39,20 @@ struct DownloadImageName {
 }
 
 struct ContentSummaryView: View {
-
+  
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentDetailsModel, HudOption) -> Void)?
   @ObservedObject var downloadsMC: DownloadsMC
   @ObservedObject var contentDetailsVM: ContentDetailsVM
   private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
-
+  
   var body: some View {
     let queue = DispatchQueue(label: "Monitor")
     monitor.start(queue: queue)
     return contentView
   }
-
+  
   private var contentView: some View {
     VStack(alignment: .leading) {
       HStack {
@@ -62,13 +62,13 @@ struct ContentSummaryView: View {
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
-
+        
         if contentDetailsVM.data.professional {
           ProTag()
         }
       }
       .padding([.top], 20)
-
+      
       Text(contentDetailsVM.data.name)
         .font(.uiTitle1)
         .lineLimit(nil)
@@ -77,34 +77,34 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .foregroundColor(.titleText)
-			
-			Text(contentDetailsVM.data.contentSummaryMetadataString)
-				.font(.uiCaption)
-				.foregroundColor(.contentText)
-				.lineSpacing(3)
-				.padding([.top], 10)
-
+      
+      Text(contentDetailsVM.data.contentSummaryMetadataString)
+        .font(.uiCaption)
+        .foregroundColor(.contentText)
+        .lineSpacing(3)
+        .padding([.top], 10)
+      
       HStack(spacing: 30, content: {
         downloadButton
         bookmarkButton
-
+        
         if contentDetailsVM.data.progression?.finished ?? false {
           CompletedTag()
         }
       })
-      .padding([.top], 15)
-
+        .padding([.top], 15)
+      
       Text(contentDetailsVM.data.desc)
         .font(.uiCaption)
         .foregroundColor(.contentText)
-				.lineSpacing(3)
+        .lineSpacing(3)
         // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
         // '.frame(idealHeight: .infinity)' to the TITLE...
         //.frame(idealHeight: .infinity)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
-
+      
       Text("By \(contentDetailsVM.data.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.contentText)
@@ -114,20 +114,20 @@ struct ContentSummaryView: View {
         .lineSpacing(3)
     }
   }
-
+  
   private var downloadButton: some View {
     completeDownloadButton
       .onTapGesture {
         self.download()
     }
   }
-
+  
   private var bookmarkButton: AnyView {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-
+    
     let imageName = contentDetailsVM.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
-
+    
     return AnyView(
       Image(imageName)
         .resizable()
@@ -137,7 +137,7 @@ struct ContentSummaryView: View {
       }
     )
   }
-
+  
   private var completeDownloadButton: some View {
     let image = Image(downloadImageName)
       .resizable()
@@ -145,36 +145,36 @@ struct ContentSummaryView: View {
       .onTapGesture {
         self.download()
     }
-
+    
     switch downloadsMC.state {
-    case .loading:
-
-      if contentDetailsVM.data.isInCollection {
-
-        guard let downloadedContent = downloadsMC.downloadedContent,
-          downloadedContent.parentContent?.id == contentDetailsVM.data.id else {
-            return AnyView(image)
-        }
-
-        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
-
-      } else {
-        // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentDetailsVM.data.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-            return AnyView(image)
-        }
-
-        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
+      case .loading:
+        
+        if contentDetailsVM.data.isInCollection {
+          
+          guard let downloadedContent = downloadsMC.downloadedContent,
+            downloadedContent.parentContent?.id == contentDetailsVM.data.id else {
+              return AnyView(image)
+          }
+          
+          return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
+          
+        } else {
+          // Only show progress on model that is currently being downloaded
+          guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentDetailsVM.data.id }),
+            downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+              return AnyView(image)
+          }
+          
+          return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
-
-    default:
-      return AnyView(image)
+      
+      default:
+        return AnyView(image)
     }
   }
-
+  
   private var downloadImageName: String {
-
+    
     if contentDetailsVM.data.isInCollection {
       return downloadsMC.data.contains { downloadModel in
         return downloadModel.id == contentDetailsVM.data.id
@@ -183,7 +183,7 @@ struct ContentSummaryView: View {
       return downloadsMC.data.contains(where: { $0.id == contentDetailsVM.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
     }
   }
-
+  
   private func download() {
     if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
       callback?(contentDetailsVM.data, .notOnWifi)
@@ -193,7 +193,7 @@ struct ContentSummaryView: View {
       callback?(contentDetailsVM.data, hudOption)
     }
   }
-
+  
   private func bookmark() {
     contentDetailsVM.toggleBookmark()
   }
