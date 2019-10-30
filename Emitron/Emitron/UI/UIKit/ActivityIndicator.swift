@@ -30,13 +30,13 @@ import UIKit
 import SwiftUI
 
 struct ActivityIndicator: UIViewRepresentable {
-    
-    func makeUIView(context: Context) -> UIActivityIndicatorView {
-        let view = UIActivityIndicatorView()
-        return view
-    }
-    
-    func updateUIView(_ activityIndicator: UIActivityIndicatorView, context: Context) {
-        activityIndicator.startAnimating()
-    }
+  
+  func makeUIView(context: Context) -> UIActivityIndicatorView {
+    let view = UIActivityIndicatorView(style: .medium)
+    return view
+  }
+  
+  func updateUIView(_ activityIndicator: UIActivityIndicatorView, context: Context) {
+    activityIndicator.startAnimating()
+  }
 }

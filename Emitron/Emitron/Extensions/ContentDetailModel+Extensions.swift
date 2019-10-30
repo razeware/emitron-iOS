@@ -56,4 +56,13 @@ extension ContentDetailsModel {
     }
     return progress
   }
+  
+  var contentSummaryMetadataString: String {
+    var start = releasedAt.cardString
+    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+      start = Constants.today
+    }
+    
+    return "\(start) • \(difficulty.displayString) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+  }
 }

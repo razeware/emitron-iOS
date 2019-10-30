@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct ProgressBarView: View {
-  private var progress: CGFloat
+  private var progress: CGFloat // Between 0.0 and 1.0
   private var height: CGFloat = 4
   private var isRounded: Bool
   
@@ -40,7 +40,9 @@ struct ProgressBarView: View {
   
   var body: some View {
     
-    ZStack(alignment: .leading) {
+    let adjustedProgress: CGFloat = progress < 0.05 ? 0.05 : progress
+    
+    return ZStack(alignment: .leading) {
       
       GeometryReader { geometry in
         Rectangle()
@@ -51,7 +53,7 @@ struct ProgressBarView: View {
         HStack(alignment: .center) {
           
           Rectangle()
-            .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+            .frame(width: geometry.size.width * (adjustedProgress/2), height: self.height)
             .foregroundColor(.accent)
             .cornerRadius(self.isRounded ? self.height/2 : 0)
           
@@ -60,14 +62,14 @@ struct ProgressBarView: View {
             Spacer()
             
             Rectangle()
-              .frame(width: geometry.size.width * (self.progress/2), height: self.height)
+              .frame(width: geometry.size.width * (adjustedProgress/2), height: self.height)
               .foregroundColor(.accent)
               .cornerRadius(self.isRounded ? self.height/2 : 0)
           }
         }
         
         Rectangle()
-          .frame(width: geometry.size.width * self.progress, height: self.height)
+          .frame(width: geometry.size.width * adjustedProgress, height: self.height)
           .foregroundColor(.accent)
           .cornerRadius(self.isRounded ? self.height/2 : 0)
       }

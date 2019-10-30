@@ -37,7 +37,6 @@
 		95CD793622F0B6980080C407 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793522F0B6980080C407 /* Bookmark.swift */; };
 		95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793922F0B83A0080C407 /* DomainModel.swift */; };
 		95CD793C22F0BEF40080C407 /* Contents.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793B22F0BEF40080C407 /* Contents.swift */; };
-		95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */; };
 		B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597A2344DF3300D7B0E2 /* VideoData.swift */; };
 		B51C597D2344EDF800D7B0E2 /* Document.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597C2344EDF800D7B0E2 /* Document.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
@@ -54,7 +53,6 @@
 		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
 		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
 		B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */; };
-		B621DD3D22F5CBB100A1F27A /* ContentSummaryModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */; };
 		B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */; };
 		B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */; };
 		B621DD4D22F5CDD500A1F27A /* DomainsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */; };
@@ -202,7 +200,6 @@
 		95CD793522F0B6980080C407 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
 		95CD793922F0B83A0080C407 /* DomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModel.swift; sourceTree = "<group>"; };
 		95CD793B22F0BEF40080C407 /* Contents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Contents.swift; sourceTree = "<group>"; };
-		95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "ContentSummaryModel+Extensions.swift"; sourceTree = "<group>"; };
 		B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_emitron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B51C597A2344DF3300D7B0E2 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
 		B51C597C2344EDF800D7B0E2 /* Document.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Document.swift; sourceTree = "<group>"; };
@@ -220,7 +217,6 @@
 		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
 		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
 		B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VideoModelTest.json; sourceTree = "<group>"; };
-		B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ContentSummaryModelTest.json; sourceTree = "<group>"; };
 		B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BookmarksModelTest.json; sourceTree = "<group>"; };
 		B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProgressionsModelTest.json; sourceTree = "<group>"; };
 		B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = DomainsModelTest.json; sourceTree = "<group>"; };
@@ -502,7 +498,6 @@
 			children = (
 				B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */,
 				B6C4F3DA22E70F990087ED10 /* CategoriesModelTest.json */,
-				B621DD3C22F5CBB100A1F27A /* ContentSummaryModelTest.json */,
 				B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */,
 				B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */,
 				B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */,
@@ -545,7 +540,6 @@
 			isa = PBXGroup;
 			children = (
 				B6C0F0DC22D5FA1C00012839 /* ContentDetailModel+Extensions.swift */,
-				95EB241D22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift */,
 				B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */,
 				B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */,
 				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
@@ -933,7 +927,6 @@
 				B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */,
 				B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */,
 				B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */,
-				B621DD3D22F5CBB100A1F27A /* ContentSummaryModelTest.json in Resources */,
 				B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */,
 				B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */,
 			);
@@ -1108,7 +1101,6 @@
 				8BFF36AA233C9AB7001B7420 /* AppState.swift in Sources */,
 				8BFC74C723650715001979F1 /* DocumentManager.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
-				95EB241E22F6E5D100A39072 /* ContentSummaryModel+Extensions.swift in Sources */,
 				B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */,
 				B682F8C722EB096300CBF2CC /* Filters.swift in Sources */,
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
