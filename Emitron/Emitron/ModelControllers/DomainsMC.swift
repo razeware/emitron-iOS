@@ -68,7 +68,7 @@ class DomainsMC: ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchDomains()
-      saveOrReplaceUpdateDate()
+      saveOrReplaceRefreshableUpdateDate()
     }
   }
 }
@@ -124,7 +124,7 @@ private extension DomainsMC {
         .log(additionalParams: nil)
     }
     
-    saveOrReplaceUpdateDate()
+    saveOrReplaceRefreshableUpdateDate()
   }
   
   func fetchDomains() {

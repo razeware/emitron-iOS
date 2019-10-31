@@ -66,7 +66,7 @@ class CategoriesMC: ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchCategories()
-      saveOrReplaceUpdateDate()
+      saveOrReplaceRefreshableUpdateDate()
     }
   }
 }
@@ -122,7 +122,7 @@ private extension CategoriesMC {
         .log(additionalParams: nil)
     }
     
-    saveOrReplaceUpdateDate()
+    saveOrReplaceRefreshableUpdateDate()
   }
   
   func fetchCategories() {

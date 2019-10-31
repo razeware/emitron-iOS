@@ -33,7 +33,11 @@ import Combine
 import Network
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-class UserMC: NSObject, ObservableObject {
+class UserMC: NSObject, ObservableObject, Refreshable {
+  
+  // MARK: Refreshable
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: UserMC.self))"
+  var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -106,6 +110,13 @@ class UserMC: NSObject, ObservableObject {
     }
   }
   
+  func fetchPermissionsIfNeeded() {
+    // Request persmission if an app launch has happened or if it's been oveer 24 hours since the last permission request once the app enters the foreground
+    guard shouldRefresh else { return }
+    
+    fetchPermissions()
+  }
+  
   func fetchPermissions() {
     // If there's no connection, use the persisted permissions
     // The re-fetch/re-store will be done the next time they open the app
@@ -125,6 +136,7 @@ class UserMC: NSObject, ObservableObject {
         // Update user to keychain
         if let user = self.user {
           PersistenceStore.current.persistUserToKeychain(user: user)
+          self.saveOrReplaceRefreshableUpdateDate()
         }
         
         // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
