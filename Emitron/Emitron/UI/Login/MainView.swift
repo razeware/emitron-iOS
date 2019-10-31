@@ -47,7 +47,7 @@ struct MainView: View {
     case .failed:
       return loginView
     case .initial, .loading:
-      userMC.fetchPermissionsIfNeeded()
+      userMC.fetchPermissions()
       return tabBarView()
     case .hasData:
       if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {

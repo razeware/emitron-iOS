@@ -117,7 +117,7 @@ class UserMC: NSObject, ObservableObject, Refreshable {
     fetchPermissions()
   }
   
-  private func fetchPermissions() {
+  func fetchPermissions() {
     // If there's no connection, use the persisted permissions
     // The re-fetch/re-store will be done the next time they open the app
     guard connectionMonitor.currentPath.status == .satisfied else { return }
