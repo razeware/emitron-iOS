@@ -35,7 +35,6 @@ struct CardView: SwiftUI.View {
   @State private var image: UIImage = #imageLiteral(resourceName: "loading")
   private var model: ContentDetailsModel
   private let animation: Animation = .easeIn
-  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
   
   init(model: ContentDetailsModel) {
     self.model = model
@@ -44,8 +43,6 @@ struct CardView: SwiftUI.View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some SwiftUI.View {
-    
-    setUpNetworkMonitor()
     
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
@@ -156,11 +153,6 @@ struct CardView: SwiftUI.View {
         .resizable()
         .frame(width: 21, height: 21)
     )
-  }
-  
-  private func setUpNetworkMonitor() {
-    let queue = DispatchQueue(label: "Monitor")
-    monitor.start(queue: queue)
   }
   
   private func loadImage() {
