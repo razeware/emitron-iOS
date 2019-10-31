@@ -33,7 +33,8 @@ protocol Refreshable {
   var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
   var shouldRefresh: Bool { get }
 
-  func saveOrReplaceUpdateDate()
+  // Every class that conforms to the protocol has to call this function after the "refreshable" action has been completed to store the date it was last updated on
+  func saveOrReplaceRefreshableUpdateDate()
 }
 
 extension Refreshable {
@@ -45,13 +46,14 @@ extension Refreshable {
     return true
   }
   
-  func saveOrReplaceUpdateDate() {
+  func saveOrReplaceRefreshableUpdateDate() {
     UserDefaults.standard.set(Date(),
                               forKey: self.refreshableUserDefaultsKey)
   }
 }
 
 enum RefreshableTimeSpan: Int {
+  // These are day values
   case long = 30
   case short = 1
   
