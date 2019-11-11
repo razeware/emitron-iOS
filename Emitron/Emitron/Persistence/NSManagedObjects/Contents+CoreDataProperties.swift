@@ -25,50 +25,34 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+//
 
-import CoreData
 import Foundation
+import CoreData
 
-@objc(Contents)
-final class Contents: NSManagedObject {
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Contents> {
-    return NSFetchRequest<Contents>(entityName: "Contents")
-  }
+extension Contents {
 
-  @NSManaged var id: NSNumber
-  @NSManaged var name: String
-  @NSManaged var uri: String
-  @NSManaged var desc: String
-  @NSManaged var releasedAt: Date
-  @NSManaged var free: Bool
-  @NSManaged var difficulty: String
-  @NSManaged var contentType: String
-  @NSManaged var duration: NSNumber
-  @NSManaged var popularity: Double
-  @NSManaged var bookmarked: Bool
-  @NSManaged var cardArtworkUrl: URL?
-  @NSManaged var technologyTripleString: String
-  @NSManaged var contributorString: String
-  @NSManaged var videoID: NSNumber?
-  
-  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.id = NSNumber(value: model.id)
-    contents.name = model.name
-    contents.uri = model.uri
-    contents.desc = model.description
-    contents.releasedAt = model.releasedAt
-    contents.free = model.free
-    contents.difficulty = model.difficulty.rawValue
-    contents.contentType = model.contentType.rawValue
-    contents.duration = NSNumber(value: model.duration)
-    contents.bookmarked = model.bookmarked
-    contents.popularity = model.popularity
-    contents.cardArtworkUrl = model.cardArtworkURL
-    contents.technologyTripleString = model.technologyTripleString
-    contents.contributorString = model.contributorString
-    contents.videoID = model.videoID != nil ? NSNumber(value: model.videoID!) : nil
-    return contents
-  }
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Contents> {
+        return NSFetchRequest<Contents>(entityName: "Contents")
+    }
+
+    @NSManaged public var bookmarked: Bool
+    @NSManaged public var cardArtworkUrl: URL?
+    @NSManaged public var contentType: String?
+    @NSManaged public var contributorString: String?
+    @NSManaged public var desc: String?
+    @NSManaged public var difficulty: String?
+    @NSManaged public var duration: Int64
+    @NSManaged public var free: Bool
+    @NSManaged public var id: Int64
+    @NSManaged public var index: Int64
+    @NSManaged public var name: String?
+    @NSManaged public var popularity: Double
+    @NSManaged public var releasedAt: Date?
+    @NSManaged public var technologyTripleString: String?
+    @NSManaged public var uri: String?
+    @NSManaged public var videoID: Int64
+    @NSManaged public var download: Download?
+
 }

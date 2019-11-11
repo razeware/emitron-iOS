@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14886.2" systemVersion="19A512f" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15508" systemVersion="18G95" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Bookmark" representedClassName="Bookmark" syncable="YES">
         <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
@@ -27,6 +27,7 @@
         <attribute name="technologyTripleString" attributeType="String"/>
         <attribute name="uri" attributeType="String"/>
         <attribute name="videoID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="download" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Download" inverseName="content" inverseEntity="Download"/>
     </entity>
     <entity name="Domain" representedClassName="Domain" syncable="YES">
         <attribute name="desc" optional="YES" attributeType="String"/>
@@ -34,6 +35,17 @@
         <attribute name="level" attributeType="String"/>
         <attribute name="name" attributeType="String"/>
         <attribute name="slug" attributeType="String"/>
+    </entity>
+    <entity name="Download" representedClassName="Download" syncable="YES">
+        <attribute name="dateRequested" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fileName" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastValidated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="localUrl" optional="YES" attributeType="URI"/>
+        <attribute name="progress" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="remoteUrl" optional="YES" attributeType="URI"/>
+        <attribute name="stateInt" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="content" maxCount="1" deletionRule="Nullify" destinationEntity="Contents" inverseName="download" inverseEntity="Contents"/>
     </entity>
     <entity name="Progression" representedClassName="Progression" syncable="YES">
         <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
@@ -45,10 +57,11 @@
         <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
     </entity>
     <elements>
-        <element name="Bookmark" positionX="-54" positionY="27" width="128" height="73"/>
-        <element name="Category" positionX="-54" positionY="27" width="128" height="103"/>
-        <element name="Contents" positionX="-45" positionY="36" width="128" height="283"/>
-        <element name="Domain" positionX="-63" positionY="-18" width="128" height="118"/>
-        <element name="Progression" positionX="-54" positionY="126" width="128" height="148"/>
+        <element name="Bookmark" positionX="-497.0546875" positionY="-546.80859375" width="128" height="73"/>
+        <element name="Category" positionX="-461.43359375" positionY="-391.765625" width="128" height="103"/>
+        <element name="Contents" positionX="-156.68359375" positionY="-691.63671875" width="128" height="298"/>
+        <element name="Domain" positionX="-365.73046875" positionY="-696.4140625" width="128" height="118"/>
+        <element name="Download" positionX="-324" positionY="-540" width="128" height="178"/>
+        <element name="Progression" positionX="-274.80078125" positionY="-352.1484375" width="128" height="148"/>
     </elements>
 </model>

@@ -53,8 +53,8 @@ class ContentDetailsModel: NSObject {
   private(set) var desc: String = ""
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
-  private(set) var difficulty: ContentDifficulty = .none
-  private(set) var contentType: ContentType = .none
+  private(set) var difficulty: ContentDifficulty? = nil
+  private(set) var contentType: ContentType? = nil
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
   private(set) var cardArtworkURL: URL?
@@ -233,20 +233,20 @@ class ContentDetailsModel: NSObject {
   /// - parameters:
   ///   - content: core data entity to transform into domain model
   init(_ content: Contents) {
-    self.id = content.id.intValue
-    self.name = content.name
-    self.uri = content.uri
-    self.desc = content.desc
-    self.releasedAt = content.releasedAt
+    self.id = Int(content.id)
+    self.name = content.name ?? ""
+    self.uri = content.uri ?? ""
+    self.desc = content.desc ?? ""
+    self.releasedAt = content.releasedAt ?? Date()
     self.free = content.free
-    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
-    self.contentType = ContentType(rawValue: content.contentType) ?? .none
-    self.duration = content.duration.intValue
+    self.difficulty = content.difficulty == nil ? nil : ContentDifficulty(rawValue: content.difficulty!)
+    self.contentType = content.contentType == nil ? nil : ContentType(rawValue: content.contentType!)
+    self.duration = Int(content.duration)
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkUrl
-    self.technologyTripleString = content.technologyTripleString
-    self.contributorString = content.contributorString
-    self.videoID = content.videoID?.intValue
+    self.technologyTripleString = content.technologyTripleString ?? ""
+    self.contributorString = content.contributorString ?? ""
+    self.videoID = content.videoID == 0 ? .none : Int(content.videoID)
   }
   
   /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
@@ -260,8 +260,8 @@ class ContentDetailsModel: NSObject {
     self.desc = content.contentDescription
     self.releasedAt = content.releasedAt
     self.free = content.free
-    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? .none
-    self.contentType = ContentType(rawValue: content.contentType) ?? .none
+    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? nil
+    self.contentType = ContentType(rawValue: content.contentType) ?? nil
     self.duration = content.duration
     self.popularity = content.popularity
     self.cardArtworkURL = content.cardArtworkURL

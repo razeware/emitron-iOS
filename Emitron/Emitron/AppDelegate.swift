@@ -39,6 +39,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
   
+  private lazy var downloadProcessor: DownloadProcessor = {
+    DownloadProcessor()
+  }()
+  
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
@@ -94,5 +98,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       } else {
           return .portrait
       }
+  }
+  
+  // For dealing with downloading of videos in the background
+  func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+    assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
+    
+    downloadProcessor.backgroundSessionCompletionHandler = completionHandler
   }
 }

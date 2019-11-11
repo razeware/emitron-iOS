@@ -28,38 +28,10 @@
 
 import Foundation
 
-class VideoData: NSObject, NSCoding {
-  var url: URL?
-  var data: Data?
-  var content: ContentDetailsModel?
+final class DownloadService {
+  private let coreDataStack: CoreDataStack
   
-  init(url: URL? = nil) {
-    self.url = url
-  }
-  
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url, let savedContent = content else { return }
-    
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.desc, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty?.rawValue ?? "", contentType: savedContent.contentType?.rawValue ?? "", parentContentId: savedContent.parentContentId)
-    
-    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
-    aCoder.encode(data)
-    aCoder.encode(contentsData, forKey: .contentKey)
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
-      self.url = URL(string: videoURL)
-    }
-    
-    if let data = aDecoder.decodeData() {
-      self.data = data
-    }
-    
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
-      self.content = ContentDetailsModel(content)
-    }
+  init(coreDataStack: CoreDataStack) {
+    self.coreDataStack = coreDataStack
   }
 }

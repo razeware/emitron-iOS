@@ -26,40 +26,27 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import XCTest
+import CoreData
+@testable import Emitron
 
-class VideoData: NSObject, NSCoding {
-  var url: URL?
-  var data: Data?
-  var content: ContentDetailsModel?
+class DownloadServiceTest: XCTestCase {
   
-  init(url: URL? = nil) {
-    self.url = url
+  private var downloadService: DownloadService!
+  private var coreDataStack: CoreDataStack!
+  
+  override func setUp() {
+    // Put setup code here. This method is called before the invocation of each test method in the class.
+    coreDataStack = CoreDataStack(modelName: "Emitron", persistentStoreType: NSInMemoryStoreType)
+    downloadService = DownloadService(coreDataStack: coreDataStack)
   }
   
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url, let savedContent = content else { return }
-    
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.desc, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty?.rawValue ?? "", contentType: savedContent.contentType?.rawValue ?? "", parentContentId: savedContent.parentContentId)
-    
-    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
-    aCoder.encode(data)
-    aCoder.encode(contentsData, forKey: .contentKey)
+  override func tearDown() {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
   
-  required init?(coder aDecoder: NSCoder) {
-    aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
-      self.url = URL(string: videoURL)
-    }
-    
-    if let data = aDecoder.decodeData() {
-      self.data = data
-    }
-    
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
-      self.content = ContentDetailsModel(content)
-    }
+  func testExample() {
+    // This is an example of a functional test case.
+    // Use XCTAssert and related functions to verify your tests produce the correct results.
   }
 }

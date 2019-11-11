@@ -35,7 +35,7 @@ extension ContentDetailsModel {
       start = Constants.today
     }
     
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+    return "\(start) • \(contentType?.displayString ?? "–") (\(duration.timeFromSeconds))"
   }
   
   var cardViewSubtitle: String {
@@ -63,6 +63,6 @@ extension ContentDetailsModel {
       start = Constants.today
     }
     
-    return "\(start) • \(difficulty.displayString) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+    return "\(start) • \(difficulty?.displayString ?? "—") • \(contentType?.displayString ?? "—") (\(duration.timeFromSeconds))"
   }
 }

@@ -27,39 +27,33 @@
 /// THE SOFTWARE.
 
 import Foundation
+import CoreData
+@testable import Emitron
 
-class VideoData: NSObject, NSCoding {
-  var url: URL?
-  var data: Data?
-  var content: ContentDetailsModel?
-  
-  init(url: URL? = nil) {
-    self.url = url
+struct CoreDataMocks {
+  static func contents(context: NSManagedObjectContext) -> Contents {
+    let contents = Contents(context: context)
+    contents.name = "Sample Contents"
+    contents.cardArtworkUrl = URL(string: "https://example.com/card_artwork.png")
+    contents.contentType = "collection"
+    contents.contributorString = "HELLO"
+    contents.desc = "Description"
+    contents.difficulty = "intermediate"
+    contents.duration = 1234
+    contents.id = 1
+    contents.releasedAt = Date()
+    contents.technologyTripleString = "Some Tech"
+    contents.uri = "rw://betamax/collections/1"
+    
+    return contents
   }
   
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url, let savedContent = content else { return }
+  static func download(context: NSManagedObjectContext) -> Download {
+    let download = Download(context: context)
+    download.id = UUID()
+    download.state = .pending
+    download.fileName = "myVideo.mp4"
     
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.desc, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty?.rawValue ?? "", contentType: savedContent.contentType?.rawValue ?? "", parentContentId: savedContent.parentContentId)
-    
-    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
-    aCoder.encode(data)
-    aCoder.encode(contentsData, forKey: .contentKey)
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
-      self.url = URL(string: videoURL)
-    }
-    
-    if let data = aDecoder.decodeData() {
-      self.data = data
-    }
-    
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
-      self.content = ContentDetailsModel(content)
-    }
+    return download
   }
 }

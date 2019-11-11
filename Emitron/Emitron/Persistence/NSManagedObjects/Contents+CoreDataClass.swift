@@ -25,41 +25,30 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+//
 
 import Foundation
+import CoreData
 
-class VideoData: NSObject, NSCoding {
-  var url: URL?
-  var data: Data?
-  var content: ContentDetailsModel?
-  
-  init(url: URL? = nil) {
-    self.url = url
-  }
-  
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url, let savedContent = content else { return }
-    
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.desc, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty?.rawValue ?? "", contentType: savedContent.contentType?.rawValue ?? "", parentContentId: savedContent.parentContentId)
-    
-    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
-    aCoder.encode(data)
-    aCoder.encode(contentsData, forKey: .contentKey)
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
-      self.url = URL(string: videoURL)
-    }
-    
-    if let data = aDecoder.decodeData() {
-      self.data = data
-    }
-    
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
-      self.content = ContentDetailsModel(content)
-    }
+@objc(Contents)
+public class Contents: NSManagedObject {
+  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
+    let contents = Contents(context: viewContext)
+    contents.id = Int64(model.id)
+    contents.name = model.name
+    contents.uri = model.uri
+    contents.desc = model.description
+    contents.releasedAt = model.releasedAt
+    contents.free = model.free
+    contents.difficulty = model.difficulty?.rawValue
+    contents.contentType = model.contentType?.rawValue
+    contents.duration = Int64(model.duration)
+    contents.bookmarked = model.bookmarked
+    contents.popularity = model.popularity
+    contents.cardArtworkUrl = model.cardArtworkURL
+    contents.technologyTripleString = model.technologyTripleString
+    contents.contributorString = model.contributorString
+    contents.videoID = Int64(model.videoID ?? 0)
+    return contents
   }
 }
