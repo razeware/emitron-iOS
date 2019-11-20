@@ -25,34 +25,38 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
-//
 
 import Foundation
-import CoreData
+import SwiftyJSON
+@testable import Emitron
 
-@objc(Contents)
-public class Contents: NSManagedObject {
-  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.update(from: model)
-    return contents
-  }
-  
-  func update(from model: ContentDetailsModel) {
-    id = Int64(model.id)
-    name = model.name
-    uri = model.uri
-    desc = model.desc
-    releasedAt = model.releasedAt
-    free = model.free
-    difficulty = model.difficulty?.rawValue
-    contentType = model.contentType?.rawValue
-    duration = Int64(model.duration)
-    bookmarked = model.bookmarked
-    popularity = model.popularity
-    cardArtworkUrl = model.cardArtworkURL
-    technologyTripleString = model.technologyTripleString
-    contributorString = model.contributorString
-    videoID = Int64(model.videoID ?? 0)
+extension ContentDetailsModelTest {
+  enum Mocks {
+    static var collection: ContentDetailsModel {
+      loadMockFrom(filename: "ContentDetails_Collection")
+    }
+    
+    static var screencast: ContentDetailsModel {
+      loadMockFrom(filename: "ContentDetails_Screencast")
+    }
+    
+    private static func loadMockFrom(filename: String) -> ContentDetailsModel {
+      do {
+        
+        let bundle = Bundle(for: ContentDetailsModelTest.self)
+        let fileURL = bundle.url(forResource: filename, withExtension: "json")
+        let data = try Data(contentsOf: fileURL!)
+        let json = try JSON(data: data)
+        
+        let document = JSONAPIDocument(json)
+        let resource = document.data.first!
+        let model = ContentDetailsModel(resource, metadata: resource.meta)!
+        model.addRelationships(for: resource)
+        return model
+      } catch {
+        let resource = JSONAPIResource()
+        return ContentDetailsModel(resource, metadata: nil)!
+      }
+    }
   }
 }

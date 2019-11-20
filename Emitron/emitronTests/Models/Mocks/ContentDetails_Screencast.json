@@ -1,0 +1,138 @@
+
+{
+  "data": {
+    "id": "5148647",
+    "type": "contents",
+    "attributes": {
+      "uri": "rw://betamax/videos/3067",
+      "name": "What's New in Xcode 11: Workflow",
+      "description": "Explore how Xcode 11 changes your workflow. Learn how to make the most out of multiple editors and Xcode's source control changes.",
+      "released_at": "2019-08-29T13:00:00.000Z",
+      "free": false,
+      "difficulty": "intermediate",
+      "content_type": "screencast",
+      "duration": 535,
+      "popularity": 23559.0,
+      "technology_triple_string": "Swift 5.1, iOS 13.0 Beta, Xcode 11.0 Beta",
+      "contributor_string": "Christine Sweigart \u0026 Jonathan S Wong",
+      "ordinal": null,
+      "professional": false,
+      "description_plain_text": "Explore how Xcode 11 changes your workflow. Learn how to make the most out of multiple editors and Xcode's source control changes.",
+      "video_identifier": 3067,
+      "parent_name": null,
+      "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/videos/3067/8a1744a8-5d44-4dd1-addc-ca7e1245db20.png"
+    },
+    "relationships": {
+      "domains": {
+        "data": [
+          {
+            "id": "1",
+            "type": "domains"
+          }
+        ]
+      },
+      "child_contents": {
+        "meta": {
+          "count": 0
+        }
+      },
+      "progression": {
+        "data": {
+          "id": "97194622",
+          "type": "progressions"
+        }
+      },
+      "bookmark": {
+        "data": {
+          "id": "101222",
+          "type": "bookmarks"
+        }
+      },
+      "groups": {
+        "data": []
+      },
+      "categories": {
+        "data": [
+          {
+            "id": "154",
+            "type": "categories"
+          }
+        ]
+      }
+    },
+    "links": {
+      "self": "http://api.raywenderlich.com/api/contents/5148647-what-s-new-in-xcode-11-workflow",
+      "video_stream": "http://api.raywenderlich.com/api/videos/3067/stream",
+      "video_download": "http://api.raywenderlich.com/api/videos/3067/download"
+    }
+  },
+  "included": [
+    {
+      "id": "1",
+      "type": "domains",
+      "attributes": {
+        "name": "iOS \u0026 Swift",
+        "slug": "ios",
+        "description": "Learn iOS development in Swift",
+        "level": "production",
+        "ordinal": 1
+      }
+    },
+    {
+      "id": "97194622",
+      "type": "progressions",
+      "attributes": {
+        "target": 535,
+        "progress": 264,
+        "finished": false,
+        "percent_complete": 49.3,
+        "created_at": "2019-10-22T06:17:27.894Z",
+        "updated_at": "2019-10-22T06:18:21.169Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "5148647",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/5148647"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/97194622"
+      }
+    },
+    {
+      "id": "101222",
+      "type": "bookmarks",
+      "attributes": {
+        "created_at": "2019-10-22T06:28:23.636Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "5148647",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/5148647"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/bookmarks/101222"
+      }
+    },
+    {
+      "id": "154",
+      "type": "categories",
+      "attributes": {
+        "name": "Tools \u0026 Libraries",
+        "uri": "rw://carolus/categories/154",
+        "ordinal": 13
+      }
+    }
+  ]
+}

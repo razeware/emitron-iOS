@@ -38,7 +38,7 @@
     </entity>
     <entity name="Download" representedClassName="Download" syncable="YES">
         <attribute name="dateRequested" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
-        <attribute name="fileName" attributeType="String"/>
+        <attribute name="fileName" optional="YES" attributeType="String"/>
         <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
         <attribute name="lastValidated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
         <attribute name="localUrl" optional="YES" attributeType="URI"/>

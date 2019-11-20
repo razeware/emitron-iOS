@@ -1,0 +1,3661 @@
+{
+  "data": {
+    "id": "5994",
+    "type": "contents",
+    "attributes": {
+      "uri": "rw://betamax/collections/142",
+      "name": "Programming in Swift",
+      "description": "\u003cp\u003eLearn about Apple’s open source programming language, Swift, through hands-on examples!  \u003c/p\u003e\n\n\u003cp\u003eIf you’ve watched Programming in Swift: Fundamentals, you can skip the following episodes in this course:\u003c/p\u003e\n\n\u003cul\u003e\n\u003cli\u003ePart 1 - All Episodes\u003c/li\u003e\n\u003cli\u003ePart 2 - Episodes 1-5\u003c/li\u003e\n\u003cli\u003ePart 3 - Episodes 1-3, and 5-9\u003c/li\u003e\n\u003cli\u003ePart 4 - Episodes 1-6\u003c/li\u003e\n\u003c/ul\u003e\n",
+      "released_at": "2018-08-21T17:00:00.000Z",
+      "free": false,
+      "difficulty": "beginner",
+      "content_type": "collection",
+      "duration": 20244,
+      "popularity": 5905.44642857143,
+      "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+      "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+      "ordinal": null,
+      "professional": false,
+      "description_plain_text": "Learn about Apple’s open source programming language, Swift, through hands-on examples!  \n\nIf you’ve watched Programming in Swift: Fundamentals, you can skip the following episodes in this course:\n\n\nPart 1 - All Episodes\nPart 2 - Episodes 1-5\nPart 3 - Episodes 1-3, and 5-9\nPart 4 - Episodes 1-6\n\n",
+      "video_identifier": null,
+      "parent_name": null,
+      "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+    },
+    "relationships": {
+      "domains": {
+        "data": [
+          {
+            "id": "1",
+            "type": "domains"
+          },
+          {
+            "id": "8",
+            "type": "domains"
+          }
+        ]
+      },
+      "child_contents": {
+        "meta": {
+          "count": 56
+        }
+      },
+      "progression": {
+        "data": {
+          "id": "16089926",
+          "type": "progressions"
+        }
+      },
+      "bookmark": {
+        "data": null
+      },
+      "groups": {
+        "data": [
+          {
+            "id": "225",
+            "type": "groups"
+          },
+          {
+            "id": "226",
+            "type": "groups"
+          },
+          {
+            "id": "227",
+            "type": "groups"
+          },
+          {
+            "id": "228",
+            "type": "groups"
+          },
+          {
+            "id": "229",
+            "type": "groups"
+          },
+          {
+            "id": "230",
+            "type": "groups"
+          }
+        ]
+      },
+      "categories": {
+        "data": [
+          {
+            "id": "143",
+            "type": "categories"
+          },
+          {
+            "id": "144",
+            "type": "categories"
+          }
+        ]
+      }
+    },
+    "links": {
+      "self": "http://api.raywenderlich.com/api/contents/5994-programming-in-swift"
+    }
+  },
+  "included": [
+    {
+      "id": "1",
+      "type": "domains",
+      "attributes": {
+        "name": "iOS \u0026 Swift",
+        "slug": "ios",
+        "description": "Learn iOS development in Swift",
+        "level": "production",
+        "ordinal": 1
+      }
+    },
+    {
+      "id": "8",
+      "type": "domains",
+      "attributes": {
+        "name": "Server-Side Swift",
+        "slug": "server-side-swift",
+        "description": "Learn web development with Swift",
+        "level": "beta",
+        "ordinal": 3
+      }
+    },
+    {
+      "id": "16089926",
+      "type": "progressions",
+      "attributes": {
+        "target": 56,
+        "progress": 0,
+        "finished": false,
+        "percent_complete": 0.0,
+        "created_at": "2019-01-08T15:57:05.250Z",
+        "updated_at": "2019-03-04T08:23:47.976Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "5994",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/5994"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16089926"
+      }
+    },
+    {
+      "id": "225",
+      "type": "groups",
+      "attributes": {
+        "name": "Core Concepts",
+        "description": null,
+        "ordinal": 0
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7039",
+              "type": "contents"
+            },
+            {
+              "id": "7042",
+              "type": "contents"
+            },
+            {
+              "id": "7043",
+              "type": "contents"
+            },
+            {
+              "id": "7044",
+              "type": "contents"
+            },
+            {
+              "id": "7045",
+              "type": "contents"
+            },
+            {
+              "id": "7046",
+              "type": "contents"
+            },
+            {
+              "id": "7047",
+              "type": "contents"
+            },
+            {
+              "id": "7049",
+              "type": "contents"
+            },
+            {
+              "id": "7050",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7039",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2056",
+        "name": "Introduction",
+        "description": "\u003cp\u003eLet\u0026#39;s take a look at what you\u0026#39;ll be learning in this part of the course, and why it\u0026#39;s important.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": true,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 184,
+        "popularity": 26014.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 1,
+        "professional": false,
+        "description_plain_text": "Let's take a look at what you'll be learning in this part of the course, and why it's important.\n",
+        "video_identifier": 2056,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7039-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "7042",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2057",
+        "name": "Swift Playgrounds",
+        "description": "\u003cp\u003eLearn how to create your first Swift playground, and see how useful it can be to learn Swift, and use in day-to-day development.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": true,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 418,
+        "popularity": 15721.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 2,
+        "professional": false,
+        "description_plain_text": "Learn how to create your first Swift playground, and see how useful it can be to learn Swift, and use in day-to-day development.\n",
+        "video_identifier": 2057,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16089925",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7042-programming-in-swift-swift-playgrounds"
+      }
+    },
+    {
+      "id": "16089925",
+      "type": "progressions",
+      "attributes": {
+        "target": 417,
+        "progress": 313,
+        "finished": false,
+        "percent_complete": 75.1,
+        "created_at": "2019-01-08T15:57:05.236Z",
+        "updated_at": "2019-01-08T15:58:19.701Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7042",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7042"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16089925"
+      }
+    },
+    {
+      "id": "7043",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2058",
+        "name": "Comments",
+        "description": "\u003cp\u003eLearn the various ways to add comments to your Swift code - a useful way to document your work or add notes for future reference.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 338,
+        "popularity": 18744.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 3,
+        "professional": false,
+        "description_plain_text": "Learn the various ways to add comments to your Swift code - a useful way to document your work or add notes for future reference.\n",
+        "video_identifier": 2058,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7043-programming-in-swift-comments"
+      }
+    },
+    {
+      "id": "7044",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2059",
+        "name": "Tuples",
+        "description": "\u003cp\u003eLearn the group related data together into a single unit, through the power of a Swift type called Tuples.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 444,
+        "popularity": 11507.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 4,
+        "professional": false,
+        "description_plain_text": "Learn the group related data together into a single unit, through the power of a Swift type called Tuples.\n",
+        "video_identifier": 2059,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7044-programming-in-swift-tuples"
+      }
+    },
+    {
+      "id": "7045",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2060",
+        "name": "Challenge: Tuples",
+        "description": "\u003cp\u003ePractice using tuples on your own, through a series of hands-on challenges.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 354,
+        "popularity": 8327.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 5,
+        "professional": false,
+        "description_plain_text": "Practice using tuples on your own, through a series of hands-on challenges.\n",
+        "video_identifier": 2060,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7045-programming-in-swift-challenge-tuples"
+      }
+    },
+    {
+      "id": "7046",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2061",
+        "name": "Booleans and Operators",
+        "description": "\u003cp\u003eLearn how to use a Swift type called Booleans, which represent true or false values, and a bunch of new operators.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 739,
+        "popularity": 7300.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 6,
+        "professional": false,
+        "description_plain_text": "Learn how to use a Swift type called Booleans, which represent true or false values, and a bunch of new operators.\n",
+        "video_identifier": 2061,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7046-programming-in-swift-booleans-and-operators"
+      }
+    },
+    {
+      "id": "7047",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2062",
+        "name": "Challenge: Booleans",
+        "description": "\u003cp\u003ePractice using booleans on your own, through a series of hands-on challenges.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 476,
+        "popularity": 5905.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 7,
+        "professional": false,
+        "description_plain_text": "Practice using booleans on your own, through a series of hands-on challenges.\n",
+        "video_identifier": 2062,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16091245",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7047-programming-in-swift-challenge-booleans"
+      }
+    },
+    {
+      "id": "16091245",
+      "type": "progressions",
+      "attributes": {
+        "target": 475,
+        "progress": 47,
+        "finished": false,
+        "percent_complete": 9.9,
+        "created_at": "2019-01-08T16:01:27.637Z",
+        "updated_at": "2019-01-08T16:01:32.648Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7047",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7047"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16091245"
+      }
+    },
+    {
+      "id": "7049",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2063",
+        "name": "Scope",
+        "description": "\u003cp\u003eTake another look at the if statement, and learn what the concept of scope means in Swift.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 293,
+        "popularity": 5805.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 8,
+        "professional": false,
+        "description_plain_text": "Take another look at the if statement, and learn what the concept of scope means in Swift.\n",
+        "video_identifier": 2063,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16090541",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7049-programming-in-swift-scope"
+      }
+    },
+    {
+      "id": "16090541",
+      "type": "progressions",
+      "attributes": {
+        "target": 293,
+        "progress": 195,
+        "finished": false,
+        "percent_complete": 66.6,
+        "created_at": "2019-01-08T15:59:11.347Z",
+        "updated_at": "2019-01-08T16:00:27.389Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7049",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7049"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16090541"
+      }
+    },
+    {
+      "id": "7050",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2064",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review where you are with your Swift core concepts, and discuss what\u0026#39;s next.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 114,
+        "popularity": 4376.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 9,
+        "professional": false,
+        "description_plain_text": "Let's review where you are with your Swift core concepts, and discuss what's next.\n",
+        "video_identifier": 2064,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7050-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "226",
+      "type": "groups",
+      "attributes": {
+        "name": "Control Flow",
+        "description": null,
+        "ordinal": 1
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7051",
+              "type": "contents"
+            },
+            {
+              "id": "7052",
+              "type": "contents"
+            },
+            {
+              "id": "7053",
+              "type": "contents"
+            },
+            {
+              "id": "7054",
+              "type": "contents"
+            },
+            {
+              "id": "7055",
+              "type": "contents"
+            },
+            {
+              "id": "7056",
+              "type": "contents"
+            },
+            {
+              "id": "7057",
+              "type": "contents"
+            },
+            {
+              "id": "7058",
+              "type": "contents"
+            },
+            {
+              "id": "7059",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7051",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2065",
+        "name": "Introduction",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you\u0026#39;ll be learning in this part of the course, and why control flow is important.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 46,
+        "popularity": 5280.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 10,
+        "professional": false,
+        "description_plain_text": "Let's review what you'll be learning in this part of the course, and why control flow is important.\n",
+        "video_identifier": 2065,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7051-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "7052",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2066",
+        "name": "While Loops",
+        "description": "\u003cp\u003eLearn how to make Swift repeat your code multiple times with while loops, repeat while loops, and break statements.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 292,
+        "popularity": 5906.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 11,
+        "professional": false,
+        "description_plain_text": "Learn how to make Swift repeat your code multiple times with while loops, repeat while loops, and break statements.\n",
+        "video_identifier": 2066,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7052-programming-in-swift-while-loops"
+      }
+    },
+    {
+      "id": "7053",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2067",
+        "name": "Challenge: While Loops",
+        "description": "\u003cp\u003ePractice using while loops on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 301,
+        "popularity": 5332.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 12,
+        "professional": false,
+        "description_plain_text": "Practice using while loops on your own, through a hands-on challenge.\n",
+        "video_identifier": 2067,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16091472",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7053-programming-in-swift-challenge-while-loops"
+      }
+    },
+    {
+      "id": "16091472",
+      "type": "progressions",
+      "attributes": {
+        "target": 301,
+        "progress": 98,
+        "finished": false,
+        "percent_complete": 32.6,
+        "created_at": "2019-01-08T16:02:18.928Z",
+        "updated_at": "2019-01-08T16:02:23.940Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7053",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7053"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16091472"
+      }
+    },
+    {
+      "id": "7054",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2068",
+        "name": "For Loops",
+        "description": "\u003cp\u003eLearn how to use for loops in Swift, along with ranges, continue, and labeled statements.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 630,
+        "popularity": 6086.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 13,
+        "professional": false,
+        "description_plain_text": "Learn how to use for loops in Swift, along with ranges, continue, and labeled statements.\n",
+        "video_identifier": 2068,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7054-programming-in-swift-for-loops"
+      }
+    },
+    {
+      "id": "7055",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2069",
+        "name": "Challenge: For Loops",
+        "description": "\u003cp\u003ePractice using for loops on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 142,
+        "popularity": 4846.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 14,
+        "professional": false,
+        "description_plain_text": "Practice using for loops on your own, through a hands-on challenge.\n",
+        "video_identifier": 2069,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7055-programming-in-swift-challenge-for-loops"
+      }
+    },
+    {
+      "id": "7056",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2070",
+        "name": "Switch Statements",
+        "description": "\u003cp\u003eLearn how to use switch statements in Swift, including some of its more powerful features.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 546,
+        "popularity": 6183.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 15,
+        "professional": false,
+        "description_plain_text": "Learn how to use switch statements in Swift, including some of its more powerful features.\n",
+        "video_identifier": 2070,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7056-programming-in-swift-switch-statements"
+      }
+    },
+    {
+      "id": "7057",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2071",
+        "name": "Challenge: Switch Statements",
+        "description": "\u003cp\u003ePractice using switch statements on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 304,
+        "popularity": 5474.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 16,
+        "professional": false,
+        "description_plain_text": "Practice using switch statements on your own, through a hands-on challenge.\n",
+        "video_identifier": 2071,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7057-programming-in-swift-challenge-switch-statements"
+      }
+    },
+    {
+      "id": "7058",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2072",
+        "name": "Enumerations",
+        "description": "\u003cp\u003eLearn about Enums, a powerful tool in Swift that can help with your switch statements and so much more!\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 538,
+        "popularity": 7219.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 17,
+        "professional": false,
+        "description_plain_text": "Learn about Enums, a powerful tool in Swift that can help with your switch statements and so much more!\n",
+        "video_identifier": 2072,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16091738",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7058-programming-in-swift-enumerations"
+      }
+    },
+    {
+      "id": "16091738",
+      "type": "progressions",
+      "attributes": {
+        "target": 537,
+        "progress": 201,
+        "finished": false,
+        "percent_complete": 37.4,
+        "created_at": "2019-01-08T16:03:18.746Z",
+        "updated_at": "2019-01-08T16:03:23.774Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7058",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7058"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16091738"
+      }
+    },
+    {
+      "id": "7059",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2073",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you learned about control flow in this part, and discuss what\u0026#39;s next.\u003c/p\u003e\n",
+        "released_at": "2018-08-21T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 79,
+        "popularity": 3949.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 18,
+        "professional": false,
+        "description_plain_text": "Let's review what you learned about control flow in this part, and discuss what's next.\n",
+        "video_identifier": 2073,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7059-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "227",
+      "type": "groups",
+      "attributes": {
+        "name": "Functions \u0026 Optionals",
+        "description": null,
+        "ordinal": 2
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7061",
+              "type": "contents"
+            },
+            {
+              "id": "7062",
+              "type": "contents"
+            },
+            {
+              "id": "7063",
+              "type": "contents"
+            },
+            {
+              "id": "7064",
+              "type": "contents"
+            },
+            {
+              "id": "7065",
+              "type": "contents"
+            },
+            {
+              "id": "7066",
+              "type": "contents"
+            },
+            {
+              "id": "7067",
+              "type": "contents"
+            },
+            {
+              "id": "7068",
+              "type": "contents"
+            },
+            {
+              "id": "7069",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7061",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2074",
+        "name": "Introduction",
+        "description": "\u003cp\u003eReview what you\u0026#39;ll be learning in this part of the course about functions and optionals.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 50,
+        "popularity": 5025.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 19,
+        "professional": false,
+        "description_plain_text": "Review what you'll be learning in this part of the course about functions and optionals.\n",
+        "video_identifier": 2074,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7061-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "7062",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2075",
+        "name": "Introduction to Functions",
+        "description": "\u003cp\u003eLearn how to write your own functions in Swift, and see for yourself how Swift makes them easy to use.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 758,
+        "popularity": 6602.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 20,
+        "professional": false,
+        "description_plain_text": "Learn how to write your own functions in Swift, and see for yourself how Swift makes them easy to use.\n",
+        "video_identifier": 2075,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16092046",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7062-programming-in-swift-introduction-to-functions"
+      }
+    },
+    {
+      "id": "16092046",
+      "type": "progressions",
+      "attributes": {
+        "target": 757,
+        "progress": 621,
+        "finished": false,
+        "percent_complete": 82.0,
+        "created_at": "2019-01-08T16:04:24.185Z",
+        "updated_at": "2019-01-08T16:04:39.246Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7062",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7062"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16092046"
+      }
+    },
+    {
+      "id": "7063",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2076",
+        "name": "Challenge: Introduction to Functions",
+        "description": "\u003cp\u003ePractice writing functions on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 294,
+        "popularity": 5195.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 21,
+        "professional": false,
+        "description_plain_text": "Practice writing functions on your own, through a hands-on challenge.\n",
+        "video_identifier": 2076,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7063-programming-in-swift-challenge-introduction-to-functions"
+      }
+    },
+    {
+      "id": "7064",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2077",
+        "name": "More Functions",
+        "description": "\u003cp\u003eLearn some more advanced features of functions, such as overloading, inout parameters, and functions as variables.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 538,
+        "popularity": 6085.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 22,
+        "professional": false,
+        "description_plain_text": "Learn some more advanced features of functions, such as overloading, inout parameters, and functions as variables.\n",
+        "video_identifier": 2077,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7064-programming-in-swift-more-functions"
+      }
+    },
+    {
+      "id": "7065",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2078",
+        "name": "Introduction to Optionals",
+        "description": "\u003cp\u003eLearn about one of the most important aspects of Swift development - optionals - through a fun analogy.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": true,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 228,
+        "popularity": 5693.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 23,
+        "professional": false,
+        "description_plain_text": "Learn about one of the most important aspects of Swift development - optionals - through a fun analogy.\n",
+        "video_identifier": 2078,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7065-programming-in-swift-introduction-to-optionals"
+      }
+    },
+    {
+      "id": "7066",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2079",
+        "name": "Challenge: Introduction to Optionals",
+        "description": "\u003cp\u003ePractice using optionals on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 78,
+        "popularity": 4948.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 24,
+        "professional": false,
+        "description_plain_text": "Practice using optionals on your own, through a hands-on challenge.\n",
+        "video_identifier": 2079,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7066-programming-in-swift-challenge-introduction-to-optionals"
+      }
+    },
+    {
+      "id": "7067",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2080",
+        "name": "More Optionals",
+        "description": "\u003cp\u003eLearn how to unwrap optionals, force unwrap optionals, use optional binding, and use the guard statement.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 454,
+        "popularity": 5596.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 25,
+        "professional": false,
+        "description_plain_text": "Learn how to unwrap optionals, force unwrap optionals, use optional binding, and use the guard statement.\n",
+        "video_identifier": 2080,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7067-programming-in-swift-more-optionals"
+      }
+    },
+    {
+      "id": "7068",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2081",
+        "name": "Challenge: More Optionals",
+        "description": "\u003cp\u003ePractice unwrapping optionals on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 177,
+        "popularity": 4711.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 26,
+        "professional": false,
+        "description_plain_text": "Practice unwrapping optionals on your own, through a hands-on challenge.\n",
+        "video_identifier": 2081,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16092358",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7068-programming-in-swift-challenge-more-optionals"
+      }
+    },
+    {
+      "id": "16092358",
+      "type": "progressions",
+      "attributes": {
+        "target": 176,
+        "progress": 14,
+        "finished": false,
+        "percent_complete": 8.0,
+        "created_at": "2019-01-08T16:05:27.445Z",
+        "updated_at": "2019-01-08T16:05:27.485Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7068",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7068"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16092358"
+      }
+    },
+    {
+      "id": "7069",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2082",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review where you are with your Swift core concepts, and discuss what\u0026#39;s next.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 72,
+        "popularity": 3554.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 27,
+        "professional": false,
+        "description_plain_text": "Let's review where you are with your Swift core concepts, and discuss what's next.\n",
+        "video_identifier": 2082,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7069-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "228",
+      "type": "groups",
+      "attributes": {
+        "name": "Collections",
+        "description": null,
+        "ordinal": 3
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7070",
+              "type": "contents"
+            },
+            {
+              "id": "7071",
+              "type": "contents"
+            },
+            {
+              "id": "7072",
+              "type": "contents"
+            },
+            {
+              "id": "7073",
+              "type": "contents"
+            },
+            {
+              "id": "7074",
+              "type": "contents"
+            },
+            {
+              "id": "7075",
+              "type": "contents"
+            },
+            {
+              "id": "7076",
+              "type": "contents"
+            },
+            {
+              "id": "7077",
+              "type": "contents"
+            },
+            {
+              "id": "7078",
+              "type": "contents"
+            },
+            {
+              "id": "7079",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7070",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2083",
+        "name": "Introduction",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you\u0026#39;ll be learning in this part of the course, and why it\u0026#39;s important.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 31,
+        "popularity": 4231.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 28,
+        "professional": false,
+        "description_plain_text": "Let's review what you'll be learning in this part of the course, and why it's important.\n",
+        "video_identifier": 2083,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16093019",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7070-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "16093019",
+      "type": "progressions",
+      "attributes": {
+        "target": 31,
+        "progress": 9,
+        "finished": false,
+        "percent_complete": 29.0,
+        "created_at": "2019-01-08T16:07:44.618Z",
+        "updated_at": "2019-01-08T16:08:14.317Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7070",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7070"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16093019"
+      }
+    },
+    {
+      "id": "7071",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2084",
+        "name": "Arrays",
+        "description": "\u003cp\u003eLearn how to use arrays in Swift to store and manipulate an ordered list of values.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 670,
+        "popularity": 5620.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 29,
+        "professional": false,
+        "description_plain_text": "Learn how to use arrays in Swift to store and manipulate an ordered list of values.\n",
+        "video_identifier": 2084,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7071-programming-in-swift-arrays"
+      }
+    },
+    {
+      "id": "7072",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2085",
+        "name": "Challenge: Arrays",
+        "description": "\u003cp\u003ePractice using arrays on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 133,
+        "popularity": 4271.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 30,
+        "professional": false,
+        "description_plain_text": "Practice using arrays on your own, through a hands-on challenge.\n",
+        "video_identifier": 2085,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7072-programming-in-swift-challenge-arrays"
+      }
+    },
+    {
+      "id": "7073",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2086",
+        "name": "Dictionaries",
+        "description": "\u003cp\u003eLearn how to use dictionaries in Swift to store an unordered collection of pairs.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 502,
+        "popularity": 5084.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 31,
+        "professional": false,
+        "description_plain_text": "Learn how to use dictionaries in Swift to store an unordered collection of pairs.\n",
+        "video_identifier": 2086,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7073-programming-in-swift-dictionaries"
+      }
+    },
+    {
+      "id": "7074",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2087",
+        "name": "Challenge: Dictionaries",
+        "description": "\u003cp\u003ePractice using dictionaries on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 216,
+        "popularity": 4297.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 32,
+        "professional": false,
+        "description_plain_text": "Practice using dictionaries on your own, through a hands-on challenge.\n",
+        "video_identifier": 2087,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7074-programming-in-swift-challenge-dictionaries"
+      }
+    },
+    {
+      "id": "7075",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2088",
+        "name": "Sets",
+        "description": "\u003cp\u003eLearn how to use Sets in Swift to store an unordered collection of unique values.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": true,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 365,
+        "popularity": 4993.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 33,
+        "professional": false,
+        "description_plain_text": "Learn how to use Sets in Swift to store an unordered collection of unique values.\n",
+        "video_identifier": 2088,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16093347",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7075-programming-in-swift-sets"
+      }
+    },
+    {
+      "id": "16093347",
+      "type": "progressions",
+      "attributes": {
+        "target": 364,
+        "progress": 321,
+        "finished": false,
+        "percent_complete": 88.2,
+        "created_at": "2019-01-08T16:08:55.883Z",
+        "updated_at": "2019-01-08T16:09:53.605Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7075",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7075"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16093347"
+      }
+    },
+    {
+      "id": "7076",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2089",
+        "name": "Closures",
+        "description": "\u003cp\u003eLearn how to create closures in Swift - which you can think of as a function without a name.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 652,
+        "popularity": 7678.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 34,
+        "professional": false,
+        "description_plain_text": "Learn how to create closures in Swift - which you can think of as a function without a name.\n",
+        "video_identifier": 2089,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7076-programming-in-swift-closures"
+      }
+    },
+    {
+      "id": "7077",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2090",
+        "name": "Closures and Collections",
+        "description": "\u003cp\u003eLearn how you can use closures to sort collections, filter collections, run calculations on elements within a collection, and more.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 700,
+        "popularity": 7160.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 35,
+        "professional": false,
+        "description_plain_text": "Learn how you can use closures to sort collections, filter collections, run calculations on elements within a collection, and more.\n",
+        "video_identifier": 2090,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7077-programming-in-swift-closures-and-collections"
+      }
+    },
+    {
+      "id": "7078",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2091",
+        "name": "Challenge: Closures",
+        "description": "\u003cp\u003ePractice using closures on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 254,
+        "popularity": 4454.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 36,
+        "professional": false,
+        "description_plain_text": "Practice using closures on your own, through a hands-on challenge.\n",
+        "video_identifier": 2091,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7078-programming-in-swift-challenge-closures"
+      }
+    },
+    {
+      "id": "7079",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2092",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you learned about collections in this part of the course, and discuss what\u0026#39;s next.\u003c/p\u003e\n",
+        "released_at": "2018-08-22T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 80,
+        "popularity": 2956.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 37,
+        "professional": false,
+        "description_plain_text": "Let's review what you learned about collections in this part of the course, and discuss what's next.\n",
+        "video_identifier": 2092,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7079-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "229",
+      "type": "groups",
+      "attributes": {
+        "name": "Structures",
+        "description": "",
+        "ordinal": 4
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7080",
+              "type": "contents"
+            },
+            {
+              "id": "7081",
+              "type": "contents"
+            },
+            {
+              "id": "7082",
+              "type": "contents"
+            },
+            {
+              "id": "7083",
+              "type": "contents"
+            },
+            {
+              "id": "7084",
+              "type": "contents"
+            },
+            {
+              "id": "7085",
+              "type": "contents"
+            },
+            {
+              "id": "7086",
+              "type": "contents"
+            },
+            {
+              "id": "7087",
+              "type": "contents"
+            },
+            {
+              "id": "7088",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7080",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2093",
+        "name": "Introduction",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you\u0026#39;ll be learning about structures in this part of the course, and why it\u0026#39;s important.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 114,
+        "popularity": 4444.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 38,
+        "professional": false,
+        "description_plain_text": "Let's review what you'll be learning about structures in this part of the course, and why it's important.\n",
+        "video_identifier": 2093,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7080-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "7081",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2094",
+        "name": "Structures",
+        "description": "\u003cp\u003eLearn how to group data and functionality together in Swift, using a value type called structures.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 836,
+        "popularity": 6318.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 39,
+        "professional": false,
+        "description_plain_text": "Learn how to group data and functionality together in Swift, using a value type called structures.\n",
+        "video_identifier": 2094,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16093900",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7081-programming-in-swift-structures"
+      }
+    },
+    {
+      "id": "16093900",
+      "type": "progressions",
+      "attributes": {
+        "target": 836,
+        "progress": 43,
+        "finished": false,
+        "percent_complete": 5.1,
+        "created_at": "2019-01-08T16:10:54.013Z",
+        "updated_at": "2019-01-08T16:13:23.261Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7081",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7081"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16093900"
+      }
+    },
+    {
+      "id": "7082",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2095",
+        "name": "Challenge: Structures",
+        "description": "\u003cp\u003ePractice using structures on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 283,
+        "popularity": 4643.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 40,
+        "professional": false,
+        "description_plain_text": "Practice using structures on your own, through a hands-on challenge.\n",
+        "video_identifier": 2095,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16094712",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7082-programming-in-swift-challenge-structures"
+      }
+    },
+    {
+      "id": "16094712",
+      "type": "progressions",
+      "attributes": {
+        "target": 282,
+        "progress": 42,
+        "finished": false,
+        "percent_complete": 14.9,
+        "created_at": "2019-01-08T16:14:01.285Z",
+        "updated_at": "2019-03-04T08:30:35.619Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7082",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7082"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16094712"
+      }
+    },
+    {
+      "id": "7083",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2096",
+        "name": "Properties",
+        "description": "\u003cp\u003eLearn how to add two types of properties to your types: stored properties, and computed properties.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 1054,
+        "popularity": 6328.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 41,
+        "professional": false,
+        "description_plain_text": "Learn how to add two types of properties to your types: stored properties, and computed properties.\n",
+        "video_identifier": 2096,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "29999050",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7083-programming-in-swift-properties"
+      }
+    },
+    {
+      "id": "29999050",
+      "type": "progressions",
+      "attributes": {
+        "target": 1053,
+        "progress": 38,
+        "finished": false,
+        "percent_complete": 3.6,
+        "created_at": "2019-03-04T08:23:38.166Z",
+        "updated_at": "2019-03-04T08:24:27.683Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7083",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7083"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/29999050"
+      }
+    },
+    {
+      "id": "7084",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2097",
+        "name": "Challenge: Properties",
+        "description": "\u003cp\u003ePractice creating properties on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 196,
+        "popularity": 3964.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 42,
+        "professional": false,
+        "description_plain_text": "Practice creating properties on your own, through a hands-on challenge.\n",
+        "video_identifier": 2097,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "29999042",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7084-programming-in-swift-challenge-properties"
+      }
+    },
+    {
+      "id": "29999042",
+      "type": "progressions",
+      "attributes": {
+        "target": 1000,
+        "progress": 0,
+        "finished": false,
+        "percent_complete": 0.0,
+        "created_at": "2019-03-04T08:23:37.174Z",
+        "updated_at": "2019-03-04T08:23:40.434Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7084",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7084"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/29999042"
+      }
+    },
+    {
+      "id": "7085",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2098",
+        "name": "Computed Properties vs. Methods",
+        "description": "\u003cp\u003eLearn when it\u0026#39;s best to use computed properties, and when it\u0026#39;s best to use methods.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 83,
+        "popularity": 3725.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 43,
+        "professional": false,
+        "description_plain_text": "Learn when it's best to use computed properties, and when it's best to use methods.\n",
+        "video_identifier": 2098,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7085-programming-in-swift-computed-properties-vs-methods"
+      }
+    },
+    {
+      "id": "7086",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2099",
+        "name": "Methods",
+        "description": "\u003cp\u003eTake a deep dive into methods, including writing initializers, mutating methods, extensions, and more.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 811,
+        "popularity": 4744.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 44,
+        "professional": false,
+        "description_plain_text": "Take a deep dive into methods, including writing initializers, mutating methods, extensions, and more.\n",
+        "video_identifier": 2099,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "30000379",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7086-programming-in-swift-methods"
+      }
+    },
+    {
+      "id": "30000379",
+      "type": "progressions",
+      "attributes": {
+        "target": 811,
+        "progress": 3,
+        "finished": false,
+        "percent_complete": 0.4,
+        "created_at": "2019-03-04T08:30:25.719Z",
+        "updated_at": "2019-03-04T08:30:25.726Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7086",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7086"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/30000379"
+      }
+    },
+    {
+      "id": "7087",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2100",
+        "name": "Challenge: Methods",
+        "description": "\u003cp\u003ePractice writing methods on your own, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 407,
+        "popularity": 3501.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 45,
+        "professional": false,
+        "description_plain_text": "Practice writing methods on your own, through a hands-on challenge.\n",
+        "video_identifier": 2100,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16095031",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7087-programming-in-swift-challenge-methods"
+      }
+    },
+    {
+      "id": "16095031",
+      "type": "progressions",
+      "attributes": {
+        "target": 1000,
+        "progress": 0,
+        "finished": false,
+        "percent_complete": 0.0,
+        "created_at": "2019-01-08T16:15:10.162Z",
+        "updated_at": "2019-03-04T08:23:41.293Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7087",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7087"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16095031"
+      }
+    },
+    {
+      "id": "7088",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2101",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you learned about structures in this part of the course, and discuss what\u0026#39;s next.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 74,
+        "popularity": 2419.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 46,
+        "professional": false,
+        "description_plain_text": "Let's review what you learned about structures in this part of the course, and discuss what's next.\n",
+        "video_identifier": 2101,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7088-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "230",
+      "type": "groups",
+      "attributes": {
+        "name": "Classes",
+        "description": null,
+        "ordinal": 5
+      },
+      "relationships": {
+        "contents": {
+          "data": [
+            {
+              "id": "7089",
+              "type": "contents"
+            },
+            {
+              "id": "7090",
+              "type": "contents"
+            },
+            {
+              "id": "7091",
+              "type": "contents"
+            },
+            {
+              "id": "7092",
+              "type": "contents"
+            },
+            {
+              "id": "7093",
+              "type": "contents"
+            },
+            {
+              "id": "7094",
+              "type": "contents"
+            },
+            {
+              "id": "7095",
+              "type": "contents"
+            },
+            {
+              "id": "7096",
+              "type": "contents"
+            },
+            {
+              "id": "7097",
+              "type": "contents"
+            },
+            {
+              "id": "7098",
+              "type": "contents"
+            }
+          ]
+        }
+      }
+    },
+    {
+      "id": "7089",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2102",
+        "name": "Introduction",
+        "description": "\u003cp\u003eLet\u0026#39;s review what you\u0026#39;ll be learning about classes in this part of the course, and why it\u0026#39;s important.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 83,
+        "popularity": 3811.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 47,
+        "professional": false,
+        "description_plain_text": "Let's review what you'll be learning about classes in this part of the course, and why it's important.\n",
+        "video_identifier": 2102,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7089-programming-in-swift-introduction"
+      }
+    },
+    {
+      "id": "7090",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2103",
+        "name": "Classes vs. Structures",
+        "description": "\u003cp\u003eLearn about the differences between classes and structures in Swift, and when you should use which.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": true,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 613,
+        "popularity": 4768.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 48,
+        "professional": false,
+        "description_plain_text": "Learn about the differences between classes and structures in Swift, and when you should use which.\n",
+        "video_identifier": 2103,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16095318",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7090-programming-in-swift-classes-vs-structures"
+      }
+    },
+    {
+      "id": "16095318",
+      "type": "progressions",
+      "attributes": {
+        "target": 612,
+        "progress": 459,
+        "finished": false,
+        "percent_complete": 75.0,
+        "created_at": "2019-01-08T16:16:04.992Z",
+        "updated_at": "2019-01-08T16:16:05.026Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7090",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7090"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16095318"
+      }
+    },
+    {
+      "id": "7091",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2104",
+        "name": "Challenge: Classes vs. Structures",
+        "description": "\u003cp\u003ePractice working with classes and understanding when to use them vs. structures, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 293,
+        "popularity": 3680.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 49,
+        "professional": false,
+        "description_plain_text": "Practice working with classes and understanding when to use them vs. structures, through a hands-on challenge.\n",
+        "video_identifier": 2104,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16095396",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7091-programming-in-swift-challenge-classes-vs-structures"
+      }
+    },
+    {
+      "id": "16095396",
+      "type": "progressions",
+      "attributes": {
+        "target": 292,
+        "progress": 233,
+        "finished": false,
+        "percent_complete": 79.8,
+        "created_at": "2019-01-08T16:16:21.413Z",
+        "updated_at": "2019-01-08T16:16:26.390Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7091",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7091"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16095396"
+      }
+    },
+    {
+      "id": "7092",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2105",
+        "name": "Inheritance",
+        "description": "\u003cp\u003eLearn how you can inherit functionality from another class in Swift.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 759,
+        "popularity": 4099.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 50,
+        "professional": false,
+        "description_plain_text": "Learn how you can inherit functionality from another class in Swift.\n",
+        "video_identifier": 2105,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7092-programming-in-swift-inheritance"
+      }
+    },
+    {
+      "id": "7093",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2106",
+        "name": "Initializers",
+        "description": "\u003cp\u003eLearn how to create your own class initializers, including two-phase initialization, and required vs. convenience initializers.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 608,
+        "popularity": 4446.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 51,
+        "professional": false,
+        "description_plain_text": "Learn how to create your own class initializers, including two-phase initialization, and required vs. convenience initializers.\n",
+        "video_identifier": 2106,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7093-programming-in-swift-initializers"
+      }
+    },
+    {
+      "id": "7094",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2107",
+        "name": "Challenge: Initializers",
+        "description": "\u003cp\u003ePractice creating your own class initializers, through a hands-on challenge.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 233,
+        "popularity": 3291.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 52,
+        "professional": false,
+        "description_plain_text": "Practice creating your own class initializers, through a hands-on challenge.\n",
+        "video_identifier": 2107,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16095719",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7094-programming-in-swift-challenge-initializers"
+      }
+    },
+    {
+      "id": "16095719",
+      "type": "progressions",
+      "attributes": {
+        "target": 233,
+        "progress": 198,
+        "finished": false,
+        "percent_complete": 85.0,
+        "created_at": "2019-01-08T16:17:19.667Z",
+        "updated_at": "2019-01-08T16:17:54.680Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7094",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7094"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16095719"
+      }
+    },
+    {
+      "id": "7095",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2108",
+        "name": "When Should You Subclass?",
+        "description": "\u003cp\u003eLearn five concepts to help you decide when you should subclass, and when you shouldn\u0026#39;t.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 200,
+        "popularity": 3065.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 53,
+        "professional": false,
+        "description_plain_text": "Learn five concepts to help you decide when you should subclass, and when you shouldn't.\n",
+        "video_identifier": 2108,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7095-programming-in-swift-when-should-you-subclass"
+      }
+    },
+    {
+      "id": "7096",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2109",
+        "name": "Protocols",
+        "description": "\u003cp\u003eLearn how to make your types conform to protocols in Swift, which you can think of as a to-do list for your types.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 500,
+        "popularity": 3905.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 54,
+        "professional": false,
+        "description_plain_text": "Learn how to make your types conform to protocols in Swift, which you can think of as a to-do list for your types.\n",
+        "video_identifier": 2109,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7096-programming-in-swift-protocols"
+      }
+    },
+    {
+      "id": "7097",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2110",
+        "name": "Memory Management",
+        "description": "\u003cp\u003eLearn how Swift manages memory under the hood, how you can tell when an object is deinitialized, and how you can avoid a nasty memory leak in your apps.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 495,
+        "popularity": 3810.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 55,
+        "professional": false,
+        "description_plain_text": "Learn how Swift manages memory under the hood, how you can tell when an object is deinitialized, and how you can avoid a nasty memory leak in your apps.\n",
+        "video_identifier": 2110,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": {
+            "id": "16096116",
+            "type": "progressions"
+          }
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7097-programming-in-swift-memory-management"
+      }
+    },
+    {
+      "id": "16096116",
+      "type": "progressions",
+      "attributes": {
+        "target": 494,
+        "progress": 337,
+        "finished": false,
+        "percent_complete": 68.2,
+        "created_at": "2019-01-08T16:18:48.165Z",
+        "updated_at": "2019-01-08T16:19:03.165Z"
+      },
+      "relationships": {
+        "content": {
+          "data": {
+            "id": "7097",
+            "type": "contents"
+          },
+          "links": {
+            "self": "http://api.raywenderlich.com/api/contents/7097"
+          }
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/progressions/16096116"
+      }
+    },
+    {
+      "id": "7098",
+      "type": "contents",
+      "attributes": {
+        "uri": "rw://betamax/videos/2111",
+        "name": "Conclusion",
+        "description": "\u003cp\u003eLet\u0026#39;s review where you\u0026#39;re at with your Swift core concepts, and give you some advice about where to go next.\u003c/p\u003e\n",
+        "released_at": "2018-08-23T17:00:00.000Z",
+        "free": false,
+        "difficulty": "beginner",
+        "content_type": "episode",
+        "duration": 112,
+        "popularity": 3617.0,
+        "technology_triple_string": "Swift 4, iOS 12, Xcode 10",
+        "contributor_string": "Catie Catterwaul \u0026 Jessy Catterwaul",
+        "ordinal": 56,
+        "professional": false,
+        "description_plain_text": "Let's review where you're at with your Swift core concepts, and give you some advice about where to go next.\n",
+        "video_identifier": 2111,
+        "parent_name": "Programming in Swift",
+        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      },
+      "relationships": {
+        "domains": {
+          "data": [
+            {
+              "id": "1",
+              "type": "domains"
+            }
+          ]
+        },
+        "child_contents": {
+          "meta": {
+            "count": 0
+          }
+        },
+        "progression": {
+          "data": null
+        },
+        "bookmark": {
+          "data": null
+        }
+      },
+      "links": {
+        "self": "http://api.raywenderlich.com/api/contents/7098-programming-in-swift-conclusion"
+      }
+    },
+    {
+      "id": "143",
+      "type": "categories",
+      "attributes": {
+        "name": "Getting Started",
+        "uri": "rw://carolus/categories/143",
+        "ordinal": 0
+      }
+    },
+    {
+      "id": "144",
+      "type": "categories",
+      "attributes": {
+        "name": "Language",
+        "uri": "rw://carolus/categories/144",
+        "ordinal": 4
+      }
+    }
+  ]
+}

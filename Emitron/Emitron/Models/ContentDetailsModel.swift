@@ -54,7 +54,7 @@ class ContentDetailsModel: NSObject {
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
   private(set) var difficulty: ContentDifficulty? = nil
-  private(set) var contentType: ContentType? = nil
+  var contentType: ContentType? = nil
   private(set) var duration: Int = 0
   private(set) var popularity: Double = 0.0
   private(set) var cardArtworkURL: URL?
@@ -64,7 +64,9 @@ class ContentDetailsModel: NSObject {
   private(set) var index: Int?
   private(set) var professional: Bool = false
   
-  private(set) var childContents: [ContentDetailsModel] = []
+  var childContents: [ContentDetailsModel] {
+    groups.flatMap { $0.childContents }
+  }
   private(set) var groups: [GroupModel] = []
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?

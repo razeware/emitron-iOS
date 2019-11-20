@@ -88,7 +88,7 @@ class DownloadTest: XCTestCase {
     try! coreDataContext.save()
     
     // Check that state matches
-    XCTAssertEqual(Download.State.cancelled, download.state)
+    XCTAssertEqual(Download.State.paused, download.state)
   }
   
   func testStatePropertyCorrectlySetsBackingVariable() {
@@ -102,7 +102,7 @@ class DownloadTest: XCTestCase {
     try! coreDataContext.save()
     
     // Check that state matches
-    XCTAssertEqual(2, download.stateInt)
+    XCTAssertEqual(3, download.stateInt)
   }
   
   func testInvalidStateBackingVariableWorksAsExpected() {

@@ -8,6 +8,15 @@
 
 /* Begin PBXBuildFile section */
 		221E56622375E4AD00333607 /* CoreDataMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E56612375E4AD00333607 /* CoreDataMocks.swift */; };
+		221E56642379761A00333607 /* ContentDetailsModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E56632379761A00333607 /* ContentDetailsModelTest.swift */; };
+		221E56662379767C00333607 /* ContentDetailsModelTest+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E56652379767C00333607 /* ContentDetailsModelTest+Mocks.swift */; };
+		221E5669237AA29900333607 /* ContentDetails_Collection.json in Resources */ = {isa = PBXBuildFile; fileRef = 221E5668237AA29900333607 /* ContentDetails_Collection.json */; };
+		221E566B237AA2B100333607 /* ContentDetails_Screencast.json in Resources */ = {isa = PBXBuildFile; fileRef = 221E566A237AA2B100333607 /* ContentDetails_Screencast.json */; };
+		221E609E23856F4000E92155 /* VideosServiceMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E609D23856F4000E92155 /* VideosServiceMock.swift */; };
+		221E60A12385771F00E92155 /* AttachmentModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E60A02385771F00E92155 /* AttachmentModelTest.swift */; };
+		221E60A32385775300E92155 /* AttachmentModelTest+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E60A22385775300E92155 /* AttachmentModelTest+Mocks.swift */; };
+		221E60A42385790B00E92155 /* Attachment_Downloads.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* Attachment_Downloads.json */; };
+		221E60A52385790B00E92155 /* Attachment_Stream.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* Attachment_Stream.json */; };
 		2288EF052372BC6A00514043 /* Download+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF042372BC6A00514043 /* Download+CoreDataProperties.swift */; };
 		2288EF062372BC6A00514043 /* Download+CoreDataClass.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF032372BC6A00514043 /* Download+CoreDataClass.swift */; };
 		2288EF0B2374057000514043 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF092374056D00514043 /* DownloadService.swift */; };
@@ -60,8 +69,6 @@
 		B595654E231B4EDB00A3FF44 /* DownloadsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595654D231B4EDB00A3FF44 /* DownloadsMC.swift */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7BD23000ABD00F36B32 /* CardView.swift */; };
-		B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */; };
-		B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */; };
 		B621DD3B22F5CB9A00A1F27A /* VideoModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */; };
 		B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */; };
 		B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */; };
@@ -173,6 +180,13 @@
 
 /* Begin PBXFileReference section */
 		221E56612375E4AD00333607 /* CoreDataMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataMocks.swift; sourceTree = "<group>"; };
+		221E56632379761A00333607 /* ContentDetailsModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailsModelTest.swift; sourceTree = "<group>"; };
+		221E56652379767C00333607 /* ContentDetailsModelTest+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentDetailsModelTest+Mocks.swift"; sourceTree = "<group>"; };
+		221E5668237AA29900333607 /* ContentDetails_Collection.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ContentDetails_Collection.json; sourceTree = "<group>"; };
+		221E566A237AA2B100333607 /* ContentDetails_Screencast.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ContentDetails_Screencast.json; sourceTree = "<group>"; };
+		221E609D23856F4000E92155 /* VideosServiceMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideosServiceMock.swift; sourceTree = "<group>"; };
+		221E60A02385771F00E92155 /* AttachmentModelTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentModelTest.swift; sourceTree = "<group>"; };
+		221E60A22385775300E92155 /* AttachmentModelTest+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttachmentModelTest+Mocks.swift"; sourceTree = "<group>"; };
 		223CE262235F977300D0ED50 /* secrets.development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.development.xcconfig; sourceTree = "<group>"; };
 		223CE263235F977300D0ED50 /* secrets.production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.production.xcconfig; sourceTree = "<group>"; };
 		2288EF032372BC6A00514043 /* Download+CoreDataClass.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Download+CoreDataClass.swift"; sourceTree = "<group>"; };
@@ -234,8 +248,8 @@
 		B595654D231B4EDB00A3FF44 /* DownloadsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadsMC.swift; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B60FF7BD23000ABD00F36B32 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
-		B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+DownloadTest.json"; sourceTree = "<group>"; };
-		B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = "VideoModel+StreamTest.json"; sourceTree = "<group>"; };
+		B621DD3622F5CB9A00A1F27A /* Attachment_Downloads.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Attachment_Downloads.json; sourceTree = "<group>"; };
+		B621DD3722F5CB9A00A1F27A /* Attachment_Stream.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Attachment_Stream.json; sourceTree = "<group>"; };
 		B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = VideoModelTest.json; sourceTree = "<group>"; };
 		B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = BookmarksModelTest.json; sourceTree = "<group>"; };
 		B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = ProgressionsModelTest.json; sourceTree = "<group>"; };
@@ -357,6 +371,33 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		221E5667237AA26F00333607 /* Mocks */ = {
+			isa = PBXGroup;
+			children = (
+				B621DD3622F5CB9A00A1F27A /* Attachment_Downloads.json */,
+				B621DD3722F5CB9A00A1F27A /* Attachment_Stream.json */,
+				221E5668237AA29900333607 /* ContentDetails_Collection.json */,
+				221E566A237AA2B100333607 /* ContentDetails_Screencast.json */,
+			);
+			path = Mocks;
+			sourceTree = "<group>";
+		};
+		221E609C23856F2B00E92155 /* Services */ = {
+			isa = PBXGroup;
+			children = (
+				221E609F23856F4400E92155 /* Mock */,
+			);
+			path = Services;
+			sourceTree = "<group>";
+		};
+		221E609F23856F4400E92155 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				221E609D23856F4000E92155 /* VideosServiceMock.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		2288EF122374297100514043 /* CoreData */ = {
 			isa = PBXGroup;
 			children = (
@@ -388,6 +429,7 @@
 		22D176BE23460A060038333D /* emitronTests */ = {
 			isa = PBXGroup;
 			children = (
+				221E609C23856F2B00E92155 /* Services */,
 				22A36F51236F7C750064A406 /* Downloads */,
 				22D176CC234751FB0038333D /* Models */,
 				22D176C923460ADE0038333D /* Persistence */,
@@ -416,6 +458,11 @@
 		22D176CC234751FB0038333D /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				221E5667237AA26F00333607 /* Mocks */,
+				221E60A02385771F00E92155 /* AttachmentModelTest.swift */,
+				221E60A22385775300E92155 /* AttachmentModelTest+Mocks.swift */,
+				221E56632379761A00333607 /* ContentDetailsModelTest.swift */,
+				221E56652379767C00333607 /* ContentDetailsModelTest+Mocks.swift */,
 				22D176CD2347520D0038333D /* UserModelTest.swift */,
 			);
 			path = Models;
@@ -551,8 +598,6 @@
 			children = (
 				B629AB4D22E60F260037F4D8 /* ContentDetailsModelTest.json */,
 				B6C4F3DA22E70F990087ED10 /* CategoriesModelTest.json */,
-				B621DD3622F5CB9A00A1F27A /* VideoModel+DownloadTest.json */,
-				B621DD3722F5CB9A00A1F27A /* VideoModel+StreamTest.json */,
 				B621DD3822F5CB9A00A1F27A /* VideoModelTest.json */,
 				B621DD4822F5CDBD00A1F27A /* BookmarksModelTest.json */,
 				B621DD4A22F5CDC800A1F27A /* ProgressionsModelTest.json */,
@@ -959,6 +1004,10 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				221E5669237AA29900333607 /* ContentDetails_Collection.json in Resources */,
+				221E566B237AA2B100333607 /* ContentDetails_Screencast.json in Resources */,
+				221E60A52385790B00E92155 /* Attachment_Stream.json in Resources */,
+				221E60A42385790B00E92155 /* Attachment_Downloads.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -967,7 +1016,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				B6DF2F8422C9F3FA0081A3A3 /* GoogleService-Info.plist in Resources */,
-				B621DD3A22F5CB9A00A1F27A /* VideoModel+StreamTest.json in Resources */,
 				B6C4F3DB22E70F990087ED10 /* CategoriesModelTest.json in Resources */,
 				B629AB4E22E60F260037F4D8 /* ContentDetailsModelTest.json in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
@@ -981,7 +1029,6 @@
 				B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */,
 				B621DD4922F5CDBD00A1F27A /* BookmarksModelTest.json in Resources */,
 				B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */,
-				B621DD3922F5CB9A00A1F27A /* VideoModel+DownloadTest.json in Resources */,
 				B621DD4B22F5CDC800A1F27A /* ProgressionsModelTest.json in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1114,9 +1161,14 @@
 			files = (
 				22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */,
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
+				221E56642379761A00333607 /* ContentDetailsModelTest.swift in Sources */,
+				221E609E23856F4000E92155 /* VideosServiceMock.swift in Sources */,
+				221E60A32385775300E92155 /* AttachmentModelTest+Mocks.swift in Sources */,
 				2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */,
+				221E60A12385771F00E92155 /* AttachmentModelTest.swift in Sources */,
 				22D176CE2347520D0038333D /* UserModelTest.swift in Sources */,
 				221E56622375E4AD00333607 /* CoreDataMocks.swift in Sources */,
+				221E56662379767C00333607 /* ContentDetailsModelTest+Mocks.swift in Sources */,
 				2288EF142374298200514043 /* ContentsTest.swift in Sources */,
 				22D176CB23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift in Sources */,
 			);

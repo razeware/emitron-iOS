@@ -27,11 +27,204 @@
 /// THE SOFTWARE.
 
 import Foundation
+import CoreData
 
 final class DownloadService {
   private let coreDataStack: CoreDataStack
+  private var coreDataContext: NSManagedObjectContext {
+    return coreDataStack.viewContext
+  }
+  private let videosService: VideosService
   
-  init(coreDataStack: CoreDataStack) {
+  private var downloadQuality: AttachmentKind {
+    guard let selectedQuality = UserDefaults.standard.downloadQuality,
+      let kind = AttachmentKind(rawValue: selectedQuality) else {
+        return AttachmentKind.hdVideoFile
+    }
+    return kind
+  }
+  private lazy var downloadsDirectory: URL = {
+    let fileManager = FileManager.default
+    let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
+    guard let documentsDirectory = documentsDirectories.first else {
+      fatalError("Unable to locate the documents directory")
+    }
+    
+    return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
+  }()
+  
+  init(coreDataStack: CoreDataStack, videosService: VideosService) {
     self.coreDataStack = coreDataStack
+    self.videosService = videosService
+    prepareDownloadDirectory()
+  }
+  
+  func requestDownload(content: ContentDetailsModel) {
+    // Let's ensure that all the relevant content is stored locally
+    var contentToDownload = [Contents]()
+    contentToDownload.append(addOrUpdate(content: content))
+    if let parentContent = content.parentContent {
+      // If the requested content has parent content we don't
+      // want to donwload it.
+      let _ = addOrUpdate(content: parentContent)
+    }
+    // We do want to download all child content tho
+    contentToDownload += content.childContents.map { addOrUpdate(content: $0) }
+    
+    // Now create the appropriate download objects.
+    //TODO: Should we do anything with these?
+    let _ = contentToDownload.map { createDownload(content: $0) }
+    
+    // Commit all these changes
+    if coreDataStack.viewContext.hasChanges {
+      do {
+        try coreDataStack.viewContext.save()
+      } catch {
+        // TODO
+        print("Unable to save. Not sure what to do.")
+      }
+    }
+  }
+  
+  func requestDownloadUrl(_ download: Download) {
+    guard download.remoteUrl == nil, download.state == .pending, download.content?.contentType != "collection" else {
+      // TODO: Log
+      print("Cannot request download URL for: \(download)")
+      return
+    }
+    // Find the video ID
+    guard let videoId = download.content?.videoID, videoId != 0 else {
+      // TODO: Log
+      print("Unable to locate videoId for download: \(download)")
+      return
+    }
+    
+    // Use the video service to request the URLs
+    videosService.getVideoDownload(for: Int(videoId)) { [weak self] result in
+      // Ensure we're still around
+      guard let self = self else { return }
+      
+      switch result {
+      case .failure(let error):
+        // TODO: Log
+        print("Unable to obtain download URLs: \(error)")
+      case .success(let attachments):
+        download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
+        download.lastValidated = Date()
+      }
+      
+      // Update the state if required
+      if download.remoteUrl == nil {
+        download.state = .error
+      }
+      
+      // Commit the changes
+      do {
+        try self.coreDataContext.save()
+      } catch {
+        // TODO: Log
+        print("Unable to save URL: \(error)")
+      }
+    }
+    
+    // Update the state
+    download.state = .urlRequested
+    // Commit the changes
+    do {
+      try self.coreDataContext.save()
+    } catch {
+      // TODO: Log
+      print("Unable to request the donwload URL: \(error)")
+    }
+  }
+  
+  func enqueue(download: Download) {
+    guard download.remoteUrl != nil, download.state == .urlRequested else {
+      // TODO: Log
+      print("Cannot enqueue download: \(download)")
+      return
+    }
+    // Find the video ID
+    guard let videoId = download.content?.videoID else {
+      // TODO: Log
+      print("Unable to locate videoId for download: \(download)")
+      return
+    }
+    
+    // Generate filename
+    let filename = "\(videoId).mp4"
+    let localUrl = downloadsDirectory.appendingPathComponent(filename)
+    
+    // Save local URL and filename
+    download.localUrl = localUrl
+    download.fileName = filename
+    
+    // Transition download to correct status
+    // If file exists, update the download
+    let fileManager = FileManager.default
+    if fileManager.fileExists(atPath: localUrl.path) {
+      download.state = .complete
+    } else {
+      download.state = .enqueued
+    }
+    
+    // Save
+    do {
+      try self.coreDataContext.save()
+    } catch {
+      // TODO: Log
+      print("Unable to enqueue download: \(error)")
+    }
+  }
+  
+  private func addOrUpdate(content model: ContentDetailsModel) -> Contents {
+    // Check to see whether we already have one
+    let request: NSFetchRequest<Contents> = Contents.fetchRequest()
+    request.predicate = NSPredicate(format: "id = %d", model.id)
+    
+    // Get hold of or create the content record
+    var content: Contents?
+    do {
+      let contents = try coreDataContext.fetch(request)
+      content = contents.first
+    } catch {
+      // TODO: Update this to logging.
+      print(error)
+    }
+    if content == nil {
+      content = Contents(context: coreDataContext)
+    }
+    
+    // Update the Content from the ContentDetailsModel
+    content!.update(from: model)
+    return content!
+  }
+  
+  private func createDownload(content: Contents) -> Download {
+    if let download = content.download {
+      // Already got a download requested
+      return download
+    }
+    
+    let download = Download(context: coreDataContext)
+    download.assignDefaults()
+    
+    // Assign it to the appropriate content
+    content.download = download
+    return download
+  }
+  
+  private func prepareDownloadDirectory() {
+    let fileManager = FileManager.default
+    do {
+      if !fileManager.fileExists(atPath: downloadsDirectory.path) {
+        try fileManager.createDirectory(at: downloadsDirectory, withIntermediateDirectories: false)
+      }
+      var values = URLResourceValues()
+      values.isExcludedFromBackup = true
+      try downloadsDirectory.setResourceValues(values)
+    } catch {
+      fatalError("Unable to prepare downloads directory: \(error)")
+    }
   }
 }

@@ -27,16 +27,30 @@ import CoreData
 public class Download: NSManagedObject {
   enum State: Int16 {
     case pending = 0
+    case urlRequested
     case enqueued
     case inProgress
     case paused
     case cancelled
     case failed
     case complete
+    case error
   }
   
   var state: State {
     get { return State(rawValue: self.stateInt) ?? .pending }
     set { self.stateInt = newValue.rawValue }
+  }
+  
+  func assignDefaults() {
+    dateRequested = Date()
+    lastValidated = nil
+    localUrl = nil
+    progress = 0
+    remoteUrl = nil
+    state = .pending
+    id = UUID()
+    fileName = nil
+    content = nil
   }
 }

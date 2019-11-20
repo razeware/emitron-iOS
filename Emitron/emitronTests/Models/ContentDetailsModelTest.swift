@@ -25,34 +25,18 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
-//
 
-import Foundation
-import CoreData
+import XCTest
 
-@objc(Contents)
-public class Contents: NSManagedObject {
-  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.update(from: model)
-    return contents
+class ContentDetailsModelTest: XCTestCase {
+  
+  override func setUp() {
+    // Put setup code here. This method is called before the invocation of each test method in the class.
   }
   
-  func update(from model: ContentDetailsModel) {
-    id = Int64(model.id)
-    name = model.name
-    uri = model.uri
-    desc = model.desc
-    releasedAt = model.releasedAt
-    free = model.free
-    difficulty = model.difficulty?.rawValue
-    contentType = model.contentType?.rawValue
-    duration = Int64(model.duration)
-    bookmarked = model.bookmarked
-    popularity = model.popularity
-    cardArtworkUrl = model.cardArtworkURL
-    technologyTripleString = model.technologyTripleString
-    contributorString = model.contributorString
-    videoID = Int64(model.videoID ?? 0)
+  override func tearDown() {
+    // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
+  
 }
+

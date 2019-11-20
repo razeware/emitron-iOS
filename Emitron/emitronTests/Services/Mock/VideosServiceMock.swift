@@ -25,34 +25,35 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
-//
 
 import Foundation
-import CoreData
+@testable import Emitron
 
-@objc(Contents)
-public class Contents: NSManagedObject {
-  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
-    contents.update(from: model)
-    return contents
+class VideosServiceMock: VideosService {
+  private(set) var videoRequestedCount = 0
+  private(set) var getVideoStreamCount = 0
+  private(set) var getVideoDownloadCount = 0
+  
+  init() {
+    super.init(client: RWAPI(authToken: ""))
   }
   
-  func update(from model: ContentDetailsModel) {
-    id = Int64(model.id)
-    name = model.name
-    uri = model.uri
-    desc = model.desc
-    releasedAt = model.releasedAt
-    free = model.free
-    difficulty = model.difficulty?.rawValue
-    contentType = model.contentType?.rawValue
-    duration = Int64(model.duration)
-    bookmarked = model.bookmarked
-    popularity = model.popularity
-    cardArtworkUrl = model.cardArtworkURL
-    technologyTripleString = model.technologyTripleString
-    contributorString = model.contributorString
-    videoID = Int64(model.videoID ?? 0)
+  func reset() {
+    videoRequestedCount = 0
+    getVideoStreamCount = 0
+    getVideoDownloadCount = 0
+  }
+  
+  override func video(for id: Int, completion: @escaping (Result<ShowVideoRequest.Response, RWAPIError>) -> Void) {
+    videoRequestedCount += 1
+  }
+  
+  override func getVideoStream(for id: Int, completion: @escaping (Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
+    getVideoStreamCount += 1
+  }
+  
+  override func getVideoDownload(for id: Int, completion: @escaping (Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
+    getVideoDownloadCount += 1
+    completion(Result.success(AttachmentModelTest.Mocks.downloads))
   }
 }
