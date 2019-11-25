@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 import CoreData
 
 final class DownloadService {
@@ -35,6 +36,8 @@ final class DownloadService {
     return coreDataStack.viewContext
   }
   private let videosService: VideosService
+  private let queueManager: DownloadQueueManager
+  private var subscriptions = Set<AnyCancellable>()
   
   private var downloadQuality: AttachmentKind {
     guard let selectedQuality = UserDefaults.standard.downloadQuality,
@@ -56,7 +59,45 @@ final class DownloadService {
   init(coreDataStack: CoreDataStack, videosService: VideosService) {
     self.coreDataStack = coreDataStack
     self.videosService = videosService
+    self.queueManager = DownloadQueueManager(coreDataStack: coreDataStack)
     prepareDownloadDirectory()
+  }
+  
+  func startProcessing() {
+    queueManager.pendingStream
+      .sink(receiveCompletion: { completion in
+        // TODO: Log
+        print(completion)
+      }, receiveValue: { [weak self] download in
+        guard let self = self else { return }
+        self.requestDownloadUrl(download)
+      })
+      .store(in: &subscriptions)
+    
+    queueManager.readyForDownloadStream
+      .sink(receiveCompletion: { completion in
+        // TODO: Log
+        print(completion)
+      }, receiveValue: { [weak self] download in
+        guard let self = self else { return }
+        self.enqueue(download: download)
+      })
+      .store(in: &subscriptions)
+    
+    queueManager.downloadQueueStream
+    .sink(receiveCompletion: { completion in
+      // TODO: Log
+      print(completion)
+    }, receiveValue: { [weak self] downloads in
+      guard let self = self else { return }
+      
+    })
+    .store(in: &subscriptions)
+  }
+  
+  func stopProcessing() {
+    subscriptions.forEach { $0.cancel() }
+    subscriptions = []
   }
   
   func requestDownload(content: ContentDetailsModel) {
@@ -85,7 +126,9 @@ final class DownloadService {
       }
     }
   }
-  
+}
+
+extension DownloadService {
   func requestDownloadUrl(_ download: Download) {
     guard download.remoteUrl == nil, download.state == .pending, download.content?.contentType != "collection" else {
       // TODO: Log
@@ -111,6 +154,7 @@ final class DownloadService {
       case .success(let attachments):
         download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
         download.lastValidated = Date()
+        download.state = .readyForDownload
       }
       
       // Update the state if required

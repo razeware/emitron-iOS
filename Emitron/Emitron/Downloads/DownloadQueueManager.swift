@@ -27,34 +27,36 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 import CoreData
-@testable import Emitron
 
-struct CoreDataMocks {
-  static func contents(context: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: context)
-    contents.name = "Sample Contents"
-    contents.cardArtworkUrl = URL(string: "https://example.com/card_artwork.png")
-    contents.contentType = "collection"
-    contents.contributorString = "HELLO"
-    contents.desc = "Description"
-    contents.difficulty = "intermediate"
-    contents.duration = 1234
-    contents.id = 1
-    contents.releasedAt = Date()
-    contents.technologyTripleString = "Some Tech"
-    contents.uri = "rw://betamax/collections/1"
-    
-    return contents
+final class DownloadQueueManager {
+  let maxSimultaneousDownloadsAllowed = 2
+  private let coreDataStack: CoreDataStack
+  private var coreDataContext: NSManagedObjectContext {
+    coreDataStack.viewContext
   }
   
-  static func download(context: NSManagedObjectContext) -> Download {
-    let download = Download(context: context)
-    download.id = UUID()
-    download.state = .pending
-    download.fileName = "myVideo.mp4"
-    download.dateRequested = Date()
-    
-    return download
+  private let pendingFR: FetchResults<Download>
+  private let readyForDownloadFR: FetchResults<Download>
+  private let downloadQueueFR: FetchResults<Download>
+  
+  var pendingStream: AnyPublisher<Download, Error> {
+    pendingFR.resultStream
+  }
+  var readyForDownloadStream: AnyPublisher<Download, Error> {
+    readyForDownloadFR.resultStream
+  }
+  var downloadQueueStream: AnyPublisher<Download, Error> {
+    downloadQueueFR.resultStream
+  }
+  
+  init(coreDataStack: CoreDataStack) {
+    self.coreDataStack = coreDataStack
+    self.pendingFR = FetchResults(context: coreDataStack.viewContext, request: Download.findBy(state: .pending))
+    self.readyForDownloadFR = FetchResults(context: coreDataStack.viewContext, request: Download.findBy(state: .readyForDownload))
+    self.downloadQueueFR =
+      FetchResults(context: coreDataStack.viewContext,
+                   request: Download.downloadQueue(size: maxSimultaneousDownloadsAllowed))
   }
 }

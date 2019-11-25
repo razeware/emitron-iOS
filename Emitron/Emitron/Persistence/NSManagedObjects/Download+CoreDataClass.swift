@@ -28,6 +28,7 @@ public class Download: NSManagedObject {
   enum State: Int16 {
     case pending = 0
     case urlRequested
+    case readyForDownload
     case enqueued
     case inProgress
     case paused
@@ -35,6 +36,31 @@ public class Download: NSManagedObject {
     case failed
     case complete
     case error
+  }
+  
+  static func findBy(state: State) -> NSFetchRequest<Download> {
+    let request: NSFetchRequest<Download> = fetchRequest()
+    let predicate = NSPredicate(format: "stateInt = %d", state.rawValue)
+    request.predicate = predicate
+    let sortDescriptor = NSSortDescriptor(key: "dateRequested", ascending: true)
+    request.sortDescriptors = [sortDescriptor]
+    return request
+  }
+  
+  static func downloadQueue(size queueSize: Int? = .none) -> NSFetchRequest<Download> {
+    let request: NSFetchRequest<Download> = Download.fetchRequest()
+    // Want either in-progress or enqueued
+    let predicate = NSPredicate(format: "stateInt = %d OR stateInt = %d", Download.State.enqueued.rawValue, Download.State.inProgress.rawValue)
+    request.predicate = predicate
+    // Make sure the in-progress ones appear first
+    request.sortDescriptors = [
+      NSSortDescriptor(key: "stateInt", ascending: Download.State.inProgress.rawValue < Download.State.enqueued.rawValue),
+      NSSortDescriptor(key: "dateRequested", ascending: true)
+    ]
+    if let queueSize = queueSize {
+      request.fetchLimit = queueSize
+    }
+    return request
   }
   
   var state: State {

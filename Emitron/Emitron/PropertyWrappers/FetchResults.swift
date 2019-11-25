@@ -27,34 +27,49 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 import CoreData
-@testable import Emitron
 
-struct CoreDataMocks {
-  static func contents(context: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: context)
-    contents.name = "Sample Contents"
-    contents.cardArtworkUrl = URL(string: "https://example.com/card_artwork.png")
-    contents.contentType = "collection"
-    contents.contributorString = "HELLO"
-    contents.desc = "Description"
-    contents.difficulty = "intermediate"
-    contents.duration = 1234
-    contents.id = 1
-    contents.releasedAt = Date()
-    contents.technologyTripleString = "Some Tech"
-    contents.uri = "rw://betamax/collections/1"
-    
-    return contents
+class FetchResults<T: NSFetchRequestResult>: NSObject, NSFetchedResultsControllerDelegate {
+  private struct NeverError: Error { }
+  
+  private let resultSubject = PassthroughSubject<T, Error>()
+  lazy var resultStream: AnyPublisher<T, Error> = {
+    if let results = results {
+      let currentResults = results.publisher
+        .mapError { _ in NeverError() as Error }
+      return self.resultSubject
+        .prepend(currentResults)
+        .eraseToAnyPublisher()
+    }
+    return self.resultSubject.eraseToAnyPublisher()
+  }()
+  var results: [T]? {
+    resultsController.fetchedObjects
   }
   
-  static func download(context: NSManagedObjectContext) -> Download {
-    let download = Download(context: context)
-    download.id = UUID()
-    download.state = .pending
-    download.fileName = "myVideo.mp4"
-    download.dateRequested = Date()
+  private let resultsController: NSFetchedResultsController<T>
+  
+  init(context: NSManagedObjectContext, request: NSFetchRequest<T>) {
+    self.resultsController = NSFetchedResultsController(fetchRequest: request, managedObjectContext: context, sectionNameKeyPath: nil, cacheName: nil)
     
-    return download
+    super.init()
+    
+    self.resultsController.delegate = self
+    do {
+      try self.resultsController.performFetch()
+    } catch {
+      resultSubject.send(completion: .failure(error))
+    }
+  }
+  
+  //: Delegate methods
+  // Updates the resultStream property as new results arrive
+  func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
+    // Gonna send notifications when new items are added
+    guard type == .insert else { return }
+    guard let object = anObject as? T else { return }
+    
+    resultSubject.send(object)
   }
 }

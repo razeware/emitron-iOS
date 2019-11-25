@@ -33,25 +33,6 @@ import Combine
 final class DownloadProcessor: NSObject {
   static let sessionIdentifier = "com.razeware.emitron.DownloadProcessor"
   
-  class DownloadTask: Cancellable {
-    private let urlSessionDownloadTask: URLSessionDownloadTask
-    
-    init(urlSessionDownloadTask: URLSessionDownloadTask) {
-      self.urlSessionDownloadTask = urlSessionDownloadTask
-    }
-    
-    func cancel() {
-      urlSessionDownloadTask.cancel()
-    }
-    
-    func pause() {
-      urlSessionDownloadTask.suspend()
-    }
-    
-    func resume() {
-      urlSessionDownloadTask.resume()
-    }
-  }
   
   private lazy var session: URLSession = {
     let config = URLSessionConfiguration.background(withIdentifier: DownloadProcessor.sessionIdentifier)
@@ -60,7 +41,7 @@ final class DownloadProcessor: NSObject {
     return URLSession(configuration: config, delegate: self, delegateQueue: .none)
   }()
   var backgroundSessionCompletionHandler: (() -> Void)?
-  private var currentDownloads = [DownloadTask]()
+  private var currentDownloads = [URLSessionDownloadTask]()
 }
 
 extension DownloadProcessor {
@@ -80,9 +61,7 @@ extension DownloadProcessor {
   }
   
   private func populateDownloadListFromSession() {
-    let downloadTasks = self.getDownloadTasksFromSession()
-    
-    currentDownloads = downloadTasks.map { DownloadTask(urlSessionDownloadTask: $0) }
+    currentDownloads = self.getDownloadTasksFromSession()
   }
 }
 
