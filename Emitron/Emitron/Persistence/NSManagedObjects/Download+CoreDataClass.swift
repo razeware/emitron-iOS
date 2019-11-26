@@ -59,6 +59,8 @@ public class Download: NSManagedObject {
     ]
     if let queueSize = queueSize {
       request.fetchLimit = queueSize
+      request.fetchBatchSize = queueSize
+      request.fetchOffset = 0
     }
     return request
   }

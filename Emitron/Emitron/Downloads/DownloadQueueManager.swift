@@ -31,32 +31,32 @@ import Combine
 import CoreData
 
 final class DownloadQueueManager {
-  let maxSimultaneousDownloadsAllowed = 2
-  private let coreDataStack: CoreDataStack
-  private var coreDataContext: NSManagedObjectContext {
-    coreDataStack.viewContext
-  }
+  private let maxSimultaneousDownloads: Int
   
   private let pendingFR: FetchResults<Download>
   private let readyForDownloadFR: FetchResults<Download>
   private let downloadQueueFR: FetchResults<Download>
   
-  var pendingStream: AnyPublisher<Download, Error> {
+  var pendingStream: AnyPublisher<Download, Never> {
     pendingFR.resultStream
   }
-  var readyForDownloadStream: AnyPublisher<Download, Error> {
+  var readyForDownloadStream: AnyPublisher<Download, Never> {
     readyForDownloadFR.resultStream
   }
-  var downloadQueueStream: AnyPublisher<Download, Error> {
-    downloadQueueFR.resultStream
+  var downloadQueue: AnyPublisher<[Download], Never> {
+    // We have to set the donwload limit here, since the FRC ignores the fetchLimit property.
+    downloadQueueFR.$results
+      .map { Array($0.prefix(self.maxSimultaneousDownloads)) }
+      .removeDuplicates()
+      .eraseToAnyPublisher()
   }
   
-  init(coreDataStack: CoreDataStack) {
-    self.coreDataStack = coreDataStack
-    self.pendingFR = FetchResults(context: coreDataStack.viewContext, request: Download.findBy(state: .pending))
-    self.readyForDownloadFR = FetchResults(context: coreDataStack.viewContext, request: Download.findBy(state: .readyForDownload))
+  init(coreDataContext: NSManagedObjectContext, maxSimultaneousDownloads: Int = 2) {
+    self.maxSimultaneousDownloads = maxSimultaneousDownloads
+    self.pendingFR = FetchResults(context: coreDataContext, request: Download.findBy(state: .pending))
+    self.readyForDownloadFR = FetchResults(context: coreDataContext, request: Download.findBy(state: .readyForDownload))
     self.downloadQueueFR =
-      FetchResults(context: coreDataStack.viewContext,
-                   request: Download.downloadQueue(size: maxSimultaneousDownloadsAllowed))
+      FetchResults(context: coreDataContext,
+                   request: Download.downloadQueue(size: maxSimultaneousDownloads))
   }
 }

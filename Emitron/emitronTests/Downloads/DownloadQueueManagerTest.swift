@@ -43,7 +43,7 @@ class DownloadQueueManagerTest: XCTestCase {
     coreDataStack = CoreDataStack(modelName: "Emitron", persistentStoreType: NSInMemoryStoreType)
     coreDataStack.setupPersistentContainer()
     downloadService = DownloadService(coreDataStack: coreDataStack, videosService: videoService)
-    queueManager = DownloadQueueManager(coreDataStack: coreDataStack)
+    queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
   }
   
   override func tearDown() {
@@ -107,9 +107,9 @@ class DownloadQueueManagerTest: XCTestCase {
   }
   
   func testDownloadQueueStreamRespectsTheMaxLimit() {
-    var received = [Download]()
+    var received = [[Download]]()
     
-    queueManager.downloadQueueStream
+    queueManager.downloadQueue
       .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0) })
       .store(in: &subscriptions)
     
@@ -117,42 +117,73 @@ class DownloadQueueManagerTest: XCTestCase {
     let download2 = sampleCDDownload(state: .enqueued)
     let _ = sampleCDDownload(state: .enqueued)
     
-    XCTAssertEqual([download1, download2], received)
+    XCTAssertEqual([download1, download2], received.last)
   }
   
   func testDownloadQueueStreamSendsFromThePast() {
-    var received = [Download]()
+    var received = [[Download]]()
     let download1 = sampleCDDownload(state: .enqueued)
     let download2 = sampleCDDownload(state: .enqueued)
     let _ = sampleCDDownload(state: .enqueued)
     
-    queueManager.downloadQueueStream
+    queueManager.downloadQueue
       .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0) })
       .store(in: &subscriptions)
     
-    XCTAssertEqual([download1, download2], received)
+    XCTAssertEqual(1, received.count)
+    XCTAssertEqual([download1, download2], received.first)
   }
   
   func testDownloadQueueStreamSendsInProgressFirst() {
+    var received = [[Download]]()
+    let _ = sampleCDDownload(state: .enqueued)
+    let download2 = sampleCDDownload(state: .inProgress)
+    let _ = sampleCDDownload(state: .enqueued)
+    let download4 = sampleCDDownload(state: .inProgress)
     
-  }
-  
-  func testDownloadQueueStreamUpdatesWhenInProgressCompleted() {
-    
-  }
-  
-  func testDownloadQueueStreamDoesNotChangeIfAtCapacity() {
-    var received = [Download]()
-    let download1 = sampleCDDownload(state: .enqueued)
-    let download2 = sampleCDDownload(state: .enqueued)
-    
-    queueManager.downloadQueueStream
+    queueManager.downloadQueue
       .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0) })
       .store(in: &subscriptions)
     
+    XCTAssertEqual(1, received.count)
+    XCTAssertEqual([download2, download4], received.first)
+  }
+  
+  func testDownloadQueueStreamUpdatesWhenInProgressCompleted() {
+    var received = [[Download]]()
+    let download1 = sampleCDDownload(state: .enqueued)
+    let download2 = sampleCDDownload(state: .inProgress)
+    let _ = sampleCDDownload(state: .enqueued)
+    let download4 = sampleCDDownload(state: .inProgress)
+    
+    queueManager.downloadQueue
+      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0) })
+      .store(in: &subscriptions)
+    
+    XCTAssertEqual(1, received.count)
+    XCTAssertEqual([download2, download4], received.last)
+    
+    download2.state = .complete
+    try! coreDataContext.save()
+    
+    XCTAssertEqual(2, received.count)
+    XCTAssertEqual([download4, download1], received.last)
+  }
+  
+  func testDownloadQueueStreamDoesNotChangeIfAtCapacity() {
+    var received = [[Download]]()
+    let download1 = sampleCDDownload(state: .enqueued)
+    let download2 = sampleCDDownload(state: .enqueued)
+    
+    queueManager.downloadQueue
+      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0) })
+      .store(in: &subscriptions)
+    
+    XCTAssertEqual([[download1, download2]], received)
+    
     let _ = sampleCDDownload(state: .enqueued)
     
-    XCTAssertEqual([download1, download2], received)
+    XCTAssertEqual([[download1, download2]], received)
   }
   
 }

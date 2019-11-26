@@ -59,7 +59,7 @@ final class DownloadService {
   init(coreDataStack: CoreDataStack, videosService: VideosService) {
     self.coreDataStack = coreDataStack
     self.videosService = videosService
-    self.queueManager = DownloadQueueManager(coreDataStack: coreDataStack)
+    self.queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
     prepareDownloadDirectory()
   }
   
@@ -84,7 +84,7 @@ final class DownloadService {
       })
       .store(in: &subscriptions)
     
-    queueManager.downloadQueueStream
+    queueManager.downloadQueue
     .sink(receiveCompletion: { completion in
       // TODO: Log
       print(completion)

@@ -30,23 +30,21 @@ import Foundation
 import Combine
 import CoreData
 
+/*
+  One could be forgiven for thinking that it should be possible to
+  build this funtionality with the @FetchResult property annotation.
+  However, that has the limitation that it requires SwiftUI, and the
+  Core Data context available in the Environment.
+*/
+
 class FetchResults<T: NSFetchRequestResult>: NSObject, NSFetchedResultsControllerDelegate {
-  private struct NeverError: Error { }
-  
-  private let resultSubject = PassthroughSubject<T, Error>()
-  lazy var resultStream: AnyPublisher<T, Error> = {
-    if let results = results {
-      let currentResults = results.publisher
-        .mapError { _ in NeverError() as Error }
-      return self.resultSubject
-        .prepend(currentResults)
-        .eraseToAnyPublisher()
-    }
-    return self.resultSubject.eraseToAnyPublisher()
+  private let resultSubject = PassthroughSubject<T, Never>()
+  lazy var resultStream: AnyPublisher<T, Never> = {
+    return self.resultSubject
+      .prepend(results.publisher)
+      .eraseToAnyPublisher()
   }()
-  var results: [T]? {
-    resultsController.fetchedObjects
-  }
+  @Published var results = [T]()
   
   private let resultsController: NSFetchedResultsController<T>
   
@@ -59,11 +57,19 @@ class FetchResults<T: NSFetchRequestResult>: NSObject, NSFetchedResultsControlle
     do {
       try self.resultsController.performFetch()
     } catch {
-      resultSubject.send(completion: .failure(error))
+      // TODO: Switch to logging
+      print("Unable to fetch results: \(error)")
     }
   }
   
   //: Delegate methods
+  // Sends an update to the results array
+  func controllerDidChangeContent(_ controller: NSFetchedResultsController<NSFetchRequestResult>) {
+    guard let fetchedObjects = controller.fetchedObjects as? [T] else { return }
+    
+    results = fetchedObjects
+  }
+  
   // Updates the resultStream property as new results arrive
   func controller(_ controller: NSFetchedResultsController<NSFetchRequestResult>, didChange anObject: Any, at indexPath: IndexPath?, for type: NSFetchedResultsChangeType, newIndexPath: IndexPath?) {
     // Gonna send notifications when new items are added
