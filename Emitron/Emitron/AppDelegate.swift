@@ -38,10 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private (set) var persistenceStore = PersistenceStore()
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
-  
-  private lazy var downloadProcessor: DownloadProcessor = {
-    DownloadProcessor()
-  }()
+  private var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -63,10 +60,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                persistenceStore: persistenceStore)
     
     guard let guardpost = guardpost,
-      let user = guardpost.currentUser  else { return true }
+      let user = guardpost.currentUser else { return true }
     
     self.dataManager = DataManager(user: user,
                                    persistenceStore: persistenceStore)
+    let videosService = VideosService(client: RWAPI(authToken: user.token))
+    downloadService = DownloadService(coreDataStack: persistenceStore.coreDataStack, videosService: videosService)
     
     return true
   }
@@ -104,6 +103,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
     assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
     
-    downloadProcessor.backgroundSessionCompletionHandler = completionHandler
+    downloadService.backgroundSessionCompletionHandler = completionHandler
   }
 }

@@ -47,6 +47,13 @@ public class Download: NSManagedObject {
     return request
   }
   
+  static func findBy(id: UUID) -> NSFetchRequest<Download> {
+    let request: NSFetchRequest<Download> = fetchRequest()
+    let predicate = NSPredicate(format: "stateInt = %s", id.uuidString)
+    request.predicate = predicate
+    return request
+  }
+  
   static func downloadQueue(size queueSize: Int? = .none) -> NSFetchRequest<Download> {
     let request: NSFetchRequest<Download> = Download.fetchRequest()
     // Want either in-progress or enqueued
@@ -82,3 +89,6 @@ public class Download: NSManagedObject {
     content = nil
   }
 }
+
+// Declare conformanace to the DownloadProcessorModel so we can use it
+extension Download: DownloadProcessorModel { }

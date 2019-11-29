@@ -37,6 +37,7 @@ final class DownloadService {
   }
   private let videosService: VideosService
   private let queueManager: DownloadQueueManager
+  private let downloadProcessor = DownloadProcessor()
   private var subscriptions = Set<AnyCancellable>()
   
   private var downloadQuality: AttachmentKind {
@@ -56,10 +57,20 @@ final class DownloadService {
     return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
   }()
   
+  var backgroundSessionCompletionHandler: (() -> Void)? {
+    get {
+      downloadProcessor.backgroundSessionCompletionHandler
+    }
+    set {
+      downloadProcessor.backgroundSessionCompletionHandler = newValue
+    }
+  }
+  
   init(coreDataStack: CoreDataStack, videosService: VideosService) {
     self.coreDataStack = coreDataStack
     self.videosService = videosService
     self.queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
+    self.downloadProcessor.delegate = self
     prepareDownloadDirectory()
   }
   
@@ -90,7 +101,17 @@ final class DownloadService {
       print(completion)
     }, receiveValue: { [weak self] downloads in
       guard let self = self else { return }
-      
+      downloads.filter { $0.state == .enqueued }
+        .forEach { (download) in
+          do {
+            try self.downloadProcessor.add(download: download)
+          } catch {
+            // TODO: Log
+            print("Problem adding download: \(error)")
+            download.state = .failed
+            self.saveContext()
+          }
+      }
     })
     .store(in: &subscriptions)
   }
@@ -270,5 +291,71 @@ extension DownloadService {
     } catch {
       fatalError("Unable to prepare downloads directory: \(error)")
     }
+  }
+}
+
+extension DownloadService: DownloadProcessorDelegate {
+  private func findDownload(withId id: UUID) -> Download? {
+    let request = Download.findBy(id: id)
+    let result = try? coreDataContext.fetch(request)
+    return result?.first
+  }
+  
+  private func saveContext() {
+    do {
+      try coreDataContext.save()
+    } catch {
+      // TODO log
+      print("Unable to save: \(error)")
+    }
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel? {
+    return findDownload(withId: downloadId)
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.state = .inProgress
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Float) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.progress = progress
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.state = .complete
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    coreDataContext.delete(download)
+    if let content = download.content {
+      coreDataContext.delete(content)
+    }
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.state = .paused
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.state = .inProgress
+    saveContext()
+  }
+  
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
+    guard let download = findDownload(withId: downloadId) else { return }
+    download.state = .error
+    
   }
 }
