@@ -32,8 +32,18 @@ import SwiftUI
 import Combine
 import Network
 
+// This protocol is added to aid testing (of DownloadService). It is not
+// currently necesarily complete. It should probably be revisited,
+// and rethought at a later stage. I'll put // TODO: here so that we might
+// find it again.
+protocol UserModelController {
+  var objectWillChange: PassthroughSubject<Void, Never> { get }
+  var user: UserModel? { get }
+  var client: RWAPI { get }
+}
+
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-class UserMC: NSObject, ObservableObject, Refreshable {
+class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
   
   // MARK: Refreshable
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: UserMC.self))"
@@ -43,6 +53,7 @@ class UserMC: NSObject, ObservableObject, Refreshable {
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
   
   /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
+  // sd: I don't get why this isn't @Published var state = DataState.initial
   private(set) var state = DataState.initial {
     willSet {
       objectWillChange.send(())
@@ -139,8 +150,6 @@ class UserMC: NSObject, ObservableObject, Refreshable {
           self.saveOrReplaceRefreshableUpdateDate()
         }
         
-        // If the user loses permissions to download videos (aka, they're not pro anymore), delete videos
-        self.removeDownloadedContentIfNecessary()
         self.guardpost.updateUser(with: self.user)
         self.state = .hasData
       }
@@ -150,27 +159,14 @@ class UserMC: NSObject, ObservableObject, Refreshable {
   func logout() {
     guardpost.logout()
     user = nil
-    removeDownloadedContentIfNecessary()
     let appDelegate = UIApplication.shared.delegate as! AppDelegate
     appDelegate.dataManager = nil
     UserDefaults.standard.deleteAllFilters()
     // TODO: Should all the stores user defaults be removed at this point, aka the Settings?
-    objectWillChange.send(())
-  }
-  
-  // If the user is nil, or if they don't have download permissions, delete all downloaded content
-  private func removeDownloadedContentIfNecessary() {
-    guard let user = user else {
-      DocumentManager.deleteAllDownloadedContent()
-      return
-    }
-    
-    if !user.canDownload {
-      DocumentManager.deleteAllDownloadedContent()
-    }
+    objectWillChange.send()
   }
 }
-
+  
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension UserMC: ASWebAuthenticationPresentationContextProviding {
   
@@ -178,3 +174,4 @@ extension UserMC: ASWebAuthenticationPresentationContextProviding {
     return UIApplication.shared.windows.first!
   }
 }
+

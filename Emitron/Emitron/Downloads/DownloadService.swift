@@ -35,10 +35,13 @@ final class DownloadService {
   private var coreDataContext: NSManagedObjectContext {
     return coreDataStack.viewContext
   }
-  private let videosService: VideosService
+  private let userModelController: UserModelController
+  private var userModelControllerSubscription: AnyCancellable?
+  private let videosServiceProvider: VideosService.Provider
+  private var videosService: VideosService?
   private let queueManager: DownloadQueueManager
   private let downloadProcessor = DownloadProcessor()
-  private var subscriptions = Set<AnyCancellable>()
+  private var processingSubscriptions = Set<AnyCancellable>()
   
   private var downloadQuality: AttachmentKind {
     guard let selectedQuality = UserDefaults.standard.downloadQuality,
@@ -66,12 +69,17 @@ final class DownloadService {
     }
   }
   
-  init(coreDataStack: CoreDataStack, videosService: VideosService) {
+  init(coreDataStack: CoreDataStack, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
     self.coreDataStack = coreDataStack
-    self.videosService = videosService
+    self.userModelController = userModelController
     self.queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
+    self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
+    self.userModelControllerSubscription = userModelController.objectWillChange.sink { [weak self] in
+      guard let self = self else { return }
+      self.checkPermissions()
+    }
     self.downloadProcessor.delegate = self
-    prepareDownloadDirectory()
+    checkPermissions()
   }
   
   func startProcessing() {
@@ -83,7 +91,7 @@ final class DownloadService {
         guard let self = self else { return }
         self.requestDownloadUrl(download)
       })
-      .store(in: &subscriptions)
+      .store(in: &processingSubscriptions)
     
     queueManager.readyForDownloadStream
       .sink(receiveCompletion: { completion in
@@ -93,7 +101,7 @@ final class DownloadService {
         guard let self = self else { return }
         self.enqueue(download: download)
       })
-      .store(in: &subscriptions)
+      .store(in: &processingSubscriptions)
     
     queueManager.downloadQueue
     .sink(receiveCompletion: { completion in
@@ -113,15 +121,20 @@ final class DownloadService {
           }
       }
     })
-    .store(in: &subscriptions)
+    .store(in: &processingSubscriptions)
   }
   
   func stopProcessing() {
-    subscriptions.forEach { $0.cancel() }
-    subscriptions = []
+    processingSubscriptions.forEach { $0.cancel() }
+    processingSubscriptions = []
   }
   
   func requestDownload(content: ContentDetailsModel) {
+    guard videosService != nil else {
+      // TODO: Log
+      print("User not allowed to request downloads")
+      return
+    }
     // Let's ensure that all the relevant content is stored locally
     var contentToDownload = [Contents]()
     contentToDownload.append(addOrUpdate(content: content))
@@ -151,6 +164,11 @@ final class DownloadService {
 
 extension DownloadService {
   func requestDownloadUrl(_ download: Download) {
+    guard let videosService = videosService else {
+      // TODO: Log
+      print("User not allowed to request downloads")
+      return
+    }
     guard download.remoteUrl == nil, download.state == .pending, download.content?.contentType != "collection" else {
       // TODO: Log
       print("Cannot request download URL for: \(download)")
@@ -291,6 +309,44 @@ extension DownloadService {
     } catch {
       fatalError("Unable to prepare downloads directory: \(error)")
     }
+  }
+  
+  private func deleteExistingDownloads() {
+    let fileManager = FileManager.default
+    do {
+      if fileManager.fileExists(atPath: downloadsDirectory.path) {
+        try fileManager.removeItem(at: downloadsDirectory)
+      }
+      prepareDownloadDirectory()
+    } catch {
+      fatalError("Unable to delete the contents of the downloads directory: \(error)")
+    }
+  }
+  
+  private func checkPermissions() {
+    guard let user = userModelController.user else {
+      // There's no user—delete everything
+      destroyDownloads()
+      videosService = .none
+      return
+    }
+    if user.canDownload {
+      // Allowed to download. Let's make a video service and the d/l dir
+      prepareDownloadDirectory()
+      if videosService == nil {
+        videosService = videosServiceProvider(userModelController.client)
+      }
+    } else {
+      // User doesn't have download permission. Delete everything and reset.
+      destroyDownloads()
+      videosService = .none
+    }
+  }
+  
+  private func destroyDownloads() {
+    // This will delete the Download model records, via the delegate callback
+    downloadProcessor.cancelAllDownloads()
+    deleteExistingDownloads()
   }
 }
 

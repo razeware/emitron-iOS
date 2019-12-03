@@ -120,6 +120,10 @@ extension DownloadProcessor {
     
     downloadTask.cancel()
   }
+  
+  func cancelAllDownloads() {
+    currentDownloads.forEach { $0.cancel() }
+  }
 }
 
 extension DownloadProcessor {

@@ -25,6 +25,9 @@
 		2288EF1123741D3700514043 /* Contents+CoreDataProperties.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF0F23741D3700514043 /* Contents+CoreDataProperties.swift */; };
 		2288EF142374298200514043 /* ContentsTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF132374298200514043 /* ContentsTest.swift */; };
 		2288EF162374299500514043 /* DownloadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF152374299500514043 /* DownloadTest.swift */; };
+		22A265AD23967B21000DD276 /* UserMCMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AC23967B21000DD276 /* UserMCMock.swift */; };
+		22A265B02396CDBE000DD276 /* UserModel+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AF2396CDBE000DD276 /* UserModel+Mocks.swift */; };
+		22A265B22396CE82000DD276 /* PermissionsModel+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B12396CE82000DD276 /* PermissionsModel+Mocks.swift */; };
 		22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F4F236F76B30064A406 /* DownloadProcessor.swift */; };
 		22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */; };
 		22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */; };
@@ -200,6 +203,9 @@
 		2288EF0F23741D3700514043 /* Contents+CoreDataProperties.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Contents+CoreDataProperties.swift"; sourceTree = "<group>"; };
 		2288EF132374298200514043 /* ContentsTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsTest.swift; sourceTree = "<group>"; };
 		2288EF152374299500514043 /* DownloadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTest.swift; sourceTree = "<group>"; };
+		22A265AC23967B21000DD276 /* UserMCMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMCMock.swift; sourceTree = "<group>"; };
+		22A265AF2396CDBE000DD276 /* UserModel+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserModel+Mocks.swift"; sourceTree = "<group>"; };
+		22A265B12396CE82000DD276 /* PermissionsModel+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionsModel+Mocks.swift"; sourceTree = "<group>"; };
 		22A36F4F236F76B30064A406 /* DownloadProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessor.swift; sourceTree = "<group>"; };
 		22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessorTest.swift; sourceTree = "<group>"; };
 		22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManager.swift; sourceTree = "<group>"; };
@@ -384,6 +390,8 @@
 				B621DD3722F5CB9A00A1F27A /* Attachment_Stream.json */,
 				221E5668237AA29900333607 /* ContentDetails_Collection.json */,
 				221E566A237AA2B100333607 /* ContentDetails_Screencast.json */,
+				22A265AF2396CDBE000DD276 /* UserModel+Mocks.swift */,
+				22A265B12396CE82000DD276 /* PermissionsModel+Mocks.swift */,
 			);
 			path = Mocks;
 			sourceTree = "<group>";
@@ -414,6 +422,22 @@
 			path = CoreData;
 			sourceTree = "<group>";
 		};
+		22A265AA23967ADE000DD276 /* Model Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				22A265AB23967B11000DD276 /* Mock */,
+			);
+			path = "Model Controllers";
+			sourceTree = "<group>";
+		};
+		22A265AB23967B11000DD276 /* Mock */ = {
+			isa = PBXGroup;
+			children = (
+				22A265AC23967B21000DD276 /* UserMCMock.swift */,
+			);
+			path = Mock;
+			sourceTree = "<group>";
+		};
 		22A36F4E236F768A0064A406 /* Downloads */ = {
 			isa = PBXGroup;
 			children = (
@@ -437,6 +461,7 @@
 		22D176BE23460A060038333D /* emitronTests */ = {
 			isa = PBXGroup;
 			children = (
+				22A265AA23967ADE000DD276 /* Model Controllers */,
 				221E609C23856F2B00E92155 /* Services */,
 				22A36F51236F7C750064A406 /* Downloads */,
 				22D176CC234751FB0038333D /* Models */,
@@ -1179,9 +1204,12 @@
 				22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */,
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
 				221E56642379761A00333607 /* ContentDetailsModelTest.swift in Sources */,
+				22A265B02396CDBE000DD276 /* UserModel+Mocks.swift in Sources */,
 				221E609E23856F4000E92155 /* VideosServiceMock.swift in Sources */,
 				221E60A32385775300E92155 /* AttachmentModelTest+Mocks.swift in Sources */,
 				2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */,
+				22A265AD23967B21000DD276 /* UserMCMock.swift in Sources */,
+				22A265B22396CE82000DD276 /* PermissionsModel+Mocks.swift in Sources */,
 				221E60A12385771F00E92155 /* AttachmentModelTest.swift in Sources */,
 				22D176CE2347520D0038333D /* UserModelTest.swift in Sources */,
 				221E56622375E4AD00333607 /* CoreDataMocks.swift in Sources */,

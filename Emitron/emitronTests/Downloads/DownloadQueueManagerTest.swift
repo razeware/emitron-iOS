@@ -42,7 +42,8 @@ class DownloadQueueManagerTest: XCTestCase {
   override func setUp() {
     coreDataStack = CoreDataStack(modelName: "Emitron", persistentStoreType: NSInMemoryStoreType)
     coreDataStack.setupPersistentContainer()
-    downloadService = DownloadService(coreDataStack: coreDataStack, videosService: videoService)
+    let userModelController = UserMCMock.withDownloads
+    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
     queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
   }
   

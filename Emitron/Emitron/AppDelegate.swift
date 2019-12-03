@@ -38,6 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private (set) var persistenceStore = PersistenceStore()
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
+  private (set) var userModelController: UserMC!
   private var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
@@ -59,13 +60,16 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                                ssoSecret: Configuration.ssoSecret,
                                persistenceStore: persistenceStore)
     
-    guard let guardpost = guardpost,
-      let user = guardpost.currentUser else { return true }
+    guard let guardpost = guardpost else { return true }
+    userModelController = UserMC(guardpost: guardpost)
+    downloadService = DownloadService(
+      coreDataStack: persistenceStore.coreDataStack,
+      userModelController: userModelController
+    )
     
+    guard let user = guardpost.currentUser else { return true }
     self.dataManager = DataManager(user: user,
                                    persistenceStore: persistenceStore)
-    let videosService = VideosService(client: RWAPI(authToken: user.token))
-    downloadService = DownloadService(coreDataStack: persistenceStore.coreDataStack, videosService: videosService)
     
     return true
   }
@@ -104,5 +108,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
     
     downloadService.backgroundSessionCompletionHandler = completionHandler
+  }
+}
+
+
+// MARK:- Making the UserModelController a hacky singleton
+extension UserMC {
+  static var current: UserMC {
+    (UIApplication.shared.delegate as! AppDelegate).userModelController
   }
 }

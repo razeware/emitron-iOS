@@ -35,11 +35,13 @@ class DownloadServiceTest: XCTestCase {
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
   private var coreDataStack: CoreDataStack!
+  private var userModelController: UserMCMock!
   
   override func setUp() {
     coreDataStack = CoreDataStack(modelName: "Emitron", persistentStoreType: NSInMemoryStoreType)
     coreDataStack.setupPersistentContainer()
-    downloadService = DownloadService(coreDataStack: coreDataStack, videosService: videoService)
+    userModelController = UserMCMock.withDownloads
+    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
     
     // Check it's all empty
     XCTAssertEqual(0, getAllContents().count)
@@ -48,6 +50,7 @@ class DownloadServiceTest: XCTestCase {
   
   override func tearDown() {
     videoService.reset()
+    deleteSampleFile(fileManager: FileManager.default)
   }
   
   var coreDataContext: NSManagedObjectContext {
@@ -66,6 +69,33 @@ class DownloadServiceTest: XCTestCase {
     let screencast = ContentDetailsModelTest.Mocks.screencast
     downloadService.requestDownload(content: screencast)
     return getAllDownloads().first!
+  }
+  
+  func downloadsDirectory(fileManager: FileManager) -> URL {
+    let documentsDirectory = fileManager.urls(for: .documentDirectory, in: .userDomainMask).first
+    return documentsDirectory!.appendingPathComponent("downloads", isDirectory: true)
+  }
+  
+  func createSampleFile(fileManager: FileManager) -> URL {
+    // Create a sample file
+    let directory = downloadsDirectory(fileManager: fileManager)
+    let sampleFile = directory.appendingPathComponent("sample_file")
+    
+    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+    
+    fileManager.createFile(atPath: sampleFile.path, contents: .none, attributes: .none)
+    XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
+    
+    return sampleFile
+  }
+  
+  func deleteSampleFile(fileManager: FileManager) {
+    let directory = downloadsDirectory(fileManager: fileManager)
+    let sampleFile = directory.appendingPathComponent("sample_file")
+    
+    if fileManager.fileExists(atPath: sampleFile.path) {
+      try! fileManager.removeItem(at: sampleFile)
+    }
   }
   
   //: requestDownload(content:) Tests
@@ -250,6 +280,56 @@ class DownloadServiceTest: XCTestCase {
     
     // The directory is marked as excluded from backups
     XCTAssert(resourceValues.isExcludedFromBackup == true)
+  }
+  
+  func testEmptiesDownloadsDirectoryIfNotLoggedIn() {
+    let fileManager = FileManager.default
+    let sampleFile = createSampleFile(fileManager: fileManager)
+    
+    userModelController.user = .none
+    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
+    
+    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+  }
+  
+  func testEmptiesDownloadsDirectoryWhenLogsOut() {
+    let fileManager = FileManager.default
+    let sampleFile = createSampleFile(fileManager: fileManager)
+    
+    userModelController.user = .none
+    userModelController.objectWillChange.send()
+    
+    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+  }
+  
+  func testEmptiesDownloadsDirectoryWhenUserDoesNotHaveDownloadPermission() {
+    let fileManager = FileManager.default
+    let sampleFile = createSampleFile(fileManager: fileManager)
+    
+    userModelController.user = UserModel.noPermissions
+    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
+    
+    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+  }
+  
+  func testEmptiesDownloadsDirectoryWhenPermissionsChange() {
+    let fileManager = FileManager.default
+    let sampleFile = createSampleFile(fileManager: fileManager)
+    
+    userModelController.user = UserModel.noPermissions
+    userModelController.objectWillChange.send()
+    
+    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+  }
+  
+  func testDoesNotEmptyDownloadDirectoryIfUserHasDownloadPermission() {
+    let fileManager = FileManager.default
+    let sampleFile = createSampleFile(fileManager: fileManager)
+    
+    userModelController.user = UserModel.withDownloads
+    userModelController.objectWillChange.send()
+    
+    XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
   }
   
   //: requestDownloadUrl() Tests

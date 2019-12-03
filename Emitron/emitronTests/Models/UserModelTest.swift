@@ -85,5 +85,22 @@ class UserModelTest: XCTestCase {
     
     XCTAssertNil(user)
   }
+  
+  func testNoPermissionsWorksAsExpected() {
+    let user = UserModel.noPermissions
+    
+    XCTAssert(!user.canDownload)
+    XCTAssert(!user.canStream)
+    XCTAssert(!user.canStreamPro)
+  }
+  
+  
+  func testWithDownloadsMockWorksAsExpected() {
+    let user = UserModel.withDownloads
+    
+    XCTAssert(user.canDownload)
+    XCTAssert(!user.canStream)
+    XCTAssert(!user.canStreamPro)
+  }
 
 }

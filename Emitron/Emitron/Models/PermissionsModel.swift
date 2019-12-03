@@ -54,6 +54,13 @@ class PermissionsModel: Codable, Equatable {
   private(set) var updatedAt: Date
   
   // MARK: - Initializers
+  // Default init—used for testing
+  init(permission: Permission = .none) {
+    createdAt = Date()
+    updatedAt = Date()
+    tag = permission
+  }
+  
   init(_ jsonResource: JSONAPIResource,
        metadata: [String: Any]?) {
     

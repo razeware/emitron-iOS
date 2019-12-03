@@ -61,8 +61,8 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
       
-      let guardpost = Guardpost.current
-      let userMC = UserMC(guardpost: guardpost)
+      // We grab this from the App Delegate, since it's needed there too
+      let userMC = UserMC.current
       let appState = AppState()
       let mainView = MainView().environmentObject(userMC).environmentObject(appState)
       
