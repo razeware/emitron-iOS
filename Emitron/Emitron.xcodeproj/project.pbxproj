@@ -46,6 +46,7 @@
 		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
 		22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512623A4C99E004D1223 /* KingfisherSwiftUI */; };
 		22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512923A4C9BE004D1223 /* SwiftyJSON */; };
+		22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512C23A4CBB9004D1223 /* GRDBCombine */; };
 		22D176CB23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */; };
 		22D176CE2347520D0038333D /* UserModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CD2347520D0038333D /* UserModelTest.swift */; };
 		22D17708235078030038333D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D17707235078030038333D /* Configuration.swift */; };
@@ -382,6 +383,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */,
+				22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */,
 				22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */,
 				22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */,
 				22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */,
@@ -992,6 +994,7 @@
 				22C0512423A4C99E004D1223 /* Kingfisher */,
 				22C0512623A4C99E004D1223 /* KingfisherSwiftUI */,
 				22C0512923A4C9BE004D1223 /* SwiftyJSON */,
+				22C0512C23A4CBB9004D1223 /* GRDBCombine */,
 			);
 			productName = Emitron;
 			productReference = B6D7DC2B22C79743006DD325 /* raywenderlich.app */;
@@ -1029,6 +1032,7 @@
 				22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+				22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */,
 			);
 			productRefGroup = B6D7DC2C22C79743006DD325 /* Products */;
 			projectDirPath = "";
@@ -1588,6 +1592,14 @@
 				minimumVersion = 5.0.0;
 			};
 		};
+		22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/groue/GRDBCombine";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.7.1;
+			};
+		};
 /* End XCRemoteSwiftPackageReference section */
 
 /* Begin XCSwiftPackageProductDependency section */
@@ -1610,6 +1622,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
+		};
+		22C0512C23A4CBB9004D1223 /* GRDBCombine */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */;
+			productName = GRDBCombine;
 		};
 /* End XCSwiftPackageProductDependency section */
 
