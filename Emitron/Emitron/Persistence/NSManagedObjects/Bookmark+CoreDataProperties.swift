@@ -31,28 +31,14 @@ import Foundation
 import CoreData
 
 
-extension Contents {
+extension Bookmark {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Contents> {
-        return NSFetchRequest<Contents>(entityName: "Contents")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Bookmark> {
+        return NSFetchRequest<Bookmark>(entityName: "Bookmark")
     }
 
-    @NSManaged public var bookmarked: Bool
-    @NSManaged public var cardArtworkUrl: URL?
-    @NSManaged public var contentType: String?
-    @NSManaged public var contributorString: String?
-    @NSManaged public var desc: String?
-    @NSManaged public var difficulty: String?
-    @NSManaged public var duration: Int64
-    @NSManaged public var free: Bool
+    @NSManaged public var createdAt: Date?
     @NSManaged public var id: Int64
-    @NSManaged public var index: Int64
-    @NSManaged public var name: String?
-    @NSManaged public var popularity: Double
-    @NSManaged public var releasedAt: Date?
-    @NSManaged public var technologyTripleString: String?
-    @NSManaged public var uri: String?
-    @NSManaged public var videoID: Int64
-    @NSManaged public var download: Download?
+    @NSManaged public var content: Content?
 
 }

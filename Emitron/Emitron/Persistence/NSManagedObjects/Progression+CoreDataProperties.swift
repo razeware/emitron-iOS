@@ -31,20 +31,19 @@ import Foundation
 import CoreData
 
 
-extension Download {
+extension Progression {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Download> {
-        return NSFetchRequest<Download>(entityName: "Download")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Progression> {
+        return NSFetchRequest<Progression>(entityName: "Progression")
     }
 
-    @NSManaged public var dateRequested: Date?
-    @NSManaged public var fileName: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var lastValidated: Date?
-    @NSManaged public var localUrl: URL?
-    @NSManaged public var progress: Float
-    @NSManaged public var remoteUrl: URL?
-    @NSManaged public var stateInt: Int16
+    @NSManaged public var createdAt: Date?
+    @NSManaged public var finished: Bool
+    @NSManaged public var id: Int64
+    @NSManaged public var percentComplete: Double
+    @NSManaged public var progress: Int64
+    @NSManaged public var target: Int64
+    @NSManaged public var updatedAt: Date?
     @NSManaged public var content: Content?
 
 }

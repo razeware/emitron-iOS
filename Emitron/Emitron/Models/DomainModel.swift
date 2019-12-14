@@ -56,7 +56,7 @@ class DomainModel: Equatable, ContentRelatable {
   }
 
   // MARK: - Properties
-  private(set) var id: Int = 0
+  private(set) var id: Int64 = 0
   private(set) var name: String = ""
   private(set) var slug: String = ""
   private(set) var description: String = ""
@@ -65,7 +65,7 @@ class DomainModel: Equatable, ContentRelatable {
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
-    self.id = jsonResource.id
+    self.id = Int64(jsonResource.id)
     self.name = jsonResource["name"] as? String ?? ""
     self.slug = jsonResource["slug"] as? String ?? ""
     self.description = jsonResource["description"] as? String ?? ""
@@ -81,7 +81,7 @@ class DomainModel: Equatable, ContentRelatable {
   /// - parameters:
   ///   - domain: core data entity to transform into domain model
   init(_ domain: Domain) {
-    self.id = domain.id.intValue
+    self.id = domain.id
     self.name = domain.name
     self.slug = domain.slug
     self.level = DomainLevel(rawValue: domain.level) ?? .none

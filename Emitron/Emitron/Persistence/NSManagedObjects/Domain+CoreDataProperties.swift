@@ -25,20 +25,40 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+//
 
-import CoreData
 import Foundation
+import CoreData
 
-@objc(Domain)
-final class Domain: NSManagedObject {
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Domain> {
-    return NSFetchRequest<Domain>(entityName: "Domain")
-  }
+extension Domain {
 
-  @NSManaged var id: NSNumber
-  @NSManaged var name: String
-  @NSManaged var level: String
-  @NSManaged var slug: String
-  @NSManaged var desc: String?
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Domain> {
+        return NSFetchRequest<Domain>(entityName: "Domain")
+    }
+
+    @NSManaged public var desc: String?
+    @NSManaged public var id: Int64
+    @NSManaged public var level: String?
+    @NSManaged public var name: String?
+    @NSManaged public var slug: String?
+    @NSManaged public var contents: NSSet?
+
+}
+
+// MARK: Generated accessors for contents
+extension Domain {
+
+    @objc(addContentsObject:)
+    @NSManaged public func addToContents(_ value: Content)
+
+    @objc(removeContentsObject:)
+    @NSManaged public func removeFromContents(_ value: Content)
+
+    @objc(addContents:)
+    @NSManaged public func addToContents(_ values: NSSet)
+
+    @objc(removeContents:)
+    @NSManaged public func removeFromContents(_ values: NSSet)
+
 }

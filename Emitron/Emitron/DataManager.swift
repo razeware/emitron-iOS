@@ -67,13 +67,6 @@ class DataManager: NSObject {
   private(set) var progressionsMC: ProgressionsMC?
   private(set) var bookmarksMC: BookmarksMC?
   let downloadsMC: DownloadsMC
-  
-  private var globalDataStore: [ContentDetailsModel] {
-    return Array(Set(inProgressContentVM.data)
-      .union(Set(completedContentVM.data))
-      .union(Set(bookmarkContentMC.data))
-      .union(Set(libraryContentsVM.data)))
-  }
 
   private var domainsSubscriber: AnyCancellable?
   private var categoriesSubsciber: AnyCancellable?

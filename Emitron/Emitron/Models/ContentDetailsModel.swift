@@ -43,13 +43,13 @@ protocol ContentRelatable {
   var type: ContentRelationship { get }
 }
 
-class ContentDetailsModel: NSObject {
+class ContentDetailsModel: NSObject, DisplayableContent {
   
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var uri: String = ""
   private(set) var name: String = ""
-  private(set) var parentName: String? // Only set for .episode content
+  private(set) var parentName: String? // Only set for .episode contentesaz`
   private(set) var desc: String = ""
   private(set) var releasedAt: Date
   private(set) var free: Bool = false
@@ -71,7 +71,7 @@ class ContentDetailsModel: NSObject {
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
   
-  var parentContent: ContentDetailsModel?
+  var parentContent: DisplayableContent?
   var isDownloaded = false
   var progression: ProgressionModel?
   var progressionId: Int?
@@ -234,7 +234,7 @@ class ContentDetailsModel: NSObject {
   ///
   /// - parameters:
   ///   - content: core data entity to transform into domain model
-  init(_ content: Contents) {
+  init(_ content: Content) {
     self.id = Int(content.id)
     self.name = content.name ?? ""
     self.uri = content.uri ?? ""

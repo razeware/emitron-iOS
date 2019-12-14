@@ -42,6 +42,10 @@ final class DownloadService {
   private let queueManager: DownloadQueueManager
   private let downloadProcessor = DownloadProcessor()
   private var processingSubscriptions = Set<AnyCancellable>()
+  private let displayableDownloadsFR: FetchResults<Content>
+  var displayableDownloads: Published<[Content]>.Publisher {
+    displayableDownloadsFR.$results
+  }
   
   private var downloadQuality: AttachmentKind {
     guard let selectedQuality = UserDefaults.standard.downloadQuality,
@@ -79,6 +83,7 @@ final class DownloadService {
       self.checkPermissions()
     }
     self.downloadProcessor.delegate = self
+    self.displayableDownloadsFR = FetchResults(context: coreDataStack.viewContext, request: Content.displayableDownloads)
     checkPermissions()
   }
   
@@ -136,7 +141,7 @@ final class DownloadService {
       return
     }
     // Let's ensure that all the relevant content is stored locally
-    var contentToDownload = [Contents]()
+    var contentToDownload = [Content]()
     contentToDownload.append(addOrUpdate(content: content))
     if let parentContent = content.parentContent {
       // If the requested content has parent content we don't
@@ -260,13 +265,13 @@ extension DownloadService {
     }
   }
   
-  private func addOrUpdate(content model: ContentDetailsModel) -> Contents {
+  private func addOrUpdate(content model: ContentDetailsModel) -> Content {
     // Check to see whether we already have one
-    let request: NSFetchRequest<Contents> = Contents.fetchRequest()
+    let request: NSFetchRequest<Content> = Contents.fetchRequest()
     request.predicate = NSPredicate(format: "id = %d", model.id)
     
     // Get hold of or create the content record
-    var content: Contents?
+    var content: Content?
     do {
       let contents = try coreDataContext.fetch(request)
       content = contents.first
@@ -275,7 +280,7 @@ extension DownloadService {
       print(error)
     }
     if content == nil {
-      content = Contents(context: coreDataContext)
+      content = Content(context: coreDataContext)
     }
     
     // Update the Content from the ContentDetailsModel
@@ -283,7 +288,7 @@ extension DownloadService {
     return content!
   }
   
-  private func createDownload(content: Contents) -> Download {
+  private func createDownload(content: Content) -> Download {
     if let download = content.download {
       // Already got a download requested
       return download

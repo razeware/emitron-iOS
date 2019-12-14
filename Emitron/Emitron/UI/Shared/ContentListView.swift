@@ -46,7 +46,7 @@ struct ContentListView: View {
   var downloadsMC: DownloadsMC
   var headerView: AnyView?
   var contentsVM: ContentPaginatable
-  var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
+  var callback: ((DownloadsAction, DisplayableContent) -> Void)?
 
   var body: some View {
     contentView

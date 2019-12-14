@@ -30,12 +30,21 @@
 import Foundation
 import CoreData
 
-@objc(Contents)
-public class Contents: NSManagedObject {
-  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: viewContext)
+@objc(Content)
+public class Content: NSManagedObject {
+  static func transform(from model: ContentDetailsModel, viewContext: NSManagedObjectContext) -> Content {
+    let contents = Content(context: viewContext)
     contents.update(from: model)
     return contents
+  }
+  
+  static var displayableDownloads: NSFetchRequest<Content> {
+    let request: NSFetchRequest<Content> = fetchRequest()
+    let predicate = NSPredicate(format: "(contentType == collection OR contentType == screencast) AND download != NULL")
+    let sort = NSSortDescriptor(key: "download.dateRequested", ascending: true)
+    request.predicate = predicate
+    request.sortDescriptors = [sort]
+    return request
   }
   
   func update(from model: ContentDetailsModel) {
@@ -46,7 +55,7 @@ public class Contents: NSManagedObject {
     releasedAt = model.releasedAt
     free = model.free
     difficulty = model.difficulty?.rawValue
-    contentType = model.contentType?.rawValue
+    contentTypeString = model.contentType?.rawValue
     duration = Int64(model.duration)
     bookmarked = model.bookmarked
     popularity = model.popularity
@@ -54,5 +63,29 @@ public class Contents: NSManagedObject {
     technologyTripleString = model.technologyTripleString
     contributorString = model.contributorString
     videoID = Int64(model.videoID ?? 0)
+  }
+}
+
+extension Content: DisplayableContent {
+  var contentType: ContentType? {
+    guard let contentTypeString = contentTypeString else { return nil }
+    return ContentType(rawValue: contentTypeString)
+  }
+  
+  var domainIDs: [Int64] {
+    guard let domains = domains as? Set<Domain> else { return [] }
+    return domains.map { $0.id }
+  }
+  
+  var parentContentId: Int64? {
+    parentContent?.id
+  }
+  
+  var parentContent: DisplayableContent? {
+    parentGroup?.parentContent
+  }
+  
+  var isInCollection: Bool {
+    parentGroup != nil
   }
 }

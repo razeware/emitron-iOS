@@ -37,6 +37,7 @@ class InProgressContentVM: ProgressionsContentVM { }
 class CompletedContentVM: ProgressionsContentVM { }
 
 class ProgressionsContentVM: ObservableObject, ContentPaginatable {
+  
   var contentScreen: ContentScreen
     
   // MARK: - Properties
@@ -49,7 +50,7 @@ class ProgressionsContentVM: ObservableObject, ContentPaginatable {
   
   private let client: RWAPI
   private let progressionsService: ProgressionsService
-  private(set) var data: [ContentDetailsModel] = []
+  private(set) var data: [DisplayableContent] = [ContentDetailsModel]()
   private(set) var totalContentNum: Int = 0
   
   // Pagination

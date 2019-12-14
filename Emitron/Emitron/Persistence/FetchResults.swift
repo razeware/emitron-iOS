@@ -37,6 +37,9 @@ import CoreData
   Core Data context available in the Environment.
 */
 
+
+
+/// A class that represents a live-updating Core Data result set
 class FetchResults<T: NSFetchRequestResult>: NSObject, NSFetchedResultsControllerDelegate {
   private let resultSubject = PassthroughSubject<T, Never>()
   lazy var resultStream: AnyPublisher<T, Never> = {

@@ -25,26 +25,15 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
-//
 
 import Foundation
-import CoreData
 
-
-extension Download {
-
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Download> {
-        return NSFetchRequest<Download>(entityName: "Download")
-    }
-
-    @NSManaged public var dateRequested: Date?
-    @NSManaged public var fileName: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var lastValidated: Date?
-    @NSManaged public var localUrl: URL?
-    @NSManaged public var progress: Float
-    @NSManaged public var remoteUrl: URL?
-    @NSManaged public var stateInt: Int16
-    @NSManaged public var content: Content?
-
+protocol DisplayableContent {
+  var id: Int64 { get }
+  var contentType: ContentType? { get }
+  var domainIDs: [Int64] { get }
+  var parentContentId: Int64? { get }
+  var parentContent: DisplayableContent? { get }
+  
+  var isInCollection: Bool { get }
 }

@@ -25,19 +25,12 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+//
 
-import CoreData
 import Foundation
+import CoreData
 
-@objc(Category)
-final class Category: NSManagedObject {
+@objc(Domain)
+public class Domain: NSManagedObject {
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Category> {
-    return NSFetchRequest<Category>(entityName: "Category")
-  }
-
-  @NSManaged var id: NSNumber
-  @NSManaged var name: String
-  @NSManaged var uri: String
-  @NSManaged var ordinal: NSNumber
 }

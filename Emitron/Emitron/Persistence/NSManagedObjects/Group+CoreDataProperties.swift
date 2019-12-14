@@ -31,20 +31,52 @@ import Foundation
 import CoreData
 
 
-extension Download {
+extension Group {
 
-    @nonobjc public class func fetchRequest() -> NSFetchRequest<Download> {
-        return NSFetchRequest<Download>(entityName: "Download")
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Group> {
+        return NSFetchRequest<Group>(entityName: "Group")
     }
 
-    @NSManaged public var dateRequested: Date?
-    @NSManaged public var fileName: String?
-    @NSManaged public var id: UUID?
-    @NSManaged public var lastValidated: Date?
-    @NSManaged public var localUrl: URL?
-    @NSManaged public var progress: Float
-    @NSManaged public var remoteUrl: URL?
-    @NSManaged public var stateInt: Int16
-    @NSManaged public var content: Content?
+    @NSManaged public var desc: String?
+    @NSManaged public var id: Int64
+    @NSManaged public var name: String?
+    @NSManaged public var ordinal: Int64
+    @NSManaged public var childContents: NSOrderedSet?
+    @NSManaged public var parentContent: Content?
+
+}
+
+// MARK: Generated accessors for childContents
+extension Group {
+
+    @objc(insertObject:inChildContentsAtIndex:)
+    @NSManaged public func insertIntoChildContents(_ value: Content, at idx: Int)
+
+    @objc(removeObjectFromChildContentsAtIndex:)
+    @NSManaged public func removeFromChildContents(at idx: Int)
+
+    @objc(insertChildContents:atIndexes:)
+    @NSManaged public func insertIntoChildContents(_ values: [Content], at indexes: NSIndexSet)
+
+    @objc(removeChildContentsAtIndexes:)
+    @NSManaged public func removeFromChildContents(at indexes: NSIndexSet)
+
+    @objc(replaceObjectInChildContentsAtIndex:withObject:)
+    @NSManaged public func replaceChildContents(at idx: Int, with value: Content)
+
+    @objc(replaceChildContentsAtIndexes:withChildContents:)
+    @NSManaged public func replaceChildContents(at indexes: NSIndexSet, with values: [Content])
+
+    @objc(addChildContentsObject:)
+    @NSManaged public func addToChildContents(_ value: Content)
+
+    @objc(removeChildContentsObject:)
+    @NSManaged public func removeFromChildContents(_ value: Content)
+
+    @objc(addChildContents:)
+    @NSManaged public func addToChildContents(_ values: NSOrderedSet)
+
+    @objc(removeChildContents:)
+    @NSManaged public func removeFromChildContents(_ values: NSOrderedSet)
 
 }

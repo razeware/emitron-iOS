@@ -25,17 +25,39 @@
 /// LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
+//
 
-import CoreData
 import Foundation
+import CoreData
 
-@objc(Bookmark)
-final class Bookmark: NSManagedObject {
 
-  @nonobjc class func fetchRequest() -> NSFetchRequest<Bookmark> {
-    return NSFetchRequest<Bookmark>(entityName: "Bookmark")
-  }
+extension Category {
 
-  @NSManaged var id: NSNumber
-  @NSManaged var createdAt: Date
+    @nonobjc public class func fetchRequest() -> NSFetchRequest<Category> {
+        return NSFetchRequest<Category>(entityName: "Category")
+    }
+
+    @NSManaged public var id: Int64
+    @NSManaged public var name: String?
+    @NSManaged public var ordinal: Int64
+    @NSManaged public var uri: String?
+    @NSManaged public var contents: NSSet?
+
+}
+
+// MARK: Generated accessors for contents
+extension Category {
+
+    @objc(addContentsObject:)
+    @NSManaged public func addToContents(_ value: Content)
+
+    @objc(removeContentsObject:)
+    @NSManaged public func removeFromContents(_ value: Content)
+
+    @objc(addContents:)
+    @NSManaged public func addToContents(_ values: NSSet)
+
+    @objc(removeContents:)
+    @NSManaged public func removeFromContents(_ values: NSSet)
+
 }

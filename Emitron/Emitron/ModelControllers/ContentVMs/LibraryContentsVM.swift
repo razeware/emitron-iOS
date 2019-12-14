@@ -44,7 +44,7 @@ class LibraryContentsVM: ObservableObject, ContentPaginatable {
   
   private let client: RWAPI
   private let contentsService: ContentsService
-  private(set) var data: [ContentDetailsModel] = []
+  private(set) var data: [DisplayableContent] = [ContentDetailsModel]()
   private(set) var totalContentNum: Int = 0
   
   // Pagination
