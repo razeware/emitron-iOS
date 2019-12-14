@@ -37,15 +37,6 @@ final class PersistenceStore {
     return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
   }
   
-  let coreDataStack = CoreDataStack()
-  
-  init() {
-    setupPersistentStore()
-  }
-  
-  private func setupPersistentStore() {
-    coreDataStack.setupPersistentContainer()
-  }
 }
 
 // MARK: Documents Directory
