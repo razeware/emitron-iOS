@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 51;
+	objectVersion = 52;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -42,13 +42,15 @@
 		22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F4F236F76B30064A406 /* DownloadProcessor.swift */; };
 		22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */; };
 		22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */; };
+		22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512123A4C923004D1223 /* KeychainSwift */; };
+		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
+		22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512623A4C99E004D1223 /* KingfisherSwiftUI */; };
+		22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512923A4C9BE004D1223 /* SwiftyJSON */; };
 		22D176CB23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */; };
 		22D176CE2347520D0038333D /* UserModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CD2347520D0038333D /* UserModelTest.swift */; };
 		22D17708235078030038333D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D17707235078030038333D /* Configuration.swift */; };
 		22D382BA2387447700FBBEF7 /* FetchResults.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D382B92387447700FBBEF7 /* FetchResults.swift */; };
 		22D382BC2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */; };
-		2C41F2A175393DBFC90112E9 /* Pods_emitron.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */; };
-		501CECBBEA709C21CA95DD7D /* Pods_emitronTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 551EFD84D14BA559003D1772 /* Pods_emitronTests.framework */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */; };
 		8B4A907123659A410025AE05 /* ContentsMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B4A907023659A410025AE05 /* ContentsMC.swift */; };
@@ -233,10 +235,6 @@
 		22D17707235078030038333D /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		22D382B92387447700FBBEF7 /* FetchResults.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FetchResults.swift; sourceTree = "<group>"; };
 		22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManagerTest.swift; sourceTree = "<group>"; };
-		45C70622AD5673AD0AB91CF1 /* Pods-emitronTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitronTests.debug.xcconfig"; path = "Target Support Files/Pods-emitronTests/Pods-emitronTests.debug.xcconfig"; sourceTree = "<group>"; };
-		551EFD84D14BA559003D1772 /* Pods_emitronTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_emitronTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		74A0D662109D5BF3458D56B8 /* Pods-emitron.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitron.debug.xcconfig"; path = "Target Support Files/Pods-emitron/Pods-emitron.debug.xcconfig"; sourceTree = "<group>"; };
-		89506CEDBFB5B4EAA22CFCE5 /* Pods-emitronTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitronTests.release.xcconfig"; path = "Target Support Files/Pods-emitronTests/Pods-emitronTests.release.xcconfig"; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
 		8B4A907023659A410025AE05 /* ContentsMC.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentsMC.swift; sourceTree = "<group>"; };
@@ -252,13 +250,11 @@
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		8BFCEF202341187C003FF72F /* PermissionsModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsModel.swift; sourceTree = "<group>"; };
 		8BFF36A9233C9AB7001B7420 /* AppState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppState.swift; sourceTree = "<group>"; };
-		8E27149DB5E7CEE532EF9C04 /* Pods-emitron.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-emitron.release.xcconfig"; path = "Target Support Files/Pods-emitron/Pods-emitron.release.xcconfig"; sourceTree = "<group>"; };
 		9535A50022D657C6000DA861 /* CoreDataStack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoreDataStack.swift; sourceTree = "<group>"; };
 		95A4513322E224B500D24E56 /* UserMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserMC.swift; sourceTree = "<group>"; };
 		95A4513422E224B500D24E56 /* VideosMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideosMC.swift; sourceTree = "<group>"; };
 		95BAF69622EF5FB200D17323 /* Emitron.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = Emitron.xcdatamodel; sourceTree = "<group>"; };
 		95CD793922F0B83A0080C407 /* DomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModel.swift; sourceTree = "<group>"; };
-		B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_emitron.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		B51C597A2344DF3300D7B0E2 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
@@ -378,7 +374,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				501CECBBEA709C21CA95DD7D /* Pods_emitronTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -386,7 +381,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				2C41F2A175393DBFC90112E9 /* Pods_emitron.framework in Frameworks */,
+				22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */,
+				22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */,
+				22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */,
+				22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -525,10 +523,6 @@
 		893818B538C1669690768381 /* Pods */ = {
 			isa = PBXGroup;
 			children = (
-				74A0D662109D5BF3458D56B8 /* Pods-emitron.debug.xcconfig */,
-				8E27149DB5E7CEE532EF9C04 /* Pods-emitron.release.xcconfig */,
-				45C70622AD5673AD0AB91CF1 /* Pods-emitronTests.debug.xcconfig */,
-				89506CEDBFB5B4EAA22CFCE5 /* Pods-emitronTests.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -625,15 +619,6 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
-		A331F97F98E99A372BB92C47 /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-				B4F0D51B092C9451D1CC2749 /* Pods_emitron.framework */,
-				551EFD84D14BA559003D1772 /* Pods_emitronTests.framework */,
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		B62B9A7C22DF764900122CE8 /* Login */ = {
 			isa = PBXGroup;
 			children = (
@@ -702,7 +687,6 @@
 				8BFF36A9233C9AB7001B7420 /* AppState.swift */,
 				B6D7DC2D22C79743006DD325 /* Emitron */,
 				22D176BE23460A060038333D /* emitronTests */,
-				A331F97F98E99A372BB92C47 /* Frameworks */,
 				893818B538C1669690768381 /* Pods */,
 				B6D7DC2C22C79743006DD325 /* Products */,
 			);
@@ -973,7 +957,6 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 22D176C623460A060038333D /* Build configuration list for PBXNativeTarget "emitronTests" */;
 			buildPhases = (
-				7FEA35D331552067BAAB0696 /* [CP] Check Pods Manifest.lock */,
 				22D176B923460A060038333D /* Sources */,
 				22D176BA23460A060038333D /* Frameworks */,
 				22D176BB23460A060038333D /* Resources */,
@@ -992,11 +975,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = B6D7DC3F22C79745006DD325 /* Build configuration list for PBXNativeTarget "emitron" */;
 			buildPhases = (
-				C9CEA336BF2F8C7E45AC687C /* [CP] Check Pods Manifest.lock */,
 				B6D7DC2722C79743006DD325 /* Sources */,
 				B6D7DC2822C79743006DD325 /* Frameworks */,
 				B6D7DC2922C79743006DD325 /* Resources */,
-				56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */,
 				B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */,
 				958699B722D48F3E00E33625 /* SwiftLint Run Script */,
 				222DD7F4233B9A9900CF561F /* Set Build Number */,
@@ -1006,6 +987,12 @@
 			dependencies = (
 			);
 			name = emitron;
+			packageProductDependencies = (
+				22C0512123A4C923004D1223 /* KeychainSwift */,
+				22C0512423A4C99E004D1223 /* Kingfisher */,
+				22C0512623A4C99E004D1223 /* KingfisherSwiftUI */,
+				22C0512923A4C9BE004D1223 /* SwiftyJSON */,
+			);
 			productName = Emitron;
 			productReference = B6D7DC2B22C79743006DD325 /* raywenderlich.app */;
 			productType = "com.apple.product-type.application";
@@ -1038,6 +1025,11 @@
 				Base,
 			);
 			mainGroup = B6D7DC2222C79743006DD325;
+			packageReferences = (
+				22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */,
+				22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */,
+				22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
+			);
 			productRefGroup = B6D7DC2C22C79743006DD325 /* Products */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1103,45 +1095,6 @@
 			shellPath = /bin/sh;
 			shellScript = "git=`sh /etc/profile; which git`\nbundleVersion=`\"$git\" rev-list --all |wc -l`\n/usr/libexec/PlistBuddy -c \"Set :CFBundleVersion $bundleVersion\" \"${TARGET_BUILD_DIR}/${INFOPLIST_PATH}\"\n";
 		};
-		56CCFAAA552C575A854BC166 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-emitron/Pods-emitron-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-emitron/Pods-emitron-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-emitron/Pods-emitron-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		7FEA35D331552067BAAB0696 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emitronTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
 		958699B722D48F3E00E33625 /* SwiftLint Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
@@ -1178,28 +1131,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
-		};
-		C9CEA336BF2F8C7E45AC687C /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-emitron-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
 
@@ -1391,7 +1322,6 @@
 /* Begin XCBuildConfiguration section */
 		22D176C423460A060038333D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 45C70622AD5673AD0AB91CF1 /* Pods-emitronTests.debug.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1412,7 +1342,6 @@
 		};
 		22D176C523460A060038333D /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 89506CEDBFB5B4EAA22CFCE5 /* Pods-emitronTests.release.xcconfig */;
 			buildSettings = {
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
@@ -1549,7 +1478,6 @@
 		};
 		B6D7DC4022C79745006DD325 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 74A0D662109D5BF3458D56B8 /* Pods-emitron.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = .dev;
@@ -1578,7 +1506,6 @@
 		};
 		B6D7DC4122C79745006DD325 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8E27149DB5E7CEE532EF9C04 /* Pods-emitron.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = "AppIcon${BUNDLE_ID_SUFFIX}";
 				BUNDLE_ID_SUFFIX = "";
@@ -1635,6 +1562,56 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 18.0.0;
+			};
+		};
+		22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/onevcat/Kingfisher";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.12.0;
+			};
+		};
+		22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 5.0.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		22C0512123A4C923004D1223 /* KeychainSwift */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */;
+			productName = KeychainSwift;
+		};
+		22C0512423A4C99E004D1223 /* Kingfisher */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = Kingfisher;
+		};
+		22C0512623A4C99E004D1223 /* KingfisherSwiftUI */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */;
+			productName = KingfisherSwiftUI;
+		};
+		22C0512923A4C9BE004D1223 /* SwiftyJSON */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
+			productName = SwiftyJSON;
+		};
+/* End XCSwiftPackageProductDependency section */
 
 /* Begin XCVersionGroup section */
 		95BAF69522EF5FB200D17323 /* Emitron.xcdatamodeld */ = {

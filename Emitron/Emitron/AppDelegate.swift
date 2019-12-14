@@ -26,9 +26,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Crashlytics
-import Fabric
-import Firebase
+
 import UIKit
 import AVFoundation
 
@@ -44,8 +42,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
-    FirebaseApp.configure()
-    //Fabric.with([Crashlytics.self])
     
     let audioSession = AVAudioSession.sharedInstance()
     do {

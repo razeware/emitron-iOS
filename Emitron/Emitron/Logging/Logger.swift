@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Firebase
 
 protocol Log {
   var object: String { get }
@@ -94,11 +93,14 @@ enum Failure: Log {
   }
   
   func log(additionalParams: [String: String]?) {
-    let params = [AnalyticsParameterItemName: self.object,
-                  "action": self.action,
-                  "reason": self.reason]
-    let allParams = params.merged(additionalParams) as [String: Any]
-    Analytics.logEvent(action, parameters: allParams)
+//    let params = [AnalyticsParameterItemName: self.object,
+//                  "action": self.action,
+//                  "reason": self.reason]
+//    let allParams = params.merged(additionalParams) as [String: Any]
+//    Analytics.logEvent(action, parameters: allParams)
+    //TODO FIX
+    guard let additionalParams = additionalParams else { return }
+    print(additionalParams)
   }
 }
 
@@ -119,10 +121,13 @@ enum Event: Log {
       return "Login"
     }
   }
-  
+
   func log(additionalParams: [String: String]?) {
-    let params = [AnalyticsParameterItemName: self.object]
-    let allParams = params.merged(additionalParams) as [String: Any]
-    Analytics.logEvent(action, parameters: allParams)
+//    let params = [AnalyticsParameterItemName: self.object]
+//    let allParams = params.merged(additionalParams) as [String: Any]
+//    Analytics.logEvent(action, parameters: allParams)
+    // TODO FIX
+    guard let additionalParams = additionalParams else { return }
+    print(additionalParams)
   }
 }
