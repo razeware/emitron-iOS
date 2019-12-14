@@ -27,11 +27,17 @@
 /// THE SOFTWARE.
 
 import Foundation
+import GRDB
 import KeychainSwift
 
 // The object responsible for managing and accessing cached content
 
 final class PersistenceStore {
+  let db: DatabaseWriter
+  
+  init(db: DatabaseWriter) {
+    self.db = db
+  }
   
   static var current: PersistenceStore {
     return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
@@ -39,24 +45,14 @@ final class PersistenceStore {
   
 }
 
-// MARK: Documents Directory
-// For storing downloaded video files which expire after 7 days
-
-extension PersistenceStore { }
-
-// MARK: CoreData
+// MARK: SQLite
 // For storing information that should not change that frequently
 // content (refresh daily)
 // categories (very infrequently)
 // domains (very infrequently)
 
 extension PersistenceStore {
-  // let storedContent = store.objects(CDContent)
-  // let content = storedContent.compactMap { $0.contentobjects() }
-    
-    func objects<T>(_ type: T.Type) -> [T] {
-      return []
-    }
+  
 }
 
 // MARK: UserDefaults

@@ -29,11 +29,12 @@
 
 import UIKit
 import AVFoundation
+import GRDB
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  private (set) var persistenceStore = PersistenceStore()
+  private (set) var persistenceStore: PersistenceStore!
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
   private (set) var userModelController: UserMC!
@@ -47,8 +48,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     do {
       try audioSession.setCategory(AVAudioSession.Category.playback)
     } catch {
-        print("Setting category to AVAudioSessionCategoryPlayback failed.")
+      print("Setting category to AVAudioSessionCategoryPlayback failed.")
     }
+    
+    // Initialise the database
+    let dbPool = try! setupDatabase(application)
+    persistenceStore = PersistenceStore(db: dbPool)
     
     // TODO: When you're logged out datamanager will be nil in this current setup
     self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
@@ -59,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     guard let guardpost = guardpost else { return true }
     userModelController = UserMC(guardpost: guardpost)
     downloadService = DownloadService(
-      coreDataStack: persistenceStore.coreDataStack,
+      persistenceStore: persistenceStore,
       userModelController: userModelController
     )
     
@@ -104,6 +109,19 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
     
     downloadService.backgroundSessionCompletionHandler = completionHandler
+  }
+  
+  private func setupDatabase(_ application: UIApplication) throws -> DatabasePool {
+    let databaseURL = try FileManager.default
+      .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+      .appendingPathComponent("emitron.sqlite")
+    let dbPool = try EmitronDatabase.openDatabase(atPath: databaseURL.path)
+    
+    // Be a nice iOS citizen, and don't consume too much memory
+    // See https://github.com/groue/GRDB.swift/blob/master/README.md#memory-management
+    dbPool.setupMemoryManagement(in: application)
+    
+    return dbPool
   }
 }
 

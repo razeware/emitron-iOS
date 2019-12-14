@@ -51,7 +51,7 @@ final class DownloadQueueManager {
       .eraseToAnyPublisher()
   }
   
-  init(coreDataContext: NSManagedObjectContext, maxSimultaneousDownloads: Int = 2) {
+  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
     self.maxSimultaneousDownloads = maxSimultaneousDownloads
     self.pendingFR = FetchResults(context: coreDataContext, request: Download.findBy(state: .pending))
     self.readyForDownloadFR = FetchResults(context: coreDataContext, request: Download.findBy(state: .readyForDownload))

@@ -31,10 +31,7 @@ import Combine
 import CoreData
 
 final class DownloadService {
-  private let coreDataStack: CoreDataStack
-  private var coreDataContext: NSManagedObjectContext {
-    return coreDataStack.viewContext
-  }
+  private let persistenceStore: PersistenceStore
   private let userModelController: UserModelController
   private var userModelControllerSubscription: AnyCancellable?
   private let videosServiceProvider: VideosService.Provider
@@ -42,10 +39,6 @@ final class DownloadService {
   private let queueManager: DownloadQueueManager
   private let downloadProcessor = DownloadProcessor()
   private var processingSubscriptions = Set<AnyCancellable>()
-  private let displayableDownloadsFR: FetchResults<Content>
-  var displayableDownloads: Published<[Content]>.Publisher {
-    displayableDownloadsFR.$results
-  }
   
   private var downloadQuality: AttachmentKind {
     guard let selectedQuality = UserDefaults.standard.downloadQuality,
@@ -73,10 +66,10 @@ final class DownloadService {
     }
   }
   
-  init(coreDataStack: CoreDataStack, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
-    self.coreDataStack = coreDataStack
+  init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
+    self.persistenceStore = persistenceStore
     self.userModelController = userModelController
-    self.queueManager = DownloadQueueManager(coreDataContext: coreDataStack.viewContext)
+    self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
     self.userModelControllerSubscription = userModelController.objectWillChange.sink { [weak self] in
       guard let self = self else { return }
