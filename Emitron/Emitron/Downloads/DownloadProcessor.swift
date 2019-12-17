@@ -30,7 +30,7 @@ import Foundation
 import Combine
 
 protocol DownloadProcessorModel {
-  var id: UUID? { get }
+  var id: UUID { get }
   var localUrl: URL? { get }
   var remoteUrl: URL? { get }
 }
@@ -38,7 +38,7 @@ protocol DownloadProcessorModel {
 protocol DownloadProcessorDelegate {
   func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel?
   func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Float)
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double)
   func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID)
   func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID)
   func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID)
@@ -85,38 +85,35 @@ final class DownloadProcessor: NSObject {
 
 extension DownloadProcessor {
   func add(download: DownloadProcessorModel) throws {
-    guard let id = download.id, let remoteUrl = download.remoteUrl else { throw DownloadProcessorError.invalidArguments }
+    guard let remoteUrl = download.remoteUrl else { throw DownloadProcessorError.invalidArguments }
     
     let downloadTask = session.downloadTask(with: remoteUrl)
-    downloadTask.downloadId = id
+    downloadTask.downloadId = download.id
     downloadTask.resume()
     
     currentDownloads.append(downloadTask)
     
-    delegate.downloadProcessor(self, didStartDownloadWithId: id)
+    delegate.downloadProcessor(self, didStartDownloadWithId: download.id)
   }
   
   func pauseDownload(_ download: DownloadProcessorModel) throws {
-    guard let id = download.id else { throw DownloadProcessorError.invalidArguments }
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == id }) else { throw DownloadProcessorError.unknownDownload }
+    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
     
     downloadTask.suspend()
     
-    delegate.downloadProcessor(self, didPauseDownloadWithId: id)
+    delegate.downloadProcessor(self, didPauseDownloadWithId: download.id)
   }
   
   func resumeDownload(_ download: DownloadProcessorModel) throws {
-    guard let id = download.id else { throw DownloadProcessorError.invalidArguments }
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == id }) else { throw DownloadProcessorError.unknownDownload }
+    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
     
     downloadTask.resume()
     
-    delegate.downloadProcessor(self, didResumeDownloadWithId: id)
+    delegate.downloadProcessor(self, didResumeDownloadWithId: download.id)
   }
   
   func cancelDownload(_ download: DownloadProcessorModel) throws {
-    guard let id = download.id else { throw DownloadProcessorError.invalidArguments }
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == id }) else { throw DownloadProcessorError.unknownDownload }
+    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
     
     downloadTask.cancel()
   }
@@ -162,7 +159,7 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
     guard let downloadId = downloadTask.downloadId else { return }
     
-    let progress = Float(Double(totalBytesWritten) / Double(totalBytesExpectedToWrite))
+    let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
     delegate.downloadProcessor(self, downloadWithId: downloadId, didUpdateProgress: progress)
   }
   

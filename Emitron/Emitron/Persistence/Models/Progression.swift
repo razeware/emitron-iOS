@@ -27,31 +27,30 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
-import CoreData
+import GRDB
 
-final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
-  private let persistenceStore: PersistenceStore
+struct Progression: Codable, FetchableRecord, TableRecord, PersistableRecord {
+  var id: Int
+  var target: Int
+  var progress: Int
+  var createdAt: Date
+  var updatedAt: Date
+  var contentId: Int
+}
 
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .pending)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .readyForDownload)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
-    persistenceStore
-      .downloadQueue(withMaxLength: maxSimultaneousDownloads)
-      .eraseToAnyPublisher()
-  }()
-  
-  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
-    self.persistenceStore = persistenceStore
+extension Progression {
+  static let content = belongsTo(Content.self)
+  var content: QueryInterfaceRequest<Content> {
+    request(for: Progression.content)
+  }
+}
+
+extension Progression {
+  init(progressionModel: ProgressionModel) {
+    self.id = progressionModel.id
+    self.target = progressionModel.target
+    self.progress = progressionModel.progress
+    self.createdAt = progressionModel.createdAt
+    self.updatedAt = progressionModel.updatedAt
   }
 }

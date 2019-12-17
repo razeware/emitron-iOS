@@ -34,6 +34,16 @@
 		22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512923A4C9BE004D1223 /* SwiftyJSON */; };
 		22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512C23A4CBB9004D1223 /* GRDBCombine */; };
 		22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */; };
+		22C0513223A4FB84004D1223 /* Content.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513123A4FB84004D1223 /* Content.swift */; };
+		22C0513423A4FB8E004D1223 /* Bookmark.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513323A4FB8E004D1223 /* Bookmark.swift */; };
+		22C0513623A4FB9A004D1223 /* Progression.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513523A4FB99004D1223 /* Progression.swift */; };
+		22C0513823A4FBA5004D1223 /* Category.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513723A4FBA5004D1223 /* Category.swift */; };
+		22C0513A23A4FBB0004D1223 /* ContentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513923A4FBB0004D1223 /* ContentCategory.swift */; };
+		22C0513C23A4FBB8004D1223 /* Domain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513B23A4FBB8004D1223 /* Domain.swift */; };
+		22C0513E23A4FBC2004D1223 /* ContentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513D23A4FBC2004D1223 /* ContentDomain.swift */; };
+		22C0514023A4FBCC004D1223 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513F23A4FBCC004D1223 /* Group.swift */; };
+		22C0514223A4FBD5004D1223 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514123A4FBD5004D1223 /* Download.swift */; };
+		22C0514623A517C3004D1223 /* PersistenceStore+Downloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */; };
 		22D176CB23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */; };
 		22D176CE2347520D0038333D /* UserModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CD2347520D0038333D /* UserModelTest.swift */; };
 		22D17708235078030038333D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D17707235078030038333D /* Configuration.swift */; };
@@ -198,6 +208,16 @@
 		22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessorTest.swift; sourceTree = "<group>"; };
 		22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManager.swift; sourceTree = "<group>"; };
 		22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronDatabase.swift; sourceTree = "<group>"; };
+		22C0513123A4FB84004D1223 /* Content.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Content.swift; sourceTree = "<group>"; };
+		22C0513323A4FB8E004D1223 /* Bookmark.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Bookmark.swift; sourceTree = "<group>"; };
+		22C0513523A4FB99004D1223 /* Progression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progression.swift; sourceTree = "<group>"; };
+		22C0513723A4FBA5004D1223 /* Category.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Category.swift; sourceTree = "<group>"; };
+		22C0513923A4FBB0004D1223 /* ContentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCategory.swift; sourceTree = "<group>"; };
+		22C0513B23A4FBB8004D1223 /* Domain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Domain.swift; sourceTree = "<group>"; };
+		22C0513D23A4FBC2004D1223 /* ContentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDomain.swift; sourceTree = "<group>"; };
+		22C0513F23A4FBCC004D1223 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
+		22C0514123A4FBD5004D1223 /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
+		22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Downloads.swift"; sourceTree = "<group>"; };
 		22D176BD23460A060038333D /* emitronTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emitronTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		22D176C123460A060038333D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+UserKeychainTest.swift"; sourceTree = "<group>"; };
@@ -434,11 +454,20 @@
 			path = Downloads;
 			sourceTree = "<group>";
 		};
-		22C0513023A4FA89004D1223 /* Records */ = {
+		22C0513023A4FA89004D1223 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				22C0513323A4FB8E004D1223 /* Bookmark.swift */,
+				22C0513723A4FBA5004D1223 /* Category.swift */,
+				22C0513123A4FB84004D1223 /* Content.swift */,
+				22C0513923A4FBB0004D1223 /* ContentCategory.swift */,
+				22C0513D23A4FBC2004D1223 /* ContentDomain.swift */,
+				22C0513B23A4FBB8004D1223 /* Domain.swift */,
+				22C0514123A4FBD5004D1223 /* Download.swift */,
+				22C0513F23A4FBCC004D1223 /* Group.swift */,
+				22C0513523A4FB99004D1223 /* Progression.swift */,
 			);
-			path = Records;
+			path = Models;
 			sourceTree = "<group>";
 		};
 		22D176BE23460A060038333D /* emitronTests */ = {
@@ -533,9 +562,10 @@
 		9535A4FF22D657B0000DA861 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
-				22C0513023A4FA89004D1223 /* Records */,
+				22C0513023A4FA89004D1223 /* Models */,
 				B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */,
 				22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */,
+				22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1118,6 +1148,7 @@
 				8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */,
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
 				8BFC74BC23648DF3001979F1 /* ContentPaginatable.swift in Sources */,
+				22C0513C23A4FBB8004D1223 /* Domain.swift in Sources */,
 				B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
 				8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */,
@@ -1154,6 +1185,7 @@
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
+				22C0513A23A4FBB0004D1223 /* ContentCategory.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */,
 				8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */,
@@ -1166,14 +1198,18 @@
 				8B4A907123659A410025AE05 /* ContentsMC.swift in Sources */,
 				B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */,
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
+				22C0513623A4FB9A004D1223 /* Progression.swift in Sources */,
 				B6D8EB2D22CBCC8800DE29AF /* ContentsRequest.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B6DF2F9622CA05140081A3A3 /* AttachmentModel.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				B63834C122DFD2E60096D9F8 /* ContentDetailsVM.swift in Sources */,
+				22C0514023A4FBCC004D1223 /* Group.swift in Sources */,
 				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
 				2288EF0B2374057000514043 /* DownloadService.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
+				22C0513223A4FB84004D1223 /* Content.swift in Sources */,
+				22C0514223A4FBD5004D1223 /* Download.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
@@ -1184,10 +1220,12 @@
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
 				B6DF2FA222CA05460081A3A3 /* GroupModel.swift in Sources */,
 				B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */,
+				22C0513823A4FBA5004D1223 /* Category.swift in Sources */,
 				B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */,
 				8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */,
 				22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */,
 				B6DF2FCB22CA863D0081A3A3 /* Guardpost.swift in Sources */,
+				22C0514623A517C3004D1223 /* PersistenceStore+Downloads.swift in Sources */,
 				B6C0F0E122D624D400012839 /* VideoPlayerController.swift in Sources */,
 				B629AB4A22E60BC00037F4D8 /* ContentSummaryView.swift in Sources */,
 				8BFCEF212341187C003FF72F /* PermissionsModel.swift in Sources */,
@@ -1199,8 +1237,10 @@
 				B6DF2F9E22CA05320081A3A3 /* ContentDetailsModel.swift in Sources */,
 				B60612B922CCE352007FC852 /* Parameters.swift in Sources */,
 				B6DF2FCF22CA89670081A3A3 /* GuardpostConstants.swift in Sources */,
+				22C0513E23A4FBC2004D1223 /* ContentDomain.swift in Sources */,
 				B6C4F3DF22E710640087ED10 /* PersistenceStore.swift in Sources */,
 				B5956541230A88E100A3FF44 /* SettingsOptionsView.swift in Sources */,
+				22C0513423A4FB8E004D1223 /* Bookmark.swift in Sources */,
 				B6419BB522EF59F5003AC14E /* DomainsMC.swift in Sources */,
 				B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,

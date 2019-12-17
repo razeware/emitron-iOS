@@ -28,7 +28,6 @@
 
 import GRDB
 
-
 /// A type responsible for initialising the appliation's database
 struct EmitronDatabase {
   /// Creates a fully initialised database
@@ -53,12 +52,12 @@ struct EmitronDatabase {
         t.column("name", .text).notNull()
         t.column("descriptionHtml", .text)
         t.column("descriptionPlainText", .text)
-        t.column("releasedAt", .datetime).indexed()
-        t.column("free", .boolean)
-        t.column("professional", .boolean)
+        t.column("releasedAt", .datetime).notNull().indexed()
+        t.column("free", .boolean).notNull().defaults(to: false)
+        t.column("professional", .boolean).notNull().defaults(to: false)
         t.column("difficulty", .integer)
         t.column("contentType", .integer).notNull()
-        t.column("duration", .integer)
+        t.column("duration", .integer).notNull().defaults(to: 0)
         t.column("videoIdentifier", .integer)
         t.column("cardArtworkUrl", .text)
         t.column("technologyTriple", .text)
@@ -132,13 +131,13 @@ struct EmitronDatabase {
     
     migrator.registerMigration("createDownload") { db in
       try db.create(table: "download") { t in
-        t.autoIncrementedPrimaryKey("id")
+        t.column("id", .text).primaryKey()
         t.column("requestedAt", .datetime).notNull().indexed()
         t.column("lastValidatedAt", .datetime)
         t.column("fileName", .text)
         t.column("localUrl", .text)
         t.column("remoteUrl", .text)
-        t.column("progress", .numeric).notNull().defaults(to: 0)
+        t.column("progress", .double).notNull().defaults(to: 0)
         t.column("state", .integer).notNull().defaults(to: 0)
         t.column("contentId", .integer).notNull().indexed().references("content", onDelete: .restrict)
       }

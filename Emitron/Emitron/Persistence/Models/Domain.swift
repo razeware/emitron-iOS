@@ -27,31 +27,48 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
-import CoreData
+import GRDB
 
-final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
-  private let persistenceStore: PersistenceStore
-
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .pending)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .readyForDownload)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
-    persistenceStore
-      .downloadQueue(withMaxLength: maxSimultaneousDownloads)
-      .eraseToAnyPublisher()
-  }()
+struct Domain: Codable, FetchableRecord, TableRecord, PersistableRecord {
+  enum Level: Int, Codable {
+    case production, beta, blog, retired, archive
+    
+    init(domainLevel: DomainLevel) {
+      switch domainLevel {
+      case .archive:
+        self = .archive
+      case .beta:
+        self = .beta
+      case .blog:
+        self = .blog
+      case .production:
+        self = .production
+      case .retired:
+        self = .retired
+      default:
+        self = .retired
+      }
+    }
+  }
   
-  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
-    self.persistenceStore = persistenceStore
+  var id: Int
+  var name: String
+  var slug: String
+  var description: String?
+  var level: Level
+}
+
+extension Domain {
+  static let contentDomains = hasMany(ContentDomain.self)
+  static let contents = hasMany(Content.self, through: contentDomains, using: ContentDomain.content)
+}
+
+extension Domain {
+  init(domainModel: DomainModel) {
+    self.id = domainModel.id
+    self.name = domainModel.name
+    self.slug = domainModel.slug
+    self.description = domainModel.description
+    self.level = Level(domainLevel: domainModel.level)
   }
 }

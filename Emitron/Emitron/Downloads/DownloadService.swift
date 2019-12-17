@@ -28,7 +28,6 @@
 
 import Foundation
 import Combine
-import CoreData
 
 final class DownloadService {
   private let persistenceStore: PersistenceStore
@@ -76,7 +75,6 @@ final class DownloadService {
       self.checkPermissions()
     }
     self.downloadProcessor.delegate = self
-    self.displayableDownloadsFR = FetchResults(context: coreDataStack.viewContext, request: Content.displayableDownloads)
     checkPermissions()
   }
   
@@ -85,9 +83,9 @@ final class DownloadService {
       .sink(receiveCompletion: { completion in
         // TODO: Log
         print(completion)
-      }, receiveValue: { [weak self] download in
-        guard let self = self else { return }
-        self.requestDownloadUrl(download)
+      }, receiveValue: { [weak self] downloadQueueItem in
+        guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+        self.requestDownloadUrl(downloadQueueItem)
       })
       .store(in: &processingSubscriptions)
     
@@ -95,9 +93,9 @@ final class DownloadService {
       .sink(receiveCompletion: { completion in
         // TODO: Log
         print(completion)
-      }, receiveValue: { [weak self] download in
-        guard let self = self else { return }
-        self.enqueue(download: download)
+      }, receiveValue: { [weak self] downloadQueueItem in
+        guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+        self.enqueue(downloadQueueItem: downloadQueueItem)
       })
       .store(in: &processingSubscriptions)
     
@@ -105,17 +103,16 @@ final class DownloadService {
     .sink(receiveCompletion: { completion in
       // TODO: Log
       print(completion)
-    }, receiveValue: { [weak self] downloads in
+    }, receiveValue: { [weak self] downloadQueueItems in
       guard let self = self else { return }
-      downloads.filter { $0.state == .enqueued }
-        .forEach { (download) in
+      downloadQueueItems.filter { $0.download.state == .enqueued }
+        .forEach { (downloadQueueItem) in
           do {
-            try self.downloadProcessor.add(download: download)
+            try self.downloadProcessor.add(download: downloadQueueItem.download)
           } catch {
             // TODO: Log
             print("Problem adding download: \(error)")
-            download.state = .failed
-            self.saveContext()
+            self.transitionDownload(withID: downloadQueueItem.download.id, to: .failed)
           }
       }
     })
@@ -133,56 +130,47 @@ final class DownloadService {
       print("User not allowed to request downloads")
       return
     }
-    // Let's ensure that all the relevant content is stored locally
-    var contentToDownload = [Content]()
-    contentToDownload.append(addOrUpdate(content: content))
-    if let parentContent = content.parentContent {
-      // If the requested content has parent content we don't
-      // want to donwload it.
-      let _ = addOrUpdate(content: parentContent)
-    }
-    // We do want to download all child content tho
-    contentToDownload += content.childContents.map { addOrUpdate(content: $0) }
     
-    // Now create the appropriate download objects.
-    //TODO: Should we do anything with these?
-    let _ = contentToDownload.map { createDownload(content: $0) }
-    
-    // Commit all these changes
-    if coreDataStack.viewContext.hasChanges {
-      do {
-        try coreDataStack.viewContext.save()
-      } catch {
-        // TODO
-        print("Unable to save. Not sure what to do.")
-      }
+    do {
+      // Let's ensure that all the relevant content is stored locally
+      let content = try persistenceStore.persistContentGraph(for: content)
+      // Now create the appropriate download objects.
+      try persistenceStore.createDownloads(for: content)
+    } catch {
+      // TODO: Log
+      print("There was a problem requesting the download: \(error)")
     }
+    
   }
 }
 
 extension DownloadService {
-  func requestDownloadUrl(_ download: Download) {
+  func requestDownloadUrl(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard let videosService = videosService else {
       // TODO: Log
       print("User not allowed to request downloads")
       return
     }
-    guard download.remoteUrl == nil, download.state == .pending, download.content?.contentType != "collection" else {
+    guard downloadQueueItem.download.remoteUrl == nil,
+      downloadQueueItem.download.state == .pending,
+      downloadQueueItem.content.contentType != .collection else {
       // TODO: Log
-      print("Cannot request download URL for: \(download)")
+        print("Cannot request download URL for: \(downloadQueueItem.download)")
       return
     }
     // Find the video ID
-    guard let videoId = download.content?.videoID, videoId != 0 else {
+    guard let videoId = downloadQueueItem.content.videoIdentifier,
+      videoId != 0 else {
       // TODO: Log
-      print("Unable to locate videoId for download: \(download)")
+        print("Unable to locate videoId for download: \(downloadQueueItem.download)")
       return
     }
     
     // Use the video service to request the URLs
-    videosService.getVideoDownload(for: Int(videoId)) { [weak self] result in
+    videosService.getVideoDownload(for: videoId) { [weak self] result in
       // Ensure we're still around
       guard let self = self else { return }
+      var download = downloadQueueItem.download
       
       switch result {
       case .failure(let error):
@@ -190,7 +178,7 @@ extension DownloadService {
         print("Unable to obtain download URLs: \(error)")
       case .success(let attachments):
         download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
-        download.lastValidated = Date()
+        download.lastValidatedAt = Date()
         download.state = .readyForDownload
       }
       
@@ -201,34 +189,29 @@ extension DownloadService {
       
       // Commit the changes
       do {
-        try self.coreDataContext.save()
+        try self.persistenceStore.update(download: download)
       } catch {
         // TODO: Log
-        print("Unable to save URL: \(error)")
+        print("Unable to save download URL: \(error)")
+        self.transitionDownload(withID: download.id, to: .failed)
       }
     }
     
-    // Update the state
-    download.state = .urlRequested
-    // Commit the changes
-    do {
-      try self.coreDataContext.save()
-    } catch {
-      // TODO: Log
-      print("Unable to request the donwload URL: \(error)")
-    }
+    // Move it on through the state machine
+    self.transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
   }
   
-  func enqueue(download: Download) {
-    guard download.remoteUrl != nil, download.state == .urlRequested else {
+  func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
+    guard downloadQueueItem.download.remoteUrl != nil,
+      downloadQueueItem.download.state == .urlRequested else {
       // TODO: Log
-      print("Cannot enqueue download: \(download)")
+        print("Cannot enqueue download: \(downloadQueueItem.download)")
       return
     }
     // Find the video ID
-    guard let videoId = download.content?.videoID else {
+    guard let videoId = downloadQueueItem.content.videoIdentifier else {
       // TODO: Log
-      print("Unable to locate videoId for download: \(download)")
+      print("Unable to locate videoId for download: \(downloadQueueItem.download)")
       return
     }
     
@@ -237,6 +220,7 @@ extension DownloadService {
     let localUrl = downloadsDirectory.appendingPathComponent(filename)
     
     // Save local URL and filename
+    var download = downloadQueueItem.download
     download.localUrl = localUrl
     download.fileName = filename
     
@@ -251,49 +235,13 @@ extension DownloadService {
     
     // Save
     do {
-      try self.coreDataContext.save()
+      try persistenceStore.update(download: download)
     } catch {
       // TODO: Log
       print("Unable to enqueue download: \(error)")
     }
   }
   
-  private func addOrUpdate(content model: ContentDetailsModel) -> Content {
-    // Check to see whether we already have one
-    let request: NSFetchRequest<Content> = Contents.fetchRequest()
-    request.predicate = NSPredicate(format: "id = %d", model.id)
-    
-    // Get hold of or create the content record
-    var content: Content?
-    do {
-      let contents = try coreDataContext.fetch(request)
-      content = contents.first
-    } catch {
-      // TODO: Update this to logging.
-      print(error)
-    }
-    if content == nil {
-      content = Content(context: coreDataContext)
-    }
-    
-    // Update the Content from the ContentDetailsModel
-    content!.update(from: model)
-    return content!
-  }
-  
-  private func createDownload(content: Content) -> Download {
-    if let download = content.download {
-      // Already got a download requested
-      return download
-    }
-    
-    let download = Download(context: coreDataContext)
-    download.assignDefaults()
-    
-    // Assign it to the appropriate content
-    content.download = download
-    return download
-  }
   
   private func prepareDownloadDirectory() {
     let fileManager = FileManager.default
@@ -349,67 +297,64 @@ extension DownloadService {
 }
 
 extension DownloadService: DownloadProcessorDelegate {
-  private func findDownload(withId id: UUID) -> Download? {
-    let request = Download.findBy(id: id)
-    let result = try? coreDataContext.fetch(request)
-    return result?.first
-  }
-  
-  private func saveContext() {
+  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel? {
     do {
-      try coreDataContext.save()
+      return try persistenceStore.download(withId: downloadId)
     } catch {
       // TODO log
-      print("Unable to save: \(error)")
+      print("Error finding download: \(error)")
     }
-  }
-  
-  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel? {
-    return findDownload(withId: downloadId)
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.state = .inProgress
-    saveContext()
+    transitionDownload(withID: downloadId, to: .inProgress)
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Float) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.progress = progress
-    saveContext()
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double) {
+    do {
+      try persistenceStore.updateDownload(withId: downloadId, withProgress: progress)
+    } catch {
+      // TODO Log
+      print("Unable to update progress on download: \(error)")
+    }
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.state = .complete
-    saveContext()
+    transitionDownload(withID: downloadId, to: .complete)
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    coreDataContext.delete(download)
-    if let content = download.content {
-      coreDataContext.delete(content)
+    do {
+      if try !persistenceStore.deleteDownload(withId: downloadId) {
+        // TODO Log
+        print("Unable to delete download: \(downloadId)")
+      }
+    } catch {
+      // TODO Log
+      print("Unable to delete download: \(error)")
     }
-    saveContext()
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.state = .paused
-    saveContext()
+    transitionDownload(withID: downloadId, to: .paused)
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.state = .inProgress
-    saveContext()
+    transitionDownload(withID: downloadId, to: .inProgress)
   }
   
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
-    guard let download = findDownload(withId: downloadId) else { return }
-    download.state = .error
-    
+    transitionDownload(withID: downloadId, to: .error)
+    // TODO Logging
+    print("DownloadDidFailWithError: \(error)")
+  }
+  
+  private func transitionDownload(withID id: UUID, to state: Download.State) {
+    do {
+      try persistenceStore.transitionDownload(withId: id, to: state)
+    } catch {
+      // TODO Logging
+      print("Unable to transition download: \(error)")
+    }
   }
 }

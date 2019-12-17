@@ -27,31 +27,24 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
-import CoreData
+import GRDB
 
-final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
-  private let persistenceStore: PersistenceStore
+struct Bookmark: Codable, FetchableRecord, TableRecord, PersistableRecord {
+  var id: Int
+  var createdAt: Date
+  var contentId: Int
+}
 
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .pending)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .readyForDownload)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
-    persistenceStore
-      .downloadQueue(withMaxLength: maxSimultaneousDownloads)
-      .eraseToAnyPublisher()
-  }()
-  
-  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
-    self.persistenceStore = persistenceStore
+extension Bookmark {
+  static let content = belongsTo(Content.self)
+  var content: QueryInterfaceRequest<Content> {
+    request(for: Bookmark.content)
+  }
+}
+
+extension Bookmark {
+  init(bookmarkModel: BookmarkModel) {
+    self.id = bookmarkModel.id
+    self.createdAt = bookmarkModel.createdAt ?? Date()
   }
 }

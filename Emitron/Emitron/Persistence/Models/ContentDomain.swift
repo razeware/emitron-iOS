@@ -27,31 +27,21 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
-import CoreData
+import GRDB
 
-final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
-  private let persistenceStore: PersistenceStore
+struct ContentDomain: Codable, FetchableRecord, TableRecord {
+  var id: Int64?
+  var contentId: Int
+  var domainId: Int
+}
 
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .pending)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .readyForDownload)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
-    persistenceStore
-      .downloadQueue(withMaxLength: maxSimultaneousDownloads)
-      .eraseToAnyPublisher()
-  }()
-  
-  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
-    self.persistenceStore = persistenceStore
+extension ContentDomain: MutablePersistableRecord {
+  mutating func didInsert(with rowID: Int64, for column: String?) {
+    id = rowID
   }
+}
+
+extension ContentDomain {
+  static let content = belongsTo(Content.self)
+  static let domain = belongsTo(Domain.self)
 }

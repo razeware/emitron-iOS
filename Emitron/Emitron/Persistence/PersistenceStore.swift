@@ -26,7 +26,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import UIKit.UIApplication
 import GRDB
 import KeychainSwift
 
@@ -42,16 +42,6 @@ final class PersistenceStore {
   static var current: PersistenceStore {
     return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
   }
-  
-}
-
-// MARK: SQLite
-// For storing information that should not change that frequently
-// content (refresh daily)
-// categories (very infrequently)
-// domains (very infrequently)
-
-extension PersistenceStore {
   
 }
 

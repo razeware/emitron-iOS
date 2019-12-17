@@ -27,31 +27,25 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
-import CoreData
+import GRDB
 
-final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
-  private let persistenceStore: PersistenceStore
+struct Category: Codable, FetchableRecord, TableRecord, PersistableRecord {
+  var id: Int
+  var name: String
+  var uri: String
+  var ordinal: Int
+}
 
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .pending)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
-    persistenceStore
-      .downloads(in: .readyForDownload)
-      .eraseToAnyPublisher()
-  }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
-    persistenceStore
-      .downloadQueue(withMaxLength: maxSimultaneousDownloads)
-      .eraseToAnyPublisher()
-  }()
-  
-  init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
-    self.persistenceStore = persistenceStore
+extension Category {
+  static let contentCategories = hasMany(ContentCategory.self)
+  static let contents = hasMany(Content.self, through: contentCategories, using: ContentCategory.content)
+}
+
+extension Category {
+  init(categoryModel: CategoryModel) {
+    self.id = categoryModel.id
+    self.name = categoryModel.name
+    self.uri = categoryModel.uri
+    self.ordinal = categoryModel.ordinal
   }
 }

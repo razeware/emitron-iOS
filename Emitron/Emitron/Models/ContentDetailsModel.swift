@@ -71,7 +71,7 @@ class ContentDetailsModel: NSObject, DisplayableContent {
   private(set) var categories: [CategoryModel] = []
   private(set) var url: URL?
   
-  var parentContent: DisplayableContent?
+  var parentContent: ContentDetailsModel?
   var isDownloaded = false
   var progression: ProgressionModel?
   var progressionId: Int?

@@ -56,7 +56,7 @@ class DomainModel: Equatable, ContentRelatable {
   }
 
   // MARK: - Properties
-  private(set) var id: Int64 = 0
+  private(set) var id: Int = 0
   private(set) var name: String = ""
   private(set) var slug: String = ""
   private(set) var description: String = ""
@@ -65,7 +65,7 @@ class DomainModel: Equatable, ContentRelatable {
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
-    self.id = Int64(jsonResource.id)
+    self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""
     self.slug = jsonResource["slug"] as? String ?? ""
     self.description = jsonResource["description"] as? String ?? ""
