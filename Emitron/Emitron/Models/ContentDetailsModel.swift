@@ -43,7 +43,7 @@ protocol ContentRelatable {
   var type: ContentRelationship { get }
 }
 
-class ContentDetailsModel: NSObject, DisplayableContent {
+class ContentDetailsModel: NSObject {
   
   // MARK: - Properties
   private(set) var id: Int = 0
@@ -200,7 +200,7 @@ class ContentDetailsModel: NSObject, DisplayableContent {
                   return content
                 })
                 
-                if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? []) {
+                if let group = GroupModel(resource, metadata: resource.meta, childContents: contentDetails ?? [], content: self) {
                   groups.append(group)
                 }
               }
@@ -228,50 +228,6 @@ class ContentDetailsModel: NSObject, DisplayableContent {
           break
       }
     }
-  }
-  
-  /// Convenience initializer to transform core data **Contents** into a **ContentDetailModel**
-  ///
-  /// - parameters:
-  ///   - content: core data entity to transform into domain model
-  init(_ content: Content) {
-    self.id = Int(content.id)
-    self.name = content.name ?? ""
-    self.uri = content.uri ?? ""
-    self.desc = content.desc ?? ""
-    self.releasedAt = content.releasedAt ?? Date()
-    self.free = content.free
-    self.difficulty = content.difficulty == nil ? nil : ContentDifficulty(rawValue: content.difficulty!)
-    self.contentType = content.contentType == nil ? nil : ContentType(rawValue: content.contentType!)
-    self.duration = Int(content.duration)
-    self.popularity = content.popularity
-    self.cardArtworkURL = content.cardArtworkUrl
-    self.technologyTripleString = content.technologyTripleString ?? ""
-    self.contributorString = content.contributorString ?? ""
-    self.videoID = content.videoID == 0 ? .none : Int(content.videoID)
-  }
-  
-  /// Convenience initializer to transform UIDocument **ContentsData** into a **ContentDetailModel**
-  ///
-  /// - parameters:
-  ///   - content: core data entity to transform into domain model
-  init(_ content: ContentsData) {
-    self.id = content.id ?? 0
-    self.name = content.name
-    self.uri = content.uri
-    self.desc = content.contentDescription
-    self.releasedAt = content.releasedAt
-    self.free = content.free
-    self.difficulty = ContentDifficulty(rawValue: content.difficulty) ?? nil
-    self.contentType = ContentType(rawValue: content.contentType) ?? nil
-    self.duration = content.duration
-    self.popularity = content.popularity
-    self.cardArtworkURL = content.cardArtworkURL
-    self.cardArtworkData = content.cardArtworkData
-    self.technologyTripleString = content.technologyTripleString
-    self.contributorString = content.contributorString
-    self.videoID = content.videoID
-    self.parentContentId = content.parentContentId
   }
 }
 

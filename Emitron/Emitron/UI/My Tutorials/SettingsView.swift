@@ -100,7 +100,7 @@ struct SettingsView: View {
           .padding([.top], 20)
         
         Spacer()
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.presentationMode.wrappedValue.dismiss()
           }) {

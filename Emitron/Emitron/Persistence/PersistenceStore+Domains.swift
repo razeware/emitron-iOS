@@ -27,39 +27,32 @@
 /// THE SOFTWARE.
 
 import Foundation
+import GRDB
 
-class VideoData: NSObject, NSCoding {
-  var url: URL?
-  var data: Data?
-  var content: ContentDetailsModel?
-  
-  init(url: URL? = nil) {
-    self.url = url
-  }
-  
-  func encode(with aCoder: NSCoder) {
-    aCoder.encode(1, forKey: .versionKey)
-    guard let videoURL = url, let savedContent = content else { return }
-    
-    let contentsData = ContentsData(id: savedContent.id, name: savedContent.name, uri: savedContent.uri, description: savedContent.desc, releasedAt: savedContent.releasedAt, free: savedContent.free, duration: savedContent.duration, popularity: savedContent.popularity, bookmarked: savedContent.bookmarked, cardArtworkURL: savedContent.cardArtworkURL, technologyTripleString: savedContent.technologyTripleString, contributorString: savedContent.contributorString, videoID: savedContent.videoID, index: savedContent.index, professional: savedContent.professional, difficulty: savedContent.difficulty?.rawValue ?? "", contentType: savedContent.contentType?.rawValue ?? "", parentContentId: savedContent.parentContentId)
-    
-    aCoder.encode(videoURL.absoluteString, forKey: .videoKey)
-    aCoder.encode(data)
-    aCoder.encode(contentsData, forKey: .contentKey)
-  }
-  
-  required init?(coder aDecoder: NSCoder) {
-    aDecoder.decodeInteger(forKey: .versionKey)
-    if let videoURL = aDecoder.decodeObject(forKey: .videoKey) as? String {
-      self.url = URL(string: videoURL)
+// MARK: - Data reading methods for display
+extension PersistenceStore {
+  /// List of all the **Domain** objects from the data store
+  func domainList() throws -> [Domain] {
+    try db.read { db in
+      try Domain
+        .order(Domain.Columns.level.asc)
+        .fetchAll(db)
     }
-    
-    if let data = aDecoder.decodeData() {
-      self.data = data
-    }
-    
-    if let content = aDecoder.decodeObject(forKey: .contentKey) as? ContentsData {
-      self.content = ContentDetailsModel(content)
+  }
+}
+
+// MARK: - Data writing methods
+extension PersistenceStore {
+  /// Sync all **Domain** objects to the data store
+  /// - Parameter domains: The list of **Domain** objects to sync
+  func sync(domains: [Domain]) throws {
+    try db.write { db in
+      // Delete domains that no longer exist
+      try Domain
+        .filter(!domains.map { $0.id }.contains(Domain.Columns.id))
+        .deleteAll(db)
+      // And now save all the domains we've been provided
+      try domains.forEach { try $0.save(db) }
     }
   }
 }

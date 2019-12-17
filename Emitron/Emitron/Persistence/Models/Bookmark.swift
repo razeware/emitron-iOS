@@ -46,5 +46,6 @@ extension Bookmark {
   init(bookmarkModel: BookmarkModel) {
     self.id = bookmarkModel.id
     self.createdAt = bookmarkModel.createdAt ?? Date()
+    self.contentId = bookmarkModel.content!.id
   }
 }

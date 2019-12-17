@@ -38,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   private (set) var guardpost: Guardpost?
   var dataManager: DataManager?
   private (set) var userModelController: UserMC!
-  private var downloadService: DownloadService!
+  private (set) var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -70,7 +70,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     guard let user = guardpost.currentUser else { return true }
     self.dataManager = DataManager(user: user,
-                                   persistenceStore: persistenceStore)
+                                   persistenceStore: persistenceStore,
+                                   downloadService: downloadService)
     
     return true
   }

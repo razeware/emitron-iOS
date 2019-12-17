@@ -52,7 +52,7 @@ struct LibraryView: View {
       .navigationBarTitle(
         Text(Constants.library))
       .navigationBarItems(trailing:
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.libraryContentsVM.reload()
           }) {
@@ -210,7 +210,7 @@ struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
 
-  public func body(content: Content) -> some View {
+  public func body(content: Self.Content) -> some View {
     HStack {
       content
       Button(action: {

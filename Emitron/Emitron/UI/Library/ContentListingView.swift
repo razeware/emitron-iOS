@@ -100,7 +100,7 @@ struct ContentListingView: View {
       self.loadImage()
     }
     .navigationBarItems(trailing:
-      Group {
+      SwiftUI.Group {
         Button(action: {
           self.refreshContentDetails()
         }) {

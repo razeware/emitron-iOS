@@ -303,6 +303,7 @@ extension DownloadService: DownloadProcessorDelegate {
     } catch {
       // TODO log
       print("Error finding download: \(error)")
+      return .none
     }
   }
   

@@ -37,6 +37,15 @@ struct Category: Codable, FetchableRecord, TableRecord, PersistableRecord {
 }
 
 extension Category {
+  enum Columns {
+    static let id = Column(CodingKeys.id)
+    static let name = Column(CodingKeys.name)
+    static let uri = Column(CodingKeys.uri)
+    static let ordinal = Column(CodingKeys.ordinal)
+  }
+}
+
+extension Category {
   static let contentCategories = hasMany(ContentCategory.self)
   static let contents = hasMany(Content.self, through: contentCategories, using: ContentCategory.content)
 }

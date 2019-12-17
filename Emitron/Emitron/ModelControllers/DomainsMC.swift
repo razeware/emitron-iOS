@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import CoreData
 
 class DomainsMC: ObservableObject, Refreshable {
   
@@ -79,10 +78,7 @@ private extension DomainsMC {
   func loadFromPersistentStore() {
     
     do {
-      let fetchRequest: NSFetchRequest<Domain> = Domain.fetchRequest()
-      let result = try persistenceStore.coreDataStack.viewContext.fetch(fetchRequest)
-      let domainModels = result.map(DomainModel.init)
-      data = domainModels
+      data = try persistenceStore.domainList().map(DomainModel.init)
       state = .hasData
     } catch {
       Failure
@@ -94,33 +90,13 @@ private extension DomainsMC {
   }
   
   func saveToPersistentStore() {
-    let viewContext = persistenceStore.coreDataStack.viewContext
-    for entry in data {
-      let domain = Domain(context: viewContext)
-      domain.id = NSNumber(value: entry.id)
-      domain.name = entry.name
-      domain.level = entry.level.rawValue
-      domain.slug = entry.slug
-      domain.desc = entry.description
-    }
-    
-    // Delete old records first
-    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Domain.fetchRequest()
-    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+    let domains = data.map(Domain.init)
     
     do {
-      try viewContext.execute(deleteRequest)
+      try persistenceStore.sync(domains: domains)
     } catch {
       Failure
-        .deleteFromPersistentStore(from: "DomainsMC", reason: "Failed to delete entities from core data.")
-        .log(additionalParams: nil)
-    }
-    
-    do {
-      try viewContext.save()
-    } catch {
-      Failure
-        .saveToPersistentStore(from: "DomainsMC", reason: "Failed to save entities to core data.")
+        .saveToPersistentStore(from: "DomainsMC", reason: "Failed to update domain list in persistent store.")
         .log(additionalParams: nil)
     }
     

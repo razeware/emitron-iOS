@@ -130,7 +130,8 @@ class VideoPlayerController: AVPlayerViewController {
 
     if let libraryContentsVM = DataManager.current?.libraryContentsVM,
       let current = currentContent,
-      let firstIndex = libraryContentsVM.data.firstIndex(where: { $0.id == current.id } ) {
+      let _ = libraryContentsVM.data.firstIndex(where: { $0.id == current.id } ) {
+      // TODO: Not sure what this is for?
     }
   }
 
@@ -181,23 +182,7 @@ class VideoPlayerController: AVPlayerViewController {
   }
 
   private func playFromLocalStorage(with url: URL, contentDetails: ContentDetailsModel) {
-    
-    let doc = Document(fileURL: url)
-    doc.open { [weak self] success in
-      guard let self = self else { return }
-      guard success else {
-        fatalError("Failed to open doc.")
-      }
-      
-      if let url = doc.videoData.url,
-         let lastComponent = url.pathComponents.last,
-         let data = doc.videoData.data {
-        
-        let tmpFileURL = URL(fileURLWithPath: NSTemporaryDirectory()).appendingPathComponent(lastComponent).appendingPathExtension("mp4")
-        try? data.write(to: tmpFileURL, options: [.atomic])
-        self.insertVideoStream(for: tmpFileURL, contentDetails: contentDetails)
-      }
-    }
+    // TODO
   }
 
   private func fetchAndInsertFromVideosRemote(for contentDetails: ContentDetailsModel) {

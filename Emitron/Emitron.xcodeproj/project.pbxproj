@@ -44,6 +44,8 @@
 		22C0514023A4FBCC004D1223 /* Group.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513F23A4FBCC004D1223 /* Group.swift */; };
 		22C0514223A4FBD5004D1223 /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514123A4FBD5004D1223 /* Download.swift */; };
 		22C0514623A517C3004D1223 /* PersistenceStore+Downloads.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */; };
+		22C0514823A8AC0B004D1223 /* PersistenceStore+Domains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */; };
+		22C0514A23A8B890004D1223 /* PersistenceStore+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */; };
 		22D176CB23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */; };
 		22D176CE2347520D0038333D /* UserModelTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D176CD2347520D0038333D /* UserModelTest.swift */; };
 		22D17708235078030038333D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D17707235078030038333D /* Configuration.swift */; };
@@ -66,7 +68,6 @@
 		95A4513522E224B500D24E56 /* UserMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A4513322E224B500D24E56 /* UserMC.swift */; };
 		95A4513622E224B500D24E56 /* VideosMC.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A4513422E224B500D24E56 /* VideosMC.swift */; };
 		95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95CD793922F0B83A0080C407 /* DomainModel.swift */; };
-		B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */ = {isa = PBXBuildFile; fileRef = B51C597A2344DF3300D7B0E2 /* VideoData.swift */; };
 		B53272DD2333ABF80069DF57 /* HudView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B53272DC2333ABF80069DF57 /* HudView.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
 		B595653323018AC200A3FF44 /* TitleDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595653223018AC200A3FF44 /* TitleDetailView.swift */; };
@@ -218,6 +219,8 @@
 		22C0513F23A4FBCC004D1223 /* Group.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Group.swift; sourceTree = "<group>"; };
 		22C0514123A4FBD5004D1223 /* Download.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Download.swift; sourceTree = "<group>"; };
 		22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Downloads.swift"; sourceTree = "<group>"; };
+		22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Domains.swift"; sourceTree = "<group>"; };
+		22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Categories.swift"; sourceTree = "<group>"; };
 		22D176BD23460A060038333D /* emitronTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emitronTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		22D176C123460A060038333D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		22D176CA23460AFE0038333D /* PersistenceStore+UserKeychainTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+UserKeychainTest.swift"; sourceTree = "<group>"; };
@@ -243,7 +246,6 @@
 		95A4513322E224B500D24E56 /* UserMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserMC.swift; sourceTree = "<group>"; };
 		95A4513422E224B500D24E56 /* VideosMC.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = VideosMC.swift; sourceTree = "<group>"; };
 		95CD793922F0B83A0080C407 /* DomainModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainModel.swift; sourceTree = "<group>"; };
-		B51C597A2344DF3300D7B0E2 /* VideoData.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoData.swift; sourceTree = "<group>"; };
 		B53272DC2333ABF80069DF57 /* HudView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HudView.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
 		B595653223018AC200A3FF44 /* TitleDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TitleDetailView.swift; sourceTree = "<group>"; };
@@ -566,6 +568,8 @@
 				B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */,
 				22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */,
 				22C0514523A517C3004D1223 /* PersistenceStore+Downloads.swift */,
+				22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */,
+				22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -593,7 +597,6 @@
 				8BFCEF202341187C003FF72F /* PermissionsModel.swift */,
 				B6DF2FA322CA05530081A3A3 /* ProgressionModel.swift */,
 				B6DF2FAE22CA498B0081A3A3 /* UserModel.swift */,
-				B51C597A2344DF3300D7B0E2 /* VideoData.swift */,
 				B6DF2FA522CA055A0081A3A3 /* VideoModel.swift */,
 				22A265B323979628000DD276 /* DisplayableContent.swift */,
 			);
@@ -959,7 +962,6 @@
 				B6D7DC2722C79743006DD325 /* Sources */,
 				B6D7DC2822C79743006DD325 /* Frameworks */,
 				B6D7DC2922C79743006DD325 /* Resources */,
-				B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */,
 				958699B722D48F3E00E33625 /* SwiftLint Run Script */,
 				222DD7F4233B9A9900CF561F /* Set Build Number */,
 			);
@@ -1096,25 +1098,6 @@
 			shellPath = /bin/sh;
 			shellScript = "if which swiftlint >/dev/null; then\n    swiftlint --no-cache\nelse\n    echo \"SwiftLint does not exist, download from https://github.com/realm/SwiftLint\"\nfi\n";
 		};
-		B6DF2F8222C9F35E0081A3A3 /* Crashlytics Run Script */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-			);
-			inputPaths = (
-				"$(SRCROOT)/$(BUILT_PRODUCTS_DIR)/$(INFOPLIST_PATH)",
-			);
-			name = "Crashlytics Run Script";
-			outputFileListPaths = (
-			);
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Fabric/run\"\n";
-		};
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1206,6 +1189,7 @@
 				B63834C122DFD2E60096D9F8 /* ContentDetailsVM.swift in Sources */,
 				22C0514023A4FBCC004D1223 /* Group.swift in Sources */,
 				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
+				22C0514A23A8B890004D1223 /* PersistenceStore+Categories.swift in Sources */,
 				2288EF0B2374057000514043 /* DownloadService.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				22C0513223A4FB84004D1223 /* Content.swift in Sources */,
@@ -1214,7 +1198,6 @@
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
 				8BFC74B8236451BE001979F1 /* ProgressionsContentVM.swift in Sources */,
-				B51C597B2344DF3300D7B0E2 /* VideoData.swift in Sources */,
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
@@ -1263,6 +1246,7 @@
 				B6FC15D222CB65880078CEDB /* DownloadModel.swift in Sources */,
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,
 				B6E21A2D22F60AC5006CB22F /* CategoriesMC.swift in Sources */,
+				22C0514823A8AC0B004D1223 /* PersistenceStore+Domains.swift in Sources */,
 				B62B9A8422DF771200122CE8 /* DataState.swift in Sources */,
 				95CD793A22F0B83A0080C407 /* DomainModel.swift in Sources */,
 				8B4A90742365A02D0025AE05 /* ContentUpdatable.swift in Sources */,

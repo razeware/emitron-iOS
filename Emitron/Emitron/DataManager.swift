@@ -40,7 +40,9 @@ class DataManager: NSObject {
         // Create and assign new data manager to the AppDelegate
 
       if let user = Guardpost.current.currentUser {
-				let dataManager = DataManager(user: user, persistenceStore: appDelegate.persistenceStore)
+        let dataManager = DataManager(user: user,
+                                      persistenceStore: appDelegate.persistenceStore,
+                                      downloadService: appDelegate.downloadService)
         appDelegate.dataManager = dataManager
       } else {
         appDelegate.dataManager = nil
@@ -73,7 +75,8 @@ class DataManager: NSObject {
 
   // MARK: - Initializers
   init(user: UserModel,
-       persistenceStore: PersistenceStore) {
+       persistenceStore: PersistenceStore,
+       downloadService: DownloadService) {
     
     self.domainsMC = DomainsMC(user: user,
                                persistenceStore: persistenceStore)
@@ -93,7 +96,7 @@ class DataManager: NSObject {
                                                  completionStatus: .completed)
     
     self.bookmarkContentMC = BookmarkContentsVM(user: user)
-    self.downloadsMC = DownloadsMC(user: user)
+    self.downloadsMC = DownloadsMC(user: user, downloadService: downloadService)
 
     super.init()
     createSubscribers()

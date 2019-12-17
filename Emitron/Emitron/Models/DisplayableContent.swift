@@ -29,10 +29,10 @@
 import Foundation
 
 protocol DisplayableContent {
-  var id: Int64 { get }
+  var id: Int { get }
   var contentType: ContentType? { get }
-  var domainIDs: [Int64] { get }
-  var parentContentId: Int64? { get }
+  var domainIDs: [Int] { get }
+  var parentContentId: Int? { get }
   var parentContent: DisplayableContent? { get }
   
   var isInCollection: Bool { get }

@@ -91,12 +91,12 @@ class BookmarkModel: ContentRelatable {
     self.id = id
   }
   
-  /// Convenience initializer to transform core data **Domain** into a **DomainModel**
+  /// Convenience initializer to transform persisted **Bookmark** into a **BookmarkModel**
   ///
   /// - parameters:
-  ///   - domain: core data entity to transform into domain model
+  ///   - bookmark: persisted entity to transform into bookmark model
   init(_ bookmark: Bookmark) {
-    self.id = bookmark.id.intValue
+    self.id = bookmark.id
     self.createdAt = bookmark.createdAt
   }
 }

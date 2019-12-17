@@ -95,30 +95,32 @@ struct TextListItemView: View {
       if contentSummary.isInCollection {
         
         // If downloading entire collection, only showing loading view at the top of the ContentsListingView
-        guard downloadsMC.isEpisodeOnly else {
-          return AnyView(image)
-        }
+//        guard downloadsMC.isEpisodeOnly else {
+//          return AnyView(image)
+//        }
         
         guard let downloadedContent = downloadsMC.downloadedContent,
         downloadedContent.id == contentSummary.id else {
           return AnyView(image)
         }
         
-        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
+//        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
 
       } else {
         // Only show progress on model that is currently being downloaded
-        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummary.id }),
-          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-          return AnyView(image)
-        }
-        
-        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
+//        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummary.id }),
+//          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
+//          return AnyView(image)
+//        }
+//
+//        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
       }
       
     default:
       return AnyView(image)
     }
+    // TODO: Remove this
+    return AnyView(image)
   }
   
   private var downloadImageName: String {

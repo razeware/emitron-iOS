@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import CoreData
 import SwiftyJSON
 
 enum DownloadsAction {
@@ -38,7 +37,7 @@ enum DownloadsAction {
 
 // Conforming to NSObject so that we can conform to URLSessionDownloadDelegate
 class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
-  
+
   // MARK: - ContentPaginatable
   var currentPage: Int = 0 // NOT IN USE
   var isLoadingMore: Bool = false // NOT IN USE
@@ -65,14 +64,17 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
     }
   }
   private let downloadService: DownloadService
-  var displayableDownloads: Published<[DisplayableContent]>.Publisher {
-    downloadService.displayableDownloads
-  }
+  
+  // TODO: Get rid of this
+  var isEpisodeOnly: Bool = false
+  var callback: (Bool) -> () = { _ in }
+  var collectionProgress: CGFloat = 0
+  var downloadedModel: DownloadModel?
 
   let contentScreen: ContentScreen = .downloads
   
   // ISSUE: Probably don't re-compute this all the time...
-  var data: [DisplayableContent] {
+  var data: [ContentDetailsModel] {
     let downloadedContents = downloadData.map { $0.content }.filter { model -> Bool in
       let isNotEpisode = model.contentType != .episode
       // Only allow episodes in ContentDetailData if the parent hasn't also been downloaded
@@ -96,9 +98,23 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
 		super.init()
   }
   
-  func deleteDownload(with: DisplayableContent) {
+  func deleteDownload(with: ContentDetailsModel) {
     // TODO
   }
   
-  func deleteCollectionContents(with)
+  func cancelDownload(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // TODO
+  }
+  
+  func saveDownload(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // TODO
+  }
+  
+  func saveCollection(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+    // TODO
+  }
+  
+  func deleteCollectionContents(withParent parent: ContentDetailsModel, showCallback: Bool) {
+    // TODO
+  }
 }

@@ -52,5 +52,6 @@ extension Progression {
     self.progress = progressionModel.progress
     self.createdAt = progressionModel.createdAt
     self.updatedAt = progressionModel.updatedAt
+    self.contentId = progressionModel.content!.id
   }
 }

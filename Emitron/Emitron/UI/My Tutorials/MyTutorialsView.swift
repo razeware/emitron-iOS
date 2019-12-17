@@ -67,7 +67,7 @@ struct MyTutorialView: View {
     contentView
       .navigationBarTitle(Text(Constants.myTutorials))
       .navigationBarItems(trailing:
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.settingsPresented = true
           }) {

@@ -64,7 +64,7 @@ struct VideoView: View {
         self.onDisappear?()
       }
       .navigationBarItems(trailing:
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.settingsPresented = true
           }) {

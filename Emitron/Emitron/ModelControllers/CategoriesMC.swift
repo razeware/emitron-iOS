@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import CoreData
 
 class CategoriesMC: ObservableObject, Refreshable {
   
@@ -77,14 +76,11 @@ private extension CategoriesMC {
   func loadFromPersistentStore() {
     
     do {
-      let fetchRequest: NSFetchRequest<Category> = Category.fetchRequest()
-      let result = try persistenceStore.coreDataStack.viewContext.fetch(fetchRequest)
-      let categoryModels = result.map(CategoryModel.init)
-      data = categoryModels
+      data = try persistenceStore.categoryList().map(CategoryModel.init)
       state = .hasData
     } catch {
       Failure
-        .loadFromPersistentStore(from: "CategoriesMC", reason: "Failed to load entities from core data.")
+        .loadFromPersistentStore(from: "CategoriesMC", reason: "Failed to load entities from persistent store.")
         .log(additionalParams: nil)
       data = []
       state = .failed
@@ -92,33 +88,13 @@ private extension CategoriesMC {
   }
   
   func saveToPersistentStore() {
-    let viewContext = persistenceStore.coreDataStack.viewContext    
-    for entry in data {
-      let category = Category(context: viewContext)
-
-      category.id = NSNumber(value: entry.id)
-      category.name = entry.name
-      category.uri = entry.uri
-      category.ordinal = NSNumber(value: entry.ordinal)
-    }
-    
-    // Delete old records first
-    let fetchRequest: NSFetchRequest<NSFetchRequestResult> = Category.fetchRequest()
-    let deleteRequest = NSBatchDeleteRequest(fetchRequest: fetchRequest)
+    let categories = data.map(Category.init)
     
     do {
-      try viewContext.execute(deleteRequest)
+      try persistenceStore.sync(categories: categories)
     } catch {
       Failure
-        .deleteFromPersistentStore(from: "CategoriesMC", reason: "Failed to delete entities from core data.")
-        .log(additionalParams: nil)
-    }
-    
-    do {
-      try viewContext.save()
-    } catch {
-      Failure
-        .saveToPersistentStore(from: "CategoriesMC", reason: "Failed to save entities to core data.")
+        .deleteFromPersistentStore(from: "CategoriesMC", reason: "Unable to sync category list to persistence store.")
         .log(additionalParams: nil)
     }
     

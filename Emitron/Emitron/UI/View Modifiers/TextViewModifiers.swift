@@ -29,9 +29,9 @@
 import SwiftUI
 
 // Inspired by: https://forums.developer.apple.com/thread/121162
-struct TitleLabel: ViewModifier {
-
-  public func body(content: Content) -> some View {
-    content
-  }
-}
+//struct TitleLabel: ViewModifier {
+//
+//  public func body(content: Content) -> some View {
+//    content
+//  }
+//}

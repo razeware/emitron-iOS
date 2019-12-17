@@ -59,6 +59,16 @@ struct Domain: Codable, FetchableRecord, TableRecord, PersistableRecord {
 }
 
 extension Domain {
+  enum Columns {
+    static let id = Column(CodingKeys.id)
+    static let name = Column(CodingKeys.name)
+    static let slug = Column(CodingKeys.slug)
+    static let description = Column(CodingKeys.description)
+    static let level = Column(CodingKeys.level)
+  }
+}
+
+extension Domain {
   static let contentDomains = hasMany(ContentDomain.self)
   static let contents = hasMany(Content.self, through: contentDomains, using: ContentDomain.content)
 }

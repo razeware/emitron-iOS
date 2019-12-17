@@ -26,7 +26,7 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import CoreData
+
 import Foundation
 import SwiftyJSON
 
@@ -41,6 +41,21 @@ enum DomainLevel: String, Equatable {
   
   static var userFacing: [DomainLevel] {
     return [DomainLevel.production, .beta]
+  }
+  
+  init(level: Domain.Level) {
+    switch level {
+    case .archive:
+      self = .archive
+    case .beta:
+      self = .beta
+    case .blog:
+      self = .blog
+    case .production:
+      self = .production
+    case .retired:
+      self = .retired
+    }
   }
 }
 
@@ -76,18 +91,16 @@ class DomainModel: Equatable, ContentRelatable {
     }
   }
 
-  /// Convenience initializer to transform core data **Domain** into a **DomainModel**
+  /// Convenience initializer to transform **Domain** into a **DomainModel**
   ///
   /// - parameters:
-  ///   - domain: core data entity to transform into domain model
+  ///   - domain:  entity to transform into domain model
   init(_ domain: Domain) {
     self.id = domain.id
     self.name = domain.name
     self.slug = domain.slug
-    self.level = DomainLevel(rawValue: domain.level) ?? .none
-    if let description = domain.desc {
-      self.description = description
-    }
+    self.level = DomainLevel(level: domain.level)
+    self.description = domain.description ?? ""
   }
 }
 

@@ -36,16 +36,19 @@ class GroupModel: NSObject {
   private(set) var desc: String = ""
   private(set) var ordinal: Int = 0
   private(set) var childContents: [ContentDetailsModel] = []
+  private(set) var content: ContentDetailsModel
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
         metadata: [String: Any],
-        childContents: [ContentDetailsModel] = []) {
+        childContents: [ContentDetailsModel] = [],
+        content: ContentDetailsModel) {
 
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""
     self.desc = jsonResource["description"] as? String ?? ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0
     self.childContents = childContents
+    self.content = content
   }
 }

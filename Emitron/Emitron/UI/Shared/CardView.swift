@@ -107,7 +107,7 @@ struct CardView: SwiftUI.View {
       }
       .padding([.trailing, .leading], 15)
       
-      Group {
+      SwiftUI.Group {
         if model.progress > 0 && model.progress < 1 {
           ProgressBarView(progress: model.progress, isRounded: true)
             .padding([.top, .bottom], 0)

@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import CoreData
 
 // These classes are here as "wrappers" because I'm not sure how else to insert different objects of the same type into the environment
 
@@ -50,7 +49,7 @@ class ProgressionsContentVM: ObservableObject, ContentPaginatable {
   
   private let client: RWAPI
   private let progressionsService: ProgressionsService
-  private(set) var data: [DisplayableContent] = [ContentDetailsModel]()
+  private(set) var data = [ContentDetailsModel]()
   private(set) var totalContentNum: Int = 0
   
   // Pagination

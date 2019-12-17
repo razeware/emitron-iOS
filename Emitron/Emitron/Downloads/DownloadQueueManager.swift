@@ -28,7 +28,6 @@
 
 import Foundation
 import Combine
-import CoreData
 
 final class DownloadQueueManager {
   private let maxSimultaneousDownloads: Int
