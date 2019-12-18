@@ -111,6 +111,47 @@ class DownloadQueueManagerTest: XCTestCase {
     XCTAssertEqual(download, pending!!.download)
   }
   
+  func testReadyForDownloadStreamSendsUpdatesAsListChanges() throws {
+    var download1 = try samplePersistedDownload(state: .readyForDownload)
+    var download2 = try samplePersistedDownload(state: .readyForDownload)
+    var download3 = try samplePersistedDownload(state: .urlRequested)
+    
+    let recorder = queueManager.readyForDownloadStream.record()
+    var readyForDownload = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual(download1, readyForDownload!!.download)
+    
+    try database.write { db in
+      download3.state = .readyForDownload
+      try download3.save(db)
+    }
+    
+    // This shouldn't fire cos it doesn't affect the stream
+    //readyForDownload = try wait(for: recorder.next(), timeout: 1)
+    //XCTAssertEqual(download1, readyForDownload!!.download)
+    
+    try database.write { db in
+      download1.state = .enqueued
+      try download1.save(db)
+    }
+    readyForDownload = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual(download2, readyForDownload!!.download)
+    
+    
+    try database.write { db in
+      download2.state = .enqueued
+      try download2.save(db)
+    }
+    readyForDownload = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual(download3, readyForDownload!!.download)
+    
+    try database.write { db in
+      download3.state = .enqueued
+      try download3.save(db)
+    }
+    readyForDownload = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertNil(readyForDownload!)
+  }
+  
   func testDownloadQueueStreamRespectsTheMaxLimit() throws {
     let recorder = queueManager.downloadQueue.record()
     

@@ -31,7 +31,16 @@ import GRDB
 
 struct Download: Codable, TableRecord {
   enum State: Int, Codable {
-    case pending, urlRequested, readyForDownload, enqueued, inProgress, paused, cancelled, failed, complete, error
+    case pending
+    case urlRequested
+    case readyForDownload
+    case enqueued
+    case inProgress
+    case paused
+    case cancelled
+    case failed
+    case complete
+    case error
   }
   
   var id: UUID
