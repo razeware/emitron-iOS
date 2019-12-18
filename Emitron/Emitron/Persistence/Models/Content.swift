@@ -165,3 +165,5 @@ extension Content {
     contributors = contentDetailsModel.contributorString
   }
 }
+
+extension Content: Equatable {}

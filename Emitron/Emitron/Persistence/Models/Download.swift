@@ -79,6 +79,8 @@ extension DerivableRequest where RowDecoder == Download {
 
 extension Download: DownloadProcessorModel { }
 
+extension Download: Equatable { }
+
 extension Download {
   static func create(for content: Content) -> Download {
     return Download(

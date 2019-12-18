@@ -27,21 +27,23 @@
 /// THE SOFTWARE.
 
 import XCTest
-import CoreData
+import GRDB
 @testable import Emitron
 
 class DownloadServiceTest: XCTestCase {
-  
+  private var database: DatabaseWriter!
+  private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
-  private var coreDataStack: CoreDataStack!
   private var userModelController: UserMCMock!
   
   override func setUp() {
-    coreDataStack = CoreDataStack(modelName: "Emitron", persistentStoreType: NSInMemoryStoreType)
-    coreDataStack.setupPersistentContainer()
-    userModelController = UserMCMock.withDownloads
-    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
+    database = try! EmitronDatabase.testDatabase()
+    persistenceStore = PersistenceStore(db: database)
+    let userModelController = UserMCMock.withDownloads
+    downloadService = DownloadService(persistenceStore: persistenceStore,
+                                      userModelController: userModelController,
+                                      videosServiceProvider: { _ in self.videoService })
     
     // Check it's all empty
     XCTAssertEqual(0, getAllContents().count)
@@ -53,22 +55,36 @@ class DownloadServiceTest: XCTestCase {
     deleteSampleFile(fileManager: FileManager.default)
   }
   
-  var coreDataContext: NSManagedObjectContext {
-    coreDataStack.viewContext
-  }
-  
-  func getAllContents() -> [Contents] {
-    try! coreDataContext.fetch(Contents.fetchRequest())
+  func getAllContents() -> [Content] {
+    try! database.read { db in
+      try Content.fetchAll(db)
+    }
   }
   
   func getAllDownloads() -> [Download] {
-    try! coreDataContext.fetch(Download.fetchRequest())
+    try! database.read { db in
+      try Download.fetchAll(db)
+    }
+  }
+  
+  func getAllDownloadQueueItems() -> [PersistenceStore.DownloadQueueItem] {
+    try! database.read { db in
+      let request = Download.including(required: Download.content)
+      return try PersistenceStore.DownloadQueueItem.fetchAll(db, request)
+    }
+  }
+  
+  
+  func sampleDownloadQueueItem() -> PersistenceStore.DownloadQueueItem {
+    let screencast = ContentDetailsModelTest.Mocks.screencast
+    downloadService.requestDownload(content: screencast)
+    let download = getAllDownloads().first!
+    let content = getAllContents().first!
+    return PersistenceStore.DownloadQueueItem(download: download, content: content)
   }
   
   func sampleDownload() -> Download {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
-    return getAllDownloads().first!
+    sampleDownloadQueueItem().download
   }
   
   func downloadsDirectory(fileManager: FileManager) -> URL {
@@ -107,24 +123,24 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(screencast.id, Int(getAllContents().first!.id))
   }
   
-  func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() {
+  func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() throws {
     let screencastModel = ContentDetailsModelTest.Mocks.screencast
-    let screencast = Contents(context: coreDataContext)
-    screencast.update(from: screencastModel)
+    var screencast = Content(contentDetailsModel: screencastModel)
+    try database.write { db in
+      try screencast.save(db)
+    }
     
-    let newDuration = Int64(1234)
+    let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
     XCTAssertNotEqual(newDuration, screencast.duration)
-    XCTAssertNotEqual(newDescription, screencast.desc)
+    XCTAssertNotEqual(newDescription, screencast.descriptionPlainText)
     
-    // Update the CD model
+    // Update the persisted model
     screencast.duration = newDuration
-    screencast.desc = newDescription
-    try! coreDataContext.save()
-    
-    // Check that we persisted the values to CD correctly
-    XCTAssertEqual(newDuration, screencast.duration)
-    XCTAssertEqual(newDescription, screencast.desc)
+    screencast.descriptionPlainText = newDescription
+    try database.write { db in
+      try screencast.save(db)
+    }
     
     // We only have one item of content
     XCTAssertEqual(1, getAllContents().count)
@@ -136,8 +152,11 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
-    XCTAssertEqual(Int64(screencastModel.duration), screencast.duration)
-    XCTAssertEqual(screencastModel.desc, screencast.desc)
+    try database.read { db in
+      let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
+      XCTAssertEqual(screencastModel.duration, updatedScreencast!.duration)
+      XCTAssertEqual(screencastModel.desc, updatedScreencast!.descriptionPlainText)
+    }
   }
   
   func testRequestDownloadEpisodeAddsEpisodeAndCollectionToLocalStore() {
@@ -149,26 +168,26 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual([episode.id, collection.id].sorted() , getAllContents().map { Int($0.id) }.sorted())
   }
   
-  func testRequestDownloadEpisodeUpdatesLocalDataStore() {
+  func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
     let collectionModel = ContentDetailsModelTest.Mocks.collection
     let episodeModel = collectionModel.childContents.first!
     
-    let collection = Contents(context: coreDataContext)
-    collection.update(from: collectionModel)
+    var collection = Content(contentDetailsModel: collectionModel)
+    try database.write { db in
+      try collection.save(db)
+    }
     
-    let newDuration = Int64(1234)
+    let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
     XCTAssertNotEqual(newDuration, collection.duration)
-    XCTAssertNotEqual(newDescription, collection.desc)
+    XCTAssertNotEqual(newDescription, collection.descriptionPlainText)
     
     // Update the CD model
     collection.duration = newDuration
-    collection.desc = newDescription
-    try! coreDataContext.save()
-    
-    // Check that we persisted the values to CD correctly
-    XCTAssertEqual(newDuration, collection.duration)
-    XCTAssertEqual(newDescription, collection.desc)
+    collection.descriptionPlainText = newDescription
+    try database.write { db in
+      try collection.save(db)
+    }
     
     // We only have one item of content
     XCTAssertEqual(1, getAllContents().count)
@@ -180,8 +199,11 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(2, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
-    XCTAssertEqual(Int64(collectionModel.duration), collection.duration)
-    XCTAssertEqual(collectionModel.desc, collection.desc)
+    try database.read { db in
+      let updatedCollection = try Content.fetchOne(db, key: collection.id)
+      XCTAssertEqual(collectionModel.duration, updatedCollection!.duration)
+      XCTAssertEqual(collectionModel.desc, updatedCollection!.descriptionPlainText)
+    }
   }
   
   func testRequestDownloadCollectionAddsCollectionAndEpisodesToLocalStore() {
@@ -192,26 +214,26 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual((collection.childContents.map { $0.id } + [collection.id]) .sorted() , getAllContents().map { Int($0.id) }.sorted())
   }
   
-  func testRequestDownloadCollectionUpdatesLocalDataStore() {
+  func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
     let collectionModel = ContentDetailsModelTest.Mocks.collection
     let episodeModel = collectionModel.childContents.first!
     
-    let episode = Contents(context: coreDataContext)
-    episode.update(from: episodeModel)
+    var episode = Content(contentDetailsModel: episodeModel)
+    try database.write { db in
+      try episode.save(db)
+    }
     
-    let newDuration = Int64(1234)
+    let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
     XCTAssertNotEqual(newDuration, episode.duration)
-    XCTAssertNotEqual(newDescription, episode.desc)
+    XCTAssertNotEqual(newDescription, episode.descriptionPlainText)
     
     // Update the CD model
     episode.duration = newDuration
-    episode.desc = newDescription
-    try! coreDataContext.save()
-    
-    // Check that we persisted the values to CD correctly
-    XCTAssertEqual(newDuration, episode.duration)
-    XCTAssertEqual(newDescription, episode.desc)
+    episode.descriptionPlainText = newDescription
+    try database.write { db in
+      try episode.save(db)
+    }
     
     // We only have one item of content
     XCTAssertEqual(1, getAllContents().count)
@@ -223,8 +245,11 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(collectionModel.childContents.count + 1, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
-    XCTAssertEqual(Int64(episodeModel.duration), episode.duration)
-    XCTAssertEqual(episodeModel.desc, episode.desc)
+    try database.read { db in
+      let updatedEpisode = try Content.fetchOne(db, key: episode.id)
+      XCTAssertEqual(episodeModel.duration, updatedEpisode!.duration)
+      XCTAssertEqual(episodeModel.desc, updatedEpisode!.descriptionPlainText)
+    }
   }
   
   func testRequestDownloadAddsDownloadToEpisodes() {
@@ -234,7 +259,7 @@ class DownloadServiceTest: XCTestCase {
     
     XCTAssertEqual(1, getAllDownloads().count)
     let download = getAllDownloads().first!
-    XCTAssertEqual(Int64(episode.id), download.content?.id)
+    XCTAssertEqual(episode.id, download.contentId)
   }
   
   func testRequestDownloadAddsDownloadToScreencasts() {
@@ -243,7 +268,7 @@ class DownloadServiceTest: XCTestCase {
     
     XCTAssertEqual(1, getAllDownloads().count)
     let download = getAllDownloads().first!
-    XCTAssertEqual(Int64(screencast.id), download.content?.id)
+    XCTAssertEqual(screencast.id, download.contentId)
   }
   
   func testRequestDownloadAddsDownloadToCollection() {
@@ -252,7 +277,10 @@ class DownloadServiceTest: XCTestCase {
     
     // Adds downloads to the collection and the individual episodes
     XCTAssertEqual(collection.childContents.count + 1, getAllDownloads().count)
-    XCTAssertEqual((collection.childContents.map { $0.id } + [collection.id]) .sorted() , getAllDownloads().map { Int($0.content!.id) }.sorted())
+    XCTAssertEqual(
+      (collection.childContents.map { $0.id } + [collection.id]).sorted(),
+      getAllDownloads().map { $0.contentId }.sorted()
+    )
   }
   
   func testRequestDownloadAddsDownloadInPendingState() {
@@ -287,7 +315,9 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = createSampleFile(fileManager: fileManager)
     
     userModelController.user = .none
-    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
+    downloadService = DownloadService(persistenceStore: persistenceStore,
+                                      userModelController: userModelController,
+                                      videosServiceProvider: { _ in self.videoService })
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -307,7 +337,9 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = createSampleFile(fileManager: fileManager)
     
     userModelController.user = UserModel.noPermissions
-    downloadService = DownloadService(coreDataStack: coreDataStack, userModelController: userModelController, videosServiceProvider: { _ in self.videoService })
+    downloadService = DownloadService(persistenceStore: persistenceStore,
+                                      userModelController: userModelController,
+                                      videosServiceProvider: { _ in self.videoService })
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -338,21 +370,21 @@ class DownloadServiceTest: XCTestCase {
     let episode = collection.childContents.first!
     downloadService.requestDownload(content: episode)
     
-    let download = getAllDownloads().first!
+    let downloadQueueItem = getAllDownloadQueueItems().first!
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
     XCTAssertEqual(1, videoService.getVideoDownloadCount)
   }
   
   func testRequestDownloadUrlRequestsDownloadsURLForScreencast() {
-    let download = sampleDownload()
+    let downloadQueueItem = sampleDownloadQueueItem()
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
     XCTAssertEqual(1, videoService.getVideoDownloadCount)
   }
@@ -361,98 +393,123 @@ class DownloadServiceTest: XCTestCase {
     let collection = ContentDetailsModelTest.Mocks.collection
     downloadService.requestDownload(content: collection)
     
-    let download = getAllDownloads().first { $0.content?.contentType == "collection" }
+    let downloadQueueItem = getAllDownloadQueueItems().first { $0.content.contentType == .collection }
     
-    XCTAssertNotNil(download)
+    XCTAssertNotNil(downloadQueueItem)
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(download!)
+    downloadService.enqueue(downloadQueueItem: downloadQueueItem!)
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlDoesNothingForDownloadInWrongState() {
-    let download = sampleDownload()
+  func testRequestDownloadUrlDoesNothingForDownloadInWrongState() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
+    var download = downloadQueueItem.download
     
     download.state = .urlRequested
     
-    try! coreDataContext.save()
+    try database.write { db in
+      try download.save(db)
+    }
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(download)
+    let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
+    downloadService.enqueue(downloadQueueItem: newQueueItem)
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlUpdatesDownloadInCallback() {
-    let download = sampleDownload()
+  func testRequestDownloadUrlUpdatesDownloadInCallback() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
     
-    XCTAssertNil(download.remoteUrl)
-    XCTAssertNil(download.lastValidated)
-    XCTAssertEqual(Download.State.pending, download.state)
+    XCTAssertNil(downloadQueueItem.download.remoteUrl)
+    XCTAssertNil(downloadQueueItem.download.lastValidatedAt)
+    XCTAssertEqual(Download.State.pending, downloadQueueItem.download.state)
     
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
-    XCTAssertNotNil(download.remoteUrl)
-    XCTAssertNotNil(download.lastValidated)
+    try database.read { db in
+      let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
+      XCTAssertNotNil(download.remoteUrl)
+      XCTAssertNotNil(download.lastValidatedAt)
+    }
   }
   
-  func testRequestDownloadUrlRespectsTheUserPreferencesOnQuality() {
-    let download = sampleDownload()
+  func testRequestDownloadUrlRespectsTheUserPreferencesOnQuality() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
     let attachment = AttachmentModelTest.Mocks.downloads.first { $0.kind == .sdVideoFile }!
     
     UserDefaults.standard.set(AttachmentKind.sdVideoFile.rawValue, forKey: UserDefaultsKey.downloadQuality.rawValue)
     
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
-    XCTAssertNotNil(download.remoteUrl)
-    XCTAssertEqual(attachment.url, download.remoteUrl)
+    try database.read { db in
+      let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
+      XCTAssertNotNil(download.remoteUrl)
+      XCTAssertEqual(attachment.url, download.remoteUrl)
+    }
     
     UserDefaults.standard.removeObject(forKey: UserDefaultsKey.downloadQuality.rawValue)
   }
   
-  func testRequestDownloadDefaultsToHDQuality() {
+  func testRequestDownloadDefaultsToHDQuality() throws {
     UserDefaults.standard.removeObject(forKey: UserDefaultsKey.downloadQuality.rawValue)
     
-    let download = sampleDownload()
+    let downloadQueueItem = sampleDownloadQueueItem()
     let attachment = AttachmentModelTest.Mocks.downloads.first { $0.kind == .hdVideoFile }!
     
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
-    XCTAssertNotNil(download.remoteUrl)
-    XCTAssertEqual(attachment.url, download.remoteUrl)
+    try database.read { db in
+      let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
+      XCTAssertNotNil(download.remoteUrl)
+      XCTAssertEqual(attachment.url, download.remoteUrl)
+    }
   }
   
-  func testRequestDownloadUpdatesTheStateCorrectly() {
-    let download = sampleDownload()
+  func testRequestDownloadUpdatesTheStateCorrectly() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
 
-    downloadService.requestDownloadUrl(download)
+    downloadService.requestDownloadUrl(downloadQueueItem)
     
-    XCTAssertEqual(Download.State.urlRequested, download.state)
+    try database.read { db in
+      let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
+      XCTAssertEqual(Download.State.urlRequested, download.state)
+    }
   }
   
-  func testEnqueueSetsPropertiesCorrectly() {
-    let download = sampleDownload()
-    
+  func testEnqueueSetsPropertiesCorrectly() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
+    var download = downloadQueueItem.download
     // Update to include the URL
     download.remoteUrl = URL(string: "https://example.com/video.mp4")
     download.state = .urlRequested
-    try! coreDataContext.save()
+    try database.write { db in
+      try download.save(db)
+    }
     
-    downloadService.enqueue(download: download)
+    let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
+    downloadService.enqueue(downloadQueueItem: newQueueItem)
     
-    XCTAssertNotNil(download.localUrl)
-    XCTAssertNotNil(download.fileName)
-    XCTAssertEqual(Download.State.enqueued, download.state)
+    try database.read { db in
+      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+      XCTAssertNotNil(refreshedDownload.localUrl)
+      XCTAssertNotNil(refreshedDownload.fileName)
+      XCTAssertEqual(Download.State.enqueued, refreshedDownload.state)
+    }
   }
   
-  func testEnqueueUpdatesStateToCompletedIfItFindsDownload() {
-    let download = sampleDownload()
+  func testEnqueueUpdatesStateToCompletedIfItFindsDownload() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
+    var download = downloadQueueItem.download
     download.remoteUrl = URL(string: "https://example.com/amazing.mp4")
-    download.fileName = "\(download.content!.videoID).mp4"
+    download.fileName = "\(downloadQueueItem.content.videoIdentifier!).mp4"
     download.state = .urlRequested
-    try! coreDataContext.save()
+    try database.write { db in
+      try download.save(db)
+    }
     
     let fileManager = FileManager.default
     let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
@@ -467,7 +524,14 @@ class DownloadServiceTest: XCTestCase {
 
     XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
     
-    downloadService.enqueue(download: download)
+    let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
+    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    
+    try database.read { db in
+      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+      XCTAssertEqual(Download.State.complete, refreshedDownload.state)
+      XCTAssertEqual(sampleFile, refreshedDownload.localUrl)
+    }
     
     XCTAssertEqual(Download.State.complete, download.state)
     XCTAssertEqual(sampleFile, download.localUrl)
@@ -475,28 +539,44 @@ class DownloadServiceTest: XCTestCase {
     try! fileManager.removeItem(at: sampleFile)
   }
   
-  func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() {
-    let download = sampleDownload()
-    download.state = .urlRequested
-    try! coreDataContext.save()
+  func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
+    var download = downloadQueueItem.download
+    download.state = .pending
+    try database.write { db in
+      try download.save(db)
+    }
     
-    downloadService.enqueue(download: download)
+    let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
     
-    XCTAssertNil(download.fileName)
-    XCTAssertNil(download.localUrl)
-    XCTAssertEqual(Download.State.urlRequested ,download.state)
+    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    
+    try database.read { db in
+      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+      XCTAssertNil(refreshedDownload.fileName)
+      XCTAssertNil(refreshedDownload.localUrl)
+      XCTAssertEqual(Download.State.urlRequested , refreshedDownload.state)
+    }
   }
   
-  func testEnqueueDoesNothingForDownloadInTheWrongState() {
-    let download = sampleDownload()
+  func testEnqueueDoesNothingForDownloadInTheWrongState() throws {
+    let downloadQueueItem = sampleDownloadQueueItem()
+    var download = downloadQueueItem.download
     download.remoteUrl = URL(string: "https://example.com/amazing.mp4")
     download.state = .pending
-    try! coreDataContext.save()
+    try database.write { db in
+      try download.save(db)
+    }
     
-    downloadService.enqueue(download: download)
+    let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
     
-    XCTAssertNil(download.fileName)
-    XCTAssertNil(download.localUrl)
-    XCTAssertEqual(Download.State.pending ,download.state)
+    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    
+    try database.read { db in
+      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+      XCTAssertNil(refreshedDownload.fileName)
+      XCTAssertNil(refreshedDownload.localUrl)
+      XCTAssertEqual(Download.State.pending , refreshedDownload.state)
+    }
   }
 }

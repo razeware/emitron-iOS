@@ -27,26 +27,17 @@
 /// THE SOFTWARE.
 
 import Foundation
-
-import XCTest
-import CoreData
+import GRDB
 @testable import Emitron
 
-class DownloadProcessorTest: XCTestCase {
-  
-  private var downloadProcessor: DownloadProcessor!
-  
-  override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
-    downloadProcessor = DownloadProcessor()
-  }
-  
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-  }
-  
-  func testExample() {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+extension EmitronDatabase {
+  static func testDatabase() throws -> DatabaseWriter {
+    // In memory database
+    let dbQueue = DatabaseQueue()
+    // And migrate
+    try migrator.migrate(dbQueue)
+    
+    return dbQueue
   }
 }
+

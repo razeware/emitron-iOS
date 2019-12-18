@@ -27,34 +27,30 @@
 /// THE SOFTWARE.
 
 import Foundation
-import CoreData
 @testable import Emitron
 
-struct CoreDataMocks {
-  static func contents(context: NSManagedObjectContext) -> Contents {
-    let contents = Contents(context: context)
-    contents.name = "Sample Contents"
-    contents.cardArtworkUrl = URL(string: "https://example.com/card_artwork.png")
-    contents.contentType = "collection"
-    contents.contributorString = "HELLO"
-    contents.desc = "Description"
-    contents.difficulty = "intermediate"
-    contents.duration = 1234
-    contents.id = 1
-    contents.releasedAt = Date()
-    contents.technologyTripleString = "Some Tech"
-    contents.uri = "rw://betamax/collections/1"
-    
-    return contents
+struct PersistenceMocks {
+  static var content: Content {
+    Content(id: 1,
+            uri: "rw://betamax/collections/1",
+            name: "Sample Contents",
+            descriptionHtml: "Description",
+            descriptionPlainText: "Description",
+            releasedAt: Date(),
+            free: false,
+            professional: true,
+            difficulty: .intermediate,
+            contentType: .collection,
+            duration: 1234,
+            cardArtworkUrl: URL(string: "https://example.com/card_artwork.png"),
+            technologyTriple: "Some Tech",
+            contributors: "HELLO")
   }
   
-  static func download(context: NSManagedObjectContext) -> Download {
-    let download = Download(context: context)
-    download.id = UUID()
-    download.state = .pending
-    download.fileName = "myVideo.mp4"
-    download.dateRequested = Date()
-    
-    return download
+  static func download(for content: Content) -> Download {
+    Download(id: UUID(),
+             requestedAt: Date(),
+             state: .pending,
+             contentId: content.id)
   }
 }

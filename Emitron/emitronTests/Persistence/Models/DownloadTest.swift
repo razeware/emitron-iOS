@@ -26,27 +26,59 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
-
 import XCTest
-import CoreData
+import GRDB
 @testable import Emitron
 
-class DownloadProcessorTest: XCTestCase {
-  
-  private var downloadProcessor: DownloadProcessor!
+class DownloadTest: XCTestCase {
+  private var database: DatabaseWriter!
   
   override func setUp() {
     // Put setup code here. This method is called before the invocation of each test method in the class.
-    downloadProcessor = DownloadProcessor()
+    database = try! EmitronDatabase.testDatabase()
   }
   
   override func tearDown() {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
   
-  func testExample() {
-    // This is an example of a functional test case.
-    // Use XCTAssert and related functions to verify your tests produce the correct results.
+  func getAllContents() -> [Content] {
+    try! database.read { db in
+      try Content.fetchAll(db)
+    }
   }
+  
+  func getAllDownloads() -> [Download] {
+    try! database.read { db in
+      try Download.fetchAll(db)
+    }
+  }
+  
+  func testDeletingDownloadDoesNotDeleteContents() throws {
+    try database.write { db in
+      let content = PersistenceMocks.content
+      try content.save(db)
+      
+      var download = PersistenceMocks.download(for: content)
+      try download.save(db)
+      
+      // Should have one item of content
+      XCTAssertEqual(1, getAllContents().count)
+      // It should be the right one
+      XCTAssertEqual(content, getAllContents().first!)
+      // There should be a single download
+      XCTAssertEqual(1, getAllDownloads().count)
+      // It too should be the right one
+      XCTAssertEqual(download, getAllDownloads().first!)
+      
+      try download.delete(db)
+      
+      // Check it was deleted
+      XCTAssertEqual(0, getAllDownloads().count)
+      // And that the contents was not deleted
+      XCTAssertEqual(1, getAllContents().count)
+      XCTAssertEqual(content, getAllContents().first!)
+    }
+  }
+  
 }
