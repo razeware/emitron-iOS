@@ -40,7 +40,7 @@ struct Download: Codable, TableRecord {
   var fileName: String?
   var localUrl: URL?
   var remoteUrl: URL?
-  var progress: Double?
+  var progress: Double = 0
   var state: State
   var contentId: Int
 }
@@ -79,7 +79,20 @@ extension DerivableRequest where RowDecoder == Download {
 
 extension Download: DownloadProcessorModel { }
 
-extension Download: Equatable { }
+extension Download: Equatable {
+  // We override this function because SQLite doesn't store dates to the same accuracy as Date
+  static func == (lhs: Download, rhs: Download) -> Bool {
+    lhs.id == rhs.id &&
+      lhs.fileName == rhs.fileName &&
+      lhs.localUrl == rhs.localUrl &&
+      lhs.remoteUrl == rhs.remoteUrl &&
+      lhs.progress == rhs.progress &&
+      lhs.state == rhs.state &&
+      lhs.contentId == rhs.contentId &&
+      lhs.requestedAt.equalEnough(to: rhs.requestedAt) &&
+      ((lhs.lastValidatedAt == nil && rhs.lastValidatedAt == nil) || lhs.lastValidatedAt!.equalEnough(to: rhs.lastValidatedAt!))
+  }
+}
 
 extension Download {
   static func create(for content: Content) -> Download {

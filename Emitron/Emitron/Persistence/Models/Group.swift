@@ -48,6 +48,6 @@ extension Group {
     self.name = groupModel.name
     self.description = groupModel.desc
     self.ordinal = groupModel.ordinal
-    self.contentId = groupModel.content.id
+    self.contentId = groupModel.contentId
   }
 }

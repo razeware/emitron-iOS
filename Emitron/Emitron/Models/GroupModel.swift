@@ -31,12 +31,13 @@ import Foundation
 class GroupModel: NSObject {
 
   // MARK: - Properties
-  private(set) var id: Int = 0
-  private(set) var name: String = ""
-  private(set) var desc: String = ""
-  private(set) var ordinal: Int = 0
-  private(set) var childContents: [ContentDetailsModel] = []
-  private(set) var content: ContentDetailsModel
+  let id: Int
+  let contentId: Int
+  let name: String
+  let desc: String
+  let ordinal: Int
+  let childContents: [ContentDetailsModel]
+  let content: ContentDetailsModel
 
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource,
@@ -45,6 +46,7 @@ class GroupModel: NSObject {
         content: ContentDetailsModel) {
 
     self.id = jsonResource.id
+    self.contentId = content.id
     self.name = jsonResource["name"] as? String ?? ""
     self.desc = jsonResource["description"] as? String ?? ""
     self.ordinal = jsonResource["ordinal"] as? Int ?? 0

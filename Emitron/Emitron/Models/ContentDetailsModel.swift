@@ -137,7 +137,7 @@ class ContentDetailsModel: NSObject {
     for relationship in jsonResource.relationships where relationship.type == "bookmark" {
       let ids = relationship.data.compactMap { $0.id }
       if let id = ids.first, id != 0 {
-        self.bookmark = BookmarkModel(id: id)
+        self.bookmark = BookmarkModel(id: id, contentId: self.id)
       }
     }
   }
@@ -222,7 +222,7 @@ class ContentDetailsModel: NSObject {
           
           // We can simply make a Bookmark with just an ID
           if let id = ids.first, self.bookmark != nil {
-            self.bookmark = BookmarkModel(id: id)
+            self.bookmark = BookmarkModel(id: id, contentId: self.id)
         }
         default:
           break

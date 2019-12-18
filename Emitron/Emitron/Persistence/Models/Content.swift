@@ -151,8 +151,7 @@ extension Content {
     uri = contentDetailsModel.uri
     name = contentDetailsModel.name
     descriptionHtml = contentDetailsModel.desc
-    // TODO: Fix this...
-    descriptionPlainText = ""
+    descriptionPlainText = contentDetailsModel.desc
     releasedAt = contentDetailsModel.releasedAt
     free = contentDetailsModel.free
     professional = contentDetailsModel.professional
@@ -166,4 +165,24 @@ extension Content {
   }
 }
 
-extension Content: Equatable {}
+extension Content: Equatable {
+  // We override this function because SQLite doesn't store dates to the same accuracy as Date
+  static func == (lhs: Content, rhs: Content) -> Bool {
+    lhs.id == rhs.id &&
+      lhs.uri == rhs.uri &&
+      lhs.name == rhs.name &&
+      lhs.descriptionHtml == rhs.descriptionHtml &&
+      lhs.descriptionPlainText == rhs.descriptionPlainText &&
+      lhs.releasedAt.equalEnough(to: rhs.releasedAt) &&
+      lhs.free == rhs.free &&
+      lhs.professional == rhs.professional &&
+      lhs.difficulty == rhs.difficulty &&
+      lhs.contentType == rhs.contentType &&
+      lhs.duration == rhs.duration &&
+      lhs.videoIdentifier == rhs.videoIdentifier &&
+      lhs.cardArtworkUrl == rhs.cardArtworkUrl &&
+      lhs.technologyTriple == rhs.technologyTriple &&
+      lhs.contributors == rhs.contributors &&
+      lhs.groupId == rhs.groupId
+  }
+}

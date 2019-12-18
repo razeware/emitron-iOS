@@ -40,7 +40,7 @@ class DownloadServiceTest: XCTestCase {
   override func setUp() {
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
-    let userModelController = UserMCMock.withDownloads
+    userModelController = UserMCMock.withDownloads
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })
@@ -164,8 +164,10 @@ class DownloadServiceTest: XCTestCase {
     let episode = collection.childContents.first!
     downloadService.requestDownload(content: episode)
     
-    XCTAssertEqual(2, getAllContents().count)
-    XCTAssertEqual([episode.id, collection.id].sorted() , getAllContents().map { Int($0.id) }.sorted())
+    let allContentIds = collection.childContents.map({ $0.id }) + [collection.id]
+    
+    XCTAssertEqual(allContentIds.count, getAllContents().count)
+    XCTAssertEqual(allContentIds.sorted() , getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
@@ -195,8 +197,8 @@ class DownloadServiceTest: XCTestCase {
     // Now execute the download request
     downloadService.requestDownload(content: episodeModel)
     
-    // Added a single episode to the content count
-    XCTAssertEqual(2, getAllContents().count)
+    // Adds all episodes and the collection to the DB
+    XCTAssertEqual(collectionModel.childContents.count + 1, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
     try database.read { db in
@@ -533,16 +535,13 @@ class DownloadServiceTest: XCTestCase {
       XCTAssertEqual(sampleFile, refreshedDownload.localUrl)
     }
     
-    XCTAssertEqual(Download.State.complete, download.state)
-    XCTAssertEqual(sampleFile, download.localUrl)
-    
     try! fileManager.removeItem(at: sampleFile)
   }
   
   func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() throws {
     let downloadQueueItem = sampleDownloadQueueItem()
     var download = downloadQueueItem.download
-    download.state = .pending
+    download.state = .urlRequested
     try database.write { db in
       try download.save(db)
     }

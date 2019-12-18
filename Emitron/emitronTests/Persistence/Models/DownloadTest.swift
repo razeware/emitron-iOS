@@ -55,30 +55,34 @@ class DownloadTest: XCTestCase {
   }
   
   func testDeletingDownloadDoesNotDeleteContents() throws {
+    let content = PersistenceMocks.content
     try database.write { db in
-      let content = PersistenceMocks.content
       try content.save(db)
-      
-      var download = PersistenceMocks.download(for: content)
-      try download.save(db)
-      
-      // Should have one item of content
-      XCTAssertEqual(1, getAllContents().count)
-      // It should be the right one
-      XCTAssertEqual(content, getAllContents().first!)
-      // There should be a single download
-      XCTAssertEqual(1, getAllDownloads().count)
-      // It too should be the right one
-      XCTAssertEqual(download, getAllDownloads().first!)
-      
-      try download.delete(db)
-      
-      // Check it was deleted
-      XCTAssertEqual(0, getAllDownloads().count)
-      // And that the contents was not deleted
-      XCTAssertEqual(1, getAllContents().count)
-      XCTAssertEqual(content, getAllContents().first!)
     }
+      
+    var download = PersistenceMocks.download(for: content)
+    try database.write { db in
+      try download.save(db)
+    }
+      
+    // Should have one item of content
+    XCTAssertEqual(1, getAllContents().count)
+    // It should be the right one
+    XCTAssertEqual(content, getAllContents().first!)
+    // There should be a single download
+    XCTAssertEqual(1, getAllDownloads().count)
+    // It too should be the right one
+    XCTAssertEqual(download, getAllDownloads().first!)
+    
+    let _ = try database.write { db in
+      try download.delete(db)
+    }
+      
+    // Check it was deleted
+    XCTAssertEqual(0, getAllDownloads().count)
+    // And that the contents was not deleted
+    XCTAssertEqual(1, getAllContents().count)
+    XCTAssertEqual(content, getAllContents().first!)
   }
   
 }

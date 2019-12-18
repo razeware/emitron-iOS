@@ -33,21 +33,25 @@ class ProgressionModel: ContentRelatable {
   let type: ContentRelationship = .progression
   
   // MARK: - Properties
-  private(set) var id: Int = 0
+  let id: Int
+  let contentId: Int
   private(set) var target: Int = 0
   private(set) var progress: Int = 0
   private(set) var finished: Bool = false
   private(set) var percentComplete: Double = 0.0
   // There's something funky going on with Date's in Xcode 11
-  private(set) var createdAt: Date
+  let createdAt: Date
   private(set) var updatedAt: Date
-  private(set) var content: ContentDetailsModel?
+  var content: ContentDetailsModel?
   
   // MARK: - Initializers
-  init(_ jsonResource: JSONAPIResource,
+  init?(_ jsonResource: JSONAPIResource,
        metadata: [String: Any]?) {
     
     self.id = jsonResource.id
+    guard let contentId = jsonResource.relationships.first(where: { $0.type == "content" })?.data.first?.id else { return nil }
+    self.contentId = contentId
+    
     self.target = jsonResource["target"] as? Int ?? 0
     self.progress = jsonResource["progress"] as? Int ?? 0
     self.finished = jsonResource["finished"] as? Bool ?? false

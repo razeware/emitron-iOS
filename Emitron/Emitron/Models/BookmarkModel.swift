@@ -34,16 +34,19 @@ class BookmarkModel: ContentRelatable {
   var type: ContentRelationship = .bookmark
 
   // MARK: - Properties
-  private(set) var id: Int
+  let id: Int
 
   //TODO Something funny going on with dates in Xcode 11! when you mark them as optional they'll always say they're nil
   // Does not happen in Xcode 10
   private(set) var createdAt: Date?
-  var content: ContentDetailsModel?
+  let contentId: Int
+  private(set) var content: ContentDetailsModel?
 
   // MARK: - Initializers
   init?(resource: JSONAPIResource, metadata: [String: Any]?) {
     self.id = resource.id
+    guard let contentId = resource.relationships.first(where: { $0.type == "content" })?.data.first?.id else { return nil }
+    self.contentId = contentId
 
     if let createdAtStr = resource["created_at"] as? String {
       self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
@@ -87,8 +90,9 @@ class BookmarkModel: ContentRelatable {
     }
   }
   
-  init(id: Int) {
+  init(id: Int, contentId: Int) {
     self.id = id
+    self.contentId = contentId
   }
   
   /// Convenience initializer to transform persisted **Bookmark** into a **BookmarkModel**
@@ -98,6 +102,7 @@ class BookmarkModel: ContentRelatable {
   init(_ bookmark: Bookmark) {
     self.id = bookmark.id
     self.createdAt = bookmark.createdAt
+    self.contentId = bookmark.contentId
   }
 }
 

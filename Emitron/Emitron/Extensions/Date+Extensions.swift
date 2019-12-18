@@ -38,4 +38,8 @@ extension Date {
       let timeInterval: TimeInterval = TimeInterval(60 * 60 * 24 * days)
       return addingTimeInterval(timeInterval)
   }
+  
+  func equalEnough(to otherDate: Date, epsilon: Double = 0.001) -> Bool {
+    abs(timeIntervalSince(otherDate)) < epsilon
+  }
 }

@@ -78,7 +78,7 @@ extension PersistenceStore {
 // MARK: - Data reading methods for download queue management
 extension PersistenceStore {
   /// Data required for operation of the download queue
-  struct DownloadQueueItem: Decodable, FetchableRecord {
+  struct DownloadQueueItem: Decodable, FetchableRecord, Equatable {
     let download: Download
     let content: Content
   }
@@ -87,11 +87,12 @@ extension PersistenceStore {
   func downloads(in state: Download.State) -> DatabasePublishers.Value<DownloadQueueItem?> {
     ValueObservation.tracking { db -> DownloadQueueItem? in
       let request = Download
+        .all()
         .including(required: Download.content)
         .filter(state: state)
         .orderByRequestedAt()
       return try DownloadQueueItem.fetchOne(db, request)
-    }.publisher(in: db)
+    }.removeDuplicates().publisher(in: db)
   }
   
   /// Returns a pubisher representing the download queue over time

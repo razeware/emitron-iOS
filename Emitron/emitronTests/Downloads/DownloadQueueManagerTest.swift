@@ -29,6 +29,7 @@
 import XCTest
 import GRDB
 import Combine
+import CombineExpectations
 @testable import Emitron
 
 class DownloadQueueManagerTest: XCTestCase {
@@ -72,7 +73,7 @@ class DownloadQueueManagerTest: XCTestCase {
     return getAllDownloads().first!
   }
   
-  func sampleCDDownload(state: Download.State = .pending) throws -> Download {
+  func samplePersistedDownload(state: Download.State = .pending) throws -> Download {
     return try database.write { db in
       let content = PersistenceMocks.content
       try content.save(db)
@@ -86,113 +87,98 @@ class DownloadQueueManagerTest: XCTestCase {
   }
   
   func testPendingStreamSendsNewDownloads() throws {
-    var received = [Download?]()
-    queueManager.pendingStream
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0?.download) })
-      .store(in: &subscriptions)
+    let recorder = queueManager.pendingStream.record()
     
+    var download = sampleDownload()
     try database.write { db in
-      var download = sampleDownload()
-      download.state = .urlRequested
       try download.save(db)
-      
-      XCTAssertEqual([download], received)
     }
-
+    
+    let downloads = try wait(for: recorder.next(2), timeout: 1, description: "PendingDownloads")
+    
+    XCTAssertEqual([nil, download], downloads.map { $0?.download })
   }
   
   func testPendingStreamSendingPreExistingDownloads() throws {
-    var received = [Download?]()
+    var download = sampleDownload()
+    try database.write { db in
+      try download.save(db)
+    }
     
-    let download = sampleDownload()
+    let recorder = queueManager.pendingStream.record()
+    let pending = try wait(for: recorder.next(), timeout: 1)
     
-    queueManager.pendingStream
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0?.download) })
-      .store(in: &subscriptions)
-    
-    XCTAssertEqual([download], received)
+    XCTAssertEqual(download, pending!!.download)
   }
   
   func testDownloadQueueStreamRespectsTheMaxLimit() throws {
-    var received = [[Download]]()
+    let recorder = queueManager.downloadQueue.record()
     
-    queueManager.downloadQueue
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0.map { $0.download }) })
-      .store(in: &subscriptions)
+    let download1 = try samplePersistedDownload(state: .enqueued)
+    let download2 = try samplePersistedDownload(state: .enqueued)
+    let _ = try samplePersistedDownload(state: .enqueued)
     
-    let download1 = try sampleCDDownload(state: .enqueued)
-    let download2 = try sampleCDDownload(state: .enqueued)
-    let _ = try sampleCDDownload(state: .enqueued)
-    
-    XCTAssertEqual([download1, download2], received.last)
+    let queue = try wait(for: recorder.next(4), timeout: 1)
+    XCTAssertEqual([
+      [],                     // Empty to start
+      [download1],            // d1 Enqueued
+      [download1, download2], // d2 Enqueued
+      [download1, download2]  // Final download makes no difference
+      ],
+                   queue.map{ $0.map { $0.download } })
   }
   
   func testDownloadQueueStreamSendsFromThePast() throws {
-    var received = [[Download]]()
-    let download1 = try sampleCDDownload(state: .enqueued)
-    let download2 = try sampleCDDownload(state: .enqueued)
-    let _ = try sampleCDDownload(state: .enqueued)
+    let download1 = try samplePersistedDownload(state: .enqueued)
+    let download2 = try samplePersistedDownload(state: .enqueued)
+    let _ = try samplePersistedDownload(state: .enqueued)
     
-    queueManager.downloadQueue
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0.map { $0.download }) })
-      .store(in: &subscriptions)
-    
-    XCTAssertEqual(1, received.count)
-    XCTAssertEqual([download1, download2], received.first)
+    let recorder = queueManager.downloadQueue.record()
+    let queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download1, download2], queue!.map { $0.download })
   }
   
   func testDownloadQueueStreamSendsInProgressFirst() throws {
-    var received = [[Download]]()
-    let _ = try sampleCDDownload(state: .enqueued)
-    let download2 = try sampleCDDownload(state: .inProgress)
-    let _ = try sampleCDDownload(state: .enqueued)
-    let download4 = try sampleCDDownload(state: .inProgress)
+    let _ = try samplePersistedDownload(state: .enqueued)
+    let download2 = try samplePersistedDownload(state: .inProgress)
+    let _ = try samplePersistedDownload(state: .enqueued)
+    let download4 = try samplePersistedDownload(state: .inProgress)
     
-    queueManager.downloadQueue
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0.map { $0.download }) })
-      .store(in: &subscriptions)
-    
-    XCTAssertEqual(1, received.count)
-    XCTAssertEqual([download2, download4], received.first)
+    let recorder = queueManager.downloadQueue.record()
+    let queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download2, download4], queue!.map { $0.download })
   }
   
   func testDownloadQueueStreamUpdatesWhenInProgressCompleted() throws {
-    var received = [[Download]]()
-    let download1 = try sampleCDDownload(state: .enqueued)
-    var download2 = try sampleCDDownload(state: .inProgress)
-    let _ = try sampleCDDownload(state: .enqueued)
-    let download4 = try sampleCDDownload(state: .inProgress)
+    let download1 = try samplePersistedDownload(state: .enqueued)
+    var download2 = try samplePersistedDownload(state: .inProgress)
+    let _ = try samplePersistedDownload(state: .enqueued)
+    let download4 = try samplePersistedDownload(state: .inProgress)
     
-    queueManager.downloadQueue
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0.map { $0.download }) })
-      .store(in: &subscriptions)
-    
-    XCTAssertEqual(1, received.count)
-    XCTAssertEqual([download2, download4], received.last)
+    let recorder = queueManager.downloadQueue.record()
+    var queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download2, download4], queue!.map { $0.download })
     
     try database.write { db in
       download2.state = .complete
       try download2.save(db)
     }
     
-    XCTAssertEqual(2, received.count)
-    XCTAssertEqual([download4, download1], received.last)
+    queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download4, download1], queue!.map { $0.download })
   }
   
   func testDownloadQueueStreamDoesNotChangeIfAtCapacity() throws {
-    var received = [[Download]]()
-    let download1 = try sampleCDDownload(state: .enqueued)
-    let download2 = try sampleCDDownload(state: .enqueued)
+    let download1 = try samplePersistedDownload(state: .enqueued)
+    let download2 = try samplePersistedDownload(state: .enqueued)
     
-    queueManager.downloadQueue
-      .sink(receiveCompletion: { print($0) }, receiveValue: { received.append($0.map { $0.download }) })
-      .store(in: &subscriptions)
+    let recorder = queueManager.downloadQueue.record()
+    var queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download1, download2], queue!.map { $0.download })
     
-    XCTAssertEqual([[download1, download2]], received)
-    
-    let _ = try sampleCDDownload(state: .enqueued)
-    
-    XCTAssertEqual([[download1, download2]], received)
+    let _ = try samplePersistedDownload(state: .enqueued)
+    queue = try wait(for: recorder.next(), timeout: 1)
+    XCTAssertEqual([download1, download2], queue!.map { $0.download })
   }
   
 }

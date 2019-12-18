@@ -139,7 +139,7 @@ struct EmitronDatabase {
         t.column("remoteUrl", .text)
         t.column("progress", .double).notNull().defaults(to: 0)
         t.column("state", .integer).notNull().defaults(to: 0)
-        t.column("contentId", .integer).notNull().indexed().references("content", onDelete: .restrict)
+        t.column("contentId", .integer).notNull().indexed().references("content", onDelete: .cascade)
       }
     }
     
