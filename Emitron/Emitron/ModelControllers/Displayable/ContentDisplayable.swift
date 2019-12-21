@@ -26,34 +26,55 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import UIKit
+import Foundation
 
-extension ContentDetailsModel {
-  var cardViewSubtitle: String {
-    guard let domainData = DataManager.current?.domainsMC.data else {
-      return ""
-    }
-    
-    let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.count > 1 ? "Multi-platform" : contentDomains.first?.name ?? ""
-    
-    return subtitle
-  }
+enum ContentViewProgressDisplayable {
+  case notStarted
+  case inProgress(progress: Double)
+  case completed
+}
+
+enum DownloadProgressDisplayable {
+  case notDownloadable
+  case downloadable
+  case enqueued
+  case inProgress(progress: Double)
+  case downloaded
+}
+
+protocol ContentListDisplayable {
+  var id: Int { get }
+  var name: String { get }
+  var cardViewSubtitle: String { get }
+  var descriptionPlainText: String { get }
+  var professional: Bool { get }
+  var viewProgress: ContentViewProgressDisplayable { get }
+  var downloadProgress: DownloadProgressDisplayable { get }
+  var releasedAt: Date { get }
+  var duration: Int { get }
+  var releasedAtDateTimeString: String { get }
+  var bookmarked: Bool { get }
+  var parentName: String? { get }
+  var contentType: ContentType { get }
+  var cardArtworkUrl: URL { get }
   
-  var progress: CGFloat {
-    var progress: CGFloat = 0
-    if let progression = progression {
-      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
-    }
-    return progress
-  }
+  func requestDetail(callback: (ContentDetailDisplayable) -> ())
+}
+
+protocol ContentDetailDisplayable: ContentListDisplayable {
+  var descriptionHtml: String { get }
+  var childContents: [ContentListDisplayable] { get }
   
-  var contentSummaryMetadataString: String {
+}
+
+
+extension ContentListDisplayable {
+  var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
       start = Constants.today
     }
     
-    return "\(start) • \(difficulty.displayString) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
   }
 }

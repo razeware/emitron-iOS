@@ -55,3 +55,13 @@ extension Progression {
     self.contentId = progressionModel.contentId
   }
 }
+
+extension Progression {
+  var finished: Bool {
+    progressProportion > 0.9
+  }
+  
+  var progressProportion: Double {
+    Double(progress) / Double(target)
+  }
+}

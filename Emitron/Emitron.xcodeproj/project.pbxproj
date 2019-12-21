@@ -18,6 +18,9 @@
 		221E60A42385790B00E92155 /* Attachment_Downloads.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3622F5CB9A00A1F27A /* Attachment_Downloads.json */; };
 		221E60A52385790B00E92155 /* Attachment_Stream.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD3722F5CB9A00A1F27A /* Attachment_Stream.json */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
+		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
+		2253632B23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632A23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift */; };
+		2253632D23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632C23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift */; };
 		2288EF0B2374057000514043 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF092374056D00514043 /* DownloadService.swift */; };
 		2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF0C23741B9700514043 /* DownloadServiceTest.swift */; };
 		2288EF142374298200514043 /* ContentTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF132374298200514043 /* ContentTest.swift */; };
@@ -25,7 +28,6 @@
 		22A265AD23967B21000DD276 /* UserMCMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AC23967B21000DD276 /* UserMCMock.swift */; };
 		22A265B02396CDBE000DD276 /* UserModel+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AF2396CDBE000DD276 /* UserModel+Mocks.swift */; };
 		22A265B22396CE82000DD276 /* PermissionsModel+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B12396CE82000DD276 /* PermissionsModel+Mocks.swift */; };
-		22A265B423979628000DD276 /* DisplayableContent.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B323979628000DD276 /* DisplayableContent.swift */; };
 		22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F4F236F76B30064A406 /* DownloadProcessor.swift */; };
 		22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */; };
 		22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */; };
@@ -166,7 +168,7 @@
 		B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15A722CB51D60078CEDB /* ContentListView.swift */; };
 		B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15AD22CB529E0078CEDB /* SettingsView.swift */; };
 		B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B022CB53220078CEDB /* TextListItemView.swift */; };
-		B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentListingView.swift */; };
+		B6FC15B522CB53730078CEDB /* ContentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentDetailView.swift */; };
 		B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BA22CB55160078CEDB /* VideoView.swift */; };
 		B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */; };
 		B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */; };
@@ -199,6 +201,9 @@
 		221E60A22385775300E92155 /* AttachmentModelTest+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "AttachmentModelTest+Mocks.swift"; sourceTree = "<group>"; };
 		223CE262235F977300D0ED50 /* secrets.development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.development.xcconfig; sourceTree = "<group>"; };
 		223CE263235F977300D0ED50 /* secrets.production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.production.xcconfig; sourceTree = "<group>"; };
+		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
+		2253632A23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentDetailsModel+ContentListDisplayable.swift"; sourceTree = "<group>"; };
+		2253632C23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadListItem+ContentListItemDisplayable.swift"; sourceTree = "<group>"; };
 		2288EF092374056D00514043 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
 		2288EF0C23741B9700514043 /* DownloadServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadServiceTest.swift; sourceTree = "<group>"; };
 		2288EF132374298200514043 /* ContentTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTest.swift; sourceTree = "<group>"; };
@@ -206,7 +211,6 @@
 		22A265AC23967B21000DD276 /* UserMCMock.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UserMCMock.swift; sourceTree = "<group>"; };
 		22A265AF2396CDBE000DD276 /* UserModel+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserModel+Mocks.swift"; sourceTree = "<group>"; };
 		22A265B12396CE82000DD276 /* PermissionsModel+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PermissionsModel+Mocks.swift"; sourceTree = "<group>"; };
-		22A265B323979628000DD276 /* DisplayableContent.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DisplayableContent.swift; sourceTree = "<group>"; };
 		22A36F4F236F76B30064A406 /* DownloadProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessor.swift; sourceTree = "<group>"; };
 		22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessorTest.swift; sourceTree = "<group>"; };
 		22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManager.swift; sourceTree = "<group>"; };
@@ -349,7 +353,7 @@
 		B6FC15A722CB51D60078CEDB /* ContentListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListView.swift; sourceTree = "<group>"; };
 		B6FC15AD22CB529E0078CEDB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B6FC15B022CB53220078CEDB /* TextListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListItemView.swift; sourceTree = "<group>"; };
-		B6FC15B422CB53730078CEDB /* ContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentListingView.swift; sourceTree = "<group>"; };
+		B6FC15B422CB53730078CEDB /* ContentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailView.swift; sourceTree = "<group>"; };
 		B6FC15BA22CB55160078CEDB /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIResource.swift; sourceTree = "<group>"; };
 		B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIRelationship.swift; sourceTree = "<group>"; };
@@ -412,6 +416,16 @@
 				221E609D23856F4000E92155 /* VideosServiceMock.swift */,
 			);
 			path = Mock;
+			sourceTree = "<group>";
+		};
+		2253632723AB16CF0013F333 /* Displayable */ = {
+			isa = PBXGroup;
+			children = (
+				2253632823AB16EB0013F333 /* ContentDisplayable.swift */,
+				2253632A23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift */,
+				2253632C23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift */,
+			);
+			path = Displayable;
 			sourceTree = "<group>";
 		};
 		2288EF122374297100514043 /* Models */ = {
@@ -603,7 +617,6 @@
 				B6DF2FA322CA05530081A3A3 /* ProgressionModel.swift */,
 				B6DF2FAE22CA498B0081A3A3 /* UserModel.swift */,
 				B6DF2FA522CA055A0081A3A3 /* VideoModel.swift */,
-				22A265B323979628000DD276 /* DisplayableContent.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -858,7 +871,7 @@
 			isa = PBXGroup;
 			children = (
 				B6C4F3CE22E6E4AC0087ED10 /* Filtering */,
-				B6FC15B422CB53730078CEDB /* ContentListingView.swift */,
+				B6FC15B422CB53730078CEDB /* ContentDetailView.swift */,
 				B6FC15BA22CB55160078CEDB /* VideoView.swift */,
 				B6C0F0D422D5D47600012839 /* LibraryView.swift */,
 			);
@@ -910,6 +923,7 @@
 		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
 			isa = PBXGroup;
 			children = (
+				2253632723AB16CF0013F333 /* Displayable */,
 				B595653E230953EF00A3FF44 /* BookmarksMC.swift */,
 				B6E21A2C22F60AC5006CB22F /* CategoriesMC.swift */,
 				8B4A907023659A410025AE05 /* ContentsMC.swift */,
@@ -1173,13 +1187,13 @@
 				B682F8C722EB096300CBF2CC /* Filters.swift in Sources */,
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
 				22D17708235078030038333D /* Configuration.swift in Sources */,
-				22A265B423979628000DD276 /* DisplayableContent.swift in Sources */,
 				22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */,
 				22C0514E23A9D695004D1223 /* DownloadModel.swift in Sources */,
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				22C0513A23A4FBB0004D1223 /* ContentCategory.swift in Sources */,
+				2253632B23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				B595653D23094E3200A3FF44 /* ProgressionsMC.swift in Sources */,
 				8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */,
@@ -1206,6 +1220,7 @@
 				22C0513223A4FB84004D1223 /* Content.swift in Sources */,
 				22C0514223A4FBD5004D1223 /* Download.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
+				2253632D23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
 				8BFC74B8236451BE001979F1 /* ProgressionsContentVM.swift in Sources */,
@@ -1226,6 +1241,7 @@
 				B6D8EB1922CB9FFE00DE29AF /* CategoriesRequest.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
 				B6DF2FB122CA4B140081A3A3 /* BookmarkRequest.swift in Sources */,
+				2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */,
 				B6C4F3C122E66A7E0087ED10 /* AppliedFilterView.swift in Sources */,
 				B6C4F3CD22E6E4640087ED10 /* FiltersHeaderView.swift in Sources */,
 				B6DF2F9E22CA05320081A3A3 /* ContentDetailsModel.swift in Sources */,
@@ -1253,7 +1269,7 @@
 				8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */,
 				22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */,
 				B6DF2FA422CA05530081A3A3 /* ProgressionModel.swift in Sources */,
-				B6FC15B522CB53730078CEDB /* ContentListingView.swift in Sources */,
+				B6FC15B522CB53730078CEDB /* ContentDetailView.swift in Sources */,
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,
 				B6E21A2D22F60AC5006CB22F /* CategoriesMC.swift in Sources */,
 				22C0514823A8AC0B004D1223 /* PersistenceStore+Domains.swift in Sources */,

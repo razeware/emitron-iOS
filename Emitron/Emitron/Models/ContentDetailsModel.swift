@@ -46,23 +46,23 @@ protocol ContentRelatable {
 class ContentDetailsModel: NSObject {
   
   // MARK: - Properties
-  private(set) var id: Int = 0
-  private(set) var uri: String = ""
-  private(set) var name: String = ""
+  let id: Int
+  let uri: String
+  let name: String
   private(set) var parentName: String? // Only set for .episode contentesaz`
-  private(set) var desc: String = ""
-  private(set) var releasedAt: Date
-  private(set) var free: Bool = false
-  private(set) var difficulty: ContentDifficulty? = nil
-  var contentType: ContentType? = nil
-  private(set) var duration: Int = 0
-  private(set) var popularity: Double = 0.0
-  private(set) var cardArtworkURL: URL?
-  private(set) var technologyTripleString: String = ""
-  private(set) var contributorString: String = ""
-  private(set) var videoID: Int?
-  private(set) var index: Int?
-  private(set) var professional: Bool = false
+  let descriptionPlainText: String
+  let descriptionHtml: String
+  let releasedAt: Date
+  let free: Bool
+  let difficulty: ContentDifficulty
+  let contentType: ContentType
+  let duration: Int
+  let cardArtworkUrl: URL
+  let technologyTripleString: String
+  let contributorString: String
+  let videoId: Int?
+  let index: Int?
+  let professional: Bool
   
   var childContents: [ContentDetailsModel] {
     groups.flatMap { $0.childContents }
@@ -72,7 +72,6 @@ class ContentDetailsModel: NSObject {
   private(set) var url: URL?
   
   var parentContent: ContentDetailsModel?
-  var isDownloaded = false
   var progression: ProgressionModel?
   var progressionId: Int?
   var bookmark: BookmarkModel?
@@ -96,13 +95,18 @@ class ContentDetailsModel: NSObject {
   
   // MARK: - Initializers
   init?(_ jsonResource: JSONAPIResource, metadata: [String: Any]?) {
+    guard let difficulty = ContentDifficulty(string: jsonResource["difficulty"] as? String ?? ""),
+      let type = ContentType(string: jsonResource["content_type"] as? String ?? ""),
+      let cardArtworkUrl = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
+      else { return nil }
     
     self.id = jsonResource.id
     self.index = jsonResource["ordinal"] as? Int
     self.uri = jsonResource["uri"] as? String ?? ""
     self.name = jsonResource["name"] as? String ?? ""
     self.parentName = jsonResource["parent_name"] as? String
-    self.desc = jsonResource["description_plain_text"] as? String ?? ""
+    self.descriptionPlainText = jsonResource["description_plain_text"] as? String ?? ""
+    self.descriptionHtml = jsonResource["description"] as? String ?? ""
     
     if let releasedAtStr = jsonResource["released_at"] as? String {
       self.releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtStr) ?? Date()
@@ -111,22 +115,15 @@ class ContentDetailsModel: NSObject {
     }
     
     self.free = jsonResource["free"] as? Bool ?? false
-    
-    if let difficulty = ContentDifficulty(rawValue: jsonResource["difficulty"] as? String ?? "") {
-      self.difficulty = difficulty
-    }
-    
-    if let type = ContentType(rawValue: jsonResource["content_type"] as? String ?? "") {
-      self.contentType = type
-    }
+    self.difficulty = difficulty
+    self.contentType = type
     
     self.duration = jsonResource["duration"] as? Int ?? 0
-    self.popularity = jsonResource["popularity"] as? Double ?? 0.0
     self.professional = jsonResource["professional"] as? Bool ?? false
-    self.cardArtworkURL = URL(string: (jsonResource["card_artwork_url"] as? String) ?? "")
+    self.cardArtworkUrl = cardArtworkUrl
     self.technologyTripleString = jsonResource["technology_triple_string"] as? String ?? ""
     self.contributorString = jsonResource["contributor_string"] as? String ?? ""
-    self.videoID = jsonResource["video_identifier"] as? Int
+    self.videoId = jsonResource["video_identifier"] as? Int
     self.url = jsonResource.links["self"]
     
     for relationship in jsonResource.relationships where relationship.type == "domains" {

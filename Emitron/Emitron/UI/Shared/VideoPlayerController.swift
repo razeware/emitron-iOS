@@ -164,7 +164,7 @@ class VideoPlayerController: AVPlayerViewController {
     guard let firstContent = currentContent else { return }
 
     if let downloadsMC = DataManager.current?.downloadsMC,
-      let downloadModel = downloadsMC.downloadData.first(where: { $0.content.videoID == firstContent.videoID }) {
+      let downloadModel = downloadsMC.downloadData.first(where: { $0.content.videoId == firstContent.videoId }) {
       playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
     } else  {
       fetchAndInsertFromVideosRemote(for: firstContent)
@@ -186,7 +186,7 @@ class VideoPlayerController: AVPlayerViewController {
   }
 
   private func fetchAndInsertFromVideosRemote(for contentDetails: ContentDetailsModel) {
-    guard let videoID = contentDetails.videoID else { return }
+    guard let videoID = contentDetails.videoId else { return }
     videosMC.getVideoStream(for: videoID) { [weak self] result in
       guard let self = self else {
         return

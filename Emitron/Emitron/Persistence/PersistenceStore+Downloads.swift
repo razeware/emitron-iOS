@@ -37,6 +37,9 @@ extension PersistenceStore {
     let content: Content
     let domains: [Domain]
     let download: Download
+    let bookmark: Bookmark?
+    let parentContent: Content?
+    let progression: Progression?
   }
   
   /// List of all downloads
@@ -45,6 +48,9 @@ extension PersistenceStore {
       let request = Content
         .including(required: Content.download)
         .including(all: Content.domains)
+        .including(optional: Content.bookmark)
+        .including(optional: Content.parentContent)
+        .including(optional: Content.progression)
         
       return try DownloadListItem.fetchAll(db, request)
     }.publisher(in: db)

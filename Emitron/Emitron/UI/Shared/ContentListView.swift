@@ -46,7 +46,7 @@ struct ContentListView: View {
   var downloadsMC: DownloadsMC
   var headerView: AnyView?
   var contentsVM: ContentPaginatable
-  var callback: ((DownloadsAction, ContentDetailsModel) -> Void)?
+  var callback: ((DownloadsAction, ContentListDisplayable) -> Void)?
 
   var body: some View {
     contentView
@@ -146,9 +146,8 @@ struct ContentListView: View {
 
     return
       AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
-
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
+          ContentDetailView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
           CardView(model: partialContent)
             .padding([.leading], 10)
@@ -172,7 +171,7 @@ struct ContentListView: View {
       AnyView(ForEach(contentsVM.data, id: \.id) { partialContent in
 
         NavigationLink(destination:
-          ContentListingView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
+          ContentDetailView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
         {
           CardView(model: partialContent)
             .padding([.leading], 10)

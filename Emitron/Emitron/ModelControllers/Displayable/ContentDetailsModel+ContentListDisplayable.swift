@@ -26,34 +26,21 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import UIKit
+import Foundation
 
-extension ContentDetailsModel {
-  var cardViewSubtitle: String {
-    guard let domainData = DataManager.current?.domainsMC.data else {
-      return ""
+extension ContentDetailsModel: ContentListDisplayable {
+  var viewProgress: ContentViewProgressDisplayable {
+    switch progression {
+    case .none:
+      return .notStarted
+    case .some(let progressModel) where progressModel.finished:
+      return .completed
+    case .some(let progressModel):
+      return .inProgress(progress: progressModel.percentComplete)
     }
-    
-    let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.count > 1 ? "Multi-platform" : contentDomains.first?.name ?? ""
-    
-    return subtitle
   }
   
-  var progress: CGFloat {
-    var progress: CGFloat = 0
-    if let progression = progression {
-      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
-    }
-    return progress
-  }
-  
-  var contentSummaryMetadataString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(difficulty.displayString) • \(contentType.displayString) (\(duration.timeFromSeconds))"
+  var downloadProgress: DownloadProgressDisplayable {
+    .downloadable
   }
 }

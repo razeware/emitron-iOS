@@ -30,59 +30,21 @@ import Foundation
 import GRDB
 
 struct Content: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  enum Difficulty: Int, Codable {
-    case beginner, intermediate, advanced
-    
-    init(contentDifficulty: ContentDifficulty) {
-      switch contentDifficulty {
-      case .beginner:
-        self = .beginner
-      case .intermediate:
-        self = .intermediate
-      case .advanced:
-        self = .advanced
-      default:
-        self = .beginner
-      }
-    }
-  }
-  
-  enum ContType: Int, Codable {
-    case collection, episode, screencast, article, product
-    
-    init(contentType: ContentType) {
-      switch contentType {
-      case .article:
-        self = .article
-      case .collection:
-        self = .collection
-      case .episode:
-        self = .episode
-      case .product:
-        self = .product
-      case .screencast:
-        self = .screencast
-      default:
-        self = .article
-      }
-    }
-  }
-  
   var id: Int
   var uri: String
   var name: String
-  var descriptionHtml: String?
-  var descriptionPlainText: String?
+  var descriptionHtml: String
+  var descriptionPlainText: String
   var releasedAt: Date
   var free: Bool
   var professional: Bool
-  var difficulty: Difficulty
-  var contentType: ContType
+  var difficulty: ContentDifficulty
+  var contentType: ContentType
   var duration: Int
   var videoIdentifier: Int?
-  var cardArtworkUrl: URL?
-  var technologyTriple: String?
-  var contributors: String?
+  var cardArtworkUrl: URL
+  var technologyTriple: String
+  var contributors: String
   var groupId: Int?
 }
 
@@ -150,16 +112,16 @@ extension Content {
     id = contentDetailsModel.id
     uri = contentDetailsModel.uri
     name = contentDetailsModel.name
-    descriptionHtml = contentDetailsModel.desc
-    descriptionPlainText = contentDetailsModel.desc
+    descriptionHtml = contentDetailsModel.descriptionHtml
+    descriptionPlainText = contentDetailsModel.descriptionPlainText
     releasedAt = contentDetailsModel.releasedAt
     free = contentDetailsModel.free
     professional = contentDetailsModel.professional
-    difficulty = Difficulty(contentDifficulty: contentDetailsModel.difficulty ?? .beginner)
-    contentType = ContType(contentType: contentDetailsModel.contentType ?? .article)
+    difficulty = contentDetailsModel.difficulty
+    contentType = contentDetailsModel.contentType
     duration = contentDetailsModel.duration
-    videoIdentifier = contentDetailsModel.videoID
-    cardArtworkUrl = contentDetailsModel.cardArtworkURL
+    videoIdentifier = contentDetailsModel.videoId
+    cardArtworkUrl = contentDetailsModel.cardArtworkUrl
     technologyTriple = contentDetailsModel.technologyTripleString
     contributors = contentDetailsModel.contributorString
   }

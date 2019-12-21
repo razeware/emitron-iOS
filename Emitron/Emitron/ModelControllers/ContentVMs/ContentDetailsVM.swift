@@ -33,30 +33,31 @@ import Combine
 class ContentDetailsVM: ObservableObject, Identifiable {
 
   // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
+  @Published private(set) var state = DataState.initial
+//  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
+//  private(set) var state = DataState.initial {
+//    willSet {
+//      objectWillChange.send(())
+//    }
+//  }
 
   private let client: RWAPI
   private let guardpost: Guardpost
   private let contentsService: ContentsService
-  private(set) var data: ContentDetailsModel
+  private(set) var contentSummary: ContentListDisplayable
+  private(set) var contentDetail: ContentDetailDisplayable
   private var shouldLocallyBookmark: Bool?
   private var bookmarksMC: BookmarksMC?
 
   // MARK: - Initializers
   init(guardpost: Guardpost,
-       partialContentDetail: ContentDetailsModel,
+       partialContentDetail: ContentListDisplayable,
        bookmarksMC: BookmarksMC? = DataManager.current?.bookmarksMC) {
     
     self.guardpost = guardpost
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.contentsService = ContentsService(client: self.client)
-    self.data = partialContentDetail
-    self.data.isDownloaded = partialContentDetail.isDownloaded
+    self.contentSummary = partialContentDetail
     self.bookmarksMC = bookmarksMC
     
     // If the partial content detail is actually the full details model; don't reload
@@ -74,7 +75,7 @@ class ContentDetailsVM: ObservableObject, Identifiable {
 
     state = .loading
 
-    contentsService.contentDetails(for: data.id) { [weak self] result in
+    contentsService.contentDetails(for: contentSummary.id) { [weak self] result in
 
       guard let self = self else {
         return
@@ -87,7 +88,7 @@ class ContentDetailsVM: ObservableObject, Identifiable {
           .fetch(from: "ContentDetailsVM", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
-        self.data = contentDetails
+        self.contentSummary = contentDetails
         if let shouldLocallyChangeBookmark = self.shouldLocallyBookmark {
           self.data.bookmarked = shouldLocallyChangeBookmark
         }
@@ -104,7 +105,7 @@ class ContentDetailsVM: ObservableObject, Identifiable {
     // If we're loading, we send the request
     // Locally updating the bookmark for UI purposes, but once the request succeeds, it will be dissemenated across all the relevant VMs
     data.bookmarked = !data.bookmarked
-    shouldLocallyBookmark = data.bookmarked
+    shouldLocallyBookmark = contentSummary.bookmarked
 		
 		state = .hasData
   }

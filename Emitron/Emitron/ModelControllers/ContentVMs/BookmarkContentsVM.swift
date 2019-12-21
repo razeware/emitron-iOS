@@ -44,7 +44,7 @@ class BookmarkContentsVM: ObservableObject, ContentPaginatable {
   
   private let client: RWAPI
   private let bookmarksService: BookmarksService
-  private(set) var data = [ContentDetailsModel]()
+  private(set) var data = [ContentListDisplayable]()
   private(set) var totalContentNum: Int = 0
   
   // Pagination
@@ -134,16 +134,16 @@ class BookmarkContentsVM: ObservableObject, ContentPaginatable {
   }
   
   private func addRelevantDetailsToContent() {
-    
-    data.forEach { model in
-      guard let dataManager = DataManager.current else { return }
-      var relationships: [ContentRelatable] = []
-      
-      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
-      relationships.append(contentsOf: domains)
-      
-      model.addRelationships(for: relationships)
-    }
+  // TODO: Make this work?
+//    data.forEach { model in
+//      guard let dataManager = DataManager.current else { return }
+//      var relationships: [ContentRelatable] = []
+//
+//      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
+//      relationships.append(contentsOf: domains)
+//
+//      model.addRelationships(for: relationships)
+//    }
   }
 }
 

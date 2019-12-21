@@ -173,35 +173,21 @@ struct LibraryView: View {
     let header = AnyView(contentControlsSection)
     let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsVM as ContentPaginatable) { (action, content) in
       switch action {
-        case .delete:
-          self.delete(for: content)
+      case .delete:
+        // TODO
+        return
         
-        case .save: return
+      case .save:
+        // TODO
+        return
         
-        case .cancel:
-          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
-        }
+      case .cancel:
+        // TODO
+        return
       }
-
-    return AnyView(contentSectionView)
-  }
-
-  private func delete(for content: ContentDetailsModel) {
-    if content.isInCollection, let parent = content.parentContent {
-      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
-    } else {
-      downloadsMC.deleteDownload(with: content)
     }
     
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
-    }
+    return AnyView(contentSectionView)
   }
 }
 

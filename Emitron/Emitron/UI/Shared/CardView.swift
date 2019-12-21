@@ -27,16 +27,15 @@
 /// THE SOFTWARE.
 
 import SwiftUI
-import Kingfisher
+import KingfisherSwiftUI
 import UIKit
 import Network
 
 struct CardView: SwiftUI.View {
-  @State private var image: UIImage = #imageLiteral(resourceName: "loading")
-  private var model: ContentDetailsModel
+  private var model: ContentListDisplayable
   private let animation: Animation = .easeIn
   
-  init(model: ContentDetailsModel) {
+  init(model: ContentListDisplayable) {
     self.model = model
   }
   
@@ -48,21 +47,20 @@ struct CardView: SwiftUI.View {
       VStack(alignment: .leading, spacing: 15) {
         VStack(alignment: .leading, spacing: 0) {
           HStack(alignment: .center) {
-            
+
             Text(name)
               .font(.uiTitle4)
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
               .padding([.trailing], 15)
               .foregroundColor(.titleText)
-            
+
             Spacer()
-            
-            Image(uiImage: self.image)
+
+            KFImage(model.cardArtworkUrl)
               .resizable()
               .aspectRatio(contentMode: .fill)
               .frame(width: 60, height: 60)
-              .onAppear(perform: self.loadImage)
               .transition(.opacity)
               .cornerRadius(6)
           }
@@ -74,7 +72,7 @@ struct CardView: SwiftUI.View {
             .foregroundColor(.contentText)
         }
         
-        Text(model.desc)
+        Text(model.descriptionPlainText)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
           .lineLimit(2)
@@ -88,14 +86,7 @@ struct CardView: SwiftUI.View {
               .padding([.trailing], 5)
           }
           
-          if model.progress >= 1 {
-            CompletedTag()
-          } else {
-            Text(model.releasedAtDateTimeString)
-              .font(.uiCaption)
-              .lineLimit(1)
-              .foregroundColor(.contentText)
-          }
+          proTagOrReleasedAt
           
           Spacer()
           
@@ -108,16 +99,7 @@ struct CardView: SwiftUI.View {
       .padding([.trailing, .leading], 15)
       
       SwiftUI.Group {
-        if model.progress > 0 && model.progress < 1 {
-          ProgressBarView(progress: model.progress, isRounded: true)
-            .padding([.top, .bottom], 0)
-        } else {
-          Rectangle()
-            .frame(height: 1)
-            .foregroundColor(.separator)
-            .padding([.top, .bottom], 0)
-            .cornerRadius(6)
-        }
+        progressBar
       }
       .padding([.trailing, .leading], 15)
       .padding([.top], 10)
@@ -140,6 +122,30 @@ struct CardView: SwiftUI.View {
     return "\(parentName): \(model.name)"
   }
   
+  private var progressBar: AnyView {
+    if case .inProgress(let progress) = model.viewProgress {
+      return AnyView(ProgressBarView(progress: CGFloat(progress), isRounded: true)
+        .padding([.top, .bottom], 0))
+    } else {
+      return AnyView(Rectangle()
+        .frame(height: 1)
+        .foregroundColor(.separator)
+        .padding([.top, .bottom], 0)
+        .cornerRadius(6))
+    }
+  }
+  
+  private var proTagOrReleasedAt: AnyView {
+    if case .completed = model.viewProgress {
+      return AnyView(CompletedTag())
+    } else {
+      return AnyView(Text(model.releasedAtDateTimeString)
+        .font(.uiCaption)
+        .lineLimit(1)
+        .foregroundColor(.contentText))
+    }
+  }
+  
   private var bookmarkButton: AnyView? {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
@@ -153,26 +159,5 @@ struct CardView: SwiftUI.View {
         .resizable()
         .frame(width: 21, height: 21)
     )
-  }
-  
-  private func loadImage() {
-    //TODO: Will be uising Kingfisher for this, for performant caching purposes, but right now just importing the library
-    // is causing this file to not compile
-    if let imageURL = model.cardArtworkURL {
-      fishImage(url: imageURL)
-    } else if let data = model.cardArtworkData, let uiImage = UIImage(data: data) {
-      self.image = uiImage
-    }
-  }
-  
-  private func fishImage(url: URL) {
-    KingfisherManager.shared.retrieveImage(with: url) { result in
-      switch result {
-        case .success(let imageResult):
-          self.image = imageResult.image
-        case .failure:
-          break
-      }
-    }
   }
 }

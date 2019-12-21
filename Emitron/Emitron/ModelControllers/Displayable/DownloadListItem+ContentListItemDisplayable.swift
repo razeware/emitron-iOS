@@ -28,12 +28,84 @@
 
 import Foundation
 
-protocol DisplayableContent {
-  var id: Int { get }
-  var contentType: ContentType? { get }
-  var domainIDs: [Int] { get }
-  var parentContentId: Int? { get }
-  var parentContent: DisplayableContent? { get }
+extension PersistenceStore.DownloadListItem: ContentListDisplayable {
+  // MARK:- Proxied from content
+  var id: Int {
+    content.id
+  }
   
-  var isInCollection: Bool { get }
+  var releasedAt: Date {
+    content.releasedAt
+  }
+  
+  var duration: Int {
+    content.duration
+  }
+  
+  var name: String {
+    content.name
+  }
+  
+  var descriptionPlainText: String {
+    content.descriptionPlainText
+  }
+  
+  var professional: Bool {
+    content.professional
+  }
+  
+  var cardArtworkUrl: URL {
+    content.cardArtworkUrl
+  }
+  
+  var contentType: ContentType {
+    content.contentType
+  }
+  
+  // MARK:- Proxied from Other Records
+  var bookmarked: Bool {
+    bookmark != nil
+  }
+  
+  var parentName: String? {
+    parentContent?.name
+  }
+  
+  // MARK:- Evaluated
+  var cardViewSubtitle: String {
+    if domains.count == 1 {
+      return domains.first!.name
+    } else if domains.count > 1 {
+      return "Multi-platform"
+    }
+    return ""
+  }
+  
+  
+  // MARK: - Converted to Display Properties
+  var viewProgress: ContentViewProgressDisplayable {
+    switch progression {
+    case .none:
+      return .notStarted
+    case .some(let p) where p.finished:
+      return .completed
+    case .some(let p):
+      return .inProgress(progress: p.progressProportion)
+    }
+  }
+  
+  var downloadProgress: DownloadProgressDisplayable {
+    switch download.state {
+    case .cancelled, .error, .failed:
+      return .notDownloadable
+    case .enqueued, .pending, .urlRequested, .readyForDownload:
+      return .enqueued
+    case .inProgress:
+      return .inProgress(progress: download.progress)
+    case .complete:
+      return .downloaded
+    case .paused:
+      return .downloadable
+    }
+  }
 }

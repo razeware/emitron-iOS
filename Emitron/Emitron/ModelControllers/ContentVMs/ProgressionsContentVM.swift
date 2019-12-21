@@ -49,7 +49,7 @@ class ProgressionsContentVM: ObservableObject, ContentPaginatable {
   
   private let client: RWAPI
   private let progressionsService: ProgressionsService
-  private(set) var data = [ContentDetailsModel]()
+  private(set) var data = [ContentListDisplayable]()
   private(set) var totalContentNum: Int = 0
   
   // Pagination
@@ -144,15 +144,15 @@ class ProgressionsContentVM: ObservableObject, ContentPaginatable {
   }
   
   private func addRelevantDetailsToContent() {
-    
-    data.forEach { model in
-      guard let dataManager = DataManager.current, model.contentType != .episode else { return }
-      var relationships: [ContentRelatable] = []
-      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
-      relationships.append(contentsOf: domains)
-      
-      model.addRelationships(for: relationships)
-    }
+    // TODO
+//    data.forEach { model in
+//      guard let dataManager = DataManager.current, model.contentType != .episode else { return }
+//      var relationships: [ContentRelatable] = []
+//      let domains = dataManager.domainsMC.data.filter { model.domainIDs.contains($0.id) }
+//      relationships.append(contentsOf: domains)
+//
+//      model.addRelationships(for: relationships)
+//    }
   }
 }
 

@@ -55,25 +55,28 @@ struct DownloadsView: View {
 
     return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as ContentPaginatable) { (action, content) in
       self.showActivityIndicator = true
+      
+      // TODO
+      
 
       // need to get groups & child contents for collection
-      if content.isInCollection {
-        // DELETING
-        // if an episode, don't need group & child contents
-        if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
-          self.handleAction(with: action, content: content)
-        } else {
-          // Handles deleting
-          guard let user = Guardpost.current.currentUser else { return }
-          let contentsMC = ContentsMC(user: user)
-          contentsMC.getContentDetails(with: content.id) { contentDetails in
-            guard let contentDetails = contentDetails else { return }
-            self.handleAction(with: action, content: contentDetails)
-          }
-        }
-      } else {
-        self.handleAction(with: action, content: content)
-      }
+//      if content.isInCollection {
+//        // DELETING
+//        // if an episode, don't need group & child contents
+//        if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
+//          self.handleAction(with: action, content: content)
+//        } else {
+//          // Handles deleting
+//          guard let user = Guardpost.current.currentUser else { return }
+//          let contentsMC = ContentsMC(user: user)
+//          contentsMC.getContentDetails(with: content.id) { contentDetails in
+//            guard let contentDetails = contentDetails else { return }
+//            self.handleAction(with: action, content: contentDetails)
+//          }
+//        }
+//      } else {
+//        self.handleAction(with: action, content: content)
+//      }
     }
   }
 

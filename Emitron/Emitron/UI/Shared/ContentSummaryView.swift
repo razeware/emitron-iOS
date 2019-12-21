@@ -94,7 +94,7 @@ struct ContentSummaryView: View {
       })
         .padding([.top], 15)
       
-      Text(contentDetailsVM.data.desc)
+      Text(contentDetailsVM.data.descriptionPlainText)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)

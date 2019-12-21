@@ -33,7 +33,7 @@ protocol ContentPaginatable {
   var currentPage: Int { get }
   var startingPage: Int { get }
   var defaultPageSize: Int { get }
-  var data: [ContentDetailsModel] { get }
+  var data: [ContentListDisplayable] { get }
   var state: DataState { get }
   var isLoadingMore: Bool { get }
   var totalContentNum: Int { get }

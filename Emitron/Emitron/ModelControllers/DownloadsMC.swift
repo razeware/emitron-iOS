@@ -74,7 +74,7 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   let contentScreen: ContentScreen = .downloads
   
   // ISSUE: Probably don't re-compute this all the time...
-  var data: [ContentDetailsModel] {
+  var data: [ContentListDisplayable] {
     let downloadedContents = downloadData.map { $0.content }.filter { model -> Bool in
       let isNotEpisode = model.contentType != .episode
       // Only allow episodes in ContentDetailData if the parent hasn't also been downloaded

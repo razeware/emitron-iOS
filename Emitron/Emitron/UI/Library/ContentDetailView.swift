@@ -29,7 +29,7 @@
 import SwiftUI
 import UIKit
 
-struct ContentListingView: View {
+struct ContentDetailView: View {
   
   @State private var isEpisodeOnly = false
   @State private var showingSheet = false
@@ -38,7 +38,7 @@ struct ContentListingView: View {
   @State var hudOption: HudOption = .success
   @ObservedObject var contentDetailsVM: ContentDetailsVM
   @ObservedObject var downloadsMC: DownloadsMC
-  var content: ContentDetailsModel
+  var content: ContentListDisplayable
   var user: UserModel
   @State var imageData: Data?
   
@@ -51,7 +51,7 @@ struct ContentListingView: View {
   
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentDetailsModel, user: UserModel, downloadsMC: DownloadsMC) {
+  init(content: ContentListDisplayable, user: UserModel, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
     self.contentDetailsVM = ContentDetailsVM(guardpost: Guardpost.current, partialContentDetail: content)
@@ -132,20 +132,20 @@ struct ContentListingView: View {
   private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
     
     // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
-    if contentDetailsVM.data.videoID != nil {
+    if contentDetailsVM.data.videoId != nil {
       return [contentDetailsVM.data]
     }
     
     let allContents = contentDetailsVM.data.groups.flatMap { $0.childContents }
     
-    guard let currentIndex = allContents.firstIndex(where: { $0.videoID == currentVideoID } )
+    guard let currentIndex = allContents.firstIndex(where: { $0.videoId == currentVideoID } )
       else { return [] }
     
     return allContents[currentIndex..<allContents.count].compactMap { $0 }
   }
   
   private func episodeListing(data: [ContentDetailsModel]) -> some View {
-    let onlyContentWithVideoID = data.filter { $0.videoID != nil }
+    let onlyContentWithVideoID = data.filter { $0.videoId != nil }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       
@@ -179,7 +179,7 @@ struct ContentListingView: View {
   }
   
   private func videoView(for model: ContentDetailsModel) -> some View {
-    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoID!),
+    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoId!),
               user: self.user,
               showingProSheet: !self.user.canStreamPro && model.professional) {
                 self.refreshContentDetails()
@@ -221,7 +221,7 @@ struct ContentListingView: View {
   }
   
   private var videoIdForPlayButton: Int {
-    return contentModelForPlayButton?.videoID ?? 0
+    return contentModelForPlayButton?.videoId ?? 0
   }
   
   private var continueButton: some View {
@@ -321,16 +321,7 @@ struct ContentListingView: View {
         
         GeometryReader { geometry in
           HStack {
-            // If progress is between 0.0 and 1.0 show continue, otherwise show play
-            if self.content.progress > 0.0 && self.content.progress < 1.0 {
-              self.continueButton
-                //HACK: to center the button when it's in a NavigationLink
-                .padding(.leading, geometry.size.width/2 - 74.5)
-            } else {
-              self.playButton
-                //HACK: to center the button when it's in a NavigationLink
-                .padding(.leading, geometry.size.width/2 - 32.0)
-            }
+            self.continueOrPlayButton(geometry: geometry)
           }
             //HACK: to remove navigation chevrons
             .padding(.trailing, -32.0)
@@ -357,6 +348,18 @@ struct ContentListingView: View {
         proView
       }
       progressBar
+    }
+  }
+  
+  private func continueOrPlayButton(geometry: GeometryProxy) -> AnyView {
+    if case .inProgress = self.content.progress {
+      return AnyView(self.continueButton
+        //HACK: to center the button when it's in a NavigationLink
+        .padding(.leading, geometry.size.width/2 - 74.5))
+    } else {
+      return AnyView(self.playButton
+        //HACK: to center the button when it's in a NavigationLink
+        .padding(.leading, geometry.size.width/2 - 32.0))
     }
   }
   
@@ -463,7 +466,8 @@ struct ContentListingView: View {
       self.uiImage = uiImage
       
       // otherwise use the imageURL
-    } else if let imageURL = contentDetailsVM.data.cardArtworkURL {
+    } else {
+      let imageURL = contentDetailsVM.data.cardArtworkUrl
       DispatchQueue.global().async {
         let data = try? Data(contentsOf: imageURL)
         DispatchQueue.main.async {
