@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ProgressionsRequest: Request {
-  typealias Response = (progressions: [ProgressionModel], totalNumber: Int)
+  typealias Response = (progressions: [Progression], cacheUpdate: DataCacheUpdate, totalNumber: Int)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,44 +39,21 @@ struct ProgressionsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> (progressions: [ProgressionModel], totalNumber: Int) {
+  func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
-    return (progressions: progressions, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
-  }
-}
-
-struct ShowProgressionsRequest: Request {
-  typealias Response = ProgressionModel
-
-  // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/progressions/\(id)" }
-  var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-
-  private var id: Int
-
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
-
-  // MARK: - Internal
-  func handle(response: Data) throws -> ProgressionModel {
-    let json = try JSON(data: response)
-    let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
-    guard let progression = progressions.first else {
-      throw RWAPIError.processingError(nil)
+    let progressions = try doc.data.map { try ProgressionAdapter.process(resource: $0) }
+    let cacheUpdate = try DataCacheUpdate(resources: doc.included)
+    guard let totalResultCount = doc.meta["total_result_count"] as? Int else {
+      throw RWAPIError.responseMissingRequiredMeta(field: "total_result_count")
     }
-    return progression
+    return (progressions: progressions, cacheUpdate: cacheUpdate, totalNumber: totalResultCount)
   }
 }
 
+// TODO: WTF is this??!
 struct UpdateProgressionsRequeest: Request {
-  typealias Response = ProgressionModel
+  typealias Response = Progression
 
   // MARK: - Properties
   var method: HTTPMethod { return .POST }
@@ -114,10 +91,10 @@ struct UpdateProgressionsRequeest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> ProgressionModel {
+  func handle(response: Data) throws -> Progression {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let progressions = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    let progressions = try doc.data.map { try ProgressionAdapter.process(resource: $0) }
     guard let progression = progressions.first else {
       throw RWAPIError.processingError(nil)
     }

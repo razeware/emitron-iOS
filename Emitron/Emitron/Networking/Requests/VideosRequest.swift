@@ -29,32 +29,8 @@
 import Foundation
 import SwiftyJSON
 
-struct ShowVideoRequest: Request {
-  typealias Response = VideoModel
-
-  // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/videos/\(id)" }
-  var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-
-  private var id: Int
-
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
-
-  // MARK: - Internal
-  func handle(response: Data) throws -> VideoModel {
-    let json = try JSON(data: response)
-    let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { VideoModel($0, metadata: nil) }.first!
-  }
-}
-
 struct StreamVideoRequest: Request {
-  typealias Response = AttachmentModel
+  typealias Response = Attachment
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -70,23 +46,28 @@ struct StreamVideoRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> AttachmentModel {
+  func handle(response: Data) throws -> Attachment {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }.first!
+    let attachments = try doc.data.map { try AttachmentAdapter.process(resource: $0) }
+    
+    guard let attachment = attachments.first,
+      attachments.count == 1 else {
+        throw RWAPIError.responseHasIncorrectNumberOfElements
+    }
+    
+    return attachment
   }
 }
 
 struct DownloadVideoRequest: Request {
   // It contains two Attachment objects, one for the HD file and one for the SD file.
-  typealias Response = [AttachmentModel]
+  typealias Response = [Attachment]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
   var path: String { return "/videos/\(id)/download" }
-  var additionalHeaders: [String: String]? {
-    return ["RW-App-Token":"52022fd1a42aa2dcfdd5d520fc4b5e0c"]
-  }
+  var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
   private var id: Int
@@ -97,9 +78,9 @@ struct DownloadVideoRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [AttachmentModel] {
+  func handle(response: Data) throws -> [Attachment] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { AttachmentModel($0, metadata: nil) }
+    return try doc.data.map { try AttachmentAdapter.process(resource: $0) }
   }
 }

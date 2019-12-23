@@ -33,6 +33,8 @@ typealias HTTPHeaders = [String: String]
 enum RWAPIError: Error {
   case requestFailed(Error?, Int)
   case processingError(Error?)
+  case responseMissingRequiredMeta(field: String?)
+  case responseHasIncorrectNumberOfElements
   case noData
 }
 

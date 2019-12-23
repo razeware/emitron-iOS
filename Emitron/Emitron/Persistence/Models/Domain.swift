@@ -49,6 +49,23 @@ struct Domain: Codable, FetchableRecord, TableRecord, PersistableRecord {
         self = .retired
       }
     }
+    
+    init?(from string: String) {
+      switch string {
+      case "production":
+        self = .production
+      case "beta":
+        self = .beta
+      case "blog":
+        self = .blog
+      case "retired":
+        self = .retired
+      case "archived":
+        self = .archive
+      default:
+        return nil
+      }
+    }
   }
   
   var id: Int

@@ -46,6 +46,7 @@ struct Content: Codable, FetchableRecord, TableRecord, PersistableRecord {
   var technologyTriple: String
   var contributors: String
   var groupId: Int?
+  var ordinal: Int
 }
 
 // MARK: Associations

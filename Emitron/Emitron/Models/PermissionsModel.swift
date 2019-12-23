@@ -29,7 +29,7 @@
 import Foundation
 import SwiftyJSON
 
-enum Permission: String, Codable {
+enum PermissionOld: String, Codable {
   case streamBeginner = "stream-beginner-videos"
   case streamPro = "stream-professional-videos"
   case download = "download-videos"
@@ -49,13 +49,13 @@ class PermissionsModel: Codable, Equatable {
   // MARK: - Properties
   private(set) var id: Int = 0
   private(set) var name: String = ""
-  private(set) var tag: Permission = .none
+  private(set) var tag: PermissionOld = .none
   private(set) var createdAt: Date
   private(set) var updatedAt: Date
   
   // MARK: - Initializers
   // Default init—used for testing
-  init(permission: Permission = .none) {
+  init(permission: PermissionOld = .none) {
     createdAt = Date()
     updatedAt = Date()
     tag = permission
@@ -66,7 +66,7 @@ class PermissionsModel: Codable, Equatable {
     
     self.id = jsonResource.id
     self.name = jsonResource["name"] as? String ?? ""
-    if let tag = Permission(rawValue: jsonResource["tag"] as? String ?? DomainLevel.none.rawValue) {
+    if let tag = PermissionOld(rawValue: jsonResource["tag"] as? String ?? DomainLevel.none.rawValue) {
       self.tag = tag
     }
     

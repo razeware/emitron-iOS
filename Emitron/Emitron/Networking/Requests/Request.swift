@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 enum HTTPMethod: String {
   case GET
@@ -52,3 +53,8 @@ extension Request {
   var method: HTTPMethod { return .GET }
   var body: Data? { return nil }
 }
+
+enum RequestError: Error {
+  case responseMissingRequiredMeta(field: String?)
+}
+

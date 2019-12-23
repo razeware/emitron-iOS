@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct ContentsRequest: Request {
-  typealias Response = (contents: [ContentDetailsModel], totalNumber: Int)
+  typealias Response = (contents: [Content], cacheUpdate: DataCacheUpdate, totalNumber: Int)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,20 +39,21 @@ struct ContentsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> (contents: [ContentDetailsModel], totalNumber: Int) {
+  func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let contents = doc.data.compactMap { resource -> ContentDetailsModel? in
-      guard let model = ContentDetailsModel(resource, metadata: resource.meta) else { return nil }
-      model.addRelationships(for: resource)
-      return model
+    let contents = try doc.data.map { try ContentAdapter.process(resource: $0) }
+    let cacheUpdate = try DataCacheUpdate(resources: doc.included, relationships: doc.data.map { (entity: $0.entityId, $0.relationships) })
+    guard let totalResultCount = doc.meta["total_result_count"] as? Int else {
+      throw RWAPIError.responseMissingRequiredMeta(field: "total_result_count")
     }
-    return (contents: contents, totalNumber: doc.meta["total_result_count"] as? Int ?? 0)
+
+    return (contents: contents, cacheUpdate: cacheUpdate, totalNumber: totalResultCount)
   }
 }
 
 struct ContentDetailsRequest: Request {
-  typealias Response = ContentDetailsModel
+  typealias Response = (content: Content, cacheUpdate: DataCacheUpdate)
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -67,21 +68,18 @@ struct ContentDetailsRequest: Request {
   }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> ContentDetailsModel {
+  func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let content = doc.data.compactMap { resource -> ContentDetailsModel? in
-      guard let model = ContentDetailsModel(resource, metadata: resource.meta) else { return nil }
-      model.addRelationships(for: resource)
-      return model
-    }
+    let cacheUpdate = try DataCacheUpdate(resources: doc.included, relationships: doc.data.map { (entity: $0.entityId, $0.relationships) })
+    let contents = try doc.data.map { try ContentAdapter.process(resource: $0, relationships: cacheUpdate.relationships) }
     
-    guard let contentSummary = content.first,
-      content.count == 1 else {
+    guard let content = contents.first,
+      contents.count == 1 else {
         throw RWAPIError.processingError(nil)
     }
     
-    return contentSummary
+    return (content: content, cacheUpdate: cacheUpdate)
   }
 }
 
@@ -99,7 +97,9 @@ struct BeginPlaybackTokenRequest: Request {
     let doc = JSONAPIDocument(json)
 
     guard let token = doc.data.first,
-    let tokenString = token["video_playback_token"] as? String, !tokenString.isEmpty else {
+      let tokenString = token["video_playback_token"] as? String,
+      !tokenString.isEmpty
+      else {
         throw RWAPIError.processingError(nil)
     }
     
@@ -109,7 +109,7 @@ struct BeginPlaybackTokenRequest: Request {
 
 // This needs to get called every 5 seconds to report usage statistics
 struct PlaybackUsageRequest: Request {
-  typealias Response = ProgressionModel
+  typealias Response = (progression: Progression, cacheUpdate: DataCacheUpdate)
   
   // MARK: - Properties
   var method: HTTPMethod { return .POST }
@@ -132,17 +132,18 @@ struct PlaybackUsageRequest: Request {
     self.token = token
   }
   
-  func handle(response: Data) throws -> ProgressionModel {
+  func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let playbackProgressContent = doc.data.compactMap { ProgressionModel($0, metadata: nil) }
+    let progressions = try doc.data.compactMap { try ProgressionAdapter.process(resource: $0) }
+    let cacheUpdate = try DataCacheUpdate(resources: doc.included)
     
-    guard let progress = playbackProgressContent.first,
-      playbackProgressContent.count == 1 else {
-        throw RWAPIError.processingError(nil)
+    guard let progression = progressions.first,
+      progressions.count == 1 else {
+        throw RWAPIError.responseHasIncorrectNumberOfElements
     }
     
-    return progress
+    return (progression: progression, cacheUpdate: cacheUpdate)
   }
 }
 
