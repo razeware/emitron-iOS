@@ -29,19 +29,12 @@
 import Foundation
 import GRDB
 
-struct ContentDomain: Codable, FetchableRecord, TableRecord {
-  var id: Int64?
-  var contentId: Int
-  var domainId: Int
-}
 
-extension ContentDomain: MutablePersistableRecord {
-  mutating func didInsert(with rowID: Int64, for column: String?) {
-    id = rowID
-  }
-}
+extension Progression: FetchableRecord, TableRecord, PersistableRecord { }
 
-extension ContentDomain {
+extension Progression {
   static let content = belongsTo(Content.self)
-  static let domain = belongsTo(Domain.self)
+  var content: QueryInterfaceRequest<Content> {
+    request(for: Progression.content)
+  }
 }

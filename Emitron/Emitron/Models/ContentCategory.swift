@@ -27,27 +27,9 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
 
-struct Group: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  var id: Int
-  var name: String
-  var description: String?
-  var ordinal: Int
+struct ContentCategory: Codable {
+  var id: Int64?
   var contentId: Int
-}
-
-extension Group {
-  static let content = belongsTo(Content.self)
-  static let contents = hasMany(Content.self)
-}
-
-extension Group {
-  init(groupModel: GroupModel) {
-    self.id = groupModel.id
-    self.name = groupModel.name
-    self.description = groupModel.desc
-    self.ordinal = groupModel.ordinal
-    self.contentId = groupModel.contentId
-  }
+  var categoryId: Int
 }

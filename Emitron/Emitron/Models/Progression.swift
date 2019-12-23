@@ -27,33 +27,14 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
 
-struct Progression: Codable, FetchableRecord, TableRecord, PersistableRecord {
+struct Progression: Codable {
   var id: Int
   var target: Int
   var progress: Int
   var createdAt: Date
   var updatedAt: Date
   var contentId: Int
-}
-
-extension Progression {
-  static let content = belongsTo(Content.self)
-  var content: QueryInterfaceRequest<Content> {
-    request(for: Progression.content)
-  }
-}
-
-extension Progression {
-  init(progressionModel: ProgressionModel) {
-    self.id = progressionModel.id
-    self.target = progressionModel.target
-    self.progress = progressionModel.progress
-    self.createdAt = progressionModel.createdAt
-    self.updatedAt = progressionModel.updatedAt
-    self.contentId = progressionModel.contentId
-  }
 }
 
 extension Progression {

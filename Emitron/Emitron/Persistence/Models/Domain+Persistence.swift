@@ -29,32 +29,19 @@
 import Foundation
 import GRDB
 
-struct Category: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  var id: Int
-  var name: String
-  var uri: String
-  var ordinal: Int
-}
+extension Domain: FetchableRecord, TableRecord, PersistableRecord { }
 
-extension Category {
+extension Domain {
   enum Columns {
     static let id = Column(CodingKeys.id)
     static let name = Column(CodingKeys.name)
-    static let uri = Column(CodingKeys.uri)
-    static let ordinal = Column(CodingKeys.ordinal)
+    static let slug = Column(CodingKeys.slug)
+    static let description = Column(CodingKeys.description)
+    static let level = Column(CodingKeys.level)
   }
 }
 
-extension Category {
-  static let contentCategories = hasMany(ContentCategory.self)
-  static let contents = hasMany(Content.self, through: contentCategories, using: ContentCategory.content)
-}
-
-extension Category {
-  init(categoryModel: CategoryModel) {
-    self.id = categoryModel.id
-    self.name = categoryModel.name
-    self.uri = categoryModel.uri
-    self.ordinal = categoryModel.ordinal
-  }
+extension Domain {
+  static let contentDomains = hasMany(ContentDomain.self)
+  static let contents = hasMany(Content.self, through: contentDomains, using: ContentDomain.content)
 }

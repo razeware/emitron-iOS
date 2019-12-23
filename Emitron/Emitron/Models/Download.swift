@@ -27,75 +27,60 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
 
-struct Domain: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  enum Level: Int, Codable {
-    case production, beta, blog, retired, archive
-    
-    init(domainLevel: DomainLevel) {
-      switch domainLevel {
-      case .archive:
-        self = .archive
-      case .beta:
-        self = .beta
-      case .blog:
-        self = .blog
-      case .production:
-        self = .production
-      case .retired:
-        self = .retired
-      default:
-        self = .retired
-      }
-    }
-    
-    init?(from string: String) {
-      switch string {
-      case "production":
-        self = .production
-      case "beta":
-        self = .beta
-      case "blog":
-        self = .blog
-      case "retired":
-        self = .retired
-      case "archived":
-        self = .archive
-      default:
-        return nil
-      }
-    }
+struct Download: Codable {
+  enum State: Int, Codable {
+    case pending
+    case urlRequested
+    case readyForDownload
+    case enqueued
+    case inProgress
+    case paused
+    case cancelled
+    case failed
+    case complete
+    case error
   }
   
-  var id: Int
-  var name: String
-  var slug: String
-  var description: String?
-  var level: Level
+  var id: UUID
+  var requestedAt: Date
+  var lastValidatedAt: Date?
+  var fileName: String?
+  var localUrl: URL?
+  var remoteUrl: URL?
+  var progress: Double = 0
+  var state: State
+  var contentId: Int
 }
 
-extension Domain {
-  enum Columns {
-    static let id = Column(CodingKeys.id)
-    static let name = Column(CodingKeys.name)
-    static let slug = Column(CodingKeys.slug)
-    static let description = Column(CodingKeys.description)
-    static let level = Column(CodingKeys.level)
+extension Download: DownloadProcessorModel { }
+
+extension Download: Equatable {
+  // We override this function because SQLite doesn't store dates to the same accuracy as Date
+  static func == (lhs: Download, rhs: Download) -> Bool {
+    lhs.id == rhs.id &&
+      lhs.fileName == rhs.fileName &&
+      lhs.localUrl == rhs.localUrl &&
+      lhs.remoteUrl == rhs.remoteUrl &&
+      lhs.progress == rhs.progress &&
+      lhs.state == rhs.state &&
+      lhs.contentId == rhs.contentId &&
+      lhs.requestedAt.equalEnough(to: rhs.requestedAt) &&
+      ((lhs.lastValidatedAt == nil && rhs.lastValidatedAt == nil) || lhs.lastValidatedAt!.equalEnough(to: rhs.lastValidatedAt!))
   }
 }
 
-extension Domain {
-  static let contentDomains = hasMany(ContentDomain.self)
-  static let contents = hasMany(Content.self, through: contentDomains, using: ContentDomain.content)
-}
-
-extension Domain {
-  init(domainModel: DomainModel) {
-    self.id = domainModel.id
-    self.name = domainModel.name
-    self.slug = domainModel.slug
-    self.description = domainModel.description
-    self.level = Level(domainLevel: domainModel.level)
+extension Download {
+  static func create(for content: Content) -> Download {
+    return Download(
+      id: UUID(),
+      requestedAt: Date(),
+      lastValidatedAt: nil,
+      fileName: nil,
+      localUrl: nil,
+      remoteUrl: nil,
+      progress: 0,
+      state: .pending,
+      contentId: content.id)
   }
 }

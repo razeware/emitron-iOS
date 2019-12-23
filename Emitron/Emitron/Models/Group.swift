@@ -27,59 +27,11 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftyJSON
 
-enum PermissionOld: String, Codable {
-  case streamBeginner = "stream-beginner-videos"
-  case streamPro = "stream-professional-videos"
-  case download = "download-videos"
-  case none = ""
-}
-
-class PermissionsModel: Codable, Equatable {
-  
-  static func == (lhs: PermissionsModel, rhs: PermissionsModel) -> Bool {
-    return lhs.id == rhs.id
-      && lhs.name == rhs.name
-      && lhs.tag == rhs.tag
-      && lhs.createdAt == rhs.createdAt
-      && lhs.updatedAt == rhs.updatedAt
-  }
-  
-  // MARK: - Properties
-  private(set) var id: Int = 0
-  private(set) var name: String = ""
-  private(set) var tag: PermissionOld = .none
-  private(set) var createdAt: Date
-  private(set) var updatedAt: Date
-  
-  // MARK: - Initializers
-  // Default init—used for testing
-  init(permission: PermissionOld = .none) {
-    createdAt = Date()
-    updatedAt = Date()
-    tag = permission
-  }
-  
-  init(_ jsonResource: JSONAPIResource,
-       metadata: [String: Any]?) {
-    
-    self.id = jsonResource.id
-    self.name = jsonResource["name"] as? String ?? ""
-    if let tag = PermissionOld(rawValue: jsonResource["tag"] as? String ?? DomainLevel.none.rawValue) {
-      self.tag = tag
-    }
-    
-    if let createdAtStr = jsonResource["created_at"] as? String {
-      self.createdAt = DateFormatter.apiDateFormatter.date(from: createdAtStr) ?? Date()
-    } else {
-      self.createdAt = Date()
-    }
-    
-    if let updatedAtStr = jsonResource["updated_at"] as? String {
-      self.updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtStr) ?? Date()
-    } else {
-      self.updatedAt = Date()
-    }
-  }
+struct Group: Codable {
+  var id: Int
+  var name: String
+  var description: String?
+  var ordinal: Int
+  var contentId: Int
 }

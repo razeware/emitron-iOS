@@ -27,21 +27,49 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
 
-struct ContentCategory: Codable, FetchableRecord, TableRecord {
-  var id: Int64?
-  var contentId: Int
-  var categoryId: Int
-}
-
-extension ContentCategory: MutablePersistableRecord {
-  mutating func didInsert(with rowID: Int64, for column: String?) {
-    id = rowID
+struct Domain: Codable, Equatable {
+  enum Level: Int, Codable {
+    case production, beta, blog, retired, archive
+    
+    init(domainLevel: DomainLevel) {
+      switch domainLevel {
+      case .archive:
+        self = .archive
+      case .beta:
+        self = .beta
+      case .blog:
+        self = .blog
+      case .production:
+        self = .production
+      case .retired:
+        self = .retired
+      default:
+        self = .retired
+      }
+    }
+    
+    init?(from string: String) {
+      switch string {
+      case "production":
+        self = .production
+      case "beta":
+        self = .beta
+      case "blog":
+        self = .blog
+      case "retired":
+        self = .retired
+      case "archived":
+        self = .archive
+      default:
+        return nil
+      }
+    }
   }
-}
-
-extension ContentCategory {
-  static let content = belongsTo(Content.self)
-  static let category = belongsTo(Category.self)
+  
+  var id: Int
+  var name: String
+  var slug: String
+  var description: String?
+  var level: Level
 }

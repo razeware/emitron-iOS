@@ -29,23 +29,11 @@
 import Foundation
 import GRDB
 
-struct Bookmark: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  var id: Int
-  var createdAt: Date
-  var contentId: Int
-}
+extension Bookmark: FetchableRecord, TableRecord, PersistableRecord { }
 
 extension Bookmark {
   static let content = belongsTo(Content.self)
   var content: QueryInterfaceRequest<Content> {
     request(for: Bookmark.content)
-  }
-}
-
-extension Bookmark {
-  init(bookmarkModel: BookmarkModel) {
-    self.id = bookmarkModel.id
-    self.createdAt = bookmarkModel.createdAt ?? Date()
-    self.contentId = bookmarkModel.contentId
   }
 }

@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,29 +28,8 @@
 
 import Foundation
 
-class GroupModel: NSObject {
-
-  // MARK: - Properties
-  let id: Int
-  let contentId: Int
-  let name: String
-  let desc: String
-  let ordinal: Int
-  let childContents: [ContentDetailsModel]
-  let content: ContentDetailsModel
-
-  // MARK: - Initializers
-  init?(_ jsonResource: JSONAPIResource,
-        metadata: [String: Any],
-        childContents: [ContentDetailsModel] = [],
-        content: ContentDetailsModel) {
-
-    self.id = jsonResource.id
-    self.contentId = content.id
-    self.name = jsonResource["name"] as? String ?? ""
-    self.desc = jsonResource["description"] as? String ?? ""
-    self.ordinal = jsonResource["ordinal"] as? Int ?? 0
-    self.childContents = childContents
-    self.content = content
-  }
+struct Bookmark: Codable {
+  var id: Int
+  var createdAt: Date
+  var contentId: Int
 }

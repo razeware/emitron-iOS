@@ -29,25 +29,7 @@
 import Foundation
 import GRDB
 
-struct Content: Codable, FetchableRecord, TableRecord, PersistableRecord {
-  var id: Int
-  var uri: String
-  var name: String
-  var descriptionHtml: String
-  var descriptionPlainText: String
-  var releasedAt: Date
-  var free: Bool
-  var professional: Bool
-  var difficulty: ContentDifficulty
-  var contentType: ContentType
-  var duration: Int
-  var videoIdentifier: Int?
-  var cardArtworkUrl: URL
-  var technologyTriple: String
-  var contributors: String
-  var groupId: Int?
-  var ordinal: Int
-}
+extension Content: FetchableRecord, TableRecord, PersistableRecord { }
 
 // MARK: Associations
 extension Content {
@@ -104,48 +86,5 @@ extension Content {
   
   var download: QueryInterfaceRequest<Download> {
     request(for: Content.download)
-  }
-}
-
-// MARK: - Interface with ContentDetailsModel
-extension Content {
-  init(contentDetailsModel: ContentDetailsModel) {
-    id = contentDetailsModel.id
-    uri = contentDetailsModel.uri
-    name = contentDetailsModel.name
-    descriptionHtml = contentDetailsModel.descriptionHtml
-    descriptionPlainText = contentDetailsModel.descriptionPlainText
-    releasedAt = contentDetailsModel.releasedAt
-    free = contentDetailsModel.free
-    professional = contentDetailsModel.professional
-    difficulty = contentDetailsModel.difficulty
-    contentType = contentDetailsModel.contentType
-    duration = contentDetailsModel.duration
-    videoIdentifier = contentDetailsModel.videoId
-    cardArtworkUrl = contentDetailsModel.cardArtworkUrl
-    technologyTriple = contentDetailsModel.technologyTripleString
-    contributors = contentDetailsModel.contributorString
-  }
-}
-
-extension Content: Equatable {
-  // We override this function because SQLite doesn't store dates to the same accuracy as Date
-  static func == (lhs: Content, rhs: Content) -> Bool {
-    lhs.id == rhs.id &&
-      lhs.uri == rhs.uri &&
-      lhs.name == rhs.name &&
-      lhs.descriptionHtml == rhs.descriptionHtml &&
-      lhs.descriptionPlainText == rhs.descriptionPlainText &&
-      lhs.releasedAt.equalEnough(to: rhs.releasedAt) &&
-      lhs.free == rhs.free &&
-      lhs.professional == rhs.professional &&
-      lhs.difficulty == rhs.difficulty &&
-      lhs.contentType == rhs.contentType &&
-      lhs.duration == rhs.duration &&
-      lhs.videoIdentifier == rhs.videoIdentifier &&
-      lhs.cardArtworkUrl == rhs.cardArtworkUrl &&
-      lhs.technologyTriple == rhs.technologyTriple &&
-      lhs.contributors == rhs.contributors &&
-      lhs.groupId == rhs.groupId
   }
 }
