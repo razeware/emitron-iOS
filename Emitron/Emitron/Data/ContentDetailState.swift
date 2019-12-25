@@ -28,10 +28,26 @@
 
 import Foundation
 
-struct Group: Equatable, Codable {
-  var id: Int
-  var name: String
-  var description: String?
-  var ordinal: Int
-  var contentId: Int
+struct CachedContentDetailState: Equatable {
+  let content: Content
+  let contentDomains: [ContentDomain]
+  let contentCategories: [ContentCategory]
+  let bookmark: Bookmark?
+  let parentContent: Content?
+  let progression: Progression?
+  let groups: [Group]
+  let childContents: [Content]
 }
+
+struct ContentDetailState: Equatable {
+  let content: Content
+  let domains: [Domain]
+  let categories: [Category]
+  let download: Download?
+  let bookmark: Bookmark?
+  let parentContent: Content?
+  let progression: Progression?
+  let groups: [Group]
+  let childContents: [Content]
+}
+

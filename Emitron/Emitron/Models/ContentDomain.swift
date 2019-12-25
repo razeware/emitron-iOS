@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct ContentDomain: Codable {
+struct ContentDomain: Equatable, Codable {
   var id: Int64?
   var contentId: Int
   var domainId: Int

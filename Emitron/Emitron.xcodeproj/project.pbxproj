@@ -36,6 +36,10 @@
 		223D77CA23B0C301005BE95D /* DomainsModelTest.json in Resources */ = {isa = PBXBuildFile; fileRef = B621DD4C22F5CDD400A1F27A /* DomainsModelTest.json */; };
 		223D77CD23B0D1EF005BE95D /* ContentCategory.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77CC23B0D1EF005BE95D /* ContentCategory.swift */; };
 		223D77CF23B0D224005BE95D /* ContentDomain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77CE23B0D224005BE95D /* ContentDomain.swift */; };
+		223D77D123B0DD3A005BE95D /* Repository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77D023B0DD3A005BE95D /* Repository.swift */; };
+		223D77D323B1A9F7005BE95D /* ContentSummaryState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77D223B1A9F7005BE95D /* ContentSummaryState.swift */; };
+		223D77D523B1AA02005BE95D /* ContentDetailState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77D423B1AA02005BE95D /* ContentDetailState.swift */; };
+		223D77D723B2168E005BE95D /* BookmarkRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77D623B2168E005BE95D /* BookmarkRepository.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
 		2253632B23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632A23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift */; };
@@ -232,6 +236,10 @@
 		223D77BA23B0C0EA005BE95D /* Progression.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Progression.swift; sourceTree = "<group>"; };
 		223D77CC23B0D1EF005BE95D /* ContentCategory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCategory.swift; sourceTree = "<group>"; };
 		223D77CE23B0D224005BE95D /* ContentDomain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDomain.swift; sourceTree = "<group>"; };
+		223D77D023B0DD3A005BE95D /* Repository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Repository.swift; sourceTree = "<group>"; };
+		223D77D223B1A9F7005BE95D /* ContentSummaryState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSummaryState.swift; sourceTree = "<group>"; };
+		223D77D423B1AA02005BE95D /* ContentDetailState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailState.swift; sourceTree = "<group>"; };
+		223D77D623B2168E005BE95D /* BookmarkRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkRepository.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632A23AB29600013F333 /* ContentDetailsModel+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentDetailsModel+ContentListDisplayable.swift"; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* DownloadListItem+ContentListItemDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadListItem+ContentListItemDisplayable.swift"; sourceTree = "<group>"; };
@@ -558,6 +566,10 @@
 			isa = PBXGroup;
 			children = (
 				22B8265F23AF5B3E00D4BA23 /* DataCache.swift */,
+				223D77D023B0DD3A005BE95D /* Repository.swift */,
+				223D77D223B1A9F7005BE95D /* ContentSummaryState.swift */,
+				223D77D423B1AA02005BE95D /* ContentDetailState.swift */,
+				223D77D623B2168E005BE95D /* BookmarkRepository.swift */,
 			);
 			path = Data;
 			sourceTree = "<group>";
@@ -1256,6 +1268,7 @@
 				B6D7DC5522C7B408006DD325 /* Font+Extensions.swift in Sources */,
 				B6D8EB1B22CBA3FE00DE29AF /* CategoriesService.swift in Sources */,
 				223D77B923B0C0DE005BE95D /* Permission.swift in Sources */,
+				223D77D523B1AA02005BE95D /* ContentDetailState.swift in Sources */,
 				B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */,
 				22B8266423AF5CF900D4BA23 /* BookmarkAdapter.swift in Sources */,
 				223D77B323B0C0C2005BE95D /* Content.swift in Sources */,
@@ -1341,7 +1354,9 @@
 				22B8265023AE2FB000D4BA23 /* AnyViewModel.swift in Sources */,
 				B6419BB522EF59F5003AC14E /* DomainsMC.swift in Sources */,
 				B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */,
+				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
+				223D77D323B1A9F7005BE95D /* ContentSummaryState.swift in Sources */,
 				B6FC15A622CB51C80078CEDB /* ToggleControlView.swift in Sources */,
 				B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */,
 				B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */,
@@ -1357,6 +1372,7 @@
 				22B8266623AF5D2100D4BA23 /* ContentAdapter.swift in Sources */,
 				8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */,
 				223D77B123B0C0B2005BE95D /* Category.swift in Sources */,
+				223D77D723B2168E005BE95D /* BookmarkRepository.swift in Sources */,
 				22B8265223AEF5CF00D4BA23 /* ViewModelFactory.swift in Sources */,
 				22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */,
 				B6FC15B522CB53730078CEDB /* ContentDetailView.swift in Sources */,

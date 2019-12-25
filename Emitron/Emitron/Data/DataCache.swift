@@ -27,12 +27,107 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 final class DataCache: ObservableObject {
-  @Published private (set) var content: [Content] = [Content]()
-  @Published private (set) var bookmarks: [Bookmark] = [Bookmark]()
-  @Published private (set) var progressions: [Progression] = [Progression]()
-  @Published private (set) var groups: [Group] = [Group]()
-  @Published private (set) var contentDomains: [ContentDomain] = [ContentDomain]()
-  @Published private (set) var contentCategories: [ContentCategory] = [ContentCategory]()
+  private var contents: [Int : Content] = [Int : Content]()
+  private var bookmarks: [Int : Bookmark] = [Int : Bookmark]()
+  private var progressions: [Int : Progression] = [Int : Progression]()
+  private var contentIndexedGroups: [Int : [Group]] = [Int : [Group]]()
+  private var groupIndexedGroups: [Int : Group] = [Int : Group]()
+  private var contentDomains: [Int : [ContentDomain]] = [Int : [ContentDomain]]()
+  private var contentCategories: [Int : [ContentCategory]] = [Int : [ContentCategory]]()
+  
+  private let objectDidChange: PassthroughSubject<Void, Never> = PassthroughSubject<Void, Never>()
+}
+
+
+extension DataCache {
+  func update(from cacheUpdate: DataCacheUpdate) {
+    cacheUpdate.bookmarks.forEach { self.bookmarks[$0.contentId] = $0 }
+    cacheUpdate.contents.forEach { self.contents[$0.id] = $0 }
+    cacheUpdate.progressions.forEach { self.progressions[$0.id] = $0 }
+    cacheUpdate.groups.forEach { self.groupIndexedGroups[$0.id] = $0 }
+    
+    let newContentCategories = Dictionary(grouping: cacheUpdate.contentCategories) { $0.contentId }
+    let newContentDomains = Dictionary(grouping: cacheUpdate.contentDomains) { $0.contentId }
+    let newContentIndexedGroups = Dictionary(grouping: cacheUpdate.groups) { $0.contentId }
+    
+    self.contentCategories.merge(newContentCategories)
+    self.contentDomains.merge(newContentDomains)
+    self.contentIndexedGroups.merge(newContentIndexedGroups)
+    
+    objectDidChange.send()
+  }
+}
+
+extension DataCache {
+  func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[CachedContentSummaryState], Never> {
+    self.objectDidChange.map { _ in
+      contentIds.compactMap { contentId in
+        self.cachedContentSummaryState(for: contentId)
+      }
+    }
+    .removeDuplicates()
+    .eraseToAnyPublisher()
+  }
+  
+  func contentDetailState(for contentId: Int) -> AnyPublisher<CachedContentDetailState, Never> {
+    self.objectDidChange.compactMap { _ in
+      self.cachedContentDetailState(for: contentId)
+    }
+    .removeDuplicates()
+    .eraseToAnyPublisher()
+  }
+}
+
+
+extension DataCache {
+  private func cachedContentSummaryState(for contentId: Int) -> CachedContentSummaryState? {
+    guard let content = self.contents[contentId],
+      let contentDomains = self.contentDomains[contentId]
+      else { return nil }
+    
+    let bookmark = self.bookmarks[contentId]
+    let progression = self.progressions[contentId]
+    
+    return CachedContentSummaryState(content: content,
+                                     contentDomains: contentDomains,
+                                     bookmark: bookmark,
+                                     parentContent: parentContent(for: content),
+                                     progression: progression)
+  }
+  
+  private func cachedContentDetailState(for contentId: Int) -> CachedContentDetailState? {
+    guard let content = self.contents[contentId],
+      let contentDomains = self.contentDomains[contentId],
+      let contentCategories = self.contentCategories[contentId]
+      else { return nil }
+    
+    let bookmark = self.bookmarks[contentId]
+    let progression = self.progressions[contentId]
+    let groups = self.contentIndexedGroups[contentId] ?? []
+    let groupIds = groups.map { $0.id }
+    let childContents = self.contents.values.filter { content in
+      if content.groupId == nil { return false }
+      return groupIds.contains(content.groupId!)
+    }
+    
+    return CachedContentDetailState(content: content,
+                                    contentDomains: contentDomains,
+                                    contentCategories: contentCategories,
+                                    bookmark: bookmark,
+                                    parentContent: parentContent(for: content),
+                                    progression: progression,
+                                    groups: groups,
+                                    childContents: childContents)
+  }
+  
+  private func parentContent(for content: Content) -> Content? {
+    guard let groupId = content.groupId,
+      let group = self.groupIndexedGroups[groupId]
+      else { return nil }
+    
+    return self.contents[group.contentId]
+  }
 }

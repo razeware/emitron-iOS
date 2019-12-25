@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct Category: Codable {
+struct Category: Equatable, Codable {
   var id: Int
   var name: String
   var uri: String

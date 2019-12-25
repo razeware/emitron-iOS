@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct Permission: Codable {
+struct Permission: Equatable, Codable {
   enum Tag: Int, Codable {
     case streamBeginner
     case streamPro

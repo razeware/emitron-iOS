@@ -29,13 +29,10 @@
 import Foundation
 
 protocol ContentPaginatable {
-  var contentScreen: ContentScreen { get }
   var currentPage: Int { get }
   var startingPage: Int { get }
   var defaultPageSize: Int { get }
-  var data: [ContentListDisplayable] { get }
   var state: DataState { get }
-  var isLoadingMore: Bool { get }
   var totalContentNum: Int { get }
   
   func loadMore()
@@ -51,8 +48,4 @@ extension ContentPaginatable {
   var defaultPageSize: Int {
     return 20
   }
-	
-	var isLoadingMore: Bool {
-		return state == .loading && currentPage > startingPage
-	}
 }

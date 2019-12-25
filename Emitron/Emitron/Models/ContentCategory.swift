@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct ContentCategory: Codable {
+struct ContentCategory: Equatable, Codable {
   var id: Int64?
   var contentId: Int
   var categoryId: Int

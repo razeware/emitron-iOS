@@ -39,6 +39,15 @@ extension PersistenceStore {
         .fetchAll(db)
     }
   }
+  
+  /// Get all the **Category** objects with the given keys
+  func categories(with categoryIds: [Int]) throws -> [Category] {
+    try db.read { db in
+      try Category
+        .order(Category.Columns.ordinal.asc)
+        .fetchAll(db, keys: categoryIds)
+    }
+  }
 }
 
 // MARK: - Data writing methods

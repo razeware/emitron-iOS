@@ -32,23 +32,6 @@ struct Domain: Codable, Equatable {
   enum Level: Int, Codable {
     case production, beta, blog, retired, archive
     
-    init(domainLevel: DomainLevel) {
-      switch domainLevel {
-      case .archive:
-        self = .archive
-      case .beta:
-        self = .beta
-      case .blog:
-        self = .blog
-      case .production:
-        self = .production
-      case .retired:
-        self = .retired
-      default:
-        self = .retired
-      }
-    }
-    
     init?(from string: String) {
       switch string {
       case "production":

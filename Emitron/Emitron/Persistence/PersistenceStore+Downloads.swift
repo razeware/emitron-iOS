@@ -81,6 +81,25 @@ extension PersistenceStore {
   }
 }
 
+extension PersistenceStore {
+  func downloads(for contentIds: [Int]) -> DatabasePublishers.Value<[Download]> {
+    ValueObservation.tracking { db -> [Download] in
+      let request = Download
+        .filter(contentIds.contains(Download.Columns.contentId))
+      return try Download.fetchAll(db, request)
+    }.publisher(in: db)
+  }
+  
+  func download(for contentId: Int) ->
+    DatabasePublishers.Value<Download?> {
+    ValueObservation.tracking { db -> Download? in
+      let request = Download
+        .filter(Download.Columns.contentId == contentId)
+      return try Download.fetchOne(db, request)
+    }.publisher(in: db)
+    }
+}
+
 // MARK: - Data reading methods for download queue management
 extension PersistenceStore {
   /// Data required for operation of the download queue

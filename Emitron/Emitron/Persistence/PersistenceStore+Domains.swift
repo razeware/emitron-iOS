@@ -39,6 +39,15 @@ extension PersistenceStore {
         .fetchAll(db)
     }
   }
+  
+  /// Get all the **Domain** objects with the given keys
+  func domains(with domainIds: [Int]) throws -> [Domain] {
+    try db.read { db in
+      try Domain
+        .order(Domain.Columns.level.asc)
+        .fetchAll(db, keys: domainIds)
+    }
+  }
 }
 
 // MARK: - Data writing methods

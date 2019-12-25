@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct Progression: Codable {
+struct Progression: Equatable, Codable {
   var id: Int
   var target: Int
   var progress: Int

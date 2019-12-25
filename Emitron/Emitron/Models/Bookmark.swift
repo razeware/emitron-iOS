@@ -28,7 +28,7 @@
 
 import Foundation
 
-struct Bookmark: Codable {
+struct Bookmark: Equatable, Codable {
   var id: Int
   var createdAt: Date
   var contentId: Int
