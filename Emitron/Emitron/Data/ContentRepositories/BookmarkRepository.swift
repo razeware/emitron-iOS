@@ -29,11 +29,24 @@
 import Foundation
 import Combine
 
-final class ViewModelFactory {
+
+final class BookmarkRepository: ContentRepository<BookmarksService, Bookmark> {
+  override var nonPaginationParameters: [Parameter] {
+    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+  }
   
+  override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Bookmark], DataCacheUpdate, Int), RWAPIError>) -> Void) {
+    return service.bookmarks(parameters: parameters) { result in
+      completion(result.map { (response) in
+        return (models: response.bookmarks, cacheUpdate: response.cacheUpdate, totalNumber: response.totalNumber)
+      })
+    }
+  }
   
-  func <#name#>(<#parameters#>) -> <#return type#> {
-    <#function body#>
+  override var extractContentIds: (([Bookmark]) -> [Int]) {
+    return { bookmarks in
+      return bookmarks.map { $0.contentId }
+    }
   }
 }
 

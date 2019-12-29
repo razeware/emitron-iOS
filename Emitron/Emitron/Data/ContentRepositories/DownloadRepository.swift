@@ -26,29 +26,4 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Combine
-
-/// A type-erased version of a ViewModel
-final class AnyViewModel<State, Input>: ObservableObject, ViewModel {
-  private let wrappedObjectWillChange: () -> AnyPublisher<Void, Never>
-  private let wrappedState: () -> State
-  private let wrappedTrigger: (Input) -> Void
-  
-  var objectWillChange: some Publisher {
-    wrappedObjectWillChange()
-  }
-  
-  var state: State {
-    wrappedState()
-  }
-  
-  func trigger(_ input: Input) {
-    wrappedTrigger(input)
-  }
-  
-  init<V: ViewModel>(_ viewModel: V) where V.State == State, V.Input == Input {
-    self.wrappedObjectWillChange = { viewModel.objectWillChange.eraseToAnyPublisher() }
-    self.wrappedState = { viewModel.state }
-    self.wrappedTrigger = viewModel.trigger
-  }
-}
+import Foundation

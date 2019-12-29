@@ -29,32 +29,40 @@
 import Foundation
 import Combine
 
-final class BookmarkRepository {
-  private let repository: Repository
-  private let service: BookmarksService
+class ContentRepository<ServiceType, ResponseModelType> {
+  let repository: Repository
+  let service: ServiceType
   
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var bookmarkedContent: [ContentSummaryState] = [ContentSummaryState]()
-
+  @Published private (set) var contents: [ContentSummaryState] = [ContentSummaryState]()
+  
   private var contentIds: [Int] = [Int]()
   private var contentSubscription: AnyCancellable?
   
-  // Parameters
-  private var defaultParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+  var nonPaginationParameters = [Parameter]() {
+    didSet {
+      reload()
+    }
   }
-    
-  init(repository: Repository, service: BookmarksService) {
+  
+  // Initialiser
+  init(repository: Repository, service: ServiceType) {
     self.repository = repository
     self.service = service
   }
+  
+  // Method to make service request
+  func makeRequest(parameters: [Parameter], completion: @escaping (_ response: Result<([ResponseModelType], DataCacheUpdate, Int), RWAPIError>) -> Void) {
+    fatalError("Override this in subclass please")
+  }
+  
+  private (set) var extractContentIds: ([ResponseModelType]) -> ([Int]) = { _ in fatalError("Please provide this in a subclass")}
 }
 
-
-extension BookmarkRepository: ContentPaginatable {
+extension ContentRepository: ContentPaginatable {
   func loadMore() {
     if state == .loading || state == .loadingAdditional {
       return
@@ -68,29 +76,27 @@ extension BookmarkRepository: ContentPaginatable {
     currentPage += 1
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
-    let allParams = defaultParameters + [pageParam]
+    let allParams = nonPaginationParameters + [pageParam]
     
-    
-    service.bookmarks(parameters: allParams) { [weak self] result in
-      guard let self = self else {
-        return
-      }
+    makeRequest(parameters: allParams) { [weak self] result in
+      guard let self = self else { return }
       
       switch result {
       case .failure(let error):
         self.currentPage -= 1
         self.state = .failed
         Failure
-          .fetch(from: "BookmarkRepository", reason: error.localizedDescription)
+          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let (bookmarks, cacheUpdate, totalNumber)):
-        self.contentIds += bookmarks.map { $0.contentId }
+      case .success(let (modelObjects, cacheUpdate, totalNumber)):
+        self.contentIds += self.extractContentIds(modelObjects)
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalNumber
         self.configureSubscription()
         self.state = .hasData
       }
+      
     }
   }
   
@@ -104,7 +110,7 @@ extension BookmarkRepository: ContentPaginatable {
     // Reset current page to 1
     currentPage = startingPage
     
-    service.bookmarks(parameters: defaultParameters) { [weak self] result in
+    makeRequest(parameters: nonPaginationParameters) {  [weak self] result in
       guard let self = self else {
         return
       }
@@ -113,10 +119,10 @@ extension BookmarkRepository: ContentPaginatable {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "BookmarkRepository", reason: error.localizedDescription)
+          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let (bookmarks, cacheUpdate, totalNumber)):
-        self.contentIds = bookmarks.map { $0.contentId }
+      case .success(let (modelObjects, cacheUpdate, totalNumber)):
+        self.contentIds = self.extractContentIds(modelObjects)
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalNumber
@@ -126,13 +132,13 @@ extension BookmarkRepository: ContentPaginatable {
     }
   }
   
+  
   private func configureSubscription() {
     self.contentSubscription = self.repository.contentSummaryState(for: self.contentIds).sink(receiveCompletion: { (error) in
       // TODO Logging
       print("Unable to receive content summary update: \(error)")
     }, receiveValue: { (contentSummaryStates) in
-      self.bookmarkedContent = contentSummaryStates
+      self.contents = contentSummaryStates
     })
   }
 }
-

@@ -27,9 +27,27 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
-class DownloadViewModel: ViewModel {
+final class InProgressRepository: ContentRepository<ProgressionsService, Progression> {
+  override var nonPaginationParameters: [Parameter] {
+    let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    let completionStatus = CompletionStatus.completed
+    let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
+    return filters + [completionFilter]
+  }
   
+  override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Progression], DataCacheUpdate, Int), RWAPIError>) -> Void) {
+    return service.progressions(parameters: parameters) { result in
+      completion(result.map { (response) in
+        return (models: response.progressions, cacheUpdate: response.cacheUpdate, totalNumber: response.totalNumber)
+      })
+    }
+  }
   
-  
+  override var extractContentIds: (([Progression]) -> [Int]) {
+    return { progressions in
+      return progressions.map { $0.contentId }
+    }
+  }
 }
