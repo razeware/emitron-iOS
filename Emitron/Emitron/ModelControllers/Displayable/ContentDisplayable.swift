@@ -57,8 +57,6 @@ protocol ContentListDisplayable {
   var parentName: String? { get }
   var contentType: ContentType { get }
   var cardArtworkUrl: URL { get }
-  
-  func requestDetail(callback: (ContentDetailDisplayable) -> ())
 }
 
 protocol ContentDetailDisplayable: ContentListDisplayable {

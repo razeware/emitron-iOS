@@ -123,6 +123,10 @@ extension DataCache {
                                     childContents: childContents)
   }
   
+  func cachedContentPersistableState(for contentId: Int) -> ContentPersistableState? {
+    cachedContentDetailState(for: contentId)
+  }
+  
   private func parentContent(for content: Content) -> Content? {
     guard let groupId = content.groupId,
       let group = self.groupIndexedGroups[groupId]

@@ -50,13 +50,13 @@ struct MyTutorialView: View {
   
   // Initialization
   @State var state: MyTutorialsState
-  @EnvironmentObject var domainsMC: DomainsMC
+  @EnvironmentObject var domainsMC: DomainModelController
   @EnvironmentObject var emitron: AppState
   
   @EnvironmentObject var bookmarkContentMC: BookmarkContentsVM
   @EnvironmentObject var inProgressContentVM: InProgressContentVM
   @EnvironmentObject var completedContentVM: CompletedContentVM
-  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var userMC: SessionController
 
   @State private var settingsPresented: Bool = false
   @State private var reloadProgression: Bool = true

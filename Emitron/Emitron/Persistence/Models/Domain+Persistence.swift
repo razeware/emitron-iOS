@@ -33,11 +33,12 @@ extension Domain: FetchableRecord, TableRecord, PersistableRecord { }
 
 extension Domain {
   enum Columns {
-    static let id = Column(CodingKeys.id)
-    static let name = Column(CodingKeys.name)
-    static let slug = Column(CodingKeys.slug)
-    static let description = Column(CodingKeys.description)
-    static let level = Column(CodingKeys.level)
+    static let id = Column("id")
+    static let name = Column("name")
+    static let slug = Column("slug")
+    static let description = Column("description")
+    static let level = Column("level")
+    static let ordinal = Column("ordinal")
   }
 }
 

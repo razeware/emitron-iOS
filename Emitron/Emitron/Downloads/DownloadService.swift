@@ -39,10 +39,10 @@ final class DownloadService {
   private let downloadProcessor = DownloadProcessor()
   private var processingSubscriptions = Set<AnyCancellable>()
   
-  private var downloadQuality: AttachmentKind {
+  private var downloadQuality: Attachment.Kind {
     guard let selectedQuality = UserDefaults.standard.downloadQuality,
-      let kind = AttachmentKind(rawValue: selectedQuality) else {
-        return AttachmentKind.hdVideoFile
+      let kind = Attachment.Kind(from: selectedQuality) else {
+        return Attachment.Kind.hdVideoFile
     }
     return kind
   }
@@ -124,18 +124,24 @@ final class DownloadService {
     processingSubscriptions = []
   }
   
-  func requestDownload(content: ContentDetailsModel) {
+  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) {
     guard videosService != nil else {
       // TODO: Log
       print("User not allowed to request downloads")
       return
     }
     
+    guard let contentPersistableState = contentLookup(contentId) else {
+      // TODO: Log
+      print("Unable to locate content to persist")
+      return
+    }
+    
     do {
       // Let's ensure that all the relevant content is stored locally
-      let content = try persistenceStore.persistContentGraph(for: content)
+      try persistenceStore.persistContentGraph(for: contentPersistableState, contentLookup: contentLookup)
       // Now create the appropriate download objects.
-      try persistenceStore.createDownloads(for: content)
+      try persistenceStore.createDownloads(for: contentPersistableState.content)
     } catch {
       // TODO: Log
       print("There was a problem requesting the download: \(error)")

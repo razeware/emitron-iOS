@@ -26,28 +26,48 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-struct CachedContentDetailState: Equatable {
-  let content: Content
-  let contentDomains: [ContentDomain]
-  let contentCategories: [ContentCategory]
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
+struct LoginView: View {
+  @EnvironmentObject var sessionController: SessionController
+  
+  var body: some View {
+    VStack {
+      
+      Image("logo")
+        .padding([.top], 88)
+      
+      Spacer()
+      
+      Image("welcomeArtwork1")
+        .padding([.bottom], 50)
+      
+      Text("Watch anytime,\nanywhere")
+        .font(.uiTitle1)
+        .foregroundColor(.titleText)
+        .padding([.bottom], 15)
+        .multilineTextAlignment(.center)
+      
+      Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+      
+      Spacer()
+      
+      MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
+        self.sessionController.login()
+      }
+      .padding([.leading, .trailing], 18)
+      .padding([.bottom], 38)
+    }
+    .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea([.all])
+  }
 }
 
-struct ContentDetailState: Decodable, Equatable {
-  let content: Content
-  let domains: [Domain]
-  let categories: [Category]
-  let download: Download?
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
-}
-
+//struct LoginView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    LoginView()
+//  }
+//}

@@ -47,12 +47,12 @@ public class Guardpost {
   private let baseUrl: String
   private let urlScheme: String
   private let ssoSecret: String
-  private var _currentUser: UserModel?
+  private var _currentUser: User?
   private var authSession: ASWebAuthenticationSession?
   private let persistenceStore: PersistenceStore
   public weak var presentationContextDelegate: ASWebAuthenticationPresentationContextProviding?
 
-  public var currentUser: UserModel? {
+  public var currentUser: User? {
     if _currentUser == .none {
       _currentUser = persistenceStore.userFromKeychain()
     }
@@ -70,7 +70,7 @@ public class Guardpost {
     self.persistenceStore = persistenceStore
   }
 
-  public func login(callback: @escaping (Result<UserModel, LoginError>) -> Void) {
+  public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
     let guardpostLogin = "\(baseUrl)/v2/sso/login"
     let returnUrl = "\(urlScheme)sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
@@ -78,14 +78,14 @@ public class Guardpost {
                                          callbackUrl: returnUrl)
 
     guard let loginUrl = ssoRequest.url else {
-      let result: Result<UserModel, LoginError> = .failure(.unableToCreateLoginUrl)
+      let result: Result<User, LoginError> = .failure(.unableToCreateLoginUrl)
       return asyncResponse(callback: callback, result: result)
     }
 
     authSession = ASWebAuthenticationSession(url: loginUrl,
                                              callbackURLScheme: urlScheme) { url, error in
 
-      var result: Result<UserModel, LoginError>
+      var result: Result<User, LoginError>
 
       guard let url = url else {
         result = .failure(LoginError.errorResponseFromGuardpost(error))
@@ -110,7 +110,7 @@ public class Guardpost {
       self.persistenceStore.persistUserToKeychain(user: user)
       self._currentUser = user
 
-      result = Result<UserModel, LoginError>.success(user)
+      result = Result<User, LoginError>.success(user)
       return self.asyncResponse(callback: callback, result: result)
     }
 
@@ -130,12 +130,12 @@ public class Guardpost {
     _currentUser = .none
   }
   
-  public func updateUser(with user: UserModel?) {
+  public func updateUser(with user: User?) {
     _currentUser = user
   }
 
-  private func asyncResponse(callback: @escaping (Result<UserModel, LoginError>) -> Void,
-                             result: Result<UserModel, LoginError>) {
+  private func asyncResponse(callback: @escaping (Result<User, LoginError>) -> Void,
+                             result: Result<User, LoginError>) {
     DispatchQueue.global(qos: .userInitiated).async {
       callback(result)
     }

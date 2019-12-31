@@ -30,8 +30,9 @@ import SwiftUI
 
 struct MainView: View {
   
-  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var appState: AppState
+  @EnvironmentObject var dataManager: DataManager
   
   var body: some View {
     return contentView
@@ -39,28 +40,26 @@ struct MainView: View {
   }
   
   private var contentView: AnyView {
-    guard let user = userMC.user else {
-      return loginView
+    guard let user = sessionController.user else {
+      return AnyView(LoginView())
     }
     
-    switch userMC.state {
+    switch sessionController.state {
     case .failed:
-      return loginView
-    case .initial, .loading:
-      userMC.fetchPermissions()
+      return AnyView(LoginView())
+    case .initial, .loading, .loadingAdditional:
+      sessionController.fetchPermissions()
       return tabBarView()
     case .hasData:
-      if let permissions = user.permissions, permissions.contains(where: { $0.tag != .none } ) {
+      if user.hasPermissionToUseApp {
         return tabBarView()
       } else {
-        return logoutView
+        return AnyView(LogoutView())
       }
     }
   }
   
   private func tabBarView() -> AnyView {
-    guard let dataManager = DataManager.current else { fatalError("Data manager is nil in MainView") }
-    
     let libraryContentsVM = dataManager.libraryContentsVM
     let downloadsMC = dataManager.downloadsMC
     let filters = dataManager.filters
@@ -87,74 +86,6 @@ struct MainView: View {
                  myTutorialsView: AnyView(myTutorialsView),
                  downloadsView: AnyView(downloadsView))
         .environmentObject(AppState())
-    )
-  }
-  
-  private var logoutView: AnyView {
-    AnyView(VStack {
-      
-      Image("logo")
-        .padding([.top], 88)
-      
-      Spacer()
-      
-      Text("No access")
-        .font(.uiTitle1)
-        .foregroundColor(.titleText)
-        .padding([.bottom], 15)
-        .multilineTextAlignment(.center)
-      
-      Text("The raywenderlich.com mobile app is only available to subscribers. ")
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 55)
-      
-      Spacer()
-      
-      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-        self.userMC.logout()
-      }
-      .padding([.leading, .trailing], 18)
-      .padding([.bottom], 38)
-    }
-    .background(Color.backgroundColor)
-    .edgesIgnoringSafeArea([.all])
-    )
-  }
-  
-  private var loginView: AnyView {
-    AnyView(VStack {
-      
-      Image("logo")
-        .padding([.top], 88)
-      
-      Spacer()
-      
-      Image("welcomeArtwork1")
-        .padding([.bottom], 50)
-      
-      Text("Watch anytime,\nanywhere")
-        .font(.uiTitle1)
-        .foregroundColor(.titleText)
-        .padding([.bottom], 15)
-        .multilineTextAlignment(.center)
-      
-      Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-      
-      Spacer()
-      
-      MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
-        self.userMC.login()
-      }
-      .padding([.leading, .trailing], 18)
-      .padding([.bottom], 38)
-    }
-    .background(Color.backgroundColor)
-    .edgesIgnoringSafeArea([.all])
     )
   }
 }

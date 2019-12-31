@@ -26,28 +26,46 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-struct CachedContentDetailState: Equatable {
-  let content: Content
-  let contentDomains: [ContentDomain]
-  let contentCategories: [ContentCategory]
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
+struct LogoutView: View {
+  @EnvironmentObject var sessionController: SessionController
+  
+  var body: some View {
+    VStack {
+      
+      Image("logo")
+        .padding([.top], 88)
+      
+      Spacer()
+      
+      Text("No access")
+        .font(.uiTitle1)
+        .foregroundColor(.titleText)
+        .padding([.bottom], 15)
+        .multilineTextAlignment(.center)
+      
+      Text("The raywenderlich.com app is only available to subscribers. ")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 55)
+      
+      Spacer()
+      
+      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+        self.sessionController.logout()
+      }
+      .padding([.leading, .trailing], 18)
+      .padding([.bottom], 38)
+    }
+    .background(Color.backgroundColor)
+    .edgesIgnoringSafeArea([.all])
+  }
 }
 
-struct ContentDetailState: Decodable, Equatable {
-  let content: Content
-  let domains: [Domain]
-  let categories: [Category]
-  let download: Download?
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
-}
-
+//struct LogoutView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    LogoutView()
+//  }
+//}

@@ -35,7 +35,8 @@ struct DomainAdapter: EntityAdapter {
     guard let name = resource.attributes["name"] as? String,
       let slug = resource.attributes["slug"] as? String,
       let domainLevelString = resource.attributes["level"] as? String,
-      let level = Domain.Level(from: domainLevelString)
+      let level = Domain.Level(from: domainLevelString),
+      let ordinal = resource.attributes["ordinal"] as? Int
     else {
       throw EntityAdapterError.invalidOrMissingAttributes
     }
@@ -44,7 +45,8 @@ struct DomainAdapter: EntityAdapter {
                   name: name,
                   slug: slug,
                   description: resource.attributes["description"] as? String,
-                  level: level)
+                  level: level,
+                  ordinal: ordinal)
     
   }
 }

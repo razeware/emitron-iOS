@@ -36,8 +36,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   private (set) var persistenceStore: PersistenceStore!
   private (set) var guardpost: Guardpost?
-  var dataManager: DataManager?
-  private (set) var userModelController: UserMC!
+  private (set) var dataManager: DataManager!
+  private (set) var sessionController: SessionController!
   private (set) var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
@@ -55,23 +55,22 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
     
-    // TODO: When you're logged out datamanager will be nil in this current setup
     self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
                                urlScheme: "com.razeware.emitron://",
                                ssoSecret: Configuration.ssoSecret,
                                persistenceStore: persistenceStore)
     
     guard let guardpost = guardpost else { return true }
-    userModelController = UserMC(guardpost: guardpost)
+    sessionController = SessionController(guardpost: guardpost)
     downloadService = DownloadService(
       persistenceStore: persistenceStore,
-      userModelController: userModelController
+      userModelController: sessionController
     )
-    
-    guard let user = guardpost.currentUser else { return true }
-    self.dataManager = DataManager(user: user,
-                                   persistenceStore: persistenceStore,
-                                   downloadService: downloadService)
+    dataManager = DataManager(
+      sessionController: sessionController,
+      persistenceStore: persistenceStore,
+      downloadService: downloadService
+    )
     
     return true
   }
@@ -127,9 +126,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 }
 
 
-// MARK:- Making the UserModelController a hacky singleton
-extension UserMC {
-  static var current: UserMC {
-    (UIApplication.shared.delegate as! AppDelegate).userModelController
+// MARK:- Making some delightful global-access points. Classy.
+extension SessionController {
+  static var current: SessionController {
+    (UIApplication.shared.delegate as! AppDelegate).sessionController
+  }
+}
+
+extension DataManager {
+  static var current: DataManager {
+    (UIApplication.shared.delegate as! AppDelegate).dataManager
   }
 }

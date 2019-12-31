@@ -36,7 +36,7 @@ struct CachedContentSummaryState: Equatable {
   let progression: Progression?
 }
 
-struct ContentSummaryState: Equatable {
+struct ContentSummaryState: Decodable, Equatable {
   let content: Content
   let domains: [Domain]
   let download: Download?

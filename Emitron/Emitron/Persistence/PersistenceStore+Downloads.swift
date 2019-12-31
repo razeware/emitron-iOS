@@ -32,19 +32,9 @@ import GRDBCombine
 
 // MARK: - Data reading methods for display
 extension PersistenceStore {
-  /// The data required to populate the download list
-  struct DownloadListItem: Decodable, FetchableRecord {
-    let content: Content
-    let domains: [Domain]
-    let download: Download
-    let bookmark: Bookmark?
-    let parentContent: Content?
-    let progression: Progression?
-  }
-  
   /// List of all downloads
-  func downloadList() -> DatabasePublishers.Value<[DownloadListItem]> {
-    ValueObservation.tracking { db -> [DownloadListItem] in
+  func downloadList() -> DatabasePublishers.Value<[ContentSummaryState]> {
+    ValueObservation.tracking { db -> [ContentSummaryState] in
       let request = Content
         .including(required: Content.download)
         .including(all: Content.domains)
@@ -52,31 +42,28 @@ extension PersistenceStore {
         .including(optional: Content.parentContent)
         .including(optional: Content.progression)
         
-      return try DownloadListItem.fetchAll(db, request)
+      return try ContentSummaryState.fetchAll(db, request)
     }.publisher(in: db)
   }
 }
 
 extension PersistenceStore {
-  /// The data required to render a downloaded item of content
-  struct DownloadDetailItem: Decodable, FetchableRecord {
-    let content: Content
-    let domains: [Domain]
-    let download: Download
-    let childContents: [Content]?
-  }
-  
-  
   /// Request details of a specific download
   /// - Parameter contentId: The id of the item of content to show
-  func downloadDetail(contentId: Int) -> DatabasePublishers.Value<DownloadDetailItem?> {
-    ValueObservation.tracking { db -> DownloadDetailItem? in
+  func downloadDetail(contentId: Int) -> DatabasePublishers.Value<ContentDetailState?> {
+    ValueObservation.tracking { db -> ContentDetailState? in
       let request = Content
         .filter(key: contentId)
         .including(required: Content.download)
         .including(all: Content.domains)
+        .including(all: Content.categories)
+        .including(optional: Content.bookmark)
+        .including(optional: Content.parentContent)
+        .including(optional: Content.progression)
+        .including(all: Content.groups)
         .including(all: Content.childContents)
-      return try DownloadDetailItem.fetchOne(db, request)
+        
+      return try ContentDetailState.fetchOne(db, request)
     }.publisher(in: db)
   }
 }
@@ -190,10 +177,10 @@ extension PersistenceStore {
   }
   
   /// Save the entire graph of models to supprt this ContentDeailsModel
-  /// - Parameter contentDetailsModel: The model to persist. Including children & parents.
-  func persistContentGraph(for contentDetailsModel: ContentDetailsModel) throws -> Content {
+  /// - Parameter contentPersistableState: The model to persist—from the DataCache.
+  func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) throws {
     try db.write { db in
-      try persistContentItem(for: contentDetailsModel, inDatabase: db, withParent: true, withChildren: true)
+      try persistContentItem(for: contentPersistableState, inDatabase: db, withChildren: true, withParent: true, contentLookup: contentLookup)
     }
   }
   
@@ -225,129 +212,46 @@ extension PersistenceStore {
 extension PersistenceStore {
   /// Save a content item, optionally including it's parent and children
   /// - Parameters:
-  ///   - contentDetailsModel: The ContentDetailsModel to persist
+  ///   - contentDetailState: The ContentDetailState to persist
   ///   - db: A `Database` object to save it
-  ///   - groupId: Optionally, assign this new `Content` to a particular `Group`
-  ///   - withParent: Should it recurively attempt to persist the parent content?
-  ///   - withChildren: Should it recursively attempt to persiste the child contents?
-  private func persistContentItem(for contentDetailsModel: ContentDetailsModel, inDatabase db: Database, groupId: Int? = nil, withParent: Bool = false, withChildren: Bool = false) throws -> Content {
+  private func persistContentItem(for contentPersistableState: ContentPersistableState, inDatabase db: Database, withChildren: Bool = false, withParent: Bool = false, contentLookup: ContentLookup? = nil) throws {
     // 1. Generate and save this content item
-    var content = Content(contentDetailsModel: contentDetailsModel)
-    content.groupId = groupId
-    try content.save(db)
+    try contentPersistableState.content.save(db)
     
-    // 2. Parent item
-    if let parentItem = contentDetailsModel.parentContent, withParent {
-      // Parents can't have parents, but we do want all children
-      let _ = try persistContentItem(for: parentItem, inDatabase: db, withParent: false, withChildren: true)
-      // Skip groups here—let's make parents responsible for creating them
-    }
+    // 2. Groups
+    try contentPersistableState.groups.forEach { try $0.save(db) }
     
     // 3. Children
-    if withChildren {
-      try contentDetailsModel.groups.forEach { groupModel in
-        // 4. Create this group
-        var group = Group(groupModel: groupModel)
-        group.contentId = content.id
-        try group.save(db)
-        
-        // Now the child contents
-        try groupModel.childContents.forEach { childItem in
-          // We're the parent, and children can't have children
-          let _ = try persistContentItem(for: childItem, inDatabase: db, groupId: group.id, withParent: false, withChildren: false)
+    if withChildren, let contentLookup = contentLookup {
+      try contentPersistableState.childContents.forEach { content in
+        if let childPersistable = contentLookup(content.id) {
+          try persistContentItem(for: childPersistable, inDatabase: db)
         }
       }
     }
     
+    // 4. Parent
+    if withParent,
+      let parentContent = contentPersistableState.parentContent,
+      let contentLookup = contentLookup,
+      let parentPersistable = contentLookup(parentContent.id) {
+      try persistContentItem(for: parentPersistable, inDatabase: db, withChildren: true, contentLookup: contentLookup)
+    }
+    
     // 5. Domains
-    try syncDomains(for: contentDetailsModel, with: content, inDatabase: db)
+    for var contentDomain in contentPersistableState.contentDomains {
+      try contentDomain.save(db)
+    }
     
     // 6. Categories
-    try syncCategories(for: contentDetailsModel, with: content, inDatabase: db)
+    for var contentCategory in contentPersistableState.contentCategories {
+      try contentCategory.save(db)
+    }
     
     // 7. Bookmark
-    if let bookmarkModel = contentDetailsModel.bookmark {
-      var bookmark = Bookmark(bookmarkModel: bookmarkModel)
-      bookmark.contentId = content.id
-      try bookmark.save(db)
-    }
+    try contentPersistableState.bookmark?.save(db)
     
     // 8. Progression
-    if let progressionModel = contentDetailsModel.progression {
-      var progression = Progression(progressionModel: progressionModel)
-      progression.contentId = content.id
-      try progression.save(db)
-    }
-    
-    // 9. And relax.
-    return content
-  }
-  
-  /// Sync domains for a CDM. Ensure the Domain exists, and then check the ContentDomain objects
-  /// - Parameters:
-  ///   - contentDetailsModel: The CDM whose domains you want to synchronise
-  ///   - content: The Content item to sync the domains to
-  ///   - db: A `Database` object to save the Domain and ContentDomain
-  private func syncDomains(for contentDetailsModel: ContentDetailsModel, with content: Content, inDatabase db: Database) throws {
-    // Get existing ContentDomains
-    let contentDomains = try content.contentDomains.fetchAll(db)
-    // Get some ids
-    let cdmDomainIds = Set(contentDetailsModel.domains.map { $0.id })
-    let cdIds = Set(contentDomains.map { $0.domainId })
-    // Diff them with the domains from the CDM
-    let domainIdsToAdd = cdmDomainIds.subtracting(cdIds)
-    let domainIdsToRemove = cdIds.subtracting(cdmDomainIds)
-    
-    // Handle removal
-    try contentDomains
-      .filter { domainIdsToRemove.contains($0.domainId) }
-      .forEach { try $0.delete(db) }
-    
-    // Handle addition
-    let domainModelsToAdd = contentDetailsModel.domains.filter { domainIdsToAdd.contains($0.id) }
-    try domainModelsToAdd.forEach { domainModel in
-      // Check that the domain exists
-      let domain = Domain(domainModel: domainModel)
-      if try !domain.exists(db) {
-        try domain.insert(db)
-      }
-      // Create the ContentDomain as appropriate
-      var contentDomain = ContentDomain(contentId: content.id, domainId: domain.id)
-      try contentDomain.insert(db)
-    }
-  }
-  
-  /// Sync categories for a CDM. Ensure the Category exists, and then check the ContentCategory objects
-  /// - Parameters:
-  ///   - contentDetailsModel: The CDM whose categories you want to synchronise
-  ///   - content: The Content item to sync the categories to
-  ///   - db: A `Database` object to save the Category and ContentCategory
-  private func syncCategories(for contentDetailsModel: ContentDetailsModel, with content: Content, inDatabase db: Database) throws {
-    // Get existing ContentCategories
-    let contentCategories = try content.contentCategories.fetchAll(db)
-    // Get some ids
-    let cdmCategoryIds = Set(contentDetailsModel.categories.map { $0.id })
-    let ccIds = Set(contentCategories.map { $0.categoryId })
-    // Diff them with the categories from the CDM
-    let categoryIdsToAdd = cdmCategoryIds.subtracting(ccIds)
-    let categoryIdsToRemove = ccIds.subtracting(cdmCategoryIds)
-    
-    // Handle removal
-    try contentCategories
-      .filter { categoryIdsToRemove.contains($0.categoryId) }
-      .forEach { try $0.delete(db) }
-    
-    // Handle addition
-    let categoryModelsToAdd = contentDetailsModel.categories.filter { categoryIdsToAdd.contains($0.id) }
-    try categoryModelsToAdd.forEach { categoryModel in
-      // Check that the category exists
-      let category = Category(categoryModel: categoryModel)
-      if try !category.exists(db) {
-        try category.insert(db)
-      }
-      // Create ContentCategory as appropriate
-      var contentCategory = ContentCategory(contentId: content.id, categoryId: category.id)
-      try contentCategory.insert(db)
-    }
+    try contentPersistableState.progression?.save(db)
   }
 }

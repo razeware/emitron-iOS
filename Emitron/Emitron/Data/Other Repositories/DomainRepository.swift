@@ -27,102 +27,73 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
 import Combine
 
-class DomainsMC: ObservableObject, Refreshable {
+class DomainRepository: Refreshable {
+  let repository: Repository
+  let service: DomainsService
   
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainsMC.self))"
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainRepository.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
-  // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
+  @Published private (set) var state: DataState = .initial
+  @Published private (set) var domains: [Domain] = [Domain]()
   
-  private let client: RWAPI
-  private let user: UserModel
-  private let service: DomainsService
-  private(set) var data: [DomainModel] = []
-  private let persistenceStore: PersistenceStore
-  
-  // MARK: - Initializers
-  init(user: UserModel,
-       persistenceStore: PersistenceStore) {
-    self.user = user
-    self.client = RWAPI(authToken: user.token)
-    self.service = DomainsService(client: self.client)
-    self.persistenceStore = persistenceStore
-        
-    loadFromPersistentStore()
+  init(repository: Repository, service: DomainsService) {
+    self.repository = repository
+    self.service = service
+    populate()
   }
   
   func populate() {
-    // TODO: Add a timing refresh function
-    
     loadFromPersistentStore()
     
     if shouldRefresh {
-      fetchDomains()
+      fetchDomainsAndUpdatePersistentStore()
       saveOrReplaceRefreshableUpdateDate()
     }
   }
-}
-
-// MARK: - Private
-private extension DomainsMC {
   
-  func loadFromPersistentStore() {
-    
+  private func loadFromPersistentStore() {
     do {
-      data = try persistenceStore.domainList().map(DomainModel.init)
+      self.domains = try repository.domainList()
       state = .hasData
     } catch {
+      self.state = .failed
       Failure
-        .loadFromPersistentStore(from: "DomainsMC", reason: "Failed to load entities from core data.")
+        .fetch(from: "DomainRepository", reason: error.localizedDescription)
         .log(additionalParams: nil)
-      data = []
-      state = .failed
     }
   }
   
-  func saveToPersistentStore() {
-    let domains = data.map(Domain.init)
-    
+  private func saveToPersistentStore() {
     do {
-      try persistenceStore.sync(domains: domains)
+      try self.repository.syncDomainList(self.domains)
     } catch {
       Failure
-        .saveToPersistentStore(from: "DomainsMC", reason: "Failed to update domain list in persistent store.")
+        .fetch(from: "DomainRepository", reason: error.localizedDescription)
         .log(additionalParams: nil)
     }
-    
-    saveOrReplaceRefreshableUpdateDate()
   }
   
-  func fetchDomains() {
-    if case(.loading) = state {
+  private func fetchDomainsAndUpdatePersistentStore() {
+    if state == .loading || state == .loadingAdditional {
       return
     }
-
+    
     state = .loading
     
     service.allDomains { [weak self] result in
-      guard let self = self else {
-        return
-      }
+      guard let self = self else { return }
       
       switch result {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "DomainsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
+        .fetch(from: "DomainRepository", reason: error.localizedDescription)
+        .log(additionalParams: nil)
       case .success(let domains):
-        self.data = domains
+        self.domains = domains
         self.state = .hasData
         self.saveToPersistentStore()
       }

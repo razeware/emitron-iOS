@@ -31,10 +31,15 @@ import Combine
 
 final class InProgressRepository: ContentRepository<ProgressionsService, Progression> {
   override var nonPaginationParameters: [Parameter] {
-    let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
-    let completionStatus = CompletionStatus.inProgress
-    let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
-    return filters + [completionFilter]
+    get {
+      let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+      let completionStatus = CompletionStatus.inProgress
+      let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
+      return filters + [completionFilter]
+    }
+    set {
+      fatalError("Not allowed to use setter on this variable")
+    }
   }
   
   override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Progression], DataCacheUpdate, Int), RWAPIError>) -> Void) {

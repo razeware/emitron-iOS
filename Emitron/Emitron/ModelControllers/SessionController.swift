@@ -28,7 +28,6 @@
 
 import AuthenticationServices
 import Foundation
-import SwiftUI
 import Combine
 import Network
 
@@ -38,15 +37,15 @@ import Network
 // find it again.
 protocol UserModelController {
   var objectWillChange: PassthroughSubject<Void, Never> { get }
-  var user: UserModel? { get }
+  var user: User? { get }
   var client: RWAPI { get }
 }
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
+class SessionController: NSObject, UserModelController, ObservableObject, Refreshable {
   
   // MARK: Refreshable
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: UserMC.self))"
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
@@ -62,7 +61,7 @@ class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
   
   private(set) var client: RWAPI
   private let guardpost: Guardpost
-  private(set) var user: UserModel? {
+  private(set) var user: User? {
     didSet {
       self.client = RWAPI(authToken: self.user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)
@@ -105,13 +104,13 @@ class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
         case .failure(let error):
           self.state = .failed
           Failure
-            .login(from: "UserMC", reason: error.localizedDescription)
+            .login(from: "SessionController", reason: error.localizedDescription)
             .log(additionalParams: nil)
         case .success(let user):
           self.user = user
           
           Event
-            .login(from: "UserMC")
+            .login(from: "SessionController")
             .log(additionalParams: nil)
 
           self.fetchPermissions()
@@ -137,7 +136,7 @@ class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
       switch result {
       case .failure(let error):
         Failure
-        .fetch(from: "UserMC_Permissions", reason: error.localizedDescription)
+        .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
         .log(additionalParams: nil)
         
         self.state = .failed
@@ -168,7 +167,7 @@ class UserMC: NSObject, UserModelController, ObservableObject, Refreshable {
 }
   
 // MARK: - ASWebAuthenticationPresentationContextProviding
-extension UserMC: ASWebAuthenticationPresentationContextProviding {
+extension SessionController: ASWebAuthenticationPresentationContextProviding {
   
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
     return UIApplication.shared.windows.first!

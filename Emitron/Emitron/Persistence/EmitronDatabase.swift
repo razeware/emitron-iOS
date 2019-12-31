@@ -107,6 +107,7 @@ struct EmitronDatabase {
         t.column("slug", .text).notNull()
         t.column("description", .text)
         t.column("level", .integer).notNull()
+        t.column("ordinal", .integer).notNull()
       }
       
       try db.create(table: "contentDomain") { t in

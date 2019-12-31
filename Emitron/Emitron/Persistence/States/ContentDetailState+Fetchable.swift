@@ -27,27 +27,6 @@
 /// THE SOFTWARE.
 
 import Foundation
+import GRDB
 
-struct CachedContentDetailState: Equatable {
-  let content: Content
-  let contentDomains: [ContentDomain]
-  let contentCategories: [ContentCategory]
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
-}
-
-struct ContentDetailState: Decodable, Equatable {
-  let content: Content
-  let domains: [Domain]
-  let categories: [Category]
-  let download: Download?
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-  let groups: [Group]
-  let childContents: [Content]
-}
-
+extension ContentDetailState: FetchableRecord { }

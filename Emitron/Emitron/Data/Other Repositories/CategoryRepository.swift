@@ -27,99 +27,73 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
 import Combine
 
-class CategoriesMC: ObservableObject, Refreshable {
+class CategoryRepository: Refreshable {
+  let repository: Repository
+  let service: CategoriesService
   
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoriesMC.self))"
+  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoryRepository.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
-  // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
+  @Published private (set) var state: DataState = .initial
+  @Published private (set) var categories: [Category] = [Category]()
   
-  private let client: RWAPI
-  private let user: UserModel
-  private let service: CategoriesService
-  private(set) var data: [CategoryModel] = []
-  private let persistenceStore: PersistenceStore
-  
-  // MARK: - Initializers
-  init(user: UserModel,
-       persistenceStore: PersistenceStore) {
-    self.user = user
-    self.client = RWAPI(authToken: user.token)
-    self.service = CategoriesService(client: self.client)
-    self.persistenceStore = persistenceStore    
+  init(repository: Repository, service: CategoriesService) {
+    self.repository = repository
+    self.service = service
+    populate()
   }
   
   func populate() {
-    // TODO: Add a timing refresh function
-    
     loadFromPersistentStore()
     
     if shouldRefresh {
-      fetchCategories()
+      fetchCategoriesAndUpdatePersistentStore()
       saveOrReplaceRefreshableUpdateDate()
     }
   }
-}
-
-// MARK: - Private
-private extension CategoriesMC {
   
-  func loadFromPersistentStore() {
-    
+  private func loadFromPersistentStore() {
     do {
-      data = try persistenceStore.categoryList().map(CategoryModel.init)
+      self.categories = try repository.categoryList()
       state = .hasData
     } catch {
+      self.state = .failed
       Failure
-        .loadFromPersistentStore(from: "CategoriesMC", reason: "Failed to load entities from persistent store.")
+        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
         .log(additionalParams: nil)
-      data = []
-      state = .failed
     }
   }
   
-  func saveToPersistentStore() {
-    let categories = data.map(Category.init)
-    
+  private func saveToPersistentStore() {
     do {
-      try persistenceStore.sync(categories: categories)
+      try self.repository.syncCategoryList(self.categories)
     } catch {
       Failure
-        .deleteFromPersistentStore(from: "CategoriesMC", reason: "Unable to sync category list to persistence store.")
+        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
         .log(additionalParams: nil)
     }
-    
-    saveOrReplaceRefreshableUpdateDate()
   }
   
-  func fetchCategories() {
-    if case(.loading) = state {
+  private func fetchCategoriesAndUpdatePersistentStore() {
+    if state == .loading || state == .loadingAdditional {
       return
     }
-
-    state = .loading    
+    
+    state = .loading
+    
     service.allCategories { [weak self] result in
-      guard let self = self else {
-        return
-      }
+      guard let self = self else { return }
       
       switch result {
       case .failure(let error):
         self.state = .failed
         Failure
-          .fetch(from: "CategoriesMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
+        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
+        .log(additionalParams: nil)
       case .success(let categories):
-        self.data = categories
+        self.categories = categories
         self.state = .hasData
         self.saveToPersistentStore()
       }

@@ -32,7 +32,12 @@ import Combine
 
 final class BookmarkRepository: ContentRepository<BookmarksService, Bookmark> {
   override var nonPaginationParameters: [Parameter] {
-    return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    get {
+      return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+    }
+    set {
+      fatalError("Not allowed to use setter on this variable")
+    }
   }
   
   override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Bookmark], DataCacheUpdate, Int), RWAPIError>) -> Void) {

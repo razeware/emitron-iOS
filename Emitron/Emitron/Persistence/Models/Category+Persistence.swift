@@ -33,10 +33,10 @@ extension Category: FetchableRecord, TableRecord, PersistableRecord { }
 
 extension Category {
   enum Columns {
-    static let id = Column(CodingKeys.id)
-    static let name = Column(CodingKeys.name)
-    static let uri = Column(CodingKeys.uri)
-    static let ordinal = Column(CodingKeys.ordinal)
+    static let id = Column("id")
+    static let name = Column("name")
+    static let uri = Column("uri")
+    static let ordinal = Column("ordinal")
   }
 }
 

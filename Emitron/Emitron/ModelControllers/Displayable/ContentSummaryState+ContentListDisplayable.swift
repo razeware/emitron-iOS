@@ -28,7 +28,7 @@
 
 import Foundation
 
-extension PersistenceStore.DownloadListItem: ContentListDisplayable {
+extension ContentSummaryState: ContentListDisplayable {
   // MARK:- Proxied from content
   var id: Int {
     content.id
@@ -95,6 +95,8 @@ extension PersistenceStore.DownloadListItem: ContentListDisplayable {
   }
   
   var downloadProgress: DownloadProgressDisplayable {
+    guard let download = download else { return .downloadable }
+
     switch download.state {
     case .cancelled, .error, .failed:
       return .notDownloadable

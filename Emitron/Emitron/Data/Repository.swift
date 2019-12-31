@@ -78,6 +78,26 @@ extension Repository {
     }.eraseToAnyPublisher()
   }
   
+  func contentPersistableState(for contentId: Int) -> ContentPersistableState? {
+    dataCache.cachedContentPersistableState(for: contentId)
+  }
+  
+  func domainList() throws -> [Domain] {
+    try persistenceStore.domainList()
+  }
+  
+  func syncDomainList(_ domains: [Domain]) throws {
+    try persistenceStore.sync(domains: domains)
+  }
+  
+  func categoryList() throws -> [Category] {
+    try persistenceStore.categoryList()
+  }
+  
+  func syncCategoryList(_ categories: [Category]) throws {
+    try persistenceStore.sync(categories: categories)
+  }
+  
   private func contentSummaryState(cached: CachedContentSummaryState, downloads: [Download]) -> ContentSummaryState {
     ContentSummaryState(
       content: cached.content,

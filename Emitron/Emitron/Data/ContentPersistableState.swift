@@ -27,22 +27,6 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
-import Combine
 
-class ProgressionsMC: ObservableObject {
-  
-  // MARK: - Properties
-  
-  private let client: RWAPI
-  private let progressionsService: ProgressionsService
-  private let dataManager: DataManager?
-    
-  // MARK: - Initializers
-  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
-    self.client = RWAPI(authToken: user.token)
-    self.progressionsService = ProgressionsService(client: self.client)
-    self.dataManager = dataManager
-  }
-}
-
+typealias ContentPersistableState = CachedContentDetailState
+typealias ContentLookup = ((_ contentId: Int) -> (ContentPersistableState?))

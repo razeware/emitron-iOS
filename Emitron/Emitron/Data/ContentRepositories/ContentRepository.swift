@@ -52,6 +52,7 @@ class ContentRepository<ServiceType, ResponseModelType> {
   init(repository: Repository, service: ServiceType) {
     self.repository = repository
     self.service = service
+    configureSubscription()
   }
   
   // Method to make service request

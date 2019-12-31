@@ -48,6 +48,15 @@ struct Domain: Codable, Equatable {
         return nil
       }
     }
+    
+    var userFacing: Bool {
+      switch self {
+      case .production, .beta:
+        return true
+      case .blog, .retired, .archive:
+        return false
+      }
+    }
   }
   
   var id: Int
@@ -55,4 +64,5 @@ struct Domain: Codable, Equatable {
   var slug: String
   var description: String?
   var level: Level
+  var ordinal: Int
 }

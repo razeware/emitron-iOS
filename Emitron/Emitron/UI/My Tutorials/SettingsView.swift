@@ -77,7 +77,7 @@ struct SettingsView: View {
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var userMC: SessionController
   private var showLogoutButton: Bool
   
   init(showLogoutButton: Bool) {
