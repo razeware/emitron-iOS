@@ -36,7 +36,7 @@ struct DownloadsView: View {
   
   @State var showActivityIndicator = false
   @State var contentScreen: ContentScreen
-  @ObservedObject var downloadsMC: DownloadsMC
+  @ObservedObject var downloadRepository: DownloadRepository
 
   var body: some View {
     ZStack(alignment: .center) {

@@ -60,32 +60,28 @@ struct MainView: View {
   }
   
   private func tabBarView() -> AnyView {
-    let libraryContentsVM = dataManager.libraryContentsVM
-    let downloadsMC = dataManager.downloadsMC
-    let filters = dataManager.filters
-
-    let libraryView = LibraryView(downloadsMC: downloadsMC)
-      .environmentObject(libraryContentsVM)
-      .environmentObject(filters)
+    let libraryView = LibraryView(
+      filters: dataManager.filters,
+      libraryRepository: dataManager.libraryRepository
+    )
     
-    let domainsMC = dataManager.domainsMC
-    let bookmarkContentsMC = dataManager.bookmarkContentMC
-    let inProgressContentVM = dataManager.inProgressContentVM
-    let completedContentVM = dataManager.completedContentVM
+    let myTutorialsView = MyTutorialView(
+      state: .inProgress,
+      inProgressRepository: dataManager.inProgressRepository,
+      completedRepository: dataManager.completedRepository,
+      bookmarkRepository: dataManager.bookmarkRepository,
+      domainRepository: dataManager.domainRepository
+    )
     
-    let myTutorialsView = MyTutorialView(state: .inProgress)
-      .environmentObject(domainsMC)
-      .environmentObject(inProgressContentVM)
-      .environmentObject(completedContentVM)
-      .environmentObject(bookmarkContentsMC)
-    
-    let downloadsView = DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
+    let downloadsView = DownloadsView(
+      contentScreen: .downloads,
+      downloadRepository: dataManager.downloadRepository
+    )
     
     return AnyView(
       TabNavView(libraryView: AnyView(libraryView),
                  myTutorialsView: AnyView(myTutorialsView),
                  downloadsView: AnyView(downloadsView))
-        .environmentObject(AppState())
     )
   }
 }

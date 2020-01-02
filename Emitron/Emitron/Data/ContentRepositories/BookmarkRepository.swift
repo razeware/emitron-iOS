@@ -27,10 +27,8 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-
-final class BookmarkRepository: ContentRepository<BookmarksService, Bookmark> {
+final class BookmarkRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
     get {
       return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
@@ -39,19 +37,4 @@ final class BookmarkRepository: ContentRepository<BookmarksService, Bookmark> {
       fatalError("Not allowed to use setter on this variable")
     }
   }
-  
-  override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Bookmark], DataCacheUpdate, Int), RWAPIError>) -> Void) {
-    return service.bookmarks(parameters: parameters) { result in
-      completion(result.map { (response) in
-        return (models: response.bookmarks, cacheUpdate: response.cacheUpdate, totalNumber: response.totalNumber)
-      })
-    }
-  }
-  
-  override var extractContentIds: (([Bookmark]) -> [Int]) {
-    return { bookmarks in
-      return bookmarks.map { $0.contentId }
-    }
-  }
 }
-

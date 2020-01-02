@@ -123,7 +123,9 @@ final class DownloadService {
     processingSubscriptions.forEach { $0.cancel() }
     processingSubscriptions = []
   }
-  
+}
+
+extension DownloadService: DownloadAction {
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) {
     guard videosService != nil else {
       // TODO: Log
@@ -146,7 +148,11 @@ final class DownloadService {
       // TODO: Log
       print("There was a problem requesting the download: \(error)")
     }
-    
+  }
+  
+  func deleteDownload(contentId: Int) {
+    // TODO
+    fatalError("This should have been implemented")
   }
 }
 

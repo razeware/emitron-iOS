@@ -29,7 +29,7 @@
 import Foundation
 import Combine
 
-class DomainRepository: Refreshable {
+class DomainRepository: ObservableObject, Refreshable {
   let repository: Repository
   let service: DomainsService
   

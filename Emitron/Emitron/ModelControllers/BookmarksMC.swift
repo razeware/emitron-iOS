@@ -38,13 +38,13 @@ class BookmarksMC {
   private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
+  init(user: User, dataManager: DataManager? = DataManager.current) {
     self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
     self.dataManager = dataManager
   }
   
-  func toggleBookmark(for content: ContentDetailsModel) {
+  func toggleBookmark(for content: Content) {
 
     if !content.bookmarked {
       bookmarksService.makeBookmark(for: content.id) { result in

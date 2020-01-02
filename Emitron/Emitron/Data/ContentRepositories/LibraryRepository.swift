@@ -29,7 +29,7 @@
 import Foundation
 import Combine
 
-final class LibraryRepository: ContentRepository<ContentsService, Content> {
+final class LibraryRepository: ContentRepository {
   var filters: Filters = Filters() {
     didSet {
       nonPaginationParameters = filters.appliedParameters
@@ -37,19 +37,5 @@ final class LibraryRepository: ContentRepository<ContentsService, Content> {
   }
   var currentAppliedFilters: [Filter] {
     filters.applied
-  }
-  
-  override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Content], DataCacheUpdate, Int), RWAPIError>) -> Void) {
-    return service.allContents(parameters: parameters) { result in
-      completion(result.map { (response) in
-        return (models: response.contents, cacheUpdate: response.cacheUpdate, totalNumber: response.totalNumber)
-      })
-    }
-  }
-  
-  override var extractContentIds: (([Content]) -> [Int]) {
-    return { progressions in
-      return progressions.map { $0.id }
-    }
   }
 }

@@ -27,13 +27,16 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
-protocol ContentPaginatable {
+protocol ContentPaginatable: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
   var currentPage: Int { get }
   var startingPage: Int { get }
   var defaultPageSize: Int { get }
   var state: DataState { get }
   var totalContentNum: Int { get }
+  
+  var contents: [ContentSummaryState] { get }
   
   func loadMore()
   func reload()

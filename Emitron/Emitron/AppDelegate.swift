@@ -138,3 +138,9 @@ extension DataManager {
     (UIApplication.shared.delegate as! AppDelegate).dataManager
   }
 }
+
+extension DownloadService {
+  static var current: DownloadService {
+    (UIApplication.shared.delegate as! AppDelegate).downloadService
+  }
+}

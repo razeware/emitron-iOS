@@ -36,27 +36,26 @@ final class DataManager: ObservableObject {
   let persistenceStore: PersistenceStore
   let downloadService: DownloadService
   let sessionController: SessionController
-  private (set) var sessionControllerSubscription: AnyCancellable
+  private (set) var sessionControllerSubscription: AnyCancellable!
 
   // Persisted information
-  private (set) var domainRepository: DomainRepository
-  private (set) var categoryRepository: CategoryRepository
+  private (set) var domainRepository: DomainRepository!
+  private (set) var categoryRepository: CategoryRepository!
   var filters: Filters = Filters()
   
   // Cached data
   let dataCache = DataCache()
-  private (set) var repository: Repository
+  private (set) var repository: Repository!
   
   // Content repositories
-  private (set) var bookmarkRepository: BookmarkRepository
-  private (set) var completedRepository: CompletedRepository
-  private (set) var inProgressRepository: InProgressRepository
-  private (set) var libraryRepository: LibraryRepository
+  private (set) var bookmarkRepository: BookmarkRepository!
+  private (set) var completedRepository: CompletedRepository!
+  private (set) var inProgressRepository: InProgressRepository!
+  private (set) var libraryRepository: LibraryRepository!
+  private (set) var downloadRepository: DownloadRepository!
   
   // Services
-  private(set) var progressionsMC: ProgressionsMC?
-  private(set) var bookmarksMC: BookmarksMC?
-  let downloadsMC: DownloadsMC
+  // TODO: Writeable progressions, downloads and bookmarks
 
   private var domainsSubscriber: AnyCancellable?
   private var categoriesSubsciber: AnyCancellable?
@@ -70,11 +69,12 @@ final class DataManager: ObservableObject {
     self.persistenceStore = persistenceStore
     self.sessionController = sessionController
     
-    rebuildRepositories()
     sessionControllerSubscription = sessionController.objectWillChange.sink { [weak self] in
       guard let self = self else { return }
       self.rebuildRepositories()
     }
+    
+    rebuildRepositories()
   }
   
   private func rebuildRepositories() {
@@ -84,14 +84,17 @@ final class DataManager: ObservableObject {
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
     let bookmarksService = BookmarksService(client: sessionController.client)
-    bookmarkRepository = BookmarkRepository(repository: repository, service: bookmarksService)
+    bookmarkRepository = BookmarkRepository(repository: repository, serviceAdapter: bookmarksService)
     
     let progressionsService = ProgressionsService(client: sessionController.client)
-    completedRepository = CompletedRepository(repository: repository, service: progressionsService)
-    inProgressRepository = InProgressRepository(repository: repository, service: progressionsService)
+    completedRepository = CompletedRepository(repository: repository, serviceAdapter: progressionsService)
+    inProgressRepository = InProgressRepository(repository: repository, serviceAdapter: progressionsService)
     
     let libraryService = ContentsService(client: sessionController.client)
-    libraryRepository = LibraryRepository(repository: repository, service: libraryService)
+    libraryRepository = LibraryRepository(repository: repository, serviceAdapter: libraryService)
+    
+    // TODO: Fix this
+    downloadRepository = DownloadRepository()
     
     let domainsService = DomainsService(client: sessionController.client)
     domainRepository = DomainRepository(repository: repository, service: domainsService)

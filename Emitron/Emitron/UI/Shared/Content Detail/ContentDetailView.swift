@@ -39,7 +39,7 @@ struct ContentDetailView: View {
   @ObservedObject var contentDetailsVM: ContentDetailsVM
   @ObservedObject var downloadsMC: DownloadsMC
   var content: ContentListDisplayable
-  var user: UserModel
+  var user: User
   @State var imageData: Data?
   
   private var canStreamPro: Bool {
@@ -51,7 +51,7 @@ struct ContentDetailView: View {
   
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentListDisplayable, user: UserModel, downloadsMC: DownloadsMC) {
+  init(content: ContentListDisplayable, user: User, downloadsMC: DownloadsMC) {
     self.content = content
     self.user = user
     self.contentDetailsVM = ContentDetailsVM(guardpost: Guardpost.current, partialContentDetail: content)

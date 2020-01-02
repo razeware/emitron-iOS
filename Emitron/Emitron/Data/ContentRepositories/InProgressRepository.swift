@@ -27,9 +27,8 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-final class InProgressRepository: ContentRepository<ProgressionsService, Progression> {
+final class InProgressRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
     get {
       let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
@@ -39,20 +38,6 @@ final class InProgressRepository: ContentRepository<ProgressionsService, Progres
     }
     set {
       fatalError("Not allowed to use setter on this variable")
-    }
-  }
-  
-  override func makeRequest(parameters: [Parameter], completion: @escaping (Result<([Progression], DataCacheUpdate, Int), RWAPIError>) -> Void) {
-    return service.progressions(parameters: parameters) { result in
-      completion(result.map { (response) in
-        return (models: response.progressions, cacheUpdate: response.cacheUpdate, totalNumber: response.totalNumber)
-      })
-    }
-  }
-  
-  override var extractContentIds: (([Progression]) -> [Int]) {
-    return { progressions in
-      return progressions.map { $0.contentId }
     }
   }
 }

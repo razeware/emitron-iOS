@@ -27,3 +27,9 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
+
+final class DownloadRepository: ObservableObject {
+  
+}
+

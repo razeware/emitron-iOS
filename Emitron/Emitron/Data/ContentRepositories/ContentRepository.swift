@@ -29,9 +29,9 @@
 import Foundation
 import Combine
 
-class ContentRepository<ServiceType, ResponseModelType> {
+class ContentRepository: ObservableObject {
   let repository: Repository
-  let service: ServiceType
+  let serviceAdapter: ContentServiceAdapter
   
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
@@ -49,18 +49,11 @@ class ContentRepository<ServiceType, ResponseModelType> {
   }
   
   // Initialiser
-  init(repository: Repository, service: ServiceType) {
+  init(repository: Repository, serviceAdapter: ContentServiceAdapter) {
     self.repository = repository
-    self.service = service
+    self.serviceAdapter = serviceAdapter
     configureSubscription()
   }
-  
-  // Method to make service request
-  func makeRequest(parameters: [Parameter], completion: @escaping (_ response: Result<([ResponseModelType], DataCacheUpdate, Int), RWAPIError>) -> Void) {
-    fatalError("Override this in subclass please")
-  }
-  
-  private (set) var extractContentIds: ([ResponseModelType]) -> ([Int]) = { _ in fatalError("Please provide this in a subclass")}
 }
 
 extension ContentRepository: ContentPaginatable {
@@ -79,7 +72,7 @@ extension ContentRepository: ContentPaginatable {
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     let allParams = nonPaginationParameters + [pageParam]
     
-    makeRequest(parameters: allParams) { [weak self] result in
+    serviceAdapter.findContent(parameters: allParams) { [weak self] result in
       guard let self = self else { return }
       
       switch result {
@@ -89,11 +82,11 @@ extension ContentRepository: ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let (modelObjects, cacheUpdate, totalNumber)):
-        self.contentIds += self.extractContentIds(modelObjects)
+      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
+        self.contentIds += newContentIds
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
-        self.totalContentNum = totalNumber
+        self.totalContentNum = totalResultCount
         self.configureSubscription()
         self.state = .hasData
       }
@@ -111,7 +104,7 @@ extension ContentRepository: ContentPaginatable {
     // Reset current page to 1
     currentPage = startingPage
     
-    makeRequest(parameters: nonPaginationParameters) {  [weak self] result in
+    serviceAdapter.findContent(parameters: nonPaginationParameters) {  [weak self] result in
       guard let self = self else {
         return
       }
@@ -122,11 +115,11 @@ extension ContentRepository: ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
-      case .success(let (modelObjects, cacheUpdate, totalNumber)):
-        self.contentIds = self.extractContentIds(modelObjects)
+      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
+        self.contentIds = newContentIds
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
-        self.totalContentNum = totalNumber
+        self.totalContentNum = totalResultCount
         self.configureSubscription()
         self.state = .hasData
       }
@@ -141,5 +134,12 @@ extension ContentRepository: ContentPaginatable {
     }, receiveValue: { (contentSummaryStates) in
       self.contents = contentSummaryStates
     })
+  }
+}
+
+extension ContentRepository {
+  func contentDetail(for contentId: Int) -> AnyPublisher<ContentDetailState, Error> {
+    repository.contentDetailState(for: contentId)
+    ///AARRRGGHHHHH
   }
 }

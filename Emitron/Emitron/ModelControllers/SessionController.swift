@@ -158,8 +158,6 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   func logout() {
     guardpost.logout()
     user = nil
-    let appDelegate = UIApplication.shared.delegate as! AppDelegate
-    appDelegate.dataManager = nil
     UserDefaults.standard.deleteAllFilters()
     // TODO: Should all the stores user defaults be removed at this point, aka the Settings?
     objectWillChange.send()

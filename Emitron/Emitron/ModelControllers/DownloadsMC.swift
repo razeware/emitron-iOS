@@ -54,7 +54,7 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   
 
   // MARK: - Private Properties
-  private let user: UserModel
+  private let user: User
   private let videosMC: VideosMC
   
   private(set) var objectWillChange = PassthroughSubject<Void, Never>()
@@ -69,7 +69,7 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
   var isEpisodeOnly: Bool = false
   var callback: (Bool) -> () = { _ in }
   var collectionProgress: CGFloat = 0
-  var downloadedModel: DownloadModel?
+  var downloadedModel: Download?
 
   let contentScreen: ContentScreen = .downloads
   
@@ -88,33 +88,33 @@ class DownloadsMC: NSObject, ObservableObject, ContentPaginatable {
     return data.count
   }
   
-  private(set) var downloadData: [DownloadModel] = []
+  private(set) var downloadData: [Download] = []
 
   // MARK: - Initializers
-  init(user: UserModel, downloadService: DownloadService) {
+  init(user: User, downloadService: DownloadService) {
     self.user = user
     self.videosMC = VideosMC(user: self.user)
     self.downloadService = downloadService
 		super.init()
   }
   
-  func deleteDownload(with: ContentDetailsModel) {
+  func deleteDownload(with: Content) {
     // TODO
   }
   
-  func cancelDownload(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+  func cancelDownload(with: Content, isEpisodeOnly: Bool) {
     // TODO
   }
   
-  func saveDownload(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+  func saveDownload(with: Content, isEpisodeOnly: Bool) {
     // TODO
   }
   
-  func saveCollection(with: ContentDetailsModel, isEpisodeOnly: Bool) {
+  func saveCollection(with: Content, isEpisodeOnly: Bool) {
     // TODO
   }
   
-  func deleteCollectionContents(withParent parent: ContentDetailsModel, showCallback: Bool) {
+  func deleteCollectionContents(withParent parent: Content, showCallback: Bool) {
     // TODO
   }
 }

@@ -42,7 +42,7 @@ struct DataCacheUpdate {
   let relationships: [EntityRelationship]
   
   init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = [JSONEntityRelationships]()) throws {
-    self.relationships = DataCacheUpdate.relationships(from: resources, with: jsonEntityRelationships)
+    let relationships = DataCacheUpdate.relationships(from: resources, with: jsonEntityRelationships)
     contents = try resources
       .filter({ $0.type == "contents" })
       .map { try ContentAdapter.process(resource: $0, relationships: relationships) }
@@ -63,6 +63,7 @@ struct DataCacheUpdate {
       .map { try CategoryAdapter.process(resource: $0, relationships: relationships) }
     contentCategories = try ContentCategoryAdapter.process(relationships: relationships)
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
+    self.relationships = relationships
   }
   
   private static func relationships(from resources: [JSONAPIResource], with additionalRelationships: [JSONEntityRelationships]) -> [EntityRelationship] {

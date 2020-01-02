@@ -32,7 +32,7 @@ import UIKit
 import Network
 
 struct CardView: SwiftUI.View {
-  private var model: ContentListDisplayable
+  private let model: ContentListDisplayable
   private let animation: Animation = .easeIn
   
   init(model: ContentListDisplayable) {

@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct DomainsRequest: Request {
-  typealias Response = [DomainModel]
+  typealias Response = [Domain]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }

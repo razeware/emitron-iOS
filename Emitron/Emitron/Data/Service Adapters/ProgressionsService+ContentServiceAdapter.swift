@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,27 +28,16 @@
 
 import Foundation
 
-class ContentsMC {
-  private let client: RWAPI
-  private let contentsService: ContentsService
-  
-  // MARK: - Initializers
-  init(user: User) {
-    self.client = RWAPI(authToken: user.token)
-    self.contentsService = ContentsService(client: self.client)
-  }
-  
-  func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
-    contentsService.contentDetails(for: id) { result in
-      switch result {
-      case .failure(let error):
-        completion?(nil)
-        Failure
-          .fetch(from: "ContentsMC", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let contentDetails):
-        completion?(contentDetails)
-      }
+extension ProgressionsService: ContentServiceAdapter {
+  func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
+    progressions(parameters: parameters) { (result) in
+       completion(result.map { (response) in
+        return (
+          contentIds: response.progressions.map { $0.contentId },
+          cacheUpdate: response.cacheUpdate,
+          totalResultCount: response.totalNumber
+        )
+      })
     }
   }
 }
