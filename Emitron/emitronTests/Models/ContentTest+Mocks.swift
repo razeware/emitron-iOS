@@ -27,34 +27,35 @@
 /// THE SOFTWARE.
 
 import Foundation
-@testable import Emitron
 import SwiftyJSON
+@testable import Emitron
 
-extension AttachmentModelTest {
+extension ContentTest {
   enum Mocks {
-    static var downloads: [AttachmentModel] {
-      loadMockFrom(filename: "Attachment_Downloads")
+    static var collection: (Content, DataCacheUpdate) {
+      loadMockFrom(filename: "ContentDetails_Collection")
     }
     
-    static var stream: AttachmentModel {
-      loadMockFrom(filename: "Attachment_Stream").first!
+    static var screencast: (Content, DataCacheUpdate) {
+      loadMockFrom(filename: "ContentDetails_Screencast")
     }
     
-    private static func loadMockFrom(filename: String) -> [AttachmentModel] {
+    private static func loadMockFrom(filename: String) -> (Content, DataCacheUpdate) {
       do {
         
-        let bundle = Bundle(for: ContentDetailsModelTest.self)
+        let bundle = Bundle(for: ContentTest.self)
         let fileURL = bundle.url(forResource: filename, withExtension: "json")
         let data = try Data(contentsOf: fileURL!)
         let json = try JSON(data: data)
         
         let document = JSONAPIDocument(json)
-        return document.data.map { resource in
-          AttachmentModel(resource, metadata: resource.meta)!
-        }
+        let resource = document.data.first!
+        let content = try ContentAdapter.process(resource: resource)
+        let cacheUpdate = try DataCacheUpdate(resources: document.included)
+        
+        return (content, cacheUpdate)
       } catch {
-        let resource = JSONAPIResource()
-        return [AttachmentModel(resource, metadata: nil)!]
+        fatalError("Unable to load mock Content from JSON: \(error)")
       }
     }
   }

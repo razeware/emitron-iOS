@@ -29,8 +29,12 @@
 import Foundation
 @testable import Emitron
 
-extension PermissionsModel {
-  static var downloadVideos: PermissionsModel {
-    PermissionsModel(permission: .download)
+extension Permission {
+  static var downloadVideos: Permission {
+    Permission(id: 431,
+               name: "Download Videos",
+               tag: .download,
+               createdAt: Date(),
+               updatedAt: Date())
   }
 }

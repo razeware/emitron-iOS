@@ -67,9 +67,37 @@ class DownloadQueueManagerTest: XCTestCase {
     }
   }
   
+  func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    
+    var parentContent: Content? = nil
+    if let groupId = content.groupId {
+      // There must be parent content
+      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupId }) {
+        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentId }
+      }
+    }
+    
+    let groups = cacheUpdate.groups.filter { $0.contentId == content.id }
+    let groupIds = groups.map { $0.id }
+    let childContent = cacheUpdate.contents.filter { groupIds.contains($0.groupId ?? -1) }
+    
+    return ContentPersistableState(
+      content: content,
+      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentId == content.id }),
+      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentId == content.id }),
+      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentId == content.id }),
+      parentContent: parentContent,
+      progression: cacheUpdate.progressions.first(where: { $0.contentId == content.id }),
+      groups: groups,
+      childContents: childContent
+    )
+  }
+  
   func sampleDownload() -> Download {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
+    let screencast = ContentTest.Mocks.screencast
+    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+      self.persistableState(for: screencast.0, with: screencast.1)
+    }
     return getAllDownloads().first!
   }
   

@@ -52,7 +52,7 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
   func testPersistenceToKeychain() {
     let store = PersistenceStore.current
     
-    guard let user = UserModel(dictionary: userDictionary) else {
+    guard let user = User(dictionary: userDictionary) else {
       return XCTFail()
     }
     
@@ -70,7 +70,7 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     
     XCTAssertNil(store.userFromKeychain())
     
-    guard let user = UserModel(dictionary: userDictionary) else {
+    guard let user = User(dictionary: userDictionary) else {
       return XCTFail()
     }
     

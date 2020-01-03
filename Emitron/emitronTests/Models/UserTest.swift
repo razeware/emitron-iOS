@@ -29,7 +29,7 @@
 import XCTest
 @testable import Emitron
 
-class UserModelTest: XCTestCase {
+class UserTest: XCTestCase {
 
   override func setUp() {
     // Put setup code here. This method is called before the invocation of each test method in the class.
@@ -49,7 +49,7 @@ class UserModelTest: XCTestCase {
   ]
   
   func testUserCorrectlyPopulatesWithDictionary() {
-    guard let user = UserModel(dictionary: userDictionary) else {
+    guard let user = User(dictionary: userDictionary) else {
       XCTFail("User should be correctly populated")
       return
     }
@@ -65,7 +65,7 @@ class UserModelTest: XCTestCase {
   func testUserDictionaryHasRequiredFields() {
     var invalidDictionary = userDictionary
     invalidDictionary.removeValue(forKey: "external_id")
-    let user = UserModel(dictionary: invalidDictionary)
+    let user = User(dictionary: invalidDictionary)
     
     XCTAssertNil(user)
   }
@@ -73,7 +73,7 @@ class UserModelTest: XCTestCase {
   func testAdditionalEntriesInTheDictionaryAreIgnored() {
     var overSpecifiedDictionary = userDictionary
     overSpecifiedDictionary["extra_field"] = "some-guff"
-    let user = UserModel(dictionary: overSpecifiedDictionary)
+    let user = User(dictionary: overSpecifiedDictionary)
     
     XCTAssertNotNil(user)
   }
@@ -81,13 +81,13 @@ class UserModelTest: XCTestCase {
   func testAvatarURLMustBeAURL() {
     var invalidDictionary = userDictionary
     invalidDictionary["avatar_url"] = "not a url"
-    let user = UserModel(dictionary: invalidDictionary)
+    let user = User(dictionary: invalidDictionary)
     
     XCTAssertNil(user)
   }
   
   func testNoPermissionsWorksAsExpected() {
-    let user = UserModel.noPermissions
+    let user = User.noPermissions
     
     XCTAssert(!user.canDownload)
     XCTAssert(!user.canStream)
@@ -96,7 +96,7 @@ class UserModelTest: XCTestCase {
   
   
   func testWithDownloadsMockWorksAsExpected() {
-    let user = UserModel.withDownloads
+    let user = User.withDownloads
     
     XCTAssert(user.canDownload)
     XCTAssert(!user.canStream)

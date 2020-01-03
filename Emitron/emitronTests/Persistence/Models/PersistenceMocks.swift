@@ -42,9 +42,13 @@ struct PersistenceMocks {
             difficulty: .intermediate,
             contentType: .collection,
             duration: 1234,
-            cardArtworkUrl: URL(string: "https://example.com/card_artwork.png"),
+            videoIdentifier: nil,
+            cardArtworkUrl: URL(string: "https://example.com/card_artwork.png")!,
             technologyTriple: "Some Tech",
-            contributors: "HELLO")
+            contributors: "HELLO",
+            groupId: nil,
+            ordinal: 0)
+    
   }
   
   static func download(for content: Content) -> Download {

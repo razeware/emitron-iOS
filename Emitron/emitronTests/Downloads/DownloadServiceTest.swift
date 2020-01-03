@@ -74,10 +74,38 @@ class DownloadServiceTest: XCTestCase {
     }
   }
   
+  func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    
+    var parentContent: Content? = nil
+    if let groupId = content.groupId {
+      // There must be parent content
+      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupId }) {
+        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentId }
+      }
+    }
+    
+    let groups = cacheUpdate.groups.filter { $0.contentId == content.id }
+    let groupIds = groups.map { $0.id }
+    let childContent = cacheUpdate.contents.filter { groupIds.contains($0.groupId ?? -1) }
+    
+    return ContentPersistableState(
+      content: content,
+      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentId == content.id }),
+      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentId == content.id }),
+      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentId == content.id }),
+      parentContent: parentContent,
+      progression: cacheUpdate.progressions.first(where: { $0.contentId == content.id }),
+      groups: groups,
+      childContents: childContent
+    )
+  }
+  
   
   func sampleDownloadQueueItem() -> PersistenceStore.DownloadQueueItem {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
+    let screencast = ContentTest.Mocks.screencast
+    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+      self.persistableState(for: screencast.0, with: screencast.1)
+    }
     let download = getAllDownloads().first!
     let content = getAllContents().first!
     return PersistenceStore.DownloadQueueItem(download: download, content: content)
@@ -116,16 +144,18 @@ class DownloadServiceTest: XCTestCase {
   
   //: requestDownload(content:) Tests
   func testRequestDownloadScreencastAddsContentToLocalStore() {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
+    let screencast = ContentTest.Mocks.screencast
+    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+      self.persistableState(for: screencast.0, with: screencast.1)
+    }
     
     XCTAssertEqual(1, getAllContents().count)
-    XCTAssertEqual(screencast.id, Int(getAllContents().first!.id))
+    XCTAssertEqual(screencast.0.id, Int(getAllContents().first!.id))
   }
   
   func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() throws {
-    let screencastModel = ContentDetailsModelTest.Mocks.screencast
-    var screencast = Content(contentDetailsModel: screencastModel)
+    let screencastModel = ContentTest.Mocks.screencast
+    var screencast = screencastModel.0
     try database.write { db in
       try screencast.save(db)
     }
@@ -146,7 +176,9 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     
     // Now execute the download request
-    downloadService.requestDownload(content: screencastModel)
+    downloadService.requestDownload(contentId: screencast.id) { _ in
+      self.persistableState(for: screencast, with: screencastModel.1)
+    }
     
     // No change to the content count
     XCTAssertEqual(1, getAllContents().count)
@@ -154,27 +186,33 @@ class DownloadServiceTest: XCTestCase {
     // And that the values have been updated in CD appropriately
     try database.read { db in
       let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
-      XCTAssertEqual(screencastModel.duration, updatedScreencast!.duration)
-      XCTAssertEqual(screencastModel.desc, updatedScreencast!.descriptionPlainText)
+      XCTAssertEqual(screencast.duration, updatedScreencast!.duration)
+      XCTAssertEqual(screencast.descriptionPlainText, updatedScreencast!.descriptionPlainText)
     }
   }
   
   func testRequestDownloadEpisodeAddsEpisodeAndCollectionToLocalStore() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    let episode = collection.childContents.first!
-    downloadService.requestDownload(content: episode)
+    let collection = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collection.0, with: collection.1)
     
-    let allContentIds = collection.childContents.map({ $0.id }) + [collection.id]
+    let episode = fullState.childContents.first!
+    downloadService.requestDownload(contentId: episode.id) { _ in
+      self.persistableState(for: collection.0, with: collection.1)
+    }
+    
+    let allContentIds = fullState.childContents.map({ $0.id }) + [collection.0.id]
     
     XCTAssertEqual(allContentIds.count, getAllContents().count)
     XCTAssertEqual(allContentIds.sorted() , getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
-    let collectionModel = ContentDetailsModelTest.Mocks.collection
-    let episodeModel = collectionModel.childContents.first!
+    let collectionModel = ContentTest.Mocks.collection
+    var collection = collectionModel.0
+    let fullState = persistableState(for: collection, with: collectionModel.1)
     
-    var collection = Content(contentDetailsModel: collectionModel)
+    let episode = fullState.childContents.first!
+    
     try database.write { db in
       try collection.save(db)
     }
@@ -195,32 +233,39 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     
     // Now execute the download request
-    downloadService.requestDownload(content: episodeModel)
+    downloadService.requestDownload(contentId: episode.id) { _ in
+      self.persistableState(for: collection, with: collectionModel.1)
+    }
     
     // Adds all episodes and the collection to the DB
-    XCTAssertEqual(collectionModel.childContents.count + 1, getAllContents().count)
+    XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
     try database.read { db in
       let updatedCollection = try Content.fetchOne(db, key: collection.id)
-      XCTAssertEqual(collectionModel.duration, updatedCollection!.duration)
-      XCTAssertEqual(collectionModel.desc, updatedCollection!.descriptionPlainText)
+      XCTAssertEqual(collection.duration, updatedCollection!.duration)
+      XCTAssertEqual(collection.descriptionPlainText, updatedCollection!.descriptionPlainText)
     }
   }
   
   func testRequestDownloadCollectionAddsCollectionAndEpisodesToLocalStore() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    downloadService.requestDownload(content: collection)
+    let collection = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collection.0, with: collection.1)
     
-    XCTAssertEqual(collection.childContents.count + 1, getAllContents().count)
-    XCTAssertEqual((collection.childContents.map { $0.id } + [collection.id]) .sorted() , getAllContents().map { Int($0.id) }.sorted())
+    downloadService.requestDownload(contentId: collection.0.id) { _ in
+      self.persistableState(for: collection.0, with: collection.1)
+    }
+    
+    XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
+    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted() , getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
-    let collectionModel = ContentDetailsModelTest.Mocks.collection
-    let episodeModel = collectionModel.childContents.first!
+    let collectionModel = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collectionModel.0, with: collectionModel.1)
     
-    var episode = Content(contentDetailsModel: episodeModel)
+    var episode = fullState.childContents.first!
+    
     try database.write { db in
       try episode.save(db)
     }
@@ -241,23 +286,29 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     
     // Now execute the download request
-    downloadService.requestDownload(content: collectionModel)
+    downloadService.requestDownload(contentId: collectionModel.0.id) { _ in
+      self.persistableState(for: collectionModel.0, with: collectionModel.1)
+    }
     
     // Added the correct number of models
-    XCTAssertEqual(collectionModel.childContents.count + 1, getAllContents().count)
+    XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
     
     // And that the values have been updated in CD appropriately
     try database.read { db in
       let updatedEpisode = try Content.fetchOne(db, key: episode.id)
-      XCTAssertEqual(episodeModel.duration, updatedEpisode!.duration)
-      XCTAssertEqual(episodeModel.desc, updatedEpisode!.descriptionPlainText)
+      XCTAssertEqual(episode.duration, updatedEpisode!.duration)
+      XCTAssertEqual(episode.descriptionPlainText, updatedEpisode!.descriptionPlainText)
     }
   }
   
   func testRequestDownloadAddsDownloadToEpisodes() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    let episode = collection.childContents.first!
-    downloadService.requestDownload(content: episode)
+    let collection = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collection.0, with: collection.1)
+    let episode = fullState.childContents.first!
+    
+    downloadService.requestDownload(contentId: episode.id) { _ in
+      self.persistableState(for: episode, with: collection.1)
+    }
     
     XCTAssertEqual(1, getAllDownloads().count)
     let download = getAllDownloads().first!
@@ -265,29 +316,36 @@ class DownloadServiceTest: XCTestCase {
   }
   
   func testRequestDownloadAddsDownloadToScreencasts() {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
+    let screencast = ContentTest.Mocks.screencast
+    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+      self.persistableState(for: screencast.0, with: screencast.1)
+    }
     
     XCTAssertEqual(1, getAllDownloads().count)
     let download = getAllDownloads().first!
-    XCTAssertEqual(screencast.id, download.contentId)
+    XCTAssertEqual(screencast.0.id, download.contentId)
   }
   
   func testRequestDownloadAddsDownloadToCollection() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    downloadService.requestDownload(content: collection)
-    
+    let collection = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collection.0, with: collection.1)
+    downloadService.requestDownload(contentId: collection.0.id) { _ in
+      self.persistableState(for: collection.0, with: collection.1)
+    }
+
     // Adds downloads to the collection and the individual episodes
-    XCTAssertEqual(collection.childContents.count + 1, getAllDownloads().count)
+    XCTAssertEqual(fullState.childContents.count + 1, getAllDownloads().count)
     XCTAssertEqual(
-      (collection.childContents.map { $0.id } + [collection.id]).sorted(),
+      (fullState.childContents.map { $0.id } + [collection.0.id]).sorted(),
       getAllDownloads().map { $0.contentId }.sorted()
     )
   }
   
   func testRequestDownloadAddsDownloadInPendingState() {
-    let screencast = ContentDetailsModelTest.Mocks.screencast
-    downloadService.requestDownload(content: screencast)
+    let screencast = ContentTest.Mocks.screencast
+    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+      self.persistableState(for: screencast.0, with: screencast.1)
+    }
     
     let download = getAllDownloads().first!
     XCTAssertEqual(.pending, download.state)
@@ -338,7 +396,7 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = UserModel.noPermissions
+    userModelController.user = User.noPermissions
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })
@@ -350,7 +408,7 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = UserModel.noPermissions
+    userModelController.user = User.noPermissions
     userModelController.objectWillChange.send()
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
@@ -360,7 +418,7 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = UserModel.withDownloads
+    userModelController.user = User.withDownloads
     userModelController.objectWillChange.send()
     
     XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
@@ -368,9 +426,13 @@ class DownloadServiceTest: XCTestCase {
   
   //: requestDownloadUrl() Tests
   func testRequestDownloadUrlRequestsDownloadURLForEpisode() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    let episode = collection.childContents.first!
-    downloadService.requestDownload(content: episode)
+    let collection = ContentTest.Mocks.collection
+    let fullState = persistableState(for: collection.0, with: collection.1)
+    let episode = fullState.childContents.first!
+    
+    downloadService.requestDownload(contentId: episode.id) { _ in
+      self.persistableState(for: episode, with: collection.1)
+    }
     
     let downloadQueueItem = getAllDownloadQueueItems().first!
     
@@ -392,8 +454,10 @@ class DownloadServiceTest: XCTestCase {
   }
   
   func testRequestDownloadUrlDoesNothingForCollection() {
-    let collection = ContentDetailsModelTest.Mocks.collection
-    downloadService.requestDownload(content: collection)
+    let collection = ContentTest.Mocks.collection
+    downloadService.requestDownload(contentId: collection.0.id) { _ in
+      self.persistableState(for: collection.0, with: collection.1)
+    }
     
     let downloadQueueItem = getAllDownloadQueueItems().first { $0.content.contentType == .collection }
     
@@ -441,9 +505,9 @@ class DownloadServiceTest: XCTestCase {
   
   func testRequestDownloadUrlRespectsTheUserPreferencesOnQuality() throws {
     let downloadQueueItem = sampleDownloadQueueItem()
-    let attachment = AttachmentModelTest.Mocks.downloads.first { $0.kind == .sdVideoFile }!
+    let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .sdVideoFile }!
     
-    UserDefaults.standard.set(AttachmentKind.sdVideoFile.rawValue, forKey: UserDefaultsKey.downloadQuality.rawValue)
+    UserDefaults.standard.set(Attachment.Kind.sdVideoFile.rawValue, forKey: UserDefaultsKey.downloadQuality.rawValue)
     
     downloadService.requestDownloadUrl(downloadQueueItem)
     
@@ -460,7 +524,7 @@ class DownloadServiceTest: XCTestCase {
     UserDefaults.standard.removeObject(forKey: UserDefaultsKey.downloadQuality.rawValue)
     
     let downloadQueueItem = sampleDownloadQueueItem()
-    let attachment = AttachmentModelTest.Mocks.downloads.first { $0.kind == .hdVideoFile }!
+    let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .hdVideoFile }!
     
     downloadService.requestDownloadUrl(downloadQueueItem)
     

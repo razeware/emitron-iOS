@@ -28,22 +28,35 @@
 
 import Foundation
 @testable import Emitron
+import SwiftyJSON
 
-extension UserModel {
-  static var withDownloads: UserModel {
-    var user = noPermissions
-    user.permissions = [PermissionsModel.downloadVideos]
-    return user
-  }
-  
-  static var noPermissions: UserModel {
-    UserModel(dictionary: [
-      "external_id" : "EXTERNAL_ID",
-      "email"       : "hello@example.com",
-      "username"    : "USERNAME",
-      "avatar_url"  : "https://example.com/avatar.png",
-      "name"        : "NAME",
-      "token"       : "THIS_IS_A_TOKEN"
-    ])!
+extension AttachmentTest {
+  enum Mocks {
+    static var downloads: ([Attachment], DataCacheUpdate) {
+      loadMockFrom(filename: "Attachment_Downloads")
+    }
+    
+    static var stream: (Attachment, DataCacheUpdate) {
+      let (attachments, cacheUpdate) = loadMockFrom(filename: "Attachment_Stream")
+      return (attachments.first!, cacheUpdate)
+    }
+    
+    private static func loadMockFrom(filename: String) -> ([Attachment], DataCacheUpdate) {
+      do {
+        let bundle = Bundle(for: AttachmentTest.self)
+        let fileURL = bundle.url(forResource: filename, withExtension: "json")
+        let data = try Data(contentsOf: fileURL!)
+        let json = try JSON(data: data)
+        
+        let document = JSONAPIDocument(json)
+        let attachments = try document.data.map { resource in
+          try AttachmentAdapter.process(resource: resource)
+        }
+        let cacheUpdate = try DataCacheUpdate(resources: document.included)
+        return (attachments, cacheUpdate)
+      } catch {
+        fatalError("Unable to load Attachment mock: \(error)")
+      }
+    }
   }
 }

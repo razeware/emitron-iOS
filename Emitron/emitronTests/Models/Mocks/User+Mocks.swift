@@ -26,16 +26,24 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import XCTest
+import Foundation
+@testable import Emitron
 
-class AttachmentModelTest: XCTestCase {
-  
-  override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+extension User {
+  static var withDownloads: User {
+    var user = noPermissions
+    user.permissions = [Permission.downloadVideos]
+    return user
   }
   
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
+  static var noPermissions: User {
+    User(dictionary: [
+      "external_id" : "EXTERNAL_ID",
+      "email"       : "hello@example.com",
+      "username"    : "USERNAME",
+      "avatar_url"  : "https://example.com/avatar.png",
+      "name"        : "NAME",
+      "token"       : "THIS_IS_A_TOKEN"
+    ])!
   }
-  
 }

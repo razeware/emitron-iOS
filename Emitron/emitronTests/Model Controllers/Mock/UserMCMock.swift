@@ -31,7 +31,7 @@ import Combine
 @testable import Emitron
 
 class UserMCMock: UserModelController {
-  var user: UserModel?
+  var user: User?
   var client: RWAPI
   let objectWillChange = PassthroughSubject<Void, Never>()
   
@@ -41,7 +41,7 @@ class UserMCMock: UserModelController {
   
   static var withDownloads: UserMCMock {
     let userModelController = UserMCMock()
-    userModelController.user = UserModel.withDownloads
+    userModelController.user = User.withDownloads
     return userModelController
   }
 }
