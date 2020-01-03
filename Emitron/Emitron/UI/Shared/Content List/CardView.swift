@@ -124,7 +124,7 @@ struct CardView: SwiftUI.View {
   
   private var progressBar: AnyView {
     if case .inProgress(let progress) = model.viewProgress {
-      return AnyView(ProgressBarView(progress: CGFloat(progress), isRounded: true)
+      return AnyView(ProgressBarView(progress: progress, isRounded: true)
         .padding([.top, .bottom], 0))
     } else {
       return AnyView(Rectangle()

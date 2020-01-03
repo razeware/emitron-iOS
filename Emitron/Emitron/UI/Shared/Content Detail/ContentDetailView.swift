@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import KingfisherSwiftUI
 import UIKit
 
 struct ContentDetailView: View {
@@ -36,35 +37,22 @@ struct ContentDetailView: View {
   @State var showAlert: Bool = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
-  @ObservedObject var contentDetailsVM: ContentDetailsVM
-  @ObservedObject var downloadsMC: DownloadsMC
-  var content: ContentListDisplayable
+  @ObservedObject var contentDetailsViewModel: ContentDetailsViewModel
   var user: User
-  @State var imageData: Data?
   
   private var canStreamPro: Bool {
     return user.canStreamPro
   }
   
-  // These should be private
-  @State var uiImage: UIImage = #imageLiteral(resourceName: "loading")
-  
   var imageRatio: CGFloat = 283/375
   
-  init(content: ContentListDisplayable, user: User, downloadsMC: DownloadsMC) {
-    self.content = content
-    self.user = user
-    self.contentDetailsVM = ContentDetailsVM(guardpost: Guardpost.current, partialContentDetail: content)
-    self.downloadsMC = downloadsMC
-  }
   
   var body: some View {
-    
     let scrollView = GeometryReader { geometry in
       List {
         Section {
           
-          if self.contentDetailsVM.data.professional && !self.canStreamPro {
+          if (self.contentDetailsViewModel.content?.professional ?? false) && !self.canStreamPro {
             self.blurOverlay(for: geometry.size.width)
           } else {
             self.opacityOverlay(for: geometry.size.width)
@@ -73,7 +61,7 @@ struct ContentDetailView: View {
           ContentSummaryView(callback: { (content, hudOption) in
             switch hudOption {
               case .success:
-                self.save(for: content, isEpisodeOnly: false)
+                self.save(for: content.id)
               case .error:
                 if self.showHudView {
                   self.showHudView.toggle()
@@ -85,7 +73,7 @@ struct ContentDetailView: View {
             }
             
             self.hudOption = hudOption
-          }, downloadsMC: self.downloadsMC, contentDetailsVM: self.contentDetailsVM)
+          }, contentDetailsViewModel: self.contentDetailsViewModel)
             .padding([.leading, .trailing], 20)
             .padding([.bottom], 37)
         }
@@ -95,9 +83,6 @@ struct ContentDetailView: View {
         self.courseDetailsSection
           .background(Color.backgroundColor)
       }
-    }
-    .onAppear {
-      self.loadImage()
     }
     .navigationBarItems(trailing:
       SwiftUI.Group {
@@ -129,23 +114,25 @@ struct ContentDetailView: View {
     }
   }
   
-  private func contentsToPlay(currentVideoID: Int) -> [ContentDetailsModel] {
+  private func contentsToPlay(currentVideoID: Int) -> [ContentListDisplayable] {
     
     // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
-    if contentDetailsVM.data.videoId != nil {
-      return [contentDetailsVM.data]
+    guard let content = contentDetailsViewModel.content else { return [] }
+    
+    if content.videoIdentifier != nil {
+      return [content]
     }
     
-    let allContents = contentDetailsVM.data.groups.flatMap { $0.childContents }
+    let childContents = contentDetailsViewModel.childContents
     
-    guard let currentIndex = allContents.firstIndex(where: { $0.videoId == currentVideoID } )
+    guard let currentIndex = childContents.firstIndex(where: { $0.videoIdentifier == currentVideoID } )
       else { return [] }
     
-    return allContents[currentIndex..<allContents.count].compactMap { $0 }
+    return Array(childContents[currentIndex..<childContents.count])
   }
   
-  private func episodeListing(data: [ContentDetailsModel]) -> some View {
-    let onlyContentWithVideoID = data.filter { $0.videoId != nil }
+  private func episodeListing(data: [ContentListDisplayable]) -> some View {
+    let onlyContentWithVideoID = data.filter { $0.videoIdentifier != nil }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       
@@ -163,10 +150,10 @@ struct ContentDetailView: View {
     .listRowBackground(Color.backgroundColor)
   }
   
-  private func rowItem(for model: ContentDetailsModel) -> some View {
+  private func rowItem(for model: ContentListDisplayable) -> some View {
     TextListItemView(contentSummary: model, buttonAction: { success in
       if success {
-        self.save(for: model, isEpisodeOnly: true)
+        self.save(for: model.id)
       } else {
         if self.showHudView {
           self.showHudView.toggle()
@@ -175,45 +162,39 @@ struct ContentDetailView: View {
         self.hudOption = success ? .success : .error
         self.showHudView = true
       }
-    }, downloadsMC: self.downloadsMC, progressionsMC: ProgressionsMC(user: Guardpost.current.currentUser!))
+    })
   }
   
-  private func videoView(for model: ContentDetailsModel) -> some View {
-    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoId!),
+  private func videoView(for model: ContentListDisplayable) -> some View {
+    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoIdentifier!),
               user: self.user,
               showingProSheet: !self.user.canStreamPro && model.professional) {
                 self.refreshContentDetails()
     }
   }
   
-  private var contentModelForPlayButton: ContentDetailsModel? {
+  private var contentModelForPlayButton: ContentListDisplayable? {
+    guard let content = contentDetailsViewModel.content else { return nil }
+    
     // If the content is an episode, rather than a collection, it will have a videoID associated with it,
     // so return the content itself
-    if contentDetailsVM.data.contentType != .collection {
-      return contentDetailsVM.data
+    if content.contentType != .collection {
+      return contentDetailsViewModel.content
     }
     
-    guard let progression = contentDetailsVM.data.progression else {
-      return contentDetailsVM.data.groups.first?.childContents.first ?? nil
-    }
-    
-    // If progressiong is at 100% or 0%, then start from beginning; first child content's video ID
-    if progression.finished || progression.percentComplete == 0.0 {
-      return contentDetailsVM.data.groups.first?.childContents.first ?? nil
-    }
-      
-      // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
-      // This means that we return true for when the first progression is nil, or when the target > the progress
-      
-    else {
-      let allContentModels = contentDetailsVM.data.groups.flatMap { $0.childContents }
-      let firstUnplayedConsecutive = allContentModels.first { model -> Bool in
-        guard let progression = model.progression else { return true }
-        return progression.target > progression.progress && !progression.finished
+    // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
+    // This means that we return true for when the first progression is nil, or when the target > the progress
+    if case .inProgress(let percentage) = content.viewProgress, percentage > 0 {
+      return contentDetailsViewModel.childContents.first { childContent in
+        if case .completed = childContent.viewProgress {
+          return false
+        }
+        return true
       }
-      
-      return firstUnplayedConsecutive ?? nil
     }
+    
+    // If progression is at 100% or 0%, then start from beginning; first child content's video ID
+    return contentDetailsViewModel.childContents.first
   }
   
   private var contentIdForPlayButton: Int {
@@ -221,7 +202,7 @@ struct ContentDetailView: View {
   }
   
   private var videoIdForPlayButton: Int {
-    return contentModelForPlayButton?.videoId ?? 0
+    return contentModelForPlayButton?.videoIdentifier ?? 0
   }
   
   private var continueButton: some View {
@@ -278,12 +259,11 @@ struct ContentDetailView: View {
   }
   
   var coursesSection: AnyView? {
-    let groups = contentDetailsVM.data.groups
+    guard let content = contentDetailsViewModel.content,
+      content.contentType == .collection else { return nil }
     
-    guard contentDetailsVM.data.contentType == .collection else {
-      return nil
-    }
-    
+    let childContents = contentDetailsViewModel.childContents
+    let groups = content.groups
     let sections = Section {
       Text("Course Episodes")
         .font(.uiTitle2)
@@ -293,12 +273,12 @@ struct ContentDetailView: View {
         ForEach(groups, id: \.id) { group in
           
           Section(header: CourseHeaderView(name: group.name)) {
-            self.episodeListing(data: group.childContents)
+            self.episodeListing(data: childContents.filter { $0.groupId == group.id })
           }
         }
       } else {
         if groups.count > 0 {
-          self.episodeListing(data: groups.first!.childContents)
+          self.episodeListing(data: childContents.filter { $0.groupId == groups.first!.id })
         }
       }
     }
@@ -310,7 +290,7 @@ struct ContentDetailView: View {
   private func opacityOverlay(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
-        Image(uiImage: uiImage)
+        KFImage(contentDetailsViewModel.content!.cardArtworkUrl)
           .resizable()
           .frame(width: width, height: width * imageRatio)
           .transition(.opacity)
@@ -334,7 +314,7 @@ struct ContentDetailView: View {
   private func blurOverlay(for width: CGFloat) -> some View {
     VStack {
       ZStack {
-        Image(uiImage: uiImage)
+        KFImage(contentDetailsViewModel.content!.cardArtworkUrl)
           .resizable()
           .frame(width: width, height: width * imageRatio)
           .transition(.opacity)
@@ -352,7 +332,7 @@ struct ContentDetailView: View {
   }
   
   private func continueOrPlayButton(geometry: GeometryProxy) -> AnyView {
-    if case .inProgress = self.content.progress {
+    if case .inProgress = self.contentDetailsViewModel.content!.viewProgress {
       return AnyView(self.continueButton
         //HACK: to center the button when it's in a NavigationLink
         .padding(.leading, geometry.size.width/2 - 74.5))
@@ -364,8 +344,10 @@ struct ContentDetailView: View {
   }
   
   private var progressBar: AnyView? {
-    guard let progression = content.progression, !progression.finished else { return nil }
-    return AnyView(ProgressBarView(progress: content.progress, isRounded: false))
+    if case .inProgress(let progress) = self.contentDetailsViewModel.content!.viewProgress {
+      return AnyView(ProgressBarView(progress: progress, isRounded: false))
+    }
+    return nil
   }
   
   private var wifiActionSheet: ActionSheet {
@@ -389,11 +371,11 @@ struct ContentDetailView: View {
       return wifiActionSheet
     } else {
       return showActionSheet(for: .cancel) { action in
-        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
-          self.showingSheet = false
-          self.showHudView = false
-        }
+//        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
+//          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
+//          self.showingSheet = false
+//          self.showHudView = false
+//        }
       }
     }
   }
@@ -423,21 +405,12 @@ struct ContentDetailView: View {
   // side effects, but can't think of a cleaner way, other than callbacks...
   private var courseDetailsSection: AnyView {
     
-    switch contentDetailsVM.state {
+    switch contentDetailsViewModel.state {
       case .failed:
         return AnyView(reloadView)
       case .hasData:
         return AnyView(coursesSection)
-      case .loading:
-        if !contentDetailsVM.data.needsDetails {
-          return AnyView(coursesSection)
-        } else {
-          return AnyView(loadingView)
-      }
-      case .initial:
-        if contentDetailsVM.data.needsDetails {
-          refreshContentDetails()
-        }
+    case .loading, .loadingAdditional, .initial:
         return AnyView(loadingView)
     }
   }
@@ -454,79 +427,16 @@ struct ContentDetailView: View {
   
   private var reloadView: AnyView? {
     AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.contentDetailsVM.getContentSummary()
+      self.contentDetailsViewModel.reload()
     })
   }
   
-  private func loadImage() {
-    
-    // first check if image data has already been saved
-    if let data = contentDetailsVM.data.cardArtworkData,
-      let uiImage = UIImage(data: data) {
-      self.uiImage = uiImage
-      
-      // otherwise use the imageURL
-    } else {
-      let imageURL = contentDetailsVM.data.cardArtworkUrl
-      DispatchQueue.global().async {
-        let data = try? Data(contentsOf: imageURL)
-        DispatchQueue.main.async {
-          if let data = data, let img = UIImage(data: data) {
-            self.uiImage = img
-            self.imageData = data
-          }
-        }
-      }
-    }
-  }
-  
   private func refreshContentDetails() {
-    self.contentDetailsVM.getContentSummary { model in
-      // Update the content in the global contentsMC, to keep all the data in sync
-      guard let dataManager = DataManager.current else { return }
-      dataManager.disseminateUpdates(for: model)
-    }
+    self.contentDetailsViewModel.reload()
   }
   
-  private func save(for content: ContentDetailsModel, isEpisodeOnly: Bool) {
-    // update content to save with image data
-    content.cardArtworkData = imageData
-    
-    // update bool so can cancel either entire collection or episode based on bool
-    self.isEpisodeOnly = isEpisodeOnly
-    downloadsMC.isEpisodeOnly = isEpisodeOnly
-    guard !downloadsMC.data.contains(where: { $0.id == content.id }) else {
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-      
-      self.hudOption = .error
-      self.showHudView = true
-      return
-    }
-    
-    // show sheet to cancel download
-    self.showingSheet = true
-    
-    if isEpisodeOnly {
-      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: isEpisodeOnly)
-    } else if content.isInCollection {
-      self.downloadsMC.saveCollection(with: content, isEpisodeOnly: false)
-    } else {
-      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: false)
-    }
-    
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-      
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
-      // hide sheet to cancel
-      self.showingSheet = false
-    }
+  private func save(for contentId: Int) {
+    // TODO
   }
+    
 }

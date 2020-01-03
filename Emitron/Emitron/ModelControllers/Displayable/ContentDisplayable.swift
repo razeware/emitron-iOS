@@ -42,6 +42,17 @@ enum DownloadProgressDisplayable {
   case downloaded
 }
 
+extension DownloadProgressDisplayable {
+  var imageName: String {
+    switch self {
+    case .enqueued, .inProgress:
+      return DownloadImageName.active
+    default:
+      return DownloadImageName.inactive
+    }
+  }
+}
+
 protocol ContentListDisplayable {
   var id: Int { get }
   var name: String { get }
@@ -57,12 +68,19 @@ protocol ContentListDisplayable {
   var parentName: String? { get }
   var contentType: ContentType { get }
   var cardArtworkUrl: URL { get }
+  var ordinal: Int { get }
+  var technologyTripleString: String { get }
+  var contentSummaryMetadataString: String { get }
+  var contributorString: String { get }
+  
+  var groupId: Int? { get }
+  var videoIdentifier: Int? { get }
 }
 
 protocol ContentDetailDisplayable: ContentListDisplayable {
   var descriptionHtml: String { get }
-  var childContents: [ContentListDisplayable] { get }
-  
+  var childContents: [Content] { get }
+  var groups: [Group] { get }
 }
 
 

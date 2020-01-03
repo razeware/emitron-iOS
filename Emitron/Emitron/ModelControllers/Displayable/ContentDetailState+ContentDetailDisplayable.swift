@@ -29,5 +29,115 @@
 import Foundation
 
 extension ContentDetailState: ContentDetailDisplayable {
+  // MARK:- Proxied from content
+  var id: Int {
+    content.id
+  }
+  
+  var releasedAt: Date {
+    content.releasedAt
+  }
+  
+  var duration: Int {
+    content.duration
+  }
+  
+  var name: String {
+    content.name
+  }
+  
+  var descriptionPlainText: String {
+    content.descriptionPlainText
+  }
+  
+  var descriptionHtml: String {
+    content.descriptionHtml
+  }
+  
+  var professional: Bool {
+    content.professional
+  }
+  
+  var cardArtworkUrl: URL {
+    content.cardArtworkUrl
+  }
+  
+  var contentType: ContentType {
+    content.contentType
+  }
+  
+  var ordinal: Int {
+    content.ordinal
+  }
+  
+  var technologyTripleString: String {
+    content.technologyTriple
+  }
+  
+  var contentSummaryMetadataString: String {
+    content.contentSummaryMetadataString
+  }
+  
+  var contributorString: String {
+    content.contributors
+  }
+  
+  var groupId: Int? {
+    content.groupId
+  }
+  
+  var videoIdentifier: Int? {
+    content.videoIdentifier
+  }
+  
+  // MARK:- Proxied from Other Records
+  var bookmarked: Bool {
+    bookmark != nil
+  }
+  
+  var parentName: String? {
+    parentContent?.name
+  }
+  
+  // MARK:- Evaluated
+  var cardViewSubtitle: String {
+    if domains.count == 1 {
+      return domains.first!.name
+    } else if domains.count > 1 {
+      return "Multi-platform"
+    }
+    return ""
+  }
+  
+  
+  // MARK: - Converted to Display Properties
+  var viewProgress: ContentViewProgressDisplayable {
+    switch progression {
+    case .none:
+      return .notStarted
+    case .some(let p) where p.finished:
+      return .completed
+    case .some(let p):
+      return .inProgress(progress: p.progressProportion)
+    }
+  }
+  
+  var downloadProgress: DownloadProgressDisplayable {
+    guard let download = download else { return .downloadable }
+
+    switch download.state {
+    case .cancelled, .error, .failed:
+      return .notDownloadable
+    case .enqueued, .pending, .urlRequested, .readyForDownload:
+      return .enqueued
+    case .inProgress:
+      return .inProgress(progress: download.progress)
+    case .complete:
+      return .downloaded
+    case .paused:
+      return .downloadable
+    }
+  }
+  
   
 }

@@ -29,7 +29,7 @@
 import Foundation
 import Combine
 
-final class DownloadRepository: ObservableObject {
-  
+final class DownloadRepository: ContentRepository {
+  // TODO
 }
 

@@ -59,7 +59,7 @@ struct LibraryView: View {
           }
       })
       .sheet(isPresented: $filtersPresented) {
-        FiltersView().environmentObject(self.filters).environmentObject(self.libraryContentsVM)
+        FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
       .background(Color.backgroundColor)
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {

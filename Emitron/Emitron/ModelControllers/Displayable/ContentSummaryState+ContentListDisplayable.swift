@@ -62,6 +62,30 @@ extension ContentSummaryState: ContentListDisplayable {
     content.contentType
   }
   
+  var ordinal: Int {
+    content.ordinal
+  }
+  
+  var technologyTripleString: String {
+    content.technologyTriple
+  }
+  
+  var contentSummaryMetadataString: String {
+    content.contentSummaryMetadataString
+  }
+  
+  var contributorString: String {
+    content.contributors
+  }
+  
+  var groupId: Int? {
+    content.groupId
+  }
+  
+  var videoIdentifier: Int? {
+    content.videoIdentifier
+  }
+  
   // MARK:- Proxied from Other Records
   var bookmarked: Bool {
     bookmark != nil
@@ -110,4 +134,7 @@ extension ContentSummaryState: ContentListDisplayable {
       return .downloadable
     }
   }
+  
+  
+
 }

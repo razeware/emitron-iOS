@@ -44,8 +44,8 @@ extension PersistenceStore {
   func domains(with domainIds: [Int]) throws -> [Domain] {
     try db.read { db in
       try Domain
-        .order(Domain.Columns.level.asc)
         .fetchAll(db, keys: domainIds)
+        .sorted { $0.level.rawValue <= $1.level.rawValue }
     }
   }
 }

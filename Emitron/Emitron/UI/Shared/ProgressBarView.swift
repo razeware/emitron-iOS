@@ -33,8 +33,8 @@ struct ProgressBarView: View {
   private var height: CGFloat = 4
   private var isRounded: Bool
   
-  init(progress: CGFloat, isRounded: Bool) {
-    self.progress = progress
+  init(progress: Double, isRounded: Bool) {
+    self.progress = CGFloat(progress)
     self.isRounded = isRounded
   }
   

@@ -37,7 +37,7 @@ private struct Layout {
 struct CircularProgressBar: View {
 
   @State var isCollection = false
-  @State var progress: CGFloat
+  @State var progress: Double
   @State var spinCircle = false
 
   var body: some View {
@@ -56,7 +56,7 @@ struct CircularProgressBar: View {
 
   var circleOverlay: some View {
     return Circle()
-      .trim(from: 0.0, to: spinCircle ? progress : Layout.endProgress)
+      .trim(from: 0.0, to: spinCircle ? CGFloat(progress) : Layout.endProgress)
       .stroke(Color.inactiveIcon, lineWidth: Layout.line)
       .frame(width: Layout.frame, height: Layout.frame)
       // FJ FIX make progress UP not count down

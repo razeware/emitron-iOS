@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,8 +27,29 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
-protocol ContentUpdatable {
-  func updateEntryIfItExists(for content: ContentDetailsModel)
+final class ContentDetailsViewModel: ObservableObject {
+  let repository: Repository
+  let service: ContentsService
+  let contentId: Int
+  
+  @Published private (set) var state: DataState = .initial
+  @Published private (set) var content: ContentDetailDisplayable?
+  @Published private (set) var childContents: [ContentListDisplayable] = [ContentListDisplayable]()
+  
+  private var contentSubscription: AnyCancellable?
+  
+  init(repository: Repository, service: ContentsService, contentId: Int) {
+    self.repository = repository
+    self.service = service
+    self.contentId = contentId
+  }
+}
+
+extension ContentDetailsViewModel {
+  func reload() {
+    
+  }
 }
 

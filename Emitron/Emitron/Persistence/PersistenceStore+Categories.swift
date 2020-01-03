@@ -44,8 +44,8 @@ extension PersistenceStore {
   func categories(with categoryIds: [Int]) throws -> [Category] {
     try db.read { db in
       try Category
-        .order(Category.Columns.ordinal.asc)
         .fetchAll(db, keys: categoryIds)
+        .sorted { $0.ordinal <= $1.ordinal }
     }
   }
 }

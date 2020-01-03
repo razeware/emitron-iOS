@@ -140,7 +140,7 @@ struct ContentListView: View {
 
   private var cardTableNavView: AnyView? {
     let guardpost = Guardpost.current
-    guard let user = guardpost.currentUser else { return nil }
+    guard let _ = guardpost.currentUser else { return nil }
 
     return
       AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
@@ -163,7 +163,7 @@ struct ContentListView: View {
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
   private var cardsTableViewWithDelete: AnyView? {
     let guardpost = Guardpost.current
-    guard let user = guardpost.currentUser else { return nil }
+    guard let _ = guardpost.currentUser else { return nil }
 
     return
       AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in

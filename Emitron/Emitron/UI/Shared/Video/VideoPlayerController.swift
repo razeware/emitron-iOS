@@ -33,8 +33,8 @@ import AVKit
 
 class VideoPlayerController: AVPlayerViewController {
 
-  private var content: [ContentDetailsModel]
-  private var currentContent: ContentDetailsModel?
+  private var content: [ContentListDisplayable]
+  private var currentContent: ContentListDisplayable?
   private var videosMC: VideosMC
   private var usageTimeObserverToken: Any?
   private var autoplayNextTimeObserverToken: Any?
@@ -48,7 +48,7 @@ class VideoPlayerController: AVPlayerViewController {
   private var playRateObserver: NSKeyValueObservation?
   private var closedCaptionsObserver: NSKeyValueObservation?
 
-  init(with content: [ContentDetailsModel], videosMC: VideosMC) {
+  init(with content: [ContentListDisplayable], videosMC: VideosMC) {
     self.videosMC = videosMC
     self.content = content
     super.init(nibName: nil, bundle: nil)
@@ -116,23 +116,12 @@ class VideoPlayerController: AVPlayerViewController {
   @objc private func playerDidFinishPlaying() {
 
     DispatchQueue.main.async {
-      self.playFromLocalIfPossible()
+      //self.playFromLocalIfPossible()
     }
   }
 
   private func updateContentsWithProgress(progress: CGFloat) {
     // Locally store progress, and update contentsMC
-
-    // If there's no progression, re-fetch the content
-    if currentContent?.progression == nil {
-
-    }
-
-    if let libraryContentsVM = DataManager.current?.libraryContentsVM,
-      let current = currentContent,
-      let _ = libraryContentsVM.data.firstIndex(where: { $0.id == current.id } ) {
-      // TODO: Not sure what this is for?
-    }
   }
 
   override func viewDidLoad() {
@@ -143,33 +132,22 @@ class VideoPlayerController: AVPlayerViewController {
   
   private func fetchPlaybackToken() {
     videosMC.fetchBeginPlaybackToken { [weak self] (success, token)  in
-      guard let self = self else { return }
+      guard let _ = self else { return }
       if success {
         // Start playback from local, if not fetch from remote
         DispatchQueue.main.async {
-          self.playFromLocalIfPossible()
+          //self.playFromLocalIfPossible()
         }
 
       } else {
         // TODO: Show failure message/view
         DispatchQueue.main.async {
-          self.playFromLocalIfPossible()
+          //self.playFromLocalIfPossible()
         }
       }
     }
   }
 
-  private func playFromLocalIfPossible() {
-    currentContent = content.first
-    guard let firstContent = currentContent else { return }
-
-    if let downloadsMC = DataManager.current?.downloadsMC,
-      let downloadModel = downloadsMC.downloadData.first(where: { $0.content.videoId == firstContent.videoId }) {
-      playFromLocalStorage(with: downloadModel.localPath, contentDetails: firstContent)
-    } else  {
-      fetchAndInsertFromVideosRemote(for: firstContent)
-    }
-  }
 
   private func setUpAVQueuePlayer(with item: AVPlayerItem) -> Void {
     let queuePlayer = AVQueuePlayer(items: [item])
@@ -181,32 +159,7 @@ class VideoPlayerController: AVPlayerViewController {
     avQueuePlayer = queuePlayer
   }
 
-  private func playFromLocalStorage(with url: URL, contentDetails: ContentDetailsModel) {
-    // TODO
-  }
-
-  private func fetchAndInsertFromVideosRemote(for contentDetails: ContentDetailsModel) {
-    guard let videoID = contentDetails.videoId else { return }
-    videosMC.getVideoStream(for: videoID) { [weak self] result in
-      guard let self = self else {
-        return
-      }
-
-      switch result {
-      case .failure(let error):
-        Failure
-        .fetch(from: "VideeoPlayerControlelr_insert", reason: error.localizedDescription)
-        .log(additionalParams: nil)
-      case .success(let videoStream):
-
-        if let url = videoStream.url {
-          self.insertVideoStream(for: url, contentDetails: contentDetails)
-        }
-      }
-    }
-  }
-
-  private func insertVideoStream(for url: URL, contentDetails: ContentDetailsModel) {
+  private func insertVideoStream(for url: URL, contentDetails: ContentListDisplayable) {
     // Create player item
     let playerItem = createPlayerItem(for: url)
 

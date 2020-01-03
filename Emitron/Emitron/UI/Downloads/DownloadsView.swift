@@ -52,67 +52,9 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-
-    return ContentListView(downloadsMC: downloadsMC, contentsVM: downloadsMC as ContentPaginatable) { (action, content) in
-      self.showActivityIndicator = true
-      
-      // TODO
-      
-
-      // need to get groups & child contents for collection
-//      if content.isInCollection {
-//        // DELETING
-//        // if an episode, don't need group & child contents
-//        if !self.downloadsMC.data.contains(where: { $0.parentContentId == content.parentContent?.id }) {
-//          self.handleAction(with: action, content: content)
-//        } else {
-//          // Handles deleting
-//          guard let user = Guardpost.current.currentUser else { return }
-//          let contentsMC = ContentsMC(user: user)
-//          contentsMC.getContentDetails(with: content.id) { contentDetails in
-//            guard let contentDetails = contentDetails else { return }
-//            self.handleAction(with: action, content: contentDetails)
-//          }
-//        }
-//      } else {
-//        self.handleAction(with: action, content: content)
-//      }
-    }
-  }
-
-  private func handleAction(with action: DownloadsAction, content: ContentDetailsModel) {
-
-    switch action {
-    case .delete:
-      if content.isInCollection {
-        // if an episode, only delete the specific episode
-        if !downloadsMC.downloadData.contains(where: { $0.content.parentContentId == content.parentContent?.id }) {
-          downloadsMC.deleteDownload(with: content)
-          self.showActivityIndicator = false
-        } else {
-          downloadsMC.deleteCollectionContents(withParent: content, showCallback: false)
-          self.showActivityIndicator = false
-        }
-      } else {
-        downloadsMC.deleteDownload(with: content)
-        self.showActivityIndicator = false
-      }
-
-    case .save:
-      self.downloadsMC.saveDownload(with: content, isEpisodeOnly: false)
-
-    case .cancel:
-      self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
-    }
+    return ContentListView(contentRepository: downloadRepository,
+                           downloadAction: DownloadService.current,
+                           contentScreen: .downloads)
   }
 }
 
-#if DEBUG
-struct DownloadsView_Previews: PreviewProvider {
-  static var previews: some View {
-    guard let dataManager = DataManager.current else { fatalError("dataManager is nil in DownloadsView") }
-    let downloadsMC = dataManager.downloadsMC
-    return DownloadsView(contentScreen: .downloads, downloadsMC: downloadsMC)
-  }
-}
-#endif

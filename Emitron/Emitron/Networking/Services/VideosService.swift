@@ -32,12 +32,6 @@ class VideosService: Service {
   typealias Provider = ((RWAPI) -> VideosService)
 
   // MARK: - Internal
-  func video(for id: Int,
-             completion: @escaping (_ response: Result<ShowVideoRequest.Response, RWAPIError>) -> Void) {
-    let request = ShowVideoRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
-  }
-
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
     let request = StreamVideoRequest(id: id)

@@ -38,7 +38,7 @@ class ContentsMC {
     self.contentsService = ContentsService(client: self.client)
   }
   
-  func getContentDetails(with id: Int, completion: ((ContentDetailsModel?) -> Void)?) {
+  func getContentDetails(with id: Int, completion: ((Content?) -> Void)?) {
     contentsService.contentDetails(for: id) { result in
       switch result {
       case .failure(let error):
@@ -47,7 +47,8 @@ class ContentsMC {
           .fetch(from: "ContentsMC", reason: error.localizedDescription)
           .log(additionalParams: nil)
       case .success(let contentDetails):
-        completion?(contentDetails)
+        // TODO
+        completion?(contentDetails.content)
       }
     }
   }

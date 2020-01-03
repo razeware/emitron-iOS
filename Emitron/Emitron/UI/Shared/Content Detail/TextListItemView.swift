@@ -36,10 +36,8 @@ private extension CGFloat {
 struct TextListItemView: View {
   // It's fine that this child view isn't observing this parameter, because the parent is, so the changes will trickle down through the requests
   // Good thought to have when creating the architecture for non-networking based views
-  var contentSummary: ContentDetailsModel
+  var contentSummary: ContentListDisplayable
   var buttonAction: (Bool) -> Void
-  @ObservedObject var downloadsMC: DownloadsMC
-  @ObservedObject var progressionsMC: ProgressionsMC
   
   var canStreamPro: Bool {
     return Guardpost.current.currentUser?.canStream ?? false
@@ -71,13 +69,18 @@ struct TextListItemView: View {
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
         .padding([.top], 2)
       
-      if contentSummary.progress < 1.0 && contentSummary.progress > 0.0 {
-        ProgressBarView(progress: contentSummary.progress, isRounded: true)
-          .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
-          .padding([.trailing], 20)
-          .padding([.top], 10)
-      }
+      progressBar
     }
+  }
+  
+  private var progressBar: AnyView? {
+    guard case .inProgress(let progress) = contentSummary.viewProgress else { return nil }
+    return AnyView(
+      ProgressBarView(progress: progress, isRounded: true)
+        .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
+        .padding([.trailing], 20)
+        .padding([.top], 10)
+    )
   }
   
   private func setUpImageAndProgress() -> AnyView {
@@ -89,52 +92,46 @@ struct TextListItemView: View {
         self.download()
     }
     
-    switch downloadsMC.state {
-    case .loading:
-
-      if contentSummary.isInCollection {
-        
-        // If downloading entire collection, only showing loading view at the top of the ContentsListingView
+//    switch downloadsMC.state {
+//    case .loading:
+//
+//      if contentSummary.isInCollection {
+//
+//         If downloading entire collection, only showing loading view at the top of the ContentsListingView
 //        guard downloadsMC.isEpisodeOnly else {
 //          return AnyView(image)
 //        }
-        
-        guard let downloadedContent = downloadsMC.downloadedContent,
-        downloadedContent.id == contentSummary.id else {
-          return AnyView(image)
-        }
-        
+//
+//        guard let downloadedContent = downloadsMC.downloadedContent,
+//        downloadedContent.id == contentSummary.id else {
+//          return AnyView(image)
+//        }
+//
 //        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
-
-      } else {
-        // Only show progress on model that is currently being downloaded
+//
+//      } else {
+//         Only show progress on model that is currently being downloaded
 //        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummary.id }),
 //          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
 //          return AnyView(image)
 //        }
 //
 //        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
-      }
-      
-    default:
-      return AnyView(image)
-    }
+//      }
+//
+//    default:
+//      return AnyView(image)
+//    }
     // TODO: Remove this
     return AnyView(image)
   }
   
   private var downloadImageName: String {
-    if contentSummary.isInCollection {
-      return downloadsMC.data.contains { downloadModel in
-        return downloadModel.id == contentSummary.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0.id == contentSummary.id }) ? DownloadImageName.inActive : DownloadImageName.active
-    }
+    contentSummary.downloadProgress.imageName
   }
   
   private func download() {
-    let success = downloadImageName != DownloadImageName.inActive
+    let success = downloadImageName != DownloadImageName.inactive
     buttonAction(success)
   }
   
@@ -158,7 +155,7 @@ struct TextListItemView: View {
         .foregroundColor(.secondaryButtonBackground)
         .cornerRadius(6)
       
-      Text("\(contentSummary.index ?? 0)")
+      Text("\(contentSummary.ordinal)")
         .font(.uiButtonLabelSmall)
         .foregroundColor(.buttonText)
     }
@@ -178,10 +175,11 @@ struct TextListItemView: View {
         .foregroundColor(Color.buttonText)
     }
     
-    guard let progression = contentSummary.progression, progression.finished else {
-      return AnyView(numberView)
+    if case .completed = contentSummary.viewProgress {
+      return AnyView(completeView)
     }
-    return AnyView(completeView)
+    
+    return AnyView(numberView)
   }
   
   private func toggleCompleteness() {

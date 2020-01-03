@@ -35,41 +35,42 @@ private struct Layout {
 
 struct DownloadImageName {
   static let active: String = "downloadActive"
-  static let inActive: String = "downloadInactive"
+  static let inactive: String = "downloadInactive"
 }
 
 struct ContentSummaryView: View {
   
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
-  var callback: ((ContentDetailsModel, HudOption) -> Void)?
-  @ObservedObject var downloadsMC: DownloadsMC
-  @ObservedObject var contentDetailsVM: ContentDetailsVM
+  var callback: ((ContentListDisplayable, HudOption) -> Void)?
+  @ObservedObject var contentDetailsViewModel: ContentDetailsViewModel
   private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
   
   var body: some View {
     let queue = DispatchQueue(label: "Monitor")
     monitor.start(queue: queue)
-    return contentView
+    guard let content = contentDetailsViewModel.content else { return AnyView(Spacer()) }
+    
+    return contentView(content: content)
   }
   
-  private var contentView: some View {
-    VStack(alignment: .leading) {
+  private func contentView(content: ContentListDisplayable) -> AnyView {
+    AnyView(VStack(alignment: .leading) {
       HStack {
-        Text(contentDetailsVM.data.technologyTripleString.uppercased())
+        Text(content.technologyTripleString.uppercased())
           .font(.uiUppercase)
           .foregroundColor(.contentText)
           .kerning(0.5)
         // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
         Spacer()
         
-        if contentDetailsVM.data.professional {
+        if content.professional {
           ProTag()
         }
       }
       .padding([.top], 20)
       
-      Text(contentDetailsVM.data.name)
+      Text(content.name)
         .font(.uiTitle1)
         .lineLimit(nil)
         //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
@@ -78,7 +79,7 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
         .foregroundColor(.titleText)
       
-      Text(contentDetailsVM.data.contentSummaryMetadataString)
+      Text(content.contentSummaryMetadataString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
@@ -88,13 +89,11 @@ struct ContentSummaryView: View {
         downloadButton
         bookmarkButton
         
-        if contentDetailsVM.data.progression?.finished ?? false {
-          CompletedTag()
-        }
+        completedTag(content: content)
       })
         .padding([.top], 15)
       
-      Text(contentDetailsVM.data.descriptionPlainText)
+      Text(content.descriptionPlainText)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
@@ -105,14 +104,14 @@ struct ContentSummaryView: View {
         .padding([.top], 15)
         .lineLimit(nil)
       
-      Text("By \(contentDetailsVM.data.contributorString)")
+      Text("By \(content.contributorString)")
         .font(.uiFootnote)
         .foregroundColor(.contentText)
         .lineLimit(2)
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .lineSpacing(3)
-    }
+    })
   }
   
   private var downloadButton: some View {
@@ -122,11 +121,18 @@ struct ContentSummaryView: View {
     }
   }
   
+  private func completedTag(content: ContentListDisplayable) -> CompletedTag? {
+    if case .completed = content.viewProgress {
+      return CompletedTag()
+    }
+    return nil
+  }
+  
   private var bookmarkButton: AnyView {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     
-    let imageName = contentDetailsVM.data.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    let imageName = (contentDetailsViewModel.content?.bookmarked ?? false) ? "bookmarkActive" : "bookmarkInactive"
     
     return AnyView(
       Image(imageName)
@@ -146,55 +152,26 @@ struct ContentSummaryView: View {
         self.download()
     }
     
-    switch downloadsMC.state {
-      case .loading:
-        
-        if contentDetailsVM.data.isInCollection {
-          
-          guard let downloadedContent = downloadsMC.downloadedContent,
-            downloadedContent.parentContent?.id == contentDetailsVM.data.id else {
-              return AnyView(image)
-          }
-          
-          return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
-          
-        } else {
-          // Only show progress on model that is currently being downloaded
-          guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentDetailsVM.data.id }),
-            downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-              return AnyView(image)
-          }
-          
-          return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
-      }
-      
-      default:
-        return AnyView(image)
+    guard let downloadProgress = contentDetailsViewModel.content?.downloadProgress else {
+      return AnyView(image)
     }
+    
+    if case .inProgress(let progress) = downloadProgress {
+      return AnyView(CircularProgressBar(isCollection: false, progress: progress))
+    }
+    
+    return AnyView(image)
   }
   
   private var downloadImageName: String {
-    
-    if contentDetailsVM.data.isInCollection {
-      return downloadsMC.data.contains { downloadModel in
-        return downloadModel.id == contentDetailsVM.data.id
-        } ? DownloadImageName.inActive : DownloadImageName.active
-    } else {
-      return downloadsMC.data.contains(where: { $0.id == contentDetailsVM.data.id }) ? DownloadImageName.inActive : DownloadImageName.active
-    }
+    (contentDetailsViewModel.content?.downloadProgress ?? DownloadProgressDisplayable.downloadable).imageName
   }
   
   private func download() {
-    if UserDefaults.standard.wifiOnlyDownloads && monitor.currentPath.status != .satisfied {
-      callback?(contentDetailsVM.data, .notOnWifi)
-    } else {
-      let success = downloadImageName != DownloadImageName.inActive
-      let hudOption: HudOption = success ? .success : .error
-      callback?(contentDetailsVM.data, hudOption)
-    }
+    // TODO
   }
   
   private func bookmark() {
-    contentDetailsVM.toggleBookmark()
+    // TODO
   }
 }

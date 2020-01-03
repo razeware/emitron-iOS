@@ -94,7 +94,7 @@ final class DataManager: ObservableObject {
     libraryRepository = LibraryRepository(repository: repository, serviceAdapter: libraryService)
     
     // TODO: Fix this
-    downloadRepository = DownloadRepository()
+    downloadRepository = DownloadRepository(repository: repository, serviceAdapter: libraryService)
     
     let domainsService = DomainsService(client: sessionController.client)
     domainRepository = DomainRepository(repository: repository, service: domainsService)

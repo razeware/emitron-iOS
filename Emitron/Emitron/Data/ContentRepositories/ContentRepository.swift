@@ -37,7 +37,7 @@ class ContentRepository: ObservableObject {
   private (set) var totalContentNum: Int = 0
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var contents: [ContentSummaryState] = [ContentSummaryState]()
+  @Published private (set) var contents: [ContentListDisplayable] = [ContentListDisplayable]()
   
   private var contentIds: [Int] = [Int]()
   private var contentSubscription: AnyCancellable?

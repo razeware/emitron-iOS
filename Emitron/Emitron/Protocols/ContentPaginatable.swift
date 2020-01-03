@@ -36,7 +36,7 @@ protocol ContentPaginatable: ObservableObject where ObjectWillChangePublisher ==
   var state: DataState { get }
   var totalContentNum: Int { get }
   
-  var contents: [ContentSummaryState] { get }
+  var contents: [ContentListDisplayable] { get }
   
   func loadMore()
   func reload()

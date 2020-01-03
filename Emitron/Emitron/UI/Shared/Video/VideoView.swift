@@ -30,10 +30,10 @@ import SwiftUI
 
 struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
     
-  private let contentDetails: [ContentDetailsModel]
+  private let contentDetails: [ContentListDisplayable]
   private let user: User
   
-  init(with contentDetails: [ContentDetailsModel], user: User) {
+  init(with contentDetails: [ContentListDisplayable], user: User) {
     self.contentDetails = contentDetails
     self.user = user
   }
@@ -50,7 +50,7 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 
 struct VideoView: View {
   
-  let contentDetails: [ContentDetailsModel]
+  let contentDetails: [ContentListDisplayable]
   let user: User
   @State var showingProSheet = false
   var onDisappear: (() -> Void)?

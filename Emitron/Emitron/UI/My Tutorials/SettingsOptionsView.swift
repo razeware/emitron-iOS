@@ -81,7 +81,7 @@ struct SettingsOptionsView: View {
   }
   
   private func setCheckmark(for detailOption: String) -> String? {
-    guard let selectedDetailOption = UserDefaults.standard.object(forKey: selectedSettingsOption.key.rawValue) as? String else {
+    guard let _ = UserDefaults.standard.object(forKey: selectedSettingsOption.key.rawValue) as? String else {
       return nil
     }
   
