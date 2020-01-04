@@ -52,7 +52,7 @@ extension AttachmentTest {
         let attachments = try document.data.map { resource in
           try AttachmentAdapter.process(resource: resource)
         }
-        let cacheUpdate = try DataCacheUpdate(resources: document.included)
+        let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
         return (attachments, cacheUpdate)
       } catch {
         fatalError("Unable to load Attachment mock: \(error)")

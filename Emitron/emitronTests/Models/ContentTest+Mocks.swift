@@ -51,7 +51,7 @@ extension ContentTest {
         let document = JSONAPIDocument(json)
         let resource = document.data.first!
         let content = try ContentAdapter.process(resource: resource)
-        let cacheUpdate = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityId, $0.relationships) })
+        let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
         
         return (content, cacheUpdate)
       } catch {

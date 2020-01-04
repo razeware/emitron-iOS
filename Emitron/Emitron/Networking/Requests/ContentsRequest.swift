@@ -43,7 +43,7 @@ struct ContentsRequest: Request {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let contents = try doc.data.map { try ContentAdapter.process(resource: $0) }
-    let cacheUpdate = try DataCacheUpdate(resources: doc.included, relationships: doc.data.map { (entity: $0.entityId, $0.relationships) })
+    let cacheUpdate = try DataCacheUpdate.loadFrom(document: doc)
     guard let totalResultCount = doc.meta["total_result_count"] as? Int else {
       throw RWAPIError.responseMissingRequiredMeta(field: "total_result_count")
     }
@@ -71,7 +71,7 @@ struct ContentDetailsRequest: Request {
   func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    let cacheUpdate = try DataCacheUpdate(resources: doc.included, relationships: doc.data.map { (entity: $0.entityId, $0.relationships) })
+    let cacheUpdate = try DataCacheUpdate.loadFrom(document: doc)
     let contents = try doc.data.map { try ContentAdapter.process(resource: $0, relationships: cacheUpdate.relationships) }
     
     guard let content = contents.first,
@@ -136,7 +136,7 @@ struct PlaybackUsageRequest: Request {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let progressions = try doc.data.compactMap { try ProgressionAdapter.process(resource: $0) }
-    let cacheUpdate = try DataCacheUpdate(resources: doc.included)
+    let cacheUpdate = try DataCacheUpdate.loadFrom(document: doc)
     
     guard let progression = progressions.first,
       progressions.count == 1 else {

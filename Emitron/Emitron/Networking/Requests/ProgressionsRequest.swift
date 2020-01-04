@@ -43,7 +43,7 @@ struct ProgressionsRequest: Request {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let progressions = try doc.data.map { try ProgressionAdapter.process(resource: $0) }
-    let cacheUpdate = try DataCacheUpdate(resources: doc.included)
+    let cacheUpdate = try DataCacheUpdate.loadFrom(document: doc)
     guard let totalResultCount = doc.meta["total_result_count"] as? Int else {
       throw RWAPIError.responseMissingRequiredMeta(field: "total_result_count")
     }

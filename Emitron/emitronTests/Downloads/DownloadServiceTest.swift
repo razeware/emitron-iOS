@@ -75,6 +75,12 @@ class DownloadServiceTest: XCTestCase {
   }
   
   func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    persistableState(for: content.id, with: cacheUpdate)
+  }
+  
+  func persistableState(for contentId: Int, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    
+    guard let content = cacheUpdate.contents.first(where: { $0.id == contentId }) else { fatalError("Invalid cache update")}
     
     var parentContent: Content? = nil
     if let groupId = content.groupId {
@@ -160,6 +166,9 @@ class DownloadServiceTest: XCTestCase {
       try screencast.save(db)
     }
     
+    let originalDuration = screencast.duration
+    let originalDescription = screencast.descriptionPlainText
+    
     let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
     XCTAssertNotEqual(newDuration, screencast.duration)
@@ -170,6 +179,13 @@ class DownloadServiceTest: XCTestCase {
     screencast.descriptionPlainText = newDescription
     try database.write { db in
       try screencast.save(db)
+    }
+    
+    // Verify the changes persisted
+    try database.read { db in
+      let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
+      XCTAssertEqual(newDuration, updatedScreencast!.duration)
+      XCTAssertEqual(newDescription, updatedScreencast!.descriptionPlainText)
     }
     
     // We only have one item of content
@@ -183,11 +199,11 @@ class DownloadServiceTest: XCTestCase {
     // No change to the content count
     XCTAssertEqual(1, getAllContents().count)
     
-    // And that the values have been updated in CD appropriately
+    // The values will have reverted to those from the cache
     try database.read { db in
       let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
-      XCTAssertEqual(screencast.duration, updatedScreencast!.duration)
-      XCTAssertEqual(screencast.descriptionPlainText, updatedScreencast!.descriptionPlainText)
+      XCTAssertEqual(originalDuration, updatedScreencast!.duration)
+      XCTAssertEqual(originalDescription, updatedScreencast!.descriptionPlainText)
     }
   }
   
@@ -196,8 +212,8 @@ class DownloadServiceTest: XCTestCase {
     let fullState = persistableState(for: collection.0, with: collection.1)
     
     let episode = fullState.childContents.first!
-    downloadService.requestDownload(contentId: episode.id) { _ in
-      self.persistableState(for: collection.0, with: collection.1)
+    downloadService.requestDownload(contentId: episode.id) { contentId in
+      self.persistableState(for: contentId, with: collection.1)
     }
     
     let allContentIds = fullState.childContents.map({ $0.id }) + [collection.0.id]
@@ -212,10 +228,12 @@ class DownloadServiceTest: XCTestCase {
     let fullState = persistableState(for: collection, with: collectionModel.1)
     
     let episode = fullState.childContents.first!
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+      self.persistableState(for: contentId, with: collectionModel.1)
+    })
     
-    try database.write { db in
-      try collection.save(db)
-    }
+    let originalDuration = collection.duration
+    let originalDescription = collection.descriptionPlainText
     
     let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
@@ -229,8 +247,12 @@ class DownloadServiceTest: XCTestCase {
       try collection.save(db)
     }
     
-    // We only have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    // Confirm the chnage was persisted
+    try database.read { db in
+      let updatedCollection = try Content.fetchOne(db, key: collection.id)
+      XCTAssertEqual(newDuration, updatedCollection!.duration)
+      XCTAssertEqual(newDescription, updatedCollection!.descriptionPlainText)
+    }
     
     // Now execute the download request
     downloadService.requestDownload(contentId: episode.id) { _ in
@@ -240,11 +262,11 @@ class DownloadServiceTest: XCTestCase {
     // Adds all episodes and the collection to the DB
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
     
-    // And that the values have been updated in CD appropriately
+    // The values will have been reverted cos of the cache
     try database.read { db in
       let updatedCollection = try Content.fetchOne(db, key: collection.id)
-      XCTAssertEqual(collection.duration, updatedCollection!.duration)
-      XCTAssertEqual(collection.descriptionPlainText, updatedCollection!.descriptionPlainText)
+      XCTAssertEqual(originalDuration, updatedCollection!.duration)
+      XCTAssertEqual(originalDescription, updatedCollection!.descriptionPlainText)
     }
   }
   
@@ -252,8 +274,8 @@ class DownloadServiceTest: XCTestCase {
     let collection = ContentTest.Mocks.collection
     let fullState = persistableState(for: collection.0, with: collection.1)
     
-    downloadService.requestDownload(contentId: collection.0.id) { _ in
-      self.persistableState(for: collection.0, with: collection.1)
+    downloadService.requestDownload(contentId: collection.0.id) { contentId in
+      self.persistableState(for: contentId, with: collection.1)
     }
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
@@ -266,38 +288,45 @@ class DownloadServiceTest: XCTestCase {
     
     var episode = fullState.childContents.first!
     
-    try database.write { db in
-      try episode.save(db)
-    }
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+      self.persistableState(for: contentId, with: collectionModel.1)
+    })
+    
+    let originalDuration = episode.duration
+    let originalDescription = episode.descriptionPlainText
     
     let newDuration = 1234
     let newDescription = "THIS IS A DESCRIPTION"
     XCTAssertNotEqual(newDuration, episode.duration)
     XCTAssertNotEqual(newDescription, episode.descriptionPlainText)
     
-    // Update the CD model
+    // Update the persisted model
     episode.duration = newDuration
     episode.descriptionPlainText = newDescription
     try database.write { db in
       try episode.save(db)
     }
     
-    // We only have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    // Check that the new values were saved
+    try database.read { db in
+      let updatedEpisode = try Content.fetchOne(db, key: episode.id)
+      XCTAssertEqual(newDuration, updatedEpisode!.duration)
+      XCTAssertEqual(newDescription, updatedEpisode!.descriptionPlainText)
+    }
     
     // Now execute the download request
-    downloadService.requestDownload(contentId: collectionModel.0.id) { _ in
-      self.persistableState(for: collectionModel.0, with: collectionModel.1)
+    downloadService.requestDownload(contentId: collectionModel.0.id) { contentId in
+      self.persistableState(for: contentId, with: collectionModel.1)
     }
     
     // Added the correct number of models
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
     
-    // And that the values have been updated in CD appropriately
+    // The values reverted cos of the data cache
     try database.read { db in
       let updatedEpisode = try Content.fetchOne(db, key: episode.id)
-      XCTAssertEqual(episode.duration, updatedEpisode!.duration)
-      XCTAssertEqual(episode.descriptionPlainText, updatedEpisode!.descriptionPlainText)
+      XCTAssertEqual(originalDuration, updatedEpisode!.duration)
+      XCTAssertEqual(originalDescription, updatedEpisode!.descriptionPlainText)
     }
   }
   
@@ -306,12 +335,12 @@ class DownloadServiceTest: XCTestCase {
     let fullState = persistableState(for: collection.0, with: collection.1)
     let episode = fullState.childContents.first!
     
-    downloadService.requestDownload(contentId: episode.id) { _ in
-      self.persistableState(for: episode, with: collection.1)
+    downloadService.requestDownload(contentId: episode.id) { contentId in
+      self.persistableState(for: contentId, with: collection.1)
     }
     
     XCTAssertEqual(1, getAllDownloads().count)
-    return XCTFail()
+    
     let download = getAllDownloads().first!
     XCTAssertEqual(episode.id, download.contentId)
   }
@@ -330,8 +359,8 @@ class DownloadServiceTest: XCTestCase {
   func testRequestDownloadAddsDownloadToCollection() {
     let collection = ContentTest.Mocks.collection
     let fullState = persistableState(for: collection.0, with: collection.1)
-    downloadService.requestDownload(contentId: collection.0.id) { _ in
-      self.persistableState(for: collection.0, with: collection.1)
+    downloadService.requestDownload(contentId: collection.0.id) { contentId in
+      self.persistableState(for: contentId, with: collection.1)
     }
 
     // Adds downloads to the collection and the individual episodes
@@ -431,12 +460,9 @@ class DownloadServiceTest: XCTestCase {
     let fullState = persistableState(for: collection.0, with: collection.1)
     let episode = fullState.childContents.first!
     
-    downloadService.requestDownload(contentId: episode.id) { _ in
-      self.persistableState(for: episode, with: collection.1)
+    downloadService.requestDownload(contentId: episode.id) { contentId in
+      self.persistableState(for: contentId, with: collection.1)
     }
-    
-    XCTFail()
-    return
     
     let downloadQueueItem = getAllDownloadQueueItems().first!
     
@@ -511,7 +537,7 @@ class DownloadServiceTest: XCTestCase {
     let downloadQueueItem = sampleDownloadQueueItem()
     let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .sdVideoFile }!
     
-    UserDefaults.standard.set(Attachment.Kind.sdVideoFile.rawValue, forKey: UserDefaultsKey.downloadQuality.rawValue)
+    UserDefaults.standard.set(Attachment.Kind.sdVideoFile.apiValue, forKey: UserDefaultsKey.downloadQuality.rawValue)
     
     downloadService.requestDownloadUrl(downloadQueueItem)
     

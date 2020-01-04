@@ -215,27 +215,29 @@ extension PersistenceStore {
   ///   - contentDetailState: The ContentDetailState to persist
   ///   - db: A `Database` object to save it
   private func persistContentItem(for contentPersistableState: ContentPersistableState, inDatabase db: Database, withChildren: Bool = false, withParent: Bool = false, contentLookup: ContentLookup? = nil) throws {
-    // 1. Generate and save this content item
+    
+    // 1. Need to do parent first—we need foreign key
+    //    contraints on the groupId for child content
+    if withParent,
+      let parentContent = contentPersistableState.parentContent,
+      let contentLookup = contentLookup,
+      let parentPersistable = contentLookup(parentContent.id) {
+      try persistContentItem(for: parentPersistable, inDatabase: db, withChildren: true, contentLookup: contentLookup)
+    }
+    
+    // 2. Generate and save this content item
     try contentPersistableState.content.save(db)
     
-    // 2. Groups
+    // 3. Groups
     try contentPersistableState.groups.forEach { try $0.save(db) }
     
-    // 3. Children
+    // 4. Children
     if withChildren, let contentLookup = contentLookup {
       try contentPersistableState.childContents.forEach { content in
         if let childPersistable = contentLookup(content.id) {
           try persistContentItem(for: childPersistable, inDatabase: db)
         }
       }
-    }
-    
-    // 4. Parent
-    if withParent,
-      let parentContent = contentPersistableState.parentContent,
-      let contentLookup = contentLookup,
-      let parentPersistable = contentLookup(parentContent.id) {
-      try persistContentItem(for: parentPersistable, inDatabase: db, withChildren: true, contentLookup: contentLookup)
     }
     
     // 5. Domains

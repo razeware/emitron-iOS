@@ -41,6 +41,24 @@ struct DataCacheUpdate {
   let contentDomains: [ContentDomain]
   let relationships: [EntityRelationship]
   
+  static func loadFrom(document: JSONAPIDocument) throws -> DataCacheUpdate {
+    let data = try DataCacheUpdate(resources: document.data)
+    let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityId, $0.relationships) })
+    return data.merged(with: included)
+  }
+  
+  init(contents: [Content], bookmarks: [Bookmark], progressions: [Progression], domains: [Domain], groups: [Group], categories: [Category], contentCategories: [ContentCategory], contentDomains: [ContentDomain], relationships: [EntityRelationship]) {
+    self.contents = contents
+    self.bookmarks = bookmarks
+    self.progressions = progressions
+    self.domains = domains
+    self.groups = groups
+    self.categories = categories
+    self.contentCategories = contentCategories
+    self.contentDomains = contentDomains
+    self.relationships = relationships
+  }
+  
   init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = [JSONEntityRelationships]()) throws {
     let relationships = DataCacheUpdate.relationships(from: resources, with: jsonEntityRelationships)
     contents = try resources
@@ -64,6 +82,18 @@ struct DataCacheUpdate {
     contentCategories = try ContentCategoryAdapter.process(relationships: relationships)
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     self.relationships = relationships
+  }
+  
+  func merged(with other: DataCacheUpdate) -> DataCacheUpdate {
+    DataCacheUpdate(contents: contents + other.contents,
+                    bookmarks: bookmarks + other.bookmarks,
+                    progressions: progressions + other.progressions,
+                    domains: domains + other.domains,
+                    groups: groups + other.groups,
+                    categories: categories + other.categories,
+                    contentCategories: contentCategories + other.contentCategories,
+                    contentDomains: contentDomains + other.contentDomains,
+                    relationships: relationships + other.relationships)
   }
   
   private static func relationships(from resources: [JSONAPIResource], with additionalRelationships: [JSONEntityRelationships]) -> [EntityRelationship] {
