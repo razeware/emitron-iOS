@@ -37,9 +37,9 @@ struct ProgressionAdapter: EntityAdapter {
     guard let target = resource.attributes["target"] as? Int,
       let progress = resource.attributes["progress"] as? Int,
       let createdAtString = resource.attributes["created_at"] as? String,
-      let createdAt = DateFormatter.apiDateFormatter.date(from: createdAtString),
+      let createdAt = createdAtString.iso8601,
       let updatedAtString = resource.attributes["updated_at"] as? String,
-      let updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtString)
+      let updatedAt = updatedAtString.iso8601
       /* Note: We're purposefully ignoring the following attributes:
        - finished
        - percent_complete

@@ -311,6 +311,7 @@ class DownloadServiceTest: XCTestCase {
     }
     
     XCTAssertEqual(1, getAllDownloads().count)
+    return XCTFail()
     let download = getAllDownloads().first!
     XCTAssertEqual(episode.id, download.contentId)
   }
@@ -433,6 +434,9 @@ class DownloadServiceTest: XCTestCase {
     downloadService.requestDownload(contentId: episode.id) { _ in
       self.persistableState(for: episode, with: collection.1)
     }
+    
+    XCTFail()
+    return
     
     let downloadQueueItem = getAllDownloadQueueItems().first!
     

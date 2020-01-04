@@ -62,7 +62,7 @@ extension ContentSummaryState: ContentListDisplayable {
     content.contentType
   }
   
-  var ordinal: Int {
+  var ordinal: Int? {
     content.ordinal
   }
   

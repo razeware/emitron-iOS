@@ -37,7 +37,7 @@ struct ContentAdapter: EntityAdapter {
       let descriptionHtml = resource.attributes["description"] as? String,
       let descriptionPlainText = resource.attributes["description_plain_text"] as? String,
       let releasedAtString = resource.attributes["released_at"] as? String,
-      let releasedAt = DateFormatter.apiDateFormatter.date(from: releasedAtString),
+      let releasedAt = releasedAtString.iso8601,
       let free = resource.attributes["free"] as? Bool,
       let professional = resource.attributes["professional"] as? Bool,
       let difficultyString = resource.attributes["difficulty"] as? String,
@@ -48,8 +48,7 @@ struct ContentAdapter: EntityAdapter {
       let cardArtworkUrlString = resource.attributes["card_artwork_url"] as? String,
       let cardArtworkUrl = URL(string: cardArtworkUrlString),
       let technologyTriple = resource.attributes["technology_triple_string"] as? String,
-      let contributors = resource.attributes["contributor_string"] as? String,
-      let ordinal = resource.attributes["ordinal"] as? Int
+      let contributors = resource.attributes["contributor_string"] as? String
       else {
         throw EntityAdapterError.invalidOrMissingAttributes
     }
@@ -77,7 +76,7 @@ struct ContentAdapter: EntityAdapter {
                    technologyTriple: technologyTriple,
                    contributors: contributors,
                    groupId: groupId,
-                   ordinal: ordinal)
+                   ordinal: resource.attributes["ordinal"] as? Int)
   }
 }
 

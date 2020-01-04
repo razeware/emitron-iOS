@@ -62,7 +62,7 @@ struct EmitronDatabase {
         t.column("cardArtworkUrl", .text).notNull()
         t.column("technologyTriple", .text).notNull()
         t.column("contributors", .text).notNull()
-        t.column("ordinal", .integer).notNull().indexed().defaults(to: 0)
+        t.column("ordinal", .integer).indexed()
       }
     }
     

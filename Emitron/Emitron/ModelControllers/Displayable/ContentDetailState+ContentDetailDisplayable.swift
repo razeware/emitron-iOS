@@ -66,7 +66,7 @@ extension ContentDetailState: ContentDetailDisplayable {
     content.contentType
   }
   
-  var ordinal: Int {
+  var ordinal: Int? {
     content.ordinal
   }
   

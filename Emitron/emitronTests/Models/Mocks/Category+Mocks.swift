@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,20 +27,32 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 import GRDB
 @testable import Emitron
 
-extension EmitronDatabase {
-  static func testDatabase() throws -> DatabaseWriter {
-    // In memory database
-    let dbQueue = DatabaseQueue()
-    // And migrate
-    try migrator.migrate(dbQueue)
-    // Load important mocks
-    try Emitron.Category.loadAndSaveMocks(db: dbQueue)
-    try Domain.loadAndSaveMocks(db: dbQueue)
-    
-    return dbQueue
+extension Emitron.Category {
+  static func loadAndSaveMocks(db: DatabaseWriter) throws {
+    let categories = loadMocksFrom(filename: "Categories")
+    try db.write { db in
+      try categories.forEach { try $0.save(db) }
+    }
+  }
+  
+  private static func loadMocksFrom(filename: String) -> ([Emitron.Category]) {
+    do {
+      let bundle = Bundle(for: AttachmentTest.self)
+      let fileURL = bundle.url(forResource: filename, withExtension: "json")
+      let data = try Data(contentsOf: fileURL!)
+      let json = try JSON(data: data)
+      
+      let document = JSONAPIDocument(json)
+      let categories = try document.data.map { resource in
+        try CategoryAdapter.process(resource: resource)
+      }
+      return categories
+    } catch {
+      fatalError("Unable to load Category mocks: \(error)")
+    }
   }
 }
-

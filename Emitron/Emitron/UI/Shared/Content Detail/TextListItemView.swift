@@ -155,7 +155,7 @@ struct TextListItemView: View {
         .foregroundColor(.secondaryButtonBackground)
         .cornerRadius(6)
       
-      Text("\(contentSummary.ordinal)")
+      Text("\(contentSummary.ordinal ?? 0)")
         .font(.uiButtonLabelSmall)
         .foregroundColor(.buttonText)
     }

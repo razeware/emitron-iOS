@@ -68,7 +68,7 @@ protocol ContentListDisplayable {
   var parentName: String? { get }
   var contentType: ContentType { get }
   var cardArtworkUrl: URL { get }
-  var ordinal: Int { get }
+  var ordinal: Int? { get }
   var technologyTripleString: String { get }
   var contentSummaryMetadataString: String { get }
   var contributorString: String { get }

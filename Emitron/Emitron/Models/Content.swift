@@ -45,7 +45,7 @@ struct Content: Codable {
   var technologyTriple: String
   var contributors: String
   var groupId: Int?
-  var ordinal: Int
+  var ordinal: Int?
 }
 
 extension Content: Equatable {

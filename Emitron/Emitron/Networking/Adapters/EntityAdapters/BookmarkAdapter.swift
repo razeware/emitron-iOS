@@ -36,7 +36,7 @@ struct BookmarkAdapter: EntityAdapter {
     }
     
     guard let createdAtString = resource.attributes["created_at"] as? String,
-      let createdAt = DateFormatter.apiDateFormatter.date(from: createdAtString)
+      let createdAt = createdAtString.iso8601
       else {
         throw EntityAdapterError.invalidOrMissingAttributes
     }

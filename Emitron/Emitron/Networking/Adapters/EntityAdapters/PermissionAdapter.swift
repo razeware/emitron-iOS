@@ -36,9 +36,9 @@ struct PermissionAdapter: EntityAdapter {
       let tagString = resource.attributes["tag"] as? String,
       let tag = Permission.Tag(from: tagString),
       let createdAtString = resource.attributes["created_at"] as? String,
-      let createdAt = DateFormatter.apiDateFormatter.date(from: createdAtString),
+      let createdAt = createdAtString.iso8601,
       let updatedAtString = resource.attributes["updated_at"] as? String,
-      let updatedAt = DateFormatter.apiDateFormatter.date(from: updatedAtString)
+      let updatedAt = updatedAtString.iso8601
     else {
       throw EntityAdapterError.invalidOrMissingAttributes
     }
