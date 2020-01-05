@@ -132,6 +132,11 @@ public class Guardpost {
   
   public func updateUser(with user: User?) {
     _currentUser = user
+    if let user = user {
+      persistenceStore.persistUserToKeychain(user: user)
+    } else {
+      persistenceStore.removeUserFromKeychain()
+    }
   }
 
   private func asyncResponse(callback: @escaping (Result<User, LoginError>) -> Void,

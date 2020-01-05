@@ -29,15 +29,18 @@
 import Foundation
 import Combine
 
-class ContentRepository: ObservableObject {
+class ContentRepository: ObservableObject, ContentPaginatable {
   let repository: Repository
-  let serviceAdapter: ContentServiceAdapter
+  let contentsService: ContentsService
+  let serviceAdapter: ContentServiceAdapter!
   
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
   
-  @Published private (set) var state: DataState = .initial
-  @Published private (set) var contents: [ContentListDisplayable] = [ContentListDisplayable]()
+  @Published var contents: [ContentListDisplayable] = [ContentListDisplayable]()
+  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
+  // Let's see if we actually need it to be @Published...
+  var state: DataState = .initial
   
   private var contentIds: [Int] = [Int]()
   private var contentSubscription: AnyCancellable?
@@ -49,14 +52,13 @@ class ContentRepository: ObservableObject {
   }
   
   // Initialiser
-  init(repository: Repository, serviceAdapter: ContentServiceAdapter) {
+  init(repository: Repository, contentsService: ContentsService, serviceAdapter: ContentServiceAdapter?) {
     self.repository = repository
+    self.contentsService = contentsService
     self.serviceAdapter = serviceAdapter
     configureSubscription()
   }
-}
 
-extension ContentRepository: ContentPaginatable {
   func loadMore() {
     if state == .loading || state == .loadingAdditional {
       return
@@ -135,11 +137,9 @@ extension ContentRepository: ContentPaginatable {
       self.contents = contentSummaryStates
     })
   }
-}
 
-extension ContentRepository {
-  func contentDetail(for contentId: Int) -> AnyPublisher<ContentDetailState, Error> {
-    repository.contentDetailState(for: contentId)
-    ///AARRRGGHHHHH
+  func contentDetailsViewModel(for contentId: Int) -> ContentDetailsViewModel {
+    // Default will use the cached version
+    DataCacheContentDetailsViewModel(contentId: contentId, repository: repository, service: contentsService)
   }
 }

@@ -29,7 +29,14 @@
 import Foundation
 import Combine
 
+enum DataCacheError: Error {
+  case cacheMiss
+}
+
 final class DataCache: ObservableObject {
+  enum CacheChange {
+    case updated
+  }
   private var contents: [Int : Content] = [Int : Content]()
   private var bookmarks: [Int : Bookmark] = [Int : Bookmark]()
   private var progressions: [Int : Progression] = [Int : Progression]()
@@ -38,7 +45,7 @@ final class DataCache: ObservableObject {
   private var contentDomains: [Int : [ContentDomain]] = [Int : [ContentDomain]]()
   private var contentCategories: [Int : [ContentCategory]] = [Int : [ContentCategory]]()
   
-  private let objectDidChange: PassthroughSubject<Void, Never> = PassthroughSubject<Void, Never>()
+  private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
 }
 
 
@@ -57,24 +64,25 @@ extension DataCache {
     self.contentDomains.merge(newContentDomains)
     self.contentIndexedGroups.merge(newContentIndexedGroups)
     
-    objectDidChange.send()
+    objectDidChange.send(.updated)
   }
 }
 
 extension DataCache {
-  func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[CachedContentSummaryState], Never> {
-    self.objectDidChange.map { _ in
-      contentIds.compactMap { contentId in
-        self.cachedContentSummaryState(for: contentId)
+  func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[CachedContentSummaryState], Error> {
+    self.objectDidChange
+      .tryMap { _ in
+        try contentIds.map { contentId in
+          try self.cachedContentSummaryState(for: contentId)
+        }
       }
-    }
-    .removeDuplicates()
-    .eraseToAnyPublisher()
+      .removeDuplicates()
+      .eraseToAnyPublisher()
   }
   
-  func contentDetailState(for contentId: Int) -> AnyPublisher<CachedContentDetailState, Never> {
-    self.objectDidChange.compactMap { _ in
-      self.cachedContentDetailState(for: contentId)
+  func contentDetailState(for contentId: Int) -> AnyPublisher<CachedContentDetailState, Error> {
+    self.objectDidChange.tryMap { _ in
+      try self.cachedContentDetailState(for: contentId)
     }
     .removeDuplicates()
     .eraseToAnyPublisher()
@@ -83,26 +91,32 @@ extension DataCache {
 
 
 extension DataCache {
-  private func cachedContentSummaryState(for contentId: Int) -> CachedContentSummaryState? {
+  private func cachedContentSummaryState(for contentId: Int) throws -> CachedContentSummaryState {
     guard let content = self.contents[contentId],
       let contentDomains = self.contentDomains[contentId]
-      else { return nil }
+      else {
+        throw DataCacheError.cacheMiss
+    }
     
     let bookmark = self.bookmarks[contentId]
     let progression = self.progressions[contentId]
     
-    return CachedContentSummaryState(content: content,
-                                     contentDomains: contentDomains,
-                                     bookmark: bookmark,
-                                     parentContent: parentContent(for: content),
-                                     progression: progression)
+    return try CachedContentSummaryState(
+      content: content,
+      contentDomains: contentDomains,
+      bookmark: bookmark,
+      parentContent: parentContent(for: content),
+      progression: progression
+    )
   }
   
-  private func cachedContentDetailState(for contentId: Int) -> CachedContentDetailState? {
+  private func cachedContentDetailState(for contentId: Int) throws -> CachedContentDetailState {
     guard let content = self.contents[contentId],
       let contentDomains = self.contentDomains[contentId],
       let contentCategories = self.contentCategories[contentId]
-      else { return nil }
+      else {
+        throw DataCacheError.cacheMiss
+    }
     
     let bookmark = self.bookmarks[contentId]
     let progression = self.progressions[contentId]
@@ -113,24 +127,26 @@ extension DataCache {
       return groupIds.contains(content.groupId!)
     }
     
-    return CachedContentDetailState(content: content,
-                                    contentDomains: contentDomains,
-                                    contentCategories: contentCategories,
-                                    bookmark: bookmark,
-                                    parentContent: parentContent(for: content),
-                                    progression: progression,
-                                    groups: groups,
-                                    childContents: childContents)
+    return try CachedContentDetailState(
+      content: content,
+      contentDomains: contentDomains,
+      contentCategories: contentCategories,
+      bookmark: bookmark,
+      parentContent: parentContent(for: content),
+      progression: progression,
+      groups: groups,
+      childContents: childContents
+    )
   }
   
-  func cachedContentPersistableState(for contentId: Int) -> ContentPersistableState? {
-    cachedContentDetailState(for: contentId)
+  func cachedContentPersistableState(for contentId: Int) throws -> ContentPersistableState {
+    try cachedContentDetailState(for: contentId)
   }
   
-  private func parentContent(for content: Content) -> Content? {
-    guard let groupId = content.groupId,
-      let group = self.groupIndexedGroups[groupId]
-      else { return nil }
+  private func parentContent(for content: Content) throws -> Content? {
+    guard let groupId = content.groupId else { return nil }
+    guard let group = self.groupIndexedGroups[groupId]
+      else { throw DataCacheError.cacheMiss }
     
     return self.contents[group.contentId]
   }

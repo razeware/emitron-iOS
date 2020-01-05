@@ -38,7 +38,10 @@ struct ContentDetailView: View {
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
   @ObservedObject var contentDetailsViewModel: ContentDetailsViewModel
-  var user: User
+  @EnvironmentObject var sessionController: SessionController
+  var user: User {
+    sessionController.user!
+  }
   
   private var canStreamPro: Bool {
     return user.canStreamPro

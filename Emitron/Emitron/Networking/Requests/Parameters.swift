@@ -33,8 +33,9 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
   case beginner
   case intermediate
   case advanced
+  case allLevels
   
-  init?(string: String) {
+  init(string: String) {
     switch string {
     case "beginner":
       self = .beginner
@@ -43,7 +44,7 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
     case "advanced":
       self = .advanced
     default:
-      return nil
+      self = .allLevels
     }
   }
   
@@ -55,6 +56,8 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
       return "Intermediate"
     case .advanced:
       return "Advanced"
+    case .allLevels:
+      return "All Levels"
     }
   }
   
@@ -66,6 +69,8 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
       return "intermediate"
     case .advanced:
       return "advanced"
+    case .allLevels:
+      return ""
     }
   }
   
@@ -77,6 +82,8 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
       return 1
     case .advanced:
       return 2
+    case .allLevels:
+      return 3
     }
   }
 }

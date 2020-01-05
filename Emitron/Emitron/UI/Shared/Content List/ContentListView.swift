@@ -144,13 +144,12 @@ struct ContentListView: View {
 
     return
       AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-//        NavigationLink(destination:
-//          ContentDetailView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
-//        {
+        NavigationLink(destination: ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+        {
           CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
-//        }
+        }
       }
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
@@ -168,13 +167,13 @@ struct ContentListView: View {
     return
       AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
 
-//        NavigationLink(destination:
-//          ContentDetailView(content: partialContent, user: user, downloadsMC: self.downloadsMC))
-//        {
+        NavigationLink(destination:
+          ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+        {
           CardView(model: partialContent)
             .padding([.leading], 10)
             .padding([.top, .bottom], 10)
-//        }
+        }
       }
       .onDelete(perform: self.delete)
       .listRowBackground(Color.backgroundColor)

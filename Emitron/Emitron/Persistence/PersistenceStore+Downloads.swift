@@ -69,6 +69,22 @@ extension PersistenceStore {
 }
 
 extension PersistenceStore {
+  func downloadContentSummary(for contentIds: [Int]) -> DatabasePublishers.Value<[ContentSummaryState]> {
+    ValueObservation.tracking { db -> [ContentSummaryState] in
+      let request = Content
+        .filter(keys: contentIds)
+        .including(required: Content.download)
+        .including(all: Content.domains)
+        .including(optional: Content.bookmark)
+        .including(optional: Content.parentContent)
+        .including(optional: Content.progression)
+      
+      return try ContentSummaryState.fetchAll(db, request)
+    }.publisher(in: db)
+  }
+}
+
+extension PersistenceStore {
   func downloads(for contentIds: [Int]) -> DatabasePublishers.Value<[Download]> {
     ValueObservation.tracking { db -> [Download] in
       let request = Download

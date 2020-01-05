@@ -48,38 +48,31 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
-  /// `Publisher` required by `BindableObject` protocol. This publisher gets sent a new `Void` value anytime `appState` changes.
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
+  /// `Publisher` required by `BindableObject` protocol.
+  let objectWillChange = PassthroughSubject<Void, Never>()
+  private var subscriptions = Set<AnyCancellable>()
+
+  private(set) var state = DataState.initial
   
-  /// This is the app's entire state. The SwiftUI view hierarchy is a function of this state.
-  // sd: I don't get why this isn't @Published var state = DataState.initial
-  private(set) var state = DataState.initial {
-    willSet {
-      objectWillChange.send(())
-    }
-  }
+  @Published private(set) var user: User?
   
-  private(set) var client: RWAPI
   private let guardpost: Guardpost
-  private(set) var user: User? {
-    didSet {
-      self.client = RWAPI(authToken: self.user?.token ?? "")
-      self.permissionsService = PermissionsService(client: self.client)
-    }
-  }
-  private(set) var permissionsService: PermissionsService
   private let connectionMonitor = NWPathMonitor()
+  private(set) var client: RWAPI
+  private(set) var permissionsService: PermissionsService
   
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     self.guardpost = guardpost
     self.user = guardpost.currentUser
-    self.client = RWAPI(authToken: self.user?.token ?? "")
+    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
     super.init()
-		
+    
     let queue = DispatchQueue(label: "Monitor")
     connectionMonitor.start(queue: queue)
+    
+    prepareSubscriptions()
   }
   
   // MARK: - Internal
@@ -87,8 +80,8 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     state = .loading
     guardpost.presentationContextDelegate = self
     
-    if user != nil {
-      if user?.permissions == nil {
+    if let user = user {
+      if user.permissions == nil {
         fetchPermissions()
       } else {
         state = .hasData
@@ -96,9 +89,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     } else {
       guardpost.login { [weak self] result in
         
-        guard let self = self else {
-          return
-        }
+        guard let self = self else { return }
         
         switch result {
         case .failure(let error):
@@ -112,9 +103,8 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
           Event
             .login(from: "SessionController")
             .log(additionalParams: nil)
-
-          self.fetchPermissions()
           
+          self.fetchPermissions()
         }
       }
     }
@@ -122,7 +112,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   
   func fetchPermissionsIfNeeded() {
     // Request persmission if an app launch has happened or if it's been oveer 24 hours since the last permission request once the app enters the foreground
-    guard shouldRefresh else { return }
+    guard shouldRefresh || user?.permissions == nil else { return }
     
     fetchPermissions()
   }
@@ -136,20 +126,18 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
       switch result {
       case .failure(let error):
         Failure
-        .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+          .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
+          .log(additionalParams: nil)
         
         self.state = .failed
       case .success(let permissions):
-        self.user?.permissions = permissions
+        guard let user = self.user else { return }
+        self.user = user.with(permissions: permissions)
         
-        // Update user to keychain
-        if let user = self.user {
-          PersistenceStore.current.persistUserToKeychain(user: user)
-          self.saveOrReplaceRefreshableUpdateDate()
-        }
+        // Ensure guardpost is aware, and hence the keychain is updated
+        self.guardpost.updateUser(with: user)
+        self.saveOrReplaceRefreshableUpdateDate()
         
-        self.guardpost.updateUser(with: self.user)
         self.state = .hasData
       }
     }
@@ -157,13 +145,19 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   
   func logout() {
     guardpost.logout()
-    user = nil
     UserDefaults.standard.deleteAllFilters()
-    // TODO: Should all the stores user defaults be removed at this point, aka the Settings?
-    objectWillChange.send()
+    user = nil
+  }
+  
+  private func prepareSubscriptions() {
+    $user.sink { (user) in
+      self.client = RWAPI(authToken: user?.token ?? "")
+      self.permissionsService = PermissionsService(client: self.client)
+    }
+    .store(in: &subscriptions)
   }
 }
-  
+
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension SessionController: ASWebAuthenticationPresentationContextProviding {
   

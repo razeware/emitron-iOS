@@ -37,18 +37,24 @@ public struct User: Equatable, Codable {
   public let avatarUrl: URL
   public let name: String
   public let token: String
-  var permissions: [Permission] = [Permission]()
+  let permissions: [Permission]?
   
   public var canStreamPro: Bool {
-    !permissions.filter { $0.tag == .streamPro }.isEmpty
+    guard let permissions = permissions else { return false }
+    
+    return !permissions.filter { $0.tag == .streamPro }.isEmpty
   }
   
   public var canStream: Bool {
-    !permissions.filter { $0.tag == .streamBeginner }.isEmpty
+    guard let permissions = permissions else { return false }
+    
+    return !permissions.filter { $0.tag == .streamBeginner }.isEmpty
   }
   
   public var canDownload: Bool {
-    !permissions.filter { $0.tag == .download }.isEmpty
+    guard let permissions = permissions else { return false }
+    
+    return !permissions.filter { $0.tag == .download }.isEmpty
   }
   
   public var hasPermissionToUseApp: Bool {
@@ -74,6 +80,20 @@ public struct User: Equatable, Codable {
     self.avatarUrl = avatarUrl
     self.name = name
     self.token = token
-    self.permissions = [Permission]()
+    self.permissions = .none
+  }
+  
+  private init(user: User, permissions: [Permission]) {
+    self.externalId = user.externalId
+    self.email = user.email
+    self.username = user.username
+    self.avatarUrl = user.avatarUrl
+    self.name = user.name
+    self.token = user.token
+    self.permissions = permissions
+  }
+  
+  func with(permissions: [Permission]) -> User {
+    User(user: self, permissions: permissions)
   }
 }

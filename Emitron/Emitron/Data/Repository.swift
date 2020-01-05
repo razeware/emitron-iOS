@@ -40,10 +40,6 @@ class Repository {
   
 }
 
-enum RepositoryError: Error {
-  case never
-}
-
 extension Repository {
   func apply(update: DataCacheUpdate) {
     dataCache.update(from: update)
@@ -57,7 +53,6 @@ extension Repository {
     let downloads = persistenceStore.downloads(for: contentIds)
     
     return fromCache
-      .mapError { _ in RepositoryError.never }
       .combineLatest(downloads)
       .map { (cachedContentSummaryStates, downloads) in
         cachedContentSummaryStates.map { cached in
@@ -71,15 +66,14 @@ extension Repository {
     let download = persistenceStore.download(for: contentId)
     
     return fromCache
-      .mapError { _ in RepositoryError.never }
       .combineLatest(download)
       .map { (cachedContentDetailState, download) in
         self.contentDetailState(cached: cachedContentDetailState, download: download)
     }.eraseToAnyPublisher()
   }
   
-  func contentPersistableState(for contentId: Int) -> ContentPersistableState? {
-    dataCache.cachedContentPersistableState(for: contentId)
+  func contentPersistableState(for contentId: Int) throws -> ContentPersistableState? {
+    try dataCache.cachedContentPersistableState(for: contentId)
   }
   
   func domainList() throws -> [Domain] {

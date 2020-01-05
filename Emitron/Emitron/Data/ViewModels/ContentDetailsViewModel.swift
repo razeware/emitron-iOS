@@ -29,27 +29,34 @@
 import Foundation
 import Combine
 
-final class ContentDetailsViewModel: ObservableObject {
-  let repository: Repository
-  let service: ContentsService
+// It'd be lovely if this could be a protocol. But in order to
+// make it an ObservableObject, (which has associated type
+// dependencies) it's easier to build a class hierarchy
+class ContentDetailsViewModel: ObservableObject {
   let contentId: Int
   
-  @Published private (set) var state: DataState = .initial
-  @Published private (set) var content: ContentDetailDisplayable?
-  @Published private (set) var childContents: [ContentListDisplayable] = [ContentListDisplayable]()
+  @Published var content: ContentDetailDisplayable?
+  @Published var childContents: [ContentListDisplayable] = [ContentListDisplayable]()
+  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
+  // Let's see if we actually need it to be @Published...
+  var state: DataState = .initial
   
-  private var contentSubscription: AnyCancellable?
+  var subscriptions = Set<AnyCancellable>()
+  let childContentsPublishers = PassthroughSubject<AnyPublisher<[ContentSummaryState], Error>, Error>()
   
-  init(repository: Repository, service: ContentsService, contentId: Int) {
-    self.repository = repository
-    self.service = service
+  init(contentId: Int) {
     self.contentId = contentId
   }
-}
 
-extension ContentDetailsViewModel {
   func reload() {
-    
+    self.state = .loading
+    subscriptions.forEach({ $0.cancel() })
+    subscriptions.removeAll()
+    configureSubscriptions()
+  }
+  
+  func configureSubscriptions() {
+    fatalError("Override this in a subclass please.")
   }
 }
 

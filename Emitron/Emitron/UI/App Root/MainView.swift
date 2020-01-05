@@ -48,7 +48,7 @@ struct MainView: View {
     case .failed:
       return AnyView(LoginView())
     case .initial, .loading, .loadingAdditional:
-      sessionController.fetchPermissions()
+      sessionController.fetchPermissionsIfNeeded()
       return tabBarView()
     case .hasData:
       if user.hasPermissionToUseApp {

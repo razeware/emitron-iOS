@@ -371,3 +371,25 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
 }
+
+
+// MARK:- Functionality for the UI
+extension DownloadService {
+  func downloadList() -> AnyPublisher<[ContentSummaryState], Error> {
+    persistenceStore
+      .downloadList()
+      .eraseToAnyPublisher()
+  }
+  
+  func downloadedContentDetail(for contentId: Int) -> AnyPublisher<ContentDetailState?, Error> {
+    persistenceStore
+      .downloadDetail(contentId: contentId)
+      .eraseToAnyPublisher()
+  }
+  
+  func contentSummaries(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
+    persistenceStore
+      .downloadContentSummary(for: contentIds)
+      .eraseToAnyPublisher()
+  }
+}

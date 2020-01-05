@@ -40,8 +40,6 @@ struct ContentAdapter: EntityAdapter {
       let releasedAt = releasedAtString.iso8601,
       let free = resource.attributes["free"] as? Bool,
       let professional = resource.attributes["professional"] as? Bool,
-      let difficultyString = resource.attributes["difficulty"] as? String,
-      let difficulty = ContentDifficulty(string: difficultyString),
       let contentTypeString = resource.attributes["content_type"] as? String,
       let contentType = ContentType(string: contentTypeString),
       let duration = resource.attributes["duration"] as? Int,
@@ -51,6 +49,10 @@ struct ContentAdapter: EntityAdapter {
       let contributors = resource.attributes["contributor_string"] as? String
       else {
         throw EntityAdapterError.invalidOrMissingAttributes
+    }
+    var difficulty = ContentDifficulty.allLevels
+    if let difficultyString = resource.attributes["difficulty"] as? String {
+      difficulty = ContentDifficulty(string: difficultyString)
     }
     
     let group = relationships.first { relationship in
