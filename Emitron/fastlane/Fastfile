@@ -26,7 +26,9 @@ platform :ios do
   end
 
   lane :tests do
-    sh 'xcodebuild -resolvePackageDependencies'
+    Dir.chdir('..') do
+      sh 'xcodebuild -resolvePackageDependencies'
+    end
     run_tests(project: 'Emitron.xcodeproj', scheme: 'Emitron')
   end
 end
