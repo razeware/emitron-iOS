@@ -154,8 +154,14 @@ extension PersistenceStore {
     guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
     }
-    
-    return try? decoder.decode(User.self, from: encoded)
+    do {
+      return try decoder.decode(User.self, from: encoded)
+    } catch {
+      Failure
+        .loadFromPersistentStore(from: "PersistenceStore_Keychain", reason: error.localizedDescription)
+        .log()
+      return nil
+    }
   }
   
   @discardableResult

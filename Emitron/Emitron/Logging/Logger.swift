@@ -34,12 +34,17 @@ protocol Log {
   var reason: String { get }
 
   func log(additionalParams: [String: String]?)
+  func log()
 }
 
 // To make "reason" optional
 extension Log {
   var reason: String {
     return "N/A"
+  }
+  
+  func log() {
+    log(additionalParams: .none)
   }
 }
 

@@ -73,8 +73,9 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   init(guardpost: Guardpost) {
     dispatchPrecondition(condition: .onQueue(.main))
     self.guardpost = guardpost
-    self.user = guardpost.currentUser
-    self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
+    let user = guardpost.currentUser
+    self.user = user
+    self.client = RWAPI(authToken: user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
     super.init()
     
