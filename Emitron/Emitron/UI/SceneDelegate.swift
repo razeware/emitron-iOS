@@ -63,11 +63,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       // We grab this from the App Delegate, since it's needed there too
       let sessionController = SessionController.current
-      let appState = AppState()
       let dataManager = DataManager.current
       let mainView = MainView()
         .environmentObject(sessionController)
-        .environmentObject(appState)
         .environmentObject(dataManager)
       
       window.rootViewController = UIHostingController(rootView: mainView)

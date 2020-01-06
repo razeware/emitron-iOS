@@ -61,8 +61,17 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   private(set) var client: RWAPI
   private(set) var permissionsService: PermissionsService
   
+  var isLoggedIn: Bool {
+    user != nil
+  }
+  
+  var hasPermissions: Bool {
+    user?.permissions != nil
+  }
+  
   // MARK: - Initializers
   init(guardpost: Guardpost) {
+    dispatchPrecondition(condition: .onQueue(.main))
     self.guardpost = guardpost
     self.user = guardpost.currentUser
     self.client = RWAPI(authToken: guardpost.currentUser?.token ?? "")
@@ -80,20 +89,21 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     state = .loading
     guardpost.presentationContextDelegate = self
     
-    if let user = user {
-      if user.permissions == nil {
+    if isLoggedIn {
+      if !hasPermissions {
         fetchPermissions()
       } else {
         state = .hasData
       }
     } else {
       guardpost.login { [weak self] result in
-        
         guard let self = self else { return }
         
         switch result {
         case .failure(let error):
           self.state = .failed
+          // Have to manually do this since we're not allowed @Published with the enum
+          self.objectWillChange.send()
           Failure
             .login(from: "SessionController", reason: error.localizedDescription)
             .log(additionalParams: nil)
@@ -112,7 +122,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   
   func fetchPermissionsIfNeeded() {
     // Request persmission if an app launch has happened or if it's been oveer 24 hours since the last permission request once the app enters the foreground
-    guard shouldRefresh || user?.permissions == nil else { return }
+    guard shouldRefresh || !hasPermissions else { return }
     
     fetchPermissions()
   }
@@ -131,14 +141,15 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
         
         self.state = .failed
       case .success(let permissions):
+        // Check that we have a logged in user. Otherwise this is pointless
         guard let user = self.user else { return }
-        self.user = user.with(permissions: permissions)
         
+        self.state = .hasData
+        // Update the user
+        self.user = user.with(permissions: permissions)
         // Ensure guardpost is aware, and hence the keychain is updated
         self.guardpost.updateUser(with: user)
         self.saveOrReplaceRefreshableUpdateDate()
-        
-        self.state = .hasData
       }
     }
   }
@@ -146,11 +157,13 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   func logout() {
     guardpost.logout()
     UserDefaults.standard.deleteAllFilters()
+    
     user = nil
   }
   
   private func prepareSubscriptions() {
-    $user.sink { (user) in
+    $user.sink { [weak self] (user) in
+      guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)
     }
@@ -160,7 +173,6 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension SessionController: ASWebAuthenticationPresentationContextProviding {
-  
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
     return UIApplication.shared.windows.first!
   }

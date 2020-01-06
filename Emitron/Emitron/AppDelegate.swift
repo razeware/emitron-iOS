@@ -34,11 +34,11 @@ import GRDB
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  private (set) var persistenceStore: PersistenceStore!
-  private (set) var guardpost: Guardpost?
-  private (set) var dataManager: DataManager!
-  private (set) var sessionController: SessionController!
-  private (set) var downloadService: DownloadService!
+  private var persistenceStore: PersistenceStore!
+  private var guardpost: Guardpost!
+  fileprivate var dataManager: DataManager!
+  fileprivate var sessionController: SessionController!
+  fileprivate var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -54,13 +54,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Initialise the database
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
+    guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
+                          urlScheme: "com.razeware.emitron://",
+                          ssoSecret: Configuration.ssoSecret,
+                          persistenceStore: persistenceStore)
     
-    self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
-                               urlScheme: "com.razeware.emitron://",
-                               ssoSecret: Configuration.ssoSecret,
-                               persistenceStore: persistenceStore)
-    
-    guard let guardpost = guardpost else { return true }
     sessionController = SessionController(guardpost: guardpost)
     downloadService = DownloadService(
       persistenceStore: persistenceStore,

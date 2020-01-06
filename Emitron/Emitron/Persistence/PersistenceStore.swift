@@ -37,12 +37,7 @@ final class PersistenceStore {
   
   init(db: DatabaseWriter) {
     self.db = db
-  }
-  
-  static var current: PersistenceStore {
-    return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
-  }
-  
+  }  
 }
 
 // MARK: UserDefaults

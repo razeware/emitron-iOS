@@ -34,16 +34,16 @@ private extension CGFloat {
 }
 
 struct TextListItemView: View {
-  // It's fine that this child view isn't observing this parameter, because the parent is, so the changes will trickle down through the requests
-  // Good thought to have when creating the architecture for non-networking based views
+  @EnvironmentObject var sessionController: SessionController
+  
   var contentSummary: ContentListDisplayable
   var buttonAction: (Bool) -> Void
   
   var canStreamPro: Bool {
-    return Guardpost.current.currentUser?.canStream ?? false
+    return sessionController.user?.canStreamPro ?? false
   }
   var canDownload: Bool {
-    return Guardpost.current.currentUser?.canDownload ?? false
+    return sessionController.user?.canDownload ?? false
   }
   
   var body: some View {

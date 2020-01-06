@@ -45,6 +45,10 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private var contentIds: [Int] = [Int]()
   private var contentSubscription: AnyCancellable?
   
+  var isEmpty: Bool {
+    contentIds.isEmpty
+  }
+  
   var nonPaginationParameters = [Parameter]() {
     didSet {
       reload()

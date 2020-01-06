@@ -29,9 +29,7 @@
 import SwiftUI
 
 struct MainView: View {
-  
   @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var appState: AppState
   @EnvironmentObject var dataManager: DataManager
   
   var body: some View {

@@ -31,13 +31,12 @@ import SwiftUI
 struct TabNavView: View {
 
   @State var selection = 0
-  @EnvironmentObject var emitron: AppState
   var libraryView: AnyView
   var myTutorialsView: AnyView
   var downloadsView: AnyView
 
   var body: some View {
-    TabView(selection: $emitron.selectedTab) {
+    TabView(selection: $selection) {
       NavigationView {
         libraryView
       }.tabItem {

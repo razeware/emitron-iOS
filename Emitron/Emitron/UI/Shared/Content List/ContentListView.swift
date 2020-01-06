@@ -41,8 +41,6 @@ struct ContentListView: View {
   @State var hudOption: HudOption = .success
   @State var isPresenting: Bool = false
   
-  @EnvironmentObject var emitron: AppState
-  
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
@@ -99,9 +97,7 @@ struct ContentListView: View {
         GeometryReader { geometry in
           ActivityIndicator()
             .onAppear {
-              // Load more from the appropriate MC conforming to updatable protocol
-              //self.contentsVM.
-              //self.contentsVM.loadMore()
+              self.contentRepository.loadMore()
           }
         }
       )
@@ -116,9 +112,9 @@ struct ContentListView: View {
     case .initial:
       contentRepository.reload()
       return AnyView(loadingView)
-    case .loading where contentRepository.contents.isEmpty:
+    case .loading where contentRepository.isEmpty:
       return AnyView(loadingView)
-    case .loading where !contentRepository.contents.isEmpty:
+    case .loading where !contentRepository.isEmpty:
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
       return AnyView(
@@ -127,7 +123,7 @@ struct ContentListView: View {
       )
     case .loadingAdditional:
       return AnyView(listView)
-    case .hasData where contentRepository.contents.isEmpty:
+    case .hasData where contentRepository.isEmpty:
       return AnyView(emptyView)
     case .hasData:
       return AnyView(listView)
@@ -138,47 +134,39 @@ struct ContentListView: View {
     }
   }
 
-  private var cardTableNavView: AnyView? {
-    let guardpost = Guardpost.current
-    guard let _ = guardpost.currentUser else { return nil }
-
-    return
-      AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-        NavigationLink(destination: ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
-        {
-          CardView(model: partialContent)
-            .padding([.leading], 10)
-            .padding([.top, .bottom], 10)
-        }
+  private var cardTableNavView: AnyView {
+    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
+      NavigationLink(destination: ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+      {
+        CardView(model: partialContent)
+          .padding([.leading], 10)
+          .padding([.top, .bottom], 10)
       }
-      .listRowBackground(Color.backgroundColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .background(Color.backgroundColor)
+    }
+    .listRowBackground(Color.backgroundColor)
+    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+    .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
     )
   }
 
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
-  private var cardsTableViewWithDelete: AnyView? {
-    let guardpost = Guardpost.current
-    guard let _ = guardpost.currentUser else { return nil }
-
-    return
-      AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-
-        NavigationLink(destination:
-          ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
-        {
-          CardView(model: partialContent)
-            .padding([.leading], 10)
-            .padding([.top, .bottom], 10)
-        }
+  private var cardsTableViewWithDelete: AnyView {
+    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
+      
+      NavigationLink(destination:
+        ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+      {
+        CardView(model: partialContent)
+          .padding([.leading], 10)
+          .padding([.top, .bottom], 10)
       }
-      .onDelete(perform: self.delete)
-      .listRowBackground(Color.backgroundColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .background(Color.backgroundColor)
+    }
+    .onDelete(perform: self.delete)
+    .listRowBackground(Color.backgroundColor)
+    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+    .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
     )
@@ -251,7 +239,8 @@ struct ContentListView: View {
     guard let buttonText = contentScreen.buttonText, contentRepository.contents.isEmpty && contentScreen != .library else { return nil }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      self.emitron.selectedTab = 0
+      print("I DON'T UNDERSTAND THE POINT OF THIS BUTTON")
+      //self.emitron.selectedTab = 0
     }
     .padding([.bottom, .leading, .trailing], 20)
 
