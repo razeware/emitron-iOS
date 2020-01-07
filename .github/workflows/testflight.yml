@@ -34,6 +34,8 @@ jobs:
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
+        FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
+        FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
       run: |
         cd Emitron
         bundle exec fastlane -v
