@@ -87,6 +87,8 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   
   // MARK: - Internal
   func login() {
+    if state == .loading { return }
+    
     state = .loading
     guardpost.presentationContextDelegate = self
     
@@ -133,6 +135,9 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     // The re-fetch/re-store will be done the next time they open the app
     guard connectionMonitor.currentPath.status == .satisfied else { return }
     
+    if state == .loadingAdditional { return }
+    
+    state = .loadingAdditional
     permissionsService.permissions { result in
       switch result {
       case .failure(let error):
@@ -158,6 +163,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   func logout() {
     guardpost.logout()
     UserDefaults.standard.deleteAllFilters()
+    self.state = .initial
     
     user = nil
   }

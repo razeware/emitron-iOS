@@ -31,6 +31,8 @@ import XCTest
 
 class PersistenceStore_UserKeychainTest: XCTestCase {
   
+  var persistenceStore: PersistenceStore!
+  
   private let userDictionary = [
     "external_id": "sample_external_id",
     "email": "email@example.com",
@@ -42,23 +44,23 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
   
   override func setUp() {
     // Put setup code here. This method is called before the invocation of each test method in the class.
+    let database = try! EmitronDatabase.testDatabase()
+    persistenceStore = PersistenceStore(db: database)
   }
   
   override func tearDown() {
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-    PersistenceStore.current.removeUserFromKeychain()
+    persistenceStore.removeUserFromKeychain()
   }
   
   func testPersistenceToKeychain() {
-    let store = PersistenceStore.current
-    
     guard let user = User(dictionary: userDictionary) else {
       return XCTFail()
     }
     
-    XCTAssert(store.persistUserToKeychain(user: user))
+    XCTAssert(persistenceStore.persistUserToKeychain(user: user))
     
-    guard let restoredUser = store.userFromKeychain() else {
+    guard let restoredUser = persistenceStore.userFromKeychain() else {
       return XCTFail("Unable to restore user from Keychain")
     }
     
@@ -66,20 +68,18 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
   }
   
   func testRemovalOfUserFromKeychain() {
-    let store = PersistenceStore.current
-    
-    XCTAssertNil(store.userFromKeychain())
+    XCTAssertNil(persistenceStore.userFromKeychain())
     
     guard let user = User(dictionary: userDictionary) else {
       return XCTFail()
     }
     
-    XCTAssert(store.persistUserToKeychain(user: user))
-    XCTAssertNotNil(store.userFromKeychain())
+    XCTAssert(persistenceStore.persistUserToKeychain(user: user))
+    XCTAssertNotNil(persistenceStore.userFromKeychain())
     
-    XCTAssert(store.removeUserFromKeychain())
+    XCTAssert(persistenceStore.removeUserFromKeychain())
     
-    XCTAssertNil(store.userFromKeychain())
+    XCTAssertNil(persistenceStore.userFromKeychain())
   }
   
 }

@@ -52,7 +52,11 @@ struct ContentAdapter: EntityAdapter {
     }
     var difficulty = ContentDifficulty.allLevels
     if let difficultyString = resource.attributes["difficulty"] as? String {
-      difficulty = ContentDifficulty(string: difficultyString)
+      if let parsedDifficulty = ContentDifficulty(string: difficultyString) {
+        difficulty = parsedDifficulty
+      } else {
+        throw EntityAdapterError.invalidOrMissingAttributes
+      }
     }
     
     let group = relationships.first { relationship in

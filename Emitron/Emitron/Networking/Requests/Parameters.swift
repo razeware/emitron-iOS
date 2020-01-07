@@ -35,7 +35,7 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
   case advanced
   case allLevels
   
-  init(string: String) {
+  init?(string: String) {
     switch string {
     case "beginner":
       self = .beginner
@@ -44,7 +44,7 @@ enum ContentDifficulty: Int, Codable, CaseIterable {
     case "advanced":
       self = .advanced
     default:
-      self = .allLevels
+      return nil
     }
   }
   
