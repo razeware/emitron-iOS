@@ -22,7 +22,6 @@
 		2228E40223B98D5500E103AA /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40123B98D5500E103AA /* LogoutView.swift */; };
 		2228E40523B999CA00E103AA /* DomainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40423B999CA00E103AA /* DomainRepository.swift */; };
 		2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40623B999D500E103AA /* CategoryRepository.swift */; };
-		2237AA9F23C3364A008E9976 /* DataCacheUpdateTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AA9E23C3364A008E9976 /* DataCacheUpdateTest.swift */; };
 		2237AAA223C3368B008E9976 /* AttachmentAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA123C3368B008E9976 /* AttachmentAdapterTest.swift */; };
 		2237AAA423C33697008E9976 /* BookmarkAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA323C33697008E9976 /* BookmarkAdapterTest.swift */; };
 		2237AAA623C336A5008E9976 /* CategoryAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA523C336A5008E9976 /* CategoryAdapterTest.swift */; };
@@ -33,6 +32,7 @@
 		2237AAB023C336EE008E9976 /* GroupAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAAF23C336EE008E9976 /* GroupAdapterTest.swift */; };
 		2237AAB223C336FB008E9976 /* PermissionAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAB123C336FB008E9976 /* PermissionAdapterTest.swift */; };
 		2237AAB423C33708008E9976 /* ProgressionAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAB323C33708008E9976 /* ProgressionAdapterTest.swift */; };
+		2237AAB723C426C7008E9976 /* DataCacheTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAB623C426C7008E9976 /* DataCacheTest.swift */; };
 		223D77A523B06FFA005BE95D /* AttachmentAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77A423B06FFA005BE95D /* AttachmentAdapter.swift */; };
 		223D77A923B07842005BE95D /* PermissionAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77A823B07842005BE95D /* PermissionAdapter.swift */; };
 		223D77AB23B0C099005BE95D /* Download.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77AA23B0C099005BE95D /* Download.swift */; };
@@ -244,7 +244,6 @@
 		2228E40123B98D5500E103AA /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
 		2228E40423B999CA00E103AA /* DomainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainRepository.swift; sourceTree = "<group>"; };
 		2228E40623B999D500E103AA /* CategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRepository.swift; sourceTree = "<group>"; };
-		2237AA9E23C3364A008E9976 /* DataCacheUpdateTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCacheUpdateTest.swift; sourceTree = "<group>"; };
 		2237AAA123C3368B008E9976 /* AttachmentAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAA323C33697008E9976 /* BookmarkAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAA523C336A5008E9976 /* CategoryAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryAdapterTest.swift; sourceTree = "<group>"; };
@@ -255,6 +254,7 @@
 		2237AAAF23C336EE008E9976 /* GroupAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GroupAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAB123C336FB008E9976 /* PermissionAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAB323C33708008E9976 /* ProgressionAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProgressionAdapterTest.swift; sourceTree = "<group>"; };
+		2237AAB623C426C7008E9976 /* DataCacheTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataCacheTest.swift; sourceTree = "<group>"; };
 		223CE262235F977300D0ED50 /* secrets.development.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.development.xcconfig; sourceTree = "<group>"; };
 		223CE263235F977300D0ED50 /* secrets.production.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.production.xcconfig; sourceTree = "<group>"; };
 		223D77A423B06FFA005BE95D /* AttachmentAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentAdapter.swift; sourceTree = "<group>"; };
@@ -533,7 +533,6 @@
 			isa = PBXGroup;
 			children = (
 				2237AAA023C33676008E9976 /* EntityAdapters */,
-				2237AA9E23C3364A008E9976 /* DataCacheUpdateTest.swift */,
 			);
 			path = Adapters;
 			sourceTree = "<group>";
@@ -553,6 +552,14 @@
 				2237AAB323C33708008E9976 /* ProgressionAdapterTest.swift */,
 			);
 			path = EntityAdapters;
+			sourceTree = "<group>";
+		};
+		2237AAB523C426B5008E9976 /* Data */ = {
+			isa = PBXGroup;
+			children = (
+				2237AAB623C426C7008E9976 /* DataCacheTest.swift */,
+			);
+			path = Data;
 			sourceTree = "<group>";
 		};
 		223D77CB23B0CD59005BE95D /* EntityAdapters */ = {
@@ -737,6 +744,7 @@
 		22D176BE23460A060038333D /* emitronTests */ = {
 			isa = PBXGroup;
 			children = (
+				2237AAB523C426B5008E9976 /* Data */,
 				2237AA9C23C3360A008E9976 /* Networking */,
 				22A265AA23967ADE000DD276 /* Model Controllers */,
 				221E609C23856F2B00E92155 /* Services */,
@@ -1351,7 +1359,6 @@
 				2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */,
 				22A265AD23967B21000DD276 /* UserMCMock.swift in Sources */,
 				2237AAAC23C336D3008E9976 /* ContentDomainAdapterTest.swift in Sources */,
-				2237AA9F23C3364A008E9976 /* DataCacheUpdateTest.swift in Sources */,
 				22A265B22396CE82000DD276 /* Permissions+Mocks.swift in Sources */,
 				2237AAB023C336EE008E9976 /* GroupAdapterTest.swift in Sources */,
 				221E60A12385771F00E92155 /* AttachmentTest.swift in Sources */,
@@ -1359,6 +1366,7 @@
 				2237AAA623C336A5008E9976 /* CategoryAdapterTest.swift in Sources */,
 				22D176CE2347520D0038333D /* UserTest.swift in Sources */,
 				221E56622375E4AD00333607 /* PersistenceMocks.swift in Sources */,
+				2237AAB723C426C7008E9976 /* DataCacheTest.swift in Sources */,
 				2237AAAA23C336C0008E9976 /* ContentCategoryAdapterTest.swift in Sources */,
 				221E56662379767C00333607 /* ContentTest+Mocks.swift in Sources */,
 				2237AAA823C336B2008E9976 /* ContentAdapterTest.swift in Sources */,
