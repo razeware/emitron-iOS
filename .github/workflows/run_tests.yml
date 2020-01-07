@@ -24,6 +24,9 @@ jobs:
         scripts/download_s3.sh development > Emitron/Emitron/Configuration/secrets.development.xcconfig
         scripts/download_s3.sh production > Emitron/Emitron/Configuration/secrets.production.xcconfig
     - name: Execute fastlane
+      env:
+        FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
+        FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
       run: |
         cd Emitron
         bundle exec fastlane -v
