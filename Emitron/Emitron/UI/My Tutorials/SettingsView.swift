@@ -77,7 +77,7 @@ struct SettingsView: View {
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-  @EnvironmentObject var userMC: SessionController
+  @EnvironmentObject var sessionController: SessionController
   private var showLogoutButton: Bool
   
   init(showLogoutButton: Bool) {
@@ -143,7 +143,7 @@ struct SettingsView: View {
       
       if showLogoutButton {
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          self.userMC.logout()
+          self.sessionController.logout()
           self.presentationMode.wrappedValue.dismiss()
         }
         .padding([.bottom, .leading, .trailing], 18)

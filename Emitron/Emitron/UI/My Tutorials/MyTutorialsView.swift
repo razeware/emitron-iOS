@@ -50,6 +50,8 @@ struct MyTutorialView: View {
   
   // Initialization
   @State var state: MyTutorialsState
+
+  @EnvironmentObject var sessionController: SessionController
   
   @ObservedObject var inProgressRepository: InProgressRepository
   @ObservedObject var completedRepository: CompletedRepository
@@ -75,6 +77,8 @@ struct MyTutorialView: View {
       })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: true)
+          // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
+          .environmentObject(self.sessionController)
       }
     .onDisappear {
       self.reloadProgression = true
