@@ -36,7 +36,7 @@ import Network
 // and rethought at a later stage. I'll put // TODO: here so that we might
 // find it again.
 protocol UserModelController {
-  var objectWillChange: PassthroughSubject<Void, Never> { get }
+  var objectWillChange: ObservableObjectPublisher { get }
   var user: User? { get }
   var client: RWAPI { get }
 }
@@ -48,8 +48,6 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
-  /// `Publisher` required by `BindableObject` protocol.
-  let objectWillChange = PassthroughSubject<Void, Never>()
   private var subscriptions = Set<AnyCancellable>()
 
   private(set) var state = DataState.initial
@@ -67,6 +65,10 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   
   var hasPermissions: Bool {
     user?.permissions != nil
+  }
+  
+  var hasPermissionToUseApp: Bool {
+    user?.hasPermissionToUseApp ?? false
   }
   
   // MARK: - Initializers
@@ -135,7 +137,11 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     // The re-fetch/re-store will be done the next time they open the app
     guard connectionMonitor.currentPath.status == .satisfied else { return }
     
+    // Don't repeatedly make the same request
     if state == .loadingAdditional { return }
+    
+    // No point in requesting permissions when there's no user
+    if !isLoggedIn { return }
     
     state = .loadingAdditional
     permissionsService.permissions { result in
