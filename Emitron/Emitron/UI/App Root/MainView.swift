@@ -58,7 +58,7 @@ struct MainView: View {
       return tabBarView()
     case .hasData:
       // This is a mess—see above.
-      if sessionController.user?.hasPermissionToUseApp ?? false {
+      if sessionController.hasPermissionToUseApp {
         return tabBarView()
       } else {
         return AnyView(LogoutView())

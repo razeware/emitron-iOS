@@ -51,7 +51,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   var nonPaginationParameters = [Parameter]() {
     didSet {
-      reload()
+      if state != .initial { reload() }
     }
   }
   
