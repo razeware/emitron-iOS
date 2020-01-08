@@ -46,8 +46,9 @@ final class DataCacheContentDetailsViewModel: ContentDetailsViewModel {
           self.getContentDetailsFromService()
         } else {
           self.state = .failed
-          // TODO logging
-          print("Unable to retrieve download content detail: \(completion)")
+          Failure
+            .repositoryLoad(from: "DataCacheContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(completion)")
+            .log()
         }
         }, receiveValue: { [weak self] (contentDetailState) in
           guard let self = self else { return }
@@ -79,8 +80,9 @@ final class DataCacheContentDetailsViewModel: ContentDetailsViewModel {
           self.getContentDetailsFromService()
         } else {
           self.state = .failed
-          // TODO logging
-          print("Unable to retrieve download child contents detail: \(completion)")
+          Failure
+            .repositoryLoad(from: "DataCacheContentDetailsViewModel", reason: "Unable to retrieve download child contents detail: \(completion)")
+            .log()
         }
         }, receiveValue: { [weak self] (contentSumaryStates) in
           guard let self = self else { return }

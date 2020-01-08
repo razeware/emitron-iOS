@@ -35,6 +35,22 @@ public enum LoginError: Error {
   case unableToDecodeGuardpostResponse
   case invalidSignature
   case unableToCreateValidUser
+  
+  public var localizedDescription: String {
+    let prefix = "GuardpostLoginError::"
+    switch self {
+    case .unableToCreateLoginUrl:
+      return "\(prefix)UnableToCreateLoginUrl"
+    case .errorResponseFromGuardpost(let error):
+      return "\(prefix)GuardpostLoginError:: [Error: \(error?.localizedDescription ?? "UNKNOWN")]"
+    case .unableToDecodeGuardpostResponse:
+      return "\(prefix)UnableToDecodeGuardpostResponse"
+    case .invalidSignature:
+      return "\(prefix)InvalidSignature"
+    case .unableToCreateValidUser:
+      return "\(prefix)UnableToCreateValidUser"
+    }
+  }
 }
 
 public class Guardpost {

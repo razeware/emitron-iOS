@@ -56,5 +56,13 @@ extension Request {
 
 enum RequestError: Error {
   case responseMissingRequiredMeta(field: String?)
+  
+  var localizedDescription: String {
+    let prefix = "RequestError::"
+    switch self {
+    case .responseMissingRequiredMeta(field: let field):
+      return "\(prefix)ResponseMissingRequiredMeta: [Field: \(field ?? "UNKNOWN")]"
+    }
+  }
 }
 

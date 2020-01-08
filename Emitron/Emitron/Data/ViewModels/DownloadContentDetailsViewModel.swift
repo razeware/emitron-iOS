@@ -43,9 +43,10 @@ final class DownloadContentDetailsViewModel: ContentDetailsViewModel {
       .sink(receiveCompletion: { [weak self] (error) in
       guard let self = self else { return }
       
-      // TODO Logging
       self.state = .failed
-      print("Unable to retrieve download content detail: \(error)")
+      Failure
+        .repositoryLoad(from: "DownloadContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(error)")
+        .log()
     }, receiveValue: { [weak self] (contentDetailState) in
       guard let self = self else { return }
       
@@ -72,9 +73,11 @@ final class DownloadContentDetailsViewModel: ContentDetailsViewModel {
       .switchToLatest()
       .sink(receiveCompletion: { [weak self] (error) in
         guard let self = self else { return }
-        // TODO Logging
+
         self.state = .failed
-        print("Unable to retrieve download child contents: \(error)")
+        Failure
+          .repositoryLoad(from: "DownloadContentDetailsViewModel", reason: "Unable to retrieve download child contents: \(error)")
+          .log()
       }, receiveValue: { [weak self] (contentSumaryStates) in
         guard let self = self else { return }
         self.state = .hasData

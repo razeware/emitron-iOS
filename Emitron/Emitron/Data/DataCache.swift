@@ -31,6 +31,13 @@ import Combine
 
 enum DataCacheError: Error {
   case cacheMiss
+  
+  var localizedDescription: String {
+    switch self {
+    case .cacheMiss:
+      return "DataCacheError::CacheMiss"
+    }
+  }
 }
 
 final class DataCache: ObservableObject {

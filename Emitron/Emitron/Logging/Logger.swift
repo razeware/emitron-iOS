@@ -55,6 +55,7 @@ enum Failure: Log {
   case loadFromPersistentStore(from: String, reason: String)
   case saveToPersistentStore(from: String, reason: String)
   case deleteFromPersistentStore(from: String, reason: String)
+  case repositoryLoad(from: String, reason: String)
   
   private var failure: String {
     return "Failed_"
@@ -66,7 +67,8 @@ enum Failure: Log {
          .fetch(from: let from, reason: _),
          .loadFromPersistentStore(from: let from, reason: _),
          .saveToPersistentStore(from: let from, reason: _),
-         .deleteFromPersistentStore(from: let from, reason: _):
+         .deleteFromPersistentStore(from: let from, reason: _),
+         .repositoryLoad(from: let from, reason: _):
       return from
     }
   }
@@ -83,6 +85,8 @@ enum Failure: Log {
       return failure + "savingToPersistentStore"
     case .deleteFromPersistentStore:
       return failure + "deleteToPersistentStore"
+    case .repositoryLoad:
+      return failure + "repositoryLoad"
     }
   }
   
@@ -92,7 +96,8 @@ enum Failure: Log {
          .fetch(from: _, reason: let reason),
          .loadFromPersistentStore(from: _, reason: let reason),
          .saveToPersistentStore(from: _, reason: let reason),
-         .deleteFromPersistentStore(from: _, reason: let reason):
+         .deleteFromPersistentStore(from: _, reason: let reason),
+         .repositoryLoad(from: _, reason: let reason):
       return reason
     }
   }
@@ -125,8 +130,8 @@ enum Event: Log {
   }
 
   func log(additionalParams: [String: String]?) {
-    let params = ["object": self.object]
+    let params = ["object": self.object, "action": self.action]
     let allParams = params.merged(additionalParams) as [String: Any]
-    print(allParams)
+    print("EVENT:: \(allParams)")
   }
 }

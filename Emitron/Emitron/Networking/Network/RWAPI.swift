@@ -36,6 +36,21 @@ enum RWAPIError: Error {
   case responseMissingRequiredMeta(field: String?)
   case responseHasIncorrectNumberOfElements
   case noData
+
+  var localizedDescription: String {
+    switch self {
+    case .requestFailed(let error, let statusCode):
+      return "RWAPIError::RequestFailed[Status: \(statusCode) | Error: \(error?.localizedDescription ?? "UNKNOWN")]"
+    case .processingError(let error):
+      return "RWAPIError::ProcessingError[Error: \(error?.localizedDescription ?? "UNKNOWN")]"
+    case .responseMissingRequiredMeta(field: let field):
+      return "RWAPIError::ResponseMissingRequiredMeta[Field: \(field ?? "UNKNOWN")]"
+    case .responseHasIncorrectNumberOfElements:
+      return "RWAPIError::ResponseHasIncorrectNumberOfElements"
+    case .noData:
+      return "RWAPIError::NoData"
+    }
+  }
 }
 
 struct RWAPI {

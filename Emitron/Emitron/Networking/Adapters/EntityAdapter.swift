@@ -86,5 +86,17 @@ enum EntityAdapterError: Error {
   case invalidResourceTypeForAdapter
   case invalidOrMissingAttributes
   case invalidOrMissingRelationships
+  
+  var localizedDescription: String {
+    let prefix = "EntityAdapterError::"
+    switch self {
+    case .invalidResourceTypeForAdapter:
+      return "\(prefix)InvalidResourceTypeForAdapter"
+    case .invalidOrMissingAttributes:
+      return "\(prefix)InvalidOrMissingAttributes"
+    case .invalidOrMissingRelationships:
+      return "\(prefix)InvalidOrMissingRelationships"
+    }
+  }
 }
 
