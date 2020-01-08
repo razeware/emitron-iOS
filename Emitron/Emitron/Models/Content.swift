@@ -41,7 +41,7 @@ struct Content: Codable {
   var contentType: ContentType
   var duration: Int
   var videoIdentifier: Int?
-  var cardArtworkUrl: URL
+  var cardArtworkUrl: URL?
   var technologyTriple: String
   var contributors: String
   var groupId: Int?

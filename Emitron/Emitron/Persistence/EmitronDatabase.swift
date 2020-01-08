@@ -59,7 +59,7 @@ struct EmitronDatabase {
         t.column("contentType", .integer).notNull()
         t.column("duration", .integer).notNull().defaults(to: 0)
         t.column("videoIdentifier", .integer)
-        t.column("cardArtworkUrl", .text).notNull()
+        t.column("cardArtworkUrl", .text)
         t.column("technologyTriple", .text).notNull()
         t.column("contributors", .text).notNull()
         t.column("ordinal", .integer).indexed()

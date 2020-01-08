@@ -58,7 +58,7 @@ extension ContentDetailState: ContentDetailDisplayable {
     content.professional
   }
   
-  var cardArtworkUrl: URL {
+  var cardArtworkUrl: URL? {
     content.cardArtworkUrl
   }
   

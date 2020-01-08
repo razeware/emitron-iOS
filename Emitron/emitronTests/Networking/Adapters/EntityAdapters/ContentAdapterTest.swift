@@ -233,17 +233,6 @@ class ContentAdapterTest: XCTestCase {
     }
   }
   
-  func testInvalidCardArtworkUrlThrows() throws {
-    var sample = sampleResource
-    sample["attributes"]["released_at"] = "this is not a valid url"
-    
-    let resource = try makeJsonAPIResource(for: sample)
-    
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
-      XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
-    }
-  }
-  
   func testMissingTechnologyTripleThrows() throws {
     var sample = sampleResource
     sample["attributes"].dictionaryObject?.removeValue(forKey: "technology_triple_string")
@@ -285,6 +274,16 @@ class ContentAdapterTest: XCTestCase {
     XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
+  }
+  
+  func testInvalidCardArtworkUrlIsAcceptable() throws {
+    var sample = sampleResource
+    sample["attributes"]["card_artwork_url"] = JSON(NSNull())
+    
+    let resource = try makeJsonAPIResource(for: sample)
+    
+    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    XCTAssertNil(content.cardArtworkUrl)
   }
   
   func testMissingGroupIsAcceptable() throws {

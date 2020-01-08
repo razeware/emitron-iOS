@@ -43,8 +43,6 @@ struct ContentAdapter: EntityAdapter {
       let contentTypeString = resource.attributes["content_type"] as? String,
       let contentType = ContentType(string: contentTypeString),
       let duration = resource.attributes["duration"] as? Int,
-      let cardArtworkUrlString = resource.attributes["card_artwork_url"] as? String,
-      let cardArtworkUrl = URL(string: cardArtworkUrlString),
       let technologyTriple = resource.attributes["technology_triple_string"] as? String,
       let contributors = resource.attributes["contributor_string"] as? String
       else {
@@ -57,6 +55,11 @@ struct ContentAdapter: EntityAdapter {
       } else {
         throw EntityAdapterError.invalidOrMissingAttributes
       }
+    }
+    
+    var cardArtworkUrl: URL? = nil
+    if let cardArtworkUrlString = resource.attributes["card_artwork_url"] as? String {
+      cardArtworkUrl = URL(string: cardArtworkUrlString)
     }
     
     let group = relationships.first { relationship in

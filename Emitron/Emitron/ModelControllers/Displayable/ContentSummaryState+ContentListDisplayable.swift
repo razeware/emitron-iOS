@@ -54,7 +54,7 @@ extension ContentSummaryState: ContentListDisplayable {
     content.professional
   }
   
-  var cardArtworkUrl: URL {
+  var cardArtworkUrl: URL? {
     content.cardArtworkUrl
   }
   
