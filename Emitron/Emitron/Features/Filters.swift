@@ -93,10 +93,6 @@ enum SortFilter: Int, Codable {
 }
 
 class Filters: ObservableObject {
-  
-  // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  
   var all: Set<Filter> {
     didSet {
       platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
@@ -251,12 +247,12 @@ class Filters: ObservableObject {
   func changeSortFilter() {
     sortFilter = sortFilter.next
     UserDefaults.standard.updateSort(with: sortFilter)
-    objectWillChange.send(())
+    objectWillChange.send()
   }
   
   func commitUpdates() {
     UserDefaults.standard.updateFilters(with: self)
-    objectWillChange.send(())
+    objectWillChange.send()
   }
   
   // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well

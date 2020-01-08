@@ -51,6 +51,22 @@ struct ContentDetailView: View {
   
   
   var body: some View {
+    contentView
+  }
+  
+  var contentView: AnyView {
+    switch contentDetailsViewModel.state {
+    case .initial:
+      contentDetailsViewModel.reload()
+      return AnyView(Text("loading..."))
+    case .hasData:
+      return AnyView(dataLoadedView)
+    default:
+      return AnyView(Text("loading..."))
+    }
+  }
+    
+  var dataLoadedView: some View {
     let scrollView = GeometryReader { geometry in
       List {
         Section {

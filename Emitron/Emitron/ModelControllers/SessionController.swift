@@ -52,7 +52,15 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
 
   private(set) var state = DataState.initial
   
-  @Published private(set) var user: User?
+  // Once again, there appears to be some kind of issue with
+  // @Published. In theory, user should be @Published, but it
+  // causes a EXC_BAD_ACCESS when accessed from outside this
+  // class. We can get around this using this extra accessor
+  // and keeping the @Published property for internal use.
+  @Published private var internalUser: User?
+  var user: User? {
+    return internalUser
+  }
   
   private let guardpost: Guardpost
   private let connectionMonitor = NWPathMonitor()
@@ -76,7 +84,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     dispatchPrecondition(condition: .onQueue(.main))
     self.guardpost = guardpost
     let user = guardpost.currentUser
-    self.user = user
+    self.internalUser = user
     self.client = RWAPI(authToken: user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
     super.init()
@@ -113,7 +121,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
             .login(from: "SessionController", reason: error.localizedDescription)
             .log(additionalParams: nil)
         case .success(let user):
-          self.user = user
+          self.internalUser = user
           
           Event
             .login(from: "SessionController")
@@ -158,7 +166,7 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
         
         self.state = .hasData
         // Update the user
-        self.user = user.with(permissions: permissions)
+        self.internalUser = user.with(permissions: permissions)
         // Ensure guardpost is aware, and hence the keychain is updated
         self.guardpost.updateUser(with: user)
         self.saveOrReplaceRefreshableUpdateDate()
@@ -171,11 +179,11 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
     UserDefaults.standard.deleteAllFilters()
     self.state = .initial
     
-    user = nil
+    internalUser = nil
   }
   
   private func prepareSubscriptions() {
-    $user.sink { [weak self] (user) in
+    $internalUser.sink { [weak self] (user) in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)

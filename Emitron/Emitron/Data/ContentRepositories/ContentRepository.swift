@@ -37,7 +37,13 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
   
-  @Published var contents: [ContentListDisplayable] = [ContentListDisplayable]()
+  // This should be @Published, but it crashes the app with EXC_BAD_ACCESS
+  // when you try and refernce it. Which is handy.
+  var contents: [ContentListDisplayable] = [ContentListDisplayable]() {
+    willSet {
+      objectWillChange.send()
+    }
+  }
   // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
   // Let's see if we actually need it to be @Published...
   var state: DataState = .initial
@@ -135,8 +141,9 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private func configureSubscription() {
     self.contentSubscription = self.repository.contentSummaryState(for: self.contentIds).sink(receiveCompletion: { (error) in
-      // TODO Logging
-      print("Unable to receive content summary update: \(error)")
+      Failure
+        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
+        .log()
     }, receiveValue: { (contentSummaryStates) in
       self.contents = contentSummaryStates
     })
