@@ -102,7 +102,7 @@ struct FiltersView: View {
   }
   
   private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup, isExpanded: filterGroup.numApplied > 0)
+    let filtersView = FiltersHeaderView(filterGroup: filterGroup, filters: self.filters, isExpanded: filterGroup.numApplied > 0)
     return filtersView
   }
   

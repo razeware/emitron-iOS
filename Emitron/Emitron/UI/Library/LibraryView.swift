@@ -136,25 +136,28 @@ struct LibraryView: View {
   }
 
   private var filtersView: some View {
-    // Make a copy of the applied filters before we present them
-    
-    let view = ScrollView(.horizontal, showsIndicators: false) {
+    ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
-        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
+        AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
+          self.filters.removeAll()
           self.libraryRepository.filters = self.filters
         }
-        .environmentObject(self.filters)
 
         ForEach(self.filters.applied, id: \.self) { filter in
-          AppliedFilterView(filter: filter, type: .default) {
+          AppliedFilterTagButton(name: filter.filterName, type: .default) {
+            if filter.isSearch {
+              self.filters.searchQuery = nil
+            } else {
+              filter.isOn.toggle()
+              self.filters.all.update(with: filter)
+            }
+            self.filters.commitUpdates()
             self.libraryRepository.filters = self.filters
           }
-          .environmentObject(self.filters)
         }
       }
     }
-    return view
   }
 
   private func updateFilters() {
