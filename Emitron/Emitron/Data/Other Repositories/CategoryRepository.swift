@@ -50,7 +50,6 @@ class CategoryRepository: Refreshable {
     
     if shouldRefresh {
       fetchCategoriesAndUpdatePersistentStore()
-      saveOrReplaceRefreshableUpdateDate()
     }
   }
   
@@ -96,6 +95,7 @@ class CategoryRepository: Refreshable {
         self.categories = categories
         self.state = .hasData
         self.saveToPersistentStore()
+        self.saveOrReplaceRefreshableUpdateDate()
       }
     }
   }

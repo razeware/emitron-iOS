@@ -112,12 +112,13 @@ enum Failure: Log {
 }
 
 enum Event: Log {
-  
   case login(from: String)
+  case refresh(from: String, action: String)
   
   var object: String {
     switch self {
-    case .login(from: let from):
+    case .login(from: let from),
+         .refresh(from: let from, action: _):
       return from
     }
   }
@@ -126,6 +127,8 @@ enum Event: Log {
     switch self {
     case .login:
       return "Login"
+    case .refresh(from: _, action: let action):
+      return action
     }
   }
 

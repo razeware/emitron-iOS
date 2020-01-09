@@ -41,8 +41,21 @@ extension Refreshable {
   
   var shouldRefresh: Bool {
     if let lastUpdateDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date {
-      return lastUpdateDate < self.refreshableCheckTimeSpan.date
+      if lastUpdateDate > self.refreshableCheckTimeSpan.date {
+        Event
+          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastUpdateDate). No refresh required.")
+          .log()
+        return false
+      } else {
+        Event
+          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastUpdateDate). Refresh is required.")
+          .log()
+        return true
+      }
     }
+    Event
+      .refresh(from: String(describing: type(of: self)), action: "Last Updated: UNKNOWN. Refresh is required.")
+      .log()
     return true
   }
   

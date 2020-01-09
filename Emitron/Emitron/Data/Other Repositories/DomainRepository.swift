@@ -50,7 +50,6 @@ class DomainRepository: ObservableObject, Refreshable {
     
     if shouldRefresh {
       fetchDomainsAndUpdatePersistentStore()
-      saveOrReplaceRefreshableUpdateDate()
     }
   }
   
@@ -96,6 +95,7 @@ class DomainRepository: ObservableObject, Refreshable {
         self.domains = domains
         self.state = .hasData
         self.saveToPersistentStore()
+        self.saveOrReplaceRefreshableUpdateDate()
       }
     }
   }
