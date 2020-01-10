@@ -37,7 +37,7 @@ final class DownloadRepository: ContentRepository {
   init(repository: Repository, contentsService: ContentsService, downloadService: DownloadService) {
     self.downloadService = downloadService
     // Don't need the repository or the service adapter
-    super.init(repository: repository, contentsService: contentsService, serviceAdapter: nil)
+    super.init(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: nil)
   }
   
   override func loadMore() {

@@ -128,14 +128,16 @@ final class DownloadService {
 extension DownloadService: DownloadAction {
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) {
     guard videosService != nil else {
-      // TODO: Log
-      print("User not allowed to request downloads")
+      Failure
+        .fetch(from: String(describing: type(of: self)), reason: "User not allowed to request downloads")
+        .log()
       return
     }
     
     guard let contentPersistableState = contentLookup(contentId) else {
-      // TODO: Log
-      print("Unable to locate content to persist")
+      Failure
+        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to locate content to persist")
+        .log()
       return
     }
     
@@ -145,8 +147,9 @@ extension DownloadService: DownloadAction {
       // Now create the appropriate download objects.
       try persistenceStore.createDownloads(for: contentPersistableState.content)
     } catch {
-      // TODO: Log
-      print("There was a problem requesting the download: \(error)")
+      Failure
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem requesting the download: \(error)")
+      .log()
     }
   }
   

@@ -36,8 +36,8 @@ private extension CGFloat {
 struct TextListItemView: View {
   @EnvironmentObject var sessionController: SessionController
   
+  var parentViewModel: ContentDetailsViewModel
   var contentSummary: ContentListDisplayable
-  var buttonAction: (Bool) -> Void
   
   var canStreamPro: Bool {
     return sessionController.user?.canStreamPro ?? false
@@ -84,7 +84,6 @@ struct TextListItemView: View {
   }
   
   private func setUpImageAndProgress() -> AnyView {
-    
     let image = Image(self.downloadImageName)
       .resizable()
       .frame(width: 19, height: 19)
@@ -92,38 +91,14 @@ struct TextListItemView: View {
         self.download()
     }
     
-//    switch downloadsMC.state {
-//    case .loading:
-//
-//      if contentSummary.isInCollection {
-//
-//         If downloading entire collection, only showing loading view at the top of the ContentsListingView
-//        guard downloadsMC.isEpisodeOnly else {
-//          return AnyView(image)
-//        }
-//
-//        guard let downloadedContent = downloadsMC.downloadedContent,
-//        downloadedContent.id == contentSummary.id else {
-//          return AnyView(image)
-//        }
-//
-//        return AnyView(CircularProgressBar(isCollection: true, progress: downloadsMC.collectionProgress))
-//
-//      } else {
-//         Only show progress on model that is currently being downloaded
-//        guard let downloadModel = downloadsMC.downloadData.first(where: { $0.content.id == contentSummary.id }),
-//          downloadModel.content.id == downloadsMC.downloadedModel?.content.id else {
-//          return AnyView(image)
-//        }
-//
-//        return AnyView(CircularProgressBar(isCollection: false, progress: downloadModel.downloadProgress))
-//      }
-//
-//    default:
-//      return AnyView(image)
-//    }
-    // TODO: Remove this
-    return AnyView(image)
+    switch contentSummary.downloadProgress {
+    case .downloadable, .downloaded, .notDownloadable:
+      return AnyView(image)
+    case .enqueued:
+      return AnyView(CircularProgressBar(isCollection: false, progress: 0))
+    case .inProgress(progress: let progress):
+      return AnyView(CircularProgressBar(isCollection: false, progress: progress))
+    }
   }
   
   private var downloadImageName: String {
@@ -131,8 +106,7 @@ struct TextListItemView: View {
   }
   
   private func download() {
-    let success = downloadImageName != DownloadImageName.inactive
-    buttonAction(success)
+    parentViewModel.requestDownload(contentId: contentSummary.id)
   }
   
   private var doneCheckbox: AnyView {

@@ -32,10 +32,10 @@ final class DataCacheContentDetailsViewModel: ContentDetailsViewModel {
   private let repository: Repository
   private let service: ContentsService
   
-  init(contentId: Int, repository: Repository, service: ContentsService) {
+  init(contentId: Int, downloadAction: DownloadAction, repository: Repository, service: ContentsService) {
     self.repository = repository
     self.service = service
-    super.init(contentId: contentId)
+    super.init(contentId: contentId, downloadAction: downloadAction)
   }
   
   override func configureSubscriptions() {
@@ -90,6 +90,20 @@ final class DataCacheContentDetailsViewModel: ContentDetailsViewModel {
           self.childContents = contentSumaryStates
       })
       .store(in: &subscriptions)
+  }
+  
+  override func requestDownload(contentId: Int? = nil) {
+    let downloadId = contentId ?? self.contentId
+    downloadAction.requestDownload(contentId: downloadId) { (contentLookupId) -> (ContentPersistableState?) in
+      do {
+        return try self.repository.contentPersistableState(for: contentLookupId)
+      } catch {
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+          .log()
+        return nil
+      }
+    }
   }
   
   private func getContentDetailsFromService() {

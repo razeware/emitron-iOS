@@ -86,14 +86,14 @@ final class DataManager: ObservableObject {
     let contentsService = ContentsService(client: sessionController.client)
     
     let bookmarksService = BookmarksService(client: sessionController.client)
-    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, serviceAdapter: bookmarksService)
+    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: bookmarksService)
     
     let progressionsService = ProgressionsService(client: sessionController.client)
-    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, serviceAdapter: progressionsService)
-    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, serviceAdapter: progressionsService)
+    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: progressionsService)
+    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: progressionsService)
     
     let libraryService = ContentsService(client: sessionController.client)
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, serviceAdapter: libraryService)
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: libraryService)
     
     downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService)
     

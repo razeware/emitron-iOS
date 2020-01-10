@@ -30,10 +30,10 @@ import Foundation
 import Combine
 
 final class LibraryRepository: ContentRepository {
-  override init(repository: Repository, contentsService: ContentsService, serviceAdapter: ContentServiceAdapter?) {
+  override init(repository: Repository, contentsService: ContentsService, downloadAction: DownloadAction, serviceAdapter: ContentServiceAdapter?) {
     filters = Filters()
     
-    super.init(repository: repository, contentsService: contentsService, serviceAdapter: serviceAdapter)
+    super.init(repository: repository, contentsService: contentsService, downloadAction: downloadAction, serviceAdapter: serviceAdapter)
     
     nonPaginationParameters = filters.appliedParameters
   }

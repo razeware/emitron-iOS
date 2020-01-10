@@ -34,6 +34,7 @@ import Combine
 // dependencies) it's easier to build a class hierarchy
 class ContentDetailsViewModel: ObservableObject {
   let contentId: Int
+  let downloadAction: DownloadAction
   
   @Published var content: ContentDetailDisplayable?
   @Published var childContents: [ContentListDisplayable] = [ContentListDisplayable]()
@@ -44,8 +45,9 @@ class ContentDetailsViewModel: ObservableObject {
   var subscriptions = Set<AnyCancellable>()
   let childContentsPublishers = PassthroughSubject<AnyPublisher<[ContentSummaryState], Error>, Error>()
   
-  init(contentId: Int) {
+  init(contentId: Int, downloadAction: DownloadAction) {
     self.contentId = contentId
+    self.downloadAction = downloadAction
   }
 
   func reload() {
@@ -57,6 +59,15 @@ class ContentDetailsViewModel: ObservableObject {
   
   func configureSubscriptions() {
     fatalError("Override this in a subclass please.")
+  }
+
+  func requestDownload(contentId: Int? = nil) {
+    fatalError("Override this in a subclass please.")
+  }
+  
+  func deleteDownload(contentId: Int? = nil) {
+    let deleteId = contentId ?? self.contentId
+    downloadAction.deleteDownload(contentId: deleteId)
   }
 }
 

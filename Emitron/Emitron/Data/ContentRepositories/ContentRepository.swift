@@ -32,6 +32,7 @@ import Combine
 class ContentRepository: ObservableObject, ContentPaginatable {
   let repository: Repository
   let contentsService: ContentsService
+  let downloadAction: DownloadAction
   let serviceAdapter: ContentServiceAdapter!
   
   private (set) var currentPage: Int = 1
@@ -62,9 +63,10 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   // Initialiser
-  init(repository: Repository, contentsService: ContentsService, serviceAdapter: ContentServiceAdapter?) {
+  init(repository: Repository, contentsService: ContentsService, downloadAction: DownloadAction, serviceAdapter: ContentServiceAdapter?) {
     self.repository = repository
     self.contentsService = contentsService
+    self.downloadAction = downloadAction
     self.serviceAdapter = serviceAdapter
     configureSubscription()
   }
@@ -151,6 +153,6 @@ class ContentRepository: ObservableObject, ContentPaginatable {
 
   func contentDetailsViewModel(for contentId: Int) -> ContentDetailsViewModel {
     // Default will use the cached version
-    DataCacheContentDetailsViewModel(contentId: contentId, repository: repository, service: contentsService)
+    DataCacheContentDetailsViewModel(contentId: contentId, downloadAction: downloadAction, repository: repository, service: contentsService)
   }
 }

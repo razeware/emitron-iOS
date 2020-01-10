@@ -56,6 +56,7 @@ enum Failure: Log {
   case saveToPersistentStore(from: String, reason: String)
   case deleteFromPersistentStore(from: String, reason: String)
   case repositoryLoad(from: String, reason: String)
+  case unsupportedAction(from: String, reason: String)
   
   private var failure: String {
     return "Failed_"
@@ -68,7 +69,8 @@ enum Failure: Log {
          .loadFromPersistentStore(from: let from, reason: _),
          .saveToPersistentStore(from: let from, reason: _),
          .deleteFromPersistentStore(from: let from, reason: _),
-         .repositoryLoad(from: let from, reason: _):
+         .repositoryLoad(from: let from, reason: _),
+         .unsupportedAction(from: let from, reason: _):
       return from
     }
   }
@@ -87,6 +89,8 @@ enum Failure: Log {
       return failure + "deleteToPersistentStore"
     case .repositoryLoad:
       return failure + "repositoryLoad"
+    case .unsupportedAction:
+      return failure + "unsupportedAction"
     }
   }
   
@@ -97,7 +101,8 @@ enum Failure: Log {
          .loadFromPersistentStore(from: _, reason: let reason),
          .saveToPersistentStore(from: _, reason: let reason),
          .deleteFromPersistentStore(from: _, reason: let reason),
-         .repositoryLoad(from: _, reason: let reason):
+         .repositoryLoad(from: _, reason: let reason),
+         .unsupportedAction(from: _, reason: let reason):
       return reason
     }
   }

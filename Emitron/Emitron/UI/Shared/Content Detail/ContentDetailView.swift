@@ -170,18 +170,7 @@ struct ContentDetailView: View {
   }
   
   private func rowItem(for model: ContentListDisplayable) -> some View {
-    TextListItemView(contentSummary: model, buttonAction: { success in
-      if success {
-        self.save(for: model.id)
-      } else {
-        if self.showHudView {
-          self.showHudView.toggle()
-        }
-        
-        self.hudOption = success ? .success : .error
-        self.showHudView = true
-      }
-    })
+    TextListItemView(parentViewModel: contentDetailsViewModel, contentSummary: model)
   }
   
   private func videoView(for model: ContentListDisplayable) -> some View {

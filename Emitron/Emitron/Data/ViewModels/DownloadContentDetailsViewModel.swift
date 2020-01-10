@@ -35,7 +35,7 @@ final class DownloadContentDetailsViewModel: ContentDetailsViewModel {
   init(contentId: Int, service: DownloadService) {
     self.service = service
     
-    super.init(contentId: contentId)
+    super.init(contentId: contentId, downloadAction: service)
   }
   
   override func configureSubscriptions() {
@@ -84,5 +84,12 @@ final class DownloadContentDetailsViewModel: ContentDetailsViewModel {
         self.childContents = contentSumaryStates
       })
       .store(in: &subscriptions)
+  }
+  
+  override func requestDownload(contentId: Int? = nil) {
+    // TODO: Do we need to support this
+    Failure
+      .unsupportedAction(from: String(describing: type(of: self)), reason: "Unable to request a download from a downloaded view model.")
+      .log()
   }
 }

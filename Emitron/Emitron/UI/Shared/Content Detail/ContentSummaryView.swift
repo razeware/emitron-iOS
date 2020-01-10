@@ -39,7 +39,6 @@ struct DownloadImageName {
 }
 
 struct ContentSummaryView: View {
-  
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
   var callback: ((ContentListDisplayable, HudOption) -> Void)?
@@ -168,7 +167,7 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    // TODO
+    contentDetailsViewModel.requestDownload()
   }
   
   private func bookmark() {
