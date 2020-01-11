@@ -33,12 +33,12 @@ import CombineExpectations
 
 class PublishedPostFactoTest: XCTestCase {
 
-  class PrePostObservedObject: ObservableObject, ObservablePostFactoObject {
+  class PrePostObservedObject: ObservablePrePostFactoObject {
     // This doesn't get syntesized
     let objectDidChange = ObservableObjectPublisher()
     
     @Published var notifiedBeforeChangeCommitted: Int = 0
-    @PublishedPostFacto var notifiedAfterChangeCommitted: Int = 0
+    @PublishedPrePostFacto var notifiedAfterChangeCommitted: Int = 0
   }
   
   var observedObject: PrePostObservedObject!

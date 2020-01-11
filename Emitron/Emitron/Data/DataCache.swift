@@ -118,11 +118,17 @@ extension DataCache {
   }
   
   private func cachedContentDetailState(for contentId: Int) throws -> CachedContentDetailState {
-    guard let content = self.contents[contentId],
-      let contentDomains = self.contentDomains[contentId],
-      let contentCategories = self.contentCategories[contentId]
-      else {
+    guard let content = self.contents[contentId] else {
+      throw DataCacheError.cacheMiss
+    }
+  
+    let contentDomains = self.contentDomains[contentId] ?? []
+    let contentCategories = self.contentCategories[contentId] ?? []
+    
+    if content.contentType != .episode {
+      if contentDomains.isEmpty || contentCategories.isEmpty {
         throw DataCacheError.cacheMiss
+      }
     }
     
     let bookmark = self.bookmarks[contentId]

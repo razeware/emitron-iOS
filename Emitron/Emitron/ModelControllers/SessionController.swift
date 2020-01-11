@@ -36,13 +36,13 @@ import Network
 // and rethought at a later stage. I'll put // TODO: here so that we might
 // find it again.
 protocol UserModelController {
-  var objectWillChange: ObservableObjectPublisher { get }
+  var objectDidChange: ObservableObjectPublisher { get }
   var user: User? { get }
   var client: RWAPI { get }
 }
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-class SessionController: NSObject, UserModelController, ObservableObject, Refreshable {
+class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject, Refreshable {
   
   // MARK: Refreshable
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
@@ -57,7 +57,8 @@ class SessionController: NSObject, UserModelController, ObservableObject, Refres
   // causes a EXC_BAD_ACCESS when accessed from outside this
   // class. We can get around this using this extra accessor
   // and keeping the @Published property for internal use.
-  @Published private var internalUser: User?
+  @PublishedPrePostFacto private var internalUser: User?
+  let objectDidChange = ObservableObjectPublisher()
   var user: User? {
     return internalUser
   }

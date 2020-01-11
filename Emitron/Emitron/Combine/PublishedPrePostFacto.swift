@@ -28,14 +28,15 @@
 
 import Combine
 
-protocol ObservablePostFactoObject: AnyObject {
+protocol ObservablePrePostFactoObject: ObservableObject {
+  var objectWillChange: ObservableObjectPublisher { get }
   // It's non-trivial to synthesise this, since it is a stored property. So let's not bother.
   var objectDidChange: ObservableObjectPublisher { get }
 }
 
 
 @propertyWrapper
-struct PublishedPostFacto<Value: Equatable> {
+struct PublishedPrePostFacto<Value: Equatable> {
   
   init(initialValue: Value) {
     self.init(wrappedValue: initialValue)
@@ -58,19 +59,20 @@ struct PublishedPostFacto<Value: Equatable> {
     set { fatalError("wrappedValue:set called") }
   }
   
-  static subscript<EnclosingSelf: ObservablePostFactoObject>(
-  _enclosingInstance observablePostFacto: EnclosingSelf,
+  static subscript<EnclosingSelf: ObservablePrePostFactoObject>(
+  _enclosingInstance object: EnclosingSelf,
   wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
   storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
   ) -> Value {
     get {
-      observablePostFacto[keyPath: storageKeyPath].value
+      object[keyPath: storageKeyPath].value
     }
     set {
-      if observablePostFacto[keyPath: storageKeyPath].value != newValue {
-        observablePostFacto[keyPath: storageKeyPath].value = newValue
-        observablePostFacto[keyPath: storageKeyPath].publisher.send(newValue)
-        observablePostFacto.objectDidChange.send()
+      if object[keyPath: storageKeyPath].value != newValue {
+        object.objectWillChange.send()
+        object[keyPath: storageKeyPath].value = newValue
+        object[keyPath: storageKeyPath].publisher.send(newValue)
+        object.objectDidChange.send()
       }
     }
   }

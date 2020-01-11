@@ -69,6 +69,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       persistenceStore: persistenceStore,
       downloadService: downloadService
     )
+    downloadService.startProcessing()
     
     return true
   }

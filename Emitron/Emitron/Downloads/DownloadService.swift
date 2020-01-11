@@ -70,9 +70,11 @@ final class DownloadService {
     self.userModelController = userModelController
     self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
-    self.userModelControllerSubscription = userModelController.objectWillChange.sink { [weak self] in
+    self.userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       guard let self = self else { return }
+      self.stopProcessing()
       self.checkPermissions()
+      self.startProcessing()
     }
     self.downloadProcessor.delegate = self
     checkPermissions()
@@ -218,7 +220,7 @@ extension DownloadService {
   
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard downloadQueueItem.download.remoteUrl != nil,
-      downloadQueueItem.download.state == .urlRequested else {
+      downloadQueueItem.download.state == .readyForDownload else {
       // TODO: Log
         print("Cannot enqueue download: \(downloadQueueItem.download)")
       return
@@ -267,6 +269,9 @@ extension DownloadService {
       var values = URLResourceValues()
       values.isExcludedFromBackup = true
       try downloadsDirectory.setResourceValues(values)
+      #if DEBUG
+      print("Download directory located at: \(downloadsDirectory.path)")
+      #endif
     } catch {
       fatalError("Unable to prepare downloads directory: \(error)")
     }

@@ -69,7 +69,9 @@ final class DownloadProcessor: NSObject {
   
   private lazy var session: URLSession = {
     let config = URLSessionConfiguration.background(withIdentifier: DownloadProcessor.sessionIdentifier)
-    config.isDiscretionary = true
+    // Uncommenting this causes the download task to fail with POSIX 22. But seemingly only with
+    // Vimeo URLs. So that's handy.
+    //config.isDiscretionary = true
     config.sessionSendsLaunchEvents = true
     return URLSession(configuration: config, delegate: self, delegateQueue: .none)
   }()
