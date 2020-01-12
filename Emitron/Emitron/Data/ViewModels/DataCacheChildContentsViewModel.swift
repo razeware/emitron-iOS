@@ -27,69 +27,65 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-final class DownloadContentDetailsViewModel: ContentDetailsViewModel {
-  private let service: DownloadService
-  
-  init(contentId: Int, service: DownloadService) {
+final class DataCacheChildContentsViewModel: ChildContentsViewModel {
+  private let service: ContentsService
+
+  init(parentContentId: Int, downloadAction: DownloadAction, repository: Repository, service: ContentsService) {
     self.service = service
-    
-    super.init(contentId: contentId, downloadAction: service)
+    super.init(parentContentId: parentContentId, downloadAction: downloadAction, repository: repository)
   }
   
   override func configureSubscriptions() {
-    service.downloadedContentDetail(for: contentId)
-      .sink(receiveCompletion: { [weak self] (error) in
-      guard let self = self else { return }
-      
-      self.state = .failed
-      Failure
-        .repositoryLoad(from: "DownloadContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(error)")
-        .log()
-    }, receiveValue: { [weak self] (contentDetailState) in
-      guard let self = self else { return }
-      
-      self.state = .hasData
-      self.content = contentDetailState
-    })
-      .store(in: &subscriptions)
-    
-    self.$content
-      .compactMap({ $0 })
-      .map(\ContentDetailDisplayable.childContents)
-      .removeDuplicates()
-      .map({ $0.map({ content in content.id }) })
-      .sink(receiveValue: { [weak self] (childContentIds) in
+    repository
+      .childContentsState(for: parentContentId)
+      .sink(receiveCompletion: { [weak self] (completion) in
         guard let self = self else { return }
-        self.state = .loadingAdditional
-        self.childContentsPublishers.send(
-          self.service.contentSummaries(for: childContentIds)
-        )
-      })
-      .store(in: &subscriptions)
-    
-    childContentsPublishers
-      .switchToLatest()
-      .sink(receiveCompletion: { [weak self] (error) in
+        if case .failure(let error) = completion, (error as? DataCacheError) == DataCacheError.cacheMiss {
+          self.getContentDetailsFromService()
+        } else {
+          self.state = .failed
+          Failure
+            .repositoryLoad(from: "DataCacheContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(completion)")
+            .log()
+        }
+      }, receiveValue: { [weak self] (childContentsState) in
         guard let self = self else { return }
-
-        self.state = .failed
-        Failure
-          .repositoryLoad(from: "DownloadContentDetailsViewModel", reason: "Unable to retrieve download child contents: \(error)")
-          .log()
-      }, receiveValue: { [weak self] (contentSumaryStates) in
-        guard let self = self else { return }
+        
         self.state = .hasData
-        self.childContents = contentSumaryStates
+        self.contents = childContentsState.contents
+        self.groups = childContentsState.groups
       })
       .store(in: &subscriptions)
   }
   
   override func requestDownload(contentId: Int? = nil) {
-    // TODO: Do we need to support this
-    Failure
-      .unsupportedAction(from: String(describing: type(of: self)), reason: "Unable to request a download from a downloaded view model.")
-      .log()
+    let downloadId = contentId ?? self.parentContentId
+    downloadAction.requestDownload(contentId: downloadId) { (contentLookupId) -> (ContentPersistableState?) in
+      do {
+        return try self.repository.contentPersistableState(for: contentLookupId)
+      } catch {
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+          .log()
+        return nil
+      }
+    }
+  }
+  
+  private func getContentDetailsFromService() {
+    self.state = .loading
+    service.contentDetails(for: parentContentId) { (result) in
+      switch result {
+      case .failure(let error):
+        self.state = .failed
+        Failure
+          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+          .log(additionalParams: nil)
+      case .success(let (_, cacheUpdate)):
+        self.repository.apply(update: cacheUpdate)
+        self.reload()
+      }
+    }
   }
 }

@@ -389,9 +389,9 @@ extension DownloadService {
       .eraseToAnyPublisher()
   }
   
-  func downloadedContentDetail(for contentId: Int) -> AnyPublisher<ContentDetailState?, Error> {
+  func downloadedContentSummary(for contentId: Int) -> AnyPublisher<ContentSummaryState?, Error> {
     persistenceStore
-      .downloadDetail(contentId: contentId)
+      .downloadContentSummary(for: contentId)
       .eraseToAnyPublisher()
   }
   

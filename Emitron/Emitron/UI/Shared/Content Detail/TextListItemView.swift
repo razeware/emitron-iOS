@@ -36,8 +36,8 @@ private extension CGFloat {
 struct TextListItemView: View {
   @EnvironmentObject var sessionController: SessionController
   
-  var parentViewModel: ContentDetailsViewModel
-  var contentSummary: ContentListDisplayable
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+  var content: ChildContentListDisplayable
   
   var canStreamPro: Bool {
     return sessionController.user?.canStreamPro ?? false
@@ -52,7 +52,7 @@ struct TextListItemView: View {
         
         doneCheckbox
         
-        Text(contentSummary.name)
+        Text(content.name)
           .font(.uiTitle5)
           .fixedSize(horizontal: false, vertical: true)
         
@@ -64,7 +64,7 @@ struct TextListItemView: View {
         }
       }
       
-      Text(contentSummary.duration.minuteSecondTimeFromSeconds)
+      Text(content.duration.minuteSecondTimeFromSeconds)
         .font(.uiCaption)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
         .padding([.top], 2)
@@ -74,7 +74,7 @@ struct TextListItemView: View {
   }
   
   private var progressBar: AnyView? {
-    guard case .inProgress(let progress) = contentSummary.viewProgress else { return nil }
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else { return nil }
     return AnyView(
       ProgressBarView(progress: progress, isRounded: true)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
@@ -91,7 +91,7 @@ struct TextListItemView: View {
         self.download()
     }
     
-    switch contentSummary.downloadProgress {
+    switch dynamicContentViewModel.downloadProgress {
     case .downloadable, .downloaded, .notDownloadable:
       return AnyView(image)
     case .enqueued:
@@ -102,16 +102,16 @@ struct TextListItemView: View {
   }
   
   private var downloadImageName: String {
-    contentSummary.downloadProgress.imageName
+    dynamicContentViewModel.downloadProgress.imageName
   }
   
   private func download() {
-    parentViewModel.requestDownload(contentId: contentSummary.id)
+    //TODO: parentViewModel.requestDownload(contentId: contentSummary.id)
   }
   
   private var doneCheckbox: AnyView {
     
-    if !canDownload && contentSummary.professional {
+    if !canDownload && content.professional {
       return AnyView(ZStack {
         Rectangle()
           .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
@@ -129,7 +129,7 @@ struct TextListItemView: View {
         .foregroundColor(.secondaryButtonBackground)
         .cornerRadius(6)
       
-      Text("\(contentSummary.ordinal ?? 0)")
+      Text("\(content.ordinal ?? 0)")
         .font(.uiButtonLabelSmall)
         .foregroundColor(.buttonText)
     }
@@ -149,7 +149,7 @@ struct TextListItemView: View {
         .foregroundColor(Color.buttonText)
     }
     
-    if case .completed = contentSummary.viewProgress {
+    if case .completed = dynamicContentViewModel.viewProgress {
       return AnyView(completeView)
     }
     

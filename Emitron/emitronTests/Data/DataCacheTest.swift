@@ -36,6 +36,9 @@ class DataCacheTest: XCTestCase {
   let screencast = ContentTest.Mocks.screencast
   var sampleContent: Content { screencast.0 }
   var sampleCacheUpdate: DataCacheUpdate { screencast.1 }
+  var sampleProgression: Progression { screencast.1.progressions.first! }
+  
+  let collection = ContentTest.Mocks.collection
   
   override func setUp() {
     cache = DataCache()
@@ -78,20 +81,80 @@ class DataCacheTest: XCTestCase {
     }
   }
   
-  func testContentDetailStateSendsWhenDataCacheUpdated() throws {
-    let publisher = cache.contentDetailState(for: sampleContent.id)
+  func testContentDynamicStateSendsWhenDataCacheUpdated() throws {
+    let publisher = cache.contentDynamicState(for: sampleContent.id)
     cache.update(from: sampleCacheUpdate)
     
     let recorder = publisher.record()
     
-    let detail = try wait(for: recorder.next(), timeout: 1)
+    let dynamic = try wait(for: recorder.next(), timeout: 1)
     
-    XCTAssertEqual(sampleContent, detail?.content)
+    XCTAssertEqual(sampleProgression, dynamic?.progression)
   }
   
-  func testContentDetailStateWhenCacheMiss() throws {
-    let publisher = cache.contentDetailState(for: sampleContent.id)
+  func testContentDynamicStateNotPossibleToCacheMiss() throws {
+    let publisher = cache.contentDynamicState(for: sampleContent.id)
     let recorder = publisher.record()
+    
+    let dynamic = try wait(for: recorder.next(), timeout: 1)
+    
+    XCTAssertEqual(CachedDynamicContentState(progression: nil, bookmark: nil), dynamic)
+  }
+  
+  func testChildContentStateSendsWhenDataCacheUpdated() throws {
+    let publisher = cache.childContentsState(for: collection.0.id)
+    cache.update(from: collection.1)
+    
+    let recorder = publisher.record()
+    
+    let childContents = try wait(for: recorder.next(), timeout: 1)
+    
+    XCTAssertEqual(collection.1.contents.count - 1, childContents?.contents.count)
+    XCTAssert(childContents!.contents.count > 1)
+  }
+  
+  func testChildContentStateWhenCacheMiss() throws {
+    let publisher = cache.childContentsState(for: collection.0.id)
+    let recorder = publisher.record()
+    
+    let completion = try wait(for: recorder.completion, timeout: 1)
+    if case .finished = completion {
+        XCTFail("Should not have finished")
+    }
+    if case let .failure(error) = completion {
+      if error as? DataCacheError != .some(.cacheMiss) {
+        XCTFail("Unexpected error: \(error)")
+      }
+    }
+  }
+  
+  func testChildContentStateWhenAScreencast() throws {
+    let publisher = cache.childContentsState(for: sampleContent.id)
+    cache.update(from: sampleCacheUpdate)
+    
+    let recorder = publisher.record()
+    
+    let childContents = try wait(for: recorder.next(), timeout: 1)
+    
+    XCTAssertEqual([], childContents?.contents)
+  }
+  
+  func testChildContentStateCacheMissWhenNoChildContentForCollection() throws {
+    let publisher = cache.childContentsState(for: collection.0.id)
+    let recorder = publisher.record()
+    
+    let cacheUpdate = DataCacheUpdate(
+      contents: [collection.0],
+      bookmarks: collection.1.bookmarks,
+      progressions: collection.1.progressions,
+      domains: collection.1.domains,
+      groups: [],
+      categories: collection.1.categories,
+      contentCategories: collection.1.contentCategories,
+      contentDomains: collection.1.contentDomains,
+      relationships: collection.1.relationships
+    )
+    cache.update(from: cacheUpdate)
     
     let completion = try wait(for: recorder.completion, timeout: 1)
     if case .finished = completion {

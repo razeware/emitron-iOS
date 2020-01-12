@@ -28,24 +28,60 @@
 
 import Foundation
 
+// MARK:- Shared
+// These are used every time we see content.
+
+/// The progress the current user has made through this item of content
 enum ContentViewProgressDisplayable {
   case notStarted
   case inProgress(progress: Double)
   case completed
+  
+  init(progression: Progression?) {
+    switch progression {
+    case .none:
+      self = .notStarted
+    case .some(let p) where p.finished:
+      self = .completed
+    case .some(let p):
+      self = .inProgress(progress: p.progressProportion)
+    }
+  }
 }
 
+/// Whether or not this item of content has been downloaded, or is downloading
 enum DownloadProgressDisplayable {
   case notDownloadable
   case downloadable
   case enqueued
   case inProgress(progress: Double)
   case downloaded
+  
+  init(download: Download?) {
+    guard let download = download else {
+      self = .downloadable
+      return
+    }
+
+    switch download.state {
+    case .cancelled, .error, .failed:
+      self = .notDownloadable
+    case .enqueued, .pending, .urlRequested, .readyForDownload:
+      self = .enqueued
+    case .inProgress:
+      self = .inProgress(progress: download.progress)
+    case .complete:
+      self = .downloaded
+    case .paused:
+      self = .downloadable
+    }
+  }
 }
 
 extension DownloadProgressDisplayable {
   var imageName: String {
     switch self {
-    case .enqueued, .inProgress:
+    case .downloaded:
       return DownloadImageName.active
     default:
       return DownloadImageName.inactive
@@ -53,18 +89,18 @@ extension DownloadProgressDisplayable {
   }
 }
 
+// MARK:- Content Listing
+
+/// Suitable for content listing view, and the summary section of the content details view
 protocol ContentListDisplayable {
   var id: Int { get }
   var name: String { get }
   var cardViewSubtitle: String { get }
   var descriptionPlainText: String { get }
   var professional: Bool { get }
-  var viewProgress: ContentViewProgressDisplayable { get }
-  var downloadProgress: DownloadProgressDisplayable { get }
   var releasedAt: Date { get }
   var duration: Int { get }
   var releasedAtDateTimeString: String { get }
-  var bookmarked: Bool { get }
   var parentName: String? { get }
   var contentType: ContentType { get }
   var cardArtworkUrl: URL? { get }
@@ -72,15 +108,8 @@ protocol ContentListDisplayable {
   var technologyTripleString: String { get }
   var contentSummaryMetadataString: String { get }
   var contributorString: String { get }
-  
-  var groupId: Int? { get }
+  // Probably only populated for screencasts
   var videoIdentifier: Int? { get }
-}
-
-protocol ContentDetailDisplayable: ContentListDisplayable {
-  var descriptionHtml: String { get }
-  var childContents: [Content] { get }
-  var groups: [Group] { get }
 }
 
 
@@ -94,3 +123,27 @@ extension ContentListDisplayable {
     return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
   }
 }
+
+
+// MARK:- Child Contents Table
+// For display on the content details view page
+
+/// Required to display a line item in the table. These should all be .episode
+protocol ChildContentListDisplayable {
+  var id: Int { get }
+  var name: String { get }
+  var ordinal: Int? { get }
+  var professional: Bool { get }
+  var duration: Int { get }
+  var groupId: Int? { get }
+  var videoIdentifier: Int? { get }
+}
+
+/// Group the contents appropriately
+protocol GroupDisplayable {
+  var id: Int { get }
+  var name: String { get }
+  var description: String? { get }
+  var ordinal: Int { get }
+}
+

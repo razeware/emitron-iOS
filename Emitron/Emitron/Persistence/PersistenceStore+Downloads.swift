@@ -38,9 +38,8 @@ extension PersistenceStore {
       let request = Content
         .including(required: Content.download)
         .including(all: Content.domains)
-        .including(optional: Content.bookmark)
+        .including(all: Content.categories)
         .including(optional: Content.parentContent)
-        .including(optional: Content.progression)
         
       return try ContentSummaryState.fetchAll(db, request)
     }.publisher(in: db)
@@ -48,36 +47,25 @@ extension PersistenceStore {
 }
 
 extension PersistenceStore {
-  /// Request details of a specific download
-  /// - Parameter contentId: The id of the item of content to show
-  func downloadDetail(contentId: Int) -> DatabasePublishers.Value<ContentDetailState?> {
-    ValueObservation.tracking { db -> ContentDetailState? in
+  func downloadContentSummary(for contentId: Int) -> DatabasePublishers.Value<ContentSummaryState?> {
+    ValueObservation.tracking { db -> ContentSummaryState? in
       let request = Content
         .filter(key: contentId)
-        .including(required: Content.download)
         .including(all: Content.domains)
         .including(all: Content.categories)
-        .including(optional: Content.bookmark)
         .including(optional: Content.parentContent)
-        .including(optional: Content.progression)
-        .including(all: Content.groups)
-        .including(all: Content.childContents)
-        
-      return try ContentDetailState.fetchOne(db, request)
+      
+      return try ContentSummaryState.fetchOne(db, request)
     }.publisher(in: db)
   }
-}
-
-extension PersistenceStore {
+  
   func downloadContentSummary(for contentIds: [Int]) -> DatabasePublishers.Value<[ContentSummaryState]> {
     ValueObservation.tracking { db -> [ContentSummaryState] in
       let request = Content
         .filter(keys: contentIds)
-        .including(required: Content.download)
         .including(all: Content.domains)
-        .including(optional: Content.bookmark)
+        .including(all: Content.categories)
         .including(optional: Content.parentContent)
-        .including(optional: Content.progression)
       
       return try ContentSummaryState.fetchAll(db, request)
     }.publisher(in: db)

@@ -416,8 +416,9 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = .none
     userModelController.objectWillChange.send()
+    userModelController.user = .none
+    userModelController.objectDidChange.send()
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -438,8 +439,9 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = User.noPermissions
     userModelController.objectWillChange.send()
+    userModelController.user = User.noPermissions
+    userModelController.objectDidChange.send()
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -448,8 +450,9 @@ class DownloadServiceTest: XCTestCase {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = User.withDownloads
     userModelController.objectWillChange.send()
+    userModelController.user = User.withDownloads
+    userModelController.objectDidChange.send()
     
     XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -581,7 +584,7 @@ class DownloadServiceTest: XCTestCase {
     var download = downloadQueueItem.download
     // Update to include the URL
     download.remoteUrl = URL(string: "https://example.com/video.mp4")
-    download.state = .urlRequested
+    download.state = .readyForDownload
     try database.write { db in
       try download.save(db)
     }
@@ -602,7 +605,7 @@ class DownloadServiceTest: XCTestCase {
     var download = downloadQueueItem.download
     download.remoteUrl = URL(string: "https://example.com/amazing.mp4")
     download.fileName = "\(downloadQueueItem.content.videoIdentifier!).mp4"
-    download.state = .urlRequested
+    download.state = .readyForDownload
     try database.write { db in
       try download.save(db)
     }

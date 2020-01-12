@@ -29,27 +29,24 @@
 import Foundation
 import Combine
 
-// It'd be lovely if this could be a protocol. But in order to
-// make it an ObservableObject, (which has associated type
-// dependencies) it's easier to build a class hierarchy
-class ContentDetailsViewModel: ObservableObject {
-  let contentId: Int
-  let downloadAction: DownloadAction
+final class DynamicContentViewModel: ObservableObject {
+  private let contentId: Int
+  private let repository: Repository
   
-  @Published var content: ContentDetailDisplayable?
-  @Published var childContents: [ContentListDisplayable] = [ContentListDisplayable]()
-  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
-  // Let's see if we actually need it to be @Published...
+  private var dynamicContentState: DynamicContentState?
+  
   var state: DataState = .initial
+  @Published var viewProgress: ContentViewProgressDisplayable = .notStarted
+  @Published var downloadProgress: DownloadProgressDisplayable = .notDownloadable
+  @Published var bookmarked: Bool = false
   
   var subscriptions = Set<AnyCancellable>()
-  let childContentsPublishers = PassthroughSubject<AnyPublisher<[ContentSummaryState], Error>, Error>()
   
-  init(contentId: Int, downloadAction: DownloadAction) {
+  init(contentId: Int, repository: Repository) {
     self.contentId = contentId
-    self.downloadAction = downloadAction
+    self.repository = repository
   }
-
+  
   func reload() {
     self.state = .loading
     subscriptions.forEach({ $0.cancel() })
@@ -57,17 +54,30 @@ class ContentDetailsViewModel: ObservableObject {
     configureSubscriptions()
   }
   
-  func configureSubscriptions() {
-    fatalError("Override this in a subclass please.")
+  private func configureSubscriptions() {
+    repository
+      .contentDynamicState(for: contentId)
+      .sink(receiveCompletion: { (completion) in
+        self.state = .failed
+        Failure
+          .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
+          .log()
+      }) { (contentState) in
+        self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
+        self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
+        self.bookmarked = contentState.bookmark != nil
+        self.dynamicContentState = contentState
+      }
+      .store(in: &subscriptions)
   }
-
+  
   func requestDownload(contentId: Int? = nil) {
     fatalError("Override this in a subclass please.")
+    // TODO
   }
   
   func deleteDownload(contentId: Int? = nil) {
     let deleteId = contentId ?? self.contentId
-    downloadAction.deleteDownload(contentId: deleteId)
+    // TODO
   }
 }
-

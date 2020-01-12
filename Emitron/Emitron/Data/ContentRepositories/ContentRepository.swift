@@ -53,7 +53,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private var contentSubscription: AnyCancellable?
   
   var isEmpty: Bool {
-    contentIds.isEmpty
+    contents.isEmpty
   }
   
   var nonPaginationParameters = [Parameter]() {
@@ -140,7 +140,6 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     }
   }
   
-  
   private func configureSubscription() {
     self.contentSubscription = self.repository.contentSummaryState(for: self.contentIds).sink(receiveCompletion: { (error) in
       Failure
@@ -150,9 +149,13 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       self.contents = contentSummaryStates
     })
   }
-
-  func contentDetailsViewModel(for contentId: Int) -> ContentDetailsViewModel {
-    // Default will use the cached version
-    DataCacheContentDetailsViewModel(contentId: contentId, downloadAction: downloadAction, repository: repository, service: contentsService)
+  
+  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
+    DynamicContentViewModel(contentId: contentId, repository: repository)
+  }
+  
+  func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
+    // Default to using the cached version
+    DataCacheChildContentsViewModel(parentContentId: contentId, downloadAction: downloadAction, repository: repository, service: contentsService)
   }
 }

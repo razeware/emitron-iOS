@@ -28,20 +28,15 @@
 
 import SwiftUI
 import KingfisherSwiftUI
-import UIKit
-import Network
 
-struct CardView: SwiftUI.View {
-  private let model: ContentListDisplayable
+struct CardView: View {
+  let model: ContentListDisplayable
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   private let animation: Animation = .easeIn
-  
-  init(model: ContentListDisplayable) {
-    self.model = model
-  }
-  
+
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
-  var body: some SwiftUI.View {
+  var body: some View {
     
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
@@ -123,7 +118,7 @@ struct CardView: SwiftUI.View {
   }
   
   private var progressBar: AnyView {
-    if case .inProgress(let progress) = model.viewProgress {
+    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
       return AnyView(ProgressBarView(progress: progress, isRounded: true)
         .padding([.top, .bottom], 0))
     } else {
@@ -136,7 +131,7 @@ struct CardView: SwiftUI.View {
   }
   
   private var proTagOrReleasedAt: AnyView {
-    if case .completed = model.viewProgress {
+    if case .completed = dynamicContentViewModel.viewProgress {
       return AnyView(CompletedTag())
     } else {
       return AnyView(Text(model.releasedAtDateTimeString)
@@ -147,15 +142,10 @@ struct CardView: SwiftUI.View {
   }
   
   private var bookmarkButton: AnyView? {
-    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
-    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
-    guard model.bookmarked else { return nil }
-    
-    let imageName = model.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    guard dynamicContentViewModel.bookmarked else { return nil }
     
     return AnyView(
-      Image(imageName)
+      Image("bookmarkActive")
         .resizable()
         .frame(width: 21, height: 21)
     )

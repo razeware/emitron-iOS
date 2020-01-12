@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,44 +27,5 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-final class DownloadRepository: ContentRepository {
-  let downloadService: DownloadService
-  
-  private var contentSubscription: AnyCancellable?
-  
-  init(repository: Repository, contentsService: ContentsService, downloadService: DownloadService) {
-    self.downloadService = downloadService
-    // Don't need the repository or the service adapter
-    super.init(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: nil)
-  }
-  
-  override func loadMore() {
-    // Do nothing
-  }
-  
-  override func reload() {
-    self.state = .loading
-    self.contentSubscription?.cancel()
-    configureSubscription()
-  }
-  
-  private func configureSubscription() {
-    self.contentSubscription =
-      self.downloadService
-        .downloadList()
-        .sink(receiveCompletion: { [weak self] (error) in
-          guard let self = self else { return }
-          // TODO Logging
-          self.state = .failed
-          print("Unable to retrieve download content summaries: \(error)")
-        }, receiveValue: { [weak self] (contentSummaryStates) in
-          guard let self = self else { return }
-          self.contents = contentSummaryStates
-          self.state = .hasData
-        })
-  }
-}
-
-
+extension Content: ChildContentListDisplayable { }

@@ -67,7 +67,7 @@ struct ContentListView: View {
         
         if contentScreen == .downloads {
 
-          if contentRepository.contents.isEmpty {
+          if contentRepository.isEmpty {
             emptyView
           } else {
             cardsTableViewWithDelete
@@ -136,9 +136,12 @@ struct ContentListView: View {
 
   private var cardTableNavView: AnyView {
     AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-      NavigationLink(destination: ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+      NavigationLink(destination: ContentDetailView(
+        content: partialContent,
+        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
       {
-        CardView(model: partialContent)
+        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
       }
@@ -154,11 +157,12 @@ struct ContentListView: View {
   //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
   private var cardsTableViewWithDelete: AnyView {
     AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-      
-      NavigationLink(destination:
-        ContentDetailView(contentDetailsViewModel: self.contentRepository.contentDetailsViewModel(for: partialContent.id)))
+      NavigationLink(destination: ContentDetailView(
+        content: partialContent,
+        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
       {
-        CardView(model: partialContent)
+        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
       }

@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import SwiftUI
-import Network
 
 private struct Layout {
   static let buttonSize: CGFloat = 21
@@ -41,16 +40,12 @@ struct DownloadImageName {
 struct ContentSummaryView: View {
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
-  var callback: ((ContentListDisplayable, HudOption) -> Void)?
-  @ObservedObject var contentDetailsViewModel: ContentDetailsViewModel
-  private let monitor = NWPathMonitor(requiredInterfaceType: .wifi)
+  
+  var content: ContentListDisplayable
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   
   var body: some View {
-    let queue = DispatchQueue(label: "Monitor")
-    monitor.start(queue: queue)
-    guard let content = contentDetailsViewModel.content else { return AnyView(Spacer()) }
-    
-    return contentView(content: content)
+    contentView(content: content)
   }
   
   private func contentView(content: ContentListDisplayable) -> AnyView {
@@ -121,7 +116,7 @@ struct ContentSummaryView: View {
   }
   
   private func completedTag(content: ContentListDisplayable) -> CompletedTag? {
-    if case .completed = content.viewProgress {
+    if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
     }
     return nil
@@ -131,7 +126,7 @@ struct ContentSummaryView: View {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     
-    let imageName = (contentDetailsViewModel.content?.bookmarked ?? false) ? "bookmarkActive" : "bookmarkInactive"
+    let imageName = dynamicContentViewModel.bookmarked ? "bookmarkActive" : "bookmarkInactive"
     
     return AnyView(
       Image(imageName)
@@ -150,12 +145,8 @@ struct ContentSummaryView: View {
       .onTapGesture {
         self.download()
     }
-    
-    guard let downloadProgress = contentDetailsViewModel.content?.downloadProgress else {
-      return AnyView(image)
-    }
-    
-    if case .inProgress(let progress) = downloadProgress {
+
+    if case .inProgress(let progress) = dynamicContentViewModel.downloadProgress {
       return AnyView(CircularProgressBar(isCollection: false, progress: progress))
     }
     
@@ -163,11 +154,11 @@ struct ContentSummaryView: View {
   }
   
   private var downloadImageName: String {
-    (contentDetailsViewModel.content?.downloadProgress ?? DownloadProgressDisplayable.downloadable).imageName
+    dynamicContentViewModel.downloadProgress.imageName
   }
   
   private func download() {
-    contentDetailsViewModel.requestDownload()
+    dynamicContentViewModel.requestDownload()
   }
   
   private func bookmark() {

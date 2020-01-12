@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,19 +28,4 @@
 
 import Foundation
 
-struct CachedContentSummaryState: Equatable {
-  let content: Content
-  let contentDomains: [ContentDomain]
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-}
-
-struct ContentSummaryState: Decodable, Equatable {
-  let content: Content
-  let domains: [Domain]
-  let download: Download?
-  let bookmark: Bookmark?
-  let parentContent: Content?
-  let progression: Progression?
-}
+extension Group: GroupDisplayable { }

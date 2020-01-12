@@ -28,7 +28,7 @@
 
 import Foundation
 
-extension ContentDetailState: ContentDetailDisplayable {
+extension ContentSummaryState: ContentListDisplayable {
   // MARK:- Proxied from content
   var id: Int {
     content.id
@@ -48,10 +48,6 @@ extension ContentDetailState: ContentDetailDisplayable {
   
   var descriptionPlainText: String {
     content.descriptionPlainText
-  }
-  
-  var descriptionHtml: String {
-    content.descriptionHtml
   }
   
   var professional: Bool {
@@ -91,10 +87,6 @@ extension ContentDetailState: ContentDetailDisplayable {
   }
   
   // MARK:- Proxied from Other Records
-  var bookmarked: Bool {
-    bookmark != nil
-  }
-  
   var parentName: String? {
     parentContent?.name
   }
@@ -108,36 +100,4 @@ extension ContentDetailState: ContentDetailDisplayable {
     }
     return ""
   }
-  
-  
-  // MARK: - Converted to Display Properties
-  var viewProgress: ContentViewProgressDisplayable {
-    switch progression {
-    case .none:
-      return .notStarted
-    case .some(let p) where p.finished:
-      return .completed
-    case .some(let p):
-      return .inProgress(progress: p.progressProportion)
-    }
-  }
-  
-  var downloadProgress: DownloadProgressDisplayable {
-    guard let download = download else { return .downloadable }
-
-    switch download.state {
-    case .cancelled, .error, .failed:
-      return .notDownloadable
-    case .enqueued, .pending, .urlRequested, .readyForDownload:
-      return .enqueued
-    case .inProgress:
-      return .inProgress(progress: download.progress)
-    case .complete:
-      return .downloaded
-    case .paused:
-      return .downloadable
-    }
-  }
-  
-  
 }

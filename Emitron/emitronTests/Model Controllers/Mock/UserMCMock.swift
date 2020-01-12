@@ -34,6 +34,7 @@ class UserMCMock: UserModelController {
   var user: User?
   var client: RWAPI
   let objectWillChange = ObservableObjectPublisher()
+  let objectDidChange = ObservableObjectPublisher()
   
   init() {
     self.client = RWAPI(authToken: "FAKE_TOKEN")

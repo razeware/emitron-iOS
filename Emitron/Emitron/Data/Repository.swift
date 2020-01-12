@@ -49,27 +49,43 @@ extension Repository {
 
 extension Repository {
   func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
-    let fromCache = dataCache.contentSummaryState(for: contentIds)
-    let downloads = persistenceStore.downloads(for: contentIds)
-    
-    return fromCache
-      .combineLatest(downloads)
-      .map { (cachedContentSummaryStates, downloads) in
+    dataCache
+      .contentSummaryState(for: contentIds)
+      .map { (cachedContentSummaryStates) in
         cachedContentSummaryStates.map { cached in
-          self.contentSummaryState(cached: cached, downloads: downloads)
+          self.contentSummaryState(cached: cached)
         }
-    }.eraseToAnyPublisher()
+      }
+      .eraseToAnyPublisher()
   }
   
-  func contentDetailState(for contentId: Int) -> AnyPublisher<ContentDetailState, Error> {
-    let fromCache = dataCache.contentDetailState(for: contentId)
+  func contentSummaryState(for contentId: Int) -> AnyPublisher<ContentSummaryState, Error> {
+    dataCache
+      .contentSummaryState(for: contentId)
+      .map { (cachedContentSummaryState) in
+        self.contentSummaryState(cached: cachedContentSummaryState)
+      }
+      .eraseToAnyPublisher()
+  }
+  
+  func childContentsState(for contentId: Int) -> AnyPublisher<ChildContentsState, Error> {
+    dataCache
+      .childContentsState(for: contentId)
+  }
+  
+  func contentDynamicState(for contentId: Int) -> AnyPublisher<DynamicContentState, Error> {
+    let fromCache = dataCache.contentDynamicState(for: contentId)
     let download = persistenceStore.download(for: contentId)
     
     return fromCache
       .combineLatest(download)
-      .map { (cachedContentDetailState, download) in
-        self.contentDetailState(cached: cachedContentDetailState, download: download)
-    }.eraseToAnyPublisher()
+      .map { (cachedState, download) in
+        DynamicContentState(download: download,
+                            progression: cachedState.progression,
+                            bookmark: cachedState.bookmark)
+      }
+      .removeDuplicates()
+      .eraseToAnyPublisher()
   }
   
   func contentPersistableState(for contentId: Int) throws -> ContentPersistableState? {
@@ -92,29 +108,12 @@ extension Repository {
     try persistenceStore.sync(categories: categories)
   }
   
-  private func contentSummaryState(cached: CachedContentSummaryState, downloads: [Download]) -> ContentSummaryState {
+  private func contentSummaryState(cached: CachedContentSummaryState) -> ContentSummaryState {
     ContentSummaryState(
       content: cached.content,
       domains: self.domains(from: cached.contentDomains),
-      download: downloads.first { $0.contentId == cached.content.id },
-      bookmark: cached.bookmark,
-      parentContent: cached.parentContent,
-      progression: cached.progression
-    )
-  }
-  
-  private func contentDetailState(cached: CachedContentDetailState,
-                                  download: Download?) -> ContentDetailState {
-    ContentDetailState(
-      content: cached.content,
-      domains: self.domains(from: cached.contentDomains),
       categories: self.categories(from: cached.contentCategories),
-      download: download,
-      bookmark: cached.bookmark,
-      parentContent: cached.parentContent,
-      progression: cached.progression,
-      groups: cached.groups,
-      childContents: cached.childContents
+      parentContent: cached.parentContent
     )
   }
   

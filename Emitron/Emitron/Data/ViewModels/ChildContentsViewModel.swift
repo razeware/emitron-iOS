@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -29,42 +29,48 @@
 import Foundation
 import Combine
 
-final class DownloadRepository: ContentRepository {
-  let downloadService: DownloadService
+class ChildContentsViewModel: ObservableObject {
+  let parentContentId: Int
+  let downloadAction: DownloadAction
+  let repository: Repository
   
-  private var contentSubscription: AnyCancellable?
+  var state: DataState = .initial
+  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
+  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
   
-  init(repository: Repository, contentsService: ContentsService, downloadService: DownloadService) {
-    self.downloadService = downloadService
-    // Don't need the repository or the service adapter
-    super.init(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: nil)
+  var subscriptions = Set<AnyCancellable>()
+  
+  init(parentContentId: Int, downloadAction: DownloadAction, repository: Repository) {
+    self.parentContentId = parentContentId
+    self.downloadAction = downloadAction
+    self.repository = repository
   }
   
-  override func loadMore() {
-    // Do nothing
-  }
-  
-  override func reload() {
+  func reload() {
     self.state = .loading
-    self.contentSubscription?.cancel()
-    configureSubscription()
+    subscriptions.forEach({ $0.cancel() })
+    subscriptions.removeAll()
+    configureSubscriptions()
   }
   
-  private func configureSubscription() {
-    self.contentSubscription =
-      self.downloadService
-        .downloadList()
-        .sink(receiveCompletion: { [weak self] (error) in
-          guard let self = self else { return }
-          // TODO Logging
-          self.state = .failed
-          print("Unable to retrieve download content summaries: \(error)")
-        }, receiveValue: { [weak self] (contentSummaryStates) in
-          guard let self = self else { return }
-          self.contents = contentSummaryStates
-          self.state = .hasData
-        })
+  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
+    contents.filter({ $0.groupId == groupId })
+  }
+  
+  func requestDownload(contentId: Int? = nil) {
+    fatalError("Override this in a subclass please.")
+  }
+  
+  func deleteDownload(contentId: Int? = nil) {
+    let deleteId = contentId ?? self.parentContentId
+    downloadAction.deleteDownload(contentId: deleteId)
+  }
+  
+  func configureSubscriptions() {
+    fatalError("Override in a subclass please.")
+  }
+  
+  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
+    DynamicContentViewModel(contentId: contentId, repository: repository)
   }
 }
-
-
