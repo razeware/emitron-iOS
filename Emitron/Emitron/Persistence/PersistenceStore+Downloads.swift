@@ -81,8 +81,7 @@ extension PersistenceStore {
     }.publisher(in: db)
   }
   
-  func download(for contentId: Int) ->
-    DatabasePublishers.Value<Download?> {
+  func download(for contentId: Int) -> DatabasePublishers.Value<Download?> {
     ValueObservation.tracking { db -> Download? in
       let request = Download
         .filter(Download.Columns.contentId == contentId)
@@ -130,6 +129,17 @@ extension PersistenceStore {
   func download(withId id: UUID) throws -> Download? {
     try db.read { db in
       try Download.fetchOne(db, key: id)
+    }
+  }
+  
+  
+  /// Return a single `Download` from its content id
+  /// - Parameter contentId: The ID of the item of content this download refers to
+  func download(forContentId contentId: Int) throws -> Download? {
+    try db.read { db in
+      try Download
+        .filter(Download.Columns.contentId == contentId)
+        .fetchOne(db)
     }
   }
 }

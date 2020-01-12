@@ -30,6 +30,6 @@ import Foundation
 
 protocol DownloadAction {
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup)
-  func cancelDownload(contentId: Int)
-  func deleteDownload(contentId: Int)
+  func cancelDownload(contentId: Int) throws
+  func deleteDownload(contentId: Int) throws
 }

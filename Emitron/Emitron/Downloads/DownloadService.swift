@@ -29,6 +29,11 @@
 import Foundation
 import Combine
 
+enum DownloadServiceError: Error {
+  case unableToCancelDownload
+  case unableToDeleteDownload
+}
+
 final class DownloadService {
   private let persistenceStore: PersistenceStore
   private let userModelController: UserModelController
@@ -127,7 +132,7 @@ final class DownloadService {
   }
 }
 
-extension DownloadService: DownloadAction {
+extension DownloadService: DownloadAction {  
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) {
     guard videosService != nil else {
       Failure
@@ -155,14 +160,38 @@ extension DownloadService: DownloadAction {
     }
   }
   
-  func cancelDownload(contentId: Int) {
-    // TODO
-    fatalError("This should have been implemented")
+  func cancelDownload(contentId: Int) throws {
+    do {
+      // 1. Find the download.
+      guard let download = try persistenceStore.download(forContentId: contentId) else { return }
+      // 2. Cancel it. The delegate callback will handle deleting the value in the persistence store.
+      try downloadProcessor.cancelDownload(download)
+    } catch {
+      Failure
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentId: \(contentId)): \(error)")
+        .log()
+      throw DownloadServiceError.unableToCancelDownload
+    }
   }
   
-  func deleteDownload(contentId: Int) {
-    // TODO
-    fatalError("This should have been implemented")
+  func deleteDownload(contentId: Int) throws {
+    do {
+      // 1. Find the download
+      guard let download = try persistenceStore.download(forContentId: contentId) else { return }
+      // 2. Delete the file from disk
+      try deleteFile(for: download)
+      // 3. Delete the persisted record
+      if try !persistenceStore.deleteDownload(withId: download.id) {
+        Failure
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the Download record from the DB (contentId: \(contentId))")
+        .log()
+      }
+    } catch {
+      Failure
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the download (contentId: \(contentId)): \(error)")
+        .log()
+      throw DownloadServiceError.unableToDeleteDownload
+    }
   }
 }
 
@@ -291,6 +320,14 @@ extension DownloadService {
       prepareDownloadDirectory()
     } catch {
       fatalError("Unable to delete the contents of the downloads directory: \(error)")
+    }
+  }
+  
+  private func deleteFile(for download: Download) throws {
+    guard let localUrl = download.localUrl else { return }
+    let filemanager = FileManager.default
+    if filemanager.fileExists(atPath: localUrl.path) {
+      try filemanager.removeItem(at: localUrl)
     }
   }
   

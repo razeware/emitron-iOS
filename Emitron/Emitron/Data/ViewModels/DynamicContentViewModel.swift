@@ -83,25 +83,31 @@ final class DynamicContentViewModel: ObservableObject {
   func downloadTapped() {
     guard state == .hasData else { return }
     
-    switch downloadProgress {
-    case .downloadable:
-      downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
-        do {
-          return try self.repository.contentPersistableState(for: contentId)
-        } catch {
-          Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
-            .log()
-          return nil
+    do {
+      switch downloadProgress {
+      case .downloadable:
+        downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
+          do {
+            return try self.repository.contentPersistableState(for: contentId)
+          } catch {
+            Failure
+              .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+              .log()
+            return nil
+          }
         }
+      case .enqueued, .inProgress:
+        try downloadAction.cancelDownload(contentId: contentId)
+      case .downloaded:
+        try downloadAction.deleteDownload(contentId: contentId)
+      case .notDownloadable:
+        // No-op
+        return
       }
-    case .enqueued, .inProgress:
-      downloadAction.cancelDownload(contentId: contentId)
-    case .downloaded:
-      downloadAction.deleteDownload(contentId: contentId)
-    case .notDownloadable:
-      // No-op
-      return
+    } catch {
+      Failure
+        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to perform download action:  \(error)")
+        .log()
     }
   }
   

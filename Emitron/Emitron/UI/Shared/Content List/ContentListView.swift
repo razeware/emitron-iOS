@@ -274,7 +274,13 @@ struct ContentListView: View {
     DispatchQueue.main.async {
       let content = self.contentRepository.contents[index]
       
-      self.downloadAction.deleteDownload(contentId: content.id)
+      do {
+        try self.downloadAction.deleteDownload(contentId: content.id)
+      } catch {
+        Failure
+          .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
+        .log()
+      }
     }
   }
 }
