@@ -32,11 +32,6 @@ private struct Layout {
   static let buttonSize: CGFloat = 21
 }
 
-struct DownloadImageName {
-  static let active: String = "downloadActive"
-  static let inactive: String = "downloadInactive"
-}
-
 struct ContentSummaryView: View {
   @State var showHudView: Bool = false
   @State var showSuccess: Bool = false
@@ -80,7 +75,10 @@ struct ContentSummaryView: View {
         .padding([.top], 10)
       
       HStack(spacing: 30, content: {
-        downloadButton
+        DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+          .onTapGesture {
+            self.download()
+          }
         bookmarkButton
         
         completedTag(content: content)
@@ -108,13 +106,6 @@ struct ContentSummaryView: View {
     })
   }
   
-  private var downloadButton: some View {
-    completeDownloadButton
-      .onTapGesture {
-        self.download()
-    }
-  }
-  
   private func completedTag(content: ContentListDisplayable) -> CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
@@ -136,25 +127,6 @@ struct ContentSummaryView: View {
           self.bookmark()
       }
     )
-  }
-  
-  private var completeDownloadButton: some View {
-    let image = Image(downloadImageName)
-      .resizable()
-      .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      .onTapGesture {
-        self.download()
-    }
-
-    if case .inProgress(let progress) = dynamicContentViewModel.downloadProgress {
-      return AnyView(CircularProgressBar(isCollection: false, progress: progress))
-    }
-    
-    return AnyView(image)
-  }
-  
-  private var downloadImageName: String {
-    dynamicContentViewModel.downloadProgress.imageName
   }
   
   private func download() {

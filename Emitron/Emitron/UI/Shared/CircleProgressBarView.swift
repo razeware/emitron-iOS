@@ -35,8 +35,6 @@ private struct Layout {
 }
 
 struct CircularProgressBar: View {
-
-  @State var isCollection = false
   @State var progress: Double
   @State var spinCircle = false
 
@@ -61,7 +59,7 @@ struct CircularProgressBar: View {
       .frame(width: Layout.frame, height: Layout.frame)
       // FJ FIX make progress UP not count down
       .rotationEffect(.degrees(-90), anchor: .center)
-      .animation(Animation.easeIn(duration: spinCircle ? isCollection ? 45 : 30 : 0))
+      .animation(Animation.easeIn(duration: spinCircle ? 30 : 0))
   }
 }
 

@@ -23,6 +23,8 @@
 		2228E40523B999CA00E103AA /* DomainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40423B999CA00E103AA /* DomainRepository.swift */; };
 		2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40623B999D500E103AA /* CategoryRepository.swift */; };
 		222EEF7023CAD65200B025A4 /* ChildContentsState+Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF6F23CAD65200B025A4 /* ChildContentsState+Fetchable.swift */; };
+		222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */; };
+		222EEF7423CAF4D700B025A4 /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF7323CAF4D700B025A4 /* Image+Extensions.swift */; };
 		2237AAA223C3368B008E9976 /* AttachmentAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA123C3368B008E9976 /* AttachmentAdapterTest.swift */; };
 		2237AAA423C33697008E9976 /* BookmarkAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA323C33697008E9976 /* BookmarkAdapterTest.swift */; };
 		2237AAA623C336A5008E9976 /* CategoryAdapterTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2237AAA523C336A5008E9976 /* CategoryAdapterTest.swift */; };
@@ -248,6 +250,8 @@
 		2228E40423B999CA00E103AA /* DomainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainRepository.swift; sourceTree = "<group>"; };
 		2228E40623B999D500E103AA /* CategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRepository.swift; sourceTree = "<group>"; };
 		222EEF6F23CAD65200B025A4 /* ChildContentsState+Fetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChildContentsState+Fetchable.swift"; sourceTree = "<group>"; };
+		222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadIcon.swift; sourceTree = "<group>"; };
+		222EEF7323CAF4D700B025A4 /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
 		2237AAA123C3368B008E9976 /* AttachmentAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AttachmentAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAA323C33697008E9976 /* BookmarkAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarkAdapterTest.swift; sourceTree = "<group>"; };
 		2237AAA523C336A5008E9976 /* CategoryAdapterTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryAdapterTest.swift; sourceTree = "<group>"; };
@@ -1017,6 +1021,7 @@
 				B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */,
 				B6D7DC4522C7AF60006DD325 /* UIFont+Extensions.swift */,
 				B6D7DC5422C7B408006DD325 /* Font+Extensions.swift */,
+				222EEF7323CAF4D700B025A4 /* Image+Extensions.swift */,
 			);
 			path = Styleguide;
 			sourceTree = "<group>";
@@ -1178,6 +1183,7 @@
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
 				229F0AC323BB29230004DD4F /* Video */,
+				222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -1469,6 +1475,7 @@
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
 				22B8266C23B05ECB00D4BA23 /* ContentCategoryAdapter.swift in Sources */,
 				B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */,
+				222EEF7423CAF4D700B025A4 /* Image+Extensions.swift in Sources */,
 				B682F8C722EB096300CBF2CC /* Filters.swift in Sources */,
 				B6D8EB1F22CBA72D00DE29AF /* ContentsService.swift in Sources */,
 				22D17708235078030038333D /* Configuration.swift in Sources */,
@@ -1550,6 +1557,7 @@
 				22C0513423A4FB8E004D1223 /* Bookmark+Persistence.swift in Sources */,
 				22B8266A23AF608A00D4BA23 /* DataCacheUpdate.swift in Sources */,
 				B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */,
+				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,

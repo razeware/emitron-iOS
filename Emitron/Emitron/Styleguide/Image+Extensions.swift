@@ -28,42 +28,9 @@
 
 import SwiftUI
 
-struct DownloadIcon: View {
-  let downloadProgress: DownloadProgressDisplayable
-  
-  var body: some View {
-    switch downloadProgress {
-    case .downloadable:
-      return AnyView(Image.Downloads.notDownloaded)
-    case .enqueued:
-      return AnyView(CircularProgressBar(progress: 0, spinCircle: true))
-    case .inProgress(progress: let progress):
-      return AnyView(CircularProgressBar(progress: progress))
-    case .downloaded:
-      return AnyView(Image.Downloads.downloaded)
-    case .notDownloadable:
-      return AnyView(Image.Downloads.notDownloaded)
-    }
-  }
-}
-
-struct DownloadIcon_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack {
-      icon(for: .downloadable)
-      icon(for: .enqueued)
-      icon(for: .inProgress(progress: 0.3))
-      icon(for: .inProgress(progress: 0.7))
-      icon(for: .inProgress(progress: 0.8))
-      icon(for: .downloaded)
-      icon(for: .notDownloadable)
-    }
-  }
-  
-  static func icon(for state: DownloadProgressDisplayable) -> some View {
-    HStack {
-      Text(state.description)
-      DownloadIcon(downloadProgress: state)
-    }
+extension Image {
+  struct Downloads {
+    static let notDownloaded: Image = Image("downloadActive")
+    static let downloaded: Image = Image("downloadInactive")
   }
 }

@@ -59,7 +59,10 @@ struct TextListItemView: View {
         Spacer()
         
         if canDownload {
-          setUpImageAndProgress()
+          DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+            .onTapGesture {
+              self.download()
+            }
             .padding([.trailing], 20)
         }
       }
@@ -81,28 +84,6 @@ struct TextListItemView: View {
         .padding([.trailing], 20)
         .padding([.top], 10)
     )
-  }
-  
-  private func setUpImageAndProgress() -> AnyView {
-    let image = Image(self.downloadImageName)
-      .resizable()
-      .frame(width: 19, height: 19)
-      .onTapGesture {
-        self.download()
-    }
-    
-    switch dynamicContentViewModel.downloadProgress {
-    case .downloadable, .downloaded, .notDownloadable:
-      return AnyView(image)
-    case .enqueued:
-      return AnyView(CircularProgressBar(isCollection: false, progress: 0))
-    case .inProgress(progress: let progress):
-      return AnyView(CircularProgressBar(isCollection: false, progress: progress))
-    }
-  }
-  
-  private var downloadImageName: String {
-    dynamicContentViewModel.downloadProgress.imageName
   }
   
   private func download() {

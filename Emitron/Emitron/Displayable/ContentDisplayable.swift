@@ -50,7 +50,7 @@ enum ContentViewProgressDisplayable {
 }
 
 /// Whether or not this item of content has been downloaded, or is downloading
-enum DownloadProgressDisplayable {
+enum DownloadProgressDisplayable: CustomStringConvertible {
   case notDownloadable
   case downloadable
   case enqueued
@@ -76,15 +76,19 @@ enum DownloadProgressDisplayable {
       self = .downloadable
     }
   }
-}
-
-extension DownloadProgressDisplayable {
-  var imageName: String {
+  
+  var description: String {
     switch self {
+    case .notDownloadable:
+      return "notDownloadable"
+    case .downloadable:
+      return "downloadable"
+    case .enqueued:
+      return "enqueued"
+    case .inProgress(progress: let progress):
+      return "inProgress(\(progress))"
     case .downloaded:
-      return DownloadImageName.active
-    default:
-      return DownloadImageName.inactive
+      return "downloaded"
     }
   }
 }
