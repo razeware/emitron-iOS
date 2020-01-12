@@ -40,7 +40,8 @@ struct ContentSummaryView: View {
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   
   var body: some View {
-    contentView(content: content)
+    dynamicContentViewModel.initialiseIfRequired()
+    return contentView(content: content)
   }
   
   private func contentView(content: ContentListDisplayable) -> AnyView {

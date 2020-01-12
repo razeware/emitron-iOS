@@ -49,6 +49,12 @@ final class DynamicContentViewModel: ObservableObject {
     self.downloadAction = downloadAction
   }
   
+  func initialiseIfRequired() {
+    if state == .initial {
+      reload()
+    }
+  }
+  
   func reload() {
     self.state = .loading
     subscriptions.forEach({ $0.cancel() })

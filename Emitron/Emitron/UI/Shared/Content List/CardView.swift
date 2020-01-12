@@ -37,7 +37,7 @@ struct CardView: View {
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some View {
-    
+    dynamicContentViewModel.initialiseIfRequired()
     let stack = VStack(alignment: .leading) {
       VStack(alignment: .leading, spacing: 15) {
         VStack(alignment: .leading, spacing: 0) {

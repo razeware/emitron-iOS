@@ -47,9 +47,7 @@ struct TextListItemView: View {
   }
   
   var body: some View {
-    if dynamicContentViewModel.state == .initial {
-      dynamicContentViewModel.reload()
-    }
+    dynamicContentViewModel.initialiseIfRequired()
     return VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .center, spacing: .horizontalSpacing) {
         

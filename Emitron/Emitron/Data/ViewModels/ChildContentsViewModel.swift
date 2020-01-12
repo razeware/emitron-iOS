@@ -46,6 +46,12 @@ class ChildContentsViewModel: ObservableObject {
     self.repository = repository
   }
   
+  func initialiseIfRequired() {
+    if state == .initial {
+      reload()
+    }
+  }
+  
   func reload() {
     self.state = .loading
     subscriptions.forEach({ $0.cancel() })

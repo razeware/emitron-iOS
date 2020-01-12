@@ -32,7 +32,8 @@ struct ChildContentListingView: View {
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
   
   var body: some View {
-    courseDetailsSection
+    childContentsViewModel.initialiseIfRequired()
+    return courseDetailsSection
   }
   
   private var courseDetailsSection: AnyView {
@@ -44,7 +45,6 @@ struct ChildContentListingView: View {
       case .loading, .loadingAdditional:
         return AnyView(loadingView)
       case .initial:
-        childContentsViewModel.reload()
         return AnyView(loadingView)
     }
   }
