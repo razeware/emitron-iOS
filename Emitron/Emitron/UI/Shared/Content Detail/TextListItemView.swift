@@ -47,7 +47,10 @@ struct TextListItemView: View {
   }
   
   var body: some View {
-    VStack(alignment: .leading, spacing: 0) {
+    if dynamicContentViewModel.state == .initial {
+      dynamicContentViewModel.reload()
+    }
+    return VStack(alignment: .leading, spacing: 0) {
       HStack(alignment: .center, spacing: .horizontalSpacing) {
         
         doneCheckbox
@@ -84,10 +87,6 @@ struct TextListItemView: View {
         .padding([.trailing], 20)
         .padding([.top], 10)
     )
-  }
-  
-  private func download() {
-    //TODO: parentViewModel.requestDownload(contentId: contentSummary.id)
   }
   
   private var doneCheckbox: AnyView {
@@ -137,7 +136,11 @@ struct TextListItemView: View {
     return AnyView(numberView)
   }
   
+  private func download() {
+    dynamicContentViewModel.downloadTapped()
+  }
+  
   private func toggleCompleteness() {
-    // TODO: Toggle Complete
+    dynamicContentViewModel.completedTapped()
   }
 }

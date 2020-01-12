@@ -130,10 +130,10 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    dynamicContentViewModel.requestDownload()
+    dynamicContentViewModel.downloadTapped()
   }
   
   private func bookmark() {
-    // TODO
+    dynamicContentViewModel.bookmarkTapped()
   }
 }

@@ -59,20 +59,6 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
       .store(in: &subscriptions)
   }
   
-  override func requestDownload(contentId: Int? = nil) {
-    let downloadId = contentId ?? self.parentContentId
-    downloadAction.requestDownload(contentId: downloadId) { (contentLookupId) -> (ContentPersistableState?) in
-      do {
-        return try self.repository.contentPersistableState(for: contentLookupId)
-      } catch {
-        Failure
-          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
-          .log()
-        return nil
-      }
-    }
-  }
-  
   private func getContentDetailsFromService() {
     self.state = .loading
     service.contentDetails(for: parentContentId) { (result) in

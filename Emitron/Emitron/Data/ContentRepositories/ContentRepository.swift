@@ -151,7 +151,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(contentId: contentId, repository: repository)
+    DynamicContentViewModel(contentId: contentId, repository: repository, downloadAction: downloadAction)
   }
   
   func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {

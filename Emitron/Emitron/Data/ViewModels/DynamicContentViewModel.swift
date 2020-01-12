@@ -32,6 +32,7 @@ import Combine
 final class DynamicContentViewModel: ObservableObject {
   private let contentId: Int
   private let repository: Repository
+  private let downloadAction: DownloadAction
   
   private var dynamicContentState: DynamicContentState?
   
@@ -42,9 +43,10 @@ final class DynamicContentViewModel: ObservableObject {
   
   var subscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository) {
+  init(contentId: Int, repository: Repository, downloadAction: DownloadAction) {
     self.contentId = contentId
     self.repository = repository
+    self.downloadAction = downloadAction
   }
   
   func reload() {
@@ -67,17 +69,45 @@ final class DynamicContentViewModel: ObservableObject {
         self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
         self.bookmarked = contentState.bookmark != nil
         self.dynamicContentState = contentState
+        self.state = .hasData
       }
       .store(in: &subscriptions)
   }
   
-  func requestDownload(contentId: Int? = nil) {
-    fatalError("Override this in a subclass please.")
+  func downloadTapped() {
+    guard state == .hasData else { return }
+    
+    switch downloadProgress {
+    case .downloadable:
+      downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
+        do {
+          return try self.repository.contentPersistableState(for: contentId)
+        } catch {
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+            .log()
+          return nil
+        }
+      }
+    case .enqueued, .inProgress:
+      downloadAction.cancelDownload(contentId: contentId)
+    case .downloaded:
+      downloadAction.deleteDownload(contentId: contentId)
+    case .notDownloadable:
+      // No-op
+      return
+    }
+  }
+  
+  func bookmarkTapped() {
+    guard state == .hasData  else { return }
+    
     // TODO
   }
   
-  func deleteDownload(contentId: Int? = nil) {
-    let deleteId = contentId ?? self.contentId
+  func completedTapped() {
+    guard state == .hasData else { return }
+    
     // TODO
   }
 }

@@ -36,7 +36,7 @@ struct DownloadIcon: View {
     case .downloadable:
       return AnyView(Image.Downloads.notDownloaded)
     case .enqueued:
-      return AnyView(CircularProgressBar(progress: 0, spinCircle: true))
+      return AnyView(CircularProgressBar(progress: 0))
     case .inProgress(progress: let progress):
       return AnyView(CircularProgressBar(progress: progress))
     case .downloaded:

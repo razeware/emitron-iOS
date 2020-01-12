@@ -35,36 +35,25 @@ private struct Layout {
 }
 
 struct CircularProgressBar: View {
-  @State var progress: Double
-  @State var spinCircle = false
+  let progress: Double
 
   var body: some View {
-    Image("downloadLoading")
+    return Image("downloadLoading")
     .foregroundColor(Color.activeIcon)
     .overlay(circleOverlay)
-    .onAppear {
-      while self.progress > 0.0 {
-        self.spinCircle = true
-        return
-      }
-
-      self.spinCircle = false
-    }
   }
 
   var circleOverlay: some View {
     return Circle()
-      .trim(from: 0.0, to: spinCircle ? CGFloat(progress) : Layout.endProgress)
+      .trim(from: 0.0, to: CGFloat(progress))
       .stroke(Color.inactiveIcon, lineWidth: Layout.line)
       .frame(width: Layout.frame, height: Layout.frame)
-      // FJ FIX make progress UP not count down
       .rotationEffect(.degrees(-90), anchor: .center)
-      .animation(Animation.easeIn(duration: spinCircle ? 30 : 0))
   }
 }
 
 struct CircularProgressIndicator_Previews: PreviewProvider {
   static var previews: some View {
-    CircularProgressBar(progress: 0.0)
+    CircularProgressBar(progress: 0.7)
   }
 }

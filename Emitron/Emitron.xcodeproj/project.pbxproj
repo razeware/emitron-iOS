@@ -1040,11 +1040,11 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
 				B6FC15A922CB523C0078CEDB /* Library */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AB22CB52480078CEDB /* My Tutorials */,
-				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B6FC15AC22CB52570078CEDB /* Shared */,
 				8B28D2B123546CFD005FCC08 /* UIKit */,
 				8B6FB4422332173800185BF5 /* View Modifiers */,
@@ -1176,6 +1176,7 @@
 				B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */,
 				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
+				222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */,
 				B53272DC2333ABF80069DF57 /* HudView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
@@ -1183,7 +1184,6 @@
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
 				229F0AC323BB29230004DD4F /* Video */,
-				222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

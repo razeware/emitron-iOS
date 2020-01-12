@@ -43,3 +43,9 @@ struct ProTag: View {
     }
   }
 }
+
+struct ProTag_Previews: PreviewProvider {
+  static var previews: some View {
+    ProTag()
+  }
+}

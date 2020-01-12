@@ -155,6 +155,11 @@ extension DownloadService: DownloadAction {
     }
   }
   
+  func cancelDownload(contentId: Int) {
+    // TODO
+    fatalError("This should have been implemented")
+  }
+  
   func deleteDownload(contentId: Int) {
     // TODO
     fatalError("This should have been implemented")

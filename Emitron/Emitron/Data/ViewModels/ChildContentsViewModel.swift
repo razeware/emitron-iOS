@@ -57,20 +57,11 @@ class ChildContentsViewModel: ObservableObject {
     contents.filter({ $0.groupId == groupId })
   }
   
-  func requestDownload(contentId: Int? = nil) {
-    fatalError("Override this in a subclass please.")
-  }
-  
-  func deleteDownload(contentId: Int? = nil) {
-    let deleteId = contentId ?? self.parentContentId
-    downloadAction.deleteDownload(contentId: deleteId)
-  }
-  
   func configureSubscriptions() {
     fatalError("Override in a subclass please.")
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(contentId: contentId, repository: repository)
+    DynamicContentViewModel(contentId: contentId, repository: repository, downloadAction: downloadAction)
   }
 }
