@@ -73,7 +73,7 @@ final class DownloadService {
   init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
-    self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
+    self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 4)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
     self.userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       guard let self = self else { return }

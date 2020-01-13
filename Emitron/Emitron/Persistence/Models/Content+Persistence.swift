@@ -29,7 +29,27 @@
 import Foundation
 import GRDB
 
-extension Content: FetchableRecord, TableRecord, PersistableRecord { }
+extension Content: FetchableRecord, TableRecord, PersistableRecord {
+  enum Columns {
+    static let id = Column("id")
+    static let uri = Column("uri")
+    static let name = Column("name")
+    static let descriptionHtml = Column("descriptionHtml")
+    static let descriptionPlainText = Column("descriptionPlainText")
+    static let releasedAt = Column("releasedAt")
+    static let free = Column("free")
+    static let professional = Column("professional")
+    static let difficulty = Column("difficulty")
+    static let contentType = Column("contentType")
+    static let duration = Column("duration")
+    static let videoIdentifier = Column("videoIdentifier")
+    static let cardArtworkUrl = Column("cardArtworkUrl")
+    static let technologyTriple = Column("technologyTriple")
+    static let contributors = Column("contributors")
+    static let groupId = Column("groupId")
+    static let ordinal = Column("ordinal")
+  }
+}
 
 // MARK: Associations
 extension Content {
@@ -44,6 +64,7 @@ extension Content {
   static let parentContent = hasOne(Content.self, through: group, using: Group.content)
   static let childContents = hasMany(Content.self, through: groups, using: Group.contents)
   static let download = hasOne(Download.self)
+  static let childDownloads = hasMany(Download.self, through: childContents, using: Content.download)
 }
 
 // MARK: Relationship Requests
@@ -86,5 +107,9 @@ extension Content {
   
   var download: QueryInterfaceRequest<Download> {
     request(for: Content.download)
+  }
+  
+  var childDownloads: QueryInterfaceRequest<Download> {
+    request(for: Content.childDownloads)
   }
 }

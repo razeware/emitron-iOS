@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,48 +27,38 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
+@testable import Emitron
 
-extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
-  enum Columns {
-    static let id = Column("id")
-    static let requestedAt = Column("requestedAt")
-    static let lastValidatedAt = Column("lastValidatedAt")
-    static let fileName = Column("fileName")
-    static let localUrl = Column("localUrl")
-    static let remoteUrl = Column("remoteUrl")
-    static let progress = Column("progress")
-    static let state = Column("state")
-    static let contentId = Column("contentId")
-  }
-}
-
-extension Download {
-  static let content = belongsTo(Content.self)
-  static let group = hasOne(Group.self, through: content, using: Content.group)
-  static let parentContent = hasOne(Content.self, through: group, using: Group.content)
-  static let parentDownload = hasOne(Download.self, through: parentContent, using: Content.download)
-  
-  var content: QueryInterfaceRequest<Content> {
-    request(for: Download.content)
+extension ContentPersistableState {
+  static func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    persistableState(for: content.id, with: cacheUpdate)
   }
   
-  var parentContent: QueryInterfaceRequest<Content> {
-    request(for: Download.parentContent)
-  }
-  
-  var parentDownload: QueryInterfaceRequest<Download> {
-    request(for: Download.parentDownload)
-  }
-}
-
-extension DerivableRequest where RowDecoder == Download {
-  func filter(state: Download.State) -> Self {
-    return filter(Download.Columns.state == state.rawValue)
-  }
-  
-  func orderByRequestedAt() -> Self {
-    let requestedAt = Download.Columns.requestedAt
-    return order(requestedAt.asc)
+  static func persistableState(for contentId: Int, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
+    
+    guard let content = cacheUpdate.contents.first(where: { $0.id == contentId }) else { fatalError("Invalid cache update")}
+    
+    var parentContent: Content? = nil
+    if let groupId = content.groupId {
+      // There must be parent content
+      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupId }) {
+        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentId }
+      }
+    }
+    
+    let groups = cacheUpdate.groups.filter { $0.contentId == content.id }
+    let groupIds = groups.map { $0.id }
+    let childContent = cacheUpdate.contents.filter { groupIds.contains($0.groupId ?? -1) }
+    
+    return ContentPersistableState(
+      content: content,
+      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentId == content.id }),
+      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentId == content.id }),
+      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentId == content.id }),
+      parentContent: parentContent,
+      progression: cacheUpdate.progressions.first(where: { $0.contentId == content.id }),
+      groups: groups,
+      childContents: childContent
+    )
   }
 }

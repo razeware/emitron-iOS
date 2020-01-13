@@ -40,7 +40,7 @@ struct PersistenceMocks {
             free: false,
             professional: true,
             difficulty: .intermediate,
-            contentType: .collection,
+            contentType: .screencast,
             duration: 1234,
             videoIdentifier: nil,
             cardArtworkUrl: URL(string: "https://example.com/card_artwork.png")!,

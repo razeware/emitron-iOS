@@ -30,15 +30,15 @@ import Foundation
 
 struct Download: Codable {
   enum State: Int, Codable {
-    case pending
+    case pending // Collection— Just created
     case urlRequested
     case readyForDownload
     case enqueued
-    case inProgress
-    case paused
+    case inProgress // Collection– Not all of the requested children are downloaded
+    case paused // Collection— All requested children are downloaded, but not all children have been requested
     case cancelled
     case failed
-    case complete
+    case complete // Collection— All children have been requested and downloaded
     case error
   }
   

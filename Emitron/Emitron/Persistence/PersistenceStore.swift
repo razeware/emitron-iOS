@@ -30,6 +30,10 @@ import UIKit.UIApplication
 import GRDB
 import KeychainSwift
 
+enum PersistenceStoreError: Error {
+  case argumentError
+}
+
 // The object responsible for managing and accessing cached content
 
 final class PersistenceStore {
@@ -37,7 +41,7 @@ final class PersistenceStore {
   
   init(db: DatabaseWriter) {
     self.db = db
-  }  
+  }
 }
 
 // MARK: UserDefaults

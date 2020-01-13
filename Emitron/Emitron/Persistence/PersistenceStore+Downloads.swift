@@ -35,11 +35,12 @@ extension PersistenceStore {
   /// List of all downloads
   func downloadList() -> DatabasePublishers.Value<[ContentSummaryState]> {
     ValueObservation.tracking { db -> [ContentSummaryState] in
+      let contentTypes = [ContentType.collection, ContentType.screencast].map { $0.rawValue }
       let request = Content
+        .filter(contentTypes.contains(Content.Columns.contentType))
         .including(required: Content.download)
         .including(all: Content.domains)
         .including(all: Content.categories)
-        .including(optional: Content.parentContent)
         
       return try ContentSummaryState.fetchAll(db, request)
     }.publisher(in: db)
@@ -101,9 +102,12 @@ extension PersistenceStore {
   /// - Parameter state: The `Download.State` to filter the results by
   func downloads(in state: Download.State) -> DatabasePublishers.Value<DownloadQueueItem?> {
     ValueObservation.tracking { db -> DownloadQueueItem? in
+      let contentTypes = [ContentType.episode, ContentType.screencast].map { $0.rawValue }
+      let contentAlias = TableAlias()
       let request = Download
         .all()
-        .including(required: Download.content)
+        .including(required: Download.content.aliased(contentAlias))
+        .filter(contentTypes.contains(contentAlias[Content.Columns.contentType]))
         .filter(state: state)
         .orderByRequestedAt()
       return try DownloadQueueItem.fetchOne(db, request)
@@ -115,13 +119,16 @@ extension PersistenceStore {
   func downloadQueue(withMaxLength max: Int) -> DatabasePublishers.Value<[DownloadQueueItem]> {
     ValueObservation.tracking { db -> [DownloadQueueItem] in
       let states = [Download.State.inProgress, Download.State.enqueued].map { $0.rawValue }
+      let contentTypes = [ContentType.episode, ContentType.screencast].map { $0.rawValue }
+      let contentAlias = TableAlias()
       let request = Download
-        .including(required: Download.content)
+        .including(required: Download.content.aliased(contentAlias))
         .filter(states.contains(Download.Columns.state))
+        .filter(contentTypes.contains(contentAlias[Content.Columns.contentType]))
         .order(Download.Columns.state.desc, Download.Columns.requestedAt.asc)
         .limit(max)
       return try DownloadQueueItem.fetchAll(db, request)
-    }.publisher(in: db)
+    }.removeDuplicates().publisher(in: db)
   }
   
   /// Return a single `Download` from its id
@@ -142,6 +149,51 @@ extension PersistenceStore {
         .fetchOne(db)
     }
   }
+  
+  /// Used to determine the state of the `Download` for a collection
+  struct CollectionDownloadSummary: Equatable {
+    let totalChildren: Int
+    let childrenRequested: Int
+    let childrenCompleted: Int
+    
+    var state: Download.State {
+      if childrenRequested == totalChildren {
+        return .complete
+      }
+      if childrenCompleted < childrenRequested {
+        return .inProgress
+      }
+      if childrenRequested > 0 {
+        return .paused
+      }
+      return .pending
+    }
+    
+    var progress: Double {
+      Double(childrenCompleted) / Double(childrenRequested)
+    }
+  }
+  
+  /// Summary download stats for the children of the given collection
+  /// - Parameter contentId: ID representing an item of `Content` with `ContentType` of `.collection`
+  func collectionDownloadSummary(forContentId contentId: Int) throws -> CollectionDownloadSummary {
+    try db.read { db in
+      guard let content = try Content.fetchOne(db, key: contentId),
+        content.contentType == .collection else {
+          throw PersistenceStoreError.argumentError
+      }
+      
+      let totalChildren = try content.childContents.fetchCount(db)
+      let totalChildDownloads = try content.childDownloads.fetchCount(db)
+      let totalCompletedChildDownloads = try content.childDownloads.filter(Download.Columns.state == Download.State.complete.rawValue).fetchCount(db)
+
+      return CollectionDownloadSummary(
+        totalChildren: totalChildren,
+        childrenRequested: totalChildDownloads,
+        childrenCompleted: totalCompletedChildDownloads
+      )
+    }
+  }
 }
 
 // MARK: - Data writing methods
@@ -151,11 +203,32 @@ extension PersistenceStore {
   ///   - id: The UUID of the download to transition
   ///   - state: The new `Download.State` to transition to.
   func transitionDownload(withId id: UUID, to state: Download.State) throws {
+    var parentDownload: Download?
     try db.write { db in
       if var download = try Download.fetchOne(db, key: id) {
         try download.updateChanges(db) {
           $0.state = state
         }
+        // Try to find the parent content for this download
+        parentDownload = try download.parentDownload.fetchOne(db)
+      }
+    }
+    // Do we need to update the parent?
+    if let parentDownload = parentDownload {
+      try updateCollectionDownloadState(collectionDownload: parentDownload)
+    }
+  }
+  
+  /// Update the collection download to match the current status of its children
+  /// - Parameter collectionDownload: A `Download` that is associated with a collection `Content`
+  private func updateCollectionDownloadState(collectionDownload: Download) throws {
+    let downloadSummary = try collectionDownloadSummary(forContentId: collectionDownload.contentId)
+    var download = collectionDownload
+    
+    let _ = try db.write { db in
+      try download.updateChanges(db) {
+        $0.state = downloadSummary.state
+        $0.progress = downloadSummary.progress
       }
     }
   }
@@ -202,6 +275,11 @@ extension PersistenceStore {
     try db.write { db in
       // Create it for this content item
       try createDownload(for: content, inDatabase: db)
+      
+      // Also need to create one for the parent
+      if let parentContent = try content.parentContent.fetchOne(db) {
+        try createDownload(for: parentContent, inDatabase: db)
+      }
       
       // And now for any children that might exist
       let childContent = try content.childContents.fetchAll(db)
