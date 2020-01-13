@@ -41,7 +41,7 @@ private enum Layout {
 
 struct FiltersHeaderView: View {
   var filterGroup: FilterGroup
-  @EnvironmentObject var filters: Filters
+  var filters: Filters
   
   @State var isExpanded: Bool = false
   
@@ -108,10 +108,10 @@ struct FiltersHeaderView: View {
 }
 
 #if DEBUG
-struct FilterGroupView_Previews: PreviewProvider {
-  static var previews: some View {
-    let filters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
-    return FiltersHeaderView(filterGroup: FilterGroup(type: .difficulties, filters: filters))
-  }
-}
+//struct FilterGroupView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    let filters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
+//    return FiltersHeaderView(filterGroup: FilterGroup(type: .difficulties, filters: filters), filters: filters)
+//  }
+//}
 #endif

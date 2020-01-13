@@ -29,14 +29,49 @@
 import Foundation
 
 // Parameter Values
-enum ContentDifficulty: String, CaseIterable {
-  case none
+enum ContentDifficulty: Int, Codable, CaseIterable {
   case beginner
   case intermediate
   case advanced
+  case allLevels
+  
+  init?(string: String) {
+    switch string {
+    case "beginner":
+      self = .beginner
+    case "intermediate":
+      self = .intermediate
+    case "advanced":
+      self = .advanced
+    default:
+      return nil
+    }
+  }
   
   var displayString: String {
-    return self.rawValue.capitalized
+    switch self {
+    case .beginner:
+      return "Beginner"
+    case .intermediate:
+      return "Intermediate"
+    case .advanced:
+      return "Advanced"
+    case .allLevels:
+      return "All Levels"
+    }
+  }
+  
+  var requestValue: String {
+    switch self {
+    case .beginner:
+      return "beginner"
+    case .intermediate:
+      return "intermediate"
+    case .advanced:
+      return "advanced"
+    case .allLevels:
+      return ""
+    }
   }
   
   var sortOrdinal: Int {
@@ -47,31 +82,63 @@ enum ContentDifficulty: String, CaseIterable {
       return 1
     case .advanced:
       return 2
-    case .none:
-      return 999 // Doesn't exist
+    case .allLevels:
+      return 3
     }
   }
 }
 
-enum ContentType: String {
-  case none
+enum ContentType: Int, Codable {
   case collection
   case episode
   case screencast
   case article
   case product
   
+  init?(string: String) {
+    switch string {
+    case "collection":
+      self = .collection
+    case "episode":
+      self = .episode
+    case "screencast":
+      self = .screencast
+    case "article":
+      self = .article
+    case "product":
+      self = .product
+    default:
+      return nil
+    }
+  }
+  
   var displayString: String {
     switch self {
     case .collection:
       return "Video Course"
-    case .episode,
-         .screencast,
-         .article,
-         .none:
-      return self.rawValue.capitalized
+    case .episode:
+      return "Episode"
+    case .screencast:
+      return "Screencast"
+    case .article:
+      return "Article"
     case .product:
-      return "Book" // Probably other types of stuff
+      return "Book"
+    }
+  }
+  
+  var requestValue: String {
+    switch self {
+    case .collection:
+      return "collection"
+    case .episode:
+      return "episode"
+    case .screencast:
+      return "screencast"
+    case .article:
+      return "article"
+    case .product:
+      return "product"
     }
   }
   
@@ -87,8 +154,6 @@ enum ContentType: String {
       return 3
     case .product:
       return 4
-    case .none:
-      return 999 // Doesn't exist
     }
   }
 }
@@ -166,13 +231,13 @@ enum ParameterFilterValue {
   var values: [(displayName: String, requestValue: String, ordinal: Int)] {
     switch self {
     case .contentTypes(types: let types):
-      return types.map { (displayName: $0.displayString, requestValue: $0.rawValue, ordinal: $0.sortOrdinal) }
+      return types.map { (displayName: $0.displayString, requestValue: $0.requestValue, ordinal: $0.sortOrdinal) }
     case .domainTypes(types: let types):
       return types.map { (displayName: $0.name, requestValue: "\($0.id)", ordinal: $0.sortOrdinal) }
     case .categoryTypes(types: let types):
       return types.map { (displayName: $0.name, requestValue: "\($0.id)", ordinal: $0.sortOrdinal) }
     case .difficulties(difficulties: let difficulties):
-      return difficulties.map { (displayName: $0.displayString, requestValue: $0.rawValue, ordinal: $0.sortOrdinal) }
+      return difficulties.map { (displayName: $0.displayString, requestValue: $0.requestValue, ordinal: $0.sortOrdinal) }
     case .contentIds(ids: let ids):
       return ids.map { (displayName: "\($0)", requestValue: "\($0)", ordinal: 0) }
     case .queryString(string: let str):

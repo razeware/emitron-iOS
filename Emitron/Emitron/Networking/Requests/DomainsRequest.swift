@@ -30,7 +30,7 @@ import Foundation
 import SwiftyJSON
 
 struct DomainsRequest: Request {
-  typealias Response = [DomainModel]
+  typealias Response = [Domain]
 
   // MARK: - Properties
   var method: HTTPMethod { return .GET }
@@ -39,9 +39,9 @@ struct DomainsRequest: Request {
   var body: Data? { return nil }
 
   // MARK: - Internal
-  func handle(response: Data) throws -> [DomainModel] {
+  func handle(response: Data) throws -> [Domain] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return doc.data.compactMap { DomainModel($0, metadata: nil) }
+    return try doc.data.map { try DomainAdapter.process(resource: $0) }
   }
 }

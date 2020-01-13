@@ -1,6 +1,0 @@
-framework module Pods_emitronTests {
-  umbrella header "Pods-emitronTests-umbrella.h"
-
-  export *
-  module * { export * }
-}

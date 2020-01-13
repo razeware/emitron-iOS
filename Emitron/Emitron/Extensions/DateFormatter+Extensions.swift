@@ -29,16 +29,33 @@
 import Foundation
 
 extension String {
-  static let apiDateString: String = "yyyy-MM-dd'T'HH:mm:ss.SSSZ"
   static let cardDateString: String = "MMM dd yyyy"
 }
 
-extension DateFormatter {
+extension ISO8601DateFormatter {
+  convenience init(_ formatOptions: Options, timeZone: TimeZone = TimeZone(secondsFromGMT: 0)!) {
+    self.init()
+    self.formatOptions = formatOptions
+    self.timeZone = timeZone
+  }
+}
+extension Formatter {
+  static let iso8601 = ISO8601DateFormatter([.withInternetDateTime, .withFractionalSeconds])
+}
 
-  static let apiDateFormatter: DateFormatter = {
-    DateFormatter.formatter(for: .apiDateString)
-  }()
-  
+extension Date {
+    var iso8601: String {
+        return Formatter.iso8601.string(from: self)
+    }
+}
+
+extension String {
+  var iso8601: Date? {
+    return Formatter.iso8601.date(from: self)
+  }
+}
+
+extension DateFormatter {
   static let cardDateFormatter: DateFormatter = {
     DateFormatter.formatter(for: .cardDateString)
   }()

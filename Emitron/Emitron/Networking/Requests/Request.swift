@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import SwiftyJSON
 
 enum HTTPMethod: String {
   case GET
@@ -52,3 +53,16 @@ extension Request {
   var method: HTTPMethod { return .GET }
   var body: Data? { return nil }
 }
+
+enum RequestError: Error {
+  case responseMissingRequiredMeta(field: String?)
+  
+  var localizedDescription: String {
+    let prefix = "RequestError::"
+    switch self {
+    case .responseMissingRequiredMeta(field: let field):
+      return "\(prefix)ResponseMissingRequiredMeta: [Field: \(field ?? "UNKNOWN")]"
+    }
+  }
+}
+

@@ -26,43 +26,50 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Crashlytics
-import Fabric
-import Firebase
+
 import UIKit
 import AVFoundation
+import GRDB
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
-  private (set) var persistenceStore = PersistenceStore()
-  private (set) var guardpost: Guardpost?
-  var dataManager: DataManager?
+  private var persistenceStore: PersistenceStore!
+  private var guardpost: Guardpost!
+  fileprivate var dataManager: DataManager!
+  fileprivate var sessionController: SessionController!
+  fileprivate var downloadService: DownloadService!
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     // Override point for customization after application launch.
-    FirebaseApp.configure()
-    //Fabric.with([Crashlytics.self])
     
     let audioSession = AVAudioSession.sharedInstance()
     do {
       try audioSession.setCategory(AVAudioSession.Category.playback)
     } catch {
-        print("Setting category to AVAudioSessionCategoryPlayback failed.")
+      print("Setting category to AVAudioSessionCategoryPlayback failed.")
     }
     
-    // TODO: When you're logged out datamanager will be nil in this current setup
-    self.guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
-                               urlScheme: "com.razeware.emitron://",
-                               ssoSecret: Configuration.ssoSecret,
-                               persistenceStore: persistenceStore)
+    // Initialise the database
+    let dbPool = try! setupDatabase(application)
+    persistenceStore = PersistenceStore(db: dbPool)
+    guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
+                          urlScheme: "com.razeware.emitron://",
+                          ssoSecret: Configuration.ssoSecret,
+                          persistenceStore: persistenceStore)
     
-    guard let guardpost = guardpost,
-      let user = guardpost.currentUser  else { return true }
-    
-    self.dataManager = DataManager(user: user,
-                                   persistenceStore: persistenceStore)
+    sessionController = SessionController(guardpost: guardpost)
+    downloadService = DownloadService(
+      persistenceStore: persistenceStore,
+      userModelController: sessionController
+    )
+    dataManager = DataManager(
+      sessionController: sessionController,
+      persistenceStore: persistenceStore,
+      downloadService: downloadService
+    )
+    downloadService.startProcessing()
     
     return true
   }
@@ -94,5 +101,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       } else {
           return .portrait
       }
+  }
+  
+  // For dealing with downloading of videos in the background
+  func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
+    assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
+    
+    downloadService.backgroundSessionCompletionHandler = completionHandler
+  }
+  
+  private func setupDatabase(_ application: UIApplication) throws -> DatabasePool {
+    let databaseURL = try FileManager.default
+      .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
+      .appendingPathComponent("emitron.sqlite")
+    let dbPool = try EmitronDatabase.openDatabase(atPath: databaseURL.path)
+    
+    // Be a nice iOS citizen, and don't consume too much memory
+    // See https://github.com/groue/GRDB.swift/blob/master/README.md#memory-management
+    dbPool.setupMemoryManagement(in: application)
+    
+    return dbPool
+  }
+}
+
+
+// MARK:- Making some delightful global-access points. Classy.
+extension SessionController {
+  static var current: SessionController {
+    (UIApplication.shared.delegate as! AppDelegate).sessionController
+  }
+}
+
+extension DataManager {
+  static var current: DataManager {
+    (UIApplication.shared.delegate as! AppDelegate).dataManager
+  }
+}
+
+extension DownloadService {
+  static var current: DownloadService {
+    (UIApplication.shared.delegate as! AppDelegate).downloadService
   }
 }

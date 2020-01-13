@@ -29,7 +29,6 @@
 import Foundation
 import SwiftUI
 import Combine
-import CoreData
 
 class BookmarksMC {
   
@@ -39,45 +38,45 @@ class BookmarksMC {
   private let dataManager: DataManager?
     
   // MARK: - Initializers
-  init(user: UserModel, dataManager: DataManager? = DataManager.current) {
+  init(user: User, dataManager: DataManager? = DataManager.current) {
     self.client = RWAPI(authToken: user.token)
     self.bookmarksService = BookmarksService(client: self.client)
     self.dataManager = dataManager
   }
   
-  func toggleBookmark(for content: ContentDetailsModel) {
+  func toggleBookmark(for content: Content) {
 
-    if !content.bookmarked {
-      bookmarksService.makeBookmark(for: content.id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsVM_makeBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(let bookmark):
-          content.bookmark = bookmark
-          content.bookmarked = true
-          guard let dataManager = self.dataManager else { return }
-          dataManager.disseminateUpdates(for: content)
-        }
-      }
-    } else {
-      guard let id = content.bookmarkId else { return }
-      // For deleting the bookmark, we have to use the original bookmark id
-      bookmarksService.destroyBookmark(for: id) { result in
-        switch result {
-        case .failure(let error):
-          Failure
-          .fetch(from: "ContentDetailsVM_destroyBookmark", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        case .success(_):
-          content.bookmark = nil
-          content.bookmarked = false
-          guard let dataManager = self.dataManager else { return }
-          dataManager.disseminateUpdates(for: content)
-        }
-      }
-    }
+//    if !content.bookmarked {
+//      bookmarksService.makeBookmark(for: content.id) { result in
+//        switch result {
+//        case .failure(let error):
+//          Failure
+//          .fetch(from: "ContentDetailsVM_makeBookmark", reason: error.localizedDescription)
+//          .log(additionalParams: nil)
+//        case .success(let bookmark):
+//          content.bookmark = bookmark
+//          content.bookmarked = true
+//          guard let dataManager = self.dataManager else { return }
+//          dataManager.disseminateUpdates(for: content)
+//        }
+//      }
+//    } else {
+//      guard let id = content.bookmarkId else { return }
+//      // For deleting the bookmark, we have to use the original bookmark id
+//      bookmarksService.destroyBookmark(for: id) { result in
+//        switch result {
+//        case .failure(let error):
+//          Failure
+//          .fetch(from: "ContentDetailsVM_destroyBookmark", reason: error.localizedDescription)
+//          .log(additionalParams: nil)
+//        case .success(_):
+//          content.bookmark = nil
+//          content.bookmarked = false
+//          guard let dataManager = self.dataManager else { return }
+//          dataManager.disseminateUpdates(for: content)
+//        }
+//      }
+//    }
   }
 }
 

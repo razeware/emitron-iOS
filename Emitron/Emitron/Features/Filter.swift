@@ -57,6 +57,10 @@ class Filter: Hashable, Codable {
     return parameter.sortOrdinal
   }
   
+  var isSearch: Bool {
+    groupType == .search
+  }
+  
   // MARK: - Initializers
   init(groupType: FilterGroupType, param: Parameter, isOn: Bool = false) {
     self.groupType = groupType

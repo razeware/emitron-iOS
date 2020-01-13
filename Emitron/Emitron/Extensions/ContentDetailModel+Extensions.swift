@@ -28,35 +28,7 @@
 
 import UIKit
 
-extension ContentDetailsModel {
-  var releasedAtDateTimeString: String {
-    var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
-      start = Constants.today
-    }
-    
-    return "\(start) • \(contentType.displayString) (\(duration.timeFromSeconds))"
-  }
-  
-  var cardViewSubtitle: String {
-    guard let domainData = DataManager.current?.domainsMC.data else {
-      return ""
-    }
-    
-    let contentDomains = domainData.filter { domains.contains($0) }
-    let subtitle = contentDomains.count > 1 ? "Multi-platform" : contentDomains.first?.name ?? ""
-    
-    return subtitle
-  }
-  
-  var progress: CGFloat {
-    var progress: CGFloat = 0
-    if let progression = progression {
-      progress = progression.finished ? 1 : CGFloat(progression.percentComplete / 100)
-    }
-    return progress
-  }
-  
+extension Content {  
   var contentSummaryMetadataString: String {
     var start = releasedAt.cardString
     if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {

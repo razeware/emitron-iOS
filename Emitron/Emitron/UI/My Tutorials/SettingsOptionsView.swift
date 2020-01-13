@@ -67,7 +67,7 @@ struct SettingsOptionsView: View {
         ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
           TitleDetailView(callback: {
             // Update user defaults
-            UserDefaults.standard.set(AttachmentKind.getValue(detail: detail), forKey: self.selectedSettingsOption.key.rawValue)
+            UserDefaults.standard.set(detail, forKey: self.selectedSettingsOption.key.rawValue)
             self.isPresented = false
           }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
             .frame(height: 46)
@@ -81,10 +81,10 @@ struct SettingsOptionsView: View {
   }
   
   private func setCheckmark(for detailOption: String) -> String? {
-    guard let selectedDetailOption = UserDefaults.standard.object(forKey: selectedSettingsOption.key.rawValue) as? String else {
+    guard let _ = UserDefaults.standard.object(forKey: selectedSettingsOption.key.rawValue) as? String else {
       return nil
     }
   
-    return selectedDetailOption == AttachmentKind.getValue(detail: detailOption) ? "checkmark" : nil
+    return "checkmark"
   }
 }

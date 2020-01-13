@@ -93,10 +93,6 @@ enum SortFilter: Int, Codable {
 }
 
 class Filters: ObservableObject {
-  
-  // MARK: - Properties
-  private(set) var objectWillChange = PassthroughSubject<Void, Never>()
-  
   var all: Set<Filter> {
     didSet {
       platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
@@ -216,8 +212,8 @@ class Filters: ObservableObject {
     self.sortFilter = savedSort
   }
   
-  func updatePlatformFilters(for domainModels: [DomainModel]) {
-    let userFacingDomains = domainModels.filter { DomainLevel.userFacing.contains($0.level) }
+  func updatePlatformFilters(for domains: [Domain]) {
+    let userFacingDomains = domains.filter { $0.level.userFacing }
     let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let platformFilters = Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) }
     platforms.filters = platformFilters
@@ -228,8 +224,8 @@ class Filters: ObservableObject {
     commitUpdates()
   }
   
-  func updateCategoryFilters(for categoryModels: [CategoryModel]) {
-    let categoryTypes = categoryModels.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
+  func updateCategoryFilters(for newCategories: [Category]) {
+    let categoryTypes = newCategories.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let categoryFilters = Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) }
     categories.filters = categoryFilters
     
@@ -251,12 +247,12 @@ class Filters: ObservableObject {
   func changeSortFilter() {
     sortFilter = sortFilter.next
     UserDefaults.standard.updateSort(with: sortFilter)
-    objectWillChange.send(())
+    objectWillChange.send()
   }
   
   func commitUpdates() {
     UserDefaults.standard.updateFilters(with: self)
-    objectWillChange.send(())
+    objectWillChange.send()
   }
   
   // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well

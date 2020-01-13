@@ -41,15 +41,15 @@ class VideosMC: ObservableObject {
   }
 
   private let client: RWAPI
-  private let user: UserModel
+  private let user: User
   private let videoService: VideosService
   private let contentsService: ContentsService
   private var token: String?
-  private(set) var data: AttachmentModel?
+  private(set) var data: Attachment?
   private(set) var streamURL: URL?
 
   // MARK: - Initializers
-  init(user: UserModel) {
+  init(user: User) {
     self.user = user
     //TODO: Probably need to handle this better
     self.client = RWAPI(authToken: user.token)
@@ -189,8 +189,8 @@ class VideosMC: ObservableObject {
           .log(additionalParams: ["VideoID": "\(id)"])
       case .success(let attachment):
         if let selectedDownloadQuality = UserDefaults.standard.downloadQuality {
-          self.data = attachment.first(where: { $0.kind.rawValue == selectedDownloadQuality })
-        } else if let defaultHD = attachment.first(where: { $0.kind.rawValue == AttachmentKind.hdVideoFile.rawValue }) {
+          self.data = attachment.first(where: { $0.kind.detail == selectedDownloadQuality })
+        } else if let defaultHD = attachment.first(where: { $0.kind == .hdVideoFile }) {
           self.data = defaultHD
         }
         self.state = .hasData

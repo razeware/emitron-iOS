@@ -39,10 +39,8 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
-
-  @EnvironmentObject var libraryContentsVM: LibraryContentsVM
-  var downloadsMC: DownloadsMC
-  @EnvironmentObject var filters: Filters
+  @ObservedObject var filters: Filters
+  @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented: Bool = false
   @State var showHudView: Bool = false
   @State var hudOption: HudOption = .success
@@ -52,16 +50,16 @@ struct LibraryView: View {
       .navigationBarTitle(
         Text(Constants.library))
       .navigationBarItems(trailing:
-        Group {
+        SwiftUI.Group {
           Button(action: {
-            self.libraryContentsVM.reload()
+            self.libraryRepository.reload()
           }) {
             Image(systemName: "arrow.clockwise")
               .foregroundColor(.iconButton)
           }
       })
       .sheet(isPresented: $filtersPresented) {
-        FiltersView().environmentObject(self.filters).environmentObject(self.libraryContentsVM)
+        FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
       .background(Color.backgroundColor)
     }
     .hud(isShowing: $showHudView, hudOption: $hudOption) {
@@ -74,7 +72,7 @@ struct LibraryView: View {
       searchAndFilterControls
         .padding([.top], 15)
       
-      if !libraryContentsVM.currentAppliedFilters.isEmpty {
+      if !libraryRepository.currentAppliedFilters.isEmpty {
         filtersView
           .padding([.top], 10)
       }
@@ -115,7 +113,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryContentsVM.totalContentNum) \(Constants.tutorials)")
+      Text("\(libraryRepository.totalContentNum) \(Constants.tutorials)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
@@ -138,70 +136,50 @@ struct LibraryView: View {
   }
 
   private var filtersView: some View {
-    // Make a copy of the applied filters before we present them
-    
-    let view = ScrollView(.horizontal, showsIndicators: false) {
+    ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
-        AppliedFilterView(filter: nil, type: .destructive, name: Constants.clearAll) {
-          self.libraryContentsVM.updateFilters(newFilters: self.filters)
+        AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
+          self.filters.removeAll()
+          self.libraryRepository.filters = self.filters
         }
-        .environmentObject(self.filters)
 
         ForEach(self.filters.applied, id: \.self) { filter in
-          AppliedFilterView(filter: filter, type: .default) {
-            self.libraryContentsVM.updateFilters(newFilters: self.filters)
+          AppliedFilterTagButton(name: filter.filterName, type: .default) {
+            if filter.isSearch {
+              self.filters.searchQuery = nil
+            } else {
+              filter.isOn.toggle()
+              self.filters.all.update(with: filter)
+            }
+            self.filters.commitUpdates()
+            self.libraryRepository.filters = self.filters
           }
-          .environmentObject(self.filters)
         }
       }
     }
-    return view
   }
 
   private func updateFilters() {
     filters.searchQuery = filters.searchStr
-    libraryContentsVM.updateFilters(newFilters: filters)
+    libraryRepository.filters = filters
   }
 
   private func changeSort() {
     filters.changeSortFilter()
-    libraryContentsVM.updateFilters(newFilters: filters)
+    libraryRepository.filters = filters
   }
 
   private var contentView: AnyView {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(downloadsMC: self.downloadsMC, headerView: header, contentsVM: libraryContentsVM as ContentPaginatable) { (action, content) in
-      switch action {
-        case .delete:
-          self.delete(for: content)
-        
-        case .save: return
-        
-        case .cancel:
-          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: false)
-        }
-      }
-
-    return AnyView(contentSectionView)
-  }
-
-  private func delete(for content: ContentDetailsModel) {
-    if content.isInCollection, let parent = content.parentContent {
-      downloadsMC.deleteCollectionContents(withParent: parent, showCallback: false)
-    } else {
-      downloadsMC.deleteDownload(with: content)
-    }
+    let contentSectionView = ContentListView(
+      contentRepository: libraryRepository,
+      downloadAction: DownloadService.current,
+      contentScreen: .library,
+      headerView: header
+    )
     
-    self.downloadsMC.callback = { success in
-      if self.showHudView {
-        // dismiss hud currently showing
-        self.showHudView.toggle()
-      }
-
-      self.hudOption = success ? .success : .error
-      self.showHudView = true
-    }
+    return AnyView(contentSectionView)
   }
 }
 
@@ -210,7 +188,7 @@ struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
 
-  public func body(content: Content) -> some View {
+  public func body(content: Self.Content) -> some View {
     HStack {
       content
       Button(action: {

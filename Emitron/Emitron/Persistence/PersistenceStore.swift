@@ -26,46 +26,22 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import UIKit.UIApplication
+import GRDB
 import KeychainSwift
+
+enum PersistenceStoreError: Error {
+  case argumentError
+}
 
 // The object responsible for managing and accessing cached content
 
 final class PersistenceStore {
+  let db: DatabaseWriter
   
-  static var current: PersistenceStore {
-    return (UIApplication.shared.delegate as! AppDelegate).persistenceStore
+  init(db: DatabaseWriter) {
+    self.db = db
   }
-  
-  let coreDataStack = CoreDataStack()
-  
-  init() {
-    setupPersistentStore()
-  }
-  
-  private func setupPersistentStore() {
-    coreDataStack.setupPersistentContainer()
-  }
-}
-
-// MARK: Documents Directory
-// For storing downloaded video files which expire after 7 days
-
-extension PersistenceStore { }
-
-// MARK: CoreData
-// For storing information that should not change that frequently
-// content (refresh daily)
-// categories (very infrequently)
-// domains (very infrequently)
-
-extension PersistenceStore {
-  // let storedContent = store.objects(CDContent)
-  // let content = storedContent.compactMap { $0.contentobjects() }
-    
-    func objects<T>(_ type: T.Type) -> [T] {
-      return []
-    }
 }
 
 // MARK: UserDefaults
@@ -150,7 +126,7 @@ extension UserDefaults {
   }
   
   var downloadQuality: String? {
-    return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? AttachmentKind.hdVideoFile.rawValue
+    return UserDefaults.standard.object(forKey: UserDefaultsKey.downloadQuality.rawValue) as? String ?? Attachment.Kind.hdVideoFile.detail
   }
   
   @objc dynamic var closedCaptionOn: Bool {
@@ -166,7 +142,7 @@ private let SSOUserKey = "com.razeware.emitron.sso_user"
 extension PersistenceStore {
   
   @discardableResult
-  func persistUserToKeychain(user: UserModel, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+  func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
     guard let encoded = try? encoder.encode(user) else {
       return false
     }
@@ -177,13 +153,19 @@ extension PersistenceStore {
                         withAccess: .accessibleAfterFirstUnlock)
   }
   
-  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> UserModel? {
+  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
     let keychain = KeychainSwift()
     guard let encoded = keychain.getData(SSOUserKey) else {
       return nil
     }
-    
-    return try? decoder.decode(UserModel.self, from: encoded)
+    do {
+      return try decoder.decode(User.self, from: encoded)
+    } catch {
+      Failure
+        .loadFromPersistentStore(from: "PersistenceStore_Keychain", reason: error.localizedDescription)
+        .log()
+      return nil
+    }
   }
   
   @discardableResult

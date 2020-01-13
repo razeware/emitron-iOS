@@ -20,12 +20,18 @@ platform :ios do
   lane :ci_beta do
     setup_ci(provider: 'travis', force: true) # Until GA are properly supported
     sync_code_signing(type: 'appstore', readonly: true)
-    build_app(workspace: 'Emitron.xcworkspace', scheme: 'Emitron')
+    Dir.chdir('..') do
+      sh 'xcodebuild -resolvePackageDependencies'
+    end
+    build_app(project: 'Emitron.xcodeproj', scheme: 'Emitron')
     upload_to_testflight(skip_waiting_for_build_processing: true)
     slack(message: 'emitron successfully uploaded to TestFlight!')
   end
 
   lane :tests do
+    Dir.chdir('..') do
+      sh 'xcodebuild -resolvePackageDependencies'
+    end
     run_tests(scheme: 'Emitron')
   end
 end

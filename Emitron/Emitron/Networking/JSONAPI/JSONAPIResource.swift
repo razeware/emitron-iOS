@@ -39,6 +39,13 @@ public class JSONAPIResource {
   var attributes: [String: Any] = [:]
   var links: [String: URL] = [:]
   var meta: [String: Any] = [:]
+  var entityType: EntityType? {
+    EntityType(from: type)
+  }
+  var entityId: EntityIdentity? {
+    guard let entityType = entityType else { return nil }
+    return EntityIdentity(id: id, type: entityType)
+  }
 
   public subscript(key: String) -> Any? {
     let value = attributes[key]

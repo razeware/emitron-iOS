@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Firebase
 
 protocol Log {
   var object: String { get }
@@ -35,12 +34,17 @@ protocol Log {
   var reason: String { get }
 
   func log(additionalParams: [String: String]?)
+  func log()
 }
 
 // To make "reason" optional
 extension Log {
   var reason: String {
     return "N/A"
+  }
+  
+  func log() {
+    log(additionalParams: .none)
   }
 }
 
@@ -51,6 +55,9 @@ enum Failure: Log {
   case loadFromPersistentStore(from: String, reason: String)
   case saveToPersistentStore(from: String, reason: String)
   case deleteFromPersistentStore(from: String, reason: String)
+  case repositoryLoad(from: String, reason: String)
+  case unsupportedAction(from: String, reason: String)
+  case downloadAction(from: String, reason: String)
   
   private var failure: String {
     return "Failed_"
@@ -62,7 +69,10 @@ enum Failure: Log {
          .fetch(from: let from, reason: _),
          .loadFromPersistentStore(from: let from, reason: _),
          .saveToPersistentStore(from: let from, reason: _),
-         .deleteFromPersistentStore(from: let from, reason: _):
+         .deleteFromPersistentStore(from: let from, reason: _),
+         .repositoryLoad(from: let from, reason: _),
+         .unsupportedAction(from: let from, reason: _),
+         .downloadAction(from: let from, reason: _):
       return from
     }
   }
@@ -79,6 +89,12 @@ enum Failure: Log {
       return failure + "savingToPersistentStore"
     case .deleteFromPersistentStore:
       return failure + "deleteToPersistentStore"
+    case .repositoryLoad:
+      return failure + "repositoryLoad"
+    case .unsupportedAction:
+      return failure + "unsupportedAction"
+    case .downloadAction:
+      return failure + "downloadAction"
     }
   }
   
@@ -88,27 +104,31 @@ enum Failure: Log {
          .fetch(from: _, reason: let reason),
          .loadFromPersistentStore(from: _, reason: let reason),
          .saveToPersistentStore(from: _, reason: let reason),
-         .deleteFromPersistentStore(from: _, reason: let reason):
+         .deleteFromPersistentStore(from: _, reason: let reason),
+         .repositoryLoad(from: _, reason: let reason),
+         .unsupportedAction(from: _, reason: let reason),
+         .downloadAction(from: _, reason: let reason):
       return reason
     }
   }
   
   func log(additionalParams: [String: String]?) {
-    let params = [AnalyticsParameterItemName: self.object,
+    let params = ["object": self.object,
                   "action": self.action,
                   "reason": self.reason]
     let allParams = params.merged(additionalParams) as [String: Any]
-    Analytics.logEvent(action, parameters: allParams)
+    print(allParams)
   }
 }
 
 enum Event: Log {
-  
   case login(from: String)
+  case refresh(from: String, action: String)
   
   var object: String {
     switch self {
-    case .login(from: let from):
+    case .login(from: let from),
+         .refresh(from: let from, action: _):
       return from
     }
   }
@@ -117,12 +137,14 @@ enum Event: Log {
     switch self {
     case .login:
       return "Login"
+    case .refresh(from: _, action: let action):
+      return action
     }
   }
-  
+
   func log(additionalParams: [String: String]?) {
-    let params = [AnalyticsParameterItemName: self.object]
+    let params = ["object": self.object, "action": self.action]
     let allParams = params.merged(additionalParams) as [String: Any]
-    Analytics.logEvent(action, parameters: allParams)
+    print("EVENT:: \(allParams)")
   }
 }

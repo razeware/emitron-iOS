@@ -77,7 +77,7 @@ struct SettingsView: View {
   @State private var settingsOptionsPresented: Bool = false
   @State var selectedOption: SettingsOption = .videoPlaybackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
-  @EnvironmentObject var userMC: UserMC
+  @EnvironmentObject var sessionController: SessionController
   private var showLogoutButton: Bool
   
   init(showLogoutButton: Bool) {
@@ -100,7 +100,7 @@ struct SettingsView: View {
           .padding([.top], 20)
         
         Spacer()
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.presentationMode.wrappedValue.dismiss()
           }) {
@@ -143,7 +143,7 @@ struct SettingsView: View {
       
       if showLogoutButton {
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          self.userMC.logout()
+          self.sessionController.logout()
           self.presentationMode.wrappedValue.dismiss()
         }
         .padding([.bottom, .leading, .trailing], 18)
@@ -161,7 +161,7 @@ struct SettingsView: View {
       }
     }
     
-    return AttachmentKind.getDetail(value: selectedDetail)
+    return Attachment.Kind(from: selectedDetail)?.detail ?? selectedDetail
   }
   
   private func setToggleState(at index: Int) -> Bool {

@@ -9,8 +9,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Switch to Xcode 11
-      run: sudo xcode-select --switch /Applications/Xcode_11.1.app
+    - name: Switch to Xcode 11.3
+      run: sudo xcode-select --switch /Applications/Xcode_11.3.app
     - name: Update fastlane
       run: |
         cd Emitron
@@ -24,6 +24,9 @@ jobs:
         scripts/download_s3.sh development > Emitron/Emitron/Configuration/secrets.development.xcconfig
         scripts/download_s3.sh production > Emitron/Emitron/Configuration/secrets.production.xcconfig
     - name: Execute fastlane
+      env:
+        FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
+        FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
       run: |
         cd Emitron
         bundle exec fastlane -v

@@ -50,13 +50,13 @@ struct MyTutorialView: View {
   
   // Initialization
   @State var state: MyTutorialsState
-  @EnvironmentObject var domainsMC: DomainsMC
-  @EnvironmentObject var emitron: AppState
+
+  @EnvironmentObject var sessionController: SessionController
   
-  @EnvironmentObject var bookmarkContentMC: BookmarkContentsVM
-  @EnvironmentObject var inProgressContentVM: InProgressContentVM
-  @EnvironmentObject var completedContentVM: CompletedContentVM
-  @EnvironmentObject var userMC: UserMC
+  @ObservedObject var inProgressRepository: InProgressRepository
+  @ObservedObject var completedRepository: CompletedRepository
+  @ObservedObject var bookmarkRepository: BookmarkRepository
+  @ObservedObject var domainRepository: DomainRepository
 
   @State private var settingsPresented: Bool = false
   @State private var reloadProgression: Bool = true
@@ -67,7 +67,7 @@ struct MyTutorialView: View {
     contentView
       .navigationBarTitle(Text(Constants.myTutorials))
       .navigationBarItems(trailing:
-        Group {
+        SwiftUI.Group {
           Button(action: {
             self.settingsPresented = true
           }) {
@@ -76,7 +76,9 @@ struct MyTutorialView: View {
           }
       })
       .sheet(isPresented: self.$settingsPresented) {
-        SettingsView(showLogoutButton: true).environmentObject(self.userMC)
+        SettingsView(showLogoutButton: true)
+          // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
+          .environmentObject(self.sessionController)
       }
     .onDisappear {
       self.reloadProgression = true
@@ -91,19 +93,19 @@ struct MyTutorialView: View {
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab
           if self.reloadProgression {
-            self.inProgressContentVM.reload()
+            self.inProgressRepository.reload()
             self.reloadProgression = false
           }
           self.state = .inProgress
         }, completedClosure: {
           if self.reloadCompleted {
-            self.completedContentVM.reload()
+            self.completedRepository.reload()
             self.reloadCompleted = false
           }
           self.state = .completed
         }, bookmarkedClosure: {
           if self.reloadBookmarks {
-            self.bookmarkContentMC.reload()
+            self.bookmarkRepository.reload()
             self.reloadBookmarks = false
           }
           self.state = .bookmarked
@@ -125,23 +127,23 @@ struct MyTutorialView: View {
   }
 
   private var inProgressContentsView: AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
-    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
-                           headerView: toggleControl,
-                           contentsVM: inProgressContentVM as ContentPaginatable))
+    AnyView(ContentListView(contentRepository: inProgressRepository,
+                            downloadAction: DownloadService.current,
+                            contentScreen: ContentScreen.inProgress,
+                            headerView: toggleControl))
   }
-
+  
   private var completedContentsView: AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
-    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
-                           headerView: toggleControl,
-                           contentsVM: completedContentVM as ContentPaginatable))
+    AnyView(ContentListView(contentRepository: completedRepository,
+                            downloadAction: DownloadService.current,
+                            contentScreen: .completed,
+                            headerView: toggleControl))
   }
-
+  
   private var bookmarkedContentsView: AnyView? {
-    guard let dataManager = DataManager.current else { return nil }
-    return AnyView(ContentListView(downloadsMC: dataManager.downloadsMC,
-                           headerView: toggleControl,
-                           contentsVM: bookmarkContentMC as ContentPaginatable))
+    AnyView(ContentListView(contentRepository: bookmarkRepository,
+                            downloadAction: DownloadService.current,
+                            contentScreen: .bookmarked,
+                            headerView: toggleControl))
   }
 }

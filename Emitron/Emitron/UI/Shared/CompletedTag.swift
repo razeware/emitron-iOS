@@ -44,3 +44,8 @@ struct CompletedTag: View {
   }
 }
 
+struct CompletedTag_Previews: PreviewProvider {
+  static var previews: some View {
+    CompletedTag()
+  }
+}

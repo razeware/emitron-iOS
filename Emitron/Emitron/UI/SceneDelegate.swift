@@ -61,10 +61,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
       
-      let guardpost = Guardpost.current
-      let userMC = UserMC(guardpost: guardpost)
-      let appState = AppState()
-      let mainView = MainView().environmentObject(userMC).environmentObject(appState)
+      // We grab this from the App Delegate, since it's needed there too
+      let sessionController = SessionController.current
+      let dataManager = DataManager.current
+      let mainView = MainView()
+        .environmentObject(sessionController)
+        .environmentObject(dataManager)
       
       window.rootViewController = UIHostingController(rootView: mainView)
       self.window = window
@@ -112,8 +114,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   func sceneWillEnterForeground(_ scene: UIScene) {
     // Request Permissions if necessary
-    let userMC = UserMC(guardpost: Guardpost.current)
-    userMC.fetchPermissionsIfNeeded()
+    SessionController.current.fetchPermissionsIfNeeded()
   }
 
   func sceneDidEnterBackground(_ scene: UIScene) {
