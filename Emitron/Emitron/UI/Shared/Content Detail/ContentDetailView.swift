@@ -111,69 +111,10 @@ struct ContentDetailView: View {
     }
   }
   
-  private func contentsToPlay(currentVideoID: Int) -> [ContentListDisplayable] {
-    return  []
-    // TODO
-    
-//    // If the content is a single episode, which we know by checking if there's a videoID on it, return the content itself
-//    if content.videoIdentifier != nil {
-//      return [content]
-//    }
-//
-//    let childContents = childContentsViewModel.contents
-//
-//    guard let currentIndex = childContents.firstIndex(where: { $0.videoIdentifier == currentVideoID } )
-//      else { return [] }
-//
-//    return Array(childContents[currentIndex..<childContents.count])
-  }
-  
-  private func videoView(for model: ContentListDisplayable) -> some View {
-    VideoView(contentDetails: self.contentsToPlay(currentVideoID: model.videoIdentifier!),
-              user: self.user,
-              showingProSheet: !self.user.canStreamPro && model.professional) {
-                self.refreshContentDetails()
-    }
-  }
-  
-  private var contentModelForPlayButton: ContentListDisplayable? {
-    // If the content is an episode, rather than a collection, it will have a videoID associated with it,
-    // so return the content itself
-    if content.contentType != .collection {
-      return content
-    }
-    
-    // TODO
-    return nil
-    
-//    // If the progression is more than 0%, start at the last consecutive video in a row that hasn't been completed
-//    // This means that we return true for when the first progression is nil, or when the target > the progress
-//    if case .inProgress(let percentage) = dynamicContentViewModel.viewProgress, percentage > 0 {
-//      return contentDetailsViewModel.childContents.first { childContent in
-//        if case .completed = childContent.viewProgress {
-//          return false
-//        }
-//        return true
-//      }
-//    }
-//
-//    // If progression is at 100% or 0%, then start from beginning; first child content's video ID
-//    return contentDetailsViewModel.childContents.first
-  }
-  
-  private var contentIdForPlayButton: Int {
-    return contentModelForPlayButton?.id ?? 0
-  }
-  
-  private var videoIdForPlayButton: Int {
-    return contentModelForPlayButton?.videoIdentifier ?? 0
-  }
   
   private var continueButton: some View {
-    return NavigationLink(destination:
-      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
-                user: self.user))
-    {
+    let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
+    return NavigationLink(destination: VideoView(viewModel: viewModel)) {
       ZStack {
         Rectangle()
           .frame(width: 155, height: 75)
@@ -200,11 +141,8 @@ struct ContentDetailView: View {
   }
   
   private var playButton: some View {
-    
-    return NavigationLink(destination:
-      VideoView(contentDetails: self.contentsToPlay(currentVideoID: self.videoIdForPlayButton),
-                user: self.user))
-    {
+    let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
+    return NavigationLink(destination: VideoView(viewModel: viewModel)) {
       ZStack {
         Rectangle()
           .frame(maxWidth: 75, maxHeight: 75)
@@ -221,9 +159,7 @@ struct ContentDetailView: View {
       }
     }
   }
-  
-  
-  
+
   private func opacityOverlay(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {

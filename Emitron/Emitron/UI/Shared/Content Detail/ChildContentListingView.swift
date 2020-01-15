@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ChildContentListingView: View {
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
+  @EnvironmentObject var sessionController: SessionController
   
   var body: some View {
     childContentsViewModel.initialiseIfRequired()
@@ -80,26 +81,22 @@ struct ChildContentListingView: View {
       })
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
-      
-//      NavigationLink(destination:
-//        self.videoView(for: model)
-//      ) {
-        self.rowItem(for: model)
-          .padding([.leading, .trailing], 20)
-          .padding([.bottom], 20)
-//      }
-        //HACK: to remove navigation chevrons
-//        .padding(.trailing, -32.0)
+      self.episodeRow(model: model)
+        .listRowInsets(EdgeInsets())
+        .listRowBackground(Color.backgroundColor)
     }
-    .listRowInsets(EdgeInsets())
-    .listRowBackground(Color.backgroundColor)
   }
   
-  private func rowItem(for model: ChildContentListDisplayable) -> some View {
-    TextListItemView(
-      dynamicContentViewModel: childContentsViewModel.dynamicContentViewModel(for: model.id),
-      content: model
-    )
+  private func episodeRow(model: ChildContentListDisplayable) -> some View {
+    let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
+    let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+    return NavigationLink(destination: VideoView(viewModel: childVideoPlaybackViewModel)) {
+      TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
+        .padding([.leading, .trailing], 20)
+        .padding([.bottom], 20)
+      }
+      //HACK: to remove navigation chevrons
+      .padding(.trailing, -32.0)
   }
   
   private var loadingView: some View {

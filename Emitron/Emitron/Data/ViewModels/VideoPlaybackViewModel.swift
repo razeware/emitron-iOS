@@ -57,7 +57,7 @@ final class VideoPlaybackViewModel {
   
 
   let player: AVQueuePlayer = AVQueuePlayer()
-  var playerTimeObserverToken: Any?
+  private var playerTimeObserverToken: Any?
   var state: DataState = .initial
   
   init(contentId: Int, repository: Repository, videosService: VideosService, contentsService: ContentsService) {
@@ -74,14 +74,23 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  func reload() {
-    do {
-      contentList = try repository.playlist(for: initialContentId)
-    } catch {
-      
-    }
+  func reloadIfRequired() {
+    guard state == .initial else { return }
+    reload()
   }
   
+  func reload() {
+    do {
+      state = .loading
+      contentList = try repository.playlist(for: initialContentId)
+      currentIndex = 0
+      enqueueNext()
+    } catch {
+      Failure
+        .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to load playlist: \(error)")
+        .log()
+    }
+  }
   
   private func prepareSubscribers() {
     let interval = CMTime(seconds: 5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
