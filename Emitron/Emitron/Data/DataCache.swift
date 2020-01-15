@@ -156,8 +156,6 @@ extension DataCache {
     )
   }
   
-  
-  
   func cachedContentPersistableState(for contentId: Int) throws -> ContentPersistableState {
     guard let content = self.contents[contentId] else {
         throw DataCacheError.cacheMiss
@@ -193,6 +191,43 @@ extension DataCache {
       )
   }
   
+  func videoPlaylist(for contentId: Int) throws -> [CachedVideoPlaybackState] {
+    guard let content = self.contents[contentId] else {
+      throw DataCacheError.cacheMiss
+    }
+    
+    // If it's a screencast then we can just return this single one
+    if content.contentType == .screencast {
+      return [videoPlaybackState(for: content)]
+    }
+    
+    // If it's an episode, find this and all the following episodes
+    if content.contentType == .episode {
+      let siblings = try siblingContents(for: content)
+      // Only want ones later than this one
+      let playlist = siblings.drop { $0 != content }
+      return playlist.map { videoPlaybackState(for: $0) }
+    }
+    
+    // If it's a collection then find where we got up to, and send from there
+    if content.contentType == .collection {
+      let children = try childContents(for: content)
+      let nextEpisode = try nextToPlay(for: children)
+      let playlist = children.drop { $0 != nextEpisode }
+      return playlist.map { videoPlaybackState(for: $0) }
+    }
+    
+    // Out of options
+    return [CachedVideoPlaybackState]()
+  }
+  
+  private func videoPlaybackState(for content: Content) -> CachedVideoPlaybackState {
+    CachedVideoPlaybackState(
+      content: content,
+      progression: progressions[content.id]
+    )
+  }
+  
   private func cachedDynamicContentState(for contentId: Int) -> CachedDynamicContentState {
     CachedDynamicContentState(
       progression: self.progressions[contentId],
@@ -206,5 +241,53 @@ extension DataCache {
       else { throw DataCacheError.cacheMiss }
     
     return self.contents[group.contentId]
+  }
+  
+  private func childContents(for content: Content) throws -> [Content] {
+    guard let groups = contentIndexedGroups[content.id] else {
+      throw DataCacheError.cacheMiss
+    }
+    
+    let groupIds = groups.map { $0.id }
+    return contents.values.filter {
+      guard let groupId = $0.groupId else { return false }
+      return groupIds.contains(groupId)
+    }.sorted {
+      guard let lhsOrdinal = $0.ordinal, let rhsOrdinal = $1.ordinal else { return true }
+      return lhsOrdinal < rhsOrdinal
+    }
+  }
+  
+  private func siblingContents(for content: Content) throws -> [Content] {
+    guard let parentContent = try parentContent(for: content) else {
+      return [Content]()
+    }
+    return try childContents(for: parentContent)
+  }
+  
+  private func nextToPlay(for contents: [Content]) throws -> Content {
+    guard contents.count > 0 else { throw DataCacheError.cacheMiss }
+    
+    // We'll assume that the contents is already ordered. It is if it comes from child/sibling contents
+    let orderedProgressions = contents.compactMap { progressions[$0.id] }
+    
+    // No child progressions—let's start with the first item of content
+    if orderedProgressions.count == 0 {
+      return contents.first!
+    }
+    
+    // The last progression is the furthest through the content
+    guard let lastProgression = orderedProgressions.last else { return contents[0] }
+    let lastContentIndex = contents.firstIndex { $0.id == lastProgression.contentId }!
+    // If it's not finished, then we're part way through it—return this item of content
+    if !lastProgression.finished {
+      return contents[lastContentIndex]
+    }
+    // Need the next one—does it exist?
+    if lastContentIndex < contents.endIndex {
+      return contents[lastContentIndex + 1]
+    }
+    // Must have completed the final episode. Let's start at the beginning again.
+    return contents[0]
   }
 }
