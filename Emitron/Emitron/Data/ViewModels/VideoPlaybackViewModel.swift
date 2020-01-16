@@ -86,8 +86,13 @@ final class VideoPlaybackViewModel {
       state = .loading
       progressEngine.start()
       contentList = try repository.playlist(for: initialContentId)
-      currentIndex = -1
-      enqueueNext()
+      currentIndex = 0
+      player.play()
+      if let progression = currentContent.progression {
+        enqueue(index: 0, startTime: Double(progression.progress))
+      } else {
+        enqueue(index: 0)
+      }
     } catch {
       Failure
         .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to load playlist: \(error)")
@@ -97,14 +102,13 @@ final class VideoPlaybackViewModel {
   
   func play() {
     self.progressEngine.playbackStarted()
-    player.play()
   }
   
   private func prepareSubscribers() {
     if let token = playerTimeObserverToken {
       player.removeTimeObserver(token)
     }
-    let interval = CMTime(seconds: 5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
+    let interval = CMTime(seconds: 5, preferredTimescale: 100)
     playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)
@@ -147,8 +151,12 @@ final class VideoPlaybackViewModel {
   private func enqueueNext() {
     guard currentIndex < contentList.endIndex else { return }
 
+    enqueue(index: currentIndex + 1)
+  }
+  
+  private func enqueue(index: Int, startTime: Double? = nil) {
     state = .loadingAdditional
-    let nextContent = contentList[currentIndex + 1]
+    let nextContent = contentList[index]
     avItem(for: nextContent)
       .sink(receiveCompletion: { (completion) in
         switch completion {
@@ -161,8 +169,16 @@ final class VideoPlaybackViewModel {
             .log()
         }
       }) { (playerItem) in
-        // Append it to the end of the player queue
-        self.player.insert(playerItem, after: nil)
+        // Try to seek if needed
+        if let startTime = startTime {
+          playerItem.seek(to: CMTime(seconds: startTime, preferredTimescale: 100)) { [weak self] _ in
+            guard let self = self else { return }
+            self.player.insert(playerItem, after: nil)
+          }
+        } else {
+          // Append it to the end of the player queue
+          self.player.insert(playerItem, after: nil)
+        }
         // Move the curent content item pointer
         self.currentIndex += 1
       }
