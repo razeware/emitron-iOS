@@ -41,6 +41,8 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
     viewController.player = viewModel.player
     viewController.entersFullScreenWhenPlaybackBegins = true
     viewController.exitsFullScreenWhenPlaybackEnds = true
+    viewController.modalPresentationStyle = .fullScreen
+    viewModel.play()
     return viewController
   }
   
@@ -68,6 +70,9 @@ struct VideoView: View {
       })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: false)
+      }
+      .onDisappear {
+        self.viewModel.player.pause()
       }
   }
   

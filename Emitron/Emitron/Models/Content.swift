@@ -69,3 +69,25 @@ extension Content: Equatable {
       lhs.groupId == rhs.groupId
   }
 }
+
+extension Content {
+  func update(from other: Content) -> Content {
+    Content(id: other.id,
+            uri: other.uri,
+            name: other.name,
+            descriptionHtml: other.descriptionHtml,
+            descriptionPlainText: other.descriptionPlainText,
+            releasedAt: other.releasedAt,
+            free: other.free,
+            professional: other.professional,
+            difficulty: other.difficulty,
+            contentType: other.contentType,
+            duration: other.duration,
+            videoIdentifier: other.videoIdentifier,
+            cardArtworkUrl: other.cardArtworkUrl,
+            technologyTriple: other.technologyTriple,
+            contributors: other.contributors,
+            groupId: other.groupId ?? self.groupId,
+            ordinal: other.ordinal)
+  }
+}

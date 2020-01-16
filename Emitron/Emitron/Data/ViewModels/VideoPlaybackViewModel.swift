@@ -49,7 +49,7 @@ final class VideoPlaybackViewModel {
   private let progressEngine: ProgressEngine
   
   private var contentList = [VideoPlaybackState]()
-  private var currentIndex = 0
+  private var currentIndex = -1
   private var currentContent: VideoPlaybackState {
     contentList[currentIndex]
   }
@@ -66,6 +66,8 @@ final class VideoPlaybackViewModel {
     self.videosService = videosService
     self.contentsService = contentsService
     self.progressEngine = ProgressEngine(contentsService: contentsService, repository: repository)
+    
+    prepareSubscribers()
   }
   
   deinit {
@@ -82,8 +84,9 @@ final class VideoPlaybackViewModel {
   func reload() {
     do {
       state = .loading
+      progressEngine.start()
       contentList = try repository.playlist(for: initialContentId)
-      currentIndex = 0
+      currentIndex = -1
       enqueueNext()
     } catch {
       Failure
@@ -92,20 +95,20 @@ final class VideoPlaybackViewModel {
     }
   }
   
+  func play() {
+    self.progressEngine.playbackStarted()
+    player.play()
+  }
+  
   private func prepareSubscribers() {
+    if let token = playerTimeObserverToken {
+      player.removeTimeObserver(token)
+    }
     let interval = CMTime(seconds: 5, preferredTimescale: CMTimeScale(NSEC_PER_SEC))
-    player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+    playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)
     }
-    
-    player.publisher(for: \.currentItem)
-      .sink { [weak self] (currentItem) in
-        guard let self = self,
-          currentItem != nil else { return }
-        self.progressEngine.playbackStarted()
-      }
-      .store(in: &subscriptions)
   }
   
   private func handleTimeUpdate(time: CMTime) {

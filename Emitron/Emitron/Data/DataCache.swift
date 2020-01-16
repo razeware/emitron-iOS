@@ -59,7 +59,8 @@ final class DataCache: ObservableObject {
 extension DataCache {
   func update(from cacheUpdate: DataCacheUpdate) {
     cacheUpdate.bookmarks.forEach { self.bookmarks[$0.contentId] = $0 }
-    cacheUpdate.contents.forEach { self.contents[$0.id] = $0 }
+    // Have to do a special update for content—since some API endpoints won't include group info
+    cacheUpdate.contents.forEach { self.contents[$0.id] = self.contents[$0.id]?.update(from: $0) ?? $0 }
     cacheUpdate.progressions.forEach { self.progressions[$0.contentId] = $0 }
     cacheUpdate.groups.forEach { self.groupIndexedGroups[$0.id] = $0 }
     

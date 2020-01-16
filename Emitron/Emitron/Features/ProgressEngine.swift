@@ -61,12 +61,16 @@ final class ProgressEngine {
   init(contentsService: ContentsService, repository: Repository) {
     self.contentsService = contentsService
     self.repository = repository
-    setupSubscriptions()
   }
   
   deinit {
     networkMonitor.cancel()
     networkMonitor.pathUpdateHandler = nil
+  }
+  
+  func start() {
+    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+    setupSubscriptions()
   }
   
   func playbackStarted() {
