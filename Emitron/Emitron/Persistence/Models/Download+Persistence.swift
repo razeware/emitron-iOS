@@ -35,7 +35,6 @@ extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
     static let requestedAt = Column("requestedAt")
     static let lastValidatedAt = Column("lastValidatedAt")
     static let fileName = Column("fileName")
-    static let localUrl = Column("localUrl")
     static let remoteUrl = Column("remoteUrl")
     static let progress = Column("progress")
     static let state = Column("state")

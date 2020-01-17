@@ -87,7 +87,6 @@ final class VideoPlaybackViewModel {
       progressEngine.start()
       contentList = try repository.playlist(for: initialContentId)
       currentIndex = 0
-      player.play()
       if let progression = currentContent.progression {
         enqueue(index: 0, startTime: Double(progression.progress))
       } else {
@@ -102,6 +101,7 @@ final class VideoPlaybackViewModel {
   
   func play() {
     self.progressEngine.playbackStarted()
+    self.player.play()
   }
   
   private func prepareSubscribers() {
@@ -191,7 +191,8 @@ final class VideoPlaybackViewModel {
       if let download = state.download,
         download.state == .complete,
         let localUrl = download.localUrl {
-        return promise(.success(AVPlayerItem(url: localUrl)))
+        let asset = AVAsset(url: localUrl)
+        return promise(.success(AVPlayerItem(asset: asset)))
       }
       
       // We're gonna need to stream it.

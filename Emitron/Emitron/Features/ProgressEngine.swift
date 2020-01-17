@@ -56,7 +56,7 @@ final class ProgressEngine {
   private var mode: Mode = .offline
   private let networkMonitor = NWPathMonitor()
   
-  private var playbackToken = ""
+  private var playbackToken: String? = nil
   
   init(contentsService: ContentsService, repository: Repository) {
     self.contentsService = contentsService
@@ -76,6 +76,7 @@ final class ProgressEngine {
   func playbackStarted() {
     // Don't especially care if we're in offline mode
     guard mode == .online else { return }
+    self.playbackToken = nil
     // Need to refresh the plaback token
     contentsService.getBeginPlaybackToken { [weak self] (result) in
       guard let self = self else { return }
@@ -99,7 +100,9 @@ final class ProgressEngine {
       }
     case .online:
       return Future { (promise) in
-        self.contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: self.playbackToken) { [weak self] (response) in
+        // Don't bother trying if the playback token is empty.
+        guard let playbackToken = self.playbackToken else { return }
+        self.contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { [weak self] (response) in
           guard let self = self else { return promise(.failure(.notImplemented)) }
           switch response {
           case .failure(let error):

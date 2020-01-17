@@ -46,11 +46,29 @@ struct Download: Codable {
   var requestedAt: Date
   var lastValidatedAt: Date?
   var fileName: String?
-  var localUrl: URL?
   var remoteUrl: URL?
   var progress: Double = 0
   var state: State
   var contentId: Int
+  
+  var localUrl: URL? {
+    guard let fileName = fileName,
+      let downloadDirectory = Download.downloadDirectory else {
+        return nil
+    }
+    
+    return downloadDirectory.appendingPathComponent(fileName)
+  }
+  
+  static var downloadDirectory: URL? {
+    let fileManager = FileManager.default
+    let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
+    guard let documentsDirectory = documentsDirectories.first else {
+      return nil
+    }
+    
+    return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
+  }
 }
 
 extension Download: DownloadProcessorModel { }
@@ -77,7 +95,6 @@ extension Download {
       requestedAt: Date(),
       lastValidatedAt: nil,
       fileName: nil,
-      localUrl: nil,
       remoteUrl: nil,
       progress: 0,
       state: .pending,
