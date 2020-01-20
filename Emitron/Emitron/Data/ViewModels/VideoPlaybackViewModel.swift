@@ -113,6 +113,19 @@ final class VideoPlaybackViewModel {
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)
     }
+    
+    UserDefaults.standard.publisher(for: \.playSpeed, options: [.initial, .new])
+      .sink { (playSpeed) in
+        self.player.rate = playSpeed
+      }
+      .store(in: &subscriptions)
+    
+    UserDefaults.standard.publisher(for: \.closedCaptionOn)
+      .sink { (_) in
+        guard let playerItem = self.player.currentItem else { return }
+        self.addClosedCaptions(for: playerItem)
+      }
+      .store(in: &subscriptions)
   }
   
   private func handleTimeUpdate(time: CMTime) {
@@ -206,12 +219,25 @@ final class VideoPlaybackViewModel {
           return promise(.failure(error))
         case .success(let response):
           guard response.kind == .stream else { return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("Not A Stream"))) }
-          return promise(.success(AVPlayerItem(url: response.url)))
+          let item = AVPlayerItem(url: response.url)
+          self.addClosedCaptions(for: item)
+          return promise(.success(item))
         }
       }
     }
   }
   
+   private func addClosedCaptions(for playerItem: AVPlayerItem) {
+    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
+      let locale = Locale(identifier: "en")
+      let options =
+        AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
+      if let option = options.first, UserDefaults.standard.closedCaptionOn {
+        playerItem.select(option, in: group)
+      }
+    }
+  }
+
   private func update(progression: Progression) {
     // Find appropriate playback state
     guard let contentIndex = contentList.firstIndex(where: { $0.content.id == progression.id }) else { return }
