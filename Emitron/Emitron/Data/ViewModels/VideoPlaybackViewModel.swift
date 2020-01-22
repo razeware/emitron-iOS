@@ -48,10 +48,20 @@ final class VideoPlaybackViewModel {
   private let contentsService: ContentsService
   private let progressEngine: ProgressEngine
   
+  // These are the content models that this view model is capable of playing. In this order.
   private var contentList = [VideoPlaybackState]()
-  private var currentIndex = -1
-  private var currentContent: VideoPlaybackState {
-    contentList[currentIndex]
+  // A cache of playback items, and a way of finding the content model for the currently playing item
+  private var playerItems = [Int : AVPlayerItem]()
+  private var currentlyPlayingContentId: Int? {
+    guard let currentItem = player.currentItem,
+      let contentId = playerItems.first(where: { $1 == currentItem })?.key
+      else { return nil }
+    return contentId
+  }
+  // Managing the Player queue. We enqueue stuff at the last possible moment.
+  private var nextContentToEnqueueIndex = 0
+  private var nextContentToEnqueue: VideoPlaybackState {
+    contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
   
@@ -86,8 +96,8 @@ final class VideoPlaybackViewModel {
       state = .loading
       progressEngine.start()
       contentList = try repository.playlist(for: initialContentId)
-      currentIndex = 0
-      if let progression = currentContent.progression {
+      nextContentToEnqueueIndex = 0
+      if let progression = nextContentToEnqueue.progression {
         enqueue(index: 0, startTime: Double(progression.progress))
       } else {
         enqueue(index: 0)
@@ -129,8 +139,9 @@ final class VideoPlaybackViewModel {
   }
   
   private func handleTimeUpdate(time: CMTime) {
+    guard let currentlyPlayingContentId = currentlyPlayingContentId else { return }
     // Update progress
-    progressEngine.updateProgress(for: currentContent.content.id, progress: Int(time.seconds))
+    progressEngine.updateProgress(for: currentlyPlayingContentId, progress: Int(time.seconds))
       .sink(receiveCompletion: { (completion) in
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
@@ -162,9 +173,9 @@ final class VideoPlaybackViewModel {
   }
   
   private func enqueueNext() {
-    guard currentIndex < contentList.endIndex else { return }
+    guard nextContentToEnqueueIndex < contentList.endIndex else { return }
 
-    enqueue(index: currentIndex + 1)
+    enqueue(index: nextContentToEnqueueIndex)
   }
   
   private func enqueue(index: Int, startTime: Double? = nil) {
@@ -193,12 +204,21 @@ final class VideoPlaybackViewModel {
           self.player.insert(playerItem, after: nil)
         }
         // Move the curent content item pointer
-        self.currentIndex += 1
+        self.nextContentToEnqueueIndex += 1
       }
       .store(in: &subscriptions)
   }
   
   private func avItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Error> {
+    // Do we already have it it in cache?
+    if let item = playerItems[state.content.id] {
+      return Future { $0(.success(item)) }
+    }
+    
+    return createAvItem(for: state)
+  }
+  
+  private func createAvItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Error> {
     Future<AVPlayerItem, Error> { (promise) in
       // Is there a completed download?
       if let download = state.download,
@@ -221,13 +241,17 @@ final class VideoPlaybackViewModel {
           guard response.kind == .stream else { return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("Not A Stream"))) }
           let item = AVPlayerItem(url: response.url)
           self.addClosedCaptions(for: item)
+          // Add it to the cache
+          self.playerItems[state.content.id] = item
           return promise(.success(item))
         }
       }
     }
   }
   
-   private func addClosedCaptions(for playerItem: AVPlayerItem) {
+  
+  
+  private func addClosedCaptions(for playerItem: AVPlayerItem) {
     if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
       let locale = Locale(identifier: "en")
       let options =
