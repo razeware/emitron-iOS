@@ -27,42 +27,38 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import AVKit
 
-struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
-    
-  private let contentDetails: [ContentListDisplayable]
-  private let user: User
+struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {  
+  private let viewModel: VideoPlaybackViewModel
   
-  init(with contentDetails: [ContentListDisplayable], user: User) {
-    self.contentDetails = contentDetails
-    self.user = user
+  init(with viewModel: VideoPlaybackViewModel) {
+    self.viewModel = viewModel
   }
   
-  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> VideoPlayerController {
-    let videosMC = VideosMC(user: user)
-    return VideoPlayerController(with: contentDetails, videosMC: videosMC)
+  func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> AVPlayerViewController {
+    let viewController = AVPlayerViewController()
+    viewController.player = viewModel.player
+    viewController.entersFullScreenWhenPlaybackBegins = true
+    viewController.exitsFullScreenWhenPlaybackEnds = true
+    viewController.modalPresentationStyle = .fullScreen
+    viewModel.play()
+    return viewController
   }
   
   func updateUIViewController(_ uiViewController: VideoPlayerControllerRepresentable.UIViewControllerType, context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) {
-    // N/A
+    // No-op
   }
 }
 
 struct VideoView: View {
+  var viewModel: VideoPlaybackViewModel
   
-  let contentDetails: [ContentListDisplayable]
-  let user: User
-  @State var showingProSheet = false
-  var onDisappear: (() -> Void)?
   @State private var settingsPresented: Bool = false
-  
+
   var body: some View {
-    contentView
-      .onDisappear {
-        // When the VideoView disappears, we trigger a reload of the content details, so that the
-        // progressions are shown correctly.
-        self.onDisappear?()
-      }
+    viewModel.reloadIfRequired()
+    return videoView
       .navigationBarItems(trailing:
         SwiftUI.Group {
           Button(action: {
@@ -72,36 +68,15 @@ struct VideoView: View {
               .foregroundColor(.iconButton)
           }
       })
-        .sheet(isPresented: self.$settingsPresented) {
-          SettingsView(showLogoutButton: false)
+      .sheet(isPresented: self.$settingsPresented) {
+        SettingsView(showLogoutButton: false)
       }
-      .alert(isPresented: $showingProSheet) {
-        notProAlert
+      .onDisappear {
+        self.viewModel.player.pause()
       }
   }
   
-  private var contentView: AnyView {
-    if !user.canStreamPro && contentDetails.first?.professional ?? true {
-      return AnyView(Color.backgroundColor)
-    } else {
-      return videoView
-    }
-  }
-  
-  private var videoView: AnyView {
-    AnyView(VideoPlayerControllerRepresentable(with: contentDetails, user: user))
-  }
-  
-  private var notProAlert: Alert {
-    return Alert(
-      title: Text("PRO Course!"),
-      message: Text("You're not a PRO subscriber."),
-      dismissButton:
-        .default(Text("OK"), action: {
-          self.showingProSheet.toggle()
-        })
-    )
+  private var videoView: some View {
+    VideoPlayerControllerRepresentable(with: viewModel)
   }
 }
-
-

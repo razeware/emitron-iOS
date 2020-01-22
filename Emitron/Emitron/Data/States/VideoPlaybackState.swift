@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,47 +27,14 @@
 /// THE SOFTWARE.
 
 import Foundation
-import GRDB
 
-extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
-  enum Columns {
-    static let id = Column("id")
-    static let requestedAt = Column("requestedAt")
-    static let lastValidatedAt = Column("lastValidatedAt")
-    static let fileName = Column("fileName")
-    static let remoteUrl = Column("remoteUrl")
-    static let progress = Column("progress")
-    static let state = Column("state")
-    static let contentId = Column("contentId")
-  }
+struct CachedVideoPlaybackState {
+  let content: Content
+  let progression: Progression?
 }
 
-extension Download {
-  static let content = belongsTo(Content.self)
-  static let group = hasOne(Group.self, through: content, using: Content.group)
-  static let parentContent = hasOne(Content.self, through: group, using: Group.content)
-  static let parentDownload = hasOne(Download.self, through: parentContent, using: Content.download)
-  
-  var content: QueryInterfaceRequest<Content> {
-    request(for: Download.content)
-  }
-  
-  var parentContent: QueryInterfaceRequest<Content> {
-    request(for: Download.parentContent)
-  }
-  
-  var parentDownload: QueryInterfaceRequest<Download> {
-    request(for: Download.parentDownload)
-  }
-}
-
-extension DerivableRequest where RowDecoder == Download {
-  func filter(state: Download.State) -> Self {
-    return filter(Download.Columns.state == state.rawValue)
-  }
-  
-  func orderByRequestedAt() -> Self {
-    let requestedAt = Download.Columns.requestedAt
-    return order(requestedAt.asc)
-  }
+struct VideoPlaybackState {
+  let content: Content
+  let progression: Progression?
+  let download: Download?
 }

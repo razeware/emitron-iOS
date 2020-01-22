@@ -88,8 +88,9 @@ final class DownloadService {
   func startProcessing() {
     queueManager.pendingStream
       .sink(receiveCompletion: { completion in
-        // TODO: Log
-        print(completion)
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+          .log()
       }, receiveValue: { [weak self] downloadQueueItem in
         guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
         self.requestDownloadUrl(downloadQueueItem)
@@ -98,8 +99,9 @@ final class DownloadService {
     
     queueManager.readyForDownloadStream
       .sink(receiveCompletion: { completion in
-        // TODO: Log
-        print(completion)
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+          .log()
       }, receiveValue: { [weak self] downloadQueueItem in
         guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
         self.enqueue(downloadQueueItem: downloadQueueItem)
@@ -268,17 +270,15 @@ extension DownloadService {
     
     // Generate filename
     let filename = "\(videoId).mp4"
-    let localUrl = downloadsDirectory.appendingPathComponent(filename)
     
     // Save local URL and filename
     var download = downloadQueueItem.download
-    download.localUrl = localUrl
     download.fileName = filename
     
     // Transition download to correct status
     // If file exists, update the download
     let fileManager = FileManager.default
-    if fileManager.fileExists(atPath: localUrl.path) {
+    if let localUrl = download.localUrl, fileManager.fileExists(atPath: localUrl.path) {
       download.state = .complete
     } else {
       download.state = .enqueued
@@ -288,8 +288,9 @@ extension DownloadService {
     do {
       try persistenceStore.update(download: download)
     } catch {
-      // TODO: Log
-      print("Unable to enqueue download: \(error)")
+      Failure
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue donwload: \(error)")
+        .log()
     }
   }
   
@@ -363,8 +364,9 @@ extension DownloadService: DownloadProcessorDelegate {
     do {
       return try persistenceStore.download(withId: downloadId)
     } catch {
-      // TODO log
-      print("Error finding download: \(error)")
+      Failure
+        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Error finding download: \(error)")
+        .log()
       return .none
     }
   }
@@ -377,8 +379,9 @@ extension DownloadService: DownloadProcessorDelegate {
     do {
       try persistenceStore.updateDownload(withId: downloadId, withProgress: progress)
     } catch {
-      // TODO Log
-      print("Unable to update progress on download: \(error)")
+      Failure
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update progress on download: \(error)")
+        .log()
     }
   }
   
@@ -389,12 +392,14 @@ extension DownloadService: DownloadProcessorDelegate {
   func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID) {
     do {
       if try !persistenceStore.deleteDownload(withId: downloadId) {
-        // TODO Log
-        print("Unable to delete download: \(downloadId)")
+        Failure
+          .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(downloadId)")
+          .log()
       }
     } catch {
-      // TODO Log
-      print("Unable to delete download: \(error)")
+      Failure
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(error)")
+        .log()
     }
   }
   
@@ -408,16 +413,18 @@ extension DownloadService: DownloadProcessorDelegate {
   
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
     transitionDownload(withID: downloadId, to: .error)
-    // TODO Logging
-    print("DownloadDidFailWithError: \(error)")
+    Failure
+      .saveToPersistentStore(from: String(describing: type(of: self)), reason: "DownloadDidFailWithError: \(error)")
+      .log()
   }
   
   private func transitionDownload(withID id: UUID, to state: Download.State) {
     do {
       try persistenceStore.transitionDownload(withId: id, to: state)
     } catch {
-      // TODO Logging
-      print("Unable to transition download: \(error)")
+      Failure
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to transition download: \(error)")
+        .log()
     }
   }
 }

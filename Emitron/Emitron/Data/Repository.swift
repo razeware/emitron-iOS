@@ -92,6 +92,19 @@ extension Repository {
     try dataCache.cachedContentPersistableState(for: contentId)
   }
   
+  /// Return an array of states that provide the playlist of what should be played for this item of content
+  /// - Parameter contentId: The id of the `Content` the user has requested to be played back
+  func playlist(for contentId: Int) throws -> [VideoPlaybackState] {
+    let fromCache = try dataCache.videoPlaylist(for: contentId)
+    return try fromCache.map { (cachedState) in
+      let download = try persistenceStore.download(forContentId: cachedState.content.id)
+      return VideoPlaybackState(
+        content: cachedState.content,
+        progression: cachedState.progression,
+        download: download)
+    }
+  }
+  
   func domainList() throws -> [Domain] {
     try persistenceStore.domainList()
   }

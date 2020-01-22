@@ -38,13 +38,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
   
-  // This should be @Published, but it crashes the app with EXC_BAD_ACCESS
-  // when you try and refernce it. Which is handy.
-  var contents: [ContentListDisplayable] = [ContentListDisplayable]() {
-    willSet {
-      objectWillChange.send()
-    }
-  }
+  @Published var contents: [ContentListDisplayable] = [ContentListDisplayable]()
+
   // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
   // Let's see if we actually need it to be @Published...
   var state: DataState = .initial
@@ -101,8 +96,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
-        self.configureSubscription()
         self.state = .hasData
+        self.configureSubscription()
       }
       
     }
@@ -134,8 +129,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
-        self.configureSubscription()
         self.state = .hasData
+        self.configureSubscription()
       }
     }
   }

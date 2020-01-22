@@ -137,7 +137,6 @@ struct EmitronDatabase {
         t.column("requestedAt", .datetime).notNull().indexed()
         t.column("lastValidatedAt", .datetime)
         t.column("fileName", .text)
-        t.column("localUrl", .text)
         t.column("remoteUrl", .text)
         t.column("progress", .double).notNull().defaults(to: 0)
         t.column("state", .integer).notNull().defaults(to: 0)

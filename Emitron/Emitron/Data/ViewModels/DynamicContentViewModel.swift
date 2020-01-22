@@ -122,4 +122,15 @@ final class DynamicContentViewModel: ObservableObject {
     
     // TODO
   }
+  
+  func videoPlaybackViewModel(apiClient: RWAPI) -> VideoPlaybackViewModel {
+    let videosService = VideosService(client: apiClient)
+    let contentsService = ContentsService(client: apiClient)
+    return VideoPlaybackViewModel(
+      contentId: contentId,
+      repository: repository,
+      videosService: videosService,
+      contentsService: contentsService
+    )
+  }
 }
