@@ -38,7 +38,6 @@ struct ContentListView: View {
   @State var showHudView: Bool = false
   @State var showAlert: Bool = false
   @State private var showSettings = false
-  @State var hudOption: HudOption = .success
   @State var isPresenting: Bool = false
   
   @ObservedObject var contentRepository: ContentRepository
