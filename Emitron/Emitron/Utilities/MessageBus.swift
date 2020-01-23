@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,29 +27,68 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
-enum Constants {
-  static let filters = "Filters"
-  static let clearAll = "Clear All"
-  static let search = "Search"
-  static let loading = "Loading..."
-  static let library = "Library"
-  static let myTutorials = "My Tutorials"
-  static let downloads = "Downloads"
-  static let newest =  "Newest"
-  static let popularity = "Popularity"
-  static let tutorials = "Tutorials"
-  static let settings = "Settings"
+struct Message {
+  enum Level {
+    case error, warning, success
+  }
   
-  // Onboarding
-  static let login = "Login"
+  let level: Level
+  let message: String
+  let autoDismiss: Bool = true
+}
+
+extension Message {
+  var snackbarState: SnackbarState {
+    SnackbarState(status: level.snackbarStatus, message: message)
+  }
+}
+
+extension Message.Level {
+  var snackbarStatus: SnackbarState.Status {
+    switch self {
+    case .error:
+      return .error
+    case .warning:
+      return .warning
+    case .success:
+      return .success
+    }
+  }
+}
+
+final class MessageBus:  ObservableObject {
+  @Published private(set) var currentMessage: Message?
+  @Published var messageVisible: Bool = false
   
-  // Other
-  static let today = "Today"
-  static let by = "By"
-  static let yes = "Yes"
-  static let no = "No"
+  private var currentTimer: AnyCancellable?
   
-  // Message Banner
-  static let autoDismissTime: TimeInterval = 3
+  func post(message: Message) {
+    invalidateTimer()
+    
+    currentMessage = message
+    messageVisible = true
+    
+    if message.autoDismiss {
+      currentTimer = createAndStartAutoDismissTimer()
+    }
+  }
+  
+  private func createAndStartAutoDismissTimer() -> AnyCancellable {
+    Timer
+      .publish(every: Constants.autoDismissTime, on: .main, in: .common)
+      .autoconnect()
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        
+        self.messageVisible = false
+        self.invalidateTimer()
+    }
+  }
+  
+  private func invalidateTimer() {
+    currentTimer?.cancel()
+    currentTimer = nil
+  }
 }

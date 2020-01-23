@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -26,30 +26,51 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-enum Constants {
-  static let filters = "Filters"
-  static let clearAll = "Clear All"
-  static let search = "Search"
-  static let loading = "Loading..."
-  static let library = "Library"
-  static let myTutorials = "My Tutorials"
-  static let downloads = "Downloads"
-  static let newest =  "Newest"
-  static let popularity = "Popularity"
-  static let tutorials = "Tutorials"
-  static let settings = "Settings"
+extension AnyTransition {
+  static var moveAndFade: AnyTransition {
+    AnyTransition.move(edge: .bottom)
+      .combined(with: .opacity)
+  }
+}
+
+struct MessageBarView: View {
+  @ObservedObject var messageBus: MessageBus
   
-  // Onboarding
-  static let login = "Login"
-  
-  // Other
-  static let today = "Today"
-  static let by = "By"
-  static let yes = "Yes"
-  static let no = "No"
-  
-  // Message Banner
-  static let autoDismissTime: TimeInterval = 3
+  var body: some View {
+    VStack {
+      if messageBus.messageVisible {
+        SnackbarView(
+          state: messageBus.currentMessage!.snackbarState,
+          visible: $messageBus.messageVisible
+        )
+      }
+    }
+    .transition(.moveAndFade)
+    .animation(.default)
+  }
+}
+
+struct MessageBarView_Previews: PreviewProvider {
+  static var previews: some View {
+    let messageBus = MessageBus()
+    messageBus.post(message: Message(level: .warning, message: "This is a warning"))
+    
+    return VStack {
+      Button(action: {
+        messageBus.messageVisible.toggle()
+      }) {
+        Text("Show/Hide")
+      }
+      
+      Button(action: {
+        messageBus.post(message: Message(level: .success, message: "Button clicked!"))
+      }) {
+        Text("Post new message")
+      }
+      
+      MessageBarView(messageBus: messageBus)
+    }
+  }
 }

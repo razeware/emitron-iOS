@@ -42,8 +42,6 @@ struct LibraryView: View {
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented: Bool = false
-  @State var showHudView: Bool = false
-  @State var hudOption: HudOption = .success
 
   var body: some View {
     contentView
@@ -61,9 +59,6 @@ struct LibraryView: View {
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
       .background(Color.backgroundColor)
-    }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
     }
   }
   

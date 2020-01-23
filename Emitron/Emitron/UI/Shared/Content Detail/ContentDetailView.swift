@@ -31,13 +31,6 @@ import KingfisherSwiftUI
 import UIKit
 
 struct ContentDetailView: View {
-  
-  @State private var isEpisodeOnly = false
-  @State private var showingSheet = false
-  @State var showAlert: Bool = false
-  @State var showHudView: Bool = false
-  @State var hudOption: HudOption = .success
-  
   var content: ContentListDisplayable
   var childContentsViewModel: ChildContentsViewModel
   var dynamicContentViewModel: DynamicContentViewModel
@@ -89,12 +82,6 @@ struct ContentDetailView: View {
             .foregroundColor(.iconButton)
         }
     })
-      .actionSheet(isPresented: $showingSheet) {
-        actionSheet
-    }
-    .hud(isShowing: $showHudView, hudOption: $hudOption) {
-      self.showHudView = false
-    }
     
     return scrollView
       .navigationBarTitle(Text(""), displayMode: .inline)
@@ -221,36 +208,6 @@ struct ContentDetailView: View {
       return AnyView(ProgressBarView(progress: progress, isRounded: false))
     }
     return nil
-  }
-  
-  private var wifiActionSheet: ActionSheet {
-    return ActionSheet(
-      title: Text("You are not connected to Wi-Fi"),
-      message: Text("Turn on Wi-Fi to access data."),
-      buttons: [
-        .default(Text("Settings"), action: {
-          self.openSettings()
-        }),
-        .default(Text("OK"), action: {
-          self.showAlert.toggle()
-          self.showingSheet.toggle()
-        })
-      ]
-    )
-  }
-  
-  private var actionSheet: ActionSheet {
-    if showAlert {
-      return wifiActionSheet
-    } else {
-      return showActionSheet(for: .cancel) { action in
-//        if let action = action, action == .cancel, let content = self.downloadsMC.downloadedContent {
-//          self.downloadsMC.cancelDownload(with: content, isEpisodeOnly: self.isEpisodeOnly)
-//          self.showingSheet = false
-//          self.showHudView = false
-//        }
-      }
-    }
   }
   
   private var proView: some View {

@@ -28,13 +28,72 @@
 
 import SwiftUI
 
-extension Image {
-  struct Downloads {
-    static let notDownloaded: Image = Image("downloadActive")
-    static let downloaded: Image = Image("downloadInactive")
+struct SnackbarState {
+  enum Status: String {
+    case success, warning, error
+    
+    var color: Color {
+      switch self {
+      case .success:
+        return Color.snackSuccess
+      case .warning:
+        return Color.snackWarning
+      case .error:
+        return Color.snackError
+      }
+    }
+    
+    var tagText: String {
+      rawValue.uppercased()
+    }
   }
   
-  static var closeWhite: Image {
-    Image("closeWhite")
+  let status: Status
+  let message: String
+}
+
+struct SnackbarView: View {
+  var state: SnackbarState
+  @Binding var visible: Bool
+  
+  var body: some View {
+    HStack {
+      Text(state.status.tagText)
+        .kerning(0.34)
+        .padding(CGFloat(5.5))
+        .background(Color.snackTabBg)
+        .foregroundColor(state.status.color)
+        .cornerRadius(CGFloat(8.5))
+        .font(.uiUppercase)
+      
+      Text(state.message)
+        .font(.uiBodyCustom)
+        .foregroundColor(Color.snackText)
+      
+      Spacer()
+      
+      Button(action: {
+        withAnimation {
+          self.visible.toggle()
+        }
+      }) {
+        Image.closeWhite
+          .resizable()
+          .frame(width: 18, height: 18)
+      }.foregroundColor(Color.snackText)
+    }
+    .padding()
+    .background(state.status.color)
+  }
+}
+
+struct SnackbarView_Previews: PreviewProvider {
+  @State static var visible = true
+  static var previews: some View {
+    VStack {
+      SnackbarView(state: SnackbarState(status: .error, message: "There was a problem."), visible: $visible)
+      SnackbarView(state: SnackbarState(status: .warning, message: "We're going orange."), visible: $visible)
+      SnackbarView(state: SnackbarState(status: .success, message: "Everything looks peachy."), visible: $visible)
+    }
   }
 }
