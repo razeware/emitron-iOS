@@ -36,7 +36,7 @@ struct Message {
   
   let level: Level
   let message: String
-  let autoDismiss: Bool = false
+  let autoDismiss: Bool = true
 }
 
 extension Message {
@@ -62,8 +62,33 @@ final class MessageBus:  ObservableObject {
   @Published private(set) var currentMessage: Message?
   @Published var messageVisible: Bool = false
   
+  private var currentTimer: AnyCancellable?
+  
   func post(message: Message) {
+    invalidateTimer()
+    
     currentMessage = message
     messageVisible = true
+    
+    if message.autoDismiss {
+      currentTimer = createAndStartAutoDismissTimer()
+    }
+  }
+  
+  private func createAndStartAutoDismissTimer() -> AnyCancellable {
+    Timer
+      .publish(every: Constants.autoDismissTime, on: .main, in: .common)
+      .autoconnect()
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        
+        self.messageVisible = false
+        self.invalidateTimer()
+    }
+  }
+  
+  private func invalidateTimer() {
+    currentTimer?.cancel()
+    currentTimer = nil
   }
 }

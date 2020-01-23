@@ -49,4 +49,7 @@ enum Constants {
   static let by = "By"
   static let yes = "Yes"
   static let no = "No"
+  
+  // Message Banner
+  static let autoDismissTime: TimeInterval = 3
 }
