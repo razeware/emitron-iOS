@@ -35,6 +35,7 @@ struct MainView: View {
   var body: some View {
     return contentView
       .background(Color.backgroundColor)
+      .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
   }
   
   private var contentView: AnyView {
