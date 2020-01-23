@@ -39,21 +39,16 @@ struct MessageBarView: View {
   @ObservedObject var messageBus: MessageBus
   
   var body: some View {
-    SwiftUI.Group {
-      snackBar
+    VStack {
+      if messageBus.messageVisible {
+        SnackbarView(
+          state: messageBus.currentMessage!.snackbarState,
+          visible: $messageBus.messageVisible
+        )
+      }
     }
-  }
-  
-  private var snackBar: AnyView? {
-    guard messageBus.messageVisible, let message = messageBus.currentMessage else { return nil }
-    
-    return AnyView(
-      SnackbarView(
-        state: message.snackbarState,
-        visible: $messageBus.messageVisible
-      )
-        .transition(.moveAndFade)
-    )
+    .transition(.moveAndFade)
+    .animation(.default)
   }
 }
 
@@ -64,17 +59,13 @@ struct MessageBarView_Previews: PreviewProvider {
     
     return VStack {
       Button(action: {
-        withAnimation {
-          messageBus.messageVisible.toggle()
-        }
+        messageBus.messageVisible.toggle()
       }) {
         Text("Show/Hide")
       }
       
       Button(action: {
-        withAnimation {
-          messageBus.post(message: Message(level: .success, message: "Button clicked!"))
-        }
+        messageBus.post(message: Message(level: .success, message: "Button clicked!"))
       }) {
         Text("Post new message")
       }
