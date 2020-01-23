@@ -28,13 +28,34 @@
 
 import SwiftUI
 
-extension Image {
-  struct Downloads {
-    static let notDownloaded: Image = Image("downloadActive")
-    static let downloaded: Image = Image("downloadInactive")
+struct SnackbarView: View {
+  var body: some View {
+    HStack {
+      Text("ERROR")
+        .kerning(0.34)
+        .padding(CGFloat(5.5))
+        .background(Color.snackTabBg)
+        .foregroundColor(Color.snackError)
+        .cornerRadius(CGFloat(8.5))
+        .font(.uiUppercase)
+        
+      Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        .font(.uiBodyCustom)
+        .foregroundColor(Color.snackText)
+      
+      Spacer()
+      
+      Image.closeWhite
+        .resizable()
+        .frame(width: 18, height: 18)
+    }
+    .padding(18)
+    .background(Color.snackError)
   }
-  
-  static var closeWhite: Image {
-    Image("closeWhite")
+}
+
+struct SnackbarView_Previews: PreviewProvider {
+  static var previews: some View {
+    SnackbarView()
   }
 }

@@ -127,6 +127,26 @@ extension Color {
   }
   
   static var appBlack: Color {
-      return Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
-    }
+    return Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
+  }
+  
+  static var snackError: Color {
+    Color("error")
+  }
+  
+  static var snackWarning: Color {
+    Color("warning")
+  }
+  
+  static var snackSuccess: Color {
+    Color("success")
+  }
+  
+  static var snackText: Color {
+    Color("snackText")
+  }
+  
+  static var snackTabBg: Color {
+    Color("snackTagBg")
+  }
 }
