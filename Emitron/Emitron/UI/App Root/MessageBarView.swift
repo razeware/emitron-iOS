@@ -26,4 +26,46 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
+
+extension AnyTransition {
+  static var moveAndFade: AnyTransition {
+    AnyTransition.move(edge: .bottom)
+      .combined(with: .opacity)
+  }
+}
+
+struct MessageBarView: View {
+  @Binding var shouldShow: Bool
+  
+  var body: some View {
+    SwiftUI.Group {
+      if shouldShow {
+        SnackbarView(state: SnackbarState(status: .success, message: "Hastag winning"), visible: $shouldShow)
+          .transition(.moveAndFade)
+      }
+    }
+  }
+}
+
+struct MessageBarView_Previews: PreviewProvider {
+  struct BindingWrapper: View {
+    @State var visible = false
+    var body: some View {
+      VStack {
+        Button(action: {
+          withAnimation {
+            self.visible.toggle()
+          }
+        }) {
+          Text("Show/Hide")
+        }
+        MessageBarView(shouldShow: $visible)
+      }
+    }
+  }
+  
+  static var previews: some View {
+    BindingWrapper()
+  }
+}

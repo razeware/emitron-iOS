@@ -73,14 +73,16 @@ struct SnackbarView: View {
       Spacer()
       
       Button(action: {
-        self.visible.toggle()
+        withAnimation {
+          self.visible.toggle()
+        }
       }) {
         Image.closeWhite
           .resizable()
           .frame(width: 18, height: 18)
       }.foregroundColor(Color.snackText)
     }
-    .padding(18)
+    .padding()
     .background(state.status.color)
   }
 }
