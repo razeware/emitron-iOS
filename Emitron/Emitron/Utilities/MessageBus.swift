@@ -26,60 +26,44 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
+import Combine
 
-extension AnyTransition {
-  static var moveAndFade: AnyTransition {
-    AnyTransition.move(edge: .bottom)
-      .combined(with: .opacity)
+struct Message {
+  enum Level {
+    case error, warning, success
+  }
+  
+  let level: Level
+  let message: String
+  let autoDismiss: Bool = false
+}
+
+extension Message {
+  var snackbarState: SnackbarState {
+    SnackbarState(status: level.snackbarStatus, message: message)
   }
 }
 
-struct MessageBarView: View {
-  @ObservedObject var messageBus: MessageBus
-  
-  var body: some View {
-    SwiftUI.Group {
-      snackBar
+extension Message.Level {
+  var snackbarStatus: SnackbarState.Status {
+    switch self {
+    case .error:
+      return .error
+    case .warning:
+      return .warning
+    case .success:
+      return .success
     }
-  }
-  
-  private var snackBar: AnyView? {
-    guard messageBus.messageVisible, let message = messageBus.currentMessage else { return nil }
-    
-    return AnyView(
-      SnackbarView(
-        state: message.snackbarState,
-        visible: $messageBus.messageVisible
-      )
-        .transition(.moveAndFade)
-    )
   }
 }
 
-struct MessageBarView_Previews: PreviewProvider {
-  static var previews: some View {
-    let messageBus = MessageBus()
-    messageBus.post(message: Message(level: .warning, message: "This is a warning"))
-    
-    return VStack {
-      Button(action: {
-        withAnimation {
-          messageBus.messageVisible.toggle()
-        }
-      }) {
-        Text("Show/Hide")
-      }
-      
-      Button(action: {
-        withAnimation {
-          messageBus.post(message: Message(level: .success, message: "Button clicked!"))
-        }
-      }) {
-        Text("Post new message")
-      }
-      
-      MessageBarView(messageBus: messageBus)
-    }
+final class MessageBus:  ObservableObject {
+  @Published private(set) var currentMessage: Message?
+  @Published var messageVisible: Bool = false
+  
+  func post(message: Message) {
+    currentMessage = message
+    messageVisible = true
   }
 }

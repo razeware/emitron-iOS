@@ -39,6 +39,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var dataManager: DataManager!
   fileprivate var sessionController: SessionController!
   fileprivate var downloadService: DownloadService!
+  fileprivate var messageBus: MessageBus = MessageBus()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -141,5 +142,11 @@ extension DataManager {
 extension DownloadService {
   static var current: DownloadService {
     (UIApplication.shared.delegate as! AppDelegate).downloadService
+  }
+}
+
+extension MessageBus {
+  static var current: MessageBus {
+    (UIApplication.shared.delegate as! AppDelegate).messageBus
   }
 }
