@@ -103,6 +103,7 @@
 		22BFE75F23DACEF400495BA9 /* SyncAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75E23DACEF400495BA9 /* SyncAction.swift */; };
 		22BFE76123DACFE200495BA9 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76023DACFE200495BA9 /* SyncEngine.swift */; };
 		22BFE76423DAD4BC00495BA9 /* SyncRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76323DAD4BC00495BA9 /* SyncRequest.swift */; };
+		22BFE76623DAE56900495BA9 /* SyncRequest+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76523DAE56900495BA9 /* SyncRequest+Persistence.swift */; };
 		22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512123A4C923004D1223 /* KeychainSwift */; };
 		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
 		22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512623A4C99E004D1223 /* KingfisherSwiftUI */; };
@@ -334,6 +335,7 @@
 		22BFE75E23DACEF400495BA9 /* SyncAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncAction.swift; sourceTree = "<group>"; };
 		22BFE76023DACFE200495BA9 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
 		22BFE76323DAD4BC00495BA9 /* SyncRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRequest.swift; sourceTree = "<group>"; };
+		22BFE76523DAE56900495BA9 /* SyncRequest+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+Persistence.swift"; sourceTree = "<group>"; };
 		22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronDatabase.swift; sourceTree = "<group>"; };
 		22C0513123A4FB84004D1223 /* Content+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Content+Persistence.swift"; sourceTree = "<group>"; };
 		22C0513323A4FB8E004D1223 /* Bookmark+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+Persistence.swift"; sourceTree = "<group>"; };
@@ -807,6 +809,7 @@
 				22C0514123A4FBD5004D1223 /* Download+Persistence.swift */,
 				22C0513F23A4FBCC004D1223 /* Group+Persistence.swift */,
 				22C0513523A4FB99004D1223 /* Progression+Persistence.swift */,
+				22BFE76523DAE56900495BA9 /* SyncRequest+Persistence.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1600,6 +1603,7 @@
 				22E2267C23CA273A00A83601 /* ChildContentsState.swift in Sources */,
 				2228E40523B999CA00E103AA /* DomainRepository.swift in Sources */,
 				B629AB4A22E60BC00037F4D8 /* ContentSummaryView.swift in Sources */,
+				22BFE76623DAE56900495BA9 /* SyncRequest+Persistence.swift in Sources */,
 				B6D8EB1922CB9FFE00DE29AF /* CategoriesRequest.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
 				B6DF2FB122CA4B140081A3A3 /* BookmarkRequest.swift in Sources */,
