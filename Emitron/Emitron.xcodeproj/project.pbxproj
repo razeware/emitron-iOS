@@ -126,6 +126,8 @@
 		22C0514823A8AC0B004D1223 /* PersistenceStore+Domains.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */; };
 		22C0514A23A8B890004D1223 /* PersistenceStore+Categories.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */; };
 		22C0514C23A8F3BA004D1223 /* EmitronDatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514B23A8F3BA004D1223 /* EmitronDatabaseTest.swift */; };
+		22C4EADB23DB8A5A001A3FDA /* WatchStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */; };
+		22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -356,6 +358,8 @@
 		22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Domains.swift"; sourceTree = "<group>"; };
 		22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Categories.swift"; sourceTree = "<group>"; };
 		22C0514B23A8F3BA004D1223 /* EmitronDatabaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronDatabaseTest.swift; sourceTree = "<group>"; };
+		22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsService.swift; sourceTree = "<group>"; };
+		22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsRequest.swift; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -1148,6 +1152,7 @@
 				B6D8EB2622CBA86000DE29AF /* ProgressionsRequest.swift */,
 				B6D8EB2A22CBA94700DE29AF /* VideosRequest.swift */,
 				8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */,
+				22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */,
 				B60612B822CCE352007FC852 /* Parameters.swift */,
 			);
 			path = Requests;
@@ -1275,6 +1280,7 @@
 				B6D8EB2422CBA85300DE29AF /* ProgressionsService.swift */,
 				B6D8EB2822CBA93D00DE29AF /* VideosService.swift */,
 				8BFCEF1C23411817003FF72F /* PermissionsService.swift */,
+				22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */,
 			);
 			path = Services;
 			sourceTree = "<group>";
@@ -1493,6 +1499,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22C4EADB23DB8A5A001A3FDA /* WatchStatsService.swift in Sources */,
 				8BFCEF1D23411817003FF72F /* PermissionsService.swift in Sources */,
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
 				8BFC74BC23648DF3001979F1 /* ContentPaginatable.swift in Sources */,
@@ -1535,6 +1542,7 @@
 				223D77B923B0C0DE005BE95D /* Permission.swift in Sources */,
 				223D77D523B1AA02005BE95D /* ContentSummaryState.swift in Sources */,
 				22BFE76823DAF5B000495BA9 /* PersistenceStore+Synchronisation.swift in Sources */,
+				22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */,
 				B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */,
 				22BFE75823D9910600495BA9 /* MessageBus.swift in Sources */,
 				22B8266423AF5CF900D4BA23 /* BookmarkAdapter.swift in Sources */,

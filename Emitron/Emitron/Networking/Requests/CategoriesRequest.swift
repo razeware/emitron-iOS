@@ -33,10 +33,10 @@ struct CategoriesRequest: Request {
   typealias Response = [Category]
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/categories" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/categories" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Internal
   func handle(response: Data) throws -> [Category] {

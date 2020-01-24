@@ -38,4 +38,11 @@ class ProgressionsService: Service {
                           parameters: parameters,
                           completion: completion)
   }
+  
+  func update(progressions: [ProgressionUpdate],
+              completion: @escaping (_ response: Result<UpdateProgressionsRequest.Response, RWAPIError>) -> Void) {
+    let request = UpdateProgressionsRequest(progressionUpdates: progressions)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
+  }
 }

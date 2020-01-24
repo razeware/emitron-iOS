@@ -27,14 +27,98 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 final class SyncEngine {
   private let persistenceStore: PersistenceStore
   private let repository: Repository
+  private let bookmarksService: BookmarksService
+  private let progressionsService: ProgressionsService
+  private let watchStatsService: WatchStatsService
   
-  init(persistenceStore: PersistenceStore, repository: Repository) {
+  private var subscriptions = Set<AnyCancellable>()
+  
+  init(
+    persistenceStore: PersistenceStore,
+    repository: Repository,
+    bookmarksService: BookmarksService,
+    progressionsService: ProgressionsService,
+    watchStatsService: WatchStatsService
+  ) {
     self.persistenceStore = persistenceStore
     self.repository = repository
+    self.bookmarksService = bookmarksService
+    self.progressionsService = progressionsService
+    self.watchStatsService = watchStatsService
+  }
+}
+
+extension SyncEngine {
+  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) {
+    return { (completion) in
+      switch completion {
+      case .finished:
+        // Don't think we should ever actually arrive here...
+        print("SyncEngine Request Stream finished. Didn't really expect it to.")
+      case .failure(let error):
+        Failure
+          .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Couldn't load sync requests: \(error)")
+          .log()
+      }
+    }
+  }
+  
+  private func beginProcessing() {
+    persistenceStore
+      .syncRequestStream(for: [.createBookmark])
+      .sink(receiveCompletion: completionHandler()) { self.syncBookmarkCreations(syncRequests: $0) }
+      .store(in: &subscriptions)
+    
+    persistenceStore
+    .syncRequestStream(for: [.deleteBookmark])
+    .sink(receiveCompletion: completionHandler()) { self.syncBookmarkDeletions(syncRequests: $0) }
+    .store(in: &subscriptions)
+    
+    persistenceStore
+      .syncRequestStream(for: [.markContentComplete, .updateProgress])
+      .sink(receiveCompletion: completionHandler()) { self.syncProgressionUpdates(syncRequests: $0) }
+      .store(in: &subscriptions)
+    
+    persistenceStore
+      .syncRequestStream(for: [.deleteProgression])
+      .sink(receiveCompletion: completionHandler()) { self.syncProgressionDeletions(syncRequests: $0) }
+      .store(in: &subscriptions)
+    
+    persistenceStore
+      .syncRequestStream(for: [.recordWatchStats])
+      .sink(receiveCompletion: completionHandler()) { self.syncWatchStats(syncRequests: $0) }
+      .store(in: &subscriptions)
+  }
+  
+  private func stopProcessing() {
+    subscriptions.forEach { $0.cancel() }
+    subscriptions.removeAll()
+  }
+}
+
+extension SyncEngine {
+  private func syncBookmarkCreations(syncRequests: [SyncRequest]) {
+  }
+  
+  private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
+    
+  }
+  
+  private func syncWatchStats(syncRequests: [SyncRequest]) {
+    
+  }
+  
+  private func syncProgressionUpdates(syncRequests: [SyncRequest]) {
+    
+  }
+  
+  private func syncProgressionDeletions(syncRequests: [SyncRequest]) {
+    
   }
 }
 
@@ -124,6 +208,6 @@ extension SyncEngine: SyncAction {
   
   func recordWatchStats(for contentId: Int, secondsWatched: Int) throws {
     // 1. Create / update sync request
-    persistenceStore.watchStatsSyncRequest(for: contentId, secondsWatched: secondsWatched)
+    try persistenceStore.watchStatsSyncRequest(for: contentId, secondsWatched: secondsWatched)
   }
 }

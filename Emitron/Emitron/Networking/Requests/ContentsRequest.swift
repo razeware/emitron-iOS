@@ -33,10 +33,10 @@ struct ContentsRequest: Request {
   typealias Response = (contents: [Content], cacheUpdate: DataCacheUpdate, totalNumber: Int)
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/contents" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/contents" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Internal
   func handle(response: Data) throws -> Response {
@@ -56,16 +56,13 @@ struct ContentDetailsRequest: Request {
   typealias Response = (content: Content, cacheUpdate: DataCacheUpdate)
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/contents/\(id)" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/contents/\(id)" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-  private var id: Int
-
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
+  var body: Data? { nil }
+  
+  // MARK: - Parameters
+  let id: Int
 
   // MARK: - Internal
   func handle(response: Data) throws -> Response {
@@ -87,10 +84,10 @@ struct BeginPlaybackTokenRequest: Request {
   typealias Response = String
   
   // MARK: - Properties
-  var method: HTTPMethod { return .POST }
-  var path: String { return "/contents/begin_playback" }
+  var method: HTTPMethod { .POST }
+  var path: String { "/contents/begin_playback" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
   
   func handle(response: Data) throws -> String {
     let json = try JSON(data: response)
@@ -112,18 +109,24 @@ struct PlaybackUsageRequest: Request {
   typealias Response = (progression: Progression, cacheUpdate: DataCacheUpdate)
   
   // MARK: - Properties
-  var method: HTTPMethod { return .POST }
-  var path: String { return "/contents/\(id)/playback" }
+  var method: HTTPMethod { .POST }
+  var path: String { "/contents/\(id)/playback" }
   var additionalHeaders: [String: String]?
   var body: Data? { 
-    let json: [String: Any] = ["video_playback_token": token, "progress": progress, "seconds": seconds]
+    let json: [String : Any] = [
+      "video_playback_token": token,
+      "progress": progress,
+      "seconds": seconds
+    ]
+    
     return try? JSONSerialization.data(withJSONObject: json)
   }
   
-  private var token: String
-  private var id: Int
-  private var progress: Int
-  private var seconds = 5
+  // MARK: - Parameters
+  let token: String
+  let id: Int
+  let progress: Int
+  let seconds = 5
   
   // MARK: - Initializers
   init(id: Int, progress: Int, token: String) {

@@ -33,10 +33,10 @@ struct ProgressionsRequest: Request {
   typealias Response = (progressions: [Progression], cacheUpdate: DataCacheUpdate, totalNumber: Int)
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/progressions" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/progressions" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Internal
   func handle(response: Data) throws -> Response {
@@ -51,53 +51,60 @@ struct ProgressionsRequest: Request {
   }
 }
 
-// TODO: WTF is this??!
-struct UpdateProgressionsRequeest: Request {
-  typealias Response = Progression
+enum ProgressionUpdateData {
+  case finished
+  case progress(Int)
+  
+  var jsonAttribute: [String : Any] {
+    switch self {
+    case .finished:
+      return ["finished" : true]
+    case .progress(let progress):
+      return ["progress" : progress]
+    }
+  }
+}
+
+protocol ProgressionUpdate {
+  var contentId: Int { get }
+  var data: ProgressionUpdateData { get }
+  var updatedAt: Date { get }
+}
+
+struct UpdateProgressionsRequest: Request {
+  typealias Response = (progressions: [Progression], cacheUpdate: DataCacheUpdate)
 
   // MARK: - Properties
-  var method: HTTPMethod { return .POST }
-  var path: String { return "/progressions/bulk" }
+  var method: HTTPMethod { .POST }
+  var path: String { "/progressions/bulk" }
   var additionalHeaders: [String: String]?
   var body: Data? {
-    let json: [String: Any] =
-      ["progressions":
-        [[
-          "content_id": id,
-          "progress": 10,
-          "updated_at": "2019-06-18T14:16:53.689"
-          ],
-         [
-          "content_id": 67890,
-          "finished": true,
-          "updated_at": "2019-06-18T14:16:53.689"
-          ]]
+    let dataJson = progressionUpdates.map { update in
+      [
+        "type": "progressions",
+        "attributes": [
+          "content_id": update.contentId,
+          "updated_at": update.updatedAt.iso8601,
+        ].merged(update.data.jsonAttribute)
       ]
-        
+    }
+    let json = [
+      "data": dataJson
+    ]
+    
     return try? JSONSerialization.data(withJSONObject: json)
   }
-
-  private var id: Int
-  private var progress: Int
-  private var finished: Bool = false
-  private var updatedAt: Date
-
-  // MARK: - Initializers
-  init(id: Int, progress: Int, finished: Bool, updatedAt: Date) {
-    self.id = id
-    self.progress = progress
-    self.finished = finished
-    self.updatedAt = updatedAt
-  }
+  
+  // MARK: - Parameters
+  let progressionUpdates: [ProgressionUpdate]
 
   // MARK: - Internal
-  func handle(response: Data) throws -> Progression {
+  func handle(response: Data) throws -> Response {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
     let progressions = try doc.data.map { try ProgressionAdapter.process(resource: $0) }
-    guard let progression = progressions.first else {
-      throw RWAPIError.processingError(nil)
-    }
-    return progression
+    let cacheUpdate = try DataCacheUpdate.loadFrom(document: doc)
+    
+    return (progressions: progressions, cacheUpdate: cacheUpdate)
   }
 }

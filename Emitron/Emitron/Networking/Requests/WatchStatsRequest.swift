@@ -1,15 +1,15 @@
-/// Copyright (c) 2019 Razeware LLC
-///
+/// Copyright (c) 2020 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -27,21 +27,42 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftyJSON
 
-struct DomainsRequest: Request {
-  typealias Response = [Domain]
+protocol WatchStat {
+  var contentId: Int { get }
+  var secondsWatched: Int { get }
+  var dateWatched: Date { get }
+}
 
+struct WatchStatsUpdateRequest: Request {
+  typealias Response = Void
+  
   // MARK: - Properties
-  var method: HTTPMethod { .GET }
-  var path: String { "/domains" }
-  var additionalHeaders: [String: String]?
-  var body: Data? { nil }
-
+  var method: HTTPMethod { .POST }
+  var path: String { "/watch_stats/bulk" }
+  var additionalHeaders: [String : String]?
+  var body: Data? {
+    let dataJson = watchStats.map { stat in
+      [
+        "type": "watch_stats",
+        "attributes": [
+          "content_id": stat.contentId,
+          "seconds": stat.secondsWatched,
+          "watched_on": stat.dateWatched.iso8601
+        ]
+      ]
+    }
+    let json = [
+      "data": dataJson
+    ]
+    
+    return try? JSONSerialization.data(withJSONObject: json)
+  }
+  
+  let watchStats: [WatchStat]
+  
   // MARK: - Internal
-  func handle(response: Data) throws -> [Domain] {
-    let json = try JSON(data: response)
-    let doc = JSONAPIDocument(json)
-    return try doc.data.map { try DomainAdapter.process(resource: $0) }
+  func handle(response: Data) throws -> Void {
+    return
   }
 }

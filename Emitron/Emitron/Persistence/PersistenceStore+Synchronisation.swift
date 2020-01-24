@@ -28,6 +28,7 @@
 
 import Foundation
 import GRDB
+import GRDBCombine
 
 // MARK:- Synchronisation Request Creation
 extension PersistenceStore {
@@ -203,5 +204,14 @@ extension PersistenceStore {
 
 // MARK:- Synchronisation Queue Management
 extension PersistenceStore {
-  // TODO
+  func syncRequestStream(for types: [SyncRequest.Synchronisation]) -> DatabasePublishers.Value<[SyncRequest]> {
+    ValueObservation.tracking { db -> [SyncRequest] in
+      let typeValues = types.map { $0.rawValue }
+      let request = SyncRequest
+        .filter(typeValues.contains(SyncRequest.Columns.type))
+        .order(SyncRequest.Columns.date.asc)
+      
+      return try SyncRequest.fetchAll(db, request)
+    }.publisher(in: db)
+  }
 }
