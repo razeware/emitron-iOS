@@ -100,6 +100,9 @@
 		22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75423D9905500495BA9 /* SnackbarView.swift */; };
 		22BFE75823D9910600495BA9 /* MessageBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75723D9910600495BA9 /* MessageBus.swift */; };
 		22BFE75C23D9AF4100495BA9 /* MessageBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */; };
+		22BFE75F23DACEF400495BA9 /* SyncAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75E23DACEF400495BA9 /* SyncAction.swift */; };
+		22BFE76123DACFE200495BA9 /* SyncEngine.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76023DACFE200495BA9 /* SyncEngine.swift */; };
+		22BFE76423DAD4BC00495BA9 /* SyncRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76323DAD4BC00495BA9 /* SyncRequest.swift */; };
 		22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512123A4C923004D1223 /* KeychainSwift */; };
 		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
 		22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512623A4C99E004D1223 /* KingfisherSwiftUI */; };
@@ -328,6 +331,9 @@
 		22BFE75423D9905500495BA9 /* SnackbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarView.swift; sourceTree = "<group>"; };
 		22BFE75723D9910600495BA9 /* MessageBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBus.swift; sourceTree = "<group>"; };
 		22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBarView.swift; sourceTree = "<group>"; };
+		22BFE75E23DACEF400495BA9 /* SyncAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncAction.swift; sourceTree = "<group>"; };
+		22BFE76023DACFE200495BA9 /* SyncEngine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncEngine.swift; sourceTree = "<group>"; };
+		22BFE76323DAD4BC00495BA9 /* SyncRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SyncRequest.swift; sourceTree = "<group>"; };
 		22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronDatabase.swift; sourceTree = "<group>"; };
 		22C0513123A4FB84004D1223 /* Content+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Content+Persistence.swift"; sourceTree = "<group>"; };
 		22C0513323A4FB8E004D1223 /* Bookmark+Persistence.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Bookmark+Persistence.swift"; sourceTree = "<group>"; };
@@ -773,6 +779,22 @@
 			path = Utilities;
 			sourceTree = "<group>";
 		};
+		22BFE75D23DACEC000495BA9 /* Data Synchronisation */ = {
+			isa = PBXGroup;
+			children = (
+				22BFE75E23DACEF400495BA9 /* SyncAction.swift */,
+				22BFE76023DACFE200495BA9 /* SyncEngine.swift */,
+			);
+			path = "Data Synchronisation";
+			sourceTree = "<group>";
+		};
+		22BFE76223DAD00800495BA9 /* Data Synchronisation */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "Data Synchronisation";
+			sourceTree = "<group>";
+		};
 		22C0513023A4FA89004D1223 /* Models */ = {
 			isa = PBXGroup;
 			children = (
@@ -805,23 +827,16 @@
 			children = (
 				2280E52623C826ED00F3913D /* Combine */,
 				2237AAB523C426B5008E9976 /* Data */,
-				2237AA9C23C3360A008E9976 /* Networking */,
-				22A265AA23967ADE000DD276 /* Model Controllers */,
-				221E609C23856F2B00E92155 /* Services */,
+				22BFE76223DAD00800495BA9 /* Data Synchronisation */,
 				22A36F51236F7C750064A406 /* Downloads */,
-				22D176CC234751FB0038333D /* Models */,
-				22D176C923460ADE0038333D /* Persistence */,
-				22D176C723460A410038333D /* Guardpost */,
 				22D176C123460A060038333D /* Info.plist */,
+				22A265AA23967ADE000DD276 /* Model Controllers */,
+				22D176CC234751FB0038333D /* Models */,
+				2237AA9C23C3360A008E9976 /* Networking */,
+				22D176C923460ADE0038333D /* Persistence */,
+				221E609C23856F2B00E92155 /* Services */,
 			);
 			path = emitronTests;
-			sourceTree = "<group>";
-		};
-		22D176C723460A410038333D /* Guardpost */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = Guardpost;
 			sourceTree = "<group>";
 		};
 		22D176C923460ADE0038333D /* Persistence */ = {
@@ -931,6 +946,7 @@
 				223D77B623B0C0D1005BE95D /* Group.swift */,
 				223D77B823B0C0DE005BE95D /* Permission.swift */,
 				223D77BA23B0C0EA005BE95D /* Progression.swift */,
+				22BFE76323DAD4BC00495BA9 /* SyncRequest.swift */,
 				B6DF2FAE22CA498B0081A3A3 /* User.swift */,
 			);
 			path = Models;
@@ -1022,6 +1038,7 @@
 				22D177032350748E0038333D /* Configuration */,
 				B62B9A7D22DF769000122CE8 /* Constants.swift */,
 				22A36F4E236F768A0064A406 /* Downloads */,
+				22BFE75D23DACEC000495BA9 /* Data Synchronisation */,
 				2253632723AB16CF0013F333 /* Displayable */,
 				B6D4529622CAB3E700BFB812 /* Extensions */,
 				B6C4F3D322E6EE200087ED10 /* Features */,
@@ -1476,6 +1493,7 @@
 				223D77CD23B0D1EF005BE95D /* ContentCategory.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
 				B6DF2F8F22CA006D0081A3A3 /* RWEnvironment.swift in Sources */,
+				22BFE75F23DACEF400495BA9 /* SyncAction.swift in Sources */,
 				95A4513522E224B500D24E56 /* SessionController.swift in Sources */,
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
 				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
@@ -1507,6 +1525,7 @@
 				22B8266423AF5CF900D4BA23 /* BookmarkAdapter.swift in Sources */,
 				223D77B323B0C0C2005BE95D /* Content.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
+				22BFE76423DAD4BC00495BA9 /* SyncRequest.swift in Sources */,
 				22E2267A23CA22C200A83601 /* DataCacheChildContentsViewModel.swift in Sources */,
 				22B8265B23AF18E400D4BA23 /* DomainAdapter.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
@@ -1558,6 +1577,7 @@
 				22C0514223A4FBD5004D1223 /* Download+Persistence.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */,
+				22BFE76123DACFE200495BA9 /* SyncEngine.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
 				223D77D923B3471F005BE95D /* InProgressRepository.swift in Sources */,
