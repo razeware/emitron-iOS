@@ -29,12 +29,12 @@
 import Foundation
 
 protocol SyncAction {
-  func createBookmark(for contentId: Int)
-  func deleteBookmark(bookmarkId: Int)
+  func createBookmark(for contentId: Int) throws
+  func deleteBookmark(for contentId: Int) throws
   
-  func markContentAsComplete(contentId: Int)
-  func removeProgress(progressionId: Int)
-  func updateProgress(for contentId: Int, progress: Int)
+  func markContentAsComplete(contentId: Int) throws
+  func removeProgress(for contentId: Int) throws
+  func updateProgress(for contentId: Int, progress: Int) throws
   
-  func recordWatchStats(for contentId: Int, secondsWatched: Int)
+  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws
 }

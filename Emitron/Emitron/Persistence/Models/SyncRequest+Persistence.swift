@@ -34,6 +34,7 @@ extension SyncRequest: FetchableRecord, TableRecord, PersistableRecord { }
 extension SyncRequest {
   enum Columns {
     static let id = Column("id")
+    static let contentId = Column("contentId")
     static let associatedRecordId = Column("associatedRecordId")
     static let category = Column("category")
     static let type = Column("type")

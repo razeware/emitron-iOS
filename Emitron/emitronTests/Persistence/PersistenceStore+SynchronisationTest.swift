@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -26,40 +26,9 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import XCTest
 
-struct Progression: Equatable, Codable {
-  var id: Int
-  var target: Int
-  var progress: Int
-  var createdAt: Date
-  var updatedAt: Date
-  var contentId: Int
-}
+class PersistenceStore_SynchronisationTest: XCTestCase {
 
-extension Progression {
-  var finished: Bool {
-    progressProportion > 0.9
-  }
-  
-  var progressProportion: Double {
-    Double(progress) / Double(target)
-  }
-}
 
-extension Progression {
-  static func completed(for content: Content) -> Progression {
-    withProgress(for: content, progress: content.duration)
-  }
-  
-  static func withProgress(for content: Content, progress: Int) -> Progression {
-    Progression(
-      id: -1,
-      target: content.duration,
-      progress: progress,
-      createdAt: Date(),
-      updatedAt: Date(),
-      contentId: content.id
-    )
-  }
 }

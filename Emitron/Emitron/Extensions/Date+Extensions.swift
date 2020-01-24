@@ -42,4 +42,9 @@ extension Date {
   func equalEnough(to otherDate: Date, epsilon: Double = 0.001) -> Bool {
     abs(timeIntervalSince(otherDate)) < epsilon
   }
+  
+  static var topOfTheHour: Date {
+    let cmpts = Calendar.current.dateComponents([.year, .month, .day, .hour], from: Date())
+    return Calendar.current.date(from: cmpts)!
+  }
 }

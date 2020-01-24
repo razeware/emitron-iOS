@@ -147,7 +147,8 @@ struct EmitronDatabase {
     migrator.registerMigration("createSyncRequest") { db in
       try db.create(table: "syncRequest") { t in
         t.autoIncrementedPrimaryKey("id")
-        t.column("associatedRecordId", .integer).notNull().indexed()
+        t.column("contentId", .integer).notNull().indexed()
+        t.column("associatedRecordId", .integer).indexed()
         t.column("category", .integer).notNull().indexed()
         t.column("type", .integer).notNull().indexed()
         t.column("date", .datetime).notNull()

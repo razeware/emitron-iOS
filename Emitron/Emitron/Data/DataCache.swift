@@ -72,6 +72,9 @@ extension DataCache {
     self.contentDomains.merge(newContentDomains)
     self.contentIndexedGroups.merge(newContentIndexedGroups)
     
+    cacheUpdate.bookmarkDeletionContentIds.forEach { self.bookmarks.removeValue(forKey: $0) }
+    cacheUpdate.progressionDeletionContentIds.forEach { self.progressions.removeValue(forKey: $0) }
+    
     objectDidChange.send(.updated)
   }
 }
@@ -111,6 +114,18 @@ extension DataCache {
     }
     .removeDuplicates()
     .eraseToAnyPublisher()
+  }
+  
+  func content(with id: Int) -> Content? {
+    contents[id]
+  }
+  
+  func progression(for contentId: Int) -> Progression? {
+    progressions[contentId]
+  }
+  
+  func bookmark(for contentId: Int) -> Bookmark? {
+    bookmarks[contentId]
   }
 }
 

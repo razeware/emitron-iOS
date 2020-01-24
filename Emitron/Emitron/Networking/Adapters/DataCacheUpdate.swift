@@ -41,13 +41,28 @@ struct DataCacheUpdate {
   let contentDomains: [ContentDomain]
   let relationships: [EntityRelationship]
   
+  let bookmarkDeletionContentIds: [Int]
+  let progressionDeletionContentIds: [Int]
+  
   static func loadFrom(document: JSONAPIDocument) throws -> DataCacheUpdate {
     let data = try DataCacheUpdate(resources: document.data)
     let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityId, $0.relationships) })
     return data.merged(with: included)
   }
   
-  init(contents: [Content], bookmarks: [Bookmark], progressions: [Progression], domains: [Domain], groups: [Group], categories: [Category], contentCategories: [ContentCategory], contentDomains: [ContentDomain], relationships: [EntityRelationship]) {
+  init(
+    contents: [Content] = [Content](),
+    bookmarks: [Bookmark] = [Bookmark](),
+    progressions: [Progression] = [Progression](),
+    domains: [Domain] = [Domain](),
+    groups: [Group] = [Group](),
+    categories: [Category] = [Category](),
+    contentCategories: [ContentCategory] = [ContentCategory](),
+    contentDomains: [ContentDomain] = [ContentDomain](),
+    relationships: [EntityRelationship] = [EntityRelationship](),
+    bookmarkDeletionContentIds: [Int] = [Int](),
+    progressionDeletionContentIds: [Int] = [Int]()
+  ) {
     self.contents = contents
     self.bookmarks = bookmarks
     self.progressions = progressions
@@ -57,6 +72,8 @@ struct DataCacheUpdate {
     self.contentCategories = contentCategories
     self.contentDomains = contentDomains
     self.relationships = relationships
+    self.bookmarkDeletionContentIds = bookmarkDeletionContentIds
+    self.progressionDeletionContentIds = progressionDeletionContentIds
   }
   
   init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = [JSONEntityRelationships]()) throws {
@@ -82,6 +99,9 @@ struct DataCacheUpdate {
     contentCategories = try ContentCategoryAdapter.process(relationships: relationships)
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     self.relationships = relationships
+    
+    self.bookmarkDeletionContentIds = [Int]()
+    self.progressionDeletionContentIds = [Int]()
   }
   
   func merged(with other: DataCacheUpdate) -> DataCacheUpdate {
