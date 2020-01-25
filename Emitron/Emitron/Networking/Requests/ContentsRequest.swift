@@ -116,7 +116,7 @@ struct PlaybackUsageRequest: Request {
     let json: [String : Any] = [
       "video_playback_token": token,
       "progress": progress,
-      "seconds": seconds
+      "seconds": Constants.videoPlaybackProgressTrackingInterval
     ]
     
     return try? JSONSerialization.data(withJSONObject: json)
@@ -126,8 +126,7 @@ struct PlaybackUsageRequest: Request {
   let token: String
   let id: Int
   let progress: Int
-  let seconds = 5
-  
+
   // MARK: - Initializers
   init(id: Int, progress: Int, token: String) {
     self.id = id

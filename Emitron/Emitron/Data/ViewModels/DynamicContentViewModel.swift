@@ -172,7 +172,8 @@ final class DynamicContentViewModel: ObservableObject {
       contentId: contentId,
       repository: repository,
       videosService: videosService,
-      contentsService: contentsService
+      contentsService: contentsService,
+      syncAction: syncAction
     )
   }
 }

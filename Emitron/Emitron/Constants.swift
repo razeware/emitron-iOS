@@ -50,6 +50,9 @@ enum Constants {
   static let yes = "Yes"
   static let no = "No"
   
+  // Video playback
+  static let videoPlaybackProgressTrackingInterval: Int = 5
+  
   // Message Banner
   static let autoDismissTime: TimeInterval = 3
   

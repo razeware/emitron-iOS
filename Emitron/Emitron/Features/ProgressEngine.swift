@@ -53,14 +53,16 @@ final class ProgressEngine {
   }
   private let contentsService: ContentsService
   private let repository: Repository
+  private let syncAction: SyncAction
   private var mode: Mode = .offline
   private let networkMonitor = NWPathMonitor()
   
   private var playbackToken: String? = nil
   
-  init(contentsService: ContentsService, repository: Repository) {
+  init(contentsService: ContentsService, repository: Repository, syncAction: SyncAction) {
     self.contentsService = contentsService
     self.repository = repository
+    self.syncAction = syncAction
   }
   
   deinit {
@@ -94,10 +96,34 @@ final class ProgressEngine {
   func updateProgress(for contentId: Int, progress: Int) -> Future<Progression, ProgressEngineError> {
     switch mode {
     case .offline:
-      // TODO: Need to implement an offline progress and watch stats tracking engine. Yippee.
-      return Future { (promise) in
-        promise(.failure(.notImplemented))
+      do {
+        try syncAction.updateProgress(for: contentId, progress: progress)
+        try syncAction.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
+        
+        let progression: Progression
+        if var existingProgression = repository.progression(for: contentId) {
+          existingProgression.progress = progress
+          progression = existingProgression
+        } else {
+          let content = repository.content(for: contentId)
+          progression = Progression(
+            id: -1,
+            target: content?.duration ?? 0,
+            progress: progress,
+            createdAt: Date(),
+            updatedAt: Date(),
+            contentId: contentId
+          )
+        }
+        return Future { (promise) in
+          promise(.success(progression))
+        }
+      } catch {
+        return Future { (promise) in
+          promise(.failure(.upstreamError(error)))
+        }
       }
+      
     case .online:
       return Future { (promise) in
         // Don't bother trying if the playback token is empty.
