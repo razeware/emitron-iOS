@@ -55,7 +55,7 @@ final class DataManager: ObservableObject {
   private (set) var downloadRepository: DownloadRepository!
   
   // Services
-  // TODO: Writeable progressions, downloads and bookmarks
+  private (set) var syncEngine: SyncEngine!
 
   private var domainsSubscriber: AnyCancellable?
   private var categoriesSubsciber: AnyCancellable?
@@ -107,5 +107,13 @@ final class DataManager: ObservableObject {
     categoriesSubsciber = categoryRepository.$categories.sink { categories in
       self.filters.updateCategoryFilters(for: categories)
     }
+    
+    let watchStatsService = WatchStatsService(client: sessionController.client)
+    syncEngine = SyncEngine(
+      persistenceStore: persistenceStore,
+      repository: repository,
+      bookmarksService: bookmarksService,
+      progressionsService: progressionsService,
+      watchStatsService: watchStatsService)
   }
 }

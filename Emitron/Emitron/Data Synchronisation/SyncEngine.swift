@@ -28,6 +28,7 @@
 
 import Foundation
 import Combine
+import Network
 
 final class SyncEngine {
   private let persistenceStore: PersistenceStore
@@ -37,6 +38,7 @@ final class SyncEngine {
   private let watchStatsService: WatchStatsService
   
   private var subscriptions = Set<AnyCancellable>()
+  private let networkMonitor = NWPathMonitor()
   
   init(
     persistenceStore: PersistenceStore,
@@ -50,10 +52,25 @@ final class SyncEngine {
     self.bookmarksService = bookmarksService
     self.progressionsService = progressionsService
     self.watchStatsService = watchStatsService
+    
+    configureNetworkObservation()
   }
 }
 
 extension SyncEngine {
+  private func configureNetworkObservation() {
+    networkMonitor.pathUpdateHandler = { [weak self] path in
+      guard let self = self else { return }
+      
+      if path.status == .satisfied {
+        self.beginProcessing()
+      } else {
+        self.stopProcessing()
+      }
+    }
+    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+  }
+  
   private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) {
     return { (completion) in
       switch completion {
@@ -69,6 +86,17 @@ extension SyncEngine {
   }
   
   private func beginProcessing() {
+    if !progressionsService.isAuthenticated {
+      Event
+        .syncEngine(action: "BeginProcessing::Skipping due to lack of authentication")
+        .log()
+      return
+    }
+    
+    Event
+      .syncEngine(action: "BeginProcessing")
+      .log()
+    
     persistenceStore
       .syncRequestStream(for: [.createBookmark])
       .sink(receiveCompletion: completionHandler()) { self.syncBookmarkCreations(syncRequests: $0) }
@@ -96,6 +124,10 @@ extension SyncEngine {
   }
   
   private func stopProcessing() {
+    Event
+      .syncEngine(action: "StopProcessing")
+      .log()
+    
     subscriptions.forEach { $0.cancel() }
     subscriptions.removeAll()
   }
@@ -103,6 +135,10 @@ extension SyncEngine {
 
 extension SyncEngine {
   private func syncBookmarkCreations(syncRequests: [SyncRequest]) {
+    Event
+      .syncEngine(action: "SyncingBookmarkCreations")
+      .log()
+
     syncRequests.forEach { (syncRequest) in
       guard syncRequest.type == .createBookmark else { return }
       
@@ -112,7 +148,7 @@ extension SyncEngine {
         switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkCreations:: \(error.localizedDescription)")
             .log()
         case .success(let bookmark):
           // Update the cache
@@ -127,6 +163,10 @@ extension SyncEngine {
   }
   
   private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
+    Event
+      .syncEngine(action: "SyncingBookmarkDeletions")
+      .log()
+    
     syncRequests.forEach { (syncRequest) in
       guard syncRequest.type == .deleteBookmark,
         let bookmarkId = syncRequest.associatedRecordId
@@ -138,7 +178,7 @@ extension SyncEngine {
         switch result {
           case .failure(let error):
             Failure
-              .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+              .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
               .log()
           case .success:
             // Update the cache
@@ -152,9 +192,15 @@ extension SyncEngine {
   }
   
   private func syncWatchStats(syncRequests: [SyncRequest]) {
+    Event
+      .syncEngine(action: "SyncingWatchStats")
+      .log()
+    
     let watchStatRequests = syncRequests.filter {
       $0.type == .recordWatchStats
     }
+    
+    if watchStatRequests.isEmpty { return }
     
     watchStatsService.update(watchStats: watchStatRequests) { [weak self] result in
       guard let self = self else { return }
@@ -162,7 +208,7 @@ extension SyncEngine {
       switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .fetch(from: String(describing: type(of: self)), reason: "syncWatchStats:: \(error.localizedDescription)")
             .log()
         case .success:
           // Remove the sync requests—we're done
@@ -172,9 +218,15 @@ extension SyncEngine {
   }
   
   private func syncProgressionUpdates(syncRequests: [SyncRequest]) {
+    Event
+      .syncEngine(action: "SyncingProgressionUpdates")
+      .log()
+    
     let progressionUpdates = syncRequests.filter {
       [.updateProgress, .markContentComplete].contains($0.type)
     }
+    
+    if progressionUpdates.isEmpty { return }
     
     progressionsService.update(progressions: progressionUpdates) { [weak self] result in
       guard let self = self else { return }
@@ -182,7 +234,7 @@ extension SyncEngine {
       switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .fetch(from: String(describing: type(of: self)), reason: "syncProgressionUpdates:: \(error.localizedDescription)")
             .log()
         case .success(_, let cacheUpdate):
           // Update the cache
@@ -194,6 +246,10 @@ extension SyncEngine {
   }
   
   private func syncProgressionDeletions(syncRequests: [SyncRequest]) {
+    Event
+      .syncEngine(action: "SyncingProgressionDeletions")
+      .log()
+    
     syncRequests.forEach { (syncRequest) in
       guard syncRequest.type == .deleteProgression,
         let progressionId = syncRequest.associatedRecordId
@@ -205,7 +261,7 @@ extension SyncEngine {
         switch result {
           case .failure(let error):
             Failure
-              .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+              .fetch(from: String(describing: type(of: self)), reason: "syncProgressionDeletions:: \(error.localizedDescription)")
               .log()
           case .success:
             // Update the cache

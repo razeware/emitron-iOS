@@ -39,6 +39,11 @@ class Service {
     self.networkClient = client
     self.session = URLSession(configuration: .default)
   }
+  
+  // MARK: - Utilities
+  var isAuthenticated: Bool {
+    !self.networkClient.authToken.isEmpty
+  }
 
   // MARK: - Internal
   func makeAndProcessRequest<R: Request>(
