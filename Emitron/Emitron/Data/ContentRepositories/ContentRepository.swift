@@ -142,11 +142,17 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   private func configureSubscription() {
-    self.contentSubscription = self.repository.contentSummaryState(for: self.contentIds).sink(receiveCompletion: { (error) in
-      Failure
-        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
-        .log()
-    }, receiveValue: { (contentSummaryStates) in
+    self.contentSubscription = self.repository
+      .contentSummaryState(for: self.contentIds)
+      .sink(receiveCompletion: { [weak self] (error) in
+        guard let self = self else { return }
+        
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
+          .log()
+    }, receiveValue: { [weak self] (contentSummaryStates) in
+      guard let self = self else { return }
+      
       self.contents = contentSummaryStates
     })
   }

@@ -72,7 +72,9 @@ extension SyncEngine {
   }
   
   private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) {
-    return { (completion) in
+    return { [weak self] (completion) in
+      guard let self = self else { return }
+      
       switch completion {
       case .finished:
         // Don't think we should ever actually arrive here...
@@ -99,27 +101,33 @@ extension SyncEngine {
     
     persistenceStore
       .syncRequestStream(for: [.createBookmark])
-      .sink(receiveCompletion: completionHandler()) { self.syncBookmarkCreations(syncRequests: $0) }
+      .removeDuplicates()
+      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncBookmarkCreations(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
-    .syncRequestStream(for: [.deleteBookmark])
-    .sink(receiveCompletion: completionHandler()) { self.syncBookmarkDeletions(syncRequests: $0) }
-    .store(in: &subscriptions)
+      .syncRequestStream(for: [.deleteBookmark])
+      .removeDuplicates()
+      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncBookmarkDeletions(syncRequests: $0) }
+      .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.markContentComplete, .updateProgress])
-      .sink(receiveCompletion: completionHandler()) { self.syncProgressionUpdates(syncRequests: $0) }
+      .removeDuplicates()
+      .print()
+      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncProgressionUpdates(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.deleteProgression])
-      .sink(receiveCompletion: completionHandler()) { self.syncProgressionDeletions(syncRequests: $0) }
+      .removeDuplicates()
+      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncProgressionDeletions(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.recordWatchStats])
-      .sink(receiveCompletion: completionHandler()) { self.syncWatchStats(syncRequests: $0) }
+      .removeDuplicates()
+      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncWatchStats(syncRequests: $0) }
       .store(in: &subscriptions)
   }
   
@@ -180,6 +188,10 @@ extension SyncEngine {
             Failure
               .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
               .log()
+            if case .requestFailed(_, 404) = error {
+              // Remove the sync request—a 404 means it doesn't exist on the server
+              self.persistenceStore.complete(syncRequests: [syncRequest])
+            }
           case .success:
             // Update the cache
             let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [syncRequest.contentId])
@@ -263,6 +275,11 @@ extension SyncEngine {
             Failure
               .fetch(from: String(describing: type(of: self)), reason: "syncProgressionDeletions:: \(error.localizedDescription)")
               .log()
+            
+            if case .requestFailed(_, 404) = error {
+              // Remove the sync request—a 404 means it doesn't exist on the server
+              self.persistenceStore.complete(syncRequests: [syncRequest])
+            }
           case .success:
             // Update the cache
             let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [syncRequest.contentId])
