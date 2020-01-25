@@ -33,6 +33,7 @@ final class DynamicContentViewModel: ObservableObject {
   private let contentId: Int
   private let repository: Repository
   private let downloadAction: DownloadAction
+  private let syncAction: SyncAction
   
   private var dynamicContentState: DynamicContentState?
   
@@ -43,10 +44,11 @@ final class DynamicContentViewModel: ObservableObject {
   
   var subscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository, downloadAction: DownloadAction) {
+  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction) {
     self.contentId = contentId
     self.repository = repository
     self.downloadAction = downloadAction
+    self.syncAction = syncAction
   }
   
   func initialiseIfRequired() {
@@ -114,13 +116,53 @@ final class DynamicContentViewModel: ObservableObject {
   func bookmarkTapped() {
     guard state == .hasData  else { return }
     
-    // TODO
+    if bookmarked {
+      do {
+        try syncAction.deleteBookmark(for: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.bookmarkDeleted))
+      } catch {
+        MessageBus.current.post(message: Message(level: .error, message: Constants.bookmarkDeletedError))
+        Failure
+          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete bookmark: \(error)")
+          .log()
+      }
+    } else {
+      do {
+        try syncAction.createBookmark(for: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.bookmarkCreated))
+      } catch {
+        MessageBus.current.post(message: Message(level: .error, message: Constants.bookmarkCreatedError))
+        Failure
+          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to create bookmark: \(error)")
+          .log()
+      }
+    }
   }
   
   func completedTapped() {
     guard state == .hasData else { return }
     
-    // TODO
+    if case .completed = viewProgress {
+      do {
+        try syncAction.removeProgress(for: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.progressRemoved))
+      } catch {
+        MessageBus.current.post(message: Message(level: .error, message: Constants.progressRemovedError))
+        Failure
+          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete progress: \(error)")
+          .log()
+      }
+    } else {
+      do {
+        try syncAction.markContentAsComplete(contentId: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.progressMarkedAsComplete))
+      } catch {
+        MessageBus.current.post(message: Message(level: .error, message: Constants.progressMarkedAsCompleteError))
+        Failure
+          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to mark as complete: \(error)")
+          .log()
+      }
+    }
   }
   
   func videoPlaybackViewModel(apiClient: RWAPI) -> VideoPlaybackViewModel {

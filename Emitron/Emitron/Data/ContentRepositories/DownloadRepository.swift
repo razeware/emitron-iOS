@@ -34,10 +34,17 @@ final class DownloadRepository: ContentRepository {
   
   private var contentSubscription: AnyCancellable?
   
-  init(repository: Repository, contentsService: ContentsService, downloadService: DownloadService) {
+  init(repository: Repository,
+       contentsService: ContentsService,
+       downloadService: DownloadService,
+       syncAction: SyncAction) {
     self.downloadService = downloadService
     // Don't need the repository or the service adapter
-    super.init(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: nil)
+    super.init(repository: repository,
+               contentsService: contentsService,
+               downloadAction: downloadService,
+               syncAction: syncAction,
+               serviceAdapter: nil)
   }
   
   override func loadMore() {

@@ -84,36 +84,38 @@ final class DataManager: ObservableObject {
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
     let contentsService = ContentsService(client: sessionController.client)
-    
     let bookmarksService = BookmarksService(client: sessionController.client)
-    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: bookmarksService)
-    
     let progressionsService = ProgressionsService(client: sessionController.client)
-    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: progressionsService)
-    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: progressionsService)
-    
     let libraryService = ContentsService(client: sessionController.client)
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, serviceAdapter: libraryService)
-    
-    downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService)
-    
     let domainsService = DomainsService(client: sessionController.client)
-    domainRepository = DomainRepository(repository: repository, service: domainsService)
-    domainsSubscriber = domainRepository.$domains.sink { domains in
-      self.filters.updatePlatformFilters(for: domains)
-    }
     let categoriesService = CategoriesService(client: sessionController.client)
-    categoryRepository = CategoryRepository(repository: repository, service: categoriesService)
-    categoriesSubsciber = categoryRepository.$categories.sink { categories in
-      self.filters.updateCategoryFilters(for: categories)
-    }
-    
     let watchStatsService = WatchStatsService(client: sessionController.client)
+    
     syncEngine = SyncEngine(
       persistenceStore: persistenceStore,
       repository: repository,
       bookmarksService: bookmarksService,
       progressionsService: progressionsService,
-      watchStatsService: watchStatsService)
+      watchStatsService: watchStatsService
+    )
+    
+    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService)
+  
+    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
+    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
+    
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService)
+    
+    downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine)
+    
+    domainRepository = DomainRepository(repository: repository, service: domainsService)
+    domainsSubscriber = domainRepository.$domains.sink { domains in
+      self.filters.updatePlatformFilters(for: domains)
+    }
+    
+    categoryRepository = CategoryRepository(repository: repository, service: categoriesService)
+    categoriesSubsciber = categoryRepository.$categories.sink { categories in
+      self.filters.updateCategoryFilters(for: categories)
+    }
   }
 }

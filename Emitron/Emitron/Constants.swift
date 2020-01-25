@@ -52,4 +52,15 @@ enum Constants {
   
   // Message Banner
   static let autoDismissTime: TimeInterval = 3
+  
+  // Messaging
+  static let bookmarkCreated = "Content bookmarked successfully."
+  static let bookmarkDeleted = "Bookmark removed successfully."
+  static let bookmarkCreatedError = "There was a problem creating the bookmark"
+  static let bookmarkDeletedError = "There was a problem deleting the bookmark"
+  
+  static let progressRemoved = "Progress removed successfully."
+  static let progressMarkedAsComplete = "Content marked as complete."
+  static let progressRemovedError = "There was a problem removing progress."
+  static let progressMarkedAsCompleteError = "There was a problem marking content as complete."
 }

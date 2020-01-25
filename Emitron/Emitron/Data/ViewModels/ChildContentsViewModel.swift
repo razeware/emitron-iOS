@@ -32,6 +32,7 @@ import Combine
 class ChildContentsViewModel: ObservableObject {
   let parentContentId: Int
   let downloadAction: DownloadAction
+  let syncAction: SyncAction
   let repository: Repository
   
   var state: DataState = .initial
@@ -40,9 +41,13 @@ class ChildContentsViewModel: ObservableObject {
   
   var subscriptions = Set<AnyCancellable>()
   
-  init(parentContentId: Int, downloadAction: DownloadAction, repository: Repository) {
+  init(parentContentId: Int,
+       downloadAction: DownloadAction,
+       syncAction: SyncAction,
+       repository: Repository) {
     self.parentContentId = parentContentId
     self.downloadAction = downloadAction
+    self.syncAction = syncAction
     self.repository = repository
   }
   
@@ -68,6 +73,11 @@ class ChildContentsViewModel: ObservableObject {
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(contentId: contentId, repository: repository, downloadAction: downloadAction)
+    DynamicContentViewModel(
+      contentId: contentId,
+      repository: repository,
+      downloadAction: downloadAction,
+      syncAction: syncAction
+    )
   }
 }
