@@ -35,12 +35,14 @@ class VideosService: Service {
   func getVideoStream(for id: Int,
                       completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
     let request = StreamVideoRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
 
   func getVideoDownload(for id: Int,
                         completion: @escaping (_ response: Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
     let request = DownloadVideoRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
 }

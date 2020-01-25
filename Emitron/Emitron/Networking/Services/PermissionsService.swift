@@ -33,6 +33,7 @@ class PermissionsService: Service {
   // MARK: - Internal
   func permissions(completion: @escaping (_ response: Result<PermissionsRequest.Response, RWAPIError>) -> Void) {
     let request = PermissionsRequest()
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
 }

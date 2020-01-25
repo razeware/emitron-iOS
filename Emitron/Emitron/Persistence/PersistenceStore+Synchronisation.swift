@@ -214,4 +214,24 @@ extension PersistenceStore {
       return try SyncRequest.fetchAll(db, request)
     }.publisher(in: db)
   }
+  
+  func complete(syncRequests: [SyncRequest]) {
+    do {
+      try db.write { (db) in
+        syncRequests.forEach {
+          do {
+            try $0.delete(db)
+          } catch {
+            Failure
+              .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete sync request: \(error)")
+              .log()
+          }
+        }
+      }
+    } catch {
+      Failure
+      .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete sync requests: \(error)")
+      .log()
+    }
+  }
 }

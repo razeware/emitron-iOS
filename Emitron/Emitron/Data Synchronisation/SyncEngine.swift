@@ -103,22 +103,119 @@ extension SyncEngine {
 
 extension SyncEngine {
   private func syncBookmarkCreations(syncRequests: [SyncRequest]) {
+    syncRequests.forEach { (syncRequest) in
+      guard syncRequest.type == .createBookmark else { return }
+      
+      bookmarksService.makeBookmark(for: syncRequest.contentId) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+        case .failure(let error):
+          Failure
+            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .log()
+        case .success(let bookmark):
+          // Update the cache
+          let cacheUpdate = DataCacheUpdate(bookmarks: [bookmark])
+          self.repository.apply(update: cacheUpdate)
+          // Remove the sync request—we're done
+          self.persistenceStore.complete(syncRequests: [syncRequest])
+        }
+      }
+    }
+    
   }
   
   private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
-    
+    syncRequests.forEach { (syncRequest) in
+      guard syncRequest.type == .deleteBookmark,
+        let bookmarkId = syncRequest.associatedRecordId
+        else { return }
+      
+      bookmarksService.destroyBookmark(for: bookmarkId) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+          case .failure(let error):
+            Failure
+              .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+              .log()
+          case .success:
+            // Update the cache
+            let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [syncRequest.contentId])
+            self.repository.apply(update: cacheUpdate)
+            // Remove the sync request—we're done
+            self.persistenceStore.complete(syncRequests: [syncRequest])
+        }
+      }
+    }
   }
   
   private func syncWatchStats(syncRequests: [SyncRequest]) {
+    let watchStatRequests = syncRequests.filter {
+      $0.type == .recordWatchStats
+    }
     
+    watchStatsService.update(watchStats: watchStatRequests) { [weak self] result in
+      guard let self = self else { return }
+      
+      switch result {
+        case .failure(let error):
+          Failure
+            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .log()
+        case .success:
+          // Remove the sync requests—we're done
+          self.persistenceStore.complete(syncRequests: watchStatRequests)
+      }
+    }
   }
   
   private func syncProgressionUpdates(syncRequests: [SyncRequest]) {
+    let progressionUpdates = syncRequests.filter {
+      [.updateProgress, .markContentComplete].contains($0.type)
+    }
     
+    progressionsService.update(progressions: progressionUpdates) { [weak self] result in
+      guard let self = self else { return }
+      
+      switch result {
+        case .failure(let error):
+          Failure
+            .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .log()
+        case .success(_, let cacheUpdate):
+          // Update the cache
+          self.repository.apply(update: cacheUpdate)
+          // Remove the sync request—we're done
+          self.persistenceStore.complete(syncRequests: progressionUpdates)
+      }
+    }
   }
   
   private func syncProgressionDeletions(syncRequests: [SyncRequest]) {
-    
+    syncRequests.forEach { (syncRequest) in
+      guard syncRequest.type == .deleteProgression,
+        let progressionId = syncRequest.associatedRecordId
+        else { return }
+      
+      progressionsService.delete(with: progressionId) { [weak self] result in
+        guard let self = self else { return }
+        
+        switch result {
+          case .failure(let error):
+            Failure
+              .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+              .log()
+          case .success:
+            // Update the cache
+            let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [syncRequest.contentId])
+            self.repository.apply(update: cacheUpdate)
+            // Remove the sync request—we're done
+            self.persistenceStore.complete(syncRequests: [syncRequest])
+        }
+      }
+    }
   }
 }
 

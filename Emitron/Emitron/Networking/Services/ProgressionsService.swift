@@ -45,4 +45,10 @@ class ProgressionsService: Service {
     makeAndProcessRequest(request: request,
                           completion: completion)
   }
+  
+  func delete(with id: Int, completion: @escaping (_ response: Result<DeleteProgressionRequest.Response, RWAPIError>) -> Void) {
+    let request = DeleteProgressionRequest(id: id)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
+  }
 }

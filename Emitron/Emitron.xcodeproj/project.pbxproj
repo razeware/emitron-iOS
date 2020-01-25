@@ -128,6 +128,8 @@
 		22C0514C23A8F3BA004D1223 /* EmitronDatabaseTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0514B23A8F3BA004D1223 /* EmitronDatabaseTest.swift */; };
 		22C4EADB23DB8A5A001A3FDA /* WatchStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */; };
 		22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */; };
+		22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */; };
+		22C4EAE123DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -360,6 +362,8 @@
 		22C0514B23A8F3BA004D1223 /* EmitronDatabaseTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronDatabaseTest.swift; sourceTree = "<group>"; };
 		22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsService.swift; sourceTree = "<group>"; };
 		22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsRequest.swift; sourceTree = "<group>"; };
+		22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+WatchStat.swift"; sourceTree = "<group>"; };
+		22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+ProgressionUpdate.swift"; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -796,6 +800,8 @@
 			children = (
 				22BFE75E23DACEF400495BA9 /* SyncAction.swift */,
 				22BFE76023DACFE200495BA9 /* SyncEngine.swift */,
+				22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */,
+				22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */,
 			);
 			path = "Data Synchronisation";
 			sourceTree = "<group>";
@@ -1600,6 +1606,7 @@
 				22C0514223A4FBD5004D1223 /* Download+Persistence.swift in Sources */,
 				B62B9A7E22DF769000122CE8 /* Constants.swift in Sources */,
 				2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */,
+				22C4EAE123DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift in Sources */,
 				22BFE76123DACFE200495BA9 /* SyncEngine.swift in Sources */,
 				B6D8EB2122CBA7FE00DE29AF /* DomainsRequest.swift in Sources */,
 				B6D8EB2522CBA85300DE29AF /* ProgressionsService.swift in Sources */,
@@ -1641,6 +1648,7 @@
 				B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */,
 				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
+				22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,
 				22E2267E23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift in Sources */,

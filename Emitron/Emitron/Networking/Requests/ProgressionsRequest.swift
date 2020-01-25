@@ -108,3 +108,21 @@ struct UpdateProgressionsRequest: Request {
     return (progressions: progressions, cacheUpdate: cacheUpdate)
   }
 }
+
+struct DeleteProgressionRequest: Request {
+  typealias Response = Void
+
+  // MARK: - Properties
+  var method: HTTPMethod { .DELETE }
+  var path: String { "/progressions/\(id)" }
+  var additionalHeaders: [String: String]?
+  var body: Data? { nil }
+  
+  // MARK: - Parameters
+  let id: Int
+  
+  // MARK: - Internal
+  func handle(response: Data) throws -> Void {
+    return
+  }
+}
