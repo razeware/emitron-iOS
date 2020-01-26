@@ -28,8 +28,14 @@
 
 import Foundation
 
+enum RequestDownloadResult {
+  case downloadRequestedSuccessfully
+  case downloadRequestedButQueueInactive
+  case problemRequestingDownload(String, Error? = nil)
+}
+
 protocol DownloadAction {
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup)
+  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult
   func cancelDownload(contentId: Int) throws
   func deleteDownload(contentId: Int) throws
 }
