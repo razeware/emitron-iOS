@@ -37,7 +37,7 @@ final class CompletedRepository: ContentRepository {
       return filters + [completionFilter]
     }
     set {
-      fatalError("Not allowed to use setter on this variable")
+      preconditionFailure("Not allowed to use setter on this variable")
     }
   }
 }

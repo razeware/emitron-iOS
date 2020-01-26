@@ -34,7 +34,7 @@ final class BookmarkRepository: ContentRepository {
       return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
     }
     set {
-      fatalError("Not allowed to use setter on this variable")
+      preconditionFailure("Not allowed to use setter on this variable")
     }
   }
 }

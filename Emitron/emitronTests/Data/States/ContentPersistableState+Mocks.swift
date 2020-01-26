@@ -36,7 +36,7 @@ extension ContentPersistableState {
   
   static func persistableState(for contentId: Int, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
     
-    guard let content = cacheUpdate.contents.first(where: { $0.id == contentId }) else { fatalError("Invalid cache update")}
+    guard let content = cacheUpdate.contents.first(where: { $0.id == contentId }) else { preconditionFailure("Invalid cache update")}
     
     var parentContent: Content? = nil
     if let groupId = content.groupId {

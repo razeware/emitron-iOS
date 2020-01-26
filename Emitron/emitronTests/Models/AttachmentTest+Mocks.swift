@@ -55,7 +55,7 @@ extension AttachmentTest {
         let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
         return (attachments, cacheUpdate)
       } catch {
-        fatalError("Unable to load Attachment mock: \(error)")
+        preconditionFailure("Unable to load Attachment mock: \(error)")
       }
     }
   }
