@@ -31,10 +31,12 @@ import Foundation
 final class BookmarkRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
     get {
-      return Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+      let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+      let sortOrder = Param.sort(for: .updatedAt, descending: true)
+      return filters + [sortOrder]
     }
     set {
-      fatalError("Not allowed to use setter on this variable")
+      preconditionFailure("Not allowed to use setter on this variable")
     }
   }
 }

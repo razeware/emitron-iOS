@@ -69,7 +69,7 @@ class ChildContentsViewModel: ObservableObject {
   }
   
   func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
+    preconditionFailure("Override in a subclass please.")
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {

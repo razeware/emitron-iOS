@@ -114,7 +114,6 @@ extension SyncEngine {
     persistenceStore
       .syncRequestStream(for: [.markContentComplete, .updateProgress])
       .removeDuplicates()
-      .print()
       .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncProgressionUpdates(syncRequests: $0) }
       .store(in: &subscriptions)
     

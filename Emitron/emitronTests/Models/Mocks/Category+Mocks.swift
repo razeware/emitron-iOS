@@ -52,7 +52,7 @@ extension Emitron.Category {
       }
       return categories
     } catch {
-      fatalError("Unable to load Category mocks: \(error)")
+      preconditionFailure("Unable to load Category mocks: \(error)")
     }
   }
 }

@@ -52,7 +52,7 @@ extension Domain {
       }
       return domains
     } catch {
-      fatalError("Unable to load Domain mocks: \(error)")
+      preconditionFailure("Unable to load Domain mocks: \(error)")
     }
   }
 }

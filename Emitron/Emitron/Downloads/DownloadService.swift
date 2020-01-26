@@ -55,7 +55,7 @@ final class DownloadService {
     let fileManager = FileManager.default
     let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
     guard let documentsDirectory = documentsDirectories.first else {
-      fatalError("Unable to locate the documents directory")
+      preconditionFailure("Unable to locate the documents directory")
     }
     
     return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
@@ -308,7 +308,7 @@ extension DownloadService {
       print("Download directory located at: \(downloadsDirectory.path)")
       #endif
     } catch {
-      fatalError("Unable to prepare downloads directory: \(error)")
+      preconditionFailure("Unable to prepare downloads directory: \(error)")
     }
   }
   
@@ -320,7 +320,7 @@ extension DownloadService {
       }
       prepareDownloadDirectory()
     } catch {
-      fatalError("Unable to delete the contents of the downloads directory: \(error)")
+      preconditionFailure("Unable to delete the contents of the downloads directory: \(error)")
     }
   }
   

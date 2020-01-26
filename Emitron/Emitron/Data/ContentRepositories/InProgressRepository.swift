@@ -34,10 +34,11 @@ final class InProgressRepository: ContentRepository {
       let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
       let completionStatus = CompletionStatus.inProgress
       let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
-      return filters + [completionFilter]
+      let sortOrder = Param.sort(for: .updatedAt, descending: true)
+      return filters + [completionFilter, sortOrder]
     }
     set {
-      fatalError("Not allowed to use setter on this variable")
+      preconditionFailure("Not allowed to use setter on this variable")
     }
   }
 }

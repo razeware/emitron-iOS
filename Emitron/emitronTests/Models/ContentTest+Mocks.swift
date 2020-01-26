@@ -55,7 +55,7 @@ extension ContentTest {
         
         return (content, cacheUpdate)
       } catch {
-        fatalError("Unable to load mock Content from JSON: \(error)")
+        preconditionFailure("Unable to load mock Content from JSON: \(error)")
       }
     }
   }
