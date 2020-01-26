@@ -281,6 +281,7 @@ enum ParameterFilterValue {
 enum ParameterSortValue: String, Codable {
   case popularity = "popularity"
   case releasedAt = "released_at"
+  case updatedAt = "updated_at"
 }
 
 // filter[content_types][]=collection&filter[content_types][]=screencast

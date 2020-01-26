@@ -136,7 +136,14 @@ class Filters: ObservableObject {
   // If the user makes a selection on ANY of them for the contentTypes group, only apply those
   // They can only select between .collection, .screencast and .episode
   var `default`: [Filter] {
-    let contentFilters = Set(Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) })
+    let contentFilters = Set(
+      Param.filters(for: [
+        .contentTypes(types: [.collection, .screencast])
+      ])
+      .map {
+        Filter(groupType: .contentTypes, param: $0, isOn: true)
+      }
+    )
     
     return Array(contentFilters)
   }
@@ -172,7 +179,10 @@ class Filters: ObservableObject {
     let sortParam = Param.sort(for: .releasedAt, descending: true)
     let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) }
     
-    var contentParams = FilterGroup(type: .contentTypes, filters: contentFilters).filters.map { $0.parameter }
+    var contentParams = FilterGroup(
+      type: .contentTypes,
+      filters: contentFilters
+    ).filters.map { $0.parameter }
     contentParams.append(sortParam)
     
     return contentParams
