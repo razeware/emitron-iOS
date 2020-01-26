@@ -183,7 +183,7 @@ class Filters: ObservableObject {
     self.platforms = FilterGroup(type: .platforms)
     self.categories = FilterGroup(type: .categories)
     
-    let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast, .episode])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
+    let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
     self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
     let difficultyFilters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
