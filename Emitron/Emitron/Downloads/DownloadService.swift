@@ -35,6 +35,7 @@ enum DownloadServiceError: Error {
 }
 
 final class DownloadService {
+  // MARK: Properties
   private let persistenceStore: PersistenceStore
   private let userModelController: UserModelController
   private var userModelControllerSubscription: AnyCancellable?
@@ -70,6 +71,7 @@ final class DownloadService {
     }
   }
   
+  // MARK: Initialisers
   init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
@@ -85,6 +87,7 @@ final class DownloadService {
     checkPermissions()
   }
   
+  // MARK: Queue Management
   func startProcessing() {
     queueManager.pendingStream
       .sink(receiveCompletion: { completion in
@@ -141,6 +144,7 @@ final class DownloadService {
   }
 }
 
+// MARK: - DownloadAction Methods
 extension DownloadService: DownloadAction {  
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) {
     guard videosService != nil else {
@@ -204,6 +208,7 @@ extension DownloadService: DownloadAction {
   }
 }
 
+// MARK: - Internal methods
 extension DownloadService {
   func requestDownloadUrl(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard let videosService = videosService else {
@@ -317,7 +322,6 @@ extension DownloadService {
     }
   }
   
-  
   private func prepareDownloadDirectory() {
     let fileManager = FileManager.default
     do {
@@ -382,6 +386,7 @@ extension DownloadService {
   }
 }
 
+// MARK: - DownloadProcesserDelegate Methods
 extension DownloadService: DownloadProcessorDelegate {
   func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel? {
     do {
