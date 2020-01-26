@@ -123,6 +123,14 @@ extension DownloadProcessor {
   func cancelAllDownloads() {
     currentDownloads.forEach { $0.cancel() }
   }
+  
+  func pauseAllDownloads() {
+    currentDownloads.forEach { $0.suspend() }
+  }
+  
+  func resumeAllDownloads() {
+    currentDownloads.forEach { $0.resume() }
+  }
 }
 
 extension DownloadProcessor {
