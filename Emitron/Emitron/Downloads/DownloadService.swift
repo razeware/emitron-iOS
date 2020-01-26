@@ -110,8 +110,14 @@ final class DownloadService {
     
     queueManager.downloadQueue
     .sink(receiveCompletion: { completion in
-      // TODO: Log
-      print(completion)
+      switch completion {
+      case .finished:
+        print("Should never get here.... \(completion)")
+      case .failure(let error):
+        Failure
+          .downloadService(from: String(describing: type(of: self)), reason: "DownloadQueue: \(error)")
+          .log()
+      }
     }, receiveValue: { [weak self] downloadQueueItems in
       guard let self = self else { return }
       downloadQueueItems.filter { $0.download.state == .enqueued }
@@ -119,8 +125,9 @@ final class DownloadService {
           do {
             try self.downloadProcessor.add(download: downloadQueueItem.download)
           } catch {
-            // TODO: Log
-            print("Problem adding download: \(error)")
+            Failure
+            .downloadService(from: String(describing: type(of: self)), reason: "Problem adding download: \(error)")
+            .log()
             self.transitionDownload(withID: downloadQueueItem.download.id, to: .failed)
           }
       }
@@ -200,22 +207,30 @@ extension DownloadService: DownloadAction {
 extension DownloadService {
   func requestDownloadUrl(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard let videosService = videosService else {
-      // TODO: Log
-      print("User not allowed to request downloads")
+      Failure
+        .downloadService(
+          from: "requestDownloadUrl",
+          reason: "User not allowed to request downloads."
+      ).log()
       return
     }
     guard downloadQueueItem.download.remoteUrl == nil,
       downloadQueueItem.download.state == .pending,
       downloadQueueItem.content.contentType != .collection else {
-      // TODO: Log
-        print("Cannot request download URL for: \(downloadQueueItem.download)")
+        Failure
+          .downloadService(from: "requestDownloadUrl",
+                           reason: "Cannot request download URL for: \(downloadQueueItem.download)")
+          .log()
       return
     }
     // Find the video ID
     guard let videoId = downloadQueueItem.content.videoIdentifier,
       videoId != 0 else {
-      // TODO: Log
-        print("Unable to locate videoId for download: \(downloadQueueItem.download)")
+        Failure
+          .downloadService(
+            from: "requestDownloadUrl",
+            reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
+        ).log()
       return
     }
     
@@ -227,8 +242,10 @@ extension DownloadService {
       
       switch result {
       case .failure(let error):
-        // TODO: Log
-        print("Unable to obtain download URLs: \(error)")
+        Failure
+          .downloadService(from: "requestDownloadUrl",
+                           reason: "Unable to obtain download URLs: \(error)")
+          .log()
       case .success(let attachments):
         download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
         download.lastValidatedAt = Date()
@@ -244,8 +261,10 @@ extension DownloadService {
       do {
         try self.persistenceStore.update(download: download)
       } catch {
-        // TODO: Log
-        print("Unable to save download URL: \(error)")
+        Failure
+          .downloadService(from: "requestDownloadUrl",
+                           reason: "Unable to save download URL: \(error)")
+          .log()
         self.transitionDownload(withID: download.id, to: .failed)
       }
     }
@@ -257,14 +276,18 @@ extension DownloadService {
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard downloadQueueItem.download.remoteUrl != nil,
       downloadQueueItem.download.state == .readyForDownload else {
-      // TODO: Log
-        print("Cannot enqueue download: \(downloadQueueItem.download)")
+        Failure
+          .downloadService(from: "enqueue",
+                           reason: "Cannot enqueue download: \(downloadQueueItem.download)")
+          .log()
       return
     }
     // Find the video ID
     guard let videoId = downloadQueueItem.content.videoIdentifier else {
-      // TODO: Log
-      print("Unable to locate videoId for download: \(downloadQueueItem.download)")
+      Failure
+        .downloadService(from: "enqueue",
+                         reason: "Unable to locate videoId for download: \(downloadQueueItem.download)")
+        .log()
       return
     }
     

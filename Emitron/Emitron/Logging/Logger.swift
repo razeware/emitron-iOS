@@ -59,6 +59,7 @@ enum Failure: Log {
   case unsupportedAction(from: String, reason: String)
   case downloadAction(from: String, reason: String)
   case viewModelAction(from: String, reason: String)
+  case downloadService(from: String, reason: String)
   
   private var failure: String {
     return "Failed_"
@@ -74,7 +75,8 @@ enum Failure: Log {
          .repositoryLoad(from: let from, reason: _),
          .unsupportedAction(from: let from, reason: _),
          .downloadAction(from: let from, reason: _),
-         .viewModelAction(from: let from, reason: _):
+         .viewModelAction(from: let from, reason: _),
+         .downloadService(from: let from, reason: _):
       return from
     }
   }
@@ -99,6 +101,8 @@ enum Failure: Log {
       return failure + "downloadAction"
     case .viewModelAction:
       return failure + "viewModelAction"
+    case .downloadService:
+      return failure + "downloadService"
     }
   }
   
@@ -112,7 +116,8 @@ enum Failure: Log {
          .repositoryLoad(from: _, reason: let reason),
          .unsupportedAction(from: _, reason: let reason),
          .downloadAction(from: _, reason: let reason),
-         .viewModelAction(from: _, reason: let reason):
+         .viewModelAction(from: _, reason: let reason),
+         .downloadService(from: _, reason: let reason):
       return reason
     }
   }
