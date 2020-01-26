@@ -32,7 +32,7 @@ import SwiftyJSON
 public class JSONAPIResource {
 
   // MARK: - Properties
-  var parent: JSONAPIDocument?
+  weak var parent: JSONAPIDocument?
   var id: Int = 0
   var type: String = ""
   var relationships: [JSONAPIRelationship] = []
@@ -42,21 +42,18 @@ public class JSONAPIResource {
   var entityType: EntityType? {
     EntityType(from: type)
   }
+  
   var entityId: EntityIdentity? {
     guard let entityType = entityType else { return nil }
+    
     return EntityIdentity(id: id, type: entityType)
   }
 
   public subscript(key: String) -> Any? {
-    let value = attributes[key]
-
-    return value
+    attributes[key]
   }
 
   // MARK: - Initializers
-  init() {
-  }
-
   convenience init(_ json: JSON,
                    parent: JSONAPIDocument?) {
 
@@ -70,9 +67,11 @@ public class JSONAPIResource {
     type = json["type"].stringValue
 
     for relationship in json["relationships"].dictionaryValue {
-      relationships.append(JSONAPIRelationship(relationship.value,
-                                               type: relationship.key,
-                                               parent: nil))
+      relationships.append(
+        JSONAPIRelationship(relationship.value,
+                            type: relationship.key,
+                            parent: nil)
+      )
     }
 
     attributes = json["attributes"].dictionaryObject ?? [:]
@@ -91,7 +90,6 @@ public class JSONAPIResource {
 }
 
 extension JSONAPIResource {
-
   subscript<K: CustomStringConvertible, T>(key: K) -> T? {
     return self[key.description] as? T
   }

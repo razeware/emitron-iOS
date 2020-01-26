@@ -30,7 +30,6 @@ import Foundation
 import SwiftyJSON
 
 public class JSONAPIError {
-
   // MARK: - Properties
   var id: String = ""
   var links: [String: URL] = [:]
@@ -42,9 +41,6 @@ public class JSONAPIError {
   var meta: [String: Any] = [:]
 
   // MARK: - Initializers
-  init() {
-  }
-
   convenience init(_ json: JSON) {
     self.init()
 

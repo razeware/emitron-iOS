@@ -30,7 +30,6 @@ import Foundation
 import SwiftyJSON
 
 public class JSONAPIRelationship {
-
   // MARK: - Properties
   var meta: [String: Any] = [:]
   var data: [JSONAPIResource] =  []
@@ -38,9 +37,6 @@ public class JSONAPIRelationship {
   var type: String = ""
 
   // MARK: - Initializers
-  init() {
-  }
-
   convenience init(_ json: JSON,
                    type: String,
                    parent: JSONAPIDocument?) {
@@ -48,7 +44,9 @@ public class JSONAPIRelationship {
 
     self.type = type
     meta = json["meta"].dictionaryObject ?? [:]
-    data = json["data"].arrayValue.map { JSONAPIResource($0, parent: nil) }
+    data = json["data"].arrayValue.map {
+      JSONAPIResource($0, parent: nil)
+    }
     
     let nonArrayJSON = json["data"]
     let nonArrayJSONAPIResource = JSONAPIResource(nonArrayJSON, parent: nil)
