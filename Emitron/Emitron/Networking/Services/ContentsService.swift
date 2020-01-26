@@ -42,17 +42,24 @@ class ContentsService: Service {
   func contentDetails(for id: Int,
                      completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void) {
     let request = ContentDetailsRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
   
   func getBeginPlaybackToken(completion: @escaping(_ response: Result<BeginPlaybackTokenRequest.Response, RWAPIError>) -> Void) {
     let request = BeginPlaybackTokenRequest()
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
   
   func reportPlaybackUsage(for id: Int, progress: Int, playbackToken: String,
                           completion: @escaping(_ response: Result<PlaybackUsageRequest.Response, RWAPIError>) -> Void) {
-    let request = PlaybackUsageRequest(id: id, progress: progress, token: playbackToken)
-    makeAndProcessRequest(request: request, completion: completion)
+    let request = PlaybackUsageRequest(
+      id: id,
+      progress: progress,
+      token: playbackToken
+    )
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
 }

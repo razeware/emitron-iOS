@@ -33,17 +33,13 @@ struct StreamVideoRequest: Request {
   typealias Response = Attachment
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/videos/\(id)/stream" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/videos/\(id)/stream" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-
-  private var id: Int
-
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
+  var body: Data? { nil }
+  
+  // MARK: - Parameters
+  let id: Int
 
   // MARK: - Internal
   func handle(response: Data) throws -> Attachment {
@@ -70,12 +66,8 @@ struct DownloadVideoRequest: Request {
   var additionalHeaders: [String: String]?
   var body: Data? { return nil }
 
-  private var id: Int
-
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
+  // MARK: - Parameters
+  let id: Int
 
   // MARK: - Internal
   func handle(response: Data) throws -> [Attachment] {

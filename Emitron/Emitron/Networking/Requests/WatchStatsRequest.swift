@@ -27,57 +27,42 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
-  let downloadAction: DownloadAction
-  let syncAction: SyncAction
-  let repository: Repository
+protocol WatchStat {
+  var contentId: Int { get }
+  var secondsWatched: Int { get }
+  var dateWatched: Date { get }
+}
+
+struct WatchStatsUpdateRequest: Request {
+  typealias Response = Void
   
-  var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
-  
-  var subscriptions = Set<AnyCancellable>()
-  
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository) {
-    self.parentContentId = parentContentId
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.repository = repository
-  }
-  
-  func initialiseIfRequired() {
-    if state == .initial {
-      reload()
+  // MARK: - Properties
+  var method: HTTPMethod { .POST }
+  var path: String { "/watch_stats/bulk" }
+  var additionalHeaders: [String : String]?
+  var body: Data? {
+    let dataJson = watchStats.map { stat in
+      [
+        "type": "watch_stats",
+        "attributes": [
+          "content_id": stat.contentId,
+          "seconds": stat.secondsWatched,
+          "watched_on": stat.dateWatched.iso8601
+        ]
+      ]
     }
+    let json = [
+      "data": dataJson
+    ]
+    
+    return try? JSONSerialization.data(withJSONObject: json)
   }
   
-  func reload() {
-    self.state = .loading
-    subscriptions.forEach({ $0.cancel() })
-    subscriptions.removeAll()
-    configureSubscriptions()
-  }
+  let watchStats: [WatchStat]
   
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
-  }
-  
-  func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
-  }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction
-    )
+  // MARK: - Internal
+  func handle(response: Data) throws -> Void {
+    return
   }
 }

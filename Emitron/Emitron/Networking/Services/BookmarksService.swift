@@ -41,11 +41,13 @@ class BookmarksService: Service {
   
   func makeBookmark(for id: Int, completion: @escaping (_ response: Result<MakeBookmark.Response, RWAPIError>) -> Void) {
     let request = MakeBookmark(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
   
   func destroyBookmark(for id: Int, completion: @escaping (_ response: Result<DestroyBookmarkRequest.Response, RWAPIError>) -> Void) {
     let request = DestroyBookmarkRequest(id: id)
-    makeAndProcessRequest(request: request, completion: completion)
+    makeAndProcessRequest(request: request,
+                          completion: completion)
   }
 }

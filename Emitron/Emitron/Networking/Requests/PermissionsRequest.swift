@@ -33,10 +33,10 @@ struct PermissionsRequest: Request {
   typealias Response = [Permission]
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/permissions" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/permissions" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Internal
   func handle(response: Data) throws -> [Permission] {

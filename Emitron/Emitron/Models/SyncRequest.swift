@@ -27,57 +27,61 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
-  let downloadAction: DownloadAction
-  let syncAction: SyncAction
-  let repository: Repository
-  
-  var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
-  
-  var subscriptions = Set<AnyCancellable>()
-  
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository) {
-    self.parentContentId = parentContentId
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.repository = repository
+struct SyncRequest: Equatable, Codable {
+  enum Category: Int, Equatable, Codable {
+    case bookmark
+    case progress
+    case watchStat
   }
   
-  func initialiseIfRequired() {
-    if state == .initial {
-      reload()
+  enum Synchronisation: Int, Equatable, Codable {
+    case createBookmark
+    case deleteBookmark
+    case deleteProgression
+    case markContentComplete
+    case updateProgress
+    case recordWatchStats
+  }
+  
+  enum Attribute: Equatable {
+    case progress(Int)
+    case time(Int)
+  }
+  
+  var id: Int64?
+  var contentId: Int
+  var associatedRecordId: Int?
+  var category: Category
+  var type: Synchronisation
+  var date: Date
+  var attributes: [Attribute]
+}
+
+extension SyncRequest.Attribute: Encodable {
+  enum CodingKeys: CodingKey {
+    case progress
+    case time
+  }
+  
+  func encode(to encoder: Encoder) throws {
+    var container = encoder.container(keyedBy: CodingKeys.self)
+    switch self {
+    case .progress(let value), .time(let value):
+      try container.encode(value, forKey: .progress)
     }
   }
-  
-  func reload() {
-    self.state = .loading
-    subscriptions.forEach({ $0.cancel() })
-    subscriptions.removeAll()
-    configureSubscriptions()
-  }
-  
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
-  }
-  
-  func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
-  }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction
-    )
+}
+
+extension SyncRequest.Attribute: Decodable {
+  init(from decoder: Decoder) throws {
+    let container = try decoder.container(keyedBy: CodingKeys.self)
+    do {
+      let progress = try container.decode(Int.self, forKey: .progress)
+      self = .progress(progress)
+    } catch {
+      let time = try container.decode(Int.self, forKey: .time)
+      self = .time(time)
+    }
   }
 }

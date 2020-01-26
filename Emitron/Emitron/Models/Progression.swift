@@ -46,3 +46,20 @@ extension Progression {
     Double(progress) / Double(target)
   }
 }
+
+extension Progression {
+  static func completed(for content: Content) -> Progression {
+    withProgress(for: content, progress: content.duration)
+  }
+  
+  static func withProgress(for content: Content, progress: Int) -> Progression {
+    Progression(
+      id: -1,
+      target: content.duration,
+      progress: progress,
+      createdAt: Date(),
+      updatedAt: Date(),
+      contentId: content.id
+    )
+  }
+}

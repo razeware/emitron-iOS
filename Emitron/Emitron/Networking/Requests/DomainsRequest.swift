@@ -33,10 +33,10 @@ struct DomainsRequest: Request {
   typealias Response = [Domain]
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/domains" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/domains" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Internal
   func handle(response: Data) throws -> [Domain] {

@@ -70,12 +70,20 @@ final class VideoPlaybackViewModel {
   private var playerTimeObserverToken: Any?
   var state: DataState = .initial
   
-  init(contentId: Int, repository: Repository, videosService: VideosService, contentsService: ContentsService) {
+  init(contentId: Int,
+       repository: Repository,
+       videosService: VideosService,
+       contentsService: ContentsService,
+       syncAction: SyncAction) {
     self.initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
     self.contentsService = contentsService
-    self.progressEngine = ProgressEngine(contentsService: contentsService, repository: repository)
+    self.progressEngine = ProgressEngine(
+      contentsService: contentsService,
+      repository: repository,
+      syncAction: syncAction
+    )
     
     prepareSubscribers()
   }
@@ -118,7 +126,10 @@ final class VideoPlaybackViewModel {
     if let token = playerTimeObserverToken {
       player.removeTimeObserver(token)
     }
-    let interval = CMTime(seconds: 5, preferredTimescale: 100)
+    let interval = CMTime(
+      seconds: Double(Constants.videoPlaybackProgressTrackingInterval),
+      preferredTimescale: 100
+    )
     playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)

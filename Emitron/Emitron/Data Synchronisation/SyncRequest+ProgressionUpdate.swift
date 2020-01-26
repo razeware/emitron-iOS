@@ -27,57 +27,28 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
-  let downloadAction: DownloadAction
-  let syncAction: SyncAction
-  let repository: Repository
-  
-  var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
-  
-  var subscriptions = Set<AnyCancellable>()
-  
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository) {
-    self.parentContentId = parentContentId
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.repository = repository
-  }
-  
-  func initialiseIfRequired() {
-    if state == .initial {
-      reload()
+extension SyncRequest: ProgressionUpdate {
+  var data: ProgressionUpdateData {
+    // This doesn't consider the possibility that this sync request
+    // doesn't actually represent a progression. But that seems ok
+    // we can test that elsewhere.
+    
+    if type == .markContentComplete {
+      return .finished
     }
+    
+    var progress: Int = 0
+    for attribute in attributes {
+      if case .progress(let seconds) = attribute {
+        progress = seconds
+      }
+    }
+    
+    return .progress(progress)
   }
   
-  func reload() {
-    self.state = .loading
-    subscriptions.forEach({ $0.cancel() })
-    subscriptions.removeAll()
-    configureSubscriptions()
-  }
-  
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
-  }
-  
-  func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
-  }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction
-    )
+  var updatedAt: Date {
+    date
   }
 }

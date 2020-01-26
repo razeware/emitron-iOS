@@ -33,9 +33,6 @@ private struct Layout {
 }
 
 struct ContentSummaryView: View {
-  @State var showHudView: Bool = false
-  @State var showSuccess: Bool = false
-  
   var content: ContentListDisplayable
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   

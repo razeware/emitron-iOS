@@ -105,6 +105,24 @@ extension Repository {
     }
   }
   
+  /// Find the specified item of content in the cache
+  /// - Parameter id: The `id` of the content to return
+  func content(for id: Int) -> Content? {
+    dataCache.content(with: id)
+  }
+  
+  /// Attempt to find a progression from the cache for a given item of content
+  /// - Parameter contentId: The `id` of the content item
+  func progression(for contentId: Int) -> Progression? {
+    dataCache.progression(for: contentId)
+  }
+  
+  /// Attempt to locate a bookmark from the cache for a given item of content
+  /// - Parameter contentId: The `id` of the content item
+  func bookmark(for contentId: Int) -> Bookmark? {
+    dataCache.bookmark(for: contentId)
+  }
+  
   func domainList() throws -> [Domain] {
     try persistenceStore.domainList()
   }

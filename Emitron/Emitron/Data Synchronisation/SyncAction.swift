@@ -27,57 +27,14 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
 
-class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
-  let downloadAction: DownloadAction
-  let syncAction: SyncAction
-  let repository: Repository
+protocol SyncAction {
+  func createBookmark(for contentId: Int) throws
+  func deleteBookmark(for contentId: Int) throws
   
-  var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
+  func markContentAsComplete(contentId: Int) throws
+  func removeProgress(for contentId: Int) throws
+  func updateProgress(for contentId: Int, progress: Int) throws
   
-  var subscriptions = Set<AnyCancellable>()
-  
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository) {
-    self.parentContentId = parentContentId
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.repository = repository
-  }
-  
-  func initialiseIfRequired() {
-    if state == .initial {
-      reload()
-    }
-  }
-  
-  func reload() {
-    self.state = .loading
-    subscriptions.forEach({ $0.cancel() })
-    subscriptions.removeAll()
-    configureSubscriptions()
-  }
-  
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
-  }
-  
-  func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
-  }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction
-    )
-  }
+  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws
 }

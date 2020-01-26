@@ -27,57 +27,18 @@
 /// THE SOFTWARE.
 
 import Foundation
-import Combine
+import GRDB
 
-class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
-  let downloadAction: DownloadAction
-  let syncAction: SyncAction
-  let repository: Repository
-  
-  var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
-  
-  var subscriptions = Set<AnyCancellable>()
-  
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository) {
-    self.parentContentId = parentContentId
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.repository = repository
-  }
-  
-  func initialiseIfRequired() {
-    if state == .initial {
-      reload()
-    }
-  }
-  
-  func reload() {
-    self.state = .loading
-    subscriptions.forEach({ $0.cancel() })
-    subscriptions.removeAll()
-    configureSubscriptions()
-  }
-  
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
-  }
-  
-  func configureSubscriptions() {
-    fatalError("Override in a subclass please.")
-  }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction
-    )
+extension SyncRequest: FetchableRecord, TableRecord, PersistableRecord { }
+
+extension SyncRequest {
+  enum Columns {
+    static let id = Column("id")
+    static let contentId = Column("contentId")
+    static let associatedRecordId = Column("associatedRecordId")
+    static let category = Column("category")
+    static let type = Column("type")
+    static let date = Column("date")
+    static let attributes = Column("attributes")
   }
 }

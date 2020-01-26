@@ -31,9 +31,16 @@ import Foundation
 final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   private let service: ContentsService
 
-  init(parentContentId: Int, downloadAction: DownloadAction, repository: Repository, service: ContentsService) {
+  init(parentContentId: Int,
+       downloadAction: DownloadAction,
+       syncAction: SyncAction,
+       repository: Repository,
+       service: ContentsService) {
     self.service = service
-    super.init(parentContentId: parentContentId, downloadAction: downloadAction, repository: repository)
+    super.init(parentContentId: parentContentId,
+               downloadAction: downloadAction,
+               syncAction: syncAction,
+               repository: repository)
   }
   
   override func configureSubscriptions() {

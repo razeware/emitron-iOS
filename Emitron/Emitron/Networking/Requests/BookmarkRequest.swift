@@ -33,11 +33,11 @@ struct GetBookmarksRequest: Request {
   typealias Response = (bookmarks: [Bookmark], cacheUpdate: DataCacheUpdate, totalNumber: Int)
   
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/bookmarks" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/bookmarks" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-  var parameters: [Parameter]? { return nil }
+  var body: Data? { nil }
+  var parameters: [Parameter]? { nil }
   
   // MARK: - Internal
   func handle(response: Data) throws -> Response {
@@ -57,16 +57,13 @@ struct DestroyBookmarkRequest: Request {
   typealias Response = Void
   
   // MARK: - Properties
-  var method: HTTPMethod { return .DELETE }
-  var path: String { return "/bookmarks/\(id)" }
+  var method: HTTPMethod { .DELETE }
+  var path: String { "/bookmarks/\(id)" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
-  private var id: Int
+  var body: Data? { nil }
   
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
+  // MARK: - Parameters
+  let id: Int
   
   // MARK: - Internal
   func handle(response: Data) throws { }
@@ -76,8 +73,8 @@ struct MakeBookmark: Request {
   typealias Response = Bookmark
   
   // MARK: - Properties
-  var method: HTTPMethod { return .POST }
-  var path: String { return "/bookmarks" }
+  var method: HTTPMethod { .POST }
+  var path: String { "/bookmarks" }
   var additionalHeaders: [String: String]?
   var body: Data? {
     let json: [String: Any] =
@@ -94,12 +91,8 @@ struct MakeBookmark: Request {
     return try? JSONSerialization.data(withJSONObject: json)
   }
   
-  private var id: Int
-  
-  // MARK: - Initializers
-  init(id: Int) {
-    self.id = id
-  }
+  // MARK: - Parameters
+  let id: Int
   
   // MARK: - Internal
   func handle(response: Data) throws -> Bookmark {

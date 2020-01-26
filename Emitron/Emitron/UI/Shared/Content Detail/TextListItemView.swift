@@ -126,6 +126,9 @@ struct TextListItemView: View {
         .frame(maxWidth: 15, maxHeight: 17)
         .foregroundColor(Color.buttonText)
     }
+    .onTapGesture {
+      self.toggleCompleteness()
+    }
     
     if case .completed = dynamicContentViewModel.viewProgress {
       return AnyView(completeView)

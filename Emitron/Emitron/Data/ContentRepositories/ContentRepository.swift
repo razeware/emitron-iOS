@@ -33,6 +33,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   let repository: Repository
   let contentsService: ContentsService
   let downloadAction: DownloadAction
+  let syncAction: SyncAction
   let serviceAdapter: ContentServiceAdapter!
   
   private (set) var currentPage: Int = 1
@@ -58,10 +59,15 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   // Initialiser
-  init(repository: Repository, contentsService: ContentsService, downloadAction: DownloadAction, serviceAdapter: ContentServiceAdapter?) {
+  init(repository: Repository,
+       contentsService: ContentsService,
+       downloadAction: DownloadAction,
+       syncAction: SyncAction,
+       serviceAdapter: ContentServiceAdapter?) {
     self.repository = repository
     self.contentsService = contentsService
     self.downloadAction = downloadAction
+    self.syncAction = syncAction
     self.serviceAdapter = serviceAdapter
     configureSubscription()
   }
@@ -136,21 +142,38 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   private func configureSubscription() {
-    self.contentSubscription = self.repository.contentSummaryState(for: self.contentIds).sink(receiveCompletion: { (error) in
-      Failure
-        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
-        .log()
-    }, receiveValue: { (contentSummaryStates) in
+    self.contentSubscription = self.repository
+      .contentSummaryState(for: self.contentIds)
+      .sink(receiveCompletion: { [weak self] (error) in
+        guard let self = self else { return }
+        
+        Failure
+          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
+          .log()
+    }, receiveValue: { [weak self] (contentSummaryStates) in
+      guard let self = self else { return }
+      
       self.contents = contentSummaryStates
     })
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(contentId: contentId, repository: repository, downloadAction: downloadAction)
+    DynamicContentViewModel(
+      contentId: contentId,
+      repository: repository,
+      downloadAction: downloadAction,
+      syncAction: syncAction
+    )
   }
   
   func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
     // Default to using the cached version
-    DataCacheChildContentsViewModel(parentContentId: contentId, downloadAction: downloadAction, repository: repository, service: contentsService)
+    DataCacheChildContentsViewModel(
+      parentContentId: contentId,
+      downloadAction: downloadAction,
+      syncAction: syncAction,
+      repository: repository,
+      service: contentsService
+    )
   }
 }
