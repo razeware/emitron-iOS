@@ -130,6 +130,8 @@
 		22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */; };
 		22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */; };
 		22C4EAE123DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */; };
+		22C4EAE423DE0958001A3FDA /* PersistenceStore+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */; };
+		22C4EAE623DE09AC001A3FDA /* UserDefaults+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE523DE09AC001A3FDA /* UserDefaults+Settings.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -361,6 +363,8 @@
 		22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsRequest.swift; sourceTree = "<group>"; };
 		22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+WatchStat.swift"; sourceTree = "<group>"; };
 		22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+ProgressionUpdate.swift"; sourceTree = "<group>"; };
+		22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Keychain.swift"; sourceTree = "<group>"; };
+		22C4EAE523DE09AC001A3FDA /* UserDefaults+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Settings.swift"; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -935,6 +939,8 @@
 				22C0514723A8AC0B004D1223 /* PersistenceStore+Domains.swift */,
 				22C0514923A8B890004D1223 /* PersistenceStore+Categories.swift */,
 				22BFE76723DAF5B000495BA9 /* PersistenceStore+Synchronisation.swift */,
+				22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */,
+				22C4EAE523DE09AC001A3FDA /* UserDefaults+Settings.swift */,
 			);
 			path = Persistence;
 			sourceTree = "<group>";
@@ -1611,6 +1617,7 @@
 				8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */,
 				22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */,
 				B6DF2FCB22CA863D0081A3A3 /* Guardpost.swift in Sources */,
+				22C4EAE623DE09AC001A3FDA /* UserDefaults+Settings.swift in Sources */,
 				22C0514623A517C3004D1223 /* PersistenceStore+Downloads.swift in Sources */,
 				2280E52323C81B3800F3913D /* PublishedPrePostFacto.swift in Sources */,
 				22B8266823AF5D4200D4BA23 /* GroupAdapter.swift in Sources */,
@@ -1653,6 +1660,7 @@
 				B621DD5122F5EEC500A1F27A /* DataManager.swift in Sources */,
 				222EEF7D23CE099C00B025A4 /* VideoPlaybackState.swift in Sources */,
 				B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */,
+				22C4EAE423DE0958001A3FDA /* PersistenceStore+Keychain.swift in Sources */,
 				22B8266623AF5D2100D4BA23 /* ContentAdapter.swift in Sources */,
 				8B6FB4442332174B00185BF5 /* TextViewModifiers.swift in Sources */,
 				223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */,

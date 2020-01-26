@@ -88,7 +88,7 @@ final class DynamicContentViewModel: ObservableObject {
     do {
       switch downloadProgress {
       case .downloadable:
-        downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
+        let result = downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
           do {
             return try self.repository.contentPersistableState(for: contentId)
           } catch {
@@ -98,10 +98,20 @@ final class DynamicContentViewModel: ObservableObject {
             return nil
           }
         }
+        switch result {
+        case .downloadRequestedSuccessfully:
+          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadRequestedSuccessfully))
+        case .downloadRequestedButQueueInactive:
+          MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadRequestedButQueueInactive))
+        case .problemRequestingDownload(let message, _):
+          MessageBus.current.post(message: Message(level: .error, message: message))
+        }
       case .enqueued, .inProgress:
         try downloadAction.cancelDownload(contentId: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
       case .downloaded:
         try downloadAction.deleteDownload(contentId: contentId)
+        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
       case .notDownloadable:
         // No-op
         return
@@ -110,6 +120,7 @@ final class DynamicContentViewModel: ObservableObject {
       Failure
         .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to perform download action:  \(error)")
         .log()
+      MessageBus.current.post(message: Message(level: .error, message: Constants.downloadUnspecifiedProblem))
     }
   }
   

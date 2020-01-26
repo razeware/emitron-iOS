@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,15 +27,45 @@
 /// THE SOFTWARE.
 
 import Foundation
+import KeychainSwift
 
-enum RequestDownloadResult {
-  case downloadRequestedSuccessfully
-  case downloadRequestedButQueueInactive
-  case problemRequestingDownload(String, Error? = nil)
-}
+// MARK: Keychain
+// User + Auth Token (refresh daily)
 
-protocol DownloadAction {
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult
-  func cancelDownload(contentId: Int) throws
-  func deleteDownload(contentId: Int) throws
+private let SSOUserKey = "com.razeware.emitron.sso_user"
+
+extension PersistenceStore {
+  
+  @discardableResult
+  func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+    guard let encoded = try? encoder.encode(user) else {
+      return false
+    }
+    
+    let keychain = KeychainSwift()
+    return keychain.set(encoded,
+                        forKey: SSOUserKey,
+                        withAccess: .accessibleAfterFirstUnlock)
+  }
+  
+  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
+    let keychain = KeychainSwift()
+    guard let encoded = keychain.getData(SSOUserKey) else {
+      return nil
+    }
+    do {
+      return try decoder.decode(User.self, from: encoded)
+    } catch {
+      Failure
+        .loadFromPersistentStore(from: "PersistenceStore_Keychain", reason: error.localizedDescription)
+        .log()
+      return nil
+    }
+  }
+  
+  @discardableResult
+  func removeUserFromKeychain() -> Bool {
+    let keychain = KeychainSwift()
+    return keychain.delete(SSOUserKey)
+  }
 }
