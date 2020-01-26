@@ -87,27 +87,25 @@ struct FiltersView: View {
     .background(Color.modalBackground)
   }
   
-  // Is ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> actually more performance than AnyView?
-  private func constructScrollView() -> ScrollView<VStack<ForEach<[FilterGroup], FilterGroup, FiltersHeaderView>>> {
-
-    let scrollView = ScrollView(.vertical, showsIndicators: false) {
+  private func constructScrollView() -> some View {
+    ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
-        
         ForEach(filters.filterGroups, id: \.self) { filterGroup in
           self.constructFilterView(filterGroup: filterGroup)
         }
       }
     }
-    return scrollView
   }
   
   private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
-    let filtersView = FiltersHeaderView(filterGroup: filterGroup, filters: self.filters, isExpanded: filterGroup.numApplied > 0)
-    return filtersView
+    FiltersHeaderView(
+      filterGroup: filterGroup,
+      filters: self.filters,
+      isExpanded: filterGroup.numApplied > 0
+    )
   }
   
   private func applyOrCloseButton() -> MainButtonView {
-    
     let equalSets = Set(libraryRepository.nonPaginationParameters) == Set(filters.appliedParameters)
     let title = equalSets ? "Close" : "Apply"
     

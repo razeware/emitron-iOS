@@ -30,7 +30,6 @@ import Foundation
 import SwiftyJSON
 
 class JSONAPIDocument {
-
   // MARK: - Properties
   var meta: [String: Any] = [:]
   var included: [JSONAPIResource] = []
