@@ -156,8 +156,8 @@ extension MessageBus {
   }
 }
 
-extension EmitronSettings {
-  static var current: EmitronSettings {
+extension SettingsManager {
+  static var current: SettingsManager {
     (UIApplication.shared.delegate as! AppDelegate).settingsManager
   }
 }

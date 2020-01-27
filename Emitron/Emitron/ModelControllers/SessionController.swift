@@ -177,7 +177,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   
   func logout() {
     guardpost.logout()
-    UserDefaults.standard.deleteAllFilters()
     self.state = .initial
     
     internalUser = nil

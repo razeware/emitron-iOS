@@ -28,9 +28,39 @@
 
 import Foundation
 
-enum PlaybackSpeed: Int {
+enum PlaybackSpeed: Int, CaseIterable {
   case half
   case standard
   case onePointFive
   case double
+  
+  static func fromDisplay(_ value: String) -> PlaybackSpeed? {
+    allCases.first { $0.display == value }
+  }
+  
+  var rate: Float {
+    switch self {
+    case .half:
+      return 0.5
+    case .standard:
+      return 1.0
+    case .onePointFive:
+      return 1.5
+    case .double:
+      return 2.0
+    }
+  }
+  
+  var display: String {
+    switch self {
+    case .half:
+      return "0.5x"
+    case .standard:
+      return "1.0x"
+    case .onePointFive:
+      return "1.5x"
+    case .double:
+      return "2.0x"
+    }
+  }
 }

@@ -55,7 +55,7 @@ struct SettingsOptionsView: View {
         Button(action: {
           self.isPresented = false
         }) {
-          Image("close")
+          Image.close
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
             .padding([.top], 20)
@@ -65,11 +65,26 @@ struct SettingsOptionsView: View {
       
       VStack {
         ForEach(self.selectedSettingsOption.detail, id: \.self) { detail in
-          TitleDetailView(callback: {
-            // Update user defaults
-            UserDefaults.standard.set(detail, forKey: self.selectedSettingsOption.key.rawValue)
-            self.isPresented = false
-          }, title: detail, detail: nil, isToggle: self.selectedSettingsOption.isToggle, isOn: self.isOn, rightImageName: self.setCheckmark(for: detail))
+          TitleDetailView(
+            callback: {
+              switch self.selectedSettingsOption {
+              case .wifiOnlyDownloads, .closedCaptionOn:
+                break
+              case .playbackSpeed:
+                guard let speed = PlaybackSpeed.fromDisplay(detail) else { break }
+                SettingsManager.current.playbackSpeed = speed
+              case .downloadQuality:
+                guard let quality = Attachment.Kind.fromDisplay(detail) else { break }
+                SettingsManager.current.downloadQuality = quality
+              }
+              self.isPresented = false
+            },
+            title: detail,
+            detail: nil,
+            isToggle: self.selectedSettingsOption.isToggle,
+            isOn: self.isOn,
+            rightImageName: self.setCheckmark(for: detail)
+          )
             .frame(height: 46)
         }
       }
@@ -81,10 +96,28 @@ struct SettingsOptionsView: View {
   }
   
   private func setCheckmark(for detailOption: String) -> String? {
-    guard let _ = UserDefaults.standard.object(forKey: selectedSettingsOption.key.rawValue) as? String else {
+    switch self.selectedSettingsOption {
+    case .wifiOnlyDownloads, .closedCaptionOn:
       return nil
+    case .playbackSpeed:
+      if SettingsManager.current.playbackSpeed.display == detailOption {
+        return "checkmark"
+      }
+    case .downloadQuality:
+      if SettingsManager.current.downloadQuality.display == detailOption {
+        return "checkmark"
+      }
     }
   
-    return "checkmark"
+    return "nil"
   }
 }
+
+
+#if DEBUG
+struct SettingsOptionsView_Previews: PreviewProvider {
+  static var previews: some View {
+    Spacer()
+  }
+}
+#endif

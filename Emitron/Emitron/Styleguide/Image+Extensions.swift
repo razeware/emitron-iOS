@@ -37,4 +37,8 @@ extension Image {
   static var closeWhite: Image {
     Image("closeWhite")
   }
+  
+  static var close: Image {
+    Image("close")
+  }
 }

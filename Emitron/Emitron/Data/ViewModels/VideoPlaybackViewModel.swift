@@ -135,15 +135,20 @@ final class VideoPlaybackViewModel {
       self.handleTimeUpdate(time: time)
     }
     
-    UserDefaults.standard.publisher(for: \.playSpeed, options: [.initial, .new])
-      .sink { (playSpeed) in
-        self.player.rate = playSpeed
+    SettingsManager.current
+      .playbackSpeedPublisher
+      .removeDuplicates()
+      .sink { [unowned self] (playbackSpeed) in
+        self.player.rate = playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
-    UserDefaults.standard.publisher(for: \.closedCaptionOn)
-      .sink { (_) in
+    SettingsManager.current
+      .closedCaptionOnPublisher
+      .removeDuplicates()
+      .sink { [unowned self] (_) in
         guard let playerItem = self.player.currentItem else { return }
+        
         self.addClosedCaptions(for: playerItem)
       }
       .store(in: &subscriptions)
@@ -267,7 +272,7 @@ final class VideoPlaybackViewModel {
       let locale = Locale(identifier: "en")
       let options =
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
-      if let option = options.first, UserDefaults.standard.closedCaptionOn {
+      if let option = options.first, SettingsManager.current.closedCaptionOn {
         playerItem.select(option, in: group)
       }
     }

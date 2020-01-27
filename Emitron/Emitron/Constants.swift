@@ -75,4 +75,11 @@ enum Constants {
   static let downloadCancelled = "Download cancelled."
   static let downloadDeleted = "Download deleted."
   static let downloadUnspecifiedProblem = "Problem with download action."
+  
+  
+  // Settings screens
+  static let settingsPlaybackSpeedLabel = "Video Playback Speed"
+  static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
+  static let settingsDownloadQualityLabel = "Downloads Quality"
+  static let settingsClosedCaptionOnLabel = "Subtitles"
 }
