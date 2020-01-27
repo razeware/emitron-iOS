@@ -40,6 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var sessionController: SessionController!
   fileprivate var downloadService: DownloadService!
   fileprivate var messageBus: MessageBus = MessageBus()
+  fileprivate var settingsManager: SettingsManager!
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -61,6 +62,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
                           persistenceStore: persistenceStore)
     
     sessionController = SessionController(guardpost: guardpost)
+    settingsManager = SettingsManager(
+      userDefaults: UserDefaults.standard,
+      userModelController: sessionController
+    )
     downloadService = DownloadService(
       persistenceStore: persistenceStore,
       userModelController: sessionController
@@ -148,5 +153,11 @@ extension DownloadService {
 extension MessageBus {
   static var current: MessageBus {
     (UIApplication.shared.delegate as! AppDelegate).messageBus
+  }
+}
+
+extension SettingsManager {
+  static var current: SettingsManager {
+    (UIApplication.shared.delegate as! AppDelegate).settingsManager
   }
 }

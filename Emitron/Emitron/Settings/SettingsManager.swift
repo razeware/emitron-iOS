@@ -34,6 +34,9 @@ final class SettingsManager {
   private let jsonEncoder = JSONEncoder()
   private let jsonDecoder = JSONDecoder()
   private let userDefaults: UserDefaults
+  private let userModelController: UserModelController
+  
+  private var subscriptions = Set<AnyCancellable>()
   
   // MARK: Subjects
   private let playbackSpeedSubject = PassthroughSubject<PlaybackSpeed, Never>()
@@ -42,8 +45,11 @@ final class SettingsManager {
   private let downloadQualitySubject = PassthroughSubject<Attachment.Kind, Never>()
   
   // MARK: Initialisers
-  init(userDefaults: UserDefaults = UserDefaults.standard) {
+  init(userDefaults: UserDefaults = UserDefaults.standard, userModelController: UserModelController) {
     self.userDefaults = userDefaults
+    self.userModelController = userModelController
+    
+    self.configureSubscriptions()
   }
   
   // MARK: Methods
@@ -51,6 +57,20 @@ final class SettingsManager {
     SettingsKey.allCases.forEach { settingsKey in
       userDefaults.removeObject(forKey: settingsKey)
     }
+  }
+}
+
+extension SettingsManager {
+  private func configureSubscriptions() {
+    userModelController.objectDidChange.sink { [weak self] _ in
+      guard let self = self else { return }
+      
+      // Reset all settings if the user is blank—i.e. not logged in
+      if self.userModelController.user == nil {
+        self.resetAll()
+      }
+    }
+    .store(in: &subscriptions)
   }
 }
 
