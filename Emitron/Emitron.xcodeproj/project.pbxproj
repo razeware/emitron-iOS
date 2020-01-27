@@ -22,6 +22,7 @@
 		2228E40223B98D5500E103AA /* LogoutView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40123B98D5500E103AA /* LogoutView.swift */; };
 		2228E40523B999CA00E103AA /* DomainRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40423B999CA00E103AA /* DomainRepository.swift */; };
 		2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2228E40623B999D500E103AA /* CategoryRepository.swift */; };
+		222C0AAC23DF05D700D65EBD /* PlaybackSpeed.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222C0AAB23DF05D700D65EBD /* PlaybackSpeed.swift */; };
 		222EEF7023CAD65200B025A4 /* ChildContentsState+Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF6F23CAD65200B025A4 /* ChildContentsState+Fetchable.swift */; };
 		222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */; };
 		222EEF7423CAF4D700B025A4 /* Image+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 222EEF7323CAF4D700B025A4 /* Image+Extensions.swift */; };
@@ -132,6 +133,9 @@
 		22C4EAE123DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */; };
 		22C4EAE423DE0958001A3FDA /* PersistenceStore+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */; };
 		22C4EAE623DE09AC001A3FDA /* UserDefaults+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE523DE09AC001A3FDA /* UserDefaults+Settings.swift */; };
+		22C4EAED23DEF910001A3FDA /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */; };
+		22C4EAEF23DEF91D001A3FDA /* SettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */; };
+		22C4EAF123DEFA76001A3FDA /* EmitronSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -265,6 +269,7 @@
 		2228E40123B98D5500E103AA /* LogoutView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LogoutView.swift; sourceTree = "<group>"; };
 		2228E40423B999CA00E103AA /* DomainRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DomainRepository.swift; sourceTree = "<group>"; };
 		2228E40623B999D500E103AA /* CategoryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoryRepository.swift; sourceTree = "<group>"; };
+		222C0AAB23DF05D700D65EBD /* PlaybackSpeed.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PlaybackSpeed.swift; sourceTree = "<group>"; };
 		222EEF6F23CAD65200B025A4 /* ChildContentsState+Fetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ChildContentsState+Fetchable.swift"; sourceTree = "<group>"; };
 		222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadIcon.swift; sourceTree = "<group>"; };
 		222EEF7323CAF4D700B025A4 /* Image+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Image+Extensions.swift"; sourceTree = "<group>"; };
@@ -365,6 +370,9 @@
 		22C4EAE023DC493D001A3FDA /* SyncRequest+ProgressionUpdate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+ProgressionUpdate.swift"; sourceTree = "<group>"; };
 		22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Keychain.swift"; sourceTree = "<group>"; };
 		22C4EAE523DE09AC001A3FDA /* UserDefaults+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UserDefaults+Settings.swift"; sourceTree = "<group>"; };
+		22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
+		22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKey.swift; sourceTree = "<group>"; };
+		22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronSettings.swift; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -829,6 +837,17 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		22C4EAEB23DEF87F001A3FDA /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */,
+				22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */,
+				22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */,
+				222C0AAB23DF05D700D65EBD /* PlaybackSpeed.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		22C914C023BD7E6700A05E00 /* Service Adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1052,6 +1071,7 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
+				22C4EAEB23DEF87F001A3FDA /* Settings */,
 				22BFE75623D990E600495BA9 /* Utilities */,
 				2280E52123C7690200F3913D /* Combine */,
 				22B8265E23AF5B3400D4BA23 /* Data */,
@@ -1569,6 +1589,7 @@
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				22C0513A23A4FBB0004D1223 /* ContentCategory+Persistence.swift in Sources */,
+				22C4EAF123DEFA76001A3FDA /* EmitronSettings.swift in Sources */,
 				223D77A923B07842005BE95D /* PermissionAdapter.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */,
@@ -1582,6 +1603,7 @@
 				2228E40223B98D5500E103AA /* LogoutView.swift in Sources */,
 				22B8266023AF5B3E00D4BA23 /* DataCache.swift in Sources */,
 				223D77CF23B0D224005BE95D /* ContentDomain.swift in Sources */,
+				22C4EAEF23DEF91D001A3FDA /* SettingsKey.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */,
@@ -1593,6 +1615,7 @@
 				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
 				22E2268023CA2D7F00A83601 /* Group+GroupDisplayable.swift in Sources */,
 				22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */,
+				222C0AAC23DF05D700D65EBD /* PlaybackSpeed.swift in Sources */,
 				22C0514A23A8B890004D1223 /* PersistenceStore+Categories.swift in Sources */,
 				2288EF0B2374057000514043 /* DownloadService.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
@@ -1610,6 +1633,7 @@
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
 				22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */,
+				22C4EAED23DEF910001A3FDA /* SettingsManager.swift in Sources */,
 				229F0ABC23BADDB00004DD4F /* ContentPersistableState.swift in Sources */,
 				B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */,
 				22C0513823A4FBA5004D1223 /* Category+Persistence.swift in Sources */,
