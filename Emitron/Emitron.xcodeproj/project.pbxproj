@@ -80,6 +80,7 @@
 		2288EF142374298200514043 /* ContentTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF132374298200514043 /* ContentTest.swift */; };
 		2288EF162374299500514043 /* DownloadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF152374299500514043 /* DownloadTest.swift */; };
 		228D0FE823E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */; };
+		228D0FEB23E01FDD00CEA6F1 /* SettingsManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228D0FEA23E01FDD00CEA6F1 /* SettingsManagerTest.swift */; };
 		229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0AB623BACC320004DD4F /* ContentSummaryState+Fetchable.swift */; };
 		229F0ABC23BADDB00004DD4F /* ContentPersistableState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0ABB23BADDB00004DD4F /* ContentPersistableState.swift */; };
 		229F0AC023BB23D00004DD4F /* DownloadAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0ABF23BB23D00004DD4F /* DownloadAction.swift */; };
@@ -323,6 +324,7 @@
 		2288EF132374298200514043 /* ContentTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTest.swift; sourceTree = "<group>"; };
 		2288EF152374299500514043 /* DownloadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTest.swift; sourceTree = "<group>"; };
 		228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestDownloadResult+Testable.swift"; sourceTree = "<group>"; };
+		228D0FEA23E01FDD00CEA6F1 /* SettingsManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagerTest.swift; sourceTree = "<group>"; };
 		229F0AB623BACC320004DD4F /* ContentSummaryState+Fetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+Fetchable.swift"; sourceTree = "<group>"; };
 		229F0ABB23BADDB00004DD4F /* ContentPersistableState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPersistableState.swift; sourceTree = "<group>"; };
 		229F0ABF23BB23D00004DD4F /* DownloadAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAction.swift; sourceTree = "<group>"; };
@@ -695,6 +697,14 @@
 			path = Models;
 			sourceTree = "<group>";
 		};
+		228D0FE923E01FBC00CEA6F1 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				228D0FEA23E01FDD00CEA6F1 /* SettingsManagerTest.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		229F0AB523BACC1F0004DD4F /* States */ = {
 			isa = PBXGroup;
 			children = (
@@ -864,6 +874,7 @@
 		22D176BE23460A060038333D /* emitronTests */ = {
 			isa = PBXGroup;
 			children = (
+				228D0FE923E01FBC00CEA6F1 /* Settings */,
 				2280E52623C826ED00F3913D /* Combine */,
 				2237AAB523C426B5008E9976 /* Data */,
 				22BFE76223DAD00800495BA9 /* Data Synchronisation */,
@@ -1512,6 +1523,7 @@
 				22A265B22396CE82000DD276 /* Permissions+Mocks.swift in Sources */,
 				2237AAB023C336EE008E9976 /* GroupAdapterTest.swift in Sources */,
 				221E60A12385771F00E92155 /* AttachmentTest.swift in Sources */,
+				228D0FEB23E01FDD00CEA6F1 /* SettingsManagerTest.swift in Sources */,
 				22BFE76A23DAF7C600495BA9 /* PersistenceStore+SynchronisationTest.swift in Sources */,
 				220D971323C032E9005C746C /* Category+Mocks.swift in Sources */,
 				2237AAA623C336A5008E9976 /* CategoryAdapterTest.swift in Sources */,
