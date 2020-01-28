@@ -1,6 +1,9 @@
 name: Push to Testflight
 
-on: [push]
+on:
+  push:
+    branches:
+      - development
 
 jobs:
   build:
