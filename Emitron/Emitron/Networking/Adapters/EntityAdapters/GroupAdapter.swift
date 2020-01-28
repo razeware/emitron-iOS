@@ -38,7 +38,7 @@ struct GroupAdapter: EntityAdapter {
         throw EntityAdapterError.invalidOrMissingAttributes
     }
     
-    guard let parentContent = relationships.first(where:{ (relationship) -> Bool in
+    guard let parentContent = relationships.first(where: { relationship -> Bool in
       relationship.from.type == .content
         && relationship.to.id == resource.id
         && relationship.to.type == .group
@@ -54,4 +54,3 @@ struct GroupAdapter: EntityAdapter {
                  contentId: contentId)
   }
 }
-

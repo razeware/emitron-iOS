@@ -54,7 +54,7 @@ struct TitleDetailView: View {
           Text(self.title)
             .foregroundColor(.titleText)
             .font(.uiBodyAppleDefault)
-            .padding([.leading,.trailing], Layout.padding)
+            .padding([.leading, .trailing], Layout.padding)
           
           Spacer()
           
@@ -80,7 +80,6 @@ struct TitleDetailView: View {
         .padding([.trailing], Layout.smallPadding)
       
       return AnyView(textView)
-
     } else if self.isToggle {
       let toggle = CustomToggleView(isOn: self.isOn) {
         self.callback?()
@@ -101,7 +100,6 @@ struct TitleDetailView: View {
         .foregroundColor(.iconButton)
       
       return AnyView(image)
-      
     }
     
     return nil

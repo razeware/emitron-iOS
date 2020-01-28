@@ -48,7 +48,7 @@ enum Constants {
   static let today = "Today"
   static let by = "By"
   static let yes = "Yes"
-  static let no = "No"
+  static let no = "No" // swiftlint:disable:this identifier_name
   
   // Video playback
   static let videoPlaybackProgressTrackingInterval: Int = 5
@@ -76,6 +76,7 @@ enum Constants {
   static let downloadDeleted = "Download deleted."
   static let downloadUnspecifiedProblem = "Problem with download action."
   
+  static let simultaneousStreamsError = "You can only stream on one device at a time."
   
   // Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"

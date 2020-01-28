@@ -40,10 +40,10 @@ struct TextListItemView: View {
   var content: ChildContentListDisplayable
   
   var canStreamPro: Bool {
-    return sessionController.user?.canStreamPro ?? false
+    sessionController.user?.canStreamPro ?? false
   }
   var canDownload: Bool {
-    return sessionController.user?.canDownload ?? false
+    sessionController.user?.canDownload ?? false
   }
   
   var body: some View {
@@ -78,7 +78,9 @@ struct TextListItemView: View {
   }
   
   private var progressBar: AnyView? {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else { return nil }
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else {
+      return nil
+    }
     return AnyView(
       ProgressBarView(progress: progress, isRounded: true)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)

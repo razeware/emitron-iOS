@@ -29,6 +29,4 @@
 import XCTest
 
 class PersistenceStore_SynchronisationTest: XCTestCase {
-
-
 }

@@ -36,19 +36,19 @@ extension TimeInterval {
 
 extension Int {
   var minutes: TimeInterval {
-    return .oneMinute * Double(self)
+    .oneMinute * Double(self)
   }
   
   var hours: TimeInterval {
-    return .oneHour * Double(self)
+    .oneHour * Double(self)
   }
   
   var days: TimeInterval {
-    return .oneDay * Double(self)
+    .oneDay * Double(self)
   }
   
   var minutesFromSeconds: Double {
-    return Double(self) / TimeInterval.oneMinute
+    Double(self) / TimeInterval.oneMinute
   }
   
   var timeFromSeconds: String {

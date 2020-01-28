@@ -55,12 +55,12 @@ enum ProgressionUpdateData {
   case finished
   case progress(Int)
   
-  var jsonAttribute: [String : Any] {
+  var jsonAttribute: [String: Any] {
     switch self {
     case .finished:
-      return ["finished" : true]
+      return ["finished": true]
     case .progress(let progress):
-      return ["progress" : progress]
+      return ["progress": progress]
     }
   }
 }
@@ -84,7 +84,7 @@ struct UpdateProgressionsRequest: Request {
         "type": "progressions",
         "attributes": [
           "content_id": update.contentId,
-          "updated_at": update.updatedAt.iso8601,
+          "updated_at": update.updatedAt.iso8601
         ].merged(update.data.jsonAttribute)
       ]
     }
@@ -122,7 +122,6 @@ struct DeleteProgressionRequest: Request {
   let id: Int
   
   // MARK: - Internal
-  func handle(response: Data) throws -> Void {
-    return
-  }
+  func handle(response: Data) throws {
+    }
 }

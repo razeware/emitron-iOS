@@ -26,10 +26,11 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-
 import UIKit
 import AVFoundation
 import GRDB
+
+// swiftlint:disable strict_fileprivate
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -39,7 +40,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var dataManager: DataManager!
   fileprivate var sessionController: SessionController!
   fileprivate var downloadService: DownloadService!
-  fileprivate var messageBus: MessageBus = MessageBus()
+  fileprivate var messageBus = MessageBus()
   fileprivate var settingsManager: SettingsManager!
   
   func application(_ application: UIApplication,
@@ -54,6 +55,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // Initialise the database
+    // swiftlint:disable:next force_try
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
     guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
@@ -99,10 +101,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   // handle orientation for the device
   func application (_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-      guard let vc = (window?.rootViewController?.presentedViewController) else {
+      guard let viewController = (window?.rootViewController?.presentedViewController) else {
           return .portrait
       }
-      if (vc.isKind(of: NSClassFromString("AVFullScreenViewController")!)){
+      if viewController.isKind(of: NSClassFromString("AVFullScreenViewController")!) {
           return .allButUpsideDown
       } else {
           return .portrait
@@ -130,8 +132,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 }
 
-
-// MARK:- Making some delightful global-access points. Classy.
+// MARK: - Making some delightful global-access points. Classy.
 extension SessionController {
   static var current: SessionController {
     (UIApplication.shared.delegate as! AppDelegate).sessionController

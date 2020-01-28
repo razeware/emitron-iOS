@@ -48,30 +48,30 @@ struct ProgressBarView: View {
         Rectangle()
           .frame(width: geometry.size.width, height: self.height)
           .foregroundColor(.borderColor)
-          .cornerRadius(self.isRounded ? self.height/2 : 0)
+          .cornerRadius(self.isRounded ? self.height / 2 : 0)
         
         HStack(alignment: .center) {
           
           Rectangle()
-            .frame(width: geometry.size.width * (adjustedProgress/2), height: self.height)
+            .frame(width: geometry.size.width * (adjustedProgress / 2), height: self.height)
             .foregroundColor(.accent)
-            .cornerRadius(self.isRounded ? self.height/2 : 0)
+            .cornerRadius(self.isRounded ? self.height / 2 : 0)
           
           if self.progress >= 1 {
             
             Spacer()
             
             Rectangle()
-              .frame(width: geometry.size.width * (adjustedProgress/2), height: self.height)
+              .frame(width: geometry.size.width * (adjustedProgress / 2), height: self.height)
               .foregroundColor(.accent)
-              .cornerRadius(self.isRounded ? self.height/2 : 0)
+              .cornerRadius(self.isRounded ? self.height / 2 : 0)
           }
         }
         
         Rectangle()
           .frame(width: geometry.size.width * adjustedProgress, height: self.height)
           .foregroundColor(.accent)
-          .cornerRadius(self.isRounded ? self.height/2 : 0)
+          .cornerRadius(self.isRounded ? self.height / 2 : 0)
       }
     }
   }

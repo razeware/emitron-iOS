@@ -41,11 +41,10 @@ struct ContentDetailView: View {
   }
   
   private var canStreamPro: Bool {
-    return user.canStreamPro
+    user.canStreamPro
   }
   
-  var imageRatio: CGFloat = 283/375
-  
+  var imageRatio: CGFloat = 283 / 375
   
   var body: some View {
     contentView
@@ -81,13 +80,12 @@ struct ContentDetailView: View {
           Image(systemName: "arrow.clockwise")
             .foregroundColor(.iconButton)
         }
-    })
+      })
     
     return scrollView
       .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
-
   
   private func openSettings() {
     // open iPhone settings
@@ -97,7 +95,6 @@ struct ContentDetailView: View {
       }
     }
   }
-  
   
   private var continueButton: some View {
     let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
@@ -195,11 +192,11 @@ struct ContentDetailView: View {
     if case .inProgress = dynamicContentViewModel.viewProgress {
       return AnyView(self.continueButton
         //HACK: to center the button when it's in a NavigationLink
-        .padding(.leading, geometry.size.width/2 - 74.5))
+        .padding(.leading, geometry.size.width / 2 - 74.5))
     } else {
       return AnyView(self.playButton
         //HACK: to center the button when it's in a NavigationLink
-        .padding(.leading, geometry.size.width/2 - 32.0))
+        .padding(.leading, geometry.size.width / 2 - 32.0))
     }
   }
   
@@ -211,23 +208,22 @@ struct ContentDetailView: View {
   }
   
   private var proView: some View {
-    return
-      VStack {
-        HStack {
-          Image("padlock")
-          
-          Text("Pro Course")
-            .font(.uiTitle1)
-            .foregroundColor(.white)
-        }
+    VStack {
+      HStack {
+        Image("padlock")
         
-        Text("To unlock this course visit raywenderlich.com/subscription for more information")
-          .multilineTextAlignment(.center)
-          .font(.uiLabel)
+        Text("Pro Course")
+          .font(.uiTitle1)
           .foregroundColor(.white)
-          .padding([.leading, .trailing], 20)
-          .lineLimit(3)
-          .fixedSize(horizontal: false, vertical: true)
+      }
+      
+      Text("To unlock this course visit raywenderlich.com/subscription for more information")
+        .multilineTextAlignment(.center)
+        .font(.uiLabel)
+        .foregroundColor(.white)
+        .padding([.leading, .trailing], 20)
+        .lineLimit(3)
+        .fixedSize(horizontal: false, vertical: true)
     }
   }
   
@@ -235,9 +231,4 @@ struct ContentDetailView: View {
     dynamicContentViewModel.reload()
     childContentsViewModel.reload()
   }
-  
-  private func save(for contentId: Int) {
-    // TODO
-  }
-    
 }

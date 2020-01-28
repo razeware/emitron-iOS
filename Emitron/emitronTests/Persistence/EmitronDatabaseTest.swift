@@ -43,4 +43,3 @@ extension EmitronDatabase {
     return dbQueue
   }
 }
-

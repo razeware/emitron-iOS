@@ -43,6 +43,5 @@ struct AttachmentAdapter: EntityAdapter {
     return Attachment(id: resource.id,
                       kind: kind,
                       url: url)
-    
   }
 }

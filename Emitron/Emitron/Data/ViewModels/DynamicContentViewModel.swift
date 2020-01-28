@@ -67,12 +67,12 @@ final class DynamicContentViewModel: ObservableObject {
   private func configureSubscriptions() {
     repository
       .contentDynamicState(for: contentId)
-      .sink(receiveCompletion: { (completion) in
+      .sink(receiveCompletion: { completion in
         self.state = .failed
         Failure
           .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
           .log()
-      }) { (contentState) in
+      }) { contentState in
         self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
         self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
         self.bookmarked = contentState.bookmark != nil
@@ -88,7 +88,7 @@ final class DynamicContentViewModel: ObservableObject {
     do {
       switch downloadProgress {
       case .downloadable:
-        let result = downloadAction.requestDownload(contentId: contentId) { (contentId) -> (ContentPersistableState?) in
+        let result = downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
           do {
             return try self.repository.contentPersistableState(for: contentId)
           } catch {

@@ -58,7 +58,7 @@ extension Message.Level {
   }
 }
 
-final class MessageBus:  ObservableObject {
+final class MessageBus: ObservableObject {
   @Published private(set) var currentMessage: Message?
   @Published var messageVisible: Bool = false
   
@@ -84,7 +84,7 @@ final class MessageBus:  ObservableObject {
         
         self.messageVisible = false
         self.invalidateTimer()
-    }
+      }
   }
   
   private func invalidateTimer() {

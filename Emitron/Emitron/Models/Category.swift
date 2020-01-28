@@ -34,4 +34,3 @@ struct Category: Equatable, Codable {
   var uri: String
   var ordinal: Int
 }
-

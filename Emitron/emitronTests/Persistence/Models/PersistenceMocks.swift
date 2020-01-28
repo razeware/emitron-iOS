@@ -29,7 +29,7 @@
 import Foundation
 @testable import Emitron
 
-struct PersistenceMocks {
+enum PersistenceMocks {
   static var content: Content {
     Content(id: 1,
             uri: "rw://betamax/collections/1",
@@ -48,7 +48,6 @@ struct PersistenceMocks {
             contributors: "HELLO",
             groupId: nil,
             ordinal: 0)
-    
   }
   
   static func download(for content: Content) -> Download {

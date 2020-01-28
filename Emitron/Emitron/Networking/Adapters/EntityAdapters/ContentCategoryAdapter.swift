@@ -31,9 +31,10 @@ import Foundation
 struct ContentCategoryAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource = JSONAPIResource(), relationships: [EntityRelationship]) throws -> [ContentCategory] {
     
-    return relationships.filter {
+    relationships.filter {
       $0.from.type == .content && $0.to.type == .category
-    }.map {
+    }
+    .map {
       ContentCategory(id: nil,
                       contentId: $0.from.id,
                       categoryId: $0.to.id)

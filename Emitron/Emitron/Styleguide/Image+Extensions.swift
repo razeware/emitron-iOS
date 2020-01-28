@@ -29,9 +29,9 @@
 import SwiftUI
 
 extension Image {
-  struct Downloads {
-    static let notDownloaded: Image = Image("downloadActive")
-    static let downloaded: Image = Image("downloadInactive")
+  enum Downloads {
+    static let notDownloaded = Image("downloadActive")
+    static let downloaded = Image("downloadInactive")
   }
   
   static var closeWhite: Image {

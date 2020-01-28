@@ -38,6 +38,8 @@ class DownloadServiceTest: XCTestCase {
   private var userModelController: UserMCMock!
   
   override func setUp() {
+    super.setUp()
+    // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     userModelController = UserMCMock.withDownloads
@@ -51,24 +53,28 @@ class DownloadServiceTest: XCTestCase {
   }
   
   override func tearDown() {
+    super.tearDown()
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
     SettingsManager.current.resetAll()
   }
   
   func getAllContents() -> [Content] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Content.fetchAll(db)
     }
   }
   
   func getAllDownloads() -> [Download] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Download.fetchAll(db)
     }
   }
   
   func getAllDownloadQueueItems() -> [PersistenceStore.DownloadQueueItem] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       let request = Download.including(required: Download.content)
       return try PersistenceStore.DownloadQueueItem.fetchAll(db, request)
@@ -113,6 +119,7 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = directory.appendingPathComponent("sample_file")
     
     if fileManager.fileExists(atPath: sampleFile.path) {
+      // swiftlint:disable:next force_try
       try! fileManager.removeItem(at: sampleFile)
     }
   }
@@ -191,7 +198,7 @@ class DownloadServiceTest: XCTestCase {
     let allContentIds = fullState.childContents.map({ $0.id }) + [collection.0.id]
     
     XCTAssertEqual(allContentIds.count, getAllContents().count)
-    XCTAssertEqual(allContentIds.sorted() , getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual(allContentIds.sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
@@ -200,7 +207,7 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
     
     let episode = fullState.childContents.first!
-    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
     })
     
@@ -253,7 +260,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssert(result.successful)
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
-    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted() , getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
@@ -262,7 +269,7 @@ class DownloadServiceTest: XCTestCase {
     
     var episode = fullState.childContents.first!
     
-    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
     })
     
@@ -326,13 +333,13 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episodes = fullState.childContents
     
-    let _ = downloadService.requestDownload(contentId: episodes[0].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[0].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
-    let _ = downloadService.requestDownload(contentId: episodes[1].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[1].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
-    let _ = downloadService.requestDownload(contentId: episodes[2].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[2].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
     
@@ -391,6 +398,7 @@ class DownloadServiceTest: XCTestCase {
     let downloadsDirectory = documentsDirectory!.appendingPathComponent("downloads", isDirectory: true)
     
     // The downloads subdirectory exists
+    // swiftlint:disable:next force_try
     let resourceValues = try! downloadsDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey])
     
     // The directory is marked as excluded from backups
@@ -486,7 +494,7 @@ class DownloadServiceTest: XCTestCase {
   
   func testRequestDownloadUrlDoesNothingForCollection() {
     let collection = ContentTest.Mocks.collection
-    let _ = downloadService.requestDownload(contentId: collection.0.id) { _ in
+    _ = downloadService.requestDownload(contentId: collection.0.id) { _ in
       ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     }
     
@@ -626,7 +634,7 @@ class DownloadServiceTest: XCTestCase {
       XCTAssertEqual(sampleFile, refreshedDownload.localUrl)
     }
     
-    try! fileManager.removeItem(at: sampleFile)
+    try fileManager.removeItem(at: sampleFile)
   }
   
   func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() throws {
@@ -645,7 +653,7 @@ class DownloadServiceTest: XCTestCase {
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localUrl)
-      XCTAssertEqual(Download.State.urlRequested , refreshedDownload.state)
+      XCTAssertEqual(Download.State.urlRequested, refreshedDownload.state)
     }
   }
   
@@ -666,7 +674,7 @@ class DownloadServiceTest: XCTestCase {
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localUrl)
-      XCTAssertEqual(Download.State.pending , refreshedDownload.state)
+      XCTAssertEqual(Download.State.pending, refreshedDownload.state)
     }
   }
 }

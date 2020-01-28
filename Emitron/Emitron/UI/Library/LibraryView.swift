@@ -55,11 +55,11 @@ struct LibraryView: View {
             Image(systemName: "arrow.clockwise")
               .foregroundColor(.iconButton)
           }
-      })
+        })
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
       .background(Color.backgroundColor)
-    }
+      }
   }
   
   private var contentControlsSection: some View {
@@ -183,7 +183,7 @@ struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
 
-  public func body(content: Self.Content) -> some View {
+  func body(content: Self.Content) -> some View {
     HStack {
       content
       Button(action: {

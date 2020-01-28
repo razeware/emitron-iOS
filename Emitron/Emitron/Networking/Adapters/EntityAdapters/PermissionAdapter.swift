@@ -48,6 +48,5 @@ struct PermissionAdapter: EntityAdapter {
                       tag: tag,
                       createdAt: createdAt,
                       updatedAt: updatedAt)
-    
   }
 }

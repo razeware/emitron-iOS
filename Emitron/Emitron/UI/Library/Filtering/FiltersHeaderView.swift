@@ -53,7 +53,7 @@ struct FiltersHeaderView: View {
           .foregroundColor(Color.borderColor)
           .frame(minHeight: 50)
           
-          RoundedRectangle(cornerRadius: Layout.cornerRadius-1.5)
+          RoundedRectangle(cornerRadius: Layout.cornerRadius - 1.5)
           .foregroundColor(Color.listHeaderBackground)
           .frame(minHeight: 46)
           .padding(2)
@@ -88,21 +88,19 @@ struct FiltersHeaderView: View {
   }
   
   private var numOfOnFilters: Int {
-    return filterGroup.filters.filter { $0.isOn }.count
+    filterGroup.filters.filter { $0.isOn }.count
   }
   
   private var expandedView: some View {
-    return
-      VStack(alignment: .leading, spacing: 8) {
-        
-        ForEach(Array(filterGroup.filters), id: \.self) { filter in
-          TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { change in
-            filter.isOn.toggle()
-            self.filters.all.update(with: filter)
-            self.filters.commitUpdates()
-          })
-            .padding([.leading, .trailing], 14)
-        }
+    VStack(alignment: .leading, spacing: 8) {        
+      ForEach(Array(filterGroup.filters), id: \.self) { filter in
+        TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
+          filter.isOn.toggle()
+          self.filters.all.update(with: filter)
+          self.filters.commitUpdates()
+        })
+          .padding([.leading, .trailing], 14)
+      }
     }
   }
 }

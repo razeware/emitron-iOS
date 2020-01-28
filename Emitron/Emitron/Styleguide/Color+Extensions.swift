@@ -31,103 +31,103 @@ import SwiftUI
 extension Color {
   
   static var contentText: Color {
-    return Color("contentText")
+    Color("contentText")
   }
   
   static var titleText: Color {
-    return Color("titleText")
+    Color("titleText")
   }
   
   static var backgroundColor: Color {
-    return Color("backgroundColor")
+    Color("backgroundColor")
   }
   
   static var activeIcon: Color {
-    return Color("activeIcon")
+    Color("activeIcon")
   }
   
   static var inactiveIcon: Color {
-    return Color("inactiveIcon")
+    Color("inactiveIcon")
   }
   
   static var accentTagBackground: Color {
-    return Color("accentTagBackground")
+    Color("accentTagBackground")
   }
   
   static var accentTagForeground: Color {
-    return Color("accentTagForeground")
+    Color("accentTagForeground")
   }
   
   static var tagBackground: Color {
-    return Color("tagBackground")
+    Color("tagBackground")
   }
   
   static var tagForeground: Color {
-    return Color("tagForeground")
+    Color("tagForeground")
   }
   
   static var primaryButtonBackground: Color {
-    return Color("primaryButtonBackground")
+    Color("primaryButtonBackground")
   }
   
   static var secondaryButtonBackground: Color {
-    return Color("secondaryButtonBackground")
+    Color("secondaryButtonBackground")
   }
   
   static var destructiveButtonBackground: Color {
-    return Color("destructiveButtonBackground")
+    Color("destructiveButtonBackground")
   }
   
   static var buttonText: Color {
-    return Color("buttonText")
+    Color("buttonText")
   }
   
   static var accent: Color {
-    return Color("accent")
+    Color("accent")
   }
   
   static var alarm: Color {
-    return Color("alarm")
+    Color("alarm")
   }
   
   static var borderColor: Color {
-    return Color("borderColor")
+    Color("borderColor")
   }
   
   static var separator: Color {
-    return Color("separator")
+    Color("separator")
   }
   
   static var textButtonText: Color {
-    return Color("textButtonText")
+    Color("textButtonText")
   }
   
   static var iconButton: Color {
-    return Color("iconButton")
+    Color("iconButton")
   }
   
   static var modalBackground: Color {
-    return Color("modalBackgroundColor")
+    Color("modalBackgroundColor")
   }
   
   static var listHeaderBackground: Color {
-    return Color("listHeaderBackground")
+    Color("listHeaderBackground")
   }
   
   static var shadowColor: Color {
-    return Color("shadowColor")
+    Color("shadowColor")
   }
   
   static var toggleSelected: Color {
-    return Color("toggleSelected")
+    Color("toggleSelected")
   }
   
   static var toggleDeselected: Color {
-    return Color("toggleDeselected")
+    Color("toggleDeselected")
   }
   
   static var appBlack: Color {
-    return Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
+    Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
   }
   
   static var snackError: Color {

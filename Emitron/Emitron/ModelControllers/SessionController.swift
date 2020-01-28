@@ -60,7 +60,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   @PublishedPrePostFacto private var internalUser: User?
   let objectDidChange = ObservableObjectPublisher()
   var user: User? {
-    return internalUser
+    internalUser
   }
   
   private let guardpost: Guardpost
@@ -98,7 +98,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   
   // MARK: - Internal
   func login() {
-    if state == .loading { return }
+    guard state != .loading else { return }
     
     state = .loading
     guardpost.presentationContextDelegate = self
@@ -147,10 +147,10 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     guard connectionMonitor.currentPath.status == .satisfied else { return }
     
     // Don't repeatedly make the same request
-    if state == .loadingAdditional { return }
+    guard state != .loadingAdditional else { return }
     
     // No point in requesting permissions when there's no user
-    if !isLoggedIn { return }
+    guard isLoggedIn else { return }
     
     state = .loadingAdditional
     permissionsService.permissions { result in
@@ -183,7 +183,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   }
   
   private func prepareSubscriptions() {
-    $internalUser.sink { [weak self] (user) in
+    $internalUser.sink { [weak self] user in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)
@@ -195,7 +195,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension SessionController: ASWebAuthenticationPresentationContextProviding {
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    return UIApplication.shared.windows.first!
+    UIApplication.shared.windows.first!
   }
 }
-

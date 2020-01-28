@@ -51,7 +51,7 @@ final class VideoPlaybackViewModel {
   // These are the content models that this view model is capable of playing. In this order.
   private var contentList = [VideoPlaybackState]()
   // A cache of playback items, and a way of finding the content model for the currently playing item
-  private var playerItems = [Int : AVPlayerItem]()
+  private var playerItems = [Int: AVPlayerItem]()
   private var currentlyPlayingContentId: Int? {
     guard let currentItem = player.currentItem,
       let contentId = playerItems.first(where: { $1 == currentItem })?.key
@@ -64,9 +64,8 @@ final class VideoPlaybackViewModel {
     contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
-  
 
-  let player: AVQueuePlayer = AVQueuePlayer()
+  let player = AVQueuePlayer()
   private var playerTimeObserverToken: Any?
   var state: DataState = .initial
   
@@ -130,7 +129,7 @@ final class VideoPlaybackViewModel {
       seconds: Double(Constants.videoPlaybackProgressTrackingInterval),
       preferredTimescale: 100
     )
-    playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] (time) in
+    playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)
     }
@@ -138,18 +137,18 @@ final class VideoPlaybackViewModel {
     SettingsManager.current
       .playbackSpeedPublisher
       .removeDuplicates()
-      .sink { [unowned self] (playbackSpeed) in
-        self.player.rate = playbackSpeed.rate
+      .sink { [weak self] playbackSpeed in
+        self?.player.rate = playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
     SettingsManager.current
       .closedCaptionOnPublisher
       .removeDuplicates()
-      .sink { [unowned self] (_) in
-        guard let playerItem = self.player.currentItem else { return }
+      .sink { [weak self] _ in
+        guard let playerItem = self?.player.currentItem else { return }
         
-        self.addClosedCaptions(for: playerItem)
+        self?.addClosedCaptions(for: playerItem)
       }
       .store(in: &subscriptions)
   }
@@ -158,25 +157,26 @@ final class VideoPlaybackViewModel {
     guard let currentlyPlayingContentId = currentlyPlayingContentId else { return }
     // Update progress
     progressEngine.updateProgress(for: currentlyPlayingContentId, progress: Int(time.seconds))
-      .sink(receiveCompletion: { (completion) in
+      .sink(receiveCompletion: { completion in
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
-            // TODO: Display error
+            MessageBus.current.post(message: Message(level: .error, message: Constants.simultaneousStreamsError))
             self.player.pause()
           }
           Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Error updating progress: \(error)")
           .log()
         }
-      }) { [weak self] (updatedProgression) in
+      }) { [weak self] updatedProgression in
         guard let self = self else { return }
         self.update(progression: updatedProgression)
       }
       .store(in: &subscriptions)
     
-    
     // Check whether we need to enqueue the next one yet
-    if state == .loading || state == .loadingAdditional { return }
+    if state == .loading || state == .loadingAdditional {
+      return
+    }
     guard let currentItem = player.currentItem else {
       return enqueueNext()
     }
@@ -198,7 +198,7 @@ final class VideoPlaybackViewModel {
     state = .loadingAdditional
     let nextContent = contentList[index]
     avItem(for: nextContent)
-      .sink(receiveCompletion: { (completion) in
+      .sink(receiveCompletion: { completion in
         switch completion {
         case .finished:
           self.state = .hasData
@@ -208,7 +208,7 @@ final class VideoPlaybackViewModel {
             .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to enqueue next playlist item: \(error))")
             .log()
         }
-      }) { (playerItem) in
+      }) { playerItem in
         // Try to seek if needed
         if let startTime = startTime {
           playerItem.seek(to: CMTime(seconds: startTime, preferredTimescale: 100)) { [weak self] _ in
@@ -235,7 +235,7 @@ final class VideoPlaybackViewModel {
   }
   
   private func createAvItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Error> {
-    Future<AVPlayerItem, Error> { (promise) in
+    Future<AVPlayerItem, Error> { promise in
       // Is there a completed download?
       if let download = state.download,
         download.state == .complete,
@@ -249,7 +249,7 @@ final class VideoPlaybackViewModel {
         return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("videoIdentifier")))
       }
       
-      self.videosService.getVideoStream(for: videoIdentifier) { (result) in
+      self.videosService.getVideoStream(for: videoIdentifier) { result in
         switch result {
         case .failure(let error):
           return promise(.failure(error))
@@ -264,8 +264,6 @@ final class VideoPlaybackViewModel {
       }
     }
   }
-  
-  
   
   private func addClosedCaptions(for playerItem: AVPlayerItem) {
     if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {

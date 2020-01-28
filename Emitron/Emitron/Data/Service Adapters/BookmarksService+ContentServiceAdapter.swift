@@ -30,14 +30,14 @@ import Foundation
 
 extension BookmarksService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    bookmarks(parameters: parameters) { (result) in
-       completion(result.map { (response) in
-        return (
+    bookmarks(parameters: parameters) { result in
+       completion(result.map { response in
+        (
           contentIds: response.bookmarks.map { $0.contentId },
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )
-      })
+       })
     }
   }
 }

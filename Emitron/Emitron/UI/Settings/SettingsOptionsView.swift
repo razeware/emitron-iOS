@@ -37,7 +37,7 @@ struct SettingsOptionsView: View {
   var body: some View {
     
     VStack {
-      HStack() {
+      HStack {
         Rectangle()
           .frame(width: 27, height: 27, alignment: .center)
           .foregroundColor(.clear)
@@ -112,7 +112,6 @@ struct SettingsOptionsView: View {
     return "nil"
   }
 }
-
 
 #if DEBUG
 struct SettingsOptionsView_Previews: PreviewProvider {

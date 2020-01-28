@@ -63,7 +63,7 @@ extension Download {
 
 extension DerivableRequest where RowDecoder == Download {
   func filter(state: Download.State) -> Self {
-    return filter(Download.Columns.state == state.rawValue)
+    filter(Download.Columns.state == state.rawValue)
   }
   
   func orderByRequestedAt() -> Self {

@@ -39,14 +39,14 @@ struct ChildContentListingView: View {
   
   private var courseDetailsSection: AnyView {
     switch childContentsViewModel.state {
-      case .failed:
-        return AnyView(reloadView)
-      case .hasData:
-        return AnyView(coursesSection)
-      case .loading, .loadingAdditional:
-        return AnyView(loadingView)
-      case .initial:
-        return AnyView(loadingView)
+    case .failed:
+      return AnyView(reloadView)
+    case .hasData:
+      return AnyView(coursesSection)
+    case .loading, .loadingAdditional:
+      return AnyView(loadingView)
+    case .initial:
+      return AnyView(loadingView)
     }
   }
   
@@ -64,7 +64,7 @@ struct ChildContentListingView: View {
           }
         }
       } else {
-        if childContentsViewModel.groups.count > 0 {
+        if !childContentsViewModel.groups.isEmpty {
           self.episodeListing(data: childContentsViewModel.contents)
         }
       }
@@ -94,14 +94,14 @@ struct ChildContentListingView: View {
       TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
         .padding([.leading, .trailing], 20)
         .padding([.bottom], 20)
-      }
+    }
       //HACK: to remove navigation chevrons
       .padding(.trailing, -32.0)
   }
   
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
-    GeometryReader { geometry in
+    GeometryReader { _ in
       ActivityIndicator()
     }
     .listRowInsets(EdgeInsets())

@@ -55,7 +55,6 @@ struct TabNavView: View {
 
       NavigationView {
         myTutorialsView
-
       }.tabItem {
         Text(Constants.myTutorials)
         Image("myTutorials")
@@ -66,4 +65,3 @@ struct TabNavView: View {
     .background(Color.backgroundColor)
   }
 }
-

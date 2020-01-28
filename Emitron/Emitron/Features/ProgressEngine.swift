@@ -49,15 +49,17 @@ enum ProgressEngineError: Error {
 
 final class ProgressEngine {
   enum Mode {
-    case online, offline
+    case online
+    case offline
   }
+  
   private let contentsService: ContentsService
   private let repository: Repository
   private let syncAction: SyncAction
   private var mode: Mode = .offline
   private let networkMonitor = NWPathMonitor()
   
-  private var playbackToken: String? = nil
+  private var playbackToken: String?
   
   init(contentsService: ContentsService, repository: Repository, syncAction: SyncAction) {
     self.contentsService = contentsService
@@ -80,7 +82,7 @@ final class ProgressEngine {
     guard mode == .online else { return }
     self.playbackToken = nil
     // Need to refresh the plaback token
-    contentsService.getBeginPlaybackToken { [weak self] (result) in
+    contentsService.getBeginPlaybackToken { [weak self] result in
       guard let self = self else { return }
       switch result {
       case .failure(let error):
@@ -115,20 +117,20 @@ final class ProgressEngine {
             contentId: contentId
           )
         }
-        return Future { (promise) in
+        return Future { promise in
           promise(.success(progression))
         }
       } catch {
-        return Future { (promise) in
+        return Future { promise in
           promise(.failure(.upstreamError(error)))
         }
       }
       
     case .online:
-      return Future { (promise) in
+      return Future { promise in
         // Don't bother trying if the playback token is empty.
         guard let playbackToken = self.playbackToken else { return }
-        self.contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { [weak self] (response) in
+        self.contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { [weak self] response in
           guard let self = self else { return promise(.failure(.notImplemented)) }
           switch response {
           case .failure(let error):

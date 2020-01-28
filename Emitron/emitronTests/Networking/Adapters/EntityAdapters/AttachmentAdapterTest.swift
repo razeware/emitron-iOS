@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class AttachmentAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "attachments",
     "attributes": [
       "url": "https://example.com/download.mp4",
@@ -68,7 +68,7 @@ class AttachmentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -79,7 +79,7 @@ class AttachmentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -90,7 +90,7 @@ class AttachmentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try AttachmentAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }

@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class DomainAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "domains",
     "attributes": [
       "name": "iOS & Swift",
@@ -73,7 +73,7 @@ class DomainAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -84,7 +84,7 @@ class DomainAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -95,7 +95,7 @@ class DomainAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -106,7 +106,7 @@ class DomainAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -117,7 +117,7 @@ class DomainAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try DomainAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -132,4 +132,3 @@ class DomainAdapterTest: XCTestCase {
     XCTAssertNil(domain.description)
   }
 }
-

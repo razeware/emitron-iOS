@@ -35,7 +35,7 @@ extension Date {
   }
   
   func dateByAddingNumberOfDays(_ days: Int) -> Date {
-      let timeInterval: TimeInterval = TimeInterval(60 * 60 * 24 * days)
+      let timeInterval = TimeInterval(60 * 60 * 24 * days)
       return addingTimeInterval(timeInterval)
   }
   

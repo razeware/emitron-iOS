@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-private struct Layout {
+private enum Layout {
   static let buttonSize: CGFloat = 21
 }
 
@@ -123,7 +123,7 @@ struct ContentSummaryView: View {
         .frame(width: Layout.buttonSize, height: Layout.buttonSize)
         .onTapGesture {
           self.bookmark()
-      }
+        }
     )
   }
   

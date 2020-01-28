@@ -40,7 +40,7 @@ struct WatchStatsUpdateRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/watch_stats/bulk" }
-  var additionalHeaders: [String : String]?
+  var additionalHeaders: [String: String]?
   var body: Data? {
     let dataJson = watchStats.map { stat in
       [
@@ -62,7 +62,6 @@ struct WatchStatsUpdateRequest: Request {
   let watchStats: [WatchStat]
   
   // MARK: - Internal
-  func handle(response: Data) throws -> Void {
-    return
-  }
+  func handle(response: Data) throws {
+    }
 }

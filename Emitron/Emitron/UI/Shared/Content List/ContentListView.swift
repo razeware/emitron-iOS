@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-private struct Layout {
+private enum Layout {
   static let sidePadding: CGFloat = 18
   static let heightDivisor: CGFloat = 3
 }
@@ -71,7 +71,6 @@ struct ContentListView: View {
           } else {
             cardsTableViewWithDelete
           }
-
         } else {
           cardTableNavView
         }
@@ -93,11 +92,11 @@ struct ContentListView: View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       return AnyView(
         // HACK: To put it in the middle we have to wrap it in Geometry Reader
-        GeometryReader { geometry in
+        GeometryReader { _ in
           ActivityIndicator()
             .onAppear {
               self.contentRepository.loadMore()
-          }
+            }
         }
       )
     } else {
@@ -138,8 +137,7 @@ struct ContentListView: View {
       NavigationLink(destination: ContentDetailView(
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
-      {
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
         CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
@@ -159,8 +157,7 @@ struct ContentListView: View {
       NavigationLink(destination: ContentDetailView(
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
-      {
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
         CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
@@ -239,7 +236,10 @@ struct ContentListView: View {
   }
 
   private var exploreButton: AnyView? {
-    guard let buttonText = contentScreen.buttonText, contentRepository.contents.isEmpty && contentScreen != .library else { return nil }
+    guard let buttonText = contentScreen.buttonText,
+      contentRepository.contents.isEmpty && contentScreen != .library else {
+        return nil
+    }
 
     let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
       print("I DON'T UNDERSTAND THE POINT OF THIS BUTTON")
@@ -269,7 +269,9 @@ struct ContentListView: View {
   }
 
   func delete(at offsets: IndexSet) {
-    guard let index = offsets.first else { return }
+    guard let index = offsets.first else {
+      return
+    }
     DispatchQueue.main.async {
       let content = self.contentRepository.contents[index]
       

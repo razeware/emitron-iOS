@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-private struct Layout {
+private enum Layout {
   static let line: CGFloat = 5.0
   static let frame: CGFloat = 19.0
   static let endProgress: CGFloat = 0.0
@@ -38,13 +38,13 @@ struct CircularProgressBar: View {
   let progress: Double
 
   var body: some View {
-    return Image("downloadLoading")
+    Image("downloadLoading")
     .foregroundColor(Color.activeIcon)
     .overlay(circleOverlay)
   }
 
   var circleOverlay: some View {
-    return Circle()
+    Circle()
       .trim(from: 0.0, to: CGFloat(progress))
       .stroke(Color.inactiveIcon, lineWidth: Layout.line)
       .frame(width: Layout.frame, height: Layout.frame)

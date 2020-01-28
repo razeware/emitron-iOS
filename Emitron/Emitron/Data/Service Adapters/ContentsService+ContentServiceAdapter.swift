@@ -30,14 +30,14 @@ import Foundation
 
 extension ContentsService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    allContents(parameters: parameters) { (result) in
-       completion(result.map { (response) in
-        return (
+    allContents(parameters: parameters) { result in
+       completion(result.map { response in
+        (
           contentIds: response.contents.map { $0.id },
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )
-      })
+       })
     }
   }
 }

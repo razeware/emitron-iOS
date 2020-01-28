@@ -44,6 +44,7 @@ class PublishedPostFactoTest: XCTestCase {
   var observedObject: PrePostObservedObject!
   
   override func setUp() {
+    super.setUp()
     observedObject = PrePostObservedObject()
   }
   
@@ -86,5 +87,4 @@ class PublishedPostFactoTest: XCTestCase {
     
     XCTAssertEqual([0, 2, 4], values)
   }
-
 }

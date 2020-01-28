@@ -71,19 +71,18 @@ extension SyncEngine {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
   }
   
-  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) {
-    return { [weak self] (completion) in
-      guard let self = self else { return }
-      
-      switch completion {
-      case .finished:
-        // Don't think we should ever actually arrive here...
-        print("SyncEngine Request Stream finished. Didn't really expect it to.")
-      case .failure(let error):
-        Failure
-          .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Couldn't load sync requests: \(error)")
-          .log()
-      }
+  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) { { [weak self] completion in
+    guard let self = self else { return }
+    
+    switch completion {
+    case .finished:
+      // Don't think we should ever actually arrive here...
+      print("SyncEngine Request Stream finished. Didn't really expect it to.")
+    case .failure(let error):
+      Failure
+        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Couldn't load sync requests: \(error)")
+        .log()
+    }
     }
   }
   
@@ -145,8 +144,8 @@ extension SyncEngine {
     Event
       .syncEngine(action: "SyncingBookmarkCreations")
       .log()
-
-    syncRequests.forEach { (syncRequest) in
+    
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .createBookmark else { return }
       
       bookmarksService.makeBookmark(for: syncRequest.contentId) { [weak self] result in
@@ -166,7 +165,6 @@ extension SyncEngine {
         }
       }
     }
-    
   }
   
   private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
@@ -174,7 +172,7 @@ extension SyncEngine {
       .syncEngine(action: "SyncingBookmarkDeletions")
       .log()
     
-    syncRequests.forEach { (syncRequest) in
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteBookmark,
         let bookmarkId = syncRequest.associatedRecordId
         else { return }
@@ -183,20 +181,20 @@ extension SyncEngine {
         guard let self = self else { return }
         
         switch result {
-          case .failure(let error):
-            Failure
-              .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
-              .log()
-            if case .requestFailed(_, 404) = error {
-              // Remove the sync request—a 404 means it doesn't exist on the server
-              self.persistenceStore.complete(syncRequests: [syncRequest])
-            }
-          case .success:
-            // Update the cache
-            let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [syncRequest.contentId])
-            self.repository.apply(update: cacheUpdate)
-            // Remove the sync request—we're done
+        case .failure(let error):
+          Failure
+            .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
+            .log()
+          if case .requestFailed(_, 404) = error {
+            // Remove the sync request—a 404 means it doesn't exist on the server
             self.persistenceStore.complete(syncRequests: [syncRequest])
+          }
+        case .success:
+          // Update the cache
+          let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [syncRequest.contentId])
+          self.repository.apply(update: cacheUpdate)
+          // Remove the sync request—we're done
+          self.persistenceStore.complete(syncRequests: [syncRequest])
         }
       }
     }
@@ -211,19 +209,21 @@ extension SyncEngine {
       $0.type == .recordWatchStats
     }
     
-    if watchStatRequests.isEmpty { return }
+    if watchStatRequests.isEmpty {
+      return
+    }
     
     watchStatsService.update(watchStats: watchStatRequests) { [weak self] result in
       guard let self = self else { return }
       
       switch result {
-        case .failure(let error):
-          Failure
-            .fetch(from: String(describing: type(of: self)), reason: "syncWatchStats:: \(error.localizedDescription)")
-            .log()
-        case .success:
-          // Remove the sync requests—we're done
-          self.persistenceStore.complete(syncRequests: watchStatRequests)
+      case .failure(let error):
+        Failure
+          .fetch(from: String(describing: type(of: self)), reason: "syncWatchStats:: \(error.localizedDescription)")
+          .log()
+      case .success:
+        // Remove the sync requests—we're done
+        self.persistenceStore.complete(syncRequests: watchStatRequests)
       }
     }
   }
@@ -237,21 +237,23 @@ extension SyncEngine {
       [.updateProgress, .markContentComplete].contains($0.type)
     }
     
-    if progressionUpdates.isEmpty { return }
+    if progressionUpdates.isEmpty {
+      return
+    }
     
     progressionsService.update(progressions: progressionUpdates) { [weak self] result in
       guard let self = self else { return }
       
       switch result {
-        case .failure(let error):
-          Failure
-            .fetch(from: String(describing: type(of: self)), reason: "syncProgressionUpdates:: \(error.localizedDescription)")
-            .log()
-        case .success(_, let cacheUpdate):
-          // Update the cache
-          self.repository.apply(update: cacheUpdate)
-          // Remove the sync request—we're done
-          self.persistenceStore.complete(syncRequests: progressionUpdates)
+      case .failure(let error):
+        Failure
+          .fetch(from: String(describing: type(of: self)), reason: "syncProgressionUpdates:: \(error.localizedDescription)")
+          .log()
+      case .success(_, let cacheUpdate):
+        // Update the cache
+        self.repository.apply(update: cacheUpdate)
+        // Remove the sync request—we're done
+        self.persistenceStore.complete(syncRequests: progressionUpdates)
       }
     }
   }
@@ -261,7 +263,7 @@ extension SyncEngine {
       .syncEngine(action: "SyncingProgressionDeletions")
       .log()
     
-    syncRequests.forEach { (syncRequest) in
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteProgression,
         let progressionId = syncRequest.associatedRecordId
         else { return }
@@ -270,21 +272,21 @@ extension SyncEngine {
         guard let self = self else { return }
         
         switch result {
-          case .failure(let error):
-            Failure
-              .fetch(from: String(describing: type(of: self)), reason: "syncProgressionDeletions:: \(error.localizedDescription)")
-              .log()
-            
-            if case .requestFailed(_, 404) = error {
-              // Remove the sync request—a 404 means it doesn't exist on the server
-              self.persistenceStore.complete(syncRequests: [syncRequest])
-            }
-          case .success:
-            // Update the cache
-            let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [syncRequest.contentId])
-            self.repository.apply(update: cacheUpdate)
-            // Remove the sync request—we're done
+        case .failure(let error):
+          Failure
+            .fetch(from: String(describing: type(of: self)), reason: "syncProgressionDeletions:: \(error.localizedDescription)")
+            .log()
+          
+          if case .requestFailed(_, 404) = error {
+            // Remove the sync request—a 404 means it doesn't exist on the server
             self.persistenceStore.complete(syncRequests: [syncRequest])
+          }
+        case .success:
+          // Update the cache
+          let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [syncRequest.contentId])
+          self.repository.apply(update: cacheUpdate)
+          // Remove the sync request—we're done
+          self.persistenceStore.complete(syncRequests: [syncRequest])
         }
       }
     }
@@ -302,7 +304,7 @@ extension SyncEngine: SyncAction {
     repository.apply(update: cacheUpdate)
     
     // 3. Persist if the content has been persisted
-    // TODO
+    // TODO: Persist if the content has been persisted
   }
   
   func deleteBookmark(for contentId: Int) throws {
@@ -316,7 +318,7 @@ extension SyncEngine: SyncAction {
     repository.apply(update: cacheUpdate)
     
     // 3. Delete bookmark if it is persisted
-    // TODO
+    // TODO: Delete bookmark if it is persisted
   }
   
   func markContentAsComplete(contentId: Int) throws {
@@ -326,9 +328,9 @@ extension SyncEngine: SyncAction {
     // 2. Create cache update and pass to respository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
-    if var p = repository.progression(for: contentId) {
-      p.progress = p.target
-      progression = p
+    if var existingProgression = repository.progression(for: contentId) {
+      existingProgression.progress = existingProgression.target
+      progression = existingProgression
     } else {
       guard let content = repository.content(for: contentId) else { return }
       progression = Progression.completed(for: content)
@@ -337,7 +339,7 @@ extension SyncEngine: SyncAction {
     repository.apply(update: cacheUpdate)
     
     // 3. Update if persisted
-    // TODO
+    // TODO: Update if persisted
   }
   
   func updateProgress(for contentId: Int, progress: Int) throws {
@@ -347,9 +349,9 @@ extension SyncEngine: SyncAction {
     // 2. Create cache update and pass to respository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
-    if var p = repository.progression(for: contentId) {
-      p.progress = progress
-      progression = p
+    if var existingProgression = repository.progression(for: contentId) {
+      existingProgression.progress = progress
+      progression = existingProgression
     } else {
       guard let content = repository.content(for: contentId) else { return }
       progression = Progression.withProgress(for: content, progress: progress)
@@ -358,7 +360,7 @@ extension SyncEngine: SyncAction {
     repository.apply(update: cacheUpdate)
     
     // 3. Update if persisted
-    // TODO
+    // TODO: Update if persisted
   }
   
   func removeProgress(for contentId: Int) throws {
@@ -372,7 +374,7 @@ extension SyncEngine: SyncAction {
     repository.apply(update: cacheUpdate)
     
     // 3. Remove if persisted
-    // TODO
+    // TODO: Remove if persisted
   }
   
   func recordWatchStats(for contentId: Int, secondsWatched: Int) throws {

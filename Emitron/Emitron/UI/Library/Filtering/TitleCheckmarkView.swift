@@ -62,7 +62,6 @@ struct TitleCheckmarkView: View {
 #if DEBUG
 struct FilterView_Previews: PreviewProvider {
   static var previews: some View {
-    // TODO: Give this a proper value
     TitleCheckmarkView(name: "Turned...", isOn: Filter.testFilter.isOn, onChange: { isOn in
       print("On state changed to: \(isOn)")
     })

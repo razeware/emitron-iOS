@@ -41,7 +41,7 @@ extension Dictionary {
   }
 
   func merged<K, V>(_ dicts: [K: V]?...) -> Dictionary {
-    return dicts.reduce(into: self) { result, dict in
+    dicts.reduce(into: self) { result, dict in
       result.merge(dict)
     }
   }

@@ -52,9 +52,8 @@ struct DownloadsView: View {
   }
 
   private var contentView: some View {
-    return ContentListView(contentRepository: downloadRepository,
-                           downloadAction: DownloadService.current,
-                           contentScreen: .downloads)
+    ContentListView(contentRepository: downloadRepository,
+                    downloadAction: DownloadService.current,
+                    contentScreen: .downloads)
   }
 }
-

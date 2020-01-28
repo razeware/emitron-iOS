@@ -30,14 +30,14 @@ import Foundation
 
 extension ProgressionsService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    progressions(parameters: parameters) { (result) in
-       completion(result.map { (response) in
-        return (
+    progressions(parameters: parameters) { result in
+       completion(result.map { response in
+        (
           contentIds: response.progressions.map { $0.contentId },
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )
-      })
+       })
     }
   }
 }

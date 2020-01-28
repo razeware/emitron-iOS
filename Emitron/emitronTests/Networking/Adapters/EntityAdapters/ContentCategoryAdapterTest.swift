@@ -62,4 +62,3 @@ class ContentCategoryAdapterTest: XCTestCase {
     XCTAssertEqual(0, contentCategories.count)
   }
 }
-

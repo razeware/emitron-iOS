@@ -32,17 +32,17 @@ import Foundation
 extension User {
   static var withDownloads: User {
     let user = noPermissions
-    return user.with(permissions:  [Permission.downloadVideos])
+    return user.with(permissions: [Permission.downloadVideos])
   }
   
   static var noPermissions: User {
     User(dictionary: [
-      "external_id" : "EXTERNAL_ID",
-      "email"       : "hello@example.com",
-      "username"    : "USERNAME",
-      "avatar_url"  : "https://example.com/avatar.png",
-      "name"        : "NAME",
-      "token"       : "THIS_IS_A_TOKEN"
+      "external_id": "EXTERNAL_ID",
+      "email": "hello@example.com",
+      "username": "USERNAME",
+      "avatar_url": "https://example.com/avatar.png",
+      "name": "NAME",
+      "token": "THIS_IS_A_TOKEN"
     ])!
   }
 }

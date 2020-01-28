@@ -46,15 +46,15 @@ class Filter: Hashable, Codable {
   var groupType: FilterGroupType
   
   var groupName: String {
-    return groupType.name
+    groupType.name
   }
   
   var filterName: String {
-    return parameter.displayName
+    parameter.displayName
   }
   
   var sortOrdinal: Int {
-    return parameter.sortOrdinal
+    parameter.sortOrdinal
   }
   
   var isSearch: Bool {
@@ -72,6 +72,6 @@ class Filter: Hashable, Codable {
 // For testing
 extension Filter {
   static var testFilter: Filter {
-    return Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: "", sortOrdinal: 0))
+    Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: "", sortOrdinal: 0))
   }
 }

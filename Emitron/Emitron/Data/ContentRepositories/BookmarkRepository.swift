@@ -36,7 +36,7 @@ final class BookmarkRepository: ContentRepository {
       return filters + [sortOrder]
     }
     set {
-      preconditionFailure("Not allowed to use setter on this variable")
+      preconditionFailure("Not allowed to use setter on this variable. [Value: \(newValue)]")
     }
   }
 }

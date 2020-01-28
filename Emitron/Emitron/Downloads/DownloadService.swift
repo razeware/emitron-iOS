@@ -100,7 +100,6 @@ final class DownloadService {
     checkPermissions()
   }
   
-  
   // MARK: Queue Management
   func startProcessing() {
     queueManager.pendingStream
@@ -218,7 +217,8 @@ extension DownloadService {
         .downloadService(
           from: "requestDownloadUrl",
           reason: "User not allowed to request downloads."
-      ).log()
+        )
+        .log()
       return
     }
     guard downloadQueueItem.download.remoteUrl == nil,
@@ -237,7 +237,8 @@ extension DownloadService {
           .downloadService(
             from: "requestDownloadUrl",
             reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
-        ).log()
+          )
+          .log()
       return
     }
     
@@ -459,8 +460,7 @@ extension DownloadService: DownloadProcessorDelegate {
   }
 }
 
-
-// MARK:- Functionality for the UI
+// MARK: - Functionality for the UI
 extension DownloadService {
   func downloadList() -> AnyPublisher<[ContentSummaryState], Error> {
     persistenceStore
@@ -481,7 +481,7 @@ extension DownloadService {
   }
 }
 
-// MARK:- Wifi Status Handling
+// MARK: - Wifi Status Handling
 extension DownloadService {
   private func configureWifiObservation() {
     // Track the network status
@@ -494,7 +494,7 @@ extension DownloadService {
     settingsSubscription = SettingsManager.current
       .wifiOnlyDownloadsPublisher
       .removeDuplicates()
-      .sink(receiveValue: { [weak self] (_) in
+      .sink(receiveValue: { [weak self] _ in
         self?.checkQueueStatus()
       })
   }
@@ -504,7 +504,9 @@ extension DownloadService {
     let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
     let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
     
-    if status == newStatus { return }
+    if status == newStatus {
+      return
+    }
     
     status = newStatus
     switch status {
@@ -538,7 +540,7 @@ extension DownloadService {
       }, receiveValue: { [weak self] downloadQueueItems in
         guard let self = self else { return }
         downloadQueueItems.filter { $0.download.state == .enqueued }
-          .forEach { (downloadQueueItem) in
+          .forEach { downloadQueueItem in
             do {
               try self.downloadProcessor.add(download: downloadQueueItem.download)
             } catch {
@@ -547,7 +549,7 @@ extension DownloadService {
               .log()
               self.transitionDownload(withID: downloadQueueItem.download.id, to: .failed)
             }
-        }
+          }
       })
     
     // Resume all downloads that the processor is already working on

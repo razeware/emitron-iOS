@@ -31,9 +31,10 @@ import Foundation
 struct ContentDomainAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource = JSONAPIResource(), relationships: [EntityRelationship]) throws -> [ContentDomain] {
     
-    return relationships.filter {
+    relationships.filter {
       $0.from.type == .content && $0.to.type == .domain
-    }.map {
+    }
+    .map {
       ContentDomain(id: nil,
                     contentId: $0.from.id,
                     domainId: $0.to.id)

@@ -50,8 +50,8 @@ protocol Request {
 
 // Default implementation to .GET
 extension Request {
-  var method: HTTPMethod { return .GET }
-  var body: Data? { return nil }
+  var method: HTTPMethod { .GET }
+  var body: Data? { nil }
 }
 
 enum RequestError: Error {
@@ -65,4 +65,3 @@ enum RequestError: Error {
     }
   }
 }
-

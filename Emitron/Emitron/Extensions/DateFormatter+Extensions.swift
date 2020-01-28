@@ -45,13 +45,13 @@ extension Formatter {
 
 extension Date {
     var iso8601: String {
-        return Formatter.iso8601.string(from: self)
+        Formatter.iso8601.string(from: self)
     }
 }
 
 extension String {
   var iso8601: Date? {
-    return Formatter.iso8601.date(from: self)
+    Formatter.iso8601.date(from: self)
   }
 }
 

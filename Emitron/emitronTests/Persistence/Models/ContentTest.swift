@@ -34,21 +34,20 @@ class ContentTest: XCTestCase {
   private var database: DatabaseWriter!
   
   override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    super.setUp()
+    // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
   }
   
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
-  }
-  
   func getAllContents() -> [Content] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Content.fetchAll(db)
     }
   }
   
   func getAllDownloads() -> [Download] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Download.fetchAll(db)
     }
@@ -112,7 +111,7 @@ class ContentTest: XCTestCase {
     // It too should be the right one
     XCTAssertEqual(download, getAllDownloads().first!)
     
-    let _ = try database.write { db in
+    _ = try database.write { db in
       try content.delete(db)
     }
     

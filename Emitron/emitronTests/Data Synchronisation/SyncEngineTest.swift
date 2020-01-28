@@ -29,6 +29,4 @@
 import XCTest
 
 class SyncEngineTest: XCTestCase {
-
-
 }

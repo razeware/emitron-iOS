@@ -44,17 +44,17 @@ final class DataCache: ObservableObject {
   enum CacheChange {
     case updated
   }
-  private var contents: [Int : Content] = [Int : Content]()
-  private var bookmarks: [Int : Bookmark] = [Int : Bookmark]()
-  private var progressions: [Int : Progression] = [Int : Progression]()
-  private var contentIndexedGroups: [Int : [Group]] = [Int : [Group]]()
-  private var groupIndexedGroups: [Int : Group] = [Int : Group]()
-  private var contentDomains: [Int : [ContentDomain]] = [Int : [ContentDomain]]()
-  private var contentCategories: [Int : [ContentCategory]] = [Int : [ContentCategory]]()
+  
+  private var contents: [Int: Content] = [Int: Content]()
+  private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
+  private var progressions: [Int: Progression] = [Int: Progression]()
+  private var contentIndexedGroups: [Int: [Group]] = [Int: [Group]]()
+  private var groupIndexedGroups: [Int: Group] = [Int: Group]()
+  private var contentDomains: [Int: [ContentDomain]] = [Int: [ContentDomain]]()
+  private var contentCategories: [Int: [ContentCategory]] = [Int: [ContentCategory]]()
   
   private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
 }
-
 
 extension DataCache {
   func update(from cacheUpdate: DataCacheUpdate) {
@@ -129,7 +129,6 @@ extension DataCache {
   }
 }
 
-
 extension DataCache {
   private func cachedContentSummaryState(for contentId: Int) throws -> CachedContentSummaryState {
     guard let content = self.contents[contentId],
@@ -153,13 +152,15 @@ extension DataCache {
       throw DataCacheError.cacheMiss
     }
     
-    if content.contentType != .collection { return CachedChildContentsState(contents: [], groups: []) }
+    if content.contentType != .collection {
+      return CachedChildContentsState(contents: [], groups: [])
+    }
     
     let groups = self.contentIndexedGroups[contentId] ?? []
     let groupIds = groups.map { $0.id }
     let childContents = self.contents.values.filter { content in
-      if content.groupId == nil { return false }
-      return groupIds.contains(content.groupId!)
+      guard let groupId = content.groupId else { return false }
+      return groupIds.contains(groupId)
     }
     
     if childContents.isEmpty {
@@ -191,8 +192,8 @@ extension DataCache {
       let groups = self.contentIndexedGroups[contentId] ?? []
       let groupIds = groups.map { $0.id }
       let childContents = self.contents.values.filter { content in
-        if content.groupId == nil { return false }
-        return groupIds.contains(content.groupId!)
+        guard let groupId = content.groupId else { return false }
+        return groupIds.contains(groupId)
       }
       
       return try ContentPersistableState(
@@ -268,7 +269,8 @@ extension DataCache {
     return contents.values.filter {
       guard let groupId = $0.groupId else { return false }
       return groupIds.contains(groupId)
-    }.sorted {
+    }
+    .sorted {
       guard let lhsOrdinal = $0.ordinal, let rhsOrdinal = $1.ordinal else { return true }
       return lhsOrdinal < rhsOrdinal
     }
@@ -282,13 +284,13 @@ extension DataCache {
   }
   
   private func nextToPlay(for contents: [Content]) throws -> Content {
-    guard contents.count > 0 else { throw DataCacheError.cacheMiss }
+    guard !contents.isEmpty else { throw DataCacheError.cacheMiss }
     
     // We'll assume that the contents is already ordered. It is if it comes from child/sibling contents
     let orderedProgressions = contents.compactMap { progressions[$0.id] }
     
     // No child progressions—let's start with the first item of content
-    if orderedProgressions.count == 0 {
+    if orderedProgressions.isEmpty {
       return contents.first!
     }
     

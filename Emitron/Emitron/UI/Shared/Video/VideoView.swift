@@ -67,7 +67,7 @@ struct VideoView: View {
             Image("settings")
               .foregroundColor(.iconButton)
           }
-      })
+        })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: false)
       }

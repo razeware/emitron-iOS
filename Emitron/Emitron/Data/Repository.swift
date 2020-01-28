@@ -37,7 +37,6 @@ class Repository {
     self.persistenceStore = persistenceStore
     self.dataCache = dataCache
   }
-  
 }
 
 extension Repository {
@@ -46,12 +45,11 @@ extension Repository {
   }
 }
 
-
 extension Repository {
   func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
     dataCache
       .contentSummaryState(for: contentIds)
-      .map { (cachedContentSummaryStates) in
+      .map { cachedContentSummaryStates in
         cachedContentSummaryStates.map { cached in
           self.contentSummaryState(cached: cached)
         }
@@ -62,7 +60,7 @@ extension Repository {
   func contentSummaryState(for contentId: Int) -> AnyPublisher<ContentSummaryState, Error> {
     dataCache
       .contentSummaryState(for: contentId)
-      .map { (cachedContentSummaryState) in
+      .map { cachedContentSummaryState in
         self.contentSummaryState(cached: cachedContentSummaryState)
       }
       .eraseToAnyPublisher()
@@ -79,7 +77,7 @@ extension Repository {
     
     return fromCache
       .combineLatest(download)
-      .map { (cachedState, download) in
+      .map { cachedState, download in
         DynamicContentState(download: download,
                             progression: cachedState.progression,
                             bookmark: cachedState.bookmark)
@@ -96,7 +94,7 @@ extension Repository {
   /// - Parameter contentId: The id of the `Content` the user has requested to be played back
   func playlist(for contentId: Int) throws -> [VideoPlaybackState] {
     let fromCache = try dataCache.videoPlaylist(for: contentId)
-    return try fromCache.map { (cachedState) in
+    return try fromCache.map { cachedState in
       let download = try persistenceStore.download(forContentId: cachedState.content.id)
       return VideoPlaybackState(
         content: cachedState.content,
@@ -152,8 +150,9 @@ extension Repository {
     do {
       return try persistenceStore.domains(with: contentDomains.map { $0.domainId })
     } catch {
-      // TODO log
-      print("There was a problem getting domains: \(error)")
+      Failure
+        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
+        .log()
       return [Domain]()
     }
   }
@@ -162,10 +161,10 @@ extension Repository {
     do {
       return try persistenceStore.categories(with: contentCategories.map { $0.categoryId })
     } catch {
-      // TODO log
-      print("There was a problem getting categories: \(error)")
+      Failure
+        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")
+        .log()
       return [Category]()
     }
   }
 }
-

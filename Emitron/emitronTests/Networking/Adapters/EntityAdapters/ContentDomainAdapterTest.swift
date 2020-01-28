@@ -62,4 +62,3 @@ class ContentDomainAdapterTest: XCTestCase {
     XCTAssertEqual(0, contentDomains.count)
   }
 }
-

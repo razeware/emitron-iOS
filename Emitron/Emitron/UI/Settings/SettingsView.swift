@@ -45,7 +45,7 @@ struct SettingsView: View {
   
   var body: some View {
     VStack {
-      HStack() {
+      HStack {
         Rectangle()
           .frame(width: 27, height: 27, alignment: .center)
           .foregroundColor(.clear)
@@ -92,7 +92,6 @@ struct SettingsView: View {
                 return
               }
             }
-            
           }, title: option.title,
              detail: self.populateDetail(for: option),
              isToggle: option.isToggle,
@@ -105,7 +104,7 @@ struct SettingsView: View {
                 isOn: false,
                 selectedSettingsOption: self.$selectedOption
               )
-          }
+            }
         }
       }
       

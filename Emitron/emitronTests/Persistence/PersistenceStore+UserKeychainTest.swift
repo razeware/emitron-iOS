@@ -43,19 +43,21 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
   ]
   
   override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    super.setUp()
+    // swiftlint:disable:next force_try
     let database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
   }
   
   override func tearDown() {
+    super.tearDown()
     // Put teardown code here. This method is called after the invocation of each test method in the class.
     persistenceStore.removeUserFromKeychain()
   }
   
   func testPersistenceToKeychain() {
     guard let user = User(dictionary: userDictionary) else {
-      return XCTFail()
+      return XCTFail("User not found")
     }
     
     XCTAssert(persistenceStore.persistUserToKeychain(user: user))
@@ -71,7 +73,7 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     XCTAssertNil(persistenceStore.userFromKeychain())
     
     guard let user = User(dictionary: userDictionary) else {
-      return XCTFail()
+      return XCTFail("User not found")
     }
     
     XCTAssert(persistenceStore.persistUserToKeychain(user: user))
@@ -81,5 +83,4 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     
     XCTAssertNil(persistenceStore.userFromKeychain())
   }
-  
 }
