@@ -61,7 +61,18 @@ struct TabNavView: View {
       }
       .tag(2)
     }
+    .accentColor(Color.accent)
     .edgesIgnoringSafeArea([.top])
     .background(Color.backgroundColor)
+  }
+}
+
+struct TabNavView_Previews: PreviewProvider {
+  static var previews: some View {
+    TabNavView(
+      libraryView: AnyView(Text("LIBRARY")),
+      myTutorialsView: AnyView(Text("MY TUTORIALS")),
+      downloadsView: AnyView(Text("DOWNLOADS"))
+    )
   }
 }
