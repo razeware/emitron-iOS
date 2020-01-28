@@ -79,6 +79,7 @@
 		2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF0C23741B9700514043 /* DownloadServiceTest.swift */; };
 		2288EF142374298200514043 /* ContentTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF132374298200514043 /* ContentTest.swift */; };
 		2288EF162374299500514043 /* DownloadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF152374299500514043 /* DownloadTest.swift */; };
+		228D0FE823E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */; };
 		229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0AB623BACC320004DD4F /* ContentSummaryState+Fetchable.swift */; };
 		229F0ABC23BADDB00004DD4F /* ContentPersistableState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0ABB23BADDB00004DD4F /* ContentPersistableState.swift */; };
 		229F0AC023BB23D00004DD4F /* DownloadAction.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0ABF23BB23D00004DD4F /* DownloadAction.swift */; };
@@ -321,6 +322,7 @@
 		2288EF0C23741B9700514043 /* DownloadServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadServiceTest.swift; sourceTree = "<group>"; };
 		2288EF132374298200514043 /* ContentTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTest.swift; sourceTree = "<group>"; };
 		2288EF152374299500514043 /* DownloadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTest.swift; sourceTree = "<group>"; };
+		228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestDownloadResult+Testable.swift"; sourceTree = "<group>"; };
 		229F0AB623BACC320004DD4F /* ContentSummaryState+Fetchable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+Fetchable.swift"; sourceTree = "<group>"; };
 		229F0ABB23BADDB00004DD4F /* ContentPersistableState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPersistableState.swift; sourceTree = "<group>"; };
 		229F0ABF23BB23D00004DD4F /* DownloadAction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadAction.swift; sourceTree = "<group>"; };
@@ -764,6 +766,7 @@
 				2288EF0C23741B9700514043 /* DownloadServiceTest.swift */,
 				22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */,
 				22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */,
+				228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */,
 			);
 			path = Downloads;
 			sourceTree = "<group>";
@@ -1497,6 +1500,7 @@
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
 				22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */,
 				221E609E23856F4000E92155 /* VideosServiceMock.swift in Sources */,
+				228D0FE823E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift in Sources */,
 				2237AAB423C33708008E9976 /* ProgressionAdapterTest.swift in Sources */,
 				220D971123C032DF005C746C /* Domain+Mocks.swift in Sources */,
 				2237AAAE23C336DF008E9976 /* DomainAdapterTest.swift in Sources */,

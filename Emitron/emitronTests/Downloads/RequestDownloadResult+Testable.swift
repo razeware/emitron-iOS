@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,31 +27,15 @@
 /// THE SOFTWARE.
 
 import Foundation
+@testable import Emitron
 
-enum RequestDownloadResult {
-  case downloadRequestedSuccessfully
-  case downloadRequestedButQueueInactive
-  case problemRequestingDownload(String, Error? = nil)
-}
-
-extension RequestDownloadResult: Equatable {
-  // Can't synthesise this becuase we might have an Error, which isn't Equatable
-  static func == (lhs: RequestDownloadResult, rhs: RequestDownloadResult) -> Bool {
-    switch (lhs, rhs) {
-    case (.downloadRequestedSuccessfully, .downloadRequestedSuccessfully):
+extension RequestDownloadResult {
+  var successful: Bool {
+    switch self {
+    case .downloadRequestedButQueueInactive, .downloadRequestedSuccessfully:
       return true
-    case (.downloadRequestedButQueueInactive, .downloadRequestedButQueueInactive):
-      return true
-    case (.problemRequestingDownload(let lhsReason, _), .problemRequestingDownload(let rhsReason, _)):
-      return lhsReason == rhsReason
-    default:
+    case .problemRequestingDownload:
       return false
     }
   }
-}
-
-protocol DownloadAction {
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult
-  func cancelDownload(contentId: Int) throws
-  func deleteDownload(contentId: Int) throws
 }
