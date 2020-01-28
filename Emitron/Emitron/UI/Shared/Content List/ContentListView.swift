@@ -71,7 +71,6 @@ struct ContentListView: View {
           } else {
             cardsTableViewWithDelete
           }
-
         } else {
           cardTableNavView
         }
@@ -93,11 +92,11 @@ struct ContentListView: View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       return AnyView(
         // HACK: To put it in the middle we have to wrap it in Geometry Reader
-        GeometryReader { geometry in
+        GeometryReader { _ in
           ActivityIndicator()
             .onAppear {
               self.contentRepository.loadMore()
-          }
+            }
         }
       )
     } else {
@@ -138,8 +137,7 @@ struct ContentListView: View {
       NavigationLink(destination: ContentDetailView(
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
-      {
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
         CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
@@ -159,8 +157,7 @@ struct ContentListView: View {
       NavigationLink(destination: ContentDetailView(
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)))
-      {
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
         CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)

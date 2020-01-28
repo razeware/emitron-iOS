@@ -108,7 +108,7 @@ struct MainButtonView: View {
               .resizable()
               .foregroundColor(type.color)
               .frame(width: 24, height: 24, alignment: .center)
-            }
+          }
             .padding([.trailing, .top, .bottom], 10)
           }
       }

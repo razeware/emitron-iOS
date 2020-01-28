@@ -41,7 +41,7 @@ final class DataManager: ObservableObject {
   // Persisted information
   private (set) var domainRepository: DomainRepository!
   private (set) var categoryRepository: CategoryRepository!
-  var filters: Filters = Filters()
+  var filters = Filters()
   
   // Cached data
   let dataCache = DataCache()

@@ -33,7 +33,7 @@ struct MainView: View {
   @EnvironmentObject var dataManager: DataManager
   
   var body: some View {
-    return contentView
+    contentView
       .background(Color.backgroundColor)
       .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
   }

@@ -31,9 +31,9 @@ import SwiftUI
 struct ToggleControlView: View {
   
   @State var toggleState: MyTutorialsState
-  var inProgressClosure: (()->())?
-  var completedClosure: (()->())?
-  var bookmarkedClosure: (()->())?
+  var inProgressClosure: (() -> Void)?
+  var completedClosure: (() -> Void)?
+  var bookmarkedClosure: (() -> Void)?
   
   var body: some View {
     HStack {

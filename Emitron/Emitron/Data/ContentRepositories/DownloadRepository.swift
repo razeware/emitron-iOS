@@ -61,17 +61,15 @@ final class DownloadRepository: ContentRepository {
     self.contentSubscription =
       self.downloadService
         .downloadList()
-        .sink(receiveCompletion: { [weak self] (error) in
+        .sink(receiveCompletion: { [weak self] error in
           guard let self = self else { return }
           // TODO Logging
           self.state = .failed
           print("Unable to retrieve download content summaries: \(error)")
-        }, receiveValue: { [weak self] (contentSummaryStates) in
+        }, receiveValue: { [weak self] contentSummaryStates in
           guard let self = self else { return }
           self.contents = contentSummaryStates
           self.state = .hasData
         })
   }
 }
-
-

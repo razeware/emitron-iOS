@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class BookmarkAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "bookmarks",
     "attributes": [
       "created_at": "2020-01-01T12:00:00.000Z"
@@ -81,7 +81,7 @@ class BookmarkAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -92,7 +92,7 @@ class BookmarkAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -104,9 +104,8 @@ class BookmarkAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try BookmarkAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingRelationships, error as! EntityAdapterError)
     }
   }
-  
 }

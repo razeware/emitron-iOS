@@ -90,7 +90,7 @@ extension Download: Equatable {
 
 extension Download {
   static func create(for content: Content) -> Download {
-    return Download(
+    Download(
       id: UUID(),
       requestedAt: Date(),
       lastValidatedAt: nil,

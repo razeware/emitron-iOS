@@ -35,7 +35,7 @@ protocol DownloadProcessorModel {
   var remoteUrl: URL? { get }
 }
 
-protocol DownloadProcessorDelegate {
+protocol DownloadProcessorDelegate: AnyObject {
   func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel?
   func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID)
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double)
@@ -77,7 +77,7 @@ final class DownloadProcessor: NSObject {
   }()
   var backgroundSessionCompletionHandler: (() -> Void)?
   private var currentDownloads = [URLSessionDownloadTask]()
-  var delegate: DownloadProcessorDelegate!
+  weak var delegate: DownloadProcessorDelegate!
   
   override init() {
     super.init()
@@ -139,12 +139,12 @@ extension DownloadProcessor {
     // Use a semaphore to make an async call synchronous
     // --There's no point in trying to complete instantiating this class without this list.
     let semaphore = DispatchSemaphore(value: 0)
-    session.getTasksWithCompletionHandler { (_, _, downloadTasks) in
+    session.getTasksWithCompletionHandler { _, _, downloadTasks in
       tasks = downloadTasks
       semaphore.signal()
     }
     
-    let _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+    _ = semaphore.wait(timeout: DispatchTime.distantFuture)
     
     return tasks
   }
@@ -194,9 +194,9 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
     
     if let error = error as NSError? {
       let cancellationReason = (error.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey] as? NSNumber)?.intValue
-      if cancellationReason ==  NSURLErrorCancelledReasonUserForceQuitApplication || cancellationReason == NSURLErrorCancelledReasonBackgroundUpdatesDisabled {
+      if cancellationReason == NSURLErrorCancelledReasonUserForceQuitApplication || cancellationReason == NSURLErrorCancelledReasonBackgroundUpdatesDisabled {
         // The download was cancelled for technical reasons, but we might be able to restart it...
-        var newTask: URLSessionDownloadTask? = nil
+        var newTask: URLSessionDownloadTask?
         if let resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
           newTask = session.downloadTask(withResumeData: resumeData)
         } else {
@@ -232,4 +232,3 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
     }
   }
 }
-

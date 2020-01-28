@@ -50,7 +50,7 @@ struct CustomToggle: UIViewRepresentable {
   }
   
   func makeCoordinator() -> CustomToggle.Coordinator {
-      return Coordinator(self)
+      Coordinator(self)
   }
   
   class Coordinator: NSObject {

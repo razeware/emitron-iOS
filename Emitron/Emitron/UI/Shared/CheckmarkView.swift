@@ -36,7 +36,7 @@ struct CheckmarkView: View {
   var innerSide: CGFloat = 20
   var outerRadius: CGFloat = 9
   var radiusRatio: CGFloat {
-    return outerRadius / outerSide
+    outerRadius / outerSide
   }
   
   var onChange: (Bool) -> Void
@@ -55,7 +55,7 @@ struct CheckmarkView: View {
           
           Image("checkmark")
             .resizable()
-            .frame(maxWidth: innerSide-1, maxHeight: innerSide+1)
+            .frame(maxWidth: innerSide - 1, maxHeight: innerSide + 1)
             .foregroundColor(Color.buttonText)
         }
         .cornerRadius(outerRadius)

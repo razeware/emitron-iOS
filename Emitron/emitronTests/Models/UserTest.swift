@@ -94,7 +94,6 @@ class UserTest: XCTestCase {
     XCTAssert(!user.canStreamPro)
   }
   
-  
   func testWithDownloadsMockWorksAsExpected() {
     let user = User.withDownloads
     
@@ -102,5 +101,4 @@ class UserTest: XCTestCase {
     XCTAssert(!user.canStream)
     XCTAssert(!user.canStreamPro)
   }
-
 }

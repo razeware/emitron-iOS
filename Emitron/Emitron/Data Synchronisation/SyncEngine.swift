@@ -71,8 +71,7 @@ extension SyncEngine {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
   }
   
-  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) {
-    return { [weak self] (completion) in
+  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) { { [weak self] completion in
       guard let self = self else { return }
       
       switch completion {
@@ -146,7 +145,7 @@ extension SyncEngine {
       .syncEngine(action: "SyncingBookmarkCreations")
       .log()
 
-    syncRequests.forEach { (syncRequest) in
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .createBookmark else { return }
       
       bookmarksService.makeBookmark(for: syncRequest.contentId) { [weak self] result in
@@ -166,7 +165,6 @@ extension SyncEngine {
         }
       }
     }
-    
   }
   
   private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
@@ -174,7 +172,7 @@ extension SyncEngine {
       .syncEngine(action: "SyncingBookmarkDeletions")
       .log()
     
-    syncRequests.forEach { (syncRequest) in
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteBookmark,
         let bookmarkId = syncRequest.associatedRecordId
         else { return }
@@ -261,7 +259,7 @@ extension SyncEngine {
       .syncEngine(action: "SyncingProgressionDeletions")
       .log()
     
-    syncRequests.forEach { (syncRequest) in
+    syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteProgression,
         let progressionId = syncRequest.associatedRecordId
         else { return }

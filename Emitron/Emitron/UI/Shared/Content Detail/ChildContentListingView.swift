@@ -94,14 +94,14 @@ struct ChildContentListingView: View {
       TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
         .padding([.leading, .trailing], 20)
         .padding([.bottom], 20)
-      }
+    }
       //HACK: to remove navigation chevrons
       .padding(.trailing, -32.0)
   }
   
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
-    GeometryReader { geometry in
+    GeometryReader { _ in
       ActivityIndicator()
     }
     .listRowInsets(EdgeInsets())

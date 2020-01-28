@@ -62,7 +62,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func populateSampleScreencast() throws -> Content {
     let screencast = ContentTest.Mocks.screencast
     let fullState = ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
-    try persistenceStore.persistContentGraph(for: fullState) { (contentId) -> (ContentPersistableState?) in
+    try persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
       ContentPersistableState.persistableState(for: contentId, with: screencast.1)
     }
     return screencast.0
@@ -71,13 +71,13 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func populateSampleCollection() throws -> Content {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
-    try persistenceStore.persistContentGraph(for: fullState) { (contentId) -> (ContentPersistableState?) in
+    try persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
     return collection.0
   }
   
-  //MARK:- Download Transitions
+  // MARK: - Download Transitions
   func testTransitionEpisodeToInProgressUpdatesCollection() throws {
     let collection = try populateSampleCollection()
     let episode = getAllContents().first { $0.id != collection.id }
@@ -92,7 +92,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
     
-    let updatedCollectionDownload = try database.read { (db) in
+    let updatedCollectionDownload = try database.read { db in
       try Download.filter(key: collectionDownload.id).fetchOne(db)
     }
     
@@ -103,7 +103,6 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func testTransitionEpisodeToDownloadedUpdatesCollection() throws {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
-    
     
     var collectionDownload = PersistenceMocks.download(for: collection)
     var episodeDownload = PersistenceMocks.download(for: episodes[0])
@@ -118,7 +117,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
     
-    let updatedCollectionDownload = try database.read { (db) in
+    let updatedCollectionDownload = try database.read { db in
       try Download.filter(key: collectionDownload.id).fetchOne(db)
     }
     
@@ -130,7 +129,6 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    
     var collectionDownload = PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes.map {
       PersistenceMocks.download(for: $0)
@@ -140,7 +138,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try collectionDownload.save(db)
     }
     
-    try database.write { (db) in
+    try database.write { db in
       try episodeDownloads.forEach { download in
         var dl = download
         try dl.save(db)
@@ -151,7 +149,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
     }
     
-    let updatedCollectionDownload = try database.read { (db) in
+    let updatedCollectionDownload = try database.read { db in
       try Download.filter(key: collectionDownload.id).fetchOne(db)
     }
     
@@ -162,7 +160,6 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func testTransitionNonFinalEpisodeToDownloadedUpdatesCollection() throws {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
-    
     
     var collectionDownload = PersistenceMocks.download(for: collection)
     var episodeDownload = PersistenceMocks.download(for: episodes[0])
@@ -177,7 +174,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .complete)
     try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
     
-    let updatedCollectionDownload = try database.read { (db) in
+    let updatedCollectionDownload = try database.read { db in
       try Download.filter(key: collectionDownload.id).fetchOne(db)
     }
     
@@ -185,18 +182,17 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     XCTAssertEqual(1, updatedCollectionDownload?.progress)
   }
   
-  // MARK:- Collection Download Utilities
+  // MARK: - Collection Download Utilities
   func testCollectionDownloadSummaryWorksForInProgress() throws {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    
-    let _ = PersistenceMocks.download(for: collection)
+    _ = PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes.map {
       PersistenceMocks.download(for: $0)
     }
     
-    try database.write { (db) in
+    try database.write { db in
       try episodeDownloads.forEach { download in
         var dl = download
         try dl.save(db)
@@ -221,13 +217,12 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    
-    let _ = PersistenceMocks.download(for: collection)
+    _ = PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes[0..<10].map { episode in
       PersistenceMocks.download(for: episode)
     }
     
-    try database.write { (db) in
+    try database.write { db in
       try episodeDownloads.forEach { download in
         var dl = download
         try dl.save(db)
@@ -252,13 +247,12 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    
-    let _ = PersistenceMocks.download(for: collection)
+    _ = PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes[0..<10].map {
       PersistenceMocks.download(for: $0)
     }
     
-    try database.write { (db) in
+    try database.write { db in
       try episodeDownloads.forEach { download in
         var dl = download
         try dl.save(db)
@@ -283,13 +277,12 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    
-    let _ = PersistenceMocks.download(for: collection)
+    _ = PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes.map {
       PersistenceMocks.download(for: $0)
     }
     
-    try database.write { (db) in
+    try database.write { db in
       try episodeDownloads.forEach { download in
         var dl = download
         try dl.save(db)
@@ -314,7 +307,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let screencast = try populateSampleScreencast()
     
     var download = PersistenceMocks.download(for: screencast)
-    try database.write { (db) in
+    try database.write { db in
       try download.save(db)
     }
     
@@ -323,7 +316,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
   }
   
-  // MARK:- Creating Downloads
+  // MARK: - Creating Downloads
   func testCreateDownloadsCreatesSingleDownloadForScreencast() throws {
     let screencast = try populateSampleScreencast()
     
@@ -386,7 +379,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     XCTAssertGreaterThan(getAllContents().count, 0)
   }
   
-  // MARK:- Queue management
+  // MARK: - Queue management
   func testDownloadListDoesNotContainEpisodes() throws {
     let collection = try populateSampleCollection()
     try persistenceStore.createDownloads(for: collection)
@@ -407,7 +400,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     let recorder = persistenceStore.downloads(in: .inProgress).record()
     
-    let downloads = getAllDownloads().sorted{ $0.requestedAt < $1.requestedAt }
+    let downloads = getAllDownloads().sorted { $0.requestedAt < $1.requestedAt }
     let episodes = getAllContents().filter({ $0.contentType == .episode })
     try downloads.forEach { download in
       try persistenceStore.transitionDownload(withId: download.id, to: .inProgress)
@@ -421,7 +414,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 2)
     
     XCTAssertEqual(0, inProgressQueue.filter { $0?.content.contentType == .collection }.count)
-    XCTAssertEqual(episodes.map{ $0.id }.sorted(), inProgressQueue.compactMap{ $0?.content.id }.sorted())
+    XCTAssertEqual(episodes.map { $0.id }.sorted(), inProgressQueue.compactMap { $0?.content.id }.sorted())
   }
   
   func testDownloadQueueDoesNotContainCollections() throws {
@@ -482,7 +475,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let screencast = try populateSampleScreencast()
     
     var download = PersistenceMocks.download(for: screencast)
-    try database.write { (db) in
+    try database.write { db in
       try download.save(db)
     }
     
@@ -497,7 +490,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let screencast = try populateSampleScreencast()
     
     var download = PersistenceMocks.download(for: screencast)
-    try database.write { (db) in
+    try database.write { db in
       try download.save(db)
     }
     

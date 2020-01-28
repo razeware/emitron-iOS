@@ -40,10 +40,10 @@ struct TextListItemView: View {
   var content: ChildContentListDisplayable
   
   var canStreamPro: Bool {
-    return sessionController.user?.canStreamPro ?? false
+    sessionController.user?.canStreamPro ?? false
   }
   var canDownload: Bool {
-    return sessionController.user?.canDownload ?? false
+    sessionController.user?.canDownload ?? false
   }
   
   var body: some View {

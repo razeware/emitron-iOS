@@ -32,39 +32,39 @@ import SwiftyJSON
 
 class ContentAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id":"12",
-    "type":"contents",
+    "id": "12",
+    "type": "contents",
     "attributes": [
-      "uri":"rw://betamax/videos/12",
-      "name":"Some kind of content",
-      "description":"HTML Description",
+      "uri": "rw://betamax/videos/12",
+      "name": "Some kind of content",
+      "description": "HTML Description",
       "description_plain_text": "PLAIN TEXT",
-      "released_at":"2020-01-01T12:00:00.000Z",
-      "free":true,
-      "difficulty":"advanced",
-      "content_type":"collection",
-      "duration":342,
-      "popularity":727.0,
-      "card_artwork_url":"https://example.com/card_artwork.png",
-      "technology_triple_string":"Swift 5, iOS 13.0 Beta, Xcode 11.0 Beta",
-      "contributor_string":"Katie Collins & Jessy Catterwaul",
-      "video_identifier":2546,
+      "released_at": "2020-01-01T12:00:00.000Z",
+      "free": true,
+      "difficulty": "advanced",
+      "content_type": "collection",
+      "duration": 342,
+      "popularity": 727.0,
+      "card_artwork_url": "https://example.com/card_artwork.png",
+      "technology_triple_string": "Swift 5, iOS 13.0 Beta, Xcode 11.0 Beta",
+      "contributor_string": "Katie Collins & Jessy Catterwaul",
+      "video_identifier": 2546,
       "ordinal": 13,
       "professional": true,
       "parent_name": "something here"
     ],
-    "relationships":[
-      "domains":[
-        "data":[
+    "relationships": [
+      "domains": [
+        "data": [
           [
-            "id":"1",
-            "type":"domains"
+            "id": "1",
+            "type": "domains"
           ]
         ]
       ],
       "child_contents": [
         "meta": [
-          "count":0
+          "count": 0
         ]
       ],
       "progression": [
@@ -73,23 +73,23 @@ class ContentAdapterTest: XCTestCase {
       "bookmark": [
         "data": NSNull()
       ],
-      "groups":[
-        "data":[
+      "groups": [
+        "data": [
         ]
       ],
-      "categories":[
-        "data":[
+      "categories": [
+        "data": [
           [
-            "id":"158",
-            "type":"categories"
+            "id": "158",
+            "type": "categories"
           ]
         ]
       ]
     ],
-    "links":[
-      "self":"http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
-      "video_stream":"http://api.raywenderlich.com/api/videos/2546/stream",
-      "video_download":"http://api.raywenderlich.com/api/videos/2546/download"
+    "links": [
+      "self": "http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
+      "video_stream": "http://api.raywenderlich.com/api/videos/2546/stream",
+      "video_download": "http://api.raywenderlich.com/api/videos/2546/download"
     ]
   ]
   
@@ -140,7 +140,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -151,7 +151,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -162,7 +162,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -173,7 +173,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -184,7 +184,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -195,7 +195,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -206,7 +206,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -217,7 +217,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -228,7 +228,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -239,7 +239,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -250,7 +250,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -271,7 +271,7 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }

@@ -40,7 +40,7 @@ protocol Log {
 // To make "reason" optional
 extension Log {
   var reason: String {
-    return "N/A"
+    "N/A"
   }
   
   func log() {
@@ -62,7 +62,7 @@ enum Failure: Log {
   case downloadService(from: String, reason: String)
   
   private var failure: String {
-    return "Failed_"
+    "Failed_"
   }
   
   var object: String {

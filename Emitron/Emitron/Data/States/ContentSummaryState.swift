@@ -41,4 +41,3 @@ struct ContentSummaryState: Decodable, Equatable {
   let categories: [Category]
   let parentContent: Content?
 }
-

@@ -44,17 +44,16 @@ final class DataCache: ObservableObject {
   enum CacheChange {
     case updated
   }
-  private var contents: [Int : Content] = [Int : Content]()
-  private var bookmarks: [Int : Bookmark] = [Int : Bookmark]()
-  private var progressions: [Int : Progression] = [Int : Progression]()
-  private var contentIndexedGroups: [Int : [Group]] = [Int : [Group]]()
-  private var groupIndexedGroups: [Int : Group] = [Int : Group]()
-  private var contentDomains: [Int : [ContentDomain]] = [Int : [ContentDomain]]()
-  private var contentCategories: [Int : [ContentCategory]] = [Int : [ContentCategory]]()
+  private var contents: [Int: Content] = [Int: Content]()
+  private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
+  private var progressions: [Int: Progression] = [Int: Progression]()
+  private var contentIndexedGroups: [Int: [Group]] = [Int: [Group]]()
+  private var groupIndexedGroups: [Int: Group] = [Int: Group]()
+  private var contentDomains: [Int: [ContentDomain]] = [Int: [ContentDomain]]()
+  private var contentCategories: [Int: [ContentCategory]] = [Int: [ContentCategory]]()
   
   private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
 }
-
 
 extension DataCache {
   func update(from cacheUpdate: DataCacheUpdate) {
@@ -128,7 +127,6 @@ extension DataCache {
     bookmarks[contentId]
   }
 }
-
 
 extension DataCache {
   private func cachedContentSummaryState(for contentId: Int) throws -> CachedContentSummaryState {

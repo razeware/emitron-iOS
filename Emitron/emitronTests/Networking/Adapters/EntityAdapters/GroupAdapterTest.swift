@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class GroupAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "groups",
     "attributes": [
       "name": "Sample Group",
@@ -49,7 +49,7 @@ class GroupAdapterTest: XCTestCase {
           [
             "id": "7042",
             "type": "contents"
-          ],
+          ]
         ]
       ]
     ]
@@ -89,7 +89,7 @@ class GroupAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -100,7 +100,7 @@ class GroupAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -111,7 +111,7 @@ class GroupAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -121,7 +121,7 @@ class GroupAdapterTest: XCTestCase {
     
     let relationships = Array(self.relationships.dropFirst())
     
-    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { (error) in
+    XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingRelationships, error as! EntityAdapterError)
     }
   }
@@ -145,5 +145,4 @@ class GroupAdapterTest: XCTestCase {
     let group = try GroupAdapter.process(resource: resource, relationships: relationships)
     XCTAssertNil(group.description)
   }
-  
 }

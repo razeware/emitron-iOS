@@ -55,11 +55,11 @@ struct LibraryView: View {
             Image(systemName: "arrow.clockwise")
               .foregroundColor(.iconButton)
           }
-      })
+        })
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
       .background(Color.backgroundColor)
-    }
+      }
   }
   
   private var contentControlsSection: some View {

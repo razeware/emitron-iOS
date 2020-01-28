@@ -29,7 +29,7 @@
 import Foundation
 
 extension ContentSummaryState: ContentListDisplayable {
-  // MARK:- Proxied from content
+  // MARK: - Proxied from content
   var id: Int {
     content.id
   }
@@ -86,12 +86,12 @@ extension ContentSummaryState: ContentListDisplayable {
     content.videoIdentifier
   }
   
-  // MARK:- Proxied from Other Records
+  // MARK: - Proxied from Other Records
   var parentName: String? {
     parentContent?.name
   }
   
-  // MARK:- Evaluated
+  // MARK: - Evaluated
   var cardViewSubtitle: String {
     if domains.count == 1 {
       return domains.first!.name

@@ -74,7 +74,7 @@ struct MyTutorialView: View {
             Image("settings")
               .foregroundColor(.iconButton)
           }
-      })
+        })
       .sheet(isPresented: self.$settingsPresented) {
         SettingsView(showLogoutButton: true)
           // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
@@ -88,7 +88,7 @@ struct MyTutorialView: View {
   }
 
   private var toggleControl: AnyView {
-    return AnyView(
+    AnyView(
       VStack {
         ToggleControlView(toggleState: state, inProgressClosure: {
           // Should only call load contents if we have just switched to the My Tutorials tab

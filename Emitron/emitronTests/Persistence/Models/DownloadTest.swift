@@ -76,7 +76,7 @@ class DownloadTest: XCTestCase {
     // It too should be the right one
     XCTAssertEqual(download, getAllDownloads().first!)
     
-    let _ = try database.write { db in
+    _ = try database.write { db in
       try download.delete(db)
     }
       
@@ -86,5 +86,4 @@ class DownloadTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     XCTAssertEqual(content, getAllContents().first!)
   }
-  
 }

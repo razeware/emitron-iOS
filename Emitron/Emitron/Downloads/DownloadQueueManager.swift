@@ -33,17 +33,17 @@ final class DownloadQueueManager {
   private let maxSimultaneousDownloads: Int
   private let persistenceStore: PersistenceStore
 
-  lazy private (set) var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
+  private (set) lazy var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
     persistenceStore
       .downloads(in: .pending)
       .eraseToAnyPublisher()
   }()
-  lazy private (set) var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
+  private (set) lazy var readyForDownloadStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> = {
     persistenceStore
       .downloads(in: .readyForDownload)
       .eraseToAnyPublisher()
   }()
-  lazy private (set) var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
+  private (set) lazy var downloadQueue: AnyPublisher<[PersistenceStore.DownloadQueueItem], Error> = {
     persistenceStore
       .downloadQueue(withMaxLength: maxSimultaneousDownloads)
       .eraseToAnyPublisher()

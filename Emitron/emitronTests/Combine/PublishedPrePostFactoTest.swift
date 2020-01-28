@@ -86,5 +86,4 @@ class PublishedPostFactoTest: XCTestCase {
     
     XCTAssertEqual([0, 2, 4], values)
   }
-
 }

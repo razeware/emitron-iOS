@@ -121,7 +121,7 @@ struct FiltersView: View {
     // Update filters with the currentFilters on contentsMC, to keep them in sync (aka, remove them)
     
     // First, turn all applied off
-    self.filters.applied.forEach{ filter in
+    self.filters.applied.forEach { filter in
       filter.isOn = false
       self.filters.all.update(with: filter)
     }

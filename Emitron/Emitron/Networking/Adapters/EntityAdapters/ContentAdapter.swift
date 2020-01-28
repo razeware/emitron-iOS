@@ -57,7 +57,7 @@ struct ContentAdapter: EntityAdapter {
       }
     }
     
-    var cardArtworkUrl: URL? = nil
+    var cardArtworkUrl: URL?
     if let cardArtworkUrlString = resource.attributes["card_artwork_url"] as? String {
       cardArtworkUrl = URL(string: cardArtworkUrlString)
     }
@@ -88,4 +88,3 @@ struct ContentAdapter: EntityAdapter {
                    ordinal: resource.attributes["ordinal"] as? Int)
   }
 }
-

@@ -47,6 +47,5 @@ struct DomainAdapter: EntityAdapter {
                   description: resource.attributes["description"] as? String,
                   level: level,
                   ordinal: ordinal)
-    
   }
 }

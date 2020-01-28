@@ -59,7 +59,7 @@ struct SingleSignOnResponse {
   }
 
   var isValid: Bool {
-    return isSignatureValid && isNonceValid
+    isSignatureValid && isNonceValid
   }
 
   var user: User? {
@@ -89,15 +89,15 @@ private extension SingleSignOnResponse {
   }
 
   var isNonceValid: Bool {
-    return decodedPayloadEntry(name: "nonce") == request.nonce
+    decodedPayloadEntry(name: "nonce") == request.nonce
   }
 
   func decodedPayloadEntry(name: String) -> String? {
-    return decodedPayload?.first { $0.name == name }?.value
+    decodedPayload?.first { $0.name == name }?.value
   }
 
   func queryItemsToDictionary(_ queryItems: [URLQueryItem]) -> [String: String] {
-    return queryItems.reduce(into: [:]) { result, item in
+    queryItems.reduce(into: [:]) { result, item in
       result[item.name] = item.value?.removingPercentEncoding
     }
   }

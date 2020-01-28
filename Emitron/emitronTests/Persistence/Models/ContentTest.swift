@@ -114,7 +114,7 @@ class ContentTest: XCTestCase {
     // It too should be the right one
     XCTAssertEqual(download, getAllDownloads().first!)
     
-    let _ = try database.write { db in
+    _ = try database.write { db in
       try content.delete(db)
     }
     

@@ -158,7 +158,6 @@ struct EmitronDatabase {
     
     //: Add future migrations below here, to ensure consistency
     
-    
     return migrator
   }
 }

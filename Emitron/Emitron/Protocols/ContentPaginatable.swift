@@ -45,10 +45,10 @@ protocol ContentPaginatable: ObservableObject where ObjectWillChangePublisher ==
 extension ContentPaginatable {
 	// All content that currently conforms to this prootocol is 1-indexed
   var startingPage: Int {
-    return 1
+    1
   }
   
   var defaultPageSize: Int {
-    return 20
+    20
   }
 }

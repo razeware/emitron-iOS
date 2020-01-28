@@ -29,7 +29,6 @@
 import Foundation
 import GRDB
 
-
 extension Progression: FetchableRecord, TableRecord, PersistableRecord { }
 
 extension Progression {

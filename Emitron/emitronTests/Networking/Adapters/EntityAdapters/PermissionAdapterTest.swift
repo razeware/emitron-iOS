@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class PermissionAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "permissions",
     "attributes": [
       "name": "Downloadable Videos",
@@ -74,7 +74,7 @@ class PermissionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -85,7 +85,7 @@ class PermissionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -96,7 +96,7 @@ class PermissionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -107,7 +107,7 @@ class PermissionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -118,7 +118,7 @@ class PermissionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }

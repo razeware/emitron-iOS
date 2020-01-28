@@ -34,7 +34,7 @@ struct FilterGroup: Hashable {
   var type: FilterGroupType
   var filters: [Filter]
   var numApplied: Int {
-    return filters.filter { $0.isOn }.count
+    filters.filter { $0.isOn }.count
   }
   
   init(type: FilterGroupType, filters: [Filter] = []) {
@@ -52,7 +52,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case none = "" // For filters whose values aren't an array, for example the search query
   
   var name: String {
-    return self.rawValue
+    self.rawValue
   }
 }
 
@@ -88,23 +88,23 @@ enum SortFilter: Int, Codable {
   }
   
   var parameter: Parameter {
-    return Param.sort(for: paramValue, descending: true)
+    Param.sort(for: paramValue, descending: true)
   }
 }
 
 class Filters: ObservableObject {
   var all: Set<Filter> {
     didSet {
-      platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      categories.filters = all.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      categories.filters = all.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
     }
   }
   
   // This decides the order in which the filter groups are displayed
   var filterGroups: [FilterGroup] {
-    return [platforms, contentTypes, difficulties, categories]
+    [platforms, contentTypes, difficulties, categories]
   }
   
   var appliedParameters: [Parameter] {
@@ -205,10 +205,10 @@ class Filters: ObservableObject {
     let savedFilters = SettingsManager.current.filters
     if !savedFilters.isEmpty {
       // Validate loaded settings and put them in the right places
-      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
-      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
+      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
     }
     
     let freshFilters =

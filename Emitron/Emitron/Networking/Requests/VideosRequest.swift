@@ -61,10 +61,10 @@ struct DownloadVideoRequest: Request {
   typealias Response = [Attachment]
 
   // MARK: - Properties
-  var method: HTTPMethod { return .GET }
-  var path: String { return "/videos/\(id)/download" }
+  var method: HTTPMethod { .GET }
+  var path: String { "/videos/\(id)/download" }
   var additionalHeaders: [String: String]?
-  var body: Data? { return nil }
+  var body: Data? { nil }
 
   // MARK: - Parameters
   let id: Int

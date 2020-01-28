@@ -196,7 +196,7 @@ class DownloadServiceTest: XCTestCase {
     let allContentIds = fullState.childContents.map({ $0.id }) + [collection.0.id]
     
     XCTAssertEqual(allContentIds.count, getAllContents().count)
-    XCTAssertEqual(allContentIds.sorted() , getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual(allContentIds.sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
@@ -205,7 +205,7 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
     
     let episode = fullState.childContents.first!
-    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
     })
     
@@ -258,7 +258,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssert(result.successful)
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
-    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted() , getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
@@ -267,7 +267,7 @@ class DownloadServiceTest: XCTestCase {
     
     var episode = fullState.childContents.first!
     
-    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { (contentId) in
+    try persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
     })
     
@@ -331,13 +331,13 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episodes = fullState.childContents
     
-    let _ = downloadService.requestDownload(contentId: episodes[0].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[0].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
-    let _ = downloadService.requestDownload(contentId: episodes[1].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[1].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
-    let _ = downloadService.requestDownload(contentId: episodes[2].id) { contentId in
+    _ = downloadService.requestDownload(contentId: episodes[2].id) { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
     
@@ -492,7 +492,7 @@ class DownloadServiceTest: XCTestCase {
   
   func testRequestDownloadUrlDoesNothingForCollection() {
     let collection = ContentTest.Mocks.collection
-    let _ = downloadService.requestDownload(contentId: collection.0.id) { _ in
+    _ = downloadService.requestDownload(contentId: collection.0.id) { _ in
       ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     }
     
@@ -651,7 +651,7 @@ class DownloadServiceTest: XCTestCase {
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localUrl)
-      XCTAssertEqual(Download.State.urlRequested , refreshedDownload.state)
+      XCTAssertEqual(Download.State.urlRequested, refreshedDownload.state)
     }
   }
   
@@ -672,7 +672,7 @@ class DownloadServiceTest: XCTestCase {
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localUrl)
-      XCTAssertEqual(Download.State.pending , refreshedDownload.state)
+      XCTAssertEqual(Download.State.pending, refreshedDownload.state)
     }
   }
 }

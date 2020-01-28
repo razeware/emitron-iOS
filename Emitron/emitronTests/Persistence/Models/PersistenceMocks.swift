@@ -48,7 +48,6 @@ struct PersistenceMocks {
             contributors: "HELLO",
             groupId: nil,
             ordinal: 0)
-    
   }
   
   static func download(for content: Content) -> Download {

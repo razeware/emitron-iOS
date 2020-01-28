@@ -81,5 +81,4 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     
     XCTAssertNil(persistenceStore.userFromKeychain())
   }
-  
 }

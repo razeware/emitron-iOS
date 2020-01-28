@@ -30,7 +30,7 @@ import Foundation
 import GRDB
 import GRDBCombine
 
-// MARK:- Synchronisation Request Creation
+// MARK: - Synchronisation Request Creation
 extension PersistenceStore {
   @discardableResult
   func createBookmarkSyncRequest(for contentId: Int) throws -> SyncRequest? {
@@ -202,7 +202,7 @@ extension PersistenceStore {
   }
 }
 
-// MARK:- Synchronisation Queue Management
+// MARK: - Synchronisation Queue Management
 extension PersistenceStore {
   func syncRequestStream(for types: [SyncRequest.Synchronisation]) -> DatabasePublishers.Value<[SyncRequest]> {
     ValueObservation.tracking { db -> [SyncRequest] in
@@ -217,7 +217,7 @@ extension PersistenceStore {
   
   func complete(syncRequests: [SyncRequest]) {
     do {
-      try db.write { (db) in
+      try db.write { db in
         syncRequests.forEach {
           do {
             try $0.delete(db)

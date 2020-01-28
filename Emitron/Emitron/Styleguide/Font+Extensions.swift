@@ -30,57 +30,57 @@ import SwiftUI
 
 extension Font {
   static var uiLargeTitle: Font {
-    return Font.custom("Bitter-Bold", size: 34.0)
+    Font.custom("Bitter-Bold", size: 34.0)
   }
   static var uiTitle1: Font {
-    return Font.custom("Bitter-Bold", size: 28.0)
+    Font.custom("Bitter-Bold", size: 28.0)
   }
   static var uiTitle2: Font {
-    return Font.custom("Bitter-Bold", size: 23.0)
+    Font.custom("Bitter-Bold", size: 23.0)
   }
   static var uiTitle3: Font {
-    return Font.custom("Bitter-Bold", size: 20.0)
+    Font.custom("Bitter-Bold", size: 20.0)
   }
   static var uiTitle4: Font {
-    return Font.custom("Bitter-Bold", size: 19.0)
+    Font.custom("Bitter-Bold", size: 19.0)
   }
   static var uiTitle5: Font {
-    return Font.custom("Bitter-Regular", size: 17.0)
+    Font.custom("Bitter-Regular", size: 17.0)
   }
   static var uiHeadline: Font {
-    return Font.system(size: 18.0).weight(.semibold)
+    Font.system(size: 18.0).weight(.semibold)
   }
 
   static var uiBodyAppleDefault: Font {
-    return Font.body
+    Font.body
   }
 
   // Can't have bold Font's
   static var uiButtonLabel: Font {
-    return Font.system(size: 17.0).bold()
+    Font.system(size: 17.0).bold()
   }
   static var uiBodyCustom: Font {
-    return Font.system(size: 15.0)
+    Font.system(size: 15.0)
   }
   static var uiLabelBold: Font {
-    return Font.system(size: 16.0).weight(.semibold)
+    Font.system(size: 16.0).weight(.semibold)
   }
   static var uiLabel: Font {
-    return Font.system(size: 16.0)
+    Font.system(size: 16.0)
   }
   static var uiButtonLabelSmall: Font {
-    return Font.system(size: 13.0).weight(.semibold)
+    Font.system(size: 13.0).weight(.semibold)
   }
   static var uiFootnote: Font {
-    return Font.footnote
+    Font.footnote
   }
   static var uiCaption: Font {
-    return Font.system(size: 13.0)
+    Font.system(size: 13.0)
   }
   static var uiUppercase: Font {
-    return Font.system(size: 12.0).weight(.semibold)
+    Font.system(size: 12.0).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    return Font.system(size: 9.0).weight(.semibold)
+    Font.system(size: 9.0).weight(.semibold)
   }
 }

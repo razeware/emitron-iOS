@@ -26,7 +26,6 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-
 import UIKit
 import AVFoundation
 import GRDB
@@ -39,7 +38,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var dataManager: DataManager!
   fileprivate var sessionController: SessionController!
   fileprivate var downloadService: DownloadService!
-  fileprivate var messageBus: MessageBus = MessageBus()
+  fileprivate var messageBus = MessageBus()
   fileprivate var settingsManager: SettingsManager!
   
   func application(_ application: UIApplication,
@@ -103,7 +102,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       guard let vc = (window?.rootViewController?.presentedViewController) else {
           return .portrait
       }
-      if (vc.isKind(of: NSClassFromString("AVFullScreenViewController")!)){
+      if vc.isKind(of: NSClassFromString("AVFullScreenViewController")!) {
           return .allButUpsideDown
       } else {
           return .portrait
@@ -131,8 +130,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
 }
 
-
-// MARK:- Making some delightful global-access points. Classy.
+// MARK: - Making some delightful global-access points. Classy.
 extension SessionController {
   static var current: SessionController {
     (UIApplication.shared.delegate as! AppDelegate).sessionController

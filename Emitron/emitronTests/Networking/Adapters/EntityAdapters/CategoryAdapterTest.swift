@@ -32,12 +32,12 @@ import SwiftyJSON
 
 class CategoryAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "categories",
     "attributes": [
       "name": "Algorithms & Data Structures",
-      "uri":"rw://carolus/categories/1234",
-      "ordinal":5
+      "uri": "rw://carolus/categories/1234",
+      "ordinal": 5
     ]
   ]
   
@@ -69,7 +69,7 @@ class CategoryAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -80,7 +80,7 @@ class CategoryAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -91,7 +91,7 @@ class CategoryAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -102,7 +102,7 @@ class CategoryAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try CategoryAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }

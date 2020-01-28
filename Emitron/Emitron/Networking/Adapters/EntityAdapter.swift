@@ -99,4 +99,3 @@ enum EntityAdapterError: Error {
     }
   }
 }
-

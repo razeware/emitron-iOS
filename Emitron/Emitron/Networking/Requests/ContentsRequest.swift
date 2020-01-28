@@ -113,7 +113,7 @@ struct PlaybackUsageRequest: Request {
   var path: String { "/contents/\(id)/playback" }
   var additionalHeaders: [String: String]?
   var body: Data? { 
-    let json: [String : Any] = [
+    let json: [String: Any] = [
       "video_playback_token": token,
       "progress": progress,
       "seconds": Constants.videoPlaybackProgressTrackingInterval
@@ -148,5 +148,3 @@ struct PlaybackUsageRequest: Request {
     return (progression: progression, cacheUpdate: cacheUpdate)
   }
 }
-
-

@@ -34,7 +34,6 @@ protocol ObservablePrePostFactoObject: ObservableObject {
   var objectDidChange: ObservableObjectPublisher { get }
 }
 
-
 @propertyWrapper
 struct PublishedPrePostFacto<Value: Equatable> {
   
@@ -77,4 +76,3 @@ struct PublishedPrePostFacto<Value: Equatable> {
     }
   }
 }
-

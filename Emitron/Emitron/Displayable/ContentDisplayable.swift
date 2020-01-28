@@ -28,7 +28,7 @@
 
 import Foundation
 
-// MARK:- Shared
+// MARK: - Shared
 // These are used every time we see content.
 
 /// The progress the current user has made through this item of content
@@ -93,7 +93,7 @@ enum DownloadProgressDisplayable: CustomStringConvertible {
   }
 }
 
-// MARK:- Content Listing
+// MARK: - Content Listing
 
 /// Suitable for content listing view, and the summary section of the content details view
 protocol ContentListDisplayable {
@@ -116,7 +116,6 @@ protocol ContentListDisplayable {
   var videoIdentifier: Int? { get }
 }
 
-
 extension ContentListDisplayable {
   var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
@@ -128,8 +127,7 @@ extension ContentListDisplayable {
   }
 }
 
-
-// MARK:- Child Contents Table
+// MARK: - Child Contents Table
 // For display on the content details view page
 
 /// Required to display a line item in the table. These should all be .episode
@@ -150,4 +148,3 @@ protocol GroupDisplayable {
   var description: String? { get }
   var ordinal: Int { get }
 }
-

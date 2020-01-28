@@ -46,7 +46,6 @@ enum ContentScreen {
     case .bookmarked: return "You haven't bookmarked any tutorials yet."
     case .inProgress: return "You don't have any tutorials in progress yet."
     case .completed: return "You haven't completed any tutorials yet."
-
     }
   }
 

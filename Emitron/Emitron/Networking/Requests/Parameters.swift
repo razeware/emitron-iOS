@@ -316,7 +316,7 @@ enum Param {
     
   // Only to be used for the search query filter
   static func filter(for param: ParameterFilterValue) -> Parameter {
-    return Parameter(key: "filter[\(param.strKey)]", value: param.value, displayName: param.value, sortOrdinal: 0)
+    Parameter(key: "filter[\(param.strKey)]", value: param.value, displayName: param.value, sortOrdinal: 0)
   }
   
   static func sort(for value: ParameterSortValue,

@@ -32,7 +32,7 @@ import SwiftyJSON
 
 class ProgressionAdapterTest: XCTestCase {
   let sampleResource: JSON = [
-    "id" : "1234",
+    "id": "1234",
     "type": "progressions",
     "attributes": [
       "target": 1000,
@@ -57,7 +57,6 @@ class ProgressionAdapterTest: XCTestCase {
       "self": "https://example.com/progressions/1234"
     ]
   ]
-
   
   func makeJsonAPIResource(for dict: JSON) throws -> JSONAPIResource {
     let json: JSON = [
@@ -92,7 +91,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidResourceTypeForAdapter, error as! EntityAdapterError)
     }
   }
@@ -103,7 +102,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -114,7 +113,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -125,7 +124,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -136,7 +135,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
   }
@@ -157,7 +156,7 @@ class ProgressionAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { (error) in
+    XCTAssertThrowsError(try ProgressionAdapter.process(resource: resource)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingRelationships, error as! EntityAdapterError)
     }
   }

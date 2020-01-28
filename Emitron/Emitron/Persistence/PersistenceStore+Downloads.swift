@@ -139,7 +139,6 @@ extension PersistenceStore {
     }
   }
   
-  
   /// Return a single `Download` from its content id
   /// - Parameter contentId: The ID of the item of content this download refers to
   func download(forContentId contentId: Int) throws -> Download? {
@@ -225,7 +224,7 @@ extension PersistenceStore {
     let downloadSummary = try collectionDownloadSummary(forContentId: collectionDownload.contentId)
     var download = collectionDownload
     
-    let _ = try db.write { db in
+    _ = try db.write { db in
       try download.updateChanges(db) {
         $0.state = downloadSummary.state
         $0.progress = downloadSummary.progress
