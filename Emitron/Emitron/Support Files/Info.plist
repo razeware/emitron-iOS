@@ -40,8 +40,6 @@
 		<key>NSAllowsArbitraryLoads</key>
 		<true/>
 	</dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Need access to dowload videos.</string>
 	<key>SSO_SECRET</key>
 	<string>$(SSO_SECRET)</string>
 	<key>UIAppFonts</key>
