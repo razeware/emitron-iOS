@@ -183,7 +183,7 @@ struct ClearButton: ViewModifier {
   @Binding var text: String
   var action: () -> Void
 
-  public func body(content: Self.Content) -> some View {
+  func body(content: Self.Content) -> some View {
     HStack {
       content
       Button(action: {

@@ -209,30 +209,26 @@ struct ContentDetailView: View {
   
   private var proView: some View {
     VStack {
-        HStack {
-          Image("padlock")
-          
-          Text("Pro Course")
-            .font(.uiTitle1)
-            .foregroundColor(.white)
-        }
+      HStack {
+        Image("padlock")
         
-        Text("To unlock this course visit raywenderlich.com/subscription for more information")
-          .multilineTextAlignment(.center)
-          .font(.uiLabel)
+        Text("Pro Course")
+          .font(.uiTitle1)
           .foregroundColor(.white)
-          .padding([.leading, .trailing], 20)
-          .lineLimit(3)
-          .fixedSize(horizontal: false, vertical: true)
       }
+      
+      Text("To unlock this course visit raywenderlich.com/subscription for more information")
+        .multilineTextAlignment(.center)
+        .font(.uiLabel)
+        .foregroundColor(.white)
+        .padding([.leading, .trailing], 20)
+        .lineLimit(3)
+        .fixedSize(horizontal: false, vertical: true)
+    }
   }
   
   private func refreshContentDetails() {
     dynamicContentViewModel.reload()
     childContentsViewModel.reload()
-  }
-  
-  private func save(for contentId: Int) {
-    // TODO
   }
 }

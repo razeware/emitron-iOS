@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-private struct Layout {
+private enum Layout {
   static let line: CGFloat = 5.0
   static let frame: CGFloat = 19.0
   static let endProgress: CGFloat = 0.0

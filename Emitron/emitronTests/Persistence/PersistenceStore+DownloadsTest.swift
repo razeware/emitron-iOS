@@ -141,8 +141,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try database.write { db in
       try episodeDownloads.forEach { download in
-        var dl = download
-        try dl.save(db)
+        var mutableDownload = download
+        try mutableDownload.save(db)
       }
     }
     
@@ -195,8 +195,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try database.write { db in
       try episodeDownloads.forEach { download in
-        var dl = download
-        try dl.save(db)
+        var mutableDownload = download
+        try mutableDownload.save(db)
       }
     }
     
@@ -225,8 +225,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try database.write { db in
       try episodeDownloads.forEach { download in
-        var dl = download
-        try dl.save(db)
+        var mutableDownload = download
+        try mutableDownload.save(db)
       }
     }
     
@@ -255,8 +255,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try database.write { db in
       try episodeDownloads.forEach { download in
-        var dl = download
-        try dl.save(db)
+        var mutableDownload = download
+        try mutableDownload.save(db)
       }
     }
     
@@ -285,8 +285,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try database.write { db in
       try episodeDownloads.forEach { download in
-        var dl = download
-        try dl.save(db)
+        var mutableDownload = download
+        try mutableDownload.save(db)
       }
     }
     

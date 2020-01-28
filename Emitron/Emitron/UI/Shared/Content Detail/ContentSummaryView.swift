@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-private struct Layout {
+private enum Layout {
   static let buttonSize: CGFloat = 21
 }
 

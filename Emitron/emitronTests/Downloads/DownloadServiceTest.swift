@@ -38,6 +38,7 @@ class DownloadServiceTest: XCTestCase {
   private var userModelController: UserMCMock!
   
   override func setUp() {
+    super.setUp()
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
@@ -52,6 +53,7 @@ class DownloadServiceTest: XCTestCase {
   }
   
   override func tearDown() {
+    super.tearDown()
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
     SettingsManager.current.resetAll()

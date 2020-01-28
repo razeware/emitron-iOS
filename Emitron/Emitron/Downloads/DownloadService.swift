@@ -217,7 +217,8 @@ extension DownloadService {
         .downloadService(
           from: "requestDownloadUrl",
           reason: "User not allowed to request downloads."
-      ).log()
+        )
+        .log()
       return
     }
     guard downloadQueueItem.download.remoteUrl == nil,
@@ -236,7 +237,8 @@ extension DownloadService {
           .downloadService(
             from: "requestDownloadUrl",
             reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
-        ).log()
+          )
+          .log()
       return
     }
     
@@ -502,7 +504,9 @@ extension DownloadService {
     let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
     let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
     
-    if status == newStatus { return }
+    if status == newStatus {
+      return
+    }
     
     status = newStatus
     switch status {

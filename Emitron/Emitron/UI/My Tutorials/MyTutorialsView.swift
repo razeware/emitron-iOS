@@ -33,7 +33,10 @@ private extension CGFloat {
 }
 
 enum MyTutorialsState: String {
-  case inProgress, completed, bookmarked
+  case inProgress
+  case completed
+  case bookmarked
+  
   var contentScreen: ContentScreen {
     switch self {
     case .inProgress:
@@ -90,26 +93,30 @@ struct MyTutorialView: View {
   private var toggleControl: AnyView {
     AnyView(
       VStack {
-        ToggleControlView(toggleState: state, inProgressClosure: {
-          // Should only call load contents if we have just switched to the My Tutorials tab
-          if self.reloadProgression {
-            self.inProgressRepository.reload()
-            self.reloadProgression = false
-          }
-          self.state = .inProgress
-        }, completedClosure: {
-          if self.reloadCompleted {
-            self.completedRepository.reload()
-            self.reloadCompleted = false
-          }
-          self.state = .completed
-        }, bookmarkedClosure: {
-          if self.reloadBookmarks {
-            self.bookmarkRepository.reload()
-            self.reloadBookmarks = false
-          }
-          self.state = .bookmarked
-        })
+        ToggleControlView(
+          toggleState: state,
+          inProgressClosure: {
+            // Should only call load contents if we have just switched to the My Tutorials tab
+            if self.reloadProgression {
+              self.inProgressRepository.reload()
+              self.reloadProgression = false
+            }
+            self.state = .inProgress
+          },
+          completedClosure: {
+            if self.reloadCompleted {
+              self.completedRepository.reload()
+              self.reloadCompleted = false
+            }
+            self.state = .completed
+          },
+          bookmarkedClosure: {
+            if self.reloadBookmarks {
+              self.bookmarkRepository.reload()
+              self.reloadBookmarks = false
+            }
+            self.state = .bookmarked
+          })
           .padding([.top], .sidePadding)
       }
       .padding([.leading, .trailing], 20)
@@ -120,9 +127,12 @@ struct MyTutorialView: View {
 
   private var contentView: AnyView? {
     switch state {
-    case .inProgress: return inProgressContentsView
-    case .completed: return completedContentsView
-    case .bookmarked: return bookmarkedContentsView
+    case .inProgress:
+      return inProgressContentsView
+    case .completed:
+      return completedContentsView
+    case .bookmarked:
+      return bookmarkedContentsView
     }
   }
 

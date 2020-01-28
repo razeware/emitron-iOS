@@ -30,6 +30,8 @@ import UIKit
 import AVFoundation
 import GRDB
 
+// swiftlint:disable strict_fileprivate
+
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
   
@@ -99,10 +101,10 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   
   // handle orientation for the device
   func application (_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-      guard let vc = (window?.rootViewController?.presentedViewController) else {
+      guard let viewController = (window?.rootViewController?.presentedViewController) else {
           return .portrait
       }
-      if vc.isKind(of: NSClassFromString("AVFullScreenViewController")!) {
+      if viewController.isKind(of: NSClassFromString("AVFullScreenViewController")!) {
           return .allButUpsideDown
       } else {
           return .portrait

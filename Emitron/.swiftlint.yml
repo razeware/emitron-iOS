@@ -59,16 +59,11 @@ opt_in_rules:
 
 disabled_rules: # rule identifiers to exclude from running
   - force_cast
-  - large_tuple
-  - function_parameter_count
   - line_length
-  - nsobject_prefer_isequal
-  - type_name
-  - prefixed_toplevel_constant
-  - trailing_closure
-  - trailing_whitespace
-  - sorted_imports
+  - multiple_closures_with_trailing_closure
   - orphaned_doc_comment
+  - todo
+  - trailing_whitespace
 
 excluded: # paths to ignore during linting. overridden by `included`
   - Carthage
@@ -82,6 +77,10 @@ cyclomatic_complexity:
   - 20 # warning
   - 25 # error
 
+large_tuple:
+  - 3 # warning
+  - 4 # error
+
 line_length:
   - 150 # warning
   - 200 # error
@@ -91,12 +90,16 @@ file_length:
   - 1500 # error
 
 function_body_length:
-  - 200 # warning
+  - 100 # warning
   - 300 # error
 
 type_body_length:
   - 1000 # warning
   - 1500 # error
+
+type_name:
+  allowed_symbols:
+    - _
 
 identifier_name:
   min_length: 3
@@ -104,3 +107,7 @@ identifier_name:
   excluded:
     - by
     - id
+    - db
+
+conditional_returns_on_newline:
+  if_only: true

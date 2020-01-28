@@ -98,7 +98,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   
   // MARK: - Internal
   func login() {
-    if state == .loading { return }
+    guard state != .loading else { return }
     
     state = .loading
     guardpost.presentationContextDelegate = self
@@ -147,10 +147,10 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     guard connectionMonitor.currentPath.status == .satisfied else { return }
     
     // Don't repeatedly make the same request
-    if state == .loadingAdditional { return }
+    guard state != .loadingAdditional else { return }
     
     // No point in requesting permissions when there's no user
-    if !isLoggedIn { return }
+    guard isLoggedIn else { return }
     
     state = .loadingAdditional
     permissionsService.permissions { result in

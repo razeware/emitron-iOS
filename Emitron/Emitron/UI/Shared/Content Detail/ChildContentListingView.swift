@@ -39,14 +39,14 @@ struct ChildContentListingView: View {
   
   private var courseDetailsSection: AnyView {
     switch childContentsViewModel.state {
-      case .failed:
-        return AnyView(reloadView)
-      case .hasData:
-        return AnyView(coursesSection)
-      case .loading, .loadingAdditional:
-        return AnyView(loadingView)
-      case .initial:
-        return AnyView(loadingView)
+    case .failed:
+      return AnyView(reloadView)
+    case .hasData:
+      return AnyView(coursesSection)
+    case .loading, .loadingAdditional:
+      return AnyView(loadingView)
+    case .initial:
+      return AnyView(loadingView)
     }
   }
   

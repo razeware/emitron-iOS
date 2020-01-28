@@ -63,9 +63,10 @@ final class DownloadRepository: ContentRepository {
         .downloadList()
         .sink(receiveCompletion: { [weak self] error in
           guard let self = self else { return }
-          // TODO Logging
           self.state = .failed
-          print("Unable to retrieve download content summaries: \(error)")
+          Failure
+            .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
+            .log()
         }, receiveValue: { [weak self] contentSummaryStates in
           guard let self = self else { return }
           self.contents = contentSummaryStates

@@ -46,7 +46,7 @@ protocol DownloadProcessorDelegate: AnyObject {
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error)
 }
 
-fileprivate extension URLSessionDownloadTask {
+private extension URLSessionDownloadTask {
   var downloadId: UUID? {
     get {
       guard let taskDescription = taskDescription else { return .none }

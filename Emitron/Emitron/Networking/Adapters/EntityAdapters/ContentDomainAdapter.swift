@@ -33,7 +33,8 @@ struct ContentDomainAdapter: EntityAdapter {
     
     relationships.filter {
       $0.from.type == .content && $0.to.type == .domain
-    }.map {
+    }
+    .map {
       ContentDomain(id: nil,
                     contentId: $0.from.id,
                     domainId: $0.to.id)

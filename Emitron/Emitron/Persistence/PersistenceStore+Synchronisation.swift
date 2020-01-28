@@ -212,7 +212,8 @@ extension PersistenceStore {
         .order(SyncRequest.Columns.date.asc)
       
       return try SyncRequest.fetchAll(db, request)
-    }.publisher(in: db)
+    }
+    .publisher(in: db)
   }
   
   func complete(syncRequests: [SyncRequest]) {

@@ -41,10 +41,10 @@ enum ContentViewProgressDisplayable {
     switch progression {
     case .none:
       self = .notStarted
-    case .some(let p) where p.finished:
+    case .some(let prog) where prog.finished:
       self = .completed
-    case .some(let p):
-      self = .inProgress(progress: p.progressProportion)
+    case .some(let prog):
+      self = .inProgress(progress: prog.progressProportion)
     }
   }
 }

@@ -49,8 +49,10 @@ enum ProgressEngineError: Error {
 
 final class ProgressEngine {
   enum Mode {
-    case online, offline
+    case online
+    case offline
   }
+  
   private let contentsService: ContentsService
   private let repository: Repository
   private let syncAction: SyncAction

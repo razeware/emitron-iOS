@@ -137,18 +137,18 @@ final class VideoPlaybackViewModel {
     SettingsManager.current
       .playbackSpeedPublisher
       .removeDuplicates()
-      .sink { [unowned self] playbackSpeed in
-        self.player.rate = playbackSpeed.rate
+      .sink { [weak self] playbackSpeed in
+        self?.player.rate = playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
     SettingsManager.current
       .closedCaptionOnPublisher
       .removeDuplicates()
-      .sink { [unowned self] _ in
-        guard let playerItem = self.player.currentItem else { return }
+      .sink { [weak self] _ in
+        guard let playerItem = self?.player.currentItem else { return }
         
-        self.addClosedCaptions(for: playerItem)
+        self?.addClosedCaptions(for: playerItem)
       }
       .store(in: &subscriptions)
   }
@@ -160,7 +160,7 @@ final class VideoPlaybackViewModel {
       .sink(receiveCompletion: { completion in
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
-            // TODO: Display error
+            MessageBus.current.post(message: Message(level: .error, message: Constants.simultaneousStreamsError))
             self.player.pause()
           }
           Failure
@@ -174,7 +174,9 @@ final class VideoPlaybackViewModel {
       .store(in: &subscriptions)
     
     // Check whether we need to enqueue the next one yet
-    if state == .loading || state == .loadingAdditional { return }
+    if state == .loading || state == .loadingAdditional {
+      return
+    }
     guard let currentItem = player.currentItem else {
       return enqueueNext()
     }

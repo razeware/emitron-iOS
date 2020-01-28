@@ -41,6 +41,7 @@ class DownloadQueueManagerTest: XCTestCase {
   private var subscriptions = Set<AnyCancellable>()
 
   override func setUp() {
+    super.setUp()
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
@@ -52,6 +53,7 @@ class DownloadQueueManagerTest: XCTestCase {
   }
   
   override func tearDown() {
+    super.tearDown()
     videoService.reset()
     subscriptions = []
   }

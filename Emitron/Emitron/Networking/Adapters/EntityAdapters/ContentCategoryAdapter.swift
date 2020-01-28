@@ -33,7 +33,8 @@ struct ContentCategoryAdapter: EntityAdapter {
     
     relationships.filter {
       $0.from.type == .content && $0.to.type == .category
-    }.map {
+    }
+    .map {
       ContentCategory(id: nil,
                       contentId: $0.from.id,
                       categoryId: $0.to.id)

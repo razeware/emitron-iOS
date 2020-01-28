@@ -29,7 +29,7 @@
 import SwiftUI
 
 extension Image {
-  struct Downloads {
+  enum Downloads {
     static let notDownloaded = Image("downloadActive")
     static let downloaded = Image("downloadInactive")
   }

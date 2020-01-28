@@ -77,7 +77,6 @@ struct CheckmarkView: View {
 #if DEBUG
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
-    // TODO: No empty String
     CheckmarkView(isOn: false, onChange: { change in
       print("Changed to: \(change)")
     })

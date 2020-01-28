@@ -55,7 +55,7 @@ struct PublishedPrePostFacto<Value: Equatable> {
   
   var wrappedValue: Value {
     get { preconditionFailure("wrappedValue:get called") }
-    set { preconditionFailure("wrappedValue:set called") }
+    set { preconditionFailure("wrappedValue:set called with \(newValue)") }
   }
   
   static subscript<EnclosingSelf: ObservablePrePostFactoObject>(

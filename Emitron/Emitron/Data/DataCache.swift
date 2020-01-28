@@ -44,6 +44,7 @@ final class DataCache: ObservableObject {
   enum CacheChange {
     case updated
   }
+  
   private var contents: [Int: Content] = [Int: Content]()
   private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
   private var progressions: [Int: Progression] = [Int: Progression]()
@@ -151,13 +152,15 @@ extension DataCache {
       throw DataCacheError.cacheMiss
     }
     
-    if content.contentType != .collection { return CachedChildContentsState(contents: [], groups: []) }
+    if content.contentType != .collection {
+      return CachedChildContentsState(contents: [], groups: [])
+    }
     
     let groups = self.contentIndexedGroups[contentId] ?? []
     let groupIds = groups.map { $0.id }
     let childContents = self.contents.values.filter { content in
-      if content.groupId == nil { return false }
-      return groupIds.contains(content.groupId!)
+      guard let groupId = content.groupId else { return false }
+      return groupIds.contains(groupId)
     }
     
     if childContents.isEmpty {
@@ -189,8 +192,8 @@ extension DataCache {
       let groups = self.contentIndexedGroups[contentId] ?? []
       let groupIds = groups.map { $0.id }
       let childContents = self.contents.values.filter { content in
-        if content.groupId == nil { return false }
-        return groupIds.contains(content.groupId!)
+        guard let groupId = content.groupId else { return false }
+        return groupIds.contains(groupId)
       }
       
       return try ContentPersistableState(
@@ -266,7 +269,8 @@ extension DataCache {
     return contents.values.filter {
       guard let groupId = $0.groupId else { return false }
       return groupIds.contains(groupId)
-    }.sorted {
+    }
+    .sorted {
       guard let lhsOrdinal = $0.ordinal, let rhsOrdinal = $1.ordinal else { return true }
       return lhsOrdinal < rhsOrdinal
     }

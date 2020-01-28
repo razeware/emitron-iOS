@@ -43,7 +43,8 @@ extension PersistenceStore {
         .including(all: Content.categories)
         
       return try ContentSummaryState.fetchAll(db, request)
-    }.publisher(in: db)
+    }
+    .publisher(in: db)
   }
 }
 
@@ -57,7 +58,8 @@ extension PersistenceStore {
         .including(optional: Content.parentContent)
       
       return try ContentSummaryState.fetchOne(db, request)
-    }.publisher(in: db)
+    }
+    .publisher(in: db)
   }
   
   func downloadContentSummary(for contentIds: [Int]) -> DatabasePublishers.Value<[ContentSummaryState]> {
@@ -69,7 +71,8 @@ extension PersistenceStore {
         .including(optional: Content.parentContent)
       
       return try ContentSummaryState.fetchAll(db, request)
-    }.publisher(in: db)
+    }
+    .publisher(in: db)
   }
 }
 
@@ -79,7 +82,8 @@ extension PersistenceStore {
       let request = Download
         .filter(contentIds.contains(Download.Columns.contentId))
       return try Download.fetchAll(db, request)
-    }.publisher(in: db)
+    }
+    .publisher(in: db)
   }
   
   func download(for contentId: Int) -> DatabasePublishers.Value<Download?> {
@@ -87,8 +91,9 @@ extension PersistenceStore {
       let request = Download
         .filter(Download.Columns.contentId == contentId)
       return try Download.fetchOne(db, request)
-    }.publisher(in: db)
     }
+    .publisher(in: db)
+  }
 }
 
 // MARK: - Data reading methods for download queue management
@@ -111,7 +116,9 @@ extension PersistenceStore {
         .filter(state: state)
         .orderByRequestedAt()
       return try DownloadQueueItem.fetchOne(db, request)
-    }.removeDuplicates().publisher(in: db)
+    }
+    .removeDuplicates()
+    .publisher(in: db)
   }
   
   /// Returns a pubisher representing the download queue over time
@@ -128,7 +135,9 @@ extension PersistenceStore {
         .order(Download.Columns.state.desc, Download.Columns.requestedAt.asc)
         .limit(max)
       return try DownloadQueueItem.fetchAll(db, request)
-    }.removeDuplicates().publisher(in: db)
+    }
+    .removeDuplicates()
+    .publisher(in: db)
   }
   
   /// Return a single `Download` from its id

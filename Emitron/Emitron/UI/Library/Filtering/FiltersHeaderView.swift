@@ -92,17 +92,16 @@ struct FiltersHeaderView: View {
   }
   
   private var expandedView: some View {
-    VStack(alignment: .leading, spacing: 8) {
-        
-        ForEach(Array(filterGroup.filters), id: \.self) { filter in
-          TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
-            filter.isOn.toggle()
-            self.filters.all.update(with: filter)
-            self.filters.commitUpdates()
-          })
-            .padding([.leading, .trailing], 14)
-        }
+    VStack(alignment: .leading, spacing: 8) {        
+      ForEach(Array(filterGroup.filters), id: \.self) { filter in
+        TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
+          filter.isOn.toggle()
+          self.filters.all.update(with: filter)
+          self.filters.commitUpdates()
+        })
+          .padding([.leading, .trailing], 14)
       }
+    }
   }
 }
 

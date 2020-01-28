@@ -78,7 +78,9 @@ struct TextListItemView: View {
   }
   
   private var progressBar: AnyView? {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else { return nil }
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else {
+      return nil
+    }
     return AnyView(
       ProgressBarView(progress: progress, isRounded: true)
         .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)

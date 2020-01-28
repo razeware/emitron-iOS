@@ -126,10 +126,7 @@ class Filters: ObservableObject {
   }
   
   var applied: [Filter] {
-    // TODO: Check with Luke if we should have the Search filter here or not
-    // It is convenient to be able to clear it from the applied filters control
-    // But will also have to figure out how to connect the searchQuery + the AppliedFilter
-    return all.filter { $0.isOn }
+    all.filter { $0.isOn }
   }
   
   // The  default filters to always apply, unless the user selects them, are .collection and .screencast

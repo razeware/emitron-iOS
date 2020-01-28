@@ -79,7 +79,7 @@ struct EntityIdentity: Identifiable {
 struct EntityRelationship {
   let name: String
   let from: EntityIdentity
-  let to: EntityIdentity
+  let to: EntityIdentity // swiftlint:disable:this identifier_name
 }
 
 enum EntityAdapterError: Error {

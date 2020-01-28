@@ -28,8 +28,10 @@
 
 import GRDB
 
+// swiftlint:disable identifier_name
+
 /// A type responsible for initialising the appliation's database
-struct EmitronDatabase {
+enum EmitronDatabase {
   /// Creates a fully initialised database
   /// - Parameter path: Path at which to create the database
   static func openDatabase(atPath path: String) throws -> DatabasePool {

@@ -29,7 +29,7 @@
 import Foundation
 @testable import Emitron
 
-struct PersistenceMocks {
+enum PersistenceMocks {
   static var content: Content {
     Content(id: 1,
             uri: "rw://betamax/collections/1",
