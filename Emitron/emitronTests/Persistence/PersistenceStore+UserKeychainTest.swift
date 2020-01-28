@@ -43,7 +43,7 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
   ]
   
   override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    // swiftlint:disable:next force_try
     let database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
   }

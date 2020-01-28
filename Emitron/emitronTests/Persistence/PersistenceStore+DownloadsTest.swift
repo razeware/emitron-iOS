@@ -36,6 +36,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   private var persistenceStore: PersistenceStore!
   
   override func setUp() {
+    // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     
@@ -45,12 +46,14 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   }
   
   func getAllContents() -> [Content] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Content.fetchAll(db)
     }
   }
   
   func getAllDownloads() -> [Download] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Download.fetchAll(db)
     }

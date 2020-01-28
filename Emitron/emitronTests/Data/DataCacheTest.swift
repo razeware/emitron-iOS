@@ -193,8 +193,8 @@ class DataCacheTest: XCTestCase {
     
     let persistableState = try cache.cachedContentPersistableState(for: collection.0.id)
     XCTAssertEqual(collection.0, persistableState.content)
-    XCTAssert(persistableState.groups.count > 0)
-    XCTAssert(persistableState.childContents.count > 0)
+    XCTAssert(!persistableState.groups.isEmpty)
+    XCTAssert(!persistableState.childContents.isEmpty)
     
     let exampleChildId = persistableState.childContents.first!.id
     

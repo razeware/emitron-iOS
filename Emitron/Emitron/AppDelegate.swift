@@ -54,6 +54,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
     
     // Initialise the database
+    // swiftlint:disable:next force_try
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
     guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",

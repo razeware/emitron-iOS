@@ -38,6 +38,7 @@ class DownloadServiceTest: XCTestCase {
   private var userModelController: UserMCMock!
   
   override func setUp() {
+    // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     userModelController = UserMCMock.withDownloads
@@ -57,18 +58,21 @@ class DownloadServiceTest: XCTestCase {
   }
   
   func getAllContents() -> [Content] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Content.fetchAll(db)
     }
   }
   
   func getAllDownloads() -> [Download] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Download.fetchAll(db)
     }
   }
   
   func getAllDownloadQueueItems() -> [PersistenceStore.DownloadQueueItem] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       let request = Download.including(required: Download.content)
       return try PersistenceStore.DownloadQueueItem.fetchAll(db, request)
@@ -113,6 +117,7 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = directory.appendingPathComponent("sample_file")
     
     if fileManager.fileExists(atPath: sampleFile.path) {
+      // swiftlint:disable:next force_try
       try! fileManager.removeItem(at: sampleFile)
     }
   }
@@ -391,6 +396,7 @@ class DownloadServiceTest: XCTestCase {
     let downloadsDirectory = documentsDirectory!.appendingPathComponent("downloads", isDirectory: true)
     
     // The downloads subdirectory exists
+    // swiftlint:disable:next force_try
     let resourceValues = try! downloadsDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey])
     
     // The directory is marked as excluded from backups
@@ -626,7 +632,7 @@ class DownloadServiceTest: XCTestCase {
       XCTAssertEqual(sampleFile, refreshedDownload.localUrl)
     }
     
-    try! fileManager.removeItem(at: sampleFile)
+    try fileManager.removeItem(at: sampleFile)
   }
   
   func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() throws {

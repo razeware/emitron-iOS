@@ -282,13 +282,13 @@ extension DataCache {
   }
   
   private func nextToPlay(for contents: [Content]) throws -> Content {
-    guard contents.count > 0 else { throw DataCacheError.cacheMiss }
+    guard !contents.isEmpty else { throw DataCacheError.cacheMiss }
     
     // We'll assume that the contents is already ordered. It is if it comes from child/sibling contents
     let orderedProgressions = contents.compactMap { progressions[$0.id] }
     
     // No child progressions—let's start with the first item of content
-    if orderedProgressions.count == 0 {
+    if orderedProgressions.isEmpty {
       return contents.first!
     }
     

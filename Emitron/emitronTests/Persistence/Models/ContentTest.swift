@@ -34,7 +34,7 @@ class ContentTest: XCTestCase {
   private var database: DatabaseWriter!
   
   override func setUp() {
-    // Put setup code here. This method is called before the invocation of each test method in the class.
+    // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
   }
   
@@ -43,12 +43,14 @@ class ContentTest: XCTestCase {
   }
   
   func getAllContents() -> [Content] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Content.fetchAll(db)
     }
   }
   
   func getAllDownloads() -> [Download] {
+    // swiftlint:disable:next force_try
     try! database.read { db in
       try Download.fetchAll(db)
     }

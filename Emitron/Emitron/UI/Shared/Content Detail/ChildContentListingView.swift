@@ -64,7 +64,7 @@ struct ChildContentListingView: View {
           }
         }
       } else {
-        if childContentsViewModel.groups.count > 0 {
+        if !childContentsViewModel.groups.isEmpty {
           self.episodeListing(data: childContentsViewModel.contents)
         }
       }
