@@ -28,54 +28,13 @@
 
 import SwiftUI
 
-enum SettingsOption: Int, Identifiable, CaseIterable {
-  case videoPlaybackSpeed, downloads, downloadsQuality, subtitles
-  
-  var id: Int {
-    return self.rawValue
-  }
-  
-  var title: String {
-    switch self {
-    case .videoPlaybackSpeed: return "Video Playback Speed"
-    case .downloads: return "Downloads (WiFi only)"
-    case .downloadsQuality: return "Downloads Quality"
-    case .subtitles: return "Subtitles"
-    }
-  }
-  
-  var key: UserDefaultsKey {
-    switch self {
-    case .videoPlaybackSpeed: return .playSpeed
-    case .downloads: return .wifiOnlyDownloads
-    case .downloadsQuality: return .downloadQuality
-    case .subtitles: return .closedCaptionOn
-    }
-  }
-  
-  var detail: [String] {
-    switch self {
-    case .videoPlaybackSpeed: return ["1.0", "1.5", "2.0"]
-    case .downloads: return ["Yes", "No"]
-    case .downloadsQuality: return ["HD", "SD"]
-    case .subtitles: return ["Yes", "No"]
-    }
-  }
-  
-  var isToggle: Bool {
-    switch self {
-    case .downloads, .subtitles: return true
-    default: return false
-    }
-  }
-}
+// These views could really do with a refactor. The data flow is a mess
 
 struct SettingsView: View {
-  
-  var rows: [SettingsOption] = [.videoPlaybackSpeed, .downloads, .downloadsQuality, .subtitles]
+  var rows: [SettingsOption] = [.playbackSpeed, .wifiOnlyDownloads, .downloadQuality, .closedCaptionOn]
   
   @State private var settingsOptionsPresented: Bool = false
-  @State var selectedOption: SettingsOption = .videoPlaybackSpeed
+  @State var selectedOption: SettingsOption = .playbackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
   private var showLogoutButton: Bool
@@ -100,11 +59,12 @@ struct SettingsView: View {
           .padding([.top], 20)
         
         Spacer()
+        
         SwiftUI.Group {
           Button(action: {
             self.presentationMode.wrappedValue.dismiss()
           }) {
-            Image("close")
+            Image.close
               .frame(width: 27, height: 27, alignment: .center)
               .padding(.trailing, 18)
               .padding([.top], 20)
@@ -114,27 +74,37 @@ struct SettingsView: View {
       }
       
       VStack {
-        ForEach(0..<self.rows.count) { index in
+        ForEach(SettingsOption.allCases) { option in
           TitleDetailView(callback: {
-            self.selectedOption = self.rows[index]
+            self.selectedOption = option
             
             // Only navigate to SettingsOptionsView if view isn't a toggle
-            if !self.rows[index].isToggle {
+            if !option.isToggle {
               self.settingsOptionsPresented.toggle()
             } else {
-              // Update user defaults for toggle
-              let previousState = self.setToggleState(at: index)
-              UserDefaults.standard.set(!previousState, forKey: self.rows[index].key.rawValue)
+              switch option {
+              case .closedCaptionOn:
+                SettingsManager.current.closedCaptionOn.toggle()
+              case .wifiOnlyDownloads:
+                SettingsManager.current.wifiOnlyDownloads.toggle()
+              case .downloadQuality, .playbackSpeed:
+                // No-op
+                return
+              }
             }
             
-          }, title: self.rows[index].title,
-             detail: self.populateDetail(at: index),
-             isToggle: self.rows[index].isToggle,
-             isOn: self.setToggleState(at: index),
+          }, title: option.title,
+             detail: self.populateDetail(for: option),
+             isToggle: option.isToggle,
+             isOn: false,
              rightImageName: "carrotRight")
             .frame(height: 46)
             .sheet(isPresented: self.$settingsOptionsPresented) {
-              SettingsOptionsView(isPresented: self.$settingsOptionsPresented, isOn: self.setToggleState(at: index), selectedSettingsOption: self.$selectedOption)
+              SettingsOptionsView(
+                isPresented: self.$settingsOptionsPresented,
+                isOn: false,
+                selectedSettingsOption: self.$selectedOption
+              )
           }
         }
       }
@@ -152,19 +122,14 @@ struct SettingsView: View {
     .background(Color.modalBackground)
   }
   
-  private func populateDetail(at index: Int) -> String {
-    guard let selectedDetail = UserDefaults.standard.object(forKey: rows[index].key.rawValue) as? String else {
-      if let detail = self.rows[index].detail.first {
-        return detail
-      } else {
-        return ""
-      }
+  private func populateDetail(for option: SettingsOption) -> String {
+    switch option {
+    case .closedCaptionOn, .wifiOnlyDownloads:
+      return ""
+    case .downloadQuality:
+      return SettingsManager.current.downloadQuality.display
+    case .playbackSpeed:
+      return SettingsManager.current.playbackSpeed.display
     }
-    
-    return Attachment.Kind(from: selectedDetail)?.detail ?? selectedDetail
-  }
-  
-  private func setToggleState(at index: Int) -> Bool {
-    return UserDefaults.standard.bool(forKey: rows[index].key.rawValue)
   }
 }

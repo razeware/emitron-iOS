@@ -95,9 +95,10 @@ class DownloadQueueManagerTest: XCTestCase {
   
   func sampleDownload() -> Download {
     let screencast = ContentTest.Mocks.screencast
-    downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let result = downloadService.requestDownload(contentId: screencast.0.id) { _ in
       self.persistableState(for: screencast.0, with: screencast.1)
     }
+    XCTAssert(result.successful)
     return getAllDownloads().first!
   }
   

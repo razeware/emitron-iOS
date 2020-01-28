@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,57 +28,61 @@
 
 import Foundation
 
-struct Attachment: Codable {
-  enum Kind: Int, Codable, CaseIterable {
-    case stream
-    case sdVideoFile
-    case hdVideoFile
-    
-    init?(from string: String) {
-      switch string {
-      case "stream":
-        self = .stream
-      case "sd_video_file":
-        self = .sdVideoFile
-      case "hd_video_file":
-        self = .hdVideoFile
-      default:
-        return nil
-      }
-    }
-    
-    static func fromDisplay(_ value: String) -> Kind? {
-      allCases.first { $0.display == value }
-    }
-    
-    var display: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "HD"
-      case .sdVideoFile:
-        return "SD"
-      }
-    }
-    
-    var apiValue: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "hd_video_file"
-      case .sdVideoFile:
-        return "sd_video_file"
-      }
-    }
-    
-    static var downloads: [Kind] {
-      [.sdVideoFile, .hdVideoFile]
+enum SettingsOption: Int, Identifiable, CaseIterable {
+  case playbackSpeed
+  case wifiOnlyDownloads
+  case downloadQuality
+  case closedCaptionOn
+  
+  var id: Int {
+    rawValue
+  }
+  
+  var title: String {
+    switch self {
+    case .playbackSpeed:
+      return Constants.settingsPlaybackSpeedLabel
+    case .wifiOnlyDownloads:
+      return Constants.settingsWifiOnlyDownloadsLabel
+    case .downloadQuality:
+      return Constants.settingsDownloadQualityLabel
+    case .closedCaptionOn:
+      return Constants.settingsClosedCaptionOnLabel
     }
   }
   
-  var id: Int
-  var kind: Kind
-  var url: URL
+  var key: SettingsKey {
+    switch self {
+    case .playbackSpeed:
+      return .playbackSpeed
+    case .wifiOnlyDownloads:
+      return .wifiOnlyDownloads
+    case .downloadQuality:
+      return .downloadQuality
+    case .closedCaptionOn:
+      return .closedCaptionOn
+    }
+  }
+  
+  var detail: [String] {
+    switch self {
+    case .playbackSpeed:
+      return PlaybackSpeed.allCases.map { $0.display }
+    case .wifiOnlyDownloads:
+      return ["Yes", "No"]
+    case .downloadQuality:
+      return Attachment.Kind.downloads.map { $0.display }
+    case .closedCaptionOn:
+      return ["Yes", "No"]
+    }
+  }
+  
+  var isToggle: Bool {
+    switch self {
+    case .wifiOnlyDownloads, .closedCaptionOn:
+      return true
+    default:
+      return false
+    }
+  }
 }

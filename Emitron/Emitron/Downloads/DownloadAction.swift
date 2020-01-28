@@ -34,6 +34,22 @@ enum RequestDownloadResult {
   case problemRequestingDownload(String, Error? = nil)
 }
 
+extension RequestDownloadResult: Equatable {
+  // Can't synthesise this becuase we might have an Error, which isn't Equatable
+  static func == (lhs: RequestDownloadResult, rhs: RequestDownloadResult) -> Bool {
+    switch (lhs, rhs) {
+    case (.downloadRequestedSuccessfully, .downloadRequestedSuccessfully):
+      return true
+    case (.downloadRequestedButQueueInactive, .downloadRequestedButQueueInactive):
+      return true
+    case (.problemRequestingDownload(let lhsReason, _), .problemRequestingDownload(let rhsReason, _)):
+      return lhsReason == rhsReason
+    default:
+      return false
+    }
+  }
+}
+
 protocol DownloadAction {
   func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult
   func cancelDownload(contentId: Int) throws

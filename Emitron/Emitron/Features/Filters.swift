@@ -201,25 +201,25 @@ class Filters: ObservableObject {
     
     self.sortFilter = SortFilter.newest
     
-    // 1. Check if there are filters in UserDefaults
-    let savedFilters = UserDefaults.standard.filters
-    // 2. Check whether the types of filters in UserDefaults still match the types of filters possible on the BE and sync them
-    // 3. Dissementae userfilters into the appropriate filter categories
+    // Check if there are filters in the settings manager
+    let savedFilters = SettingsManager.current.filters
     if !savedFilters.isEmpty {
+      // Validate loaded settings and put them in the right places
       self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
       self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
       self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
       self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal } )
     }
-    // 3. If there are filters stored in UserDefaults, use those
-    // 4. If there are no filters stores in UserDefaults, use the default filters and parameters
     
-    let freshFilters = Set(platforms.filters).union(contentTypes.filters).union(difficulties.filters).union(categories.filters)
+    let freshFilters =
+      Set(platforms.filters)
+        .union(contentTypes.filters)
+        .union(difficulties.filters)
+        .union(categories.filters)
     self.all = freshFilters
     
-    // 1. Check if there is a sort in UserDefaults and use that
-    let savedSort = UserDefaults.standard.sort
-    self.sortFilter = savedSort
+    // Load the sort from the settings manager
+    self.sortFilter = SettingsManager.current.sortFilter
   }
   
   func updatePlatformFilters(for domains: [Domain]) {
@@ -256,12 +256,12 @@ class Filters: ObservableObject {
   
   func changeSortFilter() {
     sortFilter = sortFilter.next
-    UserDefaults.standard.updateSort(with: sortFilter)
+    SettingsManager.current.sortFilter = sortFilter
     objectWillChange.send()
   }
   
   func commitUpdates() {
-    UserDefaults.standard.updateFilters(with: self)
+    SettingsManager.current.filters = all
     objectWillChange.send()
   }
   

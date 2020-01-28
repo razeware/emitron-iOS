@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,57 +28,39 @@
 
 import Foundation
 
-struct Attachment: Codable {
-  enum Kind: Int, Codable, CaseIterable {
-    case stream
-    case sdVideoFile
-    case hdVideoFile
-    
-    init?(from string: String) {
-      switch string {
-      case "stream":
-        self = .stream
-      case "sd_video_file":
-        self = .sdVideoFile
-      case "hd_video_file":
-        self = .hdVideoFile
-      default:
-        return nil
-      }
-    }
-    
-    static func fromDisplay(_ value: String) -> Kind? {
-      allCases.first { $0.display == value }
-    }
-    
-    var display: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "HD"
-      case .sdVideoFile:
-        return "SD"
-      }
-    }
-    
-    var apiValue: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "hd_video_file"
-      case .sdVideoFile:
-        return "sd_video_file"
-      }
-    }
-    
-    static var downloads: [Kind] {
-      [.sdVideoFile, .hdVideoFile]
+enum PlaybackSpeed: Int, CaseIterable {
+  case half
+  case standard
+  case onePointFive
+  case double
+  
+  static func fromDisplay(_ value: String) -> PlaybackSpeed? {
+    allCases.first { $0.display == value }
+  }
+  
+  var rate: Float {
+    switch self {
+    case .half:
+      return 0.5
+    case .standard:
+      return 1.0
+    case .onePointFive:
+      return 1.5
+    case .double:
+      return 2.0
     }
   }
   
-  var id: Int
-  var kind: Kind
-  var url: URL
+  var display: String {
+    switch self {
+    case .half:
+      return "0.5x"
+    case .standard:
+      return "1.0x"
+    case .onePointFive:
+      return "1.5x"
+    case .double:
+      return "2.0x"
+    }
+  }
 }

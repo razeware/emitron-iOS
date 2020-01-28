@@ -60,15 +60,11 @@ final class DownloadService {
   
   private let networkMonitor = NWPathMonitor()
   private var status: Status = .inactive
-  private var userDefaultSubscription: AnyCancellable?
+  private var settingsSubscription: AnyCancellable?
   private var downloadQueueSubscription: AnyCancellable?
   
   private var downloadQuality: Attachment.Kind {
-    guard let selectedQuality = UserDefaults.standard.downloadQuality,
-      let kind = Attachment.Kind(from: selectedQuality) else {
-        return Attachment.Kind.hdVideoFile
-    }
-    return kind
+    SettingsManager.current.downloadQuality
   }
   private lazy var downloadsDirectory: URL = {
     let fileManager = FileManager.default
@@ -495,16 +491,17 @@ extension DownloadService {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
     
     // Track the status of the wifi downloads setting
-    userDefaultSubscription = UserDefaults.standard
-      .publisher(for: \.wifiOnlyDownloads)
-      .sink { [weak self] _ in
+    settingsSubscription = SettingsManager.current
+      .wifiOnlyDownloadsPublisher
+      .removeDuplicates()
+      .sink(receiveValue: { [weak self] (_) in
         self?.checkQueueStatus()
-      }
+      })
   }
   
   private func checkQueueStatus() {
     let expensive = networkMonitor.currentPath.isExpensive
-    let allowedExpensive = !UserDefaults.standard.wifiOnlyDownloads
+    let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
     let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
     
     if status == newStatus { return }

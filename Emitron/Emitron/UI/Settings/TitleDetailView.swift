@@ -111,7 +111,23 @@ struct TitleDetailView: View {
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    TitleDetailView(title: "Title", detail: "Detail", isToggle: false, isOn: false, rightImageName: nil)
+    VStack {
+      TitleDetailView(
+        title: "Title",
+        detail: "Detail",
+        isToggle: false,
+        isOn: false,
+        rightImageName: "carrot"
+      )
+      
+      TitleDetailView(
+        title: "Boolean",
+        detail: "Detail",
+        isToggle: true,
+        isOn: true,
+        rightImageName: nil
+      )
+    }
   }
 }
 #endif

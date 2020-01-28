@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -27,58 +27,31 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
-struct Attachment: Codable {
-  enum Kind: Int, Codable, CaseIterable {
-    case stream
-    case sdVideoFile
-    case hdVideoFile
-    
-    init?(from string: String) {
-      switch string {
-      case "stream":
-        self = .stream
-      case "sd_video_file":
-        self = .sdVideoFile
-      case "hd_video_file":
-        self = .hdVideoFile
-      default:
-        return nil
-      }
-    }
-    
-    static func fromDisplay(_ value: String) -> Kind? {
-      allCases.first { $0.display == value }
-    }
-    
-    var display: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "HD"
-      case .sdVideoFile:
-        return "SD"
-      }
-    }
-    
-    var apiValue: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "hd_video_file"
-      case .sdVideoFile:
-        return "sd_video_file"
-      }
-    }
-    
-    static var downloads: [Kind] {
-      [.sdVideoFile, .hdVideoFile]
-    }
-  }
+protocol EmitronSettings {
+  // MARK: - Library
+  // MARK: Filters
+  var filters: Set<Filter> { get set }
   
-  var id: Int
-  var kind: Kind
-  var url: URL
+  // MARK: Sorting
+  var sortFilter: SortFilter { get set }
+  
+  // MARK: - Video Playback
+  var playbackToken: String? { get set }
+  
+  // MARK: - User Settings
+  // MARK: Video Playback
+  var playbackSpeed: PlaybackSpeed { get set }
+  var playbackSpeedPublisher: AnyPublisher<PlaybackSpeed, Never> { get }
+  
+  var closedCaptionOn: Bool { get set }
+  var closedCaptionOnPublisher: AnyPublisher<Bool, Never> { get }
+  
+  // MARK: Download Behaviour
+  var downloadQuality: Attachment.Kind { get set }
+  var downloadQualityPublisher: AnyPublisher<Attachment.Kind, Never> { get }
+  
+  var wifiOnlyDownloads: Bool { get set }
+  var wifiOnlyDownloadsPublisher: AnyPublisher<Bool, Never> { get }
 }

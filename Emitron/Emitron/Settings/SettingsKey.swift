@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,57 +28,29 @@
 
 import Foundation
 
-struct Attachment: Codable {
-  enum Kind: Int, Codable, CaseIterable {
-    case stream
-    case sdVideoFile
-    case hdVideoFile
-    
-    init?(from string: String) {
-      switch string {
-      case "stream":
-        self = .stream
-      case "sd_video_file":
-        self = .sdVideoFile
-      case "hd_video_file":
-        self = .hdVideoFile
-      default:
-        return nil
-      }
-    }
-    
-    static func fromDisplay(_ value: String) -> Kind? {
-      allCases.first { $0.display == value }
-    }
-    
-    var display: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "HD"
-      case .sdVideoFile:
-        return "SD"
-      }
-    }
-    
-    var apiValue: String {
-      switch self {
-      case .stream:
-        return "stream"
-      case .hdVideoFile:
-        return "hd_video_file"
-      case .sdVideoFile:
-        return "sd_video_file"
-      }
-    }
-    
-    static var downloads: [Kind] {
-      [.sdVideoFile, .hdVideoFile]
-    }
+enum SettingsKey: String, CaseIterable {
+  // Filters
+  case filters
+  case sortFilters
+  // Playback
+  case playbackToken
+  // User settings
+  case playbackSpeed
+  case closedCaptionOn
+  case wifiOnlyDownloads
+  case downloadQuality
+}
+
+extension UserDefaults {
+  func removeObject(forKey settingsKey: SettingsKey) {
+    removeObject(forKey: settingsKey.rawValue)
   }
   
-  var id: Int
-  var kind: Kind
-  var url: URL
+  func object(forKey settingsKey: SettingsKey) -> Any? {
+    object(forKey: settingsKey.rawValue)
+  }
+  
+  func set<T>(_ value: T, forKey settingsKey: SettingsKey) {
+    set(value, forKey: settingsKey.rawValue)
+  }
 }
