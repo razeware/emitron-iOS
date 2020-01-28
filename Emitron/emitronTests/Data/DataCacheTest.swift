@@ -41,6 +41,7 @@ class DataCacheTest: XCTestCase {
   let collection = ContentTest.Mocks.collection
   
   override func setUp() {
+    super.setUp()
     cache = DataCache()
   }
   

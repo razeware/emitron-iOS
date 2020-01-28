@@ -34,12 +34,9 @@ class ContentTest: XCTestCase {
   private var database: DatabaseWriter!
   
   override func setUp() {
+    super.setUp()
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
-  }
-  
-  override func tearDown() {
-    // Put teardown code here. This method is called after the invocation of each test method in the class.
   }
   
   func getAllContents() -> [Content] {

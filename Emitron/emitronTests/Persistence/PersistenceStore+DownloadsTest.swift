@@ -36,6 +36,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   private var persistenceStore: PersistenceStore!
   
   override func setUp() {
+    super.setUp()
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)

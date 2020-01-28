@@ -36,6 +36,7 @@ class SettingsManagerTest: XCTestCase {
   var settingsManager: SettingsManager!
 
   override func setUp() {
+    super.setUp()
     let userDefaults = UserDefaults(suiteName: userDefaultsSuite)!
     settingsManager = SettingsManager(
       userDefaults: userDefaults,
@@ -44,6 +45,7 @@ class SettingsManagerTest: XCTestCase {
   }
 
   override func tearDown() {
+    super.tearDown()
     UserDefaults().removePersistentDomain(forName: userDefaultsSuite)
   }
   
