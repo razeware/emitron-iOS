@@ -4,7 +4,7 @@ storage_mode('git')
 
 type('appstore') # The default type, can be: appstore, adhoc, enterprise or development
 
-app_identifier(['com.razeware.emitron.ios'])
+app_identifier(['com.razeware.emitron.ios', 'com.razeware.emitron.ios.beta'])
 username('engineering@razeware.com') # Your Apple Developer Portal username
 
 # For all available options run `fastlane match --help`
