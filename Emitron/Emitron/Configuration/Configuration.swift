@@ -52,7 +52,6 @@ enum Configuration {
   }
   
   static var ssoSecret: String {
-    // swiftlint:disable:next force_try
     try! value(for: "SSO_SECRET")
   }
   
