@@ -1,9 +1,6 @@
 name: Push to Testflight
 
-on:
-  push:
-    branches:
-      - development
+on: [push]
 
 jobs:
   build:
@@ -25,6 +22,7 @@ jobs:
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       run: |
         scripts/download_s3.sh development > Emitron/Emitron/Configuration/secrets.development.xcconfig
+        scripts/download_s3.sh beta > Emitron/Emitron/Configuration/secrets.beta.xcconfig
         scripts/download_s3.sh production > Emitron/Emitron/Configuration/secrets.production.xcconfig
     - name: Execute fastlane
       env:

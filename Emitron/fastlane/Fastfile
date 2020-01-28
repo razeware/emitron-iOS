@@ -23,9 +23,9 @@ platform :ios do
     Dir.chdir('..') do
       sh 'xcodebuild -resolvePackageDependencies'
     end
-    build_app(project: 'Emitron.xcodeproj', scheme: 'Emitron')
+    build_app(scheme: 'Emitron', configuration: 'Beta')
     upload_to_testflight(skip_waiting_for_build_processing: true)
-    slack(message: 'emitron successfully uploaded to TestFlight!')
+    slack(message: 'emitron::β successfully uploaded to TestFlight!')
   end
 
   lane :tests do
@@ -34,4 +34,14 @@ platform :ios do
     end
     run_tests(scheme: 'Emitron')
   end
+end
+
+error do |lane, exception|
+  slack(
+    # message with short human friendly message
+    message: exception.to_s, 
+    success: false, 
+    # Output containing extended log output
+    payload: { "Output" => exception.error_info.to_s } 
+  )
 end
