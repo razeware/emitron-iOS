@@ -53,6 +53,7 @@ class DownloadServiceTest: XCTestCase {
   override func tearDown() {
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
+    SettingsManager.current.resetAll()
   }
   
   func getAllContents() -> [Content] {
@@ -525,7 +526,7 @@ class DownloadServiceTest: XCTestCase {
     let downloadQueueItem = sampleDownloadQueueItem()
     let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .sdVideoFile }!
     
-    UserDefaults.standard.set(Attachment.Kind.sdVideoFile.apiValue, forKey: SettingsKey.downloadQuality.rawValue)
+    SettingsManager.current.downloadQuality = .sdVideoFile
     
     downloadService.requestDownloadUrl(downloadQueueItem)
     
@@ -534,13 +535,9 @@ class DownloadServiceTest: XCTestCase {
       XCTAssertNotNil(download.remoteUrl)
       XCTAssertEqual(attachment.url, download.remoteUrl)
     }
-    
-    UserDefaults.standard.removeObject(forKey: SettingsKey.downloadQuality.rawValue)
   }
   
   func testRequestDownloadDefaultsToHDQuality() throws {
-    UserDefaults.standard.removeObject(forKey: SettingsKey.downloadQuality.rawValue)
-    
     let downloadQueueItem = sampleDownloadQueueItem()
     let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .hdVideoFile }!
     
