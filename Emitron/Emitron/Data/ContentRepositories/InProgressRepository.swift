@@ -38,7 +38,7 @@ final class InProgressRepository: ContentRepository {
       return filters + [completionFilter, sortOrder]
     }
     set {
-      preconditionFailure("Not allowed to use setter on this variable.(value: )")
+      preconditionFailure("Not allowed to use setter on this variable.(value: \(newValue))")
     }
   }
 }
