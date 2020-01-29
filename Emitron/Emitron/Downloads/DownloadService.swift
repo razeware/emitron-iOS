@@ -500,20 +500,24 @@ extension DownloadService {
   }
   
   private func checkQueueStatus() {
-    let expensive = networkMonitor.currentPath.isExpensive
-    let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
-    let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
-    
-    if status == newStatus {
-      return
-    }
-    
-    status = newStatus
-    switch status {
-    case .active:
-      resumeQueue()
-    case .inactive:
-      pauseQueue()
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
+      
+      let expensive = self.networkMonitor.currentPath.isExpensive
+      let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
+      let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
+      
+      if self.status == newStatus {
+        return
+      }
+      
+      self.status = newStatus
+      switch self.status {
+      case .active:
+        self.resumeQueue()
+      case .inactive:
+        self.pauseQueue()
+      }
     }
   }
   

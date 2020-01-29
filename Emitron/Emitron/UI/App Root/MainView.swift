@@ -39,14 +39,6 @@ struct MainView: View {
   }
   
   private var contentView: AnyView {
-    /* One could be excused for thinking that one could, or
-       maybe even should, use guard let to unwrap the user
-       here. However, this currently does not seem to work with
-       an @Published variable with an optional type. So that's
-       nice isn't it? Defo didn't spend many hours discovering
-       this. Not irritated in the slightest.
-     */
-    
     if !sessionController.isLoggedIn {
       return AnyView(LoginView())
     }

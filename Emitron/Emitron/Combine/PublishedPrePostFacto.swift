@@ -28,8 +28,7 @@
 
 import Combine
 
-protocol ObservablePrePostFactoObject: ObservableObject {
-  var objectWillChange: ObservableObjectPublisher { get }
+protocol ObservablePrePostFactoObject: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
   // It's non-trivial to synthesise this, since it is a stored property. So let's not bother.
   var objectDidChange: ObservableObjectPublisher { get }
 }

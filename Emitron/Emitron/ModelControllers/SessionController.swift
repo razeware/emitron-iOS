@@ -111,24 +111,26 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
       }
     } else {
       guardpost.login { [weak self] result in
-        guard let self = self else { return }
-        
-        switch result {
-        case .failure(let error):
-          self.state = .failed
-          // Have to manually do this since we're not allowed @Published with the enum
-          self.objectWillChange.send()
-          Failure
-            .login(from: "SessionController", reason: error.localizedDescription)
-            .log(additionalParams: nil)
-        case .success(let user):
-          self.internalUser = user
+        DispatchQueue.main.async { [weak self] in
+          guard let self = self else { return }
           
-          Event
-            .login(from: "SessionController")
-            .log(additionalParams: nil)
-          
-          self.fetchPermissions()
+          switch result {
+          case .failure(let error):
+            self.state = .failed
+            // Have to manually do this since we're not allowed @Published with the enum
+            self.objectWillChange.send()
+            Failure
+              .login(from: "SessionController", reason: error.localizedDescription)
+              .log(additionalParams: nil)
+          case .success(let user):
+            self.internalUser = user
+            
+            Event
+              .login(from: "SessionController")
+              .log(additionalParams: nil)
+            
+            self.fetchPermissions()
+          }
         }
       }
     }
