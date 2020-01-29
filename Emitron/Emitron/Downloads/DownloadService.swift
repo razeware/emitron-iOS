@@ -178,8 +178,14 @@ extension DownloadService: DownloadAction {
     do {
       // 1. Find the download.
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
-      // 2. Cancel it. The delegate callback will handle deleting the value in the persistence store.
-      try downloadProcessor.cancelDownload(download)
+      // 2. Is it already downloading?
+      if [.inProgress, .paused].contains(download.state) {
+        // It's in the download process, so let's ask it to cancel it. The delegate callback will handle deleting the value in the persistence store.
+        try downloadProcessor.cancelDownload(download)
+      } else {
+        // Don't have it in the processor, so we just need to delete the download model
+        try _ = persistenceStore.deleteDownload(withId: download.id)
+      }
     } catch {
       Failure
         .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentId: \(contentId)): \(error)")
