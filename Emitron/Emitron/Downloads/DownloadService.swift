@@ -133,7 +133,7 @@ final class DownloadService {
     processingSubscriptions.forEach { $0.cancel() }
     processingSubscriptions = []
     
-    downloadQueueSubscription?.cancel()
+    pauseQueue()
   }
 }
 
@@ -511,13 +511,8 @@ extension DownloadService {
       
       let expensive = self.networkMonitor.currentPath.isExpensive
       let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
-      let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
+      self.status = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
       
-      if self.status == newStatus {
-        return
-      }
-      
-      self.status = newStatus
       switch self.status {
       case .active:
         self.resumeQueue()
@@ -530,12 +525,16 @@ extension DownloadService {
   private func pauseQueue() {
     // Cancel download queue processing
     downloadQueueSubscription?.cancel()
+    downloadQueueSubscription = nil
     
     // Pause all downloads already in the processor
     downloadProcessor.pauseAllDownloads()
   }
   
   private func resumeQueue() {
+    // Don't do anything if we already have a subscription
+    guard downloadQueueSubscription == nil else { return }
+    
     // Start download queue processing
     downloadQueueSubscription = queueManager.downloadQueue
       .sink(receiveCompletion: { completion in
