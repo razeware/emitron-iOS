@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,54 +28,22 @@
 
 import Foundation
 
-protocol Refreshable {
-  var refreshableUserDefaultsKey: String { get }
-  var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
-  var lastRefreshedDate: Date? { get }
-  var shouldRefresh: Bool { get }
-
-  // Every class that conforms to the protocol has to call this function after the "refreshable" action has been completed to store the date it was last updated on
-  func saveOrReplaceRefreshableUpdateDate()
-}
-
-extension Refreshable {
-  
-  var lastRefreshedDate: Date? {
-    UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date
+extension SessionController {
+  enum UserState {
+    case loggedIn
+    case loggingIn
+    case notLoggedIn
   }
   
-  var shouldRefresh: Bool {
-    if let lastRefreshedDate = lastRefreshedDate {
-      if lastRefreshedDate > self.refreshableCheckTimeSpan.date {
-        Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). No refresh required.")
-          .log()
-        return false
-      } else {
-        Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). Refresh is required.")
-          .log()
-        return true
-      }
-    }
-    Event
-      .refresh(from: String(describing: type(of: self)), action: "Last Updated: UNKNOWN. Refresh is required.")
-      .log()
-    return true
+  enum SessionState {
+    case online
+    case offline
   }
   
-  func saveOrReplaceRefreshableUpdateDate() {
-    UserDefaults.standard.set(Date(),
-                              forKey: self.refreshableUserDefaultsKey)
-  }
-}
-
-enum RefreshableTimeSpan: Int {
-  // These are day values
-  case long = 30
-  case short = 1
-  
-  var date: Date {
-    Date().dateByAddingNumberOfDays(-self.rawValue)
+  enum PermissionState {
+    case notLoaded
+    case loading
+    case loaded(Date?)
+    case error
   }
 }
