@@ -54,11 +54,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   private(set) var userState: UserState = .notLoggedIn
   private(set) var permissionState: PermissionState = .notLoaded
   
-  // Once again, there appears to be some kind of issue with
-  // @Published. In theory, user should be @Published, but it
-  // causes a EXC_BAD_ACCESS when accessed from outside this
-  // class. We can get around this using this extra accessor
-  // and keeping the @Published property for internal use.
   @PublishedPrePostFacto var user: User? {
     didSet {
       if user == nil {
@@ -68,6 +63,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
         userState = .loggedIn
         if user?.permissions == nil {
           permissionState = .notLoaded
+          fetchPermissionsIfNeeded()
         } else {
           permissionState = .loaded(lastRefreshedDate)
         }
@@ -75,9 +71,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     }
   }
   let objectDidChange = ObservableObjectPublisher()
-//  var user: User? {
-//    internalUser
-//  }
   
   private let guardpost: Guardpost
   private let connectionMonitor = NWPathMonitor()
@@ -108,9 +101,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     self.client = RWAPI(authToken: user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
     super.init()
-    
-    let queue = DispatchQueue(label: "Monitor")
-    connectionMonitor.start(queue: queue)
     
     prepareSubscriptions()
   }
@@ -164,7 +154,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   func fetchPermissions() {
     // If there's no connection, use the persisted permissions
     // The re-fetch/re-store will be done the next time they open the app
-    guard connectionMonitor.currentPath.status == .satisfied else { return }
+    guard sessionState == .online else { return }
     
     // Don't repeatedly make the same request
     if case .loading = permissionState {
@@ -226,6 +216,8 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
         self.sessionState = newState
         self.objectDidChange.send()
       }
+      
+      self.fetchPermissionsIfNeeded()
     }
     connectionMonitor.start(queue: .main)
   }
