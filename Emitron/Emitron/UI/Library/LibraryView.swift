@@ -26,8 +26,6 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-// https://mecid.github.io/2019/06/12/understanding-property-wrappers-in-swiftui/
-
 import SwiftUI
 
 private extension CGFloat {

@@ -81,8 +81,8 @@ struct MainView: View {
       )
     } else {
       return AnyView(
-        TabNavView(libraryView: AnyView(Text("OFFLINE")),
-                   myTutorialsView: AnyView(Text("OFFLINE")),
+        TabNavView(libraryView: AnyView(OfflineView()),
+                   myTutorialsView: AnyView(OfflineView()),
                    downloadsView: AnyView(downloadsView))
       )
     }
