@@ -184,7 +184,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
           // Update the user
           self.user = user.with(permissions: permissions)
           // Ensure guardpost is aware, and hence the keychain is updated
-          self.guardpost.updateUser(with: user)
+          self.guardpost.updateUser(with: self.user)
         }
       }
     }
