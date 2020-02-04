@@ -240,8 +240,11 @@ final class VideoPlaybackViewModel {
       if let download = state.download,
         download.state == .complete,
         let localUrl = download.localUrl {
-        let asset = AVAsset(url: localUrl)
-        return promise(.success(AVPlayerItem(asset: asset)))
+        let item = AVPlayerItem(url: localUrl)
+        self.addClosedCaptions(for: item)
+        // Add it to the cache
+        self.playerItems[state.content.id] = item
+        return promise(.success(item))
       }
       
       // We're gonna need to stream it.
