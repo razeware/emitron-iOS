@@ -90,7 +90,13 @@ struct ChildContentListingView: View {
   private func episodeRow(model: ChildContentListDisplayable) -> some View {
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
-    return NavigationLink(destination: VideoView(viewModel: childVideoPlaybackViewModel)) {
+    return NavigationLink(destination:
+      VideoView(viewModel: childVideoPlaybackViewModel)
+        .onDisappear {
+          // In case there's a left-over message from the nav view
+          MessageBus.current.dismiss()
+        }
+      ) {
       TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
         .padding([.leading, .trailing], 20)
         .padding([.bottom], 20)
