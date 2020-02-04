@@ -28,34 +28,17 @@
 
 import Foundation
 
-final class DataCacheChildContentsViewModel: ChildContentsViewModel {
-  private let service: ContentsService
-
-  init(parentContentId: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       repository: Repository,
-       service: ContentsService) {
-    self.service = service
-    super.init(parentContentId: parentContentId,
-               downloadAction: downloadAction,
-               syncAction: syncAction,
-               repository: repository)
-  }
+final class PersistenceStoreChildContentsViewModel: ChildContentsViewModel {
   
   override func loadContentDetailsIntoCache() {
-    self.state = .loading
-    service.contentDetails(for: parentContentId) { result in
-      switch result {
-      case .failure(let error):
-        self.state = .failed
-        Failure
-          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
-      case .success(let (_, cacheUpdate)):
-        self.repository.apply(update: cacheUpdate)
+    do {
+      try repository.loadDownloadedChildContentsIntoCache(for: parentContentId)
+      DispatchQueue.main.async {
         self.reload()
       }
+    } catch {
+      self.state = .failed
+      MessageBus.current.post(message: Message(level: .error, message: Constants.downloadedContentNotFound))
     }
   }
 }

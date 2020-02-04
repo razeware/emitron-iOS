@@ -32,6 +32,16 @@ import GRDB
 extension Group: FetchableRecord, TableRecord, PersistableRecord { }
 
 extension Group {
+  enum Columns {
+    static let id = Column("id")
+    static let name = Column("name")
+    static let description = Column("description")
+    static let ordinal = Column("ordinal")
+    static let contentId = Column("contentId")
+  }
+}
+
+extension Group {
   static let content = belongsTo(Content.self)
   static let contents = hasMany(Content.self)
 }

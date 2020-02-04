@@ -137,6 +137,15 @@ extension Repository {
     try persistenceStore.sync(categories: categories)
   }
   
+  func loadDownloadedChildContentsIntoCache(for contentId: Int) throws {
+    guard let content = try persistenceStore.downloadedContent(with: contentId),
+      let childContents = try persistenceStore.childContentsForDownloadedContent(with: contentId) else {
+      throw PersistenceStoreError.notFound
+    }
+    let cacheUpdate = DataCacheUpdate(contents: childContents.contents + [content], groups: childContents.groups)
+    apply(update: cacheUpdate)
+  }
+  
   private func contentSummaryState(cached: CachedContentSummaryState) -> ContentSummaryState {
     ContentSummaryState(
       content: cached.content,

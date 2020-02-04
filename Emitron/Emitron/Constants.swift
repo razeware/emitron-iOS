@@ -78,6 +78,8 @@ enum Constants {
   
   static let simultaneousStreamsError = "You can only stream on one device at a time."
   
+  static let downloadedContentNotFound = "Unable to find download."
+  
   // Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
