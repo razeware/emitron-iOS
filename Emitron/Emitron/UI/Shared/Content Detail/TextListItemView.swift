@@ -28,9 +28,9 @@
 
 import SwiftUI
 
-private extension CGFloat {
-  static let horizontalSpacing: CGFloat = 15
-  static let buttonSide: CGFloat = 30
+extension CGFloat {
+  static let childContentHorizontalSpacing: CGFloat = 15
+  static let childContentButtonSide: CGFloat = 30
 }
 
 struct TextListItemView: View {
@@ -49,7 +49,7 @@ struct TextListItemView: View {
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
     return VStack(alignment: .leading, spacing: 0) {
-      HStack(alignment: .center, spacing: .horizontalSpacing) {
+      HStack(alignment: .center, spacing: .childContentHorizontalSpacing) {
         
         doneCheckbox
         
@@ -70,7 +70,7 @@ struct TextListItemView: View {
       
       Text(content.duration.minuteSecondTimeFromSeconds)
         .font(.uiCaption)
-        .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
+        .padding([.leading], CGFloat.childContentHorizontalSpacing + CGFloat.childContentButtonSide)
         .padding([.top], 2)
       
       progressBar
@@ -83,60 +83,32 @@ struct TextListItemView: View {
     }
     return AnyView(
       ProgressBarView(progress: progress, isRounded: true)
-        .padding([.leading], CGFloat.horizontalSpacing + CGFloat.buttonSide)
+        .padding([.leading], CGFloat.childContentHorizontalSpacing + CGFloat.childContentButtonSide)
         .padding([.trailing], 20)
         .padding([.top], 10)
     )
   }
   
   private var doneCheckbox: AnyView {
-    
-    if !canDownload && content.professional {
-      return AnyView(ZStack {
-        Rectangle()
-          .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
-          .foregroundColor(.secondaryButtonBackground)
-          .cornerRadius(6)
-        
-        Image("padlock")
-          .frame(width: 10, height: 15, alignment: .center)
-      })
-    }
-
-    let numberView = ZStack {
-      Rectangle()
-        .frame(width: .buttonSide, height: .buttonSide, alignment: .center)
-        .foregroundColor(.secondaryButtonBackground)
-        .cornerRadius(6)
-      
-      Text("\(content.ordinal ?? 0)")
-        .font(.uiButtonLabelSmall)
-        .foregroundColor(.buttonText)
-    }
-    .onTapGesture {
-      self.toggleCompleteness()
-    }
-    
-    let completeView = ZStack(alignment: .center) {
-      Rectangle()
-        .frame(width: .buttonSide, height: .buttonSide)
-        .foregroundColor(Color.accent)
-        .cornerRadius(6)
-      
-      Image("checkmark")
-        .resizable()
-        .frame(maxWidth: 15, maxHeight: 17)
-        .foregroundColor(Color.buttonText)
-    }
-    .onTapGesture {
-      self.toggleCompleteness()
+    if !canStreamPro && content.professional {
+      return AnyView(LockedIconView())
     }
     
     if case .completed = dynamicContentViewModel.viewProgress {
-      return AnyView(completeView)
+      return AnyView(
+        CompletedIconView()
+          .onTapGesture {
+            self.toggleCompleteness()
+          }
+      )
+    } else {
+      return AnyView(
+        NumberIconView(number: content.ordinal ?? 0)
+          .onTapGesture {
+            self.toggleCompleteness()
+          }
+      )
     }
-    
-    return AnyView(numberView)
   }
   
   private func download() {
