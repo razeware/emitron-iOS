@@ -26,52 +26,24 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Combine
+import Foundation
 
-protocol ObservablePrePostFactoObject: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
-  // It's non-trivial to synthesise this, since it is a stored property. So let's not bother.
-  var objectDidChange: ObservableObjectPublisher { get }
-}
-
-@propertyWrapper
-struct PublishedPrePostFacto<Value: Equatable> {
-  
-  init(initialValue: Value) {
-    self.init(wrappedValue: initialValue)
+extension SessionController {
+  enum UserState {
+    case loggedIn
+    case loggingIn
+    case notLoggedIn
   }
   
-  init(wrappedValue: Value) {
-    value = wrappedValue
-    publisher = CurrentValueSubject<Value, Never>(value)
+  enum SessionState {
+    case online
+    case offline
   }
   
-  private var value: Value
-  private let publisher: CurrentValueSubject<Value, Never>!
-  
-  var projectedValue: AnyPublisher<Value, Never> {
-    publisher.eraseToAnyPublisher()
-  }
-  
-  var wrappedValue: Value {
-    get { preconditionFailure("wrappedValue:get called") }
-    set { preconditionFailure("wrappedValue:set called with \(newValue)") }
-  }
-  
-  static subscript<EnclosingSelf: ObservablePrePostFactoObject>(
-  _enclosingInstance object: EnclosingSelf,
-  wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
-  storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
-  ) -> Value {
-    get {
-      object[keyPath: storageKeyPath].value
-    }
-    set {
-      if object[keyPath: storageKeyPath].value != newValue {
-        object.objectWillChange.send()
-        object[keyPath: storageKeyPath].value = newValue
-        object[keyPath: storageKeyPath].publisher.send(newValue)
-        object.objectDidChange.send()
-      }
-    }
+  enum PermissionState {
+    case notLoaded
+    case loading
+    case loaded(Date?)
+    case error
   }
 }

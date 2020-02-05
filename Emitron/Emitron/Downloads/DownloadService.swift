@@ -133,7 +133,7 @@ final class DownloadService {
     processingSubscriptions.forEach { $0.cancel() }
     processingSubscriptions = []
     
-    downloadQueueSubscription?.cancel()
+    pauseQueue()
   }
 }
 
@@ -178,8 +178,14 @@ extension DownloadService: DownloadAction {
     do {
       // 1. Find the download.
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
-      // 2. Cancel it. The delegate callback will handle deleting the value in the persistence store.
-      try downloadProcessor.cancelDownload(download)
+      // 2. Is it already downloading?
+      if [.inProgress, .paused].contains(download.state) {
+        // It's in the download process, so let's ask it to cancel it. The delegate callback will handle deleting the value in the persistence store.
+        try downloadProcessor.cancelDownload(download)
+      } else {
+        // Don't have it in the processor, so we just need to delete the download model
+        try _ = persistenceStore.deleteDownload(withId: download.id)
+      }
     } catch {
       Failure
         .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentId: \(contentId)): \(error)")
@@ -500,32 +506,35 @@ extension DownloadService {
   }
   
   private func checkQueueStatus() {
-    let expensive = networkMonitor.currentPath.isExpensive
-    let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
-    let newStatus = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
-    
-    if status == newStatus {
-      return
-    }
-    
-    status = newStatus
-    switch status {
-    case .active:
-      resumeQueue()
-    case .inactive:
-      pauseQueue()
+    DispatchQueue.main.async { [weak self] in
+      guard let self = self else { return }
+      
+      let expensive = self.networkMonitor.currentPath.isExpensive
+      let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
+      self.status = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
+      
+      switch self.status {
+      case .active:
+        self.resumeQueue()
+      case .inactive:
+        self.pauseQueue()
+      }
     }
   }
   
   private func pauseQueue() {
     // Cancel download queue processing
     downloadQueueSubscription?.cancel()
+    downloadQueueSubscription = nil
     
     // Pause all downloads already in the processor
     downloadProcessor.pauseAllDownloads()
   }
   
   private func resumeQueue() {
+    // Don't do anything if we already have a subscription
+    guard downloadQueueSubscription == nil else { return }
+    
     // Start download queue processing
     downloadQueueSubscription = queueManager.downloadQueue
       .sink(receiveCompletion: { completion in

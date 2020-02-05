@@ -67,7 +67,12 @@ struct ContentListView: View {
         if contentScreen == .downloads {
 
           if contentRepository.isEmpty {
-            emptyView
+            AnyView(
+              NoResultsView(
+                contentScreen: contentScreen,
+                headerView: headerView
+              )
+            )
           } else {
             cardsTableViewWithDelete
           }
@@ -122,13 +127,25 @@ struct ContentListView: View {
     case .loadingAdditional:
       return AnyView(listView)
     case .hasData where contentRepository.isEmpty:
-      return AnyView(emptyView)
+      return AnyView(
+        NoResultsView(
+          contentScreen: contentScreen,
+          headerView: headerView
+        )
+      )
     case .hasData:
       return AnyView(listView)
     case .failed:
-      return AnyView(failedView)
+      return AnyView(ReloadView(headerView: headerView) {
+        self.contentRepository.reload()
+      })
     default:
-      return AnyView(emptyView)
+      return AnyView(
+        NoResultsView(
+          contentScreen: contentScreen,
+          headerView: headerView
+        )
+      )
     }
   }
 
@@ -172,84 +189,6 @@ struct ContentListView: View {
     )
   }
   
-  // ISSUE: To make the status bar the same color as the rest of thee backgrounds, we have to make all of the views into Lists
-  private var failedView: some View {
-    VStack {
-      
-      headerView
-      
-      Spacer()
-      
-      Image("emojiCrying")
-        .padding([.bottom], 30)
-      
-      Text("Something went wrong.")
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], 20)
-      
-      Text("Please try again.")
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 20)
-      
-      Spacer()
-      
-      reloadButton
-        .padding([.leading, .trailing, .bottom], 20)
-    }
-    .background(Color.backgroundColor)
-  }
-
-  private var emptyView: some View {
-    VStack {
-      headerView
-
-      Spacer()
-
-      Image(contentScreen.emptyImageName)
-        .padding([.bottom], 30)
-        .padding([.top], 97)
-      // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
-      // we're ignoring the safe area edges, so that the status bar can be the right color
-
-      Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.bottom], 20)
-        .padding([.leading, .trailing], 55)
-
-      Text(contentScreen.detailMesage)
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 55)
-
-      Spacer()
-
-      exploreButton
-    }
-    .background(Color.backgroundColor)
-  }
-
-  private var exploreButton: AnyView? {
-    guard let buttonText = contentScreen.buttonText,
-      contentRepository.contents.isEmpty && contentScreen != .library else {
-        return nil
-    }
-
-    let button = MainButtonView(title: buttonText, type: .primary(withArrow: true)) {
-      print("I DON'T UNDERSTAND THE POINT OF THIS BUTTON")
-      //self.emitron.selectedTab = 0
-    }
-    .padding([.bottom, .leading, .trailing], 20)
-
-    return AnyView(button)
-  }
-  
   private var loadingView: some View {
     VStack {
       headerView
@@ -257,15 +196,6 @@ struct ContentListView: View {
     }
     .background(Color.backgroundColor)
     .overlay(ActivityIndicator())
-  }
-  
-  private var reloadButton: AnyView? {
-
-    let button = MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.contentRepository.reload()
-    }
-
-    return AnyView(button)
   }
 
   func delete(at offsets: IndexSet) {

@@ -55,9 +55,11 @@ struct VideoView: View {
   var viewModel: VideoPlaybackViewModel
   
   @State private var settingsPresented: Bool = false
+  @State private var playbackVerified: Bool = false
 
   var body: some View {
     viewModel.reloadIfRequired()
+    verifyVideoPlaybackAllowed()
     return videoView
       .navigationBarItems(trailing:
         SwiftUI.Group {
@@ -78,5 +80,18 @@ struct VideoView: View {
   
   private var videoView: some View {
     VideoPlayerControllerRepresentable(with: viewModel)
+  }
+  
+  private func verifyVideoPlaybackAllowed() {
+    guard !playbackVerified else { return }
+    do {
+      if try viewModel.canPlayOrDisplayError() {
+        playbackVerified = true
+      }
+    } catch {
+      if let viewModelError = error as? VideoPlaybackViewModelError {
+        MessageBus.current.post(message: Message(level: .error, message: viewModelError.localizedDescription, autoDismiss: false))
+      }
+    }
   }
 }

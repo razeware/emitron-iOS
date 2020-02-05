@@ -39,7 +39,13 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
   
-  @Published var contents: [ContentListDisplayable] = [ContentListDisplayable]()
+  // This should be @Published, but it /sometimes/ crashes the app with EXC_BAD_ACCESS
+  // when you try and reference it. Which is handy.
+  var contents: [ContentListDisplayable] = [ContentListDisplayable]() {
+    willSet {
+      objectWillChange.send()
+    }
+  }
 
   // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
   // Let's see if we actually need it to be @Published...

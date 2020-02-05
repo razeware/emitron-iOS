@@ -26,52 +26,48 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Combine
+import SwiftUI
 
-protocol ObservablePrePostFactoObject: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
-  // It's non-trivial to synthesise this, since it is a stored property. So let's not bother.
-  var objectDidChange: ObservableObjectPublisher { get }
+struct ReloadView: View {
+  var headerView: AnyView?
+  var reloadHandler: () -> Void
+  
+  var body: some View {
+    VStack {
+      
+      headerView
+      
+      Spacer()
+      
+      Image("emojiCrying")
+        .padding([.bottom], 30)
+      
+      Text("Something went wrong.")
+        .font(.uiTitle2)
+        .foregroundColor(.titleText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing, .bottom], 20)
+      
+      Text("Please try again.")
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 20)
+      
+      Spacer()
+      
+      MainButtonView(
+        title: "Reload",
+        type: .primary(withArrow: false),
+        callback: reloadHandler)
+        .padding([.leading, .trailing, .bottom], 20)
+    }
+    .background(Color.backgroundColor)
+  }
 }
 
-@propertyWrapper
-struct PublishedPrePostFacto<Value: Equatable> {
-  
-  init(initialValue: Value) {
-    self.init(wrappedValue: initialValue)
-  }
-  
-  init(wrappedValue: Value) {
-    value = wrappedValue
-    publisher = CurrentValueSubject<Value, Never>(value)
-  }
-  
-  private var value: Value
-  private let publisher: CurrentValueSubject<Value, Never>!
-  
-  var projectedValue: AnyPublisher<Value, Never> {
-    publisher.eraseToAnyPublisher()
-  }
-  
-  var wrappedValue: Value {
-    get { preconditionFailure("wrappedValue:get called") }
-    set { preconditionFailure("wrappedValue:set called with \(newValue)") }
-  }
-  
-  static subscript<EnclosingSelf: ObservablePrePostFactoObject>(
-  _enclosingInstance object: EnclosingSelf,
-  wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
-  storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
-  ) -> Value {
-    get {
-      object[keyPath: storageKeyPath].value
-    }
-    set {
-      if object[keyPath: storageKeyPath].value != newValue {
-        object.objectWillChange.send()
-        object[keyPath: storageKeyPath].value = newValue
-        object[keyPath: storageKeyPath].publisher.send(newValue)
-        object.objectDidChange.send()
-      }
-    }
+struct ErrorView_Previews: PreviewProvider {
+  static var previews: some View {
+    ReloadView(headerView: nil, reloadHandler: {})
   }
 }

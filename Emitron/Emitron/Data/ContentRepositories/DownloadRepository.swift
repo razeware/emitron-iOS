@@ -57,6 +57,16 @@ final class DownloadRepository: ContentRepository {
     configureSubscription()
   }
   
+  override func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
+    // For donwloaded content, we need to tell it to use the DB, not the service
+    PersistenceStoreChildContentsViewModel(
+      parentContentId: contentId,
+      downloadAction: downloadService,
+      syncAction: syncAction,
+      repository: repository
+    )
+  }
+  
   private func configureSubscription() {
     self.contentSubscription =
       self.downloadService

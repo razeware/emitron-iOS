@@ -26,52 +26,49 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Combine
+import SwiftUI
 
-protocol ObservablePrePostFactoObject: ObservableObject where ObjectWillChangePublisher == ObservableObjectPublisher {
-  // It's non-trivial to synthesise this, since it is a stored property. So let's not bother.
-  var objectDidChange: ObservableObjectPublisher { get }
+struct NoResultsView: View {
+  var contentScreen: ContentScreen
+  var headerView: AnyView?
+  
+  var body: some View {
+    VStack {
+      headerView
+
+      Spacer()
+
+      Image(contentScreen.emptyImageName)
+        .padding([.bottom], 30)
+        .padding([.top], 97)
+      // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
+      // we're ignoring the safe area edges, so that the status bar can be the right color
+
+      Text(contentScreen.titleMessage)
+        .font(.uiTitle2)
+        .foregroundColor(.titleText)
+        .multilineTextAlignment(.center)
+        .padding([.bottom], 20)
+        .padding([.leading, .trailing], 55)
+
+      Text(contentScreen.detailMesage)
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.leading, .trailing], 55)
+    }
+    .background(Color.backgroundColor)
+  }
 }
 
-@propertyWrapper
-struct PublishedPrePostFacto<Value: Equatable> {
-  
-  init(initialValue: Value) {
-    self.init(wrappedValue: initialValue)
-  }
-  
-  init(wrappedValue: Value) {
-    value = wrappedValue
-    publisher = CurrentValueSubject<Value, Never>(value)
-  }
-  
-  private var value: Value
-  private let publisher: CurrentValueSubject<Value, Never>!
-  
-  var projectedValue: AnyPublisher<Value, Never> {
-    publisher.eraseToAnyPublisher()
-  }
-  
-  var wrappedValue: Value {
-    get { preconditionFailure("wrappedValue:get called") }
-    set { preconditionFailure("wrappedValue:set called with \(newValue)") }
-  }
-  
-  static subscript<EnclosingSelf: ObservablePrePostFactoObject>(
-  _enclosingInstance object: EnclosingSelf,
-  wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
-  storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
-  ) -> Value {
-    get {
-      object[keyPath: storageKeyPath].value
-    }
-    set {
-      if object[keyPath: storageKeyPath].value != newValue {
-        object.objectWillChange.send()
-        object[keyPath: storageKeyPath].value = newValue
-        object[keyPath: storageKeyPath].publisher.send(newValue)
-        object.objectDidChange.send()
-      }
+struct NoResultsView_Previews: PreviewProvider {
+  static var previews: some View {
+    VStack {
+      NoResultsView(contentScreen: .bookmarked)
+      NoResultsView(contentScreen: .completed)
+      NoResultsView(contentScreen: .downloads)
+      NoResultsView(contentScreen: .inProgress)
+      NoResultsView(contentScreen: .library)
     }
   }
 }

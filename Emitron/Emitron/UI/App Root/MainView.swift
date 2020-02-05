@@ -39,57 +39,52 @@ struct MainView: View {
   }
   
   private var contentView: AnyView {
-    /* One could be excused for thinking that one could, or
-       maybe even should, use guard let to unwrap the user
-       here. However, this currently does not seem to work with
-       an @Published variable with an optional type. So that's
-       nice isn't it? Defo didn't spend many hours discovering
-       this. Not irritated in the slightest.
-     */
-    
     if !sessionController.isLoggedIn {
       return AnyView(LoginView())
     }
     
-    switch sessionController.state {
-    case .failed:
-      return AnyView(LoginView())
-    case .initial, .loading, .loadingAdditional:
-      sessionController.fetchPermissionsIfNeeded()
-      return tabBarView()
-    case .hasData:
-      // This is a mess—see above.
+    if case .loaded = sessionController.permissionState {
       if sessionController.hasPermissionToUseApp {
         return tabBarView()
       } else {
         return AnyView(LogoutView())
       }
     }
+    
+    return AnyView(Text("LOADING"))
   }
   
   private func tabBarView() -> AnyView {
-    let libraryView = LibraryView(
-      filters: dataManager.filters,
-      libraryRepository: dataManager.libraryRepository
-    )
-    
-    let myTutorialsView = MyTutorialView(
-      state: .inProgress,
-      inProgressRepository: dataManager.inProgressRepository,
-      completedRepository: dataManager.completedRepository,
-      bookmarkRepository: dataManager.bookmarkRepository,
-      domainRepository: dataManager.domainRepository
-    )
-    
     let downloadsView = DownloadsView(
       contentScreen: .downloads,
       downloadRepository: dataManager.downloadRepository
     )
     
-    return AnyView(
-      TabNavView(libraryView: AnyView(libraryView),
-                 myTutorialsView: AnyView(myTutorialsView),
-                 downloadsView: AnyView(downloadsView))
-    )
+    if case .online = sessionController.sessionState {
+      let libraryView = LibraryView(
+        filters: dataManager.filters,
+        libraryRepository: dataManager.libraryRepository
+      )
+      
+      let myTutorialsView = MyTutorialView(
+        state: .inProgress,
+        inProgressRepository: dataManager.inProgressRepository,
+        completedRepository: dataManager.completedRepository,
+        bookmarkRepository: dataManager.bookmarkRepository,
+        domainRepository: dataManager.domainRepository
+      )
+    
+      return AnyView(
+        TabNavView(libraryView: AnyView(libraryView),
+                   myTutorialsView: AnyView(myTutorialsView),
+                   downloadsView: AnyView(downloadsView))
+      )
+    } else {
+      return AnyView(
+        TabNavView(libraryView: AnyView(OfflineView()),
+                   myTutorialsView: AnyView(OfflineView()),
+                   downloadsView: AnyView(downloadsView))
+      )
+    }
   }
 }

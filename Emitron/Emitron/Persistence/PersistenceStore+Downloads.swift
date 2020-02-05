@@ -96,6 +96,31 @@ extension PersistenceStore {
   }
 }
 
+extension PersistenceStore {
+  struct ChildContentContainer: Decodable, FetchableRecord {
+    let contents: [Content]
+  }
+  
+  func childContentsForDownloadedContent(with id: Int) throws -> ChildContentsState? {
+    try db.read { db in
+      let contentRequest = Content
+        .filter(key: id)
+        .including(all: Content.childContents)
+      guard let contents = try ChildContentContainer.fetchOne(db, contentRequest) else { return nil }
+      let groups = try Group
+        .filter(Group.Columns.contentId == id)
+        .fetchAll(db)
+      return ChildContentsState(contents: contents.contents, groups: groups)
+    }
+  }
+  
+  func downloadedContent(with id: Int) throws -> Content? {
+    try db.read { db in
+      try Content.fetchOne(db, key: id)
+    }
+  }
+}
+
 // MARK: - Data reading methods for download queue management
 extension PersistenceStore {
   /// Data required for operation of the download queue

@@ -31,6 +31,7 @@ import Foundation
 protocol Refreshable {
   var refreshableUserDefaultsKey: String { get }
   var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
+  var lastRefreshedDate: Date? { get }
   var shouldRefresh: Bool { get }
 
   // Every class that conforms to the protocol has to call this function after the "refreshable" action has been completed to store the date it was last updated on
@@ -39,16 +40,20 @@ protocol Refreshable {
 
 extension Refreshable {
   
+  var lastRefreshedDate: Date? {
+    UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date
+  }
+  
   var shouldRefresh: Bool {
-    if let lastUpdateDate = UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date {
-      if lastUpdateDate > self.refreshableCheckTimeSpan.date {
+    if let lastRefreshedDate = lastRefreshedDate {
+      if lastRefreshedDate > self.refreshableCheckTimeSpan.date {
         Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastUpdateDate). No refresh required.")
+          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). No refresh required.")
           .log()
         return false
       } else {
         Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastUpdateDate). Refresh is required.")
+          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). Refresh is required.")
           .log()
         return true
       }

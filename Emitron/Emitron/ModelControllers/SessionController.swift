@@ -43,25 +43,34 @@ protocol UserModelController {
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
 class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject, Refreshable {
-  
   // MARK: Refreshable
   var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   private var subscriptions = Set<AnyCancellable>()
 
-  private(set) var state = DataState.initial
+  // Managing the state of the current session
+  private(set) var sessionState: SessionState = .offline
+  private(set) var userState: UserState = .notLoggedIn
+  private(set) var permissionState: PermissionState = .notLoaded
   
-  // Once again, there appears to be some kind of issue with
-  // @Published. In theory, user should be @Published, but it
-  // causes a EXC_BAD_ACCESS when accessed from outside this
-  // class. We can get around this using this extra accessor
-  // and keeping the @Published property for internal use.
-  @PublishedPrePostFacto private var internalUser: User?
-  let objectDidChange = ObservableObjectPublisher()
-  var user: User? {
-    internalUser
+  @PublishedPrePostFacto var user: User? {
+    didSet {
+      if user == nil {
+        userState = .notLoggedIn
+        permissionState = .notLoaded
+      } else {
+        userState = .loggedIn
+        if user?.permissions == nil {
+          permissionState = .notLoaded
+          fetchPermissionsIfNeeded()
+        } else {
+          permissionState = .loaded(lastRefreshedDate)
+        }
+      }
+    }
   }
+  let objectDidChange = ObservableObjectPublisher()
   
   private let guardpost: Guardpost
   private let connectionMonitor = NWPathMonitor()
@@ -69,11 +78,14 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   private(set) var permissionsService: PermissionsService
   
   var isLoggedIn: Bool {
-    user != nil
+    userState == .loggedIn
   }
   
   var hasPermissions: Bool {
-    user?.permissions != nil
+    if case .loaded = permissionState {
+      return true
+    }
+    return false
   }
   
   var hasPermissionToUseApp: Bool {
@@ -85,57 +97,55 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     dispatchPrecondition(condition: .onQueue(.main))
     self.guardpost = guardpost
     let user = guardpost.currentUser
-    self.internalUser = user
+    self.user = user
     self.client = RWAPI(authToken: user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
     super.init()
-    
-    let queue = DispatchQueue(label: "Monitor")
-    connectionMonitor.start(queue: queue)
     
     prepareSubscriptions()
   }
   
   // MARK: - Internal
   func login() {
-    guard state != .loading else { return }
+    guard userState != .loggingIn else { return }
     
-    state = .loading
+    userState = .loggingIn
     guardpost.presentationContextDelegate = self
     
     if isLoggedIn {
       if !hasPermissions {
         fetchPermissions()
-      } else {
-        state = .hasData
       }
     } else {
       guardpost.login { [weak self] result in
-        guard let self = self else { return }
-        
-        switch result {
-        case .failure(let error):
-          self.state = .failed
-          // Have to manually do this since we're not allowed @Published with the enum
-          self.objectWillChange.send()
-          Failure
-            .login(from: "SessionController", reason: error.localizedDescription)
-            .log(additionalParams: nil)
-        case .success(let user):
-          self.internalUser = user
+        DispatchQueue.main.async { [weak self] in
+          guard let self = self else { return }
           
-          Event
-            .login(from: "SessionController")
-            .log(additionalParams: nil)
-          
-          self.fetchPermissions()
+          switch result {
+          case .failure(let error):
+            self.userState = .notLoggedIn
+            self.permissionState = .notLoaded
+            // Have to manually do this since we're not allowed @Published with enums
+            self.objectWillChange.send()
+            Failure
+              .login(from: "SessionController", reason: error.localizedDescription)
+              .log(additionalParams: nil)
+          case .success(let user):
+            self.user = user
+            
+            Event
+              .login(from: "SessionController")
+              .log(additionalParams: nil)
+            
+            self.fetchPermissions()
+          }
         }
       }
     }
   }
   
   func fetchPermissionsIfNeeded() {
-    // Request persmission if an app launch has happened or if it's been oveer 24 hours since the last permission request once the app enters the foreground
+    // Request persmission if an app launch has happened or if it's been over 24 hours since the last permission request once the app enters the foreground
     guard shouldRefresh || !hasPermissions else { return }
     
     fetchPermissions()
@@ -144,51 +154,72 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   func fetchPermissions() {
     // If there's no connection, use the persisted permissions
     // The re-fetch/re-store will be done the next time they open the app
-    guard connectionMonitor.currentPath.status == .satisfied else { return }
+    guard sessionState == .online else { return }
     
     // Don't repeatedly make the same request
-    guard state != .loadingAdditional else { return }
+    if case .loading = permissionState {
+      return
+    }
     
     // No point in requesting permissions when there's no user
     guard isLoggedIn else { return }
     
-    state = .loadingAdditional
+    permissionState = .loading
     permissionsService.permissions { result in
-      switch result {
-      case .failure(let error):
-        Failure
-          .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
-          .log(additionalParams: nil)
-        
-        self.state = .failed
-      case .success(let permissions):
-        // Check that we have a logged in user. Otherwise this is pointless
-        guard let user = self.user else { return }
-        
-        self.state = .hasData
-        // Update the user
-        self.internalUser = user.with(permissions: permissions)
-        // Ensure guardpost is aware, and hence the keychain is updated
-        self.guardpost.updateUser(with: user)
-        self.saveOrReplaceRefreshableUpdateDate()
+      DispatchQueue.main.async {
+        switch result {
+        case .failure(let error):
+          Failure
+            .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
+            .log(additionalParams: nil)
+          
+          self.permissionState = .error
+        case .success(let permissions):
+          // Check that we have a logged in user. Otherwise this is pointless
+          guard let user = self.user else { return }
+          
+          // Update the date that we retrieved the permissions
+          self.saveOrReplaceRefreshableUpdateDate()
+          
+          // Update the user
+          self.user = user.with(permissions: permissions)
+          // Ensure guardpost is aware, and hence the keychain is updated
+          self.guardpost.updateUser(with: self.user)
+        }
       }
     }
   }
   
   func logout() {
     guardpost.logout()
-    self.state = .initial
-    
-    internalUser = nil
+    userState = .notLoggedIn
+    permissionState = .notLoaded
+
+    user = nil
   }
   
   private func prepareSubscriptions() {
-    $internalUser.sink { [weak self] user in
+    $user.sink { [weak self] user in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
       self.permissionsService = PermissionsService(client: self.client)
     }
     .store(in: &subscriptions)
+    
+    connectionMonitor.pathUpdateHandler = { [weak self] path in
+      guard let self = self else { return }
+      
+      let newState: SessionState = path.status == .satisfied ? .online : .offline
+      
+      if newState != self.sessionState {
+        self.objectWillChange.send()
+        self.sessionState = newState
+        self.objectDidChange.send()
+      }
+      
+      self.fetchPermissionsIfNeeded()
+    }
+    connectionMonitor.start(queue: .main)
   }
 }
 

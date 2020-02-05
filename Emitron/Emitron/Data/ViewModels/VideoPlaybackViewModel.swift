@@ -32,21 +32,31 @@ import Combine
 
 enum VideoPlaybackViewModelError: Error {
   case invalidOrMissingAttribute(String)
+  case cannotStreamWhenOffline
+  case invalidPermissions
   
   var localizedDescription: String {
     switch self {
     case .invalidOrMissingAttribute(let attribute):
       return "VideoPlaybackViewModelError::invalidOrMissingAttribute::\(attribute)"
+    case .cannotStreamWhenOffline:
+      return Constants.videoPlaybackCannotStreamWhenOffline
+    case .invalidPermissions:
+      return Constants.videoPlaybackInvalidPermissions
     }
   }
 }
 
 final class VideoPlaybackViewModel {
+  // Allow control of appearance and dismissal of the video view
+  var shouldShow: Bool = false
+  
   private let initialContentId: Int
   private let repository: Repository
   private let videosService: VideosService
   private let contentsService: ContentsService
   private let progressEngine: ProgressEngine
+  private let sessionController: SessionController
   
   // These are the content models that this view model is capable of playing. In this order.
   private var contentList = [VideoPlaybackState]()
@@ -73,7 +83,8 @@ final class VideoPlaybackViewModel {
        repository: Repository,
        videosService: VideosService,
        contentsService: ContentsService,
-       syncAction: SyncAction) {
+       syncAction: SyncAction,
+       sessionController: SessionController = .current) {
     self.initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
@@ -83,6 +94,7 @@ final class VideoPlaybackViewModel {
       repository: repository,
       syncAction: syncAction
     )
+    self.sessionController = sessionController
     
     prepareSubscribers()
   }
@@ -90,6 +102,35 @@ final class VideoPlaybackViewModel {
   deinit {
     if let token = playerTimeObserverToken {
       player.removeTimeObserver(token)
+    }
+  }
+  
+  func canPlayOrDisplayError() throws -> Bool {
+    // Do we have a user
+    guard let user = sessionController.user else {
+      throw VideoPlaybackViewModelError.invalidPermissions
+    }
+    // Do we have the first item of content?
+    guard let contentItem = contentList.first else {
+      throw VideoPlaybackViewModelError.invalidPermissions
+    }
+    // Can that user view this content?
+    if contentItem.content.professional && !user.canStreamPro {
+      throw VideoPlaybackViewModelError.invalidPermissions
+    }
+    // If we're online then, that's all good
+    if sessionController.sessionState == .online {
+      return true
+    }
+    
+    // If we've got a download, then we're ok too
+    if let download = contentItem.download,
+      download.state == .complete,
+      download.localUrl != nil {
+      return true
+    } else {
+      // We can't stream cos we're offline, and we don't have a download
+      throw VideoPlaybackViewModelError.cannotStreamWhenOffline
     }
   }
   
@@ -240,8 +281,11 @@ final class VideoPlaybackViewModel {
       if let download = state.download,
         download.state == .complete,
         let localUrl = download.localUrl {
-        let asset = AVAsset(url: localUrl)
-        return promise(.success(AVPlayerItem(asset: asset)))
+        let item = AVPlayerItem(url: localUrl)
+        self.addClosedCaptions(for: item)
+        // Add it to the cache
+        self.playerItems[state.content.id] = item
+        return promise(.success(item))
       }
       
       // We're gonna need to stream it.

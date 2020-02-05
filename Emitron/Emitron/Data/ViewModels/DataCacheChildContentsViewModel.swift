@@ -43,30 +43,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
                repository: repository)
   }
   
-  override func configureSubscriptions() {
-    repository
-      .childContentsState(for: parentContentId)
-      .sink(receiveCompletion: { [weak self] completion in
-        guard let self = self else { return }
-        if case .failure(let error) = completion, (error as? DataCacheError) == DataCacheError.cacheMiss {
-          self.getContentDetailsFromService()
-        } else {
-          self.state = .failed
-          Failure
-            .repositoryLoad(from: "DataCacheContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(completion)")
-            .log()
-        }
-      }, receiveValue: { [weak self] childContentsState in
-        guard let self = self else { return }
-        
-        self.state = .hasData
-        self.contents = childContentsState.contents
-        self.groups = childContentsState.groups
-      })
-      .store(in: &subscriptions)
-  }
-  
-  private func getContentDetailsFromService() {
+  override func loadContentDetailsIntoCache() {
     self.state = .loading
     service.contentDetails(for: parentContentId) { result in
       switch result {

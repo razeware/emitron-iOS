@@ -9,6 +9,11 @@
 /* Begin PBXBuildFile section */
 		220D971123C032DF005C746C /* Domain+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220D971023C032DF005C746C /* Domain+Mocks.swift */; };
 		220D971323C032E9005C746C /* Category+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 220D971223C032E9005C746C /* Category+Mocks.swift */; };
+		2213193C23E47B6A00F15816 /* SessionController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213193B23E47B6A00F15816 /* SessionController+States.swift */; };
+		2213193F23E4E85500F15816 /* NoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213193E23E4E85500F15816 /* NoResultsView.swift */; };
+		2213194123E4E85F00F15816 /* OfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194023E4E85F00F15816 /* OfflineView.swift */; };
+		2213194323E4E86900F15816 /* ReloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194223E4E86900F15816 /* ReloadView.swift */; };
+		2213194523E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194423E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift */; };
 		221E56622375E4AD00333607 /* PersistenceMocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E56612375E4AD00333607 /* PersistenceMocks.swift */; };
 		221E56662379767C00333607 /* ContentTest+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 221E56652379767C00333607 /* ContentTest+Mocks.swift */; };
 		221E5669237AA29900333607 /* ContentDetails_Collection.json in Resources */ = {isa = PBXBuildFile; fileRef = 221E5668237AA29900333607 /* ContentDetails_Collection.json */; };
@@ -260,6 +265,11 @@
 /* Begin PBXFileReference section */
 		220D971023C032DF005C746C /* Domain+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Domain+Mocks.swift"; sourceTree = "<group>"; };
 		220D971223C032E9005C746C /* Category+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Category+Mocks.swift"; sourceTree = "<group>"; };
+		2213193B23E47B6A00F15816 /* SessionController+States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SessionController+States.swift"; sourceTree = "<group>"; };
+		2213193E23E4E85500F15816 /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
+		2213194023E4E85F00F15816 /* OfflineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineView.swift; sourceTree = "<group>"; };
+		2213194223E4E86900F15816 /* ReloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadView.swift; sourceTree = "<group>"; };
+		2213194423E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStoreChildContentsViewModel.swift; sourceTree = "<group>"; };
 		221E56612375E4AD00333607 /* PersistenceMocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceMocks.swift; sourceTree = "<group>"; };
 		221E56652379767C00333607 /* ContentTest+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentTest+Mocks.swift"; sourceTree = "<group>"; };
 		221E5668237AA29900333607 /* ContentDetails_Collection.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = ContentDetails_Collection.json; sourceTree = "<group>"; };
@@ -531,8 +541,19 @@
 				22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */,
 				22E2267923CA22C200A83601 /* DataCacheChildContentsViewModel.swift */,
 				222EEF7A23CDC24400B025A4 /* VideoPlaybackViewModel.swift */,
+				2213194423E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift */,
 			);
 			path = ViewModels;
+			sourceTree = "<group>";
+		};
+		2213193D23E4E83300F15816 /* Empty States */ = {
+			isa = PBXGroup;
+			children = (
+				2213193E23E4E85500F15816 /* NoResultsView.swift */,
+				2213194023E4E85F00F15816 /* OfflineView.swift */,
+				2213194223E4E86900F15816 /* ReloadView.swift */,
+			);
+			path = "Empty States";
 			sourceTree = "<group>";
 		};
 		221E5667237AA26F00333607 /* Mocks */ = {
@@ -818,6 +839,7 @@
 		22BFE75D23DACEC000495BA9 /* Data Synchronisation */ = {
 			isa = PBXGroup;
 			children = (
+				222EEF7E23CEC63400B025A4 /* ProgressEngine.swift */,
 				22BFE75E23DACEF400495BA9 /* SyncAction.swift */,
 				22BFE76023DACFE200495BA9 /* SyncEngine.swift */,
 				22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */,
@@ -1048,7 +1070,6 @@
 			children = (
 				B682F8C622EB096300CBF2CC /* Filters.swift */,
 				B6C4F3D622E6EE5B0087ED10 /* Filter.swift */,
-				222EEF7E23CEC63400B025A4 /* ProgressEngine.swift */,
 			);
 			path = Features;
 			sourceTree = "<group>";
@@ -1160,6 +1181,7 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				2213193D23E4E83300F15816 /* Empty States */,
 				22E88F5F23DF8D7C0016EB36 /* Settings */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
@@ -1312,6 +1334,7 @@
 				8BFC74BF23649FB4001979F1 /* ContentVMs */,
 				B62B9A8322DF771200122CE8 /* DataState.swift */,
 				95A4513322E224B500D24E56 /* SessionController.swift */,
+				2213193B23E47B6A00F15816 /* SessionController+States.swift */,
 			);
 			path = ModelControllers;
 			sourceTree = "<group>";
@@ -1558,6 +1581,7 @@
 				B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */,
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
 				229F0AC023BB23D00004DD4F /* DownloadAction.swift in Sources */,
+				2213194123E4E85F00F15816 /* OfflineView.swift in Sources */,
 				223D77AF23B0C0AA005BE95D /* Bookmark.swift in Sources */,
 				8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */,
 				223D77CD23B0D1EF005BE95D /* ContentCategory.swift in Sources */,
@@ -1644,6 +1668,7 @@
 				22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */,
 				222C0AAC23DF05D700D65EBD /* PlaybackSpeed.swift in Sources */,
 				22C0514A23A8B890004D1223 /* PersistenceStore+Categories.swift in Sources */,
+				2213193C23E47B6A00F15816 /* SessionController+States.swift in Sources */,
 				2288EF0B2374057000514043 /* DownloadService.swift in Sources */,
 				B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */,
 				22C0513223A4FB84004D1223 /* Content+Persistence.swift in Sources */,
@@ -1703,6 +1728,7 @@
 				B6C4F3BD22E668FC0087ED10 /* FiltersView.swift in Sources */,
 				8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */,
 				B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */,
+				2213194323E4E86900F15816 /* ReloadView.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
 				229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */,
 				B6C4F3D722E6EE5B0087ED10 /* Filter.swift in Sources */,
@@ -1717,8 +1743,10 @@
 				223D77B123B0C0B2005BE95D /* Category.swift in Sources */,
 				22E2267623C9BD3900A83601 /* DynamicContentState.swift in Sources */,
 				2228E40023B9891600E103AA /* LoginView.swift in Sources */,
+				2213193F23E4E85500F15816 /* NoResultsView.swift in Sources */,
 				223D77D723B2168E005BE95D /* BookmarkRepository.swift in Sources */,
 				22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */,
+				2213194523E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift in Sources */,
 				22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */,
 				B6FC15B522CB53730078CEDB /* ContentDetailView.swift in Sources */,
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,

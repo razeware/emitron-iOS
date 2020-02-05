@@ -31,6 +31,7 @@ import GRDB
 
 enum PersistenceStoreError: Error {
   case argumentError
+  case notFound
 }
 
 // The object responsible for managing and accessing cached content
