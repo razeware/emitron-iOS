@@ -35,6 +35,15 @@ private enum Layout {
 struct ContentSummaryView: View {
   var content: ContentListDisplayable
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+  @EnvironmentObject var sessionController: SessionController
+  
+  var courseLocked: Bool {
+    content.professional && !sessionController.user!.canStreamPro
+  }
+  
+  var canDownload: Bool {
+    sessionController.user!.canDownload
+  }
   
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
@@ -72,16 +81,21 @@ struct ContentSummaryView: View {
         .lineSpacing(3)
         .padding([.top], 10)
       
-      HStack(spacing: 30, content: {
-        DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-          .onTapGesture {
-            self.download()
+      if !courseLocked {
+        HStack(spacing: 30, content: {
+          if canDownload {
+            DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+              .onTapGesture {
+                self.download()
+              }
           }
-        bookmarkButton
-        
-        completedTag(content: content)
-      })
-        .padding([.top], 15)
+          
+          bookmarkButton
+          
+          completedTag(content: content)
+        })
+          .padding([.top], 15)
+      }
       
       Text(content.descriptionPlainText)
         .font(.uiCaption)
