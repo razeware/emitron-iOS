@@ -28,21 +28,33 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+struct PlayButtonView: View {
+  var body: some View {
+    HStack {
+      Spacer()
+      
+      ZStack {
+        Rectangle()
+          .frame(maxWidth: 75, maxHeight: 75)
+          .foregroundColor(.white)
+          .cornerRadius(13)
+        Rectangle()
+          .frame(maxWidth: 65, maxHeight: 65)
+          .foregroundColor(.appBlack)
+          .cornerRadius(11)
+        Image("materialIconPlay")
+          .resizable()
+          .frame(width: 40, height: 40)
+          .foregroundColor(.white)
+      }
+      
+      Spacer()
+    }
   }
-  
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
+}
+
+struct PlayButtonView_Previews: PreviewProvider {
+  static var previews: some View {
+    PlayButtonView()
   }
 }

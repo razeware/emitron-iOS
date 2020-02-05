@@ -56,9 +56,9 @@ struct ContentDetailView: View {
         Section {
           
           if self.content.professional && !self.canStreamPro {
-            self.blurOverlay(for: geometry.size.width)
+            self.headerImageLockedProContent(for: geometry.size.width)
           } else {
-            self.opacityOverlay(for: geometry.size.width)
+            self.headerImagePlayableContent(for: geometry.size.width)
           }
           
           ContentSummaryView(content: self.content, dynamicContentViewModel: self.dynamicContentViewModel)
@@ -96,107 +96,37 @@ struct ContentDetailView: View {
     }
   }
   
-  private var continueButton: some View {
+  private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
     let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
     return NavigationLink(destination: VideoView(viewModel: viewModel)) {
-      ZStack {
-        Rectangle()
-          .frame(width: 155, height: 75)
-          .foregroundColor(.white)
-          .cornerRadius(13)
-        Rectangle()
-          .frame(width: 145, height: 65)
-          .foregroundColor(.appBlack)
-          .cornerRadius(11)
-        
-        HStack {
-          Image("materialIconPlay")
-            .resizable()
-            .frame(width: 40, height: 40)
-            .foregroundColor(.white)
-          Text("Continue")
-            .foregroundColor(.white)
-            .font(.uiLabelBold)
-        }
-          //HACK: Beacuse the play button has padding on it
-          .padding([.leading], -7)
-      }
-    }
-  }
-  
-  private var playButton: some View {
-    let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
-    return NavigationLink(destination: VideoView(viewModel: viewModel)) {
-      ZStack {
-        Rectangle()
-          .frame(maxWidth: 75, maxHeight: 75)
-          .foregroundColor(.white)
-          .cornerRadius(13)
-        Rectangle()
-          .frame(maxWidth: 65, maxHeight: 65)
-          .foregroundColor(.appBlack)
-          .cornerRadius(11)
-        Image("materialIconPlay")
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
+      if case .inProgress = dynamicContentViewModel.viewProgress {
+        return AnyView(ContinueButtonView())
+      } else {
+        return AnyView(PlayButtonView())
       }
     }
   }
 
-  private func opacityOverlay(for width: CGFloat) -> some View {
+  private func headerImagePlayableContent(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
-        KFImage(content.cardArtworkUrl)
-          .resizable()
+        VerticalFadeImageView(imageUrl: content.cardArtworkUrl)
           .frame(width: width, height: width * imageRatio)
-          .transition(.opacity)
         
-        Rectangle()
-          .foregroundColor(.appBlack)
-          .opacity(0.2)
-        
-        GeometryReader { geometry in
-          HStack {
-            self.continueOrPlayButton(geometry: geometry)
-          }
-            //HACK: to remove navigation chevrons
-            .padding(.trailing, -32.0)
-        }
+        continueOrPlayButton
+          .padding(.trailing, -32.0) // HACK: to remove navigation chevrons
       }
+      
       progressBar
     })
   }
   
-  private func blurOverlay(for width: CGFloat) -> some View {
-    VStack {
-      ZStack {
-        KFImage(content.cardArtworkUrl)
-          .resizable()
-          .frame(width: width, height: width * imageRatio)
-          .transition(.opacity)
-          .blur(radius: 10)
-        
-        Rectangle()
-          .foregroundColor(.appBlack)
-          .opacity(0.5)
-          .blur(radius: 10)
-        
-        proView
-      }
-      progressBar
-    }
-  }
-  
-  private func continueOrPlayButton(geometry: GeometryProxy) -> AnyView {
-    if case .inProgress = dynamicContentViewModel.viewProgress {
-      return AnyView(self.continueButton
-        //HACK: to center the button when it's in a NavigationLink
-        .padding(.leading, geometry.size.width / 2 - 74.5))
-    } else {
-      return AnyView(self.playButton
-        //HACK: to center the button when it's in a NavigationLink
-        .padding(.leading, geometry.size.width / 2 - 32.0))
+  private func headerImageLockedProContent(for width: CGFloat) -> some View {
+    ZStack {
+      VerticalFadeImageView(imageUrl: content.cardArtworkUrl, blurred: true)
+        .frame(width: width, height: width * imageRatio)
+      
+      ProContentLockedOverlayView()
     }
   }
   
@@ -205,26 +135,6 @@ struct ContentDetailView: View {
       return AnyView(ProgressBarView(progress: progress, isRounded: false))
     }
     return nil
-  }
-  
-  private var proView: some View {
-    VStack {
-      HStack {
-        Image("padlock")
-        
-        Text("Pro Course")
-          .font(.uiTitle1)
-          .foregroundColor(.white)
-      }
-      
-      Text("To unlock this course visit raywenderlich.com/subscription for more information")
-        .multilineTextAlignment(.center)
-        .font(.uiLabel)
-        .foregroundColor(.white)
-        .padding([.leading, .trailing], 20)
-        .lineLimit(3)
-        .fixedSize(horizontal: false, vertical: true)
-    }
   }
   
   private func refreshContentDetails() {

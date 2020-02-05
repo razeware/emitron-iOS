@@ -88,4 +88,7 @@ enum Constants {
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
   static let settingsDownloadQualityLabel = "Downloads Quality"
   static let settingsClosedCaptionOnLabel = "Subtitles"
+  
+  // Detail View
+  static let detailContentLockedCosPro = "To unlock this course visit raywenderlich.com/subscription for more information"
 }

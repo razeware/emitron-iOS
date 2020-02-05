@@ -28,21 +28,30 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+struct ProContentLockedOverlayView: View {
+  var body: some View {
+    VStack {
+      HStack {
+        Image.padlock
+        
+        Text("Pro Course")
+          .font(.uiTitle1)
+          .foregroundColor(.white)
+      }
+      
+      Text(Constants.detailContentLockedCosPro)
+        .multilineTextAlignment(.center)
+        .font(.uiLabel)
+        .foregroundColor(.white)
+        .padding([.leading, .trailing], 20)
+        .lineLimit(3)
+        .fixedSize(horizontal: false, vertical: true)
+    }
   }
-  
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
+}
+
+struct ProContentLockedOverlayView_Previews: PreviewProvider {
+  static var previews: some View {
+    ProContentLockedOverlayView()
   }
 }

@@ -27,22 +27,34 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import KingfisherSwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+struct VerticalFadeImageView: View {
+  var imageUrl: URL?
+  var blurred: Bool = false
+  
+  var body: some View {
+    ZStack {
+      KFImage(imageUrl)
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .blur(radius: blurred ? 10 : 0)
+        .clipped()
+      
+      LinearGradient(gradient: Gradient(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
+                     startPoint: .top,
+                     endPoint: .bottom)
+    }
+  }
+}
+
+struct VerticalFadeImageView_Previews: PreviewProvider {
+  
+  static var previews: some View {
+    VerticalFadeImageView(imageUrl: sampleImageUrl)
   }
   
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
+  static var sampleImageUrl: URL? {
+    Bundle.main.url(forResource: "sampleCardImage", withExtension: "png")
   }
 }

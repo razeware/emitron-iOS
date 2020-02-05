@@ -28,21 +28,41 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+struct ContinueButtonView: View {
+  var body: some View {
+    HStack {
+      Spacer()
+      
+      ZStack {
+        Rectangle()
+          .frame(width: 155, height: 75)
+          .foregroundColor(.white)
+          .cornerRadius(13)
+        Rectangle()
+          .frame(width: 145, height: 65)
+          .foregroundColor(.appBlack)
+          .cornerRadius(11)
+        
+        HStack {
+          Image("materialIconPlay")
+            .resizable()
+            .frame(width: 40, height: 40)
+            .foregroundColor(.white)
+          Text("Continue")
+            .foregroundColor(.white)
+            .font(.uiLabelBold)
+        }
+          //HACK: Beacuse the play button has padding on it
+          .padding([.leading], -7)
+      }
+      
+      Spacer()
+    }
   }
-  
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
+}
+
+struct ContinueButtonView_Previews: PreviewProvider {
+  static var previews: some View {
+    ContinueButtonView()
   }
 }
