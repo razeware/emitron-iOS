@@ -40,9 +40,6 @@ struct NoResultsView: View {
 
       Image(contentScreen.emptyImageName)
         .padding([.bottom], 30)
-        .padding([.top], 97)
-      // Accounting for the size of the navbar on iPhone 8, to push down conttent, because
-      // we're ignoring the safe area edges, so that the status bar can be the right color
 
       Text(contentScreen.titleMessage)
         .font(.uiTitle2)
@@ -56,6 +53,8 @@ struct NoResultsView: View {
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 55)
+      
+      Spacer()
     }
     .background(Color.backgroundColor)
   }
