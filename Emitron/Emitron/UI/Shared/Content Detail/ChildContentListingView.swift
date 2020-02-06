@@ -87,28 +87,39 @@ struct ChildContentListingView: View {
     }
   }
   
-  private func episodeRow(model: ChildContentListDisplayable) -> some View {
+  private func episodeRow(model: ChildContentListDisplayable) -> AnyView {
+    
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
-    let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
-    return NavigationLink(destination:
-      VideoView(viewModel: childVideoPlaybackViewModel)
-        .onDisappear {
-          // In case there's a left-over message from the nav view
-          MessageBus.current.dismiss()
-        }
-      ) {
-      TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
-        .padding([.leading, .trailing], 20)
-        .padding([.bottom], 20)
+    
+    if model.professional && !sessionController.user!.canStreamPro {
+      return AnyView(TextListItemView(
+        dynamicContentViewModel: childDynamicContentViewModel,
+        content: model)
+          .padding([.leading, .trailing], 20)
+          .padding([.bottom], 20))
+    } else {
+      let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+      
+      return AnyView(NavigationLink(destination:
+        VideoView(viewModel: childVideoPlaybackViewModel)
+          .onDisappear {
+            // In case there's a left-over message from the nav view
+            MessageBus.current.dismiss()
+          }
+        ) {
+        TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
+          .padding([.leading, .trailing], 20)
+          .padding([.bottom], 20)
+      }
+        //HACK: to remove navigation chevrons
+        .padding(.trailing, -32.0))
     }
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -32.0)
   }
   
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
     GeometryReader { _ in
-      ActivityIndicator()
+      LoadingView()
     }
     .listRowInsets(EdgeInsets())
     .listRowBackground(Color.backgroundColor)

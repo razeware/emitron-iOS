@@ -296,6 +296,13 @@ extension PersistenceStore {
     }
   }
   
+  /// Delete all the downloads in the database
+  func deleteDownloads() throws {
+    _ = try db.write { db in
+      try Download.deleteAll(db)
+    }
+  }
+  
   /// Save the entire graph of models to supprt this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.
   func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) throws {

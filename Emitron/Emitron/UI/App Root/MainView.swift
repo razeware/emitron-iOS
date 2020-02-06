@@ -51,12 +51,12 @@ struct MainView: View {
       }
     }
     
-    return AnyView(Text("LOADING"))
+    return AnyView(LoadingView())
   }
   
   private func tabBarView() -> AnyView {
     let downloadsView = DownloadsView(
-      contentScreen: .downloads,
+      contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
       downloadRepository: dataManager.downloadRepository
     )
     

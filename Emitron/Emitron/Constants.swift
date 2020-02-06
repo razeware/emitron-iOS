@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import CoreGraphics.CGBase
 
 enum Constants {
   static let filters = "Filters"
@@ -55,6 +56,9 @@ enum Constants {
   
   // Message Banner
   static let autoDismissTime: TimeInterval = 3
+  
+  // Appearance
+  static let blurRadius: CGFloat = 5
   
   // Messaging
   static let bookmarkCreated = "Content bookmarked successfully."
@@ -88,4 +92,7 @@ enum Constants {
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
   static let settingsDownloadQualityLabel = "Downloads Quality"
   static let settingsClosedCaptionOnLabel = "Subtitles"
+  
+  // Detail View
+  static let detailContentLockedCosPro = "To unlock this course visit raywenderlich.com/subscription for more information"
 }

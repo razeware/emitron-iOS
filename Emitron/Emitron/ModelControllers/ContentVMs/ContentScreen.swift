@@ -29,7 +29,11 @@
 import Foundation
 
 enum ContentScreen {
-  case library, downloads, inProgress, completed, bookmarked
+  case library
+  case downloads(permitted: Bool)
+  case inProgress
+  case completed
+  case bookmarked
 
   var isMyTutorials: Bool {
     switch self {
@@ -45,8 +49,10 @@ enum ContentScreen {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library:
       return "We couldn't find anything with that search criteria."
-    case .downloads:
+    case .downloads(permitted: true):
       return "You haven't downloaded any tutorials yet."
+    case .downloads(permitted: false):
+      return "Professional subscribers only."
     case .bookmarked:
       return "You haven't bookmarked any tutorials yet."
     case .inProgress:
@@ -66,8 +72,10 @@ enum ContentScreen {
       return "When you start a video course you can quickly resume it from here."
     case .completed:
       return "Watch all the episodes of a video course or screencast to complete it."
-    case .downloads:
+    case .downloads(permitted: true):
       return "Tap the download icon to download a video course or episode to watch offline."
+    case .downloads(permitted: false):
+      return "Professional subscriber benefits include being able to download videos and watch them offline, access to exclusive content, and more!"
     }
   }
 

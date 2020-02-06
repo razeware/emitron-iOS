@@ -41,4 +41,8 @@ extension Image {
   static var close: Image {
     Image("close")
   }
+  
+  static var padlock: Image {
+    Image("padlock")
+  }
 }

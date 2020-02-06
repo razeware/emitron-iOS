@@ -55,30 +55,22 @@ struct ContentListView: View {
     List {
       if headerView != nil {
         Section(header: headerView) {
-          if contentScreen == .downloads {
-            cardsTableViewWithDelete
-          } else {
-          cardTableNavView
-          }
+          appropriateCardsView
           loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
         
-        if contentScreen == .downloads {
-
-          if contentRepository.isEmpty {
-            AnyView(
-              NoResultsView(
-                contentScreen: contentScreen,
-                headerView: headerView
-              )
+        if contentRepository.isEmpty {
+          AnyView(
+            NoResultsView(
+              contentScreen: contentScreen,
+              headerView: headerView
             )
-          } else {
-            cardsTableViewWithDelete
-          }
+          )
         } else {
-          cardTableNavView
+          appropriateCardsView
         }
+        
         loadMoreView
       }
     }
@@ -121,8 +113,12 @@ struct ContentListView: View {
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
       return AnyView(
-        listView
-          .overlay(ActivityIndicator())
+        ZStack {
+          listView
+            .blur(radius: Constants.blurRadius)
+          
+          LoadingView()
+        }
       )
     case .loadingAdditional:
       return AnyView(listView)
@@ -189,13 +185,25 @@ struct ContentListView: View {
     )
   }
   
-  private var loadingView: some View {
-    VStack {
-      headerView
-      Spacer()
+  private var appropriateCardsView: AnyView {
+    if case .downloads = contentScreen {
+      return cardsTableViewWithDelete
+    } else {
+      return cardTableNavView
     }
-    .background(Color.backgroundColor)
-    .overlay(ActivityIndicator())
+  }
+  
+  private var loadingView: some View {
+    ZStack {
+      VStack {
+        headerView
+        Spacer()
+      }
+        .background(Color.backgroundColor)
+        .blur(radius: Constants.blurRadius)
+      
+      LoadingView()
+    }
   }
 
   func delete(at offsets: IndexSet) {
