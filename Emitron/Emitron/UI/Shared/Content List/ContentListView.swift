@@ -121,8 +121,12 @@ struct ContentListView: View {
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
       return AnyView(
-        listView
-          .overlay(ActivityIndicator())
+        ZStack {
+          listView
+            .blur(radius: Constants.blurRadius)
+          
+          LoadingView()
+        }
       )
     case .loadingAdditional:
       return AnyView(listView)
@@ -190,12 +194,16 @@ struct ContentListView: View {
   }
   
   private var loadingView: some View {
-    VStack {
-      headerView
-      Spacer()
+    ZStack {
+      VStack {
+        headerView
+        Spacer()
+      }
+        .background(Color.backgroundColor)
+        .blur(radius: Constants.blurRadius)
+      
+      LoadingView()
     }
-    .background(Color.backgroundColor)
-    .overlay(ActivityIndicator())
   }
 
   func delete(at offsets: IndexSet) {

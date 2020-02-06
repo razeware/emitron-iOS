@@ -30,13 +30,17 @@ import SwiftUI
 
 struct LoadingView: View {
   var body: some View {
-    VStack {
-      ActivityIndicator()
-        .padding([.bottom], 10)
-      Text("Loading...")
-        .font(.uiHeadline)
+    ZStack {
+      Color.backgroundColor
+        .opacity(0.5)
+      
+      VStack {
+        ActivityIndicator()
+          .padding([.bottom], 10)
+        Text("Loading...")
+          .font(.uiHeadline)
+      }
     }
-      .background(Color.backgroundColor)
   }
 }
 

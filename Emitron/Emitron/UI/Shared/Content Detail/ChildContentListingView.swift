@@ -119,7 +119,7 @@ struct ChildContentListingView: View {
   private var loadingView: some View {
     // HACK: To put it in the middle we have to wrap it in Geometry Reader
     GeometryReader { _ in
-      ActivityIndicator()
+      LoadingView()
     }
     .listRowInsets(EdgeInsets())
     .listRowBackground(Color.backgroundColor)
