@@ -51,7 +51,7 @@ struct MainView: View {
       }
     }
     
-    return AnyView(Text("LOADING"))
+    return AnyView(LoadingView())
   }
   
   private func tabBarView() -> AnyView {
