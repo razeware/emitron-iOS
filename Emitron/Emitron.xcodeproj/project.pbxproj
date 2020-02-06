@@ -578,6 +578,8 @@
 		2213195223EB7A5700F15816 /* Child Listing */ = {
 			isa = PBXGroup;
 			children = (
+				2213194C23EB224500F15816 /* ContinueButtonView.swift */,
+				2213194A23EB220800F15816 /* PlayButtonView.swift */,
 				2213195323EB7A6A00F15816 /* NumberIconView.swift */,
 				2213195523EB7A7800F15816 /* CompletedIconView.swift */,
 				2213195723EB7A9800F15816 /* LockedIconView.swift */,
@@ -784,8 +786,6 @@
 				B6FC15B022CB53220078CEDB /* TextListItemView.swift */,
 				22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */,
 				2213194623EAFBD700F15816 /* VerticalFadeImageView.swift */,
-				2213194A23EB220800F15816 /* PlayButtonView.swift */,
-				2213194C23EB224500F15816 /* ContinueButtonView.swift */,
 				2213194E23EB687100F15816 /* ProContentLockedOverlayView.swift */,
 			);
 			path = "Content Detail";

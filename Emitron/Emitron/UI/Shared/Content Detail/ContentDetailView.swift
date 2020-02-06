@@ -32,7 +32,7 @@ import UIKit
 
 struct ContentDetailView: View {
   var content: ContentListDisplayable
-  var childContentsViewModel: ChildContentsViewModel
+  @ObservedObject var childContentsViewModel: ChildContentsViewModel
   var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject var sessionController: SessionController
@@ -99,10 +99,20 @@ struct ContentDetailView: View {
   private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
     let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
     return NavigationLink(destination: VideoView(viewModel: viewModel)) {
-      if case .inProgress = dynamicContentViewModel.viewProgress {
-        return AnyView(ContinueButtonView())
+      if case .hasData = childContentsViewModel.state {
+        if case .inProgress = dynamicContentViewModel.viewProgress {
+          return AnyView(ContinueButtonView())
+        } else {
+          return AnyView(PlayButtonView())
+        }
       } else {
-        return AnyView(PlayButtonView())
+        return AnyView(
+          HStack {
+            Spacer()
+            ActivityIndicator()
+            Spacer()
+          }
+        )
       }
     }
   }
