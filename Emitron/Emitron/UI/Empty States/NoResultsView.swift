@@ -62,10 +62,11 @@ struct NoResultsView: View {
 
 struct NoResultsView_Previews: PreviewProvider {
   static var previews: some View {
-    VStack {
+    SwiftUI.Group {
       NoResultsView(contentScreen: .bookmarked)
       NoResultsView(contentScreen: .completed)
-      NoResultsView(contentScreen: .downloads)
+      NoResultsView(contentScreen: .downloads(permitted: true))
+      NoResultsView(contentScreen: .downloads(permitted: false))
       NoResultsView(contentScreen: .inProgress)
       NoResultsView(contentScreen: .library)
     }

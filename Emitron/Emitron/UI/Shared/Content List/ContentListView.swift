@@ -55,30 +55,22 @@ struct ContentListView: View {
     List {
       if headerView != nil {
         Section(header: headerView) {
-          if contentScreen == .downloads {
-            cardsTableViewWithDelete
-          } else {
-          cardTableNavView
-          }
+          appropriateCardsView
           loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
         
-        if contentScreen == .downloads {
-
-          if contentRepository.isEmpty {
-            AnyView(
-              NoResultsView(
-                contentScreen: contentScreen,
-                headerView: headerView
-              )
+        if contentRepository.isEmpty {
+          AnyView(
+            NoResultsView(
+              contentScreen: contentScreen,
+              headerView: headerView
             )
-          } else {
-            cardsTableViewWithDelete
-          }
+          )
         } else {
-          cardTableNavView
+          appropriateCardsView
         }
+        
         loadMoreView
       }
     }
@@ -191,6 +183,14 @@ struct ContentListView: View {
       //HACK: to remove navigation chevrons
       .padding(.trailing, -38.0)
     )
+  }
+  
+  private var appropriateCardsView: AnyView {
+    if case .downloads = contentScreen {
+      return cardsTableViewWithDelete
+    } else {
+      return cardTableNavView
+    }
   }
   
   private var loadingView: some View {

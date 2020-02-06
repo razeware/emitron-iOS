@@ -56,7 +56,7 @@ struct MainView: View {
   
   private func tabBarView() -> AnyView {
     let downloadsView = DownloadsView(
-      contentScreen: .downloads,
+      contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
       downloadRepository: dataManager.downloadRepository
     )
     
