@@ -358,6 +358,13 @@ extension DownloadService {
     } catch {
       preconditionFailure("Unable to delete the contents of the downloads directory: \(error)")
     }
+    do {
+      try persistenceStore.deleteDownloads()
+    } catch {
+      Failure
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to destroy all downloads")
+        .log()
+    }
   }
   
   private func deleteFile(for download: Download) throws {
