@@ -34,6 +34,7 @@ struct SettingsView: View {
   var rows: [SettingsOption] = [.playbackSpeed, .wifiOnlyDownloads, .downloadQuality, .closedCaptionOn]
   
   @State private var settingsOptionsPresented: Bool = false
+  @State private var licensesPresented: Bool = false
   @State var selectedOption: SettingsOption = .playbackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
@@ -109,6 +110,16 @@ struct SettingsView: View {
       }
       
       Spacer()
+      
+      Button(action: {
+        self.licensesPresented.toggle()
+      }) {
+        Text("Software Licenses")
+      }
+        .sheet(isPresented: $licensesPresented) {
+          LicenseListView(visible: self.$licensesPresented)
+        }
+        .padding([.bottom], 25)
       
       if showLogoutButton {
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
