@@ -167,6 +167,10 @@
 		22E2267C23CA273A00A83601 /* ChildContentsState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267B23CA273A00A83601 /* ChildContentsState.swift */; };
 		22E2267E23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267D23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift */; };
 		22E2268023CA2D7F00A83601 /* Group+GroupDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267F23CA2D7F00A83601 /* Group+GroupDisplayable.swift */; };
+		22EFB80023ECB3E0005AD8CD /* LicenseListView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EFB7FF23ECB3E0005AD8CD /* LicenseListView.swift */; };
+		22EFB80223ECB3ED005AD8CD /* LicenseDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EFB80123ECB3ED005AD8CD /* LicenseDetailView.swift */; };
+		22EFB80423ECB5A3005AD8CD /* FossLicense.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22EFB80323ECB5A3005AD8CD /* FossLicense.swift */; };
+		22EFB80723ECB6DB005AD8CD /* FossLicenses.json in Resources */ = {isa = PBXBuildFile; fileRef = 22EFB80623ECB6DB005AD8CD /* FossLicenses.json */; };
 		22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */; };
@@ -424,6 +428,10 @@
 		22E2267B23CA273A00A83601 /* ChildContentsState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentsState.swift; sourceTree = "<group>"; };
 		22E2267D23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Content+ChildContentListDisplayable.swift"; sourceTree = "<group>"; };
 		22E2267F23CA2D7F00A83601 /* Group+GroupDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Group+GroupDisplayable.swift"; sourceTree = "<group>"; };
+		22EFB7FF23ECB3E0005AD8CD /* LicenseListView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseListView.swift; sourceTree = "<group>"; };
+		22EFB80123ECB3ED005AD8CD /* LicenseDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LicenseDetailView.swift; sourceTree = "<group>"; };
+		22EFB80323ECB5A3005AD8CD /* FossLicense.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FossLicense.swift; sourceTree = "<group>"; };
+		22EFB80623ECB6DB005AD8CD /* FossLicenses.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FossLicenses.json; sourceTree = "<group>"; };
 		22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentListingView.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -997,11 +1005,29 @@
 		22E88F5F23DF8D7C0016EB36 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				22EFB7FE23ECB3C4005AD8CD /* Licenses */,
 				B5956540230A88E100A3FF44 /* SettingsOptionsView.swift */,
 				B6FC15AD22CB529E0078CEDB /* SettingsView.swift */,
 				B595653223018AC200A3FF44 /* TitleDetailView.swift */,
 			);
 			path = Settings;
+			sourceTree = "<group>";
+		};
+		22EFB7FE23ECB3C4005AD8CD /* Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				22EFB7FF23ECB3E0005AD8CD /* LicenseListView.swift */,
+				22EFB80123ECB3ED005AD8CD /* LicenseDetailView.swift */,
+			);
+			path = Licenses;
+			sourceTree = "<group>";
+		};
+		22EFB80523ECB67B005AD8CD /* FOSS Licenses */ = {
+			isa = PBXGroup;
+			children = (
+				22EFB80623ECB6DB005AD8CD /* FossLicenses.json */,
+			);
+			path = "FOSS Licenses";
 			sourceTree = "<group>";
 		};
 		8B28D2B123546CFD005FCC08 /* UIKit */ = {
@@ -1071,6 +1097,7 @@
 				B6DF2FAE22CA498B0081A3A3 /* User.swift */,
 				222C0AAF23DF554E00D65EBD /* SettingsOption.swift */,
 				222C0AAB23DF05D700D65EBD /* PlaybackSpeed.swift */,
+				22EFB80323ECB5A3005AD8CD /* FossLicense.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1152,6 +1179,7 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
+				22EFB80523ECB67B005AD8CD /* FOSS Licenses */,
 				22C4EAEB23DEF87F001A3FDA /* Settings */,
 				22BFE75623D990E600495BA9 /* Utilities */,
 				2280E52123C7690200F3913D /* Combine */,
@@ -1510,6 +1538,7 @@
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */,
 				B695033822D4BED700CE0391 /* OFL.txt in Resources */,
+				22EFB80723ECB6DB005AD8CD /* FossLicenses.json in Resources */,
 				B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */,
 				B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */,
 				2213194923EB04D300F15816 /* sampleCardImage.png in Resources */,
@@ -1619,6 +1648,7 @@
 				229F0AC023BB23D00004DD4F /* DownloadAction.swift in Sources */,
 				2213194123E4E85F00F15816 /* OfflineView.swift in Sources */,
 				223D77AF23B0C0AA005BE95D /* Bookmark.swift in Sources */,
+				22EFB80423ECB5A3005AD8CD /* FossLicense.swift in Sources */,
 				8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */,
 				223D77CD23B0D1EF005BE95D /* ContentCategory.swift in Sources */,
 				B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */,
@@ -1681,6 +1711,7 @@
 				223D77A923B07842005BE95D /* PermissionAdapter.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */,
+				22EFB80023ECB3E0005AD8CD /* LicenseListView.swift in Sources */,
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
 				B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */,
@@ -1743,6 +1774,7 @@
 				B6D8EB1922CB9FFE00DE29AF /* CategoriesRequest.swift in Sources */,
 				B6D7DC4322C7ADDC006DD325 /* UIColor+Extensions.swift in Sources */,
 				B6DF2FB122CA4B140081A3A3 /* BookmarkRequest.swift in Sources */,
+				22EFB80223ECB3ED005AD8CD /* LicenseDetailView.swift in Sources */,
 				2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */,
 				B6C4F3C122E66A7E0087ED10 /* AppliedFilterTagButton.swift in Sources */,
 				B6C4F3CD22E6E4640087ED10 /* FiltersHeaderView.swift in Sources */,
