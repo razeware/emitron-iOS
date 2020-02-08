@@ -29,77 +29,14 @@
 import Foundation
 import Combine
 
-struct FilterGroup: Hashable {
-  var type: FilterGroupType
-  var filters: [Filter]
-  var numApplied: Int {
-    filters.filter { $0.isOn }.count
-  }
-  
-  init(type: FilterGroupType, filters: [Filter] = []) {
-    self.type = type
-    self.filters = filters
-  }
-}
-
-enum FilterGroupType: String, Hashable, CaseIterable, Codable {
-  case platforms = "Platforms"
-  case categories = "Categories"
-  case subscriptionPlans = "Subscription Plans"
-  case contentTypes = "Content Type"
-  case difficulties = "Difficulty"
-  case search = "Search"
-  case none = "" // For filters whose values aren't an array, for example the search query
-  
-  var name: String {
-    self.rawValue
-  }
-}
-
-enum SortFilter: Int, Codable {
-  case newest
-  case popularity
-  
-  var next: SortFilter {
-    switch self {
-    case .newest:
-      return .popularity
-    case .popularity:
-      return .newest
-    }
-  }
-  
-  var name: String {
-    switch self {
-    case .newest:
-      return Constants.newest
-    case .popularity:
-      return Constants.popularity
-    }
-  }
-  
-  var paramValue: ParameterSortValue {
-    switch self {
-    case .newest:
-      return .releasedAt
-    case .popularity:
-      return .popularity
-    }
-  }
-  
-  var parameter: Parameter {
-    Param.sort(for: paramValue, descending: true)
-  }
-}
-
 class Filters: ObservableObject {
   var all: Set<Filter> {
     didSet {
-      platforms.filters = all.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      categories.filters = all.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      subscriptionPlans.filters = all.filter { $0.groupType == .subscriptionPlans }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      platforms.filters = all.filter { $0.groupType == .platforms }.sorted()
+      categories.filters = all.filter { $0.groupType == .categories }.sorted()
+      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted()
+      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted()
+      subscriptionPlans.filters = all.filter { $0.groupType == .subscriptionPlans }.sorted()
     }
   }
   
@@ -120,7 +57,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.default.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -138,25 +75,17 @@ class Filters: ObservableObject {
   
   // The  default filters to always apply, unless the user selects them, are .collection and .screencast
   // If the user makes a selection on ANY of them for the contentTypes group, only apply those
-  // They can only select between .collection, .screencast and .episode
-  var `default`: [Filter] {
-    let contentFilters = Set(
-      Param.filters(for: [
-        .contentTypes(types: [.collection, .screencast])
-      ])
-      .map {
-        Filter(groupType: .contentTypes, param: $0, isOn: true)
-      }
-    )
-    
-    return Array(contentFilters)
+  // They can only select between .collection, .screencast
+  var defaultFilters: [Filter] {
+    Param
+      .filters(for: [.contentTypes(types: [.collection, .screencast])])
+      .map { Filter(groupType: .contentTypes, param: $0, isOn: true) }
   }
   
   @Published var searchStr: String = "" 
   
   var searchQuery: String? {
     didSet {
-      
       searchStr = searchQuery ?? ""
       // Remove search filter from filters
       if let searchFilter = searchFilter {
@@ -182,7 +111,7 @@ class Filters: ObservableObject {
   
   private var defaultParameters: [Parameter] {
     let sortParam = Param.sort(for: .releasedAt, descending: true)
-    let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: true ) }
+    let contentFilters = defaultFilters
     
     var contentParams = FilterGroup(
       type: .contentTypes,
@@ -194,30 +123,34 @@ class Filters: ObservableObject {
   }
   
   init() {
-    
+    self.sortFilter = SortFilter.newest
     self.platforms = FilterGroup(type: .platforms)
     self.categories = FilterGroup(type: .categories)
     
-    let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
+    let contentFilters = Param
+      .filters(for: [.contentTypes(types: [.collection, .screencast])])
+      .map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
     self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
-    let difficultyFilters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false) }
+    let difficultyFilters = Param
+      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     
-    let subscriptionPlanFilters = Param.filters(for: [.subscriptionPlans(plans: [.beginner, .professional])]).map { Filter(groupType: .subscriptionPlans, param: $0, isOn: false) }
+    let subscriptionPlanFilters = Param
+      .filters(for: [.subscriptionPlans(plans: [.beginner, .professional])])
+      .map { Filter(groupType: .subscriptionPlans, param: $0, isOn: false) }
     self.subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
-    
-    self.sortFilter = SortFilter.newest
     
     // Check if there are filters in the settings manager
     let savedFilters = SettingsManager.current.filters
     if !savedFilters.isEmpty {
       // Validate loaded settings and put them in the right places
-      self.platforms.filters = savedFilters.filter { $0.groupType == .platforms }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
-      self.subscriptionPlans.filters = savedFilters.filter { $0.groupType == .subscriptionPlans }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      self.platforms.updateFilters(from: savedFilters)
+      self.categories.updateFilters(from: savedFilters)
+      self.contentTypes.updateFilters(from: savedFilters)
+      self.difficulties.updateFilters(from: savedFilters)
+      self.subscriptionPlans.updateFilters(from: savedFilters)
     }
     
     let freshFilters =
@@ -235,7 +168,9 @@ class Filters: ObservableObject {
   func updatePlatformFilters(for domains: [Domain]) {
     let userFacingDomains = domains.filter { $0.level.userFacing }
     let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
-    let platformFilters = Param.filters(for: [.domainTypes(types: domainTypes)]).map { Filter(groupType: .platforms, param: $0, isOn: false ) }
+    let platformFilters = Param
+      .filters(for: [.domainTypes(types: domainTypes)])
+      .map { Filter(groupType: .platforms, param: $0, isOn: false ) }
     platforms.filters = platformFilters
     
     platformFilters.forEach { filter in
@@ -246,7 +181,9 @@ class Filters: ObservableObject {
   
   func updateCategoryFilters(for newCategories: [Category]) {
     let categoryTypes = newCategories.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
-    let categoryFilters = Param.filters(for: [.categoryTypes(types: categoryTypes)]).map { Filter(groupType: .categories, param: $0, isOn: false ) }
+    let categoryFilters = Param
+      .filters(for: [.categoryTypes(types: categoryTypes)])
+      .map { Filter(groupType: .categories, param: $0, isOn: false ) }
     categories.filters = categoryFilters
     
     categoryFilters.forEach { filter in
@@ -283,7 +220,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.default.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -301,7 +238,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.default.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
