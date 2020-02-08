@@ -173,6 +173,12 @@
 		22EFB80723ECB6DB005AD8CD /* FossLicenses.json in Resources */ = {isa = PBXBuildFile; fileRef = 22EFB80623ECB6DB005AD8CD /* FossLicenses.json */; };
 		22F2C45023EF2503007ED4A1 /* FilterGroup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C44F23EF2503007ED4A1 /* FilterGroup.swift */; };
 		22F2C45223EF2525007ED4A1 /* SortFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45123EF2525007ED4A1 /* SortFilter.swift */; };
+		22F2C45523EF7938007ED4A1 /* ContentDifficulty+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45423EF7938007ED4A1 /* ContentDifficulty+Request.swift */; };
+		22F2C45923EF7987007ED4A1 /* ContentDifficulty.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45823EF7987007ED4A1 /* ContentDifficulty.swift */; };
+		22F2C45B23EF79C1007ED4A1 /* ContentType.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45A23EF79C1007ED4A1 /* ContentType.swift */; };
+		22F2C45D23EF79D8007ED4A1 /* ContentType+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45C23EF79D8007ED4A1 /* ContentType+Request.swift */; };
+		22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */; };
+		22F2C46123EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */; };
 		22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B28D2B323546D0F005FCC08 /* ActivityIndicator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */; };
@@ -436,6 +442,12 @@
 		22EFB80623ECB6DB005AD8CD /* FossLicenses.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = FossLicenses.json; sourceTree = "<group>"; };
 		22F2C44F23EF2503007ED4A1 /* FilterGroup.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterGroup.swift; sourceTree = "<group>"; };
 		22F2C45123EF2525007ED4A1 /* SortFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SortFilter.swift; sourceTree = "<group>"; };
+		22F2C45423EF7938007ED4A1 /* ContentDifficulty+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentDifficulty+Request.swift"; sourceTree = "<group>"; };
+		22F2C45823EF7987007ED4A1 /* ContentDifficulty.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDifficulty.swift; sourceTree = "<group>"; };
+		22F2C45A23EF79C1007ED4A1 /* ContentType.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentType.swift; sourceTree = "<group>"; };
+		22F2C45C23EF79D8007ED4A1 /* ContentType+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentType+Request.swift"; sourceTree = "<group>"; };
+		22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSubscriptionPlan.swift; sourceTree = "<group>"; };
+		22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSubscriptionPlan+Request.swift"; sourceTree = "<group>"; };
 		22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentListingView.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B28D2B223546D0F005FCC08 /* ActivityIndicator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ActivityIndicator.swift; sourceTree = "<group>"; };
@@ -1034,6 +1046,16 @@
 			path = "FOSS Licenses";
 			sourceTree = "<group>";
 		};
+		22F2C45323EF7918007ED4A1 /* Models */ = {
+			isa = PBXGroup;
+			children = (
+				22F2C45423EF7938007ED4A1 /* ContentDifficulty+Request.swift */,
+				22F2C45C23EF79D8007ED4A1 /* ContentType+Request.swift */,
+				22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */,
+			);
+			path = Models;
+			sourceTree = "<group>";
+		};
 		8B28D2B123546CFD005FCC08 /* UIKit */ = {
 			isa = PBXGroup;
 			children = (
@@ -1102,6 +1124,9 @@
 				222C0AAF23DF554E00D65EBD /* SettingsOption.swift */,
 				222C0AAB23DF05D700D65EBD /* PlaybackSpeed.swift */,
 				22EFB80323ECB5A3005AD8CD /* FossLicense.swift */,
+				22F2C45823EF7987007ED4A1 /* ContentDifficulty.swift */,
+				22F2C45A23EF79C1007ED4A1 /* ContentType.swift */,
+				22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1288,6 +1313,7 @@
 		B6DF2F9422CA01440081A3A3 /* Requests */ = {
 			isa = PBXGroup;
 			children = (
+				22F2C45323EF7918007ED4A1 /* Models */,
 				B6DF2F9022CA00820081A3A3 /* Request.swift */,
 				B6DF2FB022CA4B140081A3A3 /* BookmarkRequest.swift */,
 				B6D8EB1822CB9FFE00DE29AF /* CategoriesRequest.swift */,
@@ -1662,6 +1688,7 @@
 				22BFE75F23DACEF400495BA9 /* SyncAction.swift in Sources */,
 				2213194F23EB687100F15816 /* ProContentLockedOverlayView.swift in Sources */,
 				95A4513522E224B500D24E56 /* SessionController.swift in Sources */,
+				22F2C45B23EF79C1007ED4A1 /* ContentType.swift in Sources */,
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
 				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
@@ -1684,6 +1711,7 @@
 				22BFE75C23D9AF4100495BA9 /* MessageBarView.swift in Sources */,
 				B6D8EB1B22CBA3FE00DE29AF /* CategoriesService.swift in Sources */,
 				22C914C823BD8F6E00A05E00 /* ContentsService+ContentServiceAdapter.swift in Sources */,
+				22F2C46123EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift in Sources */,
 				223D77B923B0C0DE005BE95D /* Permission.swift in Sources */,
 				223D77D523B1AA02005BE95D /* ContentSummaryState.swift in Sources */,
 				22BFE76823DAF5B000495BA9 /* PersistenceStore+Synchronisation.swift in Sources */,
@@ -1769,6 +1797,7 @@
 				8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */,
 				2213194B23EB220800F15816 /* PlayButtonView.swift in Sources */,
 				22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */,
+				22F2C45923EF7987007ED4A1 /* ContentDifficulty.swift in Sources */,
 				B6DF2FCB22CA863D0081A3A3 /* Guardpost.swift in Sources */,
 				22C0514623A517C3004D1223 /* PersistenceStore+Downloads.swift in Sources */,
 				2280E52323C81B3800F3913D /* PublishedPrePostFacto.swift in Sources */,
@@ -1802,6 +1831,7 @@
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,
 				22E2267E23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift in Sources */,
+				22F2C45523EF7938007ED4A1 /* ContentDifficulty+Request.swift in Sources */,
 				2213194D23EB224500F15816 /* ContinueButtonView.swift in Sources */,
 				B6FC15A622CB51C80078CEDB /* ToggleControlView.swift in Sources */,
 				B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */,
@@ -1828,6 +1858,7 @@
 				223D77D723B2168E005BE95D /* BookmarkRepository.swift in Sources */,
 				22F2C45023EF2503007ED4A1 /* FilterGroup.swift in Sources */,
 				22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */,
+				22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */,
 				2213194523E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift in Sources */,
 				22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */,
 				2213195823EB7A9800F15816 /* LockedIconView.swift in Sources */,
@@ -1835,6 +1866,7 @@
 				B6DF2F8D22CA00500081A3A3 /* RWAPI.swift in Sources */,
 				22C0514823A8AC0B004D1223 /* PersistenceStore+Domains.swift in Sources */,
 				B62B9A8422DF771200122CE8 /* DataState.swift in Sources */,
+				22F2C45D23EF79D8007ED4A1 /* ContentType+Request.swift in Sources */,
 				B6C0F0DF22D5FD4C00012839 /* TimeInterval+Extensions.swift in Sources */,
 				B6FC15D522CB68E20078CEDB /* Service.swift in Sources */,
 				B6DF2FAF22CA498B0081A3A3 /* User.swift in Sources */,
