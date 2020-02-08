@@ -158,6 +158,42 @@ enum ContentType: Int, Codable {
   }
 }
 
+enum ContentSubscriptionPlan: Int, Codable {
+  case beginner
+  case professional
+  
+  init(_ pro: Bool) {
+    self = pro ? .professional : .beginner
+  }
+  
+  var displayString: String {
+    switch self {
+    case .beginner:
+      return "Beginner"
+    case .professional:
+      return "Professional"
+    }
+  }
+  
+  var requestValue: String {
+    switch self {
+    case .beginner:
+      return "false"
+    case .professional:
+      return "true"
+    }
+  }
+  
+  var sortOrdinal: Int {
+    switch self {
+    case .beginner:
+      return 0
+    case .professional:
+      return 1
+    }
+  }
+}
+
 extension Int {
   static let defaultPageNum = 20
   static let maxPageNum = 100
@@ -208,6 +244,7 @@ enum ParameterFilterValue {
   case contentIds(ids: [Int])
   case queryString(string: String)
   case completionStatus(status: CompletionStatus)
+  case subscriptionPlans(plans: [ContentSubscriptionPlan])
   
   var strKey: String {
     switch self {
@@ -225,6 +262,8 @@ enum ParameterFilterValue {
       return "q"
     case .completionStatus:
       return "completion_status"
+    case .subscriptionPlans:
+      return "professional"
     }
   }
   
@@ -244,6 +283,8 @@ enum ParameterFilterValue {
       return [(displayName: str, requestValue: str, ordinal: 0)]
     case .completionStatus(let status):
       return [(displayName: status.rawValue, requestValue: status.rawValue, ordinal: 0)]
+    case .subscriptionPlans(plans: let plans):
+      return plans.map { (displayName: $0.displayString, requestValue: $0.requestValue, ordinal: $0.sortOrdinal) }
     }
   }
     
@@ -256,7 +297,8 @@ enum ParameterFilterValue {
          .domainTypes,
          .difficulties,
          .categoryTypes,
-         .completionStatus:
+         .completionStatus,
+         .subscriptionPlans:
       return false
     }
   }
@@ -271,7 +313,8 @@ enum ParameterFilterValue {
          .contentTypes,
          .domainTypes,
          .difficulties,
-         .categoryTypes:
+         .categoryTypes,
+         .subscriptionPlans:
       return ""
     }
   }

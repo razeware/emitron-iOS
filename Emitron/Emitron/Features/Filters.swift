@@ -27,7 +27,6 @@
 /// THE SOFTWARE.
 
 import Foundation
-import SwiftUI
 import Combine
 
 struct FilterGroup: Hashable {
@@ -46,6 +45,7 @@ struct FilterGroup: Hashable {
 enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case platforms = "Platforms"
   case categories = "Categories"
+  case subscriptionPlans = "Subscription Plans"
   case contentTypes = "Content Type"
   case difficulties = "Difficulty"
   case search = "Search"
@@ -99,12 +99,19 @@ class Filters: ObservableObject {
       categories.filters = all.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
       contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
       difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      subscriptionPlans.filters = all.filter { $0.groupType == .subscriptionPlans }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
     }
   }
   
   // This decides the order in which the filter groups are displayed
   var filterGroups: [FilterGroup] {
-    [platforms, contentTypes, difficulties, categories]
+    [
+      platforms,
+      subscriptionPlans,
+      contentTypes,
+      difficulties,
+      categories
+    ]
   }
   
   var appliedParameters: [Parameter] {
@@ -170,6 +177,7 @@ class Filters: ObservableObject {
   private(set) var categories: FilterGroup
   private(set) var contentTypes: FilterGroup
   private(set) var difficulties: FilterGroup
+  private(set) var subscriptionPlans: FilterGroup
   private(set) var searchFilter: Filter?
   
   private var defaultParameters: [Parameter] {
@@ -193,8 +201,11 @@ class Filters: ObservableObject {
     let contentFilters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])]).map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
     self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
-    let difficultyFilters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
+    let difficultyFilters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
+    
+    let subscriptionPlanFilters = Param.filters(for: [.subscriptionPlans(plans: [.beginner, .professional])]).map { Filter(groupType: .subscriptionPlans, param: $0, isOn: false) }
+    self.subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
     
     self.sortFilter = SortFilter.newest
     
@@ -206,6 +217,7 @@ class Filters: ObservableObject {
       self.categories.filters = savedFilters.filter { $0.groupType == .categories }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
       self.contentTypes.filters = savedFilters.filter { $0.groupType == .contentTypes }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
       self.difficulties.filters = savedFilters.filter { $0.groupType == .difficulties }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
+      self.subscriptionPlans.filters = savedFilters.filter { $0.groupType == .subscriptionPlans }.sorted(by: { $0.sortOrdinal < $1.sortOrdinal })
     }
     
     let freshFilters =
@@ -213,6 +225,7 @@ class Filters: ObservableObject {
         .union(contentTypes.filters)
         .union(difficulties.filters)
         .union(categories.filters)
+        .union(subscriptionPlans.filters)
     self.all = freshFilters
     
     // Load the sort from the settings manager
