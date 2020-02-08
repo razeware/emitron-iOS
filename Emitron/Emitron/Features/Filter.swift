@@ -62,7 +62,7 @@ class Filter: Codable {
 // MARK: - Equatable
 extension Filter: Equatable {
   static func == (lhs: Filter, rhs: Filter) -> Bool {
-    lhs.filterName == rhs.filterName
+    lhs.groupType == rhs.groupType && lhs.filterName == rhs.filterName
   }
 }
 
@@ -70,7 +70,8 @@ extension Filter: Equatable {
 extension Filter: Hashable {
   // In order for Set equality operations to work on a Class, we have to make sure that the reference hashes are the same between filters, so we implement our own hashing function
   func hash(into hasher: inout Hasher) {
-      hasher.combine(filterName)
+    hasher.combine(filterName)
+    hasher.combine(groupType)
   }
 }
 

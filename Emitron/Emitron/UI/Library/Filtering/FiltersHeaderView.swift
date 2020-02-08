@@ -92,7 +92,7 @@ struct FiltersHeaderView: View {
   }
   
   private var expandedView: some View {
-    VStack(alignment: .leading, spacing: 8) {        
+    VStack(alignment: .leading, spacing: 8) {
       ForEach(Array(filterGroup.filters), id: \.self) { filter in
         TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
           filter.isOn.toggle()
@@ -106,10 +106,16 @@ struct FiltersHeaderView: View {
 }
 
 #if DEBUG
-//struct FilterGroupView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    let filters = Param.filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])]).map { Filter(groupType: .difficulties, param: $0, isOn: false ) }
-//    return FiltersHeaderView(filterGroup: FilterGroup(type: .difficulties, filters: filters), filters: filters)
-//  }
-//}
+struct FilterGroupView_Previews: PreviewProvider {
+  static var previews: some View {
+    let filters = Param
+      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
+    
+    return FiltersHeaderView(
+      filterGroup: FilterGroup(type: .difficulties, filters: filters),
+      filters: Filters()
+    )
+  }
+}
 #endif
