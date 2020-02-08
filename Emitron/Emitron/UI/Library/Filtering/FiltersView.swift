@@ -58,7 +58,7 @@ struct FiltersView: View {
           }
           self.presentationMode.wrappedValue.dismiss()
         }) {
-          Image("close")
+          Image.close
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
             .foregroundColor(.iconButton)

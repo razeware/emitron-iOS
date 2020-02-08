@@ -29,135 +29,6 @@
 import Foundation
 
 // Parameter Values
-enum ContentDifficulty: Int, Codable, CaseIterable {
-  case beginner
-  case intermediate
-  case advanced
-  case allLevels
-  
-  init?(string: String) {
-    switch string {
-    case "beginner":
-      self = .beginner
-    case "intermediate":
-      self = .intermediate
-    case "advanced":
-      self = .advanced
-    default:
-      return nil
-    }
-  }
-  
-  var displayString: String {
-    switch self {
-    case .beginner:
-      return "Beginner"
-    case .intermediate:
-      return "Intermediate"
-    case .advanced:
-      return "Advanced"
-    case .allLevels:
-      return "All Levels"
-    }
-  }
-  
-  var requestValue: String {
-    switch self {
-    case .beginner:
-      return "beginner"
-    case .intermediate:
-      return "intermediate"
-    case .advanced:
-      return "advanced"
-    case .allLevels:
-      return ""
-    }
-  }
-  
-  var sortOrdinal: Int {
-    switch self {
-    case .beginner:
-      return 0
-    case .intermediate:
-      return 1
-    case .advanced:
-      return 2
-    case .allLevels:
-      return 3
-    }
-  }
-}
-
-enum ContentType: Int, Codable {
-  case collection
-  case episode
-  case screencast
-  case article
-  case product
-  
-  init?(string: String) {
-    switch string {
-    case "collection":
-      self = .collection
-    case "episode":
-      self = .episode
-    case "screencast":
-      self = .screencast
-    case "article":
-      self = .article
-    case "product":
-      self = .product
-    default:
-      return nil
-    }
-  }
-  
-  var displayString: String {
-    switch self {
-    case .collection:
-      return "Video Course"
-    case .episode:
-      return "Episode"
-    case .screencast:
-      return "Screencast"
-    case .article:
-      return "Article"
-    case .product:
-      return "Book"
-    }
-  }
-  
-  var requestValue: String {
-    switch self {
-    case .collection:
-      return "collection"
-    case .episode:
-      return "episode"
-    case .screencast:
-      return "screencast"
-    case .article:
-      return "article"
-    case .product:
-      return "product"
-    }
-  }
-  
-  var sortOrdinal: Int {
-    switch self {
-    case .collection:
-      return 0
-    case .screencast:
-      return 1
-    case .episode:
-      return 2
-    case .article:
-      return 3
-    case .product:
-      return 4
-    }
-  }
-}
-
 extension Int {
   static let defaultPageNum = 20
   static let maxPageNum = 100
@@ -208,6 +79,7 @@ enum ParameterFilterValue {
   case contentIds(ids: [Int])
   case queryString(string: String)
   case completionStatus(status: CompletionStatus)
+  case subscriptionPlans(plans: [ContentSubscriptionPlan])
   
   var strKey: String {
     switch self {
@@ -225,6 +97,17 @@ enum ParameterFilterValue {
       return "q"
     case .completionStatus:
       return "completion_status"
+    case .subscriptionPlans:
+      return "professional"
+    }
+  }
+  
+  var isArray: Bool {
+    switch self {
+    case .subscriptionPlans, .queryString, .completionStatus:
+      return false
+    default:
+      return true
     }
   }
   
@@ -244,6 +127,8 @@ enum ParameterFilterValue {
       return [(displayName: str, requestValue: str, ordinal: 0)]
     case .completionStatus(let status):
       return [(displayName: status.rawValue, requestValue: status.rawValue, ordinal: 0)]
+    case .subscriptionPlans(plans: let plans):
+      return plans.map { (displayName: $0.displayString, requestValue: $0.requestValue, ordinal: $0.sortOrdinal) }
     }
   }
     
@@ -256,7 +141,8 @@ enum ParameterFilterValue {
          .domainTypes,
          .difficulties,
          .categoryTypes,
-         .completionStatus:
+         .completionStatus,
+         .subscriptionPlans:
       return false
     }
   }
@@ -271,7 +157,8 @@ enum ParameterFilterValue {
          .contentTypes,
          .domainTypes,
          .difficulties,
-         .categoryTypes:
+         .categoryTypes,
+         .subscriptionPlans:
       return ""
     }
   }
@@ -304,7 +191,7 @@ enum Param {
     values.forEach { value in
       guard !value.isSearchQuery else { return }
       
-      let key = "filter[\(value.strKey)][]"
+      let key = "filter[\(value.strKey)]\(value.isArray ? "[]" : "")"
       let values = value.values
       let all = values.map { Parameter(key: key, value: $0.requestValue, displayName: $0.displayName, sortOrdinal: $0.ordinal) }
       

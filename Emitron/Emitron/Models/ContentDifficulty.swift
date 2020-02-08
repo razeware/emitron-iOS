@@ -1,15 +1,15 @@
-/// Copyright (c) 2019 Razeware LLC
-///
+/// Copyright (c) 2020 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,63 +28,48 @@
 
 import Foundation
 
-class Filter: Codable {
-  // MARK: - Properties
-  var parameter: Parameter
-  var isOn: Bool
+enum ContentDifficulty: Int, Codable, CaseIterable {
+  case beginner
+  case intermediate
+  case advanced
+  case allLevels
   
-  var groupType: FilterGroupType
-  
-  var groupName: String {
-    groupType.name
+  init?(string: String) {
+    switch string {
+    case "beginner":
+      self = .beginner
+    case "intermediate":
+      self = .intermediate
+    case "advanced":
+      self = .advanced
+    default:
+      return nil
+    }
   }
   
-  var filterName: String {
-    parameter.displayName
+  var displayString: String {
+    switch self {
+    case .beginner:
+      return "Beginner"
+    case .intermediate:
+      return "Intermediate"
+    case .advanced:
+      return "Advanced"
+    case .allLevels:
+      return "All Levels"
+    }
   }
   
   var sortOrdinal: Int {
-    parameter.sortOrdinal
-  }
-  
-  var isSearch: Bool {
-    groupType == .search
-  }
-  
-  // MARK: - Initializers
-  init(groupType: FilterGroupType, param: Parameter, isOn: Bool = false) {
-    self.groupType = groupType
-    self.parameter = param
-    self.isOn = isOn
-  }
-}
-
-// MARK: - Equatable
-extension Filter: Equatable {
-  static func == (lhs: Filter, rhs: Filter) -> Bool {
-    lhs.groupType == rhs.groupType && lhs.filterName == rhs.filterName
-  }
-}
-
-// MARK: - Hashable
-extension Filter: Hashable {
-  // In order for Set equality operations to work on a Class, we have to make sure that the reference hashes are the same between filters, so we implement our own hashing function
-  func hash(into hasher: inout Hasher) {
-    hasher.combine(filterName)
-    hasher.combine(groupType)
-  }
-}
-
-// MARK: - Comparable
-extension Filter: Comparable {
-  static func < (lhs: Filter, rhs: Filter) -> Bool {
-    lhs.sortOrdinal < rhs.sortOrdinal
-  }
-}
-
-// MARK: - For Testing
-extension Filter {
-  static var testFilter: Filter {
-    Filter(groupType: .contentTypes, param: Parameter(key: "", value: "", displayName: "", sortOrdinal: 0))
+    switch self {
+    case .beginner:
+      return 0
+    case .intermediate:
+      return 1
+    case .advanced:
+      return 2
+    case .allLevels:
+      return 3
+    }
   }
 }
