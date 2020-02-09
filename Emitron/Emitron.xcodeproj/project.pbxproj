@@ -1155,7 +1155,7 @@
 			path = Filtering;
 			sourceTree = "<group>";
 		};
-		B6C4F3D322E6EE200087ED10 /* Features */ = {
+		B6C4F3D322E6EE200087ED10 /* Filters */ = {
 			isa = PBXGroup;
 			children = (
 				B682F8C622EB096300CBF2CC /* Filters.swift */,
@@ -1163,7 +1163,7 @@
 				22F2C44F23EF2503007ED4A1 /* FilterGroup.swift */,
 				22F2C45123EF2525007ED4A1 /* SortFilter.swift */,
 			);
-			path = Features;
+			path = Filters;
 			sourceTree = "<group>";
 		};
 		B6C4F3E022E72CED0087ED10 /* Logging */ = {
@@ -1223,7 +1223,7 @@
 				22A36F4E236F768A0064A406 /* Downloads */,
 				2253632723AB16CF0013F333 /* Displayable */,
 				B6D4529622CAB3E700BFB812 /* Extensions */,
-				B6C4F3D322E6EE200087ED10 /* Features */,
+				B6C4F3D322E6EE200087ED10 /* Filters */,
 				B6DF2FAD22CA435A0081A3A3 /* Guardpost */,
 				B6C4F3E022E72CED0087ED10 /* Logging */,
 				B6FC15C822CB5D950078CEDB /* ModelControllers */,
