@@ -79,12 +79,14 @@ struct MainView: View {
                    myTutorialsView: AnyView(myTutorialsView),
                    downloadsView: AnyView(downloadsView))
       )
-    } else {
+    } else if case .offline = sessionController.sessionState {
       return AnyView(
         TabNavView(libraryView: AnyView(OfflineView()),
                    myTutorialsView: AnyView(OfflineView()),
                    downloadsView: AnyView(downloadsView))
       )
+    } else {
+      return AnyView(LoadingView())
     }
   }
 }

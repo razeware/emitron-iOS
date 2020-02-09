@@ -36,6 +36,7 @@ extension SessionController {
   }
   
   enum SessionState {
+    case unknown
     case online
     case offline
   }

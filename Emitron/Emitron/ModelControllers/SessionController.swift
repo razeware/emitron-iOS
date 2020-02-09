@@ -50,9 +50,9 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   private var subscriptions = Set<AnyCancellable>()
 
   // Managing the state of the current session
-  private(set) var sessionState: SessionState = .offline
+  private(set) var sessionState: SessionState = .unknown
   private(set) var userState: UserState = .notLoggedIn
-  private(set) var permissionState: PermissionState = .notLoaded
+  @Published private(set) var permissionState: PermissionState = .notLoaded
   
   @PublishedPrePostFacto var user: User? {
     didSet {
@@ -95,6 +95,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     dispatchPrecondition(condition: .onQueue(.main))
+    
     self.guardpost = guardpost
     let user = guardpost.currentUser
     self.user = user
