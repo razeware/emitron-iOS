@@ -48,7 +48,7 @@ class CategoryRepository: Refreshable {
   func populate() {
     loadFromPersistentStore()
     
-    if shouldRefresh {
+    if shouldRefresh || categories.isEmpty {
       fetchCategoriesAndUpdatePersistentStore()
     }
   }

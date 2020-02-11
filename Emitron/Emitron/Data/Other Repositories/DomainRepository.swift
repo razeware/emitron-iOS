@@ -48,7 +48,7 @@ class DomainRepository: ObservableObject, Refreshable {
   func populate() {
     loadFromPersistentStore()
     
-    if shouldRefresh {
+    if shouldRefresh || domains.isEmpty {
       fetchDomainsAndUpdatePersistentStore()
     }
   }

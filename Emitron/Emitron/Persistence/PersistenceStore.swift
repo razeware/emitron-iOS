@@ -42,3 +42,13 @@ final class PersistenceStore {
     self.db = db
   }
 }
+
+extension PersistenceStore {
+  /// Completely erase the database. Used for logout.
+  func erase() throws {
+    // Empty it
+    try db.erase()
+    // Repopulate the structure
+    try EmitronDatabase.migrator.migrate(db)
+  }
+}
