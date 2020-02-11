@@ -95,4 +95,8 @@ enum Constants {
   
   // Detail View
   static let detailContentLockedCosPro = "To unlock this course visit raywenderlich.com/subscription for more information"
+  
+  // Pull-to-refresh
+  static let pullToRefreshPullMessage = "Pull to refresh"
+  static let pullToRefreshLoadingMessage = "Loading…"
 }

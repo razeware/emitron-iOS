@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -26,12 +26,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-// Inspired by: https://forums.developer.apple.com/thread/121162
-//struct TitleLabel: ViewModifier {
-//
-//  public func body(content: Content) -> some View {
-//    content
-//  }
-//}
+extension Comparable {
+  func clamped(to limits: ClosedRange<Self>) -> Self {
+    min(max(self, limits.lowerBound), limits.upperBound)
+  }
+}

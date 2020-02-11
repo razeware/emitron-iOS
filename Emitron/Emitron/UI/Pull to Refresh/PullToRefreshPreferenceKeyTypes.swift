@@ -28,29 +28,18 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+enum PullToRefreshPreferenceKeyTypes {
+  struct PrefData: Equatable {
+    let bounds: CGRect
   }
   
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
-  }
-  
-  static var arrowGreen: Image {
-    Image("arrowGreen")
-  }
-  
-  static var arrowRed: Image {
-    Image("arrowRed")
+  struct PrefKey: PreferenceKey {
+    typealias Value = [PrefData]
+    
+    static var defaultValue: [PrefData] = []
+    
+    static func reduce(value: inout [PrefData], nextValue: () -> [PrefData]) {
+      value.append(contentsOf: nextValue())
+    }
   }
 }

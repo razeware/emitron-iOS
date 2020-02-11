@@ -28,29 +28,29 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
+struct PullDownArrowView: View {
+  var proportion: Double
+  
+  var rotation: Angle {
+    Angle(radians: .pi * proportion.clamped(to: 0...1))
   }
   
-  static var closeWhite: Image {
-    Image("closeWhite")
+  var body: some View {
+    Image(systemName: "arrow.down")
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .rotationEffect(rotation)
   }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
-  }
-  
-  static var arrowGreen: Image {
-    Image("arrowGreen")
-  }
-  
-  static var arrowRed: Image {
-    Image("arrowRed")
+}
+
+struct RefreshIconView_Previews: PreviewProvider {
+  static var previews: some View {
+    VStack {
+      PullDownArrowView(proportion: 0)
+      PullDownArrowView(proportion: 0.2)
+      PullDownArrowView(proportion: 0.4)
+      PullDownArrowView(proportion: 0.8)
+      PullDownArrowView(proportion: 1.2)
+    }
   }
 }

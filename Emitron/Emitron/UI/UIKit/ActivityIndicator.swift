@@ -30,9 +30,10 @@ import UIKit
 import SwiftUI
 
 struct ActivityIndicator: UIViewRepresentable {
+  var style: UIActivityIndicatorView.Style = .medium
   
   func makeUIView(context: Context) -> UIActivityIndicatorView {
-    let view = UIActivityIndicatorView(style: .medium)
+    let view = UIActivityIndicatorView(style: style)
     return view
   }
   
