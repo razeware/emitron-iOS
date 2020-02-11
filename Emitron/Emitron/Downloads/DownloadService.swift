@@ -359,7 +359,7 @@ extension DownloadService {
       preconditionFailure("Unable to delete the contents of the downloads directory: \(error)")
     }
     do {
-      try persistenceStore.deleteDownloads()
+      try persistenceStore.erase()
     } catch {
       Failure
         .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to destroy all downloads")
@@ -378,6 +378,7 @@ extension DownloadService {
   private func checkPermissions() {
     guard let user = userModelController.user else {
       // There's no user—delete everything
+      stopProcessing()
       destroyDownloads()
       videosService = .none
       return
@@ -388,8 +389,10 @@ extension DownloadService {
       if videosService == nil {
         videosService = videosServiceProvider(userModelController.client)
       }
+      startProcessing()
     } else {
       // User doesn't have download permission. Delete everything and reset.
+      stopProcessing()
       destroyDownloads()
       videosService = .none
     }

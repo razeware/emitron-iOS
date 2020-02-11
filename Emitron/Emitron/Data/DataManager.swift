@@ -44,7 +44,7 @@ final class DataManager: ObservableObject {
   var filters = Filters()
   
   // Cached data
-  let dataCache = DataCache()
+  var dataCache = DataCache()
   private (set) var repository: Repository!
   
   // Content repositories
@@ -80,6 +80,9 @@ final class DataManager: ObservableObject {
   private func rebuildRepositories() {
     // We're all changing—let's announce it
     objectWillChange.send()
+    
+    // Empty the caches
+    dataCache = DataCache()
     
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     

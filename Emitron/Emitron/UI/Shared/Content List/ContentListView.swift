@@ -53,25 +53,25 @@ struct ContentListView: View {
 
   private var listView: some View {
     List {
-      if headerView != nil {
-        Section(header: headerView) {
-          appropriateCardsView
-          loadMoreView
+      if self.headerView != nil {
+        Section(header: self.headerView) {
+          self.appropriateCardsView
+          self.loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
         
-        if contentRepository.isEmpty {
+        if self.contentRepository.isEmpty {
           AnyView(
             NoResultsView(
-              contentScreen: contentScreen,
-              headerView: headerView
+              contentScreen: self.contentScreen,
+              headerView: self.headerView
             )
           )
         } else {
-          appropriateCardsView
+          self.appropriateCardsView
         }
         
-        loadMoreView
+        self.loadMoreView
       }
     }
   }

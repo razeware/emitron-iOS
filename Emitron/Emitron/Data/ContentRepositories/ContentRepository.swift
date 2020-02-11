@@ -120,6 +120,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     }
     
     state = .loading
+    // `state` can't be @Published, so we have to do this manually
+    objectWillChange.send()
     
     // Reset current page to 1
     currentPage = startingPage

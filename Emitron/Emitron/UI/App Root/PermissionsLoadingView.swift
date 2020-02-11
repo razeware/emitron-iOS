@@ -28,29 +28,29 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
-  }
+struct PermissionsLoadingView: View {
+  @EnvironmentObject var sessionController: SessionController
+  @State var showLogoutAlert: Bool = false
   
-  static var closeWhite: Image {
-    Image("closeWhite")
+  var body: some View {
+    LoadingView()
+      .onTapGesture(count: 5) {
+        self.showLogoutAlert.toggle()
+      }
+    .alert(isPresented: $showLogoutAlert) {
+      Alert(
+        title: Text("Force Logout?"),
+        primaryButton: .destructive(Text("Logout"), action: {
+              self.sessionController.logout()
+            }),
+        secondaryButton: .cancel()
+      )
+    }
   }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
-  }
-  
-  static var arrowGreen: Image {
-    Image("arrowGreen")
-  }
-  
-  static var arrowRed: Image {
-    Image("arrowRed")
+}
+
+struct PermissionsLoadingView_Previews: PreviewProvider {
+  static var previews: some View {
+    PermissionsLoadingView()
   }
 }

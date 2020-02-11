@@ -56,7 +56,7 @@ struct LibraryView: View {
         })
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
-      .background(Color.backgroundColor)
+          .background(Color.backgroundColor)
       }
   }
   
