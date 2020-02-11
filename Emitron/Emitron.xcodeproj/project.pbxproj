@@ -115,6 +115,7 @@
 		22B8266C23B05ECB00D4BA23 /* ContentCategoryAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B8266B23B05ECB00D4BA23 /* ContentCategoryAdapter.swift */; };
 		22B8266E23B0617800D4BA23 /* ContentDomainAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B8266D23B0617800D4BA23 /* ContentDomainAdapter.swift */; };
 		22BE654F23F1F66E00717369 /* Comparable+Clamped.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE654E23F1F66E00717369 /* Comparable+Clamped.swift */; };
+		22BE655323F2D0CB00717369 /* PermissionsLoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BE655223F2D0CB00717369 /* PermissionsLoadingView.swift */; };
 		22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75423D9905500495BA9 /* SnackbarView.swift */; };
 		22BFE75823D9910600495BA9 /* MessageBus.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75723D9910600495BA9 /* MessageBus.swift */; };
 		22BFE75C23D9AF4100495BA9 /* MessageBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */; };
@@ -386,6 +387,7 @@
 		22B8266B23B05ECB00D4BA23 /* ContentCategoryAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentCategoryAdapter.swift; sourceTree = "<group>"; };
 		22B8266D23B0617800D4BA23 /* ContentDomainAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDomainAdapter.swift; sourceTree = "<group>"; };
 		22BE654E23F1F66E00717369 /* Comparable+Clamped.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Comparable+Clamped.swift"; sourceTree = "<group>"; };
+		22BE655223F2D0CB00717369 /* PermissionsLoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsLoadingView.swift; sourceTree = "<group>"; };
 		22BFE75423D9905500495BA9 /* SnackbarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SnackbarView.swift; sourceTree = "<group>"; };
 		22BFE75723D9910600495BA9 /* MessageBus.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBus.swift; sourceTree = "<group>"; };
 		22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MessageBarView.swift; sourceTree = "<group>"; };
@@ -1132,6 +1134,7 @@
 				B6C0F0CE22D5D3EE00012839 /* TabNavView.swift */,
 				22BFE75423D9905500495BA9 /* SnackbarView.swift */,
 				22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */,
+				22BE655223F2D0CB00717369 /* PermissionsLoadingView.swift */,
 			);
 			path = "App Root";
 			sourceTree = "<group>";
@@ -1712,6 +1715,7 @@
 				22BFE75823D9910600495BA9 /* MessageBus.swift in Sources */,
 				22B8266423AF5CF900D4BA23 /* BookmarkAdapter.swift in Sources */,
 				223D77B323B0C0C2005BE95D /* Content.swift in Sources */,
+				22BE655323F2D0CB00717369 /* PermissionsLoadingView.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
 				22BFE76423DAD4BC00495BA9 /* SyncRequest.swift in Sources */,
 				22E2267A23CA22C200A83601 /* DataCacheChildContentsViewModel.swift in Sources */,
