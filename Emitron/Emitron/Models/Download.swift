@@ -78,7 +78,6 @@ extension Download: Equatable {
   static func == (lhs: Download, rhs: Download) -> Bool {
     lhs.id == rhs.id &&
       lhs.fileName == rhs.fileName &&
-      lhs.localUrl == rhs.localUrl &&
       lhs.remoteUrl == rhs.remoteUrl &&
       lhs.progress == rhs.progress &&
       lhs.state == rhs.state &&

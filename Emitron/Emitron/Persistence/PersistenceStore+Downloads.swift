@@ -44,6 +44,7 @@ extension PersistenceStore {
         
       return try ContentSummaryState.fetchAll(db, request)
     }
+    .removeDuplicates()
     .publisher(in: db)
   }
 }

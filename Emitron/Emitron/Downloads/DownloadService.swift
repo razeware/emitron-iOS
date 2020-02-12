@@ -102,6 +102,8 @@ final class DownloadService {
   
   // MARK: Queue Management
   func startProcessing() {
+    // Make sure that we can't start multiple processing subscriptions
+    stopProcessing()
     queueManager.pendingStream
       .sink(receiveCompletion: { completion in
         Failure
@@ -389,7 +391,6 @@ extension DownloadService {
       if videosService == nil {
         videosService = videosServiceProvider(userModelController.client)
       }
-      startProcessing()
     } else {
       // User doesn't have download permission. Delete everything and reset.
       stopProcessing()
