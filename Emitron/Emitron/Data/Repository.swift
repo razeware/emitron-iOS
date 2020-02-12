@@ -121,6 +121,14 @@ extension Repository {
     dataCache.bookmark(for: contentId)
   }
   
+  func parentContent(for contentId: Int) -> Content? {
+    dataCache.parentContent(for: contentId)
+  }
+  
+  func childProgress(for contentId: Int) -> (total: Int, completed: Int)? {
+    dataCache.childProgress(for: contentId)
+  }
+  
   func domainList() throws -> [Domain] {
     try persistenceStore.domainList()
   }

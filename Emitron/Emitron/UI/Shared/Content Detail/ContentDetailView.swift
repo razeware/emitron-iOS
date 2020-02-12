@@ -33,7 +33,7 @@ import UIKit
 struct ContentDetailView: View {
   var content: ContentListDisplayable
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
-  var dynamicContentViewModel: DynamicContentViewModel
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject var sessionController: SessionController
   var user: User {

@@ -77,7 +77,7 @@ final class DownloadProcessor: NSObject {
   }()
   var backgroundSessionCompletionHandler: (() -> Void)?
   private var currentDownloads = [URLSessionDownloadTask]()
-  private var throttleList = [UUID : Double]()
+  private var throttleList = [UUID: Double]()
   weak var delegate: DownloadProcessorDelegate!
   
   override init() {

@@ -96,27 +96,14 @@ final class ProgressEngine {
   }
   
   func updateProgress(for contentId: Int, progress: Int) -> Future<Progression, ProgressEngineError> {
+    let progression = updateCacheWithProgress(for: contentId, progress: progress)
+    
     switch mode {
     case .offline:
       do {
         try syncAction.updateProgress(for: contentId, progress: progress)
         try syncAction.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
         
-        let progression: Progression
-        if var existingProgression = repository.progression(for: contentId) {
-          existingProgression.progress = progress
-          progression = existingProgression
-        } else {
-          let content = repository.content(for: contentId)
-          progression = Progression(
-            id: -1,
-            target: content?.duration ?? 0,
-            progress: progress,
-            createdAt: Date(),
-            updatedAt: Date(),
-            contentId: contentId
-          )
-        }
         return Future { promise in
           promise(.success(progression))
         }
@@ -162,5 +149,39 @@ final class ProgressEngine {
         self.mode = .offline
       }
     }
+  }
+  
+  private func updateCacheWithProgress(for contentId: Int, progress: Int, target: Int? = nil) -> Progression {
+    let content = repository.content(for: contentId)
+    let progression: Progression
+    
+    if var existingProgression = repository.progression(for: contentId) {
+      existingProgression.progress = progress
+      progression = existingProgression
+    } else {
+      progression = Progression(
+        id: -1,
+        target: target ?? content?.duration ?? 0,
+        progress: progress,
+        createdAt: Date(),
+        updatedAt: Date(),
+        contentId: contentId
+      )
+    }
+    
+    let cacheUpdate = DataCacheUpdate(progressions: [progression])
+    repository.apply(update: cacheUpdate)
+    
+    // See whether we need to update parent content
+    if progression.finished,
+      let parentContent = repository.parentContent(for: contentId),
+      let childProgress = repository.childProgress(for: parentContent.id) {
+      
+      _ = updateCacheWithProgress(for: parentContent.id,
+                                  progress: childProgress.completed,
+                                  target: childProgress.total)
+    }
+    
+    return progression
   }
 }
