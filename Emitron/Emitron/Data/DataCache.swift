@@ -127,6 +127,24 @@ extension DataCache {
   func bookmark(for contentId: Int) -> Bookmark? {
     bookmarks[contentId]
   }
+  
+  func parentContent(for contentId: Int) -> Content? {
+    guard let content = content(with: contentId) else { return nil }
+    
+    return try? parentContent(for: content)
+  }
+  
+  func childProgress(for contentId: Int) -> (total: Int, completed: Int)? {
+    guard let content = content(with: contentId) else { return nil }
+    
+    guard let childContents = try? childContents(for: content) else { return nil }
+    
+    let completedCount = childContents
+      .compactMap { self.progression(for: $0.id) }
+      .filter { $0.finished }
+      .count
+    return (total: childContents.count, completed: completedCount )
+  }
 }
 
 extension DataCache {

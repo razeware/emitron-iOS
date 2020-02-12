@@ -122,9 +122,14 @@ struct SettingsView: View {
         .padding([.bottom], 25)
       
       if showLogoutButton {
-        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          self.sessionController.logout()
-          self.presentationMode.wrappedValue.dismiss()
+        VStack {
+          Text("Logged in as \(sessionController.user!.username)")
+            .font(.uiCaption)
+            .foregroundColor(.contentText)
+          MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+            self.sessionController.logout()
+            self.presentationMode.wrappedValue.dismiss()
+          }
         }
         .padding([.bottom, .leading, .trailing], 18)
       }
