@@ -42,6 +42,8 @@ class DownloadQueueManagerTest: XCTestCase {
 
   override func setUp() {
     super.setUp()
+    // There's one already running—let's stop that
+    DownloadService.current.stopProcessing()
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
@@ -50,6 +52,7 @@ class DownloadQueueManagerTest: XCTestCase {
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
+    downloadService.stopProcessing()
   }
   
   override func tearDown() {
