@@ -65,7 +65,7 @@ struct AppliedFilterTagButton: View {
           .foregroundColor(.buttonText)
           .font(.uiButtonLabelSmall)
           .padding([.trailing], Layout.padding.textTrailing)
-        Image("closeWhite")
+        Image.closeWhite
           .resizable()
           .frame(width: Layout.imageSize, height: Layout.imageSize)
           .foregroundColor(.buttonText)

@@ -96,7 +96,7 @@ class Filters: ObservableObject {
         searchFilter = nil
         return
       }
-      searchFilter = Filter(groupType: .none, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
+      searchFilter = Filter(groupType: .search, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
       all.update(with: searchFilter!)
     }
   }
