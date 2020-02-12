@@ -77,6 +77,7 @@ final class DownloadProcessor: NSObject {
   }()
   var backgroundSessionCompletionHandler: (() -> Void)?
   private var currentDownloads = [URLSessionDownloadTask]()
+  private var throttleList = [UUID : Double]()
   weak var delegate: DownloadProcessorDelegate!
   
   override init() {
@@ -170,6 +171,15 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
     guard let downloadId = downloadTask.downloadId else { return }
     
     let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
+    // We want to call the progress update every 2%
+    if let lastReportedProgress = throttleList[downloadId],
+      abs(progress - lastReportedProgress) < 0.02 {
+      // Less than a 2% change—it's a no-op
+      return
+    }
+
+    // Update the throttle list and make the delegate call
+    throttleList[downloadId] = progress
     delegate.downloadProcessor(self, downloadWithId: downloadId, didUpdateProgress: progress)
   }
   
