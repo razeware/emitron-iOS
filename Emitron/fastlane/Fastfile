@@ -24,6 +24,7 @@ platform :ios do
       sh 'xcodebuild -resolvePackageDependencies'
     end
     build_app(scheme: 'Emitron', configuration: 'Beta')
+    changelog_from_git_commits
     upload_to_testflight(skip_waiting_for_build_processing: true)
     slack(message: 'emitron::β successfully uploaded to TestFlight!')
   end
@@ -36,12 +37,12 @@ platform :ios do
   end
 end
 
-error do |lane, exception|
+error do |_lane, exception|
   slack(
     # message with short human friendly message
-    message: exception.to_s, 
-    success: false, 
+    message: exception.to_s,
+    success: false,
     # Output containing extended log output
-    payload: { "Output" => exception.error_info.to_s } 
+    payload: { 'Output' => exception.error_info.to_s }
   )
 end
