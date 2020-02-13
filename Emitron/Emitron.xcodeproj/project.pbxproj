@@ -83,6 +83,8 @@
 		223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DC23B3473C005BE95D /* LibraryRepository.swift */; };
 		223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DE23B6515A005BE95D /* ContentRepository.swift */; };
 		223D77E123B84C00005BE95D /* CompletedRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77E023B84C00005BE95D /* CompletedRepository.swift */; };
+		224D298A23F5E51600E4F4B6 /* CardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298923F5E51600E4F4B6 /* CardContainerView.swift */; };
+		224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
 		2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */; };
@@ -355,6 +357,8 @@
 		223D77DC23B3473C005BE95D /* LibraryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRepository.swift; sourceTree = "<group>"; };
 		223D77DE23B6515A005BE95D /* ContentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRepository.swift; sourceTree = "<group>"; };
 		223D77E023B84C00005BE95D /* CompletedRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedRepository.swift; sourceTree = "<group>"; };
+		224D298923F5E51600E4F4B6 /* CardContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainerView.swift; sourceTree = "<group>"; };
+		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
 		2280E52223C81B3800F3913D /* PublishedPrePostFacto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedPrePostFacto.swift; sourceTree = "<group>"; };
@@ -746,6 +750,7 @@
 				2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */,
 				22E2267D23CA2D6E00A83601 /* Content+ChildContentListDisplayable.swift */,
 				22E2267F23CA2D7F00A83601 /* Group+GroupDisplayable.swift */,
+				224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */,
 			);
 			path = Displayable;
 			sourceTree = "<group>";
@@ -798,6 +803,7 @@
 			children = (
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
 				B6FC15A722CB51D60078CEDB /* ContentListView.swift */,
+				224D298923F5E51600E4F4B6 /* CardContainerView.swift */,
 			);
 			path = "Content List";
 			sourceTree = "<group>";
@@ -1760,6 +1766,7 @@
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */,
 				223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */,
+				224D298A23F5E51600E4F4B6 /* CardContainerView.swift in Sources */,
 				2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */,
 				222EEF7B23CDC24500B025A4 /* VideoPlaybackViewModel.swift in Sources */,
 				223D77AB23B0C099005BE95D /* Download.swift in Sources */,
@@ -1852,6 +1859,7 @@
 				2228E40023B9891600E103AA /* LoginView.swift in Sources */,
 				2213193F23E4E85500F15816 /* NoResultsView.swift in Sources */,
 				223D77D723B2168E005BE95D /* BookmarkRepository.swift in Sources */,
+				224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */,
 				22F2C45023EF2503007ED4A1 /* FilterGroup.swift in Sources */,
 				22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */,
 				22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */,

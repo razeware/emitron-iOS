@@ -140,20 +140,22 @@ struct ContentListView: View {
 
   private var cardTableNavView: AnyView {
     AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
+      ZStack {
+        CardContainerView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
+        .padding(10)
       NavigationLink(destination: ContentDetailView(
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
         dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
-          .padding([.leading], 10)
-          .padding([.top, .bottom], 10)
-      }
+        EmptyView()
+      }.buttonStyle(PlainButtonStyle())
     }
-    .listRowBackground(Color.backgroundColor)
-    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-    .background(Color.backgroundColor)
+    }
+      .listRowBackground(Color.backgroundColor)
+      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
+      .background(Color.backgroundColor)
       //HACK: to remove navigation chevrons
-      .padding(.trailing, -38.0)
+      //.padding(.trailing, -38.0)
     )
   }
 
@@ -164,7 +166,7 @@ struct ContentListView: View {
         content: partialContent,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
         dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
+        CardContainerView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
           .padding([.leading], 10)
           .padding([.top, .bottom], 10)
       }

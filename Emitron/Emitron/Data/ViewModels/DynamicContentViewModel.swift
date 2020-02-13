@@ -29,7 +29,7 @@
 import Foundation
 import Combine
 
-final class DynamicContentViewModel: ObservableObject {
+final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable {
   private let contentId: Int
   private let repository: Repository
   private let downloadAction: DownloadAction
@@ -42,7 +42,7 @@ final class DynamicContentViewModel: ObservableObject {
   @Published var downloadProgress: DownloadProgressDisplayable = .notDownloadable
   @Published var bookmarked: Bool = false
   
-  var subscriptions = Set<AnyCancellable>()
+  private var subscriptions = Set<AnyCancellable>()
   
   init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction) {
     self.contentId = contentId

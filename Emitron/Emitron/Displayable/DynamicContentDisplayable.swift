@@ -1,5 +1,5 @@
-/// Copyright (c) 2019 Razeware LLC
-///
+/// Copyright (c) 2020 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
@@ -9,7 +9,7 @@
 /// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -26,59 +26,10 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Foundation
 
-struct ProgressBarView: View {
-  private var progress: CGFloat // Between 0.0 and 1.0
-  private var height: CGFloat = 4
-  private var isRounded: Bool
-  
-  init(progress: Double, isRounded: Bool) {
-    self.progress = CGFloat(progress)
-    self.isRounded = isRounded
-  }
-  
-  var adjustedProgress: CGFloat {
-    progress < 0.05 ? 0.05 : progress
-  }
-  
-  var body: some View {
-    GeometryReader { geometry in
-      Rectangle()
-        .frame(width: geometry.size.width, height: self.height)
-        .foregroundColor(.borderColor)
-        .cornerRadius(self.isRounded ? self.height / 2 : 0)
-        .overlay(
-          Rectangle()
-            .frame(width: geometry.size.width * self.adjustedProgress, height: self.height)
-            .foregroundColor(.accent)
-            .cornerRadius(self.isRounded ? self.height / 2 : 0),
-          alignment: .leading
-        )
-    }.frame(height: self.height)
-  }
+protocol DynamicContentDisplayable {
+  var viewProgress: ContentViewProgressDisplayable { get }
+  var downloadProgress: DownloadProgressDisplayable { get }
+  var bookmarked: Bool { get }
 }
-
-#if DEBUG
-struct ProgressBarView_Previews: PreviewProvider {
-  static var previews: some View {
-    SwiftUI.Group {
-      bars.colorScheme(.light)
-      bars.colorScheme(.dark)
-    }
-  }
-  
-  static var bars: some View {
-    VStack(spacing: 20) {
-      ProgressBarView(progress: 0.3, isRounded: true)
-      ProgressBarView(progress: 0.6, isRounded: true)
-      ProgressBarView(progress: 1.0, isRounded: true)
-      ProgressBarView(progress: 0.3, isRounded: false)
-      ProgressBarView(progress: 0.6, isRounded: false)
-      ProgressBarView(progress: 0.9, isRounded: false)
-    }
-      .padding()
-      .background(Color.backgroundColor)
-  }
-}
-#endif

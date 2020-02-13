@@ -42,6 +42,10 @@ extension Color {
     Color("backgroundColor")
   }
   
+  static var cardBackground: Color {
+    Color("cardBackground")
+  }
+  
   static var activeIcon: Color {
     Color("activeIcon")
   }
