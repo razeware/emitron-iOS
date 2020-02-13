@@ -55,6 +55,7 @@ struct ChildContentListingView: View {
       if self.childContentsViewModel.contents.count > 1 {
         Text("Course Episodes")
           .font(.uiTitle2)
+          .foregroundColor(.titleText)
           .padding([.top], -5)
         
         if childContentsViewModel.groups.count > 1 {
