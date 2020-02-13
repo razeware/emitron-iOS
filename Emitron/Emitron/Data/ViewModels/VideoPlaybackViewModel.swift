@@ -145,7 +145,8 @@ final class VideoPlaybackViewModel {
       progressEngine.start()
       contentList = try repository.playlist(for: initialContentId)
       nextContentToEnqueueIndex = 0
-      if let progression = nextContentToEnqueue.progression {
+      if let progression = nextContentToEnqueue.progression,
+        !progression.finished {
         enqueue(index: 0, startTime: Double(progression.progress))
       } else {
         enqueue(index: 0)
