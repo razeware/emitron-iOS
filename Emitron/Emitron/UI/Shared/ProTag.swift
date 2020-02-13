@@ -31,11 +31,16 @@ import SwiftUI
 struct ProTag: View {
   var body: some View {
     Text("PRO")
-      .foregroundColor(.tagForeground)
+      .foregroundColor(.proTagForeground)
       .font(.uiUppercaseTag)
-      .padding(5)
-      .background(Color.tagBackground)
-      .cornerRadius(6)
+      .padding([.vertical], 5)
+      .padding([.horizontal], 7)
+      .background(Color.proTagBackground)
+      .overlay(
+        RoundedRectangle(cornerRadius: 6)
+          .stroke(Color.proTagForeground, lineWidth: 4)
+      )
+      .cornerRadius(6) // This is a bit hacky.
   }
 }
 

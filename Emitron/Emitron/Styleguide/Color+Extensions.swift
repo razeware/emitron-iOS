@@ -66,6 +66,14 @@ extension Color {
     Color("tagForeground")
   }
   
+  static var proTagBackground: Color {
+    Color("proTagBackground")
+  }
+  
+  static var proTagForeground: Color {
+    Color("proTagForeground")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }
