@@ -138,53 +138,39 @@ struct ContentListView: View {
     }
   }
 
-  private var cardTableNavView: AnyView {
-    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
+  private func cardTableNavView(withDelete: Bool = false) -> some View {
+    ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
-        CardContainerView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
-        .padding(10)
-      NavigationLink(destination: ContentDetailView(
-        content: partialContent,
-        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        EmptyView()
-      }.buttonStyle(PlainButtonStyle())
+        CardContainerView(
+          model: partialContent,
+          dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+        )
+          .padding(10)
+        NavigationLink(
+          destination: ContentDetailView(
+            content: partialContent,
+            childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+            dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+          )
+        ) {
+          EmptyView()
+        }
+          .buttonStyle(PlainButtonStyle())
+          //HACK: to remove navigation chevrons
+          .padding(.trailing, -10.0)
+      }
     }
-    }
+      .if(withDelete) { $0.onDelete(perform: self.delete) }
       .listRowBackground(Color.backgroundColor)
       .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
       .background(Color.backgroundColor)
-      //HACK: to remove navigation chevrons
-      //.padding(.trailing, -38.0)
-    )
-  }
-
-  //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
-  private var cardsTableViewWithDelete: AnyView {
-    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-      NavigationLink(destination: ContentDetailView(
-        content: partialContent,
-        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        CardContainerView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
-          .padding([.leading], 10)
-          .padding([.top, .bottom], 10)
-      }
-    }
-    .onDelete(perform: self.delete)
-    .listRowBackground(Color.backgroundColor)
-    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-    .background(Color.backgroundColor)
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -38.0)
-    )
   }
   
-  private var appropriateCardsView: AnyView {
+  private var appropriateCardsView: some View {
     if case .downloads = contentScreen {
-      return cardsTableViewWithDelete
+      return cardTableNavView(withDelete: true)
     } else {
-      return cardTableNavView
+      return cardTableNavView(withDelete: false)
     }
   }
   

@@ -29,8 +29,8 @@
         "components" : {
           "red" : "242",
           "alpha" : "1.000",
-          "blue" : "240",
-          "green" : "255"
+          "blue" : "250",
+          "green" : "246"
         }
       }
     },
