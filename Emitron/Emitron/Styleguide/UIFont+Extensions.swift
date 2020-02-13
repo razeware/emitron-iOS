@@ -47,6 +47,11 @@ extension UIFont {
   static var uiHeadline: UIFont {
     UIFont(name: "Bitter-Regular", size: 17.0)!
   }
+  
+  static var uiNumberBox: UIFont {
+    UIFont(name: "Bitter-Bold", size: 13.0)!
+  }
+  
   static var uiBodyAppleDefault: UIFont {
     UIFont.systemFont(ofSize: 17.0, weight: .regular)
   }

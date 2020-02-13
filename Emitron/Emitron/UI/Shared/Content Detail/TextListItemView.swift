@@ -48,44 +48,43 @@ struct TextListItemView: View {
   
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
-    return VStack(alignment: .leading, spacing: 0) {
-      HStack(alignment: .center, spacing: .childContentHorizontalSpacing) {
-        
-        doneCheckbox
-        
-        Text(content.name)
-          .font(.uiTitle5)
-          .fixedSize(horizontal: false, vertical: true)
-        
-        Spacer()
-        
-        if canDownload {
-          DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-            .onTapGesture {
-              self.download()
-            }
-            .padding([.trailing], 20)
+    return HStack(alignment: .top, spacing: .childContentHorizontalSpacing) {
+      doneCheckbox
+      
+      VStack(spacing: 15) {
+        HStack {
+          VStack(alignment: .leading, spacing: 5) {
+            Text(content.name)
+              .font(.uiTitle5)
+            
+            Text(content.duration.minuteSecondTimeFromSeconds)
+              .font(.uiCaption)
+              .foregroundColor(.contentText)
+          }
+            
+          Spacer()
+            
+          if canDownload {
+            DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+              .onTapGesture {
+                self.download()
+              }
+          }
         }
+        progressBar
       }
-      
-      Text(content.duration.minuteSecondTimeFromSeconds)
-        .font(.uiCaption)
-        .padding([.leading], CGFloat.childContentHorizontalSpacing + CGFloat.childContentButtonSide)
-        .padding([.top], 2)
-      
-      progressBar
     }
+    .padding([.trailing], 20)
   }
   
-  private var progressBar: AnyView? {
+  private var progressBar: AnyView {
     guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else {
-      return nil
+      return AnyView(Rectangle()
+        .frame(height: 1)
+        .foregroundColor(.borderColor))
     }
     return AnyView(
       ProgressBarView(progress: progress, isRounded: true)
-        .padding([.leading], CGFloat.childContentHorizontalSpacing + CGFloat.childContentButtonSide)
-        .padding([.trailing], 20)
-        .padding([.top], 10)
     )
   }
   
