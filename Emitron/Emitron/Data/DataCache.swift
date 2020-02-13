@@ -301,29 +301,30 @@ extension DataCache {
     return try childContents(for: parentContent)
   }
   
-  private func nextToPlay(for contents: [Content]) throws -> Content {
-    guard !contents.isEmpty else { throw DataCacheError.cacheMiss }
+  private func nextToPlay(for contentList: [Content]) throws -> Content {
+    guard !contentList.isEmpty else { throw DataCacheError.cacheMiss }
     
     // We'll assume that the contents is already ordered. It is if it comes from child/sibling contents
-    let orderedProgressions = contents.compactMap { progressions[$0.id] }
+    let orderedProgressions = contentList.compactMap { progressions[$0.id] }
     
     // No child progressions—let's start with the first item of content
     if orderedProgressions.isEmpty {
-      return contents.first!
+      return contentList.first!
     }
     
     // The last progression is the furthest through the content
-    guard let lastProgression = orderedProgressions.last else { return contents[0] }
-    let lastContentIndex = contents.firstIndex { $0.id == lastProgression.contentId }!
+    guard let lastProgression = orderedProgressions.last,
+      let lastContentIndex = contentList.firstIndex(where: { $0.id == lastProgression.contentId })
+      else { return contentList[0] }
     // If it's not finished, then we're part way through it—return this item of content
     if !lastProgression.finished {
-      return contents[lastContentIndex]
+      return contentList[lastContentIndex]
     }
     // Need the next one—does it exist?
-    if lastContentIndex < contents.endIndex {
-      return contents[lastContentIndex + 1]
+    if lastContentIndex + 1 < contentList.endIndex {
+      return contentList[lastContentIndex + 1]
     }
     // Must have completed the final episode. Let's start at the beginning again.
-    return contents[0]
+    return contentList[0]
   }
 }
