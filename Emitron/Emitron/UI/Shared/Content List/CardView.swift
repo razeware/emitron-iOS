@@ -39,34 +39,36 @@ struct CardView: View {
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
     let stack = VStack(alignment: .leading) {
-      VStack(alignment: .leading, spacing: 15) {
-        VStack(alignment: .leading, spacing: 0) {
-          HStack(alignment: .center) {
-
+      VStack(alignment: .leading, spacing: 7) {
+        HStack(alignment: .top) {
+          
+          VStack(alignment: .leading, spacing: 5) {
             Text(name)
               .font(.uiTitle4)
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
               .padding([.trailing], 15)
               .foregroundColor(.titleText)
-
+            
+            Text(model.cardViewSubtitle)
+              .font(.uiCaption)
+              .lineLimit(nil)
+              .foregroundColor(.contentText)
+            
             Spacer()
-
-            KFImage(model.cardArtworkUrl)
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .frame(width: 60, height: 60)
-              .transition(.opacity)
-              .cornerRadius(6)
           }
-          .padding([.top], 10)
-          
-          Text(model.cardViewSubtitle)
-            .font(.uiCaption)
-            .lineLimit(nil)
-            .foregroundColor(.contentText)
+
+          Spacer()
+
+          KFImage(model.cardArtworkUrl)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 60, height: 60)
+            .transition(.opacity)
+            .cornerRadius(6)
         }
-        
+        .padding([.top], 10)
+
         Text(model.descriptionPlainText)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
@@ -75,7 +77,6 @@ struct CardView: View {
           .foregroundColor(.contentText)
         
         HStack {
-          
           if model.professional {
             ProTag()
               .padding([.trailing], 5)
