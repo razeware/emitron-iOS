@@ -85,6 +85,6 @@ extension Font {
     Font.system(size: 12.0).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    Font.system(size: 9.0).weight(.semibold)
+    Font.system(size: 10.0).weight(.semibold)
   }
 }
