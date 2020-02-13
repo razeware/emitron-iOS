@@ -28,34 +28,44 @@
 
 import SwiftUI
 
+private struct SizeKey: PreferenceKey {
+  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+    value = value ?? nextValue()
+  }
+}
+
 struct ContinueButtonView: View {
+  @State var size: CGSize?
   var body: some View {
-    HStack {
+    HStack { // This container is a hack to centre it on a navigation link
       Spacer()
-      
-      ZStack {
-        Rectangle()
-          .frame(width: 155, height: 75)
+      HStack {
+        Image.materialIconPlay
+          .resizable()
+          .frame(width: 40, height: 40)
           .foregroundColor(.white)
-          .cornerRadius(13)
-        Rectangle()
-          .frame(width: 145, height: 65)
-          .foregroundColor(.appBlack)
-          .cornerRadius(11)
-        
-        HStack {
-          Image("materialIconPlay")
-            .resizable()
-            .frame(width: 40, height: 40)
-            .foregroundColor(.white)
-          Text("Continue")
-            .foregroundColor(.white)
-            .font(.uiLabelBold)
-        }
-          //HACK: Beacuse the play button has padding on it
-          .padding([.leading], -7)
+        Text("Continue")
+          .foregroundColor(.white)
+          .font(.uiButtonLabel)
+          .fixedSize()
       }
-      
+        .padding([.vertical, .leading], 10)
+        .padding([.trailing], 18) // Since the play image has its own padding
+        .background(GeometryReader { proxy in
+          Color.clear.preference(key: SizeKey.self, value: proxy.size)
+        })
+        .frame(width: size?.width, height: size?.height)
+        .background(
+          RoundedRectangle(cornerRadius: 9)
+            .fill(Color.appBlack)
+          .overlay(
+            RoundedRectangle(cornerRadius: 9)
+              .stroke(Color.white, lineWidth: 5)
+          )
+        )
+        .onPreferenceChange(SizeKey.self) { size in
+          self.size = size
+        }
       Spacer()
     }
   }
@@ -63,6 +73,11 @@ struct ContinueButtonView: View {
 
 struct ContinueButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    ContinueButtonView()
+    VStack(spacing: 20) {
+      ContinueButtonView().colorScheme(.dark)
+      ContinueButtonView().colorScheme(.light)
+    }
+    .padding(20)
+    .background(Color.blue)
   }
 }

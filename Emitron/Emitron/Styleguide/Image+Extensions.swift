@@ -53,4 +53,8 @@ extension Image {
   static var arrowRed: Image {
     Image("arrowRed")
   }
+  
+  static var materialIconPlay: Image {
+    Image("materialIconPlay")
+  }
 }
