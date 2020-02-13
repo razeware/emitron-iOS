@@ -112,14 +112,7 @@ struct ContentListView: View {
     case .loading where !contentRepository.isEmpty:
       // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
       // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
-      return AnyView(
-        ZStack {
-          listView
-            .blur(radius: Constants.blurRadius)
-          
-          LoadingView()
-        }
-      )
+      return AnyView(loadingView)
     case .loadingAdditional:
       return AnyView(listView)
     case .hasData where contentRepository.isEmpty:
@@ -194,14 +187,8 @@ struct ContentListView: View {
   }
   
   private var loadingView: some View {
-    ZStack {
-      VStack {
-        headerView
-        Spacer()
-      }
-        .background(Color.backgroundColor)
-        .blur(radius: Constants.blurRadius)
-      
+    VStack {
+      headerView
       LoadingView()
     }
   }

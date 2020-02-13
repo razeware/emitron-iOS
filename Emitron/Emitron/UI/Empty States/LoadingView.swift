@@ -32,7 +32,6 @@ struct LoadingView: View {
   var body: some View {
     ZStack {
       Color.backgroundColor
-        .opacity(0.5)
       
       VStack {
         ActivityIndicator()
