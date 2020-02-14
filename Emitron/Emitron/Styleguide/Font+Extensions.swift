@@ -50,6 +50,10 @@ extension Font {
   static var uiHeadline: Font {
     Font.system(size: 18.0).weight(.semibold)
   }
+  
+  static var uiNumberBox: Font {
+    Font.custom("Bitter-Bold", size: 13.0)
+  }
 
   static var uiBodyAppleDefault: Font {
     Font.body
@@ -81,6 +85,6 @@ extension Font {
     Font.system(size: 12.0).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    Font.system(size: 9.0).weight(.semibold)
+    Font.system(size: 10.0).weight(.semibold)
   }
 }

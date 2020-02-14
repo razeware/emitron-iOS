@@ -52,20 +52,23 @@ struct ChildContentListingView: View {
   
   var coursesSection: some View {
     Section {
-      Text("Course Episodes")
-        .font(.uiTitle2)
-        .padding([.top], -5)
-      
-      if childContentsViewModel.groups.count > 1 {
-        ForEach(childContentsViewModel.groups, id: \.id) { group in
-          
-          Section(header: CourseHeaderView(name: group.name)) {
-            self.episodeListing(data: self.childContentsViewModel.contents(for: group.id))
+      if self.childContentsViewModel.contents.count > 1 {
+        Text("Course Episodes")
+          .font(.uiTitle2)
+          .foregroundColor(.titleText)
+          .padding([.top], -5)
+        
+        if childContentsViewModel.groups.count > 1 {
+          ForEach(childContentsViewModel.groups, id: \.id) { group in
+            
+            Section(header: CourseHeaderView(name: group.name)) {
+              self.episodeListing(data: self.childContentsViewModel.contents(for: group.id))
+            }
           }
-        }
-      } else {
-        if !childContentsViewModel.groups.isEmpty {
-          self.episodeListing(data: childContentsViewModel.contents)
+        } else {
+          if !childContentsViewModel.groups.isEmpty {
+            self.episodeListing(data: childContentsViewModel.contents)
+          }
         }
       }
     }

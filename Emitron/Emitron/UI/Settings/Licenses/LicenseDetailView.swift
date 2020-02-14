@@ -47,7 +47,8 @@ struct LicenseDetailView: View {
         .foregroundColor(.contentText)
       Spacer()
     }
-  .padding(10)
+    .padding(10)
+    .background(Color.backgroundColor)
   }
 }
 

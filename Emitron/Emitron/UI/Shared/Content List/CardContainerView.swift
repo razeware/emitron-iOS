@@ -28,56 +28,18 @@
 
 import SwiftUI
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
-struct ContinueButtonView: View {
-  @State var size: CGSize?
+struct CardContainerView: View {
+  let model: ContentListDisplayable
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+  
   var body: some View {
-    HStack { // This container is a hack to centre it on a navigation link
-      Spacer()
-      HStack {
-        Image.materialIconPlay
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
-        Text("Continue")
-          .foregroundColor(.white)
-          .font(.uiButtonLabel)
-          .fixedSize()
-      }
-        .padding([.vertical, .leading], 10)
-        .padding([.trailing], 18) // Since the play image has its own padding
-        .background(GeometryReader { proxy in
-          Color.clear.preference(key: SizeKey.self, value: proxy.size)
-        })
-        .frame(width: size?.width, height: size?.height)
-        .background(
-          RoundedRectangle(cornerRadius: 9)
-            .fill(Color.appBlack)
-          .overlay(
-            RoundedRectangle(cornerRadius: 9)
-              .stroke(Color.white, lineWidth: 5)
-          )
-        )
-        .onPreferenceChange(SizeKey.self) { size in
-          self.size = size
-        }
-      Spacer()
-    }
+    dynamicContentViewModel.initialiseIfRequired()
+    return CardView(model: model, dynamicContent: dynamicContentViewModel as DynamicContentDisplayable)
   }
 }
 
-struct ContinueButtonView_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack(spacing: 20) {
-      ContinueButtonView().colorScheme(.dark)
-      ContinueButtonView().colorScheme(.light)
-    }
-    .padding(20)
-    .background(Color.blue)
-  }
-}
+//struct CardContainerView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    CardContainerView()
+//  }
+//}

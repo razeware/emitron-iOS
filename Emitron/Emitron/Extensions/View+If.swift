@@ -28,56 +28,14 @@
 
 import SwiftUI
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
-struct ContinueButtonView: View {
-  @State var size: CGSize?
-  var body: some View {
-    HStack { // This container is a hack to centre it on a navigation link
-      Spacer()
-      HStack {
-        Image.materialIconPlay
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
-        Text("Continue")
-          .foregroundColor(.white)
-          .font(.uiButtonLabel)
-          .fixedSize()
+extension View {
+  func `if`<T: View>(_ conditional: Bool, transform: (Self) -> T) -> some View {
+    SwiftUI.Group {
+      if conditional {
+        transform(self)
+      } else {
+        self
       }
-        .padding([.vertical, .leading], 10)
-        .padding([.trailing], 18) // Since the play image has its own padding
-        .background(GeometryReader { proxy in
-          Color.clear.preference(key: SizeKey.self, value: proxy.size)
-        })
-        .frame(width: size?.width, height: size?.height)
-        .background(
-          RoundedRectangle(cornerRadius: 9)
-            .fill(Color.appBlack)
-          .overlay(
-            RoundedRectangle(cornerRadius: 9)
-              .stroke(Color.white, lineWidth: 5)
-          )
-        )
-        .onPreferenceChange(SizeKey.self) { size in
-          self.size = size
-        }
-      Spacer()
     }
-  }
-}
-
-struct ContinueButtonView_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack(spacing: 20) {
-      ContinueButtonView().colorScheme(.dark)
-      ContinueButtonView().colorScheme(.light)
-    }
-    .padding(20)
-    .background(Color.blue)
   }
 }

@@ -73,8 +73,7 @@ struct SettingsView: View {
           }
         }
       }
-      
-      VStack {
+      VStack(spacing: 0) {
         ForEach(SettingsOption.allCases) { option in
           TitleDetailView(callback: {
             self.selectedOption = option
@@ -97,8 +96,7 @@ struct SettingsView: View {
              detail: self.populateDetail(for: option),
              isToggle: option.isToggle,
              isOn: false,
-             rightImageName: "carrotRight")
-            .frame(height: 46)
+             rightImage: Image(systemName: "chevron.right"))
             .sheet(isPresented: self.$settingsOptionsPresented) {
               SettingsOptionsView(
                 isPresented: self.$settingsOptionsPresented,
@@ -108,6 +106,7 @@ struct SettingsView: View {
             }
         }
       }
+        .padding([.horizontal], 20)
       
       Spacer()
       
@@ -131,7 +130,7 @@ struct SettingsView: View {
             self.presentationMode.wrappedValue.dismiss()
           }
         }
-        .padding([.bottom, .leading, .trailing], 18)
+        .padding([.bottom, .horizontal], 18)
       }
     }
     .background(Color.modalBackground)

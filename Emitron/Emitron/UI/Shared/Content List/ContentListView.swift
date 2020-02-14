@@ -28,18 +28,7 @@
 
 import SwiftUI
 
-private enum Layout {
-  static let sidePadding: CGFloat = 18
-  static let heightDivisor: CGFloat = 3
-}
-
 struct ContentListView: View {
-
-  @State var showHudView: Bool = false
-  @State var showAlert: Bool = false
-  @State private var showSettings = false
-  @State var isPresenting: Bool = false
-  
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
@@ -47,10 +36,60 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
-    //.background(Color.backgroundColor)
   }
 
+  private var contentView: AnyView {
+    switch contentRepository.state {
+    case .initial:
+      contentRepository.reload()
+      return AnyView(loadingView)
+    case .loading:
+      return AnyView(loadingView)
+    case .loadingAdditional:
+      return AnyView(listView)
+    case .hasData where contentRepository.isEmpty:
+      return AnyView(noResultsView)
+    case .hasData:
+      return AnyView(listView)
+    case .failed:
+      return AnyView(reloadView)
+    }
+  }
+
+  private func cardTableNavView(withDelete: Bool = false) -> some View {
+    ForEach(contentRepository.contents, id: \.id) { partialContent in
+      ZStack {
+        CardContainerView(
+          model: partialContent,
+          dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+        )
+          .padding(10)
+        NavigationLink(
+          destination: ContentDetailView(
+            content: partialContent,
+            childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+            dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+          )
+        ) {
+          EmptyView()
+        }
+          .buttonStyle(PlainButtonStyle())
+          //HACK: to remove navigation chevrons
+          .padding(.trailing, -10.0)
+      }
+    }
+      .if(withDelete) { $0.onDelete(perform: self.delete) }
+      .listRowInsets(EdgeInsets())
+  }
+  
+  private var appropriateCardsView: some View {
+    if case .downloads = contentScreen {
+      return cardTableNavView(withDelete: true)
+    } else {
+      return cardTableNavView(withDelete: false)
+    }
+  }
+  
   private var listView: some View {
     List {
       if self.headerView != nil {
@@ -59,32 +98,42 @@ struct ContentListView: View {
           self.loadMoreView
         }.listRowInsets(EdgeInsets())
       } else {
-        
-        if self.contentRepository.isEmpty {
-          AnyView(
-            NoResultsView(
-              contentScreen: self.contentScreen,
-              headerView: self.headerView
-            )
-          )
-        } else {
-          self.appropriateCardsView
-        }
-        
+        self.appropriateCardsView
         self.loadMoreView
       }
     }
   }
-
-  private func openSettings() {
-    // open iPhone settings
-    if let url = URL(string: UIApplication.openSettingsURLString) {
-      if UIApplication.shared.canOpenURL(url) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
+  
+  private var loadingView: some View {
+    List {
+      VStack {
+        headerView
+        Spacer(minLength: 50)
+        LoadingView()
       }
+        .listRowInsets(EdgeInsets())
     }
   }
-
+  
+  private var noResultsView: some View {
+    List {
+      NoResultsView(
+        contentScreen: contentScreen,
+        headerView: headerView
+      )
+        .listRowInsets(EdgeInsets())
+    }
+  }
+  
+  private var reloadView: some View {
+    List {
+      ReloadView(headerView: headerView) {
+        self.contentRepository.reload()
+      }
+        .listRowInsets(EdgeInsets())
+    }
+  }
+  
   private var loadMoreView: AnyView? {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       return AnyView(
@@ -101,112 +150,7 @@ struct ContentListView: View {
     }
   }
 
-  private var contentView: AnyView {
-    
-    switch contentRepository.state {
-    case .initial:
-      contentRepository.reload()
-      return AnyView(loadingView)
-    case .loading where contentRepository.isEmpty:
-      return AnyView(loadingView)
-    case .loading where !contentRepository.isEmpty:
-      // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
-      // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
-      return AnyView(
-        ZStack {
-          listView
-            .blur(radius: Constants.blurRadius)
-          
-          LoadingView()
-        }
-      )
-    case .loadingAdditional:
-      return AnyView(listView)
-    case .hasData where contentRepository.isEmpty:
-      return AnyView(
-        NoResultsView(
-          contentScreen: contentScreen,
-          headerView: headerView
-        )
-      )
-    case .hasData:
-      return AnyView(listView)
-    case .failed:
-      return AnyView(ReloadView(headerView: headerView) {
-        self.contentRepository.reload()
-      })
-    default:
-      return AnyView(
-        NoResultsView(
-          contentScreen: contentScreen,
-          headerView: headerView
-        )
-      )
-    }
-  }
-
-  private var cardTableNavView: AnyView {
-    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-      NavigationLink(destination: ContentDetailView(
-        content: partialContent,
-        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
-          .padding([.leading], 10)
-          .padding([.top, .bottom], 10)
-      }
-    }
-    .listRowBackground(Color.backgroundColor)
-    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-    .background(Color.backgroundColor)
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -38.0)
-    )
-  }
-
-  //TODO: Definitely not the cleanest solution to have almost a duplicate of the above variable, but couldn't find a better one
-  private var cardsTableViewWithDelete: AnyView {
-    AnyView(ForEach(contentRepository.contents, id: \.id) { partialContent in
-      NavigationLink(destination: ContentDetailView(
-        content: partialContent,
-        childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))) {
-        CardView(model: partialContent, dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id))
-          .padding([.leading], 10)
-          .padding([.top, .bottom], 10)
-      }
-    }
-    .onDelete(perform: self.delete)
-    .listRowBackground(Color.backgroundColor)
-    .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-    .background(Color.backgroundColor)
-      //HACK: to remove navigation chevrons
-      .padding(.trailing, -38.0)
-    )
-  }
-  
-  private var appropriateCardsView: AnyView {
-    if case .downloads = contentScreen {
-      return cardsTableViewWithDelete
-    } else {
-      return cardTableNavView
-    }
-  }
-  
-  private var loadingView: some View {
-    ZStack {
-      VStack {
-        headerView
-        Spacer()
-      }
-        .background(Color.backgroundColor)
-        .blur(radius: Constants.blurRadius)
-      
-      LoadingView()
-    }
-  }
-
-  func delete(at offsets: IndexSet) {
+  private func delete(at offsets: IndexSet) {
     guard let index = offsets.first else {
       return
     }

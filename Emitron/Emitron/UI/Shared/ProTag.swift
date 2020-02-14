@@ -30,22 +30,27 @@ import SwiftUI
 
 struct ProTag: View {
   var body: some View {
-    ZStack {
-      Rectangle()
-        .foregroundColor(.tagBackground)
-        .cornerRadius(6)
-        .frame(width: 36, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
-
-      Text("PRO")
-        .foregroundColor(.tagForeground)
-        .font(.uiUppercase)
-        .kerning(0.5)
-    }
+    Text("PRO")
+      .foregroundColor(.proTagForeground)
+      .font(.uiUppercaseTag)
+      .padding([.vertical], 5)
+      .padding([.horizontal], 7)
+      .background(Color.proTagBackground)
+      .overlay(
+        RoundedRectangle(cornerRadius: 6)
+          .stroke(Color.proTagForeground, lineWidth: 4)
+      )
+      .cornerRadius(6) // This is a bit hacky.
   }
 }
 
 struct ProTag_Previews: PreviewProvider {
   static var previews: some View {
-    ProTag()
+    VStack(spacing: 10) {
+      ProTag().colorScheme(.light)
+      ProTag().colorScheme(.dark)
+    }
+      .padding()
+      .background(Color.green)
   }
 }

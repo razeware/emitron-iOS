@@ -31,42 +31,42 @@ import KingfisherSwiftUI
 
 struct CardView: View {
   let model: ContentListDisplayable
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+  let dynamicContent: DynamicContentDisplayable
   private let animation: Animation = .easeIn
 
   //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
   // results in truncating the text
   var body: some View {
-    dynamicContentViewModel.initialiseIfRequired()
-    let stack = VStack(alignment: .leading) {
-      VStack(alignment: .leading, spacing: 15) {
-        VStack(alignment: .leading, spacing: 0) {
-          HStack(alignment: .center) {
-
+    VStack(spacing: 0) {
+      VStack(alignment: .leading, spacing: 0) {
+        HStack(alignment: .top) {
+          
+          VStack(alignment: .leading, spacing: 5) {
             Text(name)
               .font(.uiTitle4)
               .lineLimit(2)
               .fixedSize(horizontal: false, vertical: true)
               .padding([.trailing], 15)
               .foregroundColor(.titleText)
-
+            
+            Text(model.cardViewSubtitle)
+              .font(.uiCaption)
+              .lineLimit(nil)
+              .foregroundColor(.contentText)
+            
             Spacer()
-
-            KFImage(model.cardArtworkUrl)
-              .resizable()
-              .aspectRatio(contentMode: .fill)
-              .frame(width: 60, height: 60)
-              .transition(.opacity)
-              .cornerRadius(6)
           }
-          .padding([.top], 10)
-          
-          Text(model.cardViewSubtitle)
-            .font(.uiCaption)
-            .lineLimit(nil)
-            .foregroundColor(.contentText)
+
+          Spacer()
+
+          KFImage(model.cardArtworkUrl)
+            .resizable()
+            .aspectRatio(contentMode: .fill)
+            .frame(width: 60, height: 60)
+            .transition(.opacity)
+            .cornerRadius(6)
         }
-        
+
         Text(model.descriptionPlainText)
           .font(.uiCaption)
           .fixedSize(horizontal: false, vertical: true)
@@ -75,38 +75,25 @@ struct CardView: View {
           .foregroundColor(.contentText)
         
         HStack {
-          
           if model.professional {
             ProTag()
               .padding([.trailing], 5)
           }
           
-          proTagOrReleasedAt
+          completedTagOrReleasedAt
           
           Spacer()
           
-          HStack(spacing: 18) {
-            bookmarkButton
-          }
+          bookmarkButton
         }
-        .padding([.top], 20)
+        .padding([.top], 18)
       }
-      .padding([.trailing, .leading], 15)
+      .padding(15)
       
-      SwiftUI.Group {
-        progressBar
-      }
-      .padding([.trailing, .leading], 15)
-      .padding([.top], 10)
+      progressBar
     }
+    .background(Color.cardBackground)
     .cornerRadius(6)
-    .padding([.trailing], 32)
-    
-    // TODO: If we want to get the card + dropshadow design back, uncomment this
-    //    .background(Color.white)
-    //    .shadow(color: Color.black.opacity(0.05), radius: 1, x: 0, y: 2)
-    
-    return AnyView(stack)
   }
   
   private var name: String {
@@ -117,21 +104,16 @@ struct CardView: View {
     return "\(parentName): \(model.name)"
   }
   
-  private var progressBar: AnyView {
-    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
-      return AnyView(ProgressBarView(progress: progress, isRounded: true)
-        .padding([.top, .bottom], 0))
+  private var progressBar: AnyView? {
+    if case .inProgress(let progress) = dynamicContent.viewProgress {
+      return AnyView(ProgressBarView(progress: progress, isRounded: true))
     } else {
-      return AnyView(Rectangle()
-        .frame(height: 1)
-        .foregroundColor(.separator)
-        .padding([.top, .bottom], 0)
-        .cornerRadius(6))
+      return nil
     }
   }
   
-  private var proTagOrReleasedAt: AnyView {
-    if case .completed = dynamicContentViewModel.viewProgress {
+  private var completedTagOrReleasedAt: AnyView {
+    if case .completed = dynamicContent.viewProgress {
       return AnyView(CompletedTag())
     } else {
       return AnyView(Text(model.releasedAtDateTimeString)
@@ -142,7 +124,7 @@ struct CardView: View {
   }
   
   private var bookmarkButton: AnyView? {
-    guard dynamicContentViewModel.bookmarked else { return nil }
+    guard dynamicContent.bookmarked else { return nil }
     
     return AnyView(
       Image("bookmarkActive")
@@ -151,3 +133,75 @@ struct CardView: View {
     )
   }
 }
+
+#if DEBUG
+struct MockContentListDisplayable: ContentListDisplayable {
+  var id: Int = 1
+  var name: String = "Drawing in iOS with SwiftUI"
+  var cardViewSubtitle: String = "iOS & Swift"
+  var descriptionPlainText: String = "Learn about drawing using SwiftUI by creating custom controls using a combination of SwiftUI and something else that will be cut off"
+  var professional: Bool = true
+  var releasedAt = Date()
+  var duration: Int = 10080
+  var parentName: String?
+  var contentType: ContentType = .collection
+  var cardArtworkUrl: URL? = URL(string: "https://files.betamax.raywenderlich.com/attachments/collections/216/9eb9899d-47d0-429d-96f0-e15ac9542ecc.png")
+  var ordinal: Int?
+  var technologyTripleString: String = "Doesn't matter"
+  var contentSummaryMetadataString: String = "Doesn't matter"
+  var contributorString: String = "Deosn't matter"
+  var videoIdentifier: Int?
+}
+
+struct MockDynamicContentDisplayable: DynamicContentDisplayable {
+  var viewProgress: ContentViewProgressDisplayable = .notStarted
+  var downloadProgress: DownloadProgressDisplayable = .downloadable
+  var bookmarked: Bool = false
+}
+
+struct CardView_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      list.colorScheme(.dark)
+      
+      list.colorScheme(.light)
+    }
+  }
+  
+  static var list: some View {
+    List {
+      CardView(
+        model: MockContentListDisplayable(professional: false),
+        dynamicContent: MockDynamicContentDisplayable()
+      )
+      CardView(
+        model: MockContentListDisplayable(),
+        dynamicContent: MockDynamicContentDisplayable(
+          viewProgress: .inProgress(progress: 0.4),
+          bookmarked: true
+        )
+      )
+      CardView(
+        model: MockContentListDisplayable(),
+        dynamicContent: MockDynamicContentDisplayable(
+          viewProgress: .completed
+        )
+      )
+      CardView(
+        model: MockContentListDisplayable(),
+        dynamicContent: MockDynamicContentDisplayable(
+          viewProgress: .inProgress(progress: 0.8)
+        )
+      )
+      CardView(
+        model: MockContentListDisplayable(),
+        dynamicContent: MockDynamicContentDisplayable()
+      )
+      CardView(
+        model: MockContentListDisplayable(),
+        dynamicContent: MockDynamicContentDisplayable()
+      )
+    }
+  }
+}
+#endif

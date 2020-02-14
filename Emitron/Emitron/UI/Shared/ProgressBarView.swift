@@ -38,41 +38,47 @@ struct ProgressBarView: View {
     self.isRounded = isRounded
   }
   
+  var adjustedProgress: CGFloat {
+    progress < 0.05 ? 0.05 : progress
+  }
+  
   var body: some View {
-    
-    let adjustedProgress: CGFloat = progress < 0.05 ? 0.05 : progress
-    
-    return ZStack(alignment: .leading) {
-      
-      GeometryReader { geometry in
-        Rectangle()
-          .frame(width: geometry.size.width, height: self.height)
-          .foregroundColor(.borderColor)
-          .cornerRadius(self.isRounded ? self.height / 2 : 0)
-        
-        HStack(alignment: .center) {
-          
+    GeometryReader { geometry in
+      Rectangle()
+        .frame(width: geometry.size.width, height: self.height)
+        .foregroundColor(.borderColor)
+        .cornerRadius(self.isRounded ? self.height / 2 : 0)
+        .overlay(
           Rectangle()
-            .frame(width: geometry.size.width * (adjustedProgress / 2), height: self.height)
+            .frame(width: geometry.size.width * self.adjustedProgress, height: self.height)
             .foregroundColor(.accent)
-            .cornerRadius(self.isRounded ? self.height / 2 : 0)
-          
-          if self.progress >= 1 {
-            
-            Spacer()
-            
-            Rectangle()
-              .frame(width: geometry.size.width * (adjustedProgress / 2), height: self.height)
-              .foregroundColor(.accent)
-              .cornerRadius(self.isRounded ? self.height / 2 : 0)
-          }
-        }
-        
-        Rectangle()
-          .frame(width: geometry.size.width * adjustedProgress, height: self.height)
-          .foregroundColor(.accent)
-          .cornerRadius(self.isRounded ? self.height / 2 : 0)
-      }
-    }
+            .cornerRadius(self.isRounded ? self.height / 2 : 0),
+          alignment: .leading
+        )
+    }.frame(height: self.height)
   }
 }
+
+#if DEBUG
+struct ProgressBarView_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      bars.colorScheme(.light)
+      bars.colorScheme(.dark)
+    }
+  }
+  
+  static var bars: some View {
+    VStack(spacing: 20) {
+      ProgressBarView(progress: 0.3, isRounded: true)
+      ProgressBarView(progress: 0.6, isRounded: true)
+      ProgressBarView(progress: 1.0, isRounded: true)
+      ProgressBarView(progress: 0.3, isRounded: false)
+      ProgressBarView(progress: 0.6, isRounded: false)
+      ProgressBarView(progress: 0.9, isRounded: false)
+    }
+      .padding()
+      .background(Color.backgroundColor)
+  }
+}
+#endif

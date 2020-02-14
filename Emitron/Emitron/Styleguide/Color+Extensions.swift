@@ -42,6 +42,10 @@ extension Color {
     Color("backgroundColor")
   }
   
+  static var cardBackground: Color {
+    Color("cardBackground")
+  }
+  
   static var activeIcon: Color {
     Color("activeIcon")
   }
@@ -64,6 +68,14 @@ extension Color {
   
   static var tagForeground: Color {
     Color("tagForeground")
+  }
+  
+  static var proTagBackground: Color {
+    Color("proTagBackground")
+  }
+  
+  static var proTagForeground: Color {
+    Color("proTagForeground")
   }
   
   static var primaryButtonBackground: Color {

@@ -47,6 +47,17 @@ enum MyTutorialsState: String {
       return .bookmarked
     }
   }
+  
+  var displayString: String {
+    switch self {
+    case .inProgress:
+      return "In Progress"
+    case .completed:
+      return "Completed"
+    case .bookmarked:
+      return "Bookmarks"
+    }
+  }
 }
 
 struct MyTutorialView: View {
@@ -95,33 +106,30 @@ struct MyTutorialView: View {
       VStack {
         ToggleControlView(
           toggleState: state,
-          inProgressClosure: {
-            // Should only call load contents if we have just switched to the My Tutorials tab
-            if self.reloadProgression {
-              self.inProgressRepository.reload()
-              self.reloadProgression = false
+          toggleUpdated: { newState in
+            self.state = newState
+            switch newState {
+            case .inProgress:
+              // Should only call load contents if we have just switched to the My Tutorials tab
+              if self.reloadProgression {
+                self.inProgressRepository.reload()
+                self.reloadProgression = false
+              }
+            case .completed:
+              if self.reloadCompleted {
+                self.completedRepository.reload()
+                self.reloadCompleted = false
+              }
+            case .bookmarked:
+              if self.reloadBookmarks {
+                self.bookmarkRepository.reload()
+                self.reloadBookmarks = false
+              }
             }
-            self.state = .inProgress
-          },
-          completedClosure: {
-            if self.reloadCompleted {
-              self.completedRepository.reload()
-              self.reloadCompleted = false
-            }
-            self.state = .completed
-          },
-          bookmarkedClosure: {
-            if self.reloadBookmarks {
-              self.bookmarkRepository.reload()
-              self.reloadBookmarks = false
-            }
-            self.state = .bookmarked
           })
           .padding([.top], .sidePadding)
       }
-      .padding([.leading, .trailing], 20)
-      .background(Color.backgroundColor)
-      .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
+      .padding([.horizontal], 18)
     )
   }
 

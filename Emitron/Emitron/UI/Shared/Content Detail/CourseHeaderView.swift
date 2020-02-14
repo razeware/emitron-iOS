@@ -33,7 +33,8 @@ struct CourseHeaderView: View {
   
   var body: some View {
     Text(name)
-    .font(.uiTitle3)
+      .font(.uiTitle3)
+      .foregroundColor(.titleText)
       .padding([.bottom], 10)
   }
 }

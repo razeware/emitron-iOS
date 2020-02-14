@@ -34,50 +34,69 @@ private struct SizeKey: PreferenceKey {
   }
 }
 
-struct ContinueButtonView: View {
-  @State var size: CGSize?
+struct SearchFieldView: View {
+  @Binding var searchString: String
+  var action: () -> Void = {}
+  @State private var height: CGFloat?
+  
   var body: some View {
-    HStack { // This container is a hack to centre it on a navigation link
-      Spacer()
-      HStack {
-        Image.materialIconPlay
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
-        Text("Continue")
-          .foregroundColor(.white)
-          .font(.uiButtonLabel)
-          .fixedSize()
+    HStack {
+      Image(systemName: "magnifyingglass")
+        .foregroundColor(.iconButton)
+      
+      TextField(Constants.search, text: $searchString) {
+        self.action()
       }
-        .padding([.vertical, .leading], 10)
-        .padding([.trailing], 18) // Since the play image has its own padding
-        .background(GeometryReader { proxy in
-          Color.clear.preference(key: SizeKey.self, value: proxy.size)
-        })
-        .frame(width: size?.width, height: size?.height)
-        .background(
-          RoundedRectangle(cornerRadius: 9)
-            .fill(Color.appBlack)
-          .overlay(
-            RoundedRectangle(cornerRadius: 9)
-              .stroke(Color.white, lineWidth: 5)
-          )
-        )
-        .onPreferenceChange(SizeKey.self) { size in
-          self.size = size
-        }
-      Spacer()
+        .keyboardType(.webSearch)
+        .contentShape(Rectangle())
+      
+      Button(action: {
+        self.searchString = ""
+        self.action()
+      }) {
+        Image(systemName: "multiply.circle.fill")
+          // If we don't enforce a frame, the button doesn't register the tap action
+          .frame(width: 25, height: 25, alignment: .center)
+          .foregroundColor(.iconButton)
+      }
     }
+      .padding([.vertical], 11)
+      .padding([.horizontal], 15)
+      .background(GeometryReader { proxy in
+        Color.clear.preference(key: SizeKey.self, value: proxy.size)
+      })
+      .frame(height: height)
+      .background(background)
+      .onPreferenceChange(SizeKey.self) { size in
+        self.height = size?.height
+      }
+  }
+  
+  var background: some View {
+    RoundedRectangle(cornerRadius: 9)
+      .fill(Color.cardBackground)
+      .overlay(
+        RoundedRectangle(cornerRadius: 9)
+          .stroke(Color.borderColor, lineWidth: 2)
+      )
   }
 }
 
-struct ContinueButtonView_Previews: PreviewProvider {
+struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    VStack(spacing: 20) {
-      ContinueButtonView().colorScheme(.dark)
-      ContinueButtonView().colorScheme(.light)
+    SwiftUI.Group {
+      searchFields.colorScheme(.light)
+      searchFields.colorScheme(.dark)
     }
-    .padding(20)
-    .background(Color.blue)
+  }
+  
+  static var searchFields: some View {
+    VStack(spacing: 20) {
+      SearchFieldView(searchString: .constant(""))
+      SearchFieldView(searchString: .constant("Hello"))
+      SearchFieldView(searchString: .constant("Testing"))
+    }
+      .padding(20)
+      .background(Color.backgroundColor)
   }
 }

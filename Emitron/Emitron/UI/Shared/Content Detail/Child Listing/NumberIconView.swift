@@ -39,7 +39,7 @@ struct NumberIconView: View {
         .cornerRadius(6)
       
       Text("\(number)")
-        .font(.uiButtonLabelSmall)
+        .font(.uiNumberBox)
         .foregroundColor(.buttonText)
     }
   }
