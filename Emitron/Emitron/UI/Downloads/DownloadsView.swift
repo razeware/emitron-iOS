@@ -28,27 +28,13 @@
 
 import SwiftUI
 
-private extension CGFloat {
-  static let sidePadding: CGFloat = 18
-}
-
 struct DownloadsView: View {
-  
-  @State var showActivityIndicator = false
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadRepository: DownloadRepository
 
   var body: some View {
-    ZStack(alignment: .center) {
-      contentView
-      .background(Color.backgroundColor)
-      
-      if showActivityIndicator {
-        ActivityIndicator()
-      }
-    }
-    .navigationBarTitle(Text(Constants.downloads))
-    //.background(Color.backgroundColor) (If this is uncommented than the status bar becomes clear, and the large title doesn't become small)
+    contentView
+      .navigationBarTitle(Text(Constants.downloads))
   }
 
   private var contentView: some View {
