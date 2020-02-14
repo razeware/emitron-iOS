@@ -28,18 +28,7 @@
 
 import SwiftUI
 
-private enum Layout {
-  static let sidePadding: CGFloat = 18
-  static let heightDivisor: CGFloat = 3
-}
-
 struct ContentListView: View {
-
-  @State var showHudView: Bool = false
-  @State var showAlert: Bool = false
-  @State private var showSettings = false
-  @State var isPresenting: Bool = false
-  
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
@@ -47,94 +36,23 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
-    // ISSUE: If the below line gets uncommented, then the large title never changes to the inline one on scroll :(
-    //.background(Color.backgroundColor)
-  }
-
-  private var listView: some View {
-    List {
-      if self.headerView != nil {
-        Section(header: self.headerView) {
-          self.appropriateCardsView
-          self.loadMoreView
-        }.listRowInsets(EdgeInsets())
-      } else {
-        
-        if self.contentRepository.isEmpty {
-          AnyView(
-            NoResultsView(
-              contentScreen: self.contentScreen,
-              headerView: self.headerView
-            )
-          )
-        } else {
-          self.appropriateCardsView
-        }
-        
-        self.loadMoreView
-      }
-    }
-  }
-
-  private func openSettings() {
-    // open iPhone settings
-    if let url = URL(string: UIApplication.openSettingsURLString) {
-      if UIApplication.shared.canOpenURL(url) {
-        UIApplication.shared.open(url, options: [:], completionHandler: nil)
-      }
-    }
-  }
-
-  private var loadMoreView: AnyView? {
-    if contentRepository.totalContentNum > contentRepository.contents.count {
-      return AnyView(
-        // HACK: To put it in the middle we have to wrap it in Geometry Reader
-        GeometryReader { _ in
-          ActivityIndicator()
-            .onAppear {
-              self.contentRepository.loadMore()
-            }
-        }
-      )
-    } else {
-      return nil
-    }
   }
 
   private var contentView: AnyView {
-    
     switch contentRepository.state {
     case .initial:
       contentRepository.reload()
       return AnyView(loadingView)
-    case .loading where contentRepository.isEmpty:
-      return AnyView(loadingView)
-    case .loading where !contentRepository.isEmpty:
-      // ISSUE: If we're RE-loading but not loading more, show the activity indicator in the middle, because the loading spinner at the bottom is always shown
-      // since that's what triggers the additional content load (because there's no good way of telling that we've scrolled to the bottom of the scroll view
+    case .loading:
       return AnyView(loadingView)
     case .loadingAdditional:
       return AnyView(listView)
     case .hasData where contentRepository.isEmpty:
-      return AnyView(
-        NoResultsView(
-          contentScreen: contentScreen,
-          headerView: headerView
-        )
-      )
+      return AnyView(noResultsView)
     case .hasData:
       return AnyView(listView)
     case .failed:
-      return AnyView(ReloadView(headerView: headerView) {
-        self.contentRepository.reload()
-      })
-    default:
-      return AnyView(
-        NoResultsView(
-          contentScreen: contentScreen,
-          headerView: headerView
-        )
-      )
+      return AnyView(reloadView)
     }
   }
 
@@ -161,9 +79,7 @@ struct ContentListView: View {
       }
     }
       .if(withDelete) { $0.onDelete(perform: self.delete) }
-      .listRowBackground(Color.backgroundColor)
-      .listRowInsets(EdgeInsets(top: 0, leading: 0, bottom: 0, trailing: 0))
-      .background(Color.backgroundColor)
+      .listRowInsets(EdgeInsets())
   }
   
   private var appropriateCardsView: some View {
@@ -174,14 +90,67 @@ struct ContentListView: View {
     }
   }
   
+  private var listView: some View {
+    List {
+      if self.headerView != nil {
+        Section(header: self.headerView) {
+          self.appropriateCardsView
+          self.loadMoreView
+        }.listRowInsets(EdgeInsets())
+      } else {
+        self.appropriateCardsView
+        self.loadMoreView
+      }
+    }
+  }
+  
   private var loadingView: some View {
-    VStack {
-      headerView
-      LoadingView()
+    List {
+      VStack {
+        headerView
+        Spacer(minLength: 50)
+        LoadingView()
+      }
+        .listRowInsets(EdgeInsets())
+    }
+  }
+  
+  private var noResultsView: some View {
+    List {
+      NoResultsView(
+        contentScreen: contentScreen,
+        headerView: headerView
+      )
+        .listRowInsets(EdgeInsets())
+    }
+  }
+  
+  private var reloadView: some View {
+    List {
+      ReloadView(headerView: headerView) {
+        self.contentRepository.reload()
+      }
+        .listRowInsets(EdgeInsets())
+    }
+  }
+  
+  private var loadMoreView: AnyView? {
+    if contentRepository.totalContentNum > contentRepository.contents.count {
+      return AnyView(
+        // HACK: To put it in the middle we have to wrap it in Geometry Reader
+        GeometryReader { _ in
+          ActivityIndicator()
+            .onAppear {
+              self.contentRepository.loadMore()
+            }
+        }
+      )
+    } else {
+      return nil
     }
   }
 
-  func delete(at offsets: IndexSet) {
+  private func delete(at offsets: IndexSet) {
     guard let index = offsets.first else {
       return
     }
