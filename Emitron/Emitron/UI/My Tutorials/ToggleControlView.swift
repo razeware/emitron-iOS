@@ -29,112 +29,63 @@
 import SwiftUI
 
 struct ToggleControlView: View {
-  
   @State var toggleState: MyTutorialsState
-  var inProgressClosure: (() -> Void)?
-  var completedClosure: (() -> Void)?
-  var bookmarkedClosure: (() -> Void)?
+  var toggleUpdated: ((MyTutorialsState) -> Void)?
   
   var body: some View {
-    HStack {
+    ZStack(alignment: .bottom) {
+      RoundedRectangle(cornerRadius: 1)
+        .fill(Color.toggleDeselected)
+        .frame(height: 2)
       
-      Button(action: {
-        self.toggleState = .inProgress
-        self.inProgress()
-      }) {
-        
-        VStack {
-          
-          if self.toggleState == .inProgress {
-            self.updateToggleToOn(with: "In Progress")
-          } else {
-            self.updateToggleToOff(with: "In Progress")
-          }
-        }
+      HStack {
+        toggleButton(for: .inProgress)
+        toggleButton(for: .completed)
+        toggleButton(for: .bookmarked)
       }
-      
-      Button(action: {
-        self.toggleState = .completed
-        self.completed()
-      }, label: {
-        VStack {
-          
-          if self.toggleState == .completed {
-            self.updateToggleToOn(with: "Completed")
-            } else {
-              self.updateToggleToOff(with: "Completed")
-          }
-        }
-      })
-      
-      Button(action: {
-        self.toggleState = .bookmarked
-        self.bookmarked()
-      }, label: {
-        
-        VStack {
-          
-          if self.toggleState == .bookmarked {
-            self.updateToggleToOn(with: "Bookmarks")
-            } else {
-              self.updateToggleToOff(with: "Bookmarks")
-          }
-        }
-      })
     }
   }
   
-  private func updateToggleToOn(with text: String) -> some View {
-    
-    let stackView = VStack {
-      Text(text)
-      .lineLimit(1)
-      .font(.uiButtonLabelSmall)
-      .foregroundColor(Color.toggleSelected)
-      .frame(width: 80, height: nil, alignment: .center)
-      
-      Rectangle()
-      .frame(maxWidth: 120, maxHeight: 2)
-      .foregroundColor(Color.toggleSelected)
+  private func toggleButton(for state: MyTutorialsState) -> some View {
+    Button(action: {
+      self.toggleState = state
+      self.toggleUpdated?(state)
+    }) {
+      toggleButtonContent(for: state)
     }
-    
-    return AnyView(stackView)
   }
   
-  private func updateToggleToOff(with text: String) -> some View {
-    
-    let stackView = VStack {
-      Text(text)
-      .lineLimit(1)
-      .font(.uiButtonLabelSmall)
-      .foregroundColor(Color.toggleDeselected)
-      .frame(width: 80, height: nil, alignment: .center)
+  private func toggleButtonContent(for state: MyTutorialsState) -> some View {
+    VStack {
+      Text(state.displayString)
+        .font(.uiButtonLabelSmall)
+        .foregroundColor(toggleState == state ? Color.toggleSelected : Color.toggleDeselected)
       
-      Rectangle()
-      .frame(maxWidth: 120, maxHeight: 2)
-      .foregroundColor(Color.toggleDeselected)
+      RoundedRectangle(cornerRadius: 1)
+        .fill(toggleState == state ? Color.toggleSelected : Color.toggleDeselected)
+        .frame(height: 2)
     }
-    
-    return AnyView(stackView)
-  }
-  
-  private func inProgress() {
-    inProgressClosure?()
-  }
-  
-  private func completed() {
-    completedClosure?()
-  }
-  
-  private func bookmarked() {
-    bookmarkedClosure?()
   }
 }
 
 #if DEBUG
 struct ToggleControlView_Previews: PreviewProvider {
-    static var previews: some View {
-      ToggleControlView(toggleState: .inProgress)
+  static var previews: some View {
+    SwiftUI.Group {
+      tabs.colorScheme(.light)
+      tabs.colorScheme(.dark)
     }
+  }
+  
+  static var tabs: some View {
+    VStack(spacing: 40) {
+      ToggleControlView(toggleState: .inProgress)
+      ToggleControlView(toggleState: .completed)
+      ToggleControlView(toggleState: .bookmarked)
+    }
+      .padding([.vertical], 40)
+      .padding([.horizontal], 10)
+      .background(Color.backgroundColor)
+  }
 }
 #endif
