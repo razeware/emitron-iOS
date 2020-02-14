@@ -29,8 +29,7 @@
 import SwiftUI
 
 private enum Layout {
-  static let padding: CGFloat = 20
-  static let smallPadding: CGFloat = 2
+  static let padding: CGFloat = 11
 }
 
 struct TitleDetailView: View {
@@ -40,7 +39,7 @@ struct TitleDetailView: View {
   var detail: String?
   var isToggle: Bool
   var isOn: Bool
-  var rightImageName: String?
+  var rightImage: Image?
   
   var body: some View {
     Button(action: {
@@ -49,12 +48,12 @@ struct TitleDetailView: View {
       }
     }, label: {
       
-      VStack {
+      VStack(spacing: 0) {
         HStack {
           Text(self.title)
             .foregroundColor(.titleText)
             .font(.uiBodyAppleDefault)
-            .padding([.leading, .trailing], Layout.padding)
+            .padding([.vertical], Layout.padding)
           
           Spacer()
           
@@ -65,41 +64,34 @@ struct TitleDetailView: View {
         Rectangle()
           .frame(height: 1)
           .foregroundColor(Color.separator)
-          .padding([.leading, .trailing], Layout.padding)
       }
     })
-    .background(Color.modalBackground)
   }
   
   private func textOrToggleView() -> AnyView? {
     if let detail = detail, !isToggle {
-      let textView = Text(detail)
-        .foregroundColor(.titleText)
-        .font(.uiBodyAppleDefault)
-        .padding([.leading], Layout.padding)
-        .padding([.trailing], Layout.smallPadding)
-      
-      return AnyView(textView)
+      return AnyView(
+        Text(detail)
+          .foregroundColor(.iconButton)
+          .font(.uiBodyAppleDefault)
+      )
     } else if self.isToggle {
-      let toggle = CustomToggleView(isOn: self.isOn) {
-        self.callback?()
-      }
-      .padding([.trailing], Layout.padding)
-      return AnyView(toggle)
+      return AnyView(
+        CustomToggleView(isOn: self.isOn) {
+          self.callback?()
+        }
+      )
     }
     
     return nil
   }
   
   private func addRightImage() -> AnyView? {
-    if let imageName = self.rightImageName, !self.isToggle {
-        let image = Image(imageName)
-        .resizable()
-        .frame(maxWidth: 13, maxHeight: 13)
-        .padding([.trailing], Layout.padding)
-        .foregroundColor(.iconButton)
-      
-      return AnyView(image)
+    if let rightImage = rightImage, !self.isToggle {
+      return AnyView(
+        rightImage
+          .foregroundColor(.iconButton)
+      )
     }
     
     return nil
@@ -109,23 +101,29 @@ struct TitleDetailView: View {
 #if DEBUG
 struct TitleDetailsView_Previews: PreviewProvider {
   static var previews: some View {
-    VStack {
+    SwiftUI.Group {
+      rows.colorScheme(.dark)
+      rows.colorScheme(.light)
+    }
+  }
+  
+  static var rows: some View {
+    VStack(spacing: 0) {
       TitleDetailView(
         title: "Title",
         detail: "Detail",
         isToggle: false,
         isOn: false,
-        rightImageName: "carrot"
+        rightImage: Image(systemName: "chevron.right")
       )
       
       TitleDetailView(
         title: "Boolean",
         detail: "Detail",
         isToggle: true,
-        isOn: true,
-        rightImageName: nil
+        isOn: true
       )
-    }
+    }.background(Color.backgroundColor)
   }
 }
 #endif

@@ -83,7 +83,7 @@ struct SettingsOptionsView: View {
             detail: nil,
             isToggle: self.selectedSettingsOption.isToggle,
             isOn: self.isOn,
-            rightImageName: self.setCheckmark(for: detail)
+            rightImage: self.setCheckmark(for: detail)
           )
             .frame(height: 46)
         }
@@ -95,21 +95,21 @@ struct SettingsOptionsView: View {
     .background(Color.modalBackground)
   }
   
-  private func setCheckmark(for detailOption: String) -> String? {
+  private func setCheckmark(for detailOption: String) -> Image? {
     switch self.selectedSettingsOption {
     case .wifiOnlyDownloads, .closedCaptionOn:
       return nil
     case .playbackSpeed:
       if SettingsManager.current.playbackSpeed.display == detailOption {
-        return "checkmark"
+        return Image(systemName: "checkmark")
       }
     case .downloadQuality:
       if SettingsManager.current.downloadQuality.display == detailOption {
-        return "checkmark"
+        return Image(systemName: "checkmark")
       }
     }
   
-    return "nil"
+    return nil
   }
 }
 
