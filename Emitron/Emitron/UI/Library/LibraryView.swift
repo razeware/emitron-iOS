@@ -44,16 +44,8 @@ struct LibraryView: View {
   var body: some View {
     contentView
       .navigationBarTitle(
-        Text(Constants.library))
-      .navigationBarItems(trailing:
-        SwiftUI.Group {
-          Button(action: {
-            self.libraryRepository.reload()
-          }) {
-            Image(systemName: "arrow.clockwise")
-              .foregroundColor(.iconButton)
-          }
-        })
+        Text(Constants.library)
+      )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
           .background(Color.backgroundColor)
@@ -78,15 +70,9 @@ struct LibraryView: View {
   }
 
   private var searchField: some View {
-
-    TextField(Constants.search,
-              text: $filters.searchStr) {
+    SearchFieldView(searchString: $filters.searchStr) {
       self.updateFilters()
     }
-    .textFieldStyle(RoundedBorderTextFieldStyle())
-    .modifier(ClearButton(text: $filters.searchStr, action: {
-      self.updateFilters()
-    }))
   }
 
   private var searchAndFilterControls: some View {
