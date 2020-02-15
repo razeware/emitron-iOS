@@ -200,7 +200,7 @@ extension DataCache {
       let contentCategories = self.contentCategories[contentId] ?? []
       
       if content.contentType != .episode {
-        if contentDomains.isEmpty || contentCategories.isEmpty {
+        if contentDomains.isEmpty {
           throw DataCacheError.cacheMiss
         }
       }
