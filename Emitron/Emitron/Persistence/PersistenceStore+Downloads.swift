@@ -323,7 +323,7 @@ extension PersistenceStore {
       }
       
       // And now for any children that might exist
-      let childContent = try content.childContents.fetchAll(db)
+      let childContent = try content.childContents.order(Content.Columns.ordinal.asc).fetchAll(db)
       try childContent.forEach { contentItem in
         try createDownload(for: contentItem, inDatabase: db)
       }
