@@ -140,7 +140,7 @@ extension PersistenceStore {
         .including(required: Download.content.aliased(contentAlias))
         .filter(contentTypes.contains(contentAlias[Content.Columns.contentType]))
         .filter(state: state)
-        .orderByRequestedAt()
+        .orderByRequestedAtAndOrdinal()
       return try DownloadQueueItem.fetchOne(db, request)
     }
     .removeDuplicates()
@@ -158,7 +158,7 @@ extension PersistenceStore {
         .including(required: Download.content.aliased(contentAlias))
         .filter(states.contains(Download.Columns.state))
         .filter(contentTypes.contains(contentAlias[Content.Columns.contentType]))
-        .order(Download.Columns.state.desc, Download.Columns.requestedAt.asc)
+        .order(Download.Columns.state.desc, Download.Columns.requestedAt.asc, Download.Columns.ordinal.asc)
         .limit(max)
       return try DownloadQueueItem.fetchAll(db, request)
     }

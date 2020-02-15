@@ -39,6 +39,7 @@ extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
     static let progress = Column("progress")
     static let state = Column("state")
     static let contentId = Column("contentId")
+    static let ordinal = Column("ordinal")
   }
 }
 
@@ -66,8 +67,9 @@ extension DerivableRequest where RowDecoder == Download {
     filter(Download.Columns.state == state.rawValue)
   }
   
-  func orderByRequestedAt() -> Self {
+  func orderByRequestedAtAndOrdinal() -> Self {
     let requestedAt = Download.Columns.requestedAt
-    return order(requestedAt.asc)
+    let ordinal = Download.Columns.ordinal
+    return order(requestedAt.asc, ordinal.asc)
   }
 }
