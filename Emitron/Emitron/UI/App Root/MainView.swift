@@ -31,6 +31,7 @@ import SwiftUI
 struct MainView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var dataManager: DataManager
+  private let tabViewModel = TabViewModel()
   
   var body: some View {
     contentView
@@ -78,12 +79,14 @@ struct MainView: View {
         TabNavView(libraryView: AnyView(libraryView),
                    myTutorialsView: AnyView(myTutorialsView),
                    downloadsView: AnyView(downloadsView))
+          .environmentObject(tabViewModel)
       )
     } else if case .offline = sessionController.sessionState {
       return AnyView(
         TabNavView(libraryView: AnyView(OfflineView()),
                    myTutorialsView: AnyView(OfflineView()),
                    downloadsView: AnyView(downloadsView))
+          .environmentObject(tabViewModel)
       )
     } else {
       return AnyView(LoadingView())
