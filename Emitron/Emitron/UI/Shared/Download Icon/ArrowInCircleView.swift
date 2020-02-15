@@ -1,15 +1,15 @@
-/// Copyright (c) 2019 Razeware LLC
-///
+/// Copyright (c) 2020 Razeware LLC
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -29,31 +29,37 @@
 import SwiftUI
 
 private enum Layout {
-  static let line: CGFloat = 5.0
-  static let frame: CGFloat = 19.0
-  static let endProgress: CGFloat = 0.0
+  static let frame: CGFloat = 18
 }
 
-struct CircularProgressBar: View {
-  let progress: Double
-
+struct ArrowInCircleView: View {
+  let fillColour: Color
+  
   var body: some View {
-    Image("downloadLoading")
-    .foregroundColor(Color.activeIcon)
-    .overlay(circleOverlay)
-  }
-
-  var circleOverlay: some View {
     Circle()
-      .trim(from: 0.0, to: CGFloat(progress))
-      .stroke(Color.inactiveIcon, lineWidth: Layout.line)
+      .fill(fillColour)
       .frame(width: Layout.frame, height: Layout.frame)
-      .rotationEffect(.degrees(-90), anchor: .center)
+      .overlay(
+        Image(systemName: "arrow.down")
+          .foregroundColor(.backgroundColor), alignment: .top
+      )
   }
 }
 
-struct CircularProgressIndicator_Previews: PreviewProvider {
+struct ArrowInCircleView_Previews: PreviewProvider {
   static var previews: some View {
-    CircularProgressBar(progress: 0.7)
+    SwiftUI.Group {
+      circles.colorScheme(.dark)
+      circles.colorScheme(.light)
+    }
+  }
+  
+  static var circles: some View {
+    HStack(spacing: 20) {
+      ArrowInCircleView(fillColour: .accent)
+      ArrowInCircleView(fillColour: .activeIcon)
+    }
+      .padding(20)
+      .background(Color.backgroundColor)
   }
 }

@@ -34,21 +34,28 @@ struct DownloadIcon: View {
   var body: some View {
     switch downloadProgress {
     case .downloadable:
-      return AnyView(Image.Downloads.notDownloaded)
+      return AnyView(ArrowInCircleView(fillColour: .activeIcon))
     case .enqueued:
-      return AnyView(CircularProgressBar(progress: 0))
+      return AnyView(SpinningCircleView())
     case .inProgress(progress: let progress):
       return AnyView(CircularProgressBar(progress: progress))
     case .downloaded:
-      return AnyView(Image.Downloads.downloaded)
+      return AnyView(ArrowInCircleView(fillColour: .accent))
     case .notDownloadable:
-      return AnyView(Image.Downloads.notDownloaded)
+      return AnyView(ArrowInCircleView(fillColour: .activeIcon))
     }
   }
 }
 
 struct DownloadIcon_Previews: PreviewProvider {
   static var previews: some View {
+    SwiftUI.Group {
+      selectionList.colorScheme(.light)
+      selectionList.colorScheme(.dark)
+    }
+  }
+  
+  static var selectionList: some View {
     VStack {
       icon(for: .downloadable)
       icon(for: .enqueued)
@@ -58,6 +65,8 @@ struct DownloadIcon_Previews: PreviewProvider {
       icon(for: .downloaded)
       icon(for: .notDownloadable)
     }
+      .padding(20)
+      .background(Color.backgroundColor)
   }
   
   static func icon(for state: DownloadProgressDisplayable) -> some View {

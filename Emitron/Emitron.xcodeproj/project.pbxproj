@@ -160,6 +160,8 @@
 		22C640FC23F75CDD00CBFDE5 /* TabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C640FB23F75CDD00CBFDE5 /* TabViewModel.swift */; };
 		22C640FF23F805F300CBFDE5 /* PagerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C640FE23F805F300CBFDE5 /* PagerView.swift */; };
 		22C6410123F809CE00CBFDE5 /* PagingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410023F809CE00CBFDE5 /* PagingIndicatorView.swift */; };
+		22C6410323F891D100CBFDE5 /* ArrowInCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */; };
+		22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -434,6 +436,8 @@
 		22C640FB23F75CDD00CBFDE5 /* TabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewModel.swift; sourceTree = "<group>"; };
 		22C640FE23F805F300CBFDE5 /* PagerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagerView.swift; sourceTree = "<group>"; };
 		22C6410023F809CE00CBFDE5 /* PagingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingIndicatorView.swift; sourceTree = "<group>"; };
+		22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowInCircleView.swift; sourceTree = "<group>"; };
+		22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningCircleView.swift; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -969,6 +973,17 @@
 			path = Generic;
 			sourceTree = "<group>";
 		};
+		22C6410423F893CB00CBFDE5 /* Download Icon */ = {
+			isa = PBXGroup;
+			children = (
+				222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */,
+				22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */,
+				B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */,
+				22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */,
+			);
+			path = "Download Icon";
+			sourceTree = "<group>";
+		};
 		22C914C023BD7E6700A05E00 /* Service Adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1432,11 +1447,10 @@
 		B6FC15AC22CB52570078CEDB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				22C6410423F893CB00CBFDE5 /* Download Icon */,
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
-				B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */,
 				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
-				222EEF7123CAE04D00B025A4 /* DownloadIcon.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
 				8B7E96DC2357A65F0083DA38 /* ProTag.swift */,
@@ -1697,6 +1711,7 @@
 				B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */,
 				8BFC74BC23648DF3001979F1 /* ContentPaginatable.swift in Sources */,
 				22E2267823CA200E00A83601 /* ChildContentsViewModel.swift in Sources */,
+				22C6410323F891D100CBFDE5 /* ArrowInCircleView.swift in Sources */,
 				22C0513C23A4FBB8004D1223 /* Domain+Persistence.swift in Sources */,
 				223D77AD23B0C0A2005BE95D /* Attachment.swift in Sources */,
 				B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */,
@@ -1859,6 +1874,7 @@
 				2213194723EAFBD700F15816 /* VerticalFadeImageView.swift in Sources */,
 				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
+				22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */,
 				22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,
