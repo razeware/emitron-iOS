@@ -91,13 +91,13 @@ struct MainButtonView: View {
               Spacer()
               
               Image(systemName: "arrow.right")
-                .resizable()
-                .aspectRatio(1, contentMode: .fit)
-                .padding(4)
+                .frame(width: height, height: height)
                 .foregroundColor(type.color)
-                .background(Color.white)
-                .cornerRadius(9)
-                .padding(12)
+                .background(
+                  Color.white
+                    .cornerRadius(9)
+                    .padding(12)
+                )
             }
           }
         }
