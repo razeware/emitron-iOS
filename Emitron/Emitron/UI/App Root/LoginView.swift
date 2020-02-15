@@ -39,19 +39,47 @@ struct LoginView: View {
       
       Spacer()
       
-      Image("welcomeArtwork1")
-        .padding([.bottom], 50)
-      
-      Text("Watch anytime,\nanywhere")
-        .font(.uiTitle1)
-        .foregroundColor(.titleText)
-        .padding([.bottom], 15)
-        .multilineTextAlignment(.center)
-      
-      Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
+      PagerView(pageCount: 2, showIndicator: true) {
+        VStack {
+          Image("welcomeArtwork1")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 265)
+            .padding([.bottom], 40)
+          
+          Text("Watch anytime,\nanywhere")
+            .font(.uiTitle1)
+            .foregroundColor(.titleText)
+            .multilineTextAlignment(.center)
+            .padding([.bottom], 15)
+          
+          Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
+            .font(.uiLabel)
+            .foregroundColor(.contentText)
+            .multilineTextAlignment(.center)
+        }
+        .background(Color.backgroundColor)
+        
+        VStack {
+          Image("welcomeArtwork2")
+            .resizable()
+            .aspectRatio(contentMode: .fit)
+            .frame(width: 265)
+            .padding([.bottom], 40)
+          
+          Text("Take your videos on\nthe go")
+            .font(.uiTitle1)
+            .foregroundColor(.titleText)
+            .multilineTextAlignment(.center)
+            .padding([.bottom], 15)
+          
+          Text("Professional Subscribers can download and\nwatch videos even when they're offline.")
+            .font(.uiLabel)
+            .foregroundColor(.contentText)
+            .multilineTextAlignment(.center)
+        }
+          .background(Color.backgroundColor)
+      }
       
       Spacer()
       
@@ -66,8 +94,8 @@ struct LoginView: View {
   }
 }
 
-//struct LoginView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    LoginView()
-//  }
-//}
+struct LoginView_Previews: PreviewProvider {
+  static var previews: some View {
+    LoginView()
+  }
+}

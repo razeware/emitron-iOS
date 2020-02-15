@@ -122,9 +122,11 @@ struct SettingsView: View {
       
       if showLogoutButton {
         VStack {
-          Text("Logged in as \(sessionController.user!.username)")
-            .font(.uiCaption)
-            .foregroundColor(.contentText)
+          if sessionController.user != nil {
+            Text("Logged in as \(sessionController.user?.username ?? "")")
+              .font(.uiCaption)
+              .foregroundColor(.contentText)
+          }
           MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
             self.sessionController.logout()
             self.presentationMode.wrappedValue.dismiss()

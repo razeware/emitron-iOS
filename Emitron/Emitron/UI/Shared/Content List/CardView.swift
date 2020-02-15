@@ -86,7 +86,7 @@ struct CardView: View {
           
           bookmarkButton
         }
-        .padding([.top], 18)
+        .padding([.top], 24)
       }
       .padding(15)
       
