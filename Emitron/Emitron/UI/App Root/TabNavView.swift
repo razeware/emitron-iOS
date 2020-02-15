@@ -29,21 +29,20 @@
 import SwiftUI
 
 struct TabNavView: View {
-
-  @State var selection = 0
+  @EnvironmentObject var viewModel: TabViewModel
   var libraryView: AnyView
   var myTutorialsView: AnyView
   var downloadsView: AnyView
 
   var body: some View {
-    TabView(selection: $selection) {
+    TabView(selection: $viewModel.selectedTab) {
       NavigationView {
         libraryView
       }.tabItem {
         Text(Constants.library)
         Image("library")
       }
-      .tag(0)
+      .tag(MainTab.library)
 
       NavigationView {
         downloadsView
@@ -51,7 +50,7 @@ struct TabNavView: View {
         Text(Constants.downloads)
         Image("downloadTabInactive")
       }
-      .tag(1)
+      .tag(MainTab.downloads)
 
       NavigationView {
         myTutorialsView
@@ -59,7 +58,7 @@ struct TabNavView: View {
         Text(Constants.myTutorials)
         Image("myTutorials")
       }
-      .tag(2)
+      .tag(MainTab.myTutorials)
     }
     .accentColor(Color.accent)
     .edgesIgnoringSafeArea([.top])

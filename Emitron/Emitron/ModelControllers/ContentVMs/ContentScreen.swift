@@ -78,13 +78,13 @@ enum ContentScreen {
       return "Professional subscriber benefits include being able to download videos and watch them offline, access to exclusive content, and more!"
     }
   }
-
-  var buttonText: String? {
+  
+  var showExploreButton: Bool {
     switch self {
-    case .downloads, .inProgress, .completed, .bookmarked:
-      return "Explore Tutorials"
-    default:
-      return "Reload"
+    case .downloads(permitted: true), .inProgress, .completed, .bookmarked:
+      return true
+    case .downloads(permitted: false), .library:
+      return false
     }
   }
 

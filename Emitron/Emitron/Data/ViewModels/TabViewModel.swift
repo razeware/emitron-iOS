@@ -26,59 +26,14 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import SwiftUI
+import Combine
 
-struct NoResultsView: View {
-  @EnvironmentObject var tabViewModel: TabViewModel
-  var contentScreen: ContentScreen
-  var headerView: AnyView?
-  
-  var body: some View {
-    VStack {
-      headerView
-
-      Spacer()
-
-      Image(contentScreen.emptyImageName)
-        .padding([.bottom], 30)
-
-      Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.bottom], 20)
-        .padding([.leading, .trailing], 55)
-
-      Text(contentScreen.detailMesage)
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 55)
-      
-      Spacer()
-      
-      if contentScreen.showExploreButton {
-        MainButtonView(
-          title: "Explore Tutorials",
-          type: .primary(withArrow: true)) {
-            self.tabViewModel.selectedTab = .library
-        }
-          .padding([.leading, .trailing, .bottom], 20)
-      }
-    }
-    .background(Color.backgroundColor)
-  }
+enum MainTab: Hashable {
+  case library
+  case downloads
+  case myTutorials
 }
 
-struct NoResultsView_Previews: PreviewProvider {
-  static var previews: some View {
-    SwiftUI.Group {
-      NoResultsView(contentScreen: .bookmarked)
-      NoResultsView(contentScreen: .completed)
-      NoResultsView(contentScreen: .downloads(permitted: true))
-      NoResultsView(contentScreen: .downloads(permitted: false))
-      NoResultsView(contentScreen: .inProgress)
-      NoResultsView(contentScreen: .library)
-    }
-  }
+final class TabViewModel: ObservableObject {
+  @Published var selectedTab: MainTab = .library
 }
