@@ -178,6 +178,11 @@ extension DownloadService: DownloadAction {
   
   func cancelDownload(contentId: Int) throws {
     do {
+      // 0. If there are some children, then let's cancel all of them first.
+      if let children = try persistenceStore.childContentsForDownloadedContent(with: contentId) {
+        try children.contents.forEach { try cancelDownload(contentId: $0.id) }
+      }
+      
       // 1. Find the download.
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
       // 2. Is it already downloading?
@@ -198,6 +203,11 @@ extension DownloadService: DownloadAction {
   
   func deleteDownload(contentId: Int) throws {
     do {
+      // 0. If there are some children, the let's delete all of them first.
+      if let children = try persistenceStore.childContentsForDownloadedContent(with: contentId) {
+        try children.contents.forEach { try deleteDownload(contentId: $0.id) }
+      }
+      
       // 1. Find the download
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
       // 2. Delete the file from disk
