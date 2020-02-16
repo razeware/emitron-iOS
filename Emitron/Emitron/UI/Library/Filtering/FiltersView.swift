@@ -84,7 +84,7 @@ struct FiltersView: View {
       }
       .padding([.leading, .trailing, .bottom], 18)
     }
-    .background(Color.modalBackground)
+    .background(Color.backgroundColor)
   }
   
   private func constructScrollView() -> some View {

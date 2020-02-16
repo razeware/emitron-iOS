@@ -146,6 +146,18 @@ extension Color {
     Color("toggleLineDeselected")
   }
   
+  static var checkmarkBackground: Color {
+    Color("checkmarkBackground")
+  }
+  
+  static var checkmarkBorder: Color {
+    Color("checkmarkBorder")
+  }
+  
+  static var checkmarkColor: Color {
+    Color("checkmarkColor")
+  }
+  
   static var appBlack: Color {
     Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
   }
