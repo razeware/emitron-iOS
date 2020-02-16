@@ -28,12 +28,7 @@
 
 import SwiftUI
 
-extension Image {
-  enum Downloads {
-    static let notDownloaded = Image("downloadActive")
-    static let downloaded = Image("downloadInactive")
-  }
-  
+extension Image {  
   static var closeWhite: Image {
     Image("closeWhite")
   }
@@ -44,14 +39,6 @@ extension Image {
   
   static var padlock: Image {
     Image("padlock")
-  }
-  
-  static var arrowGreen: Image {
-    Image("arrowGreen")
-  }
-  
-  static var arrowRed: Image {
-    Image("arrowRed")
   }
   
   static var materialIconPlay: Image {
