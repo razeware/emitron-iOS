@@ -130,12 +130,20 @@ extension Color {
     Color("shadowColor")
   }
   
-  static var toggleSelected: Color {
-    Color("toggleSelected")
+  static var toggleTextSelected: Color {
+    Color("toggleTextSelected")
   }
   
-  static var toggleDeselected: Color {
-    Color("toggleDeselected")
+  static var toggleTextDeselected: Color {
+    Color("toggleTextDeselected")
+  }
+  
+  static var toggleLineSelected: Color {
+    Color("toggleLineSelected")
+  }
+  
+  static var toggleLineDeselected: Color {
+    Color("toggleLineDeselected")
   }
   
   static var appBlack: Color {

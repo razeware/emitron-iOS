@@ -35,7 +35,7 @@ struct ToggleControlView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       RoundedRectangle(cornerRadius: 1)
-        .fill(Color.toggleDeselected)
+        .fill(Color.toggleLineDeselected)
         .frame(height: 2)
       
       HStack {
@@ -59,10 +59,10 @@ struct ToggleControlView: View {
     VStack {
       Text(state.displayString)
         .font(.uiButtonLabelSmall)
-        .foregroundColor(toggleState == state ? Color.toggleSelected : Color.toggleDeselected)
+        .foregroundColor(toggleState == state ? Color.toggleTextSelected : Color.toggleTextDeselected)
       
       RoundedRectangle(cornerRadius: 1)
-        .fill(toggleState == state ? Color.toggleSelected : Color.toggleDeselected)
+        .fill(toggleState == state ? Color.toggleLineSelected : Color.toggleLineDeselected)
         .frame(height: 2)
     }
   }
