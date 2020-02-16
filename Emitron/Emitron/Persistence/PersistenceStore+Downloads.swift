@@ -191,7 +191,7 @@ extension PersistenceStore {
     let childrenCompleted: Int
     
     var state: Download.State {
-      if childrenRequested == totalChildren {
+      if childrenRequested == childrenCompleted && childrenCompleted == totalChildren {
         return .complete
       }
       if childrenCompleted < childrenRequested {
@@ -237,19 +237,52 @@ extension PersistenceStore {
   ///   - id: The UUID of the download to transition
   ///   - state: The new `Download.State` to transition to.
   func transitionDownload(withId id: UUID, to state: Download.State) throws {
-    var parentDownload: Download?
     try db.write { db in
       if var download = try Download.fetchOne(db, key: id) {
         try download.updateChanges(db) {
           $0.state = state
         }
-        // Try to find the parent content for this download
-        parentDownload = try download.parentDownload.fetchOne(db)
+        // Check whether we need to update the parent state
+        asyncUpdateParentDownloadState(for: download)
       }
     }
-    // Do we need to update the parent?
-    if let parentDownload = parentDownload {
-      try updateCollectionDownloadState(collectionDownload: parentDownload)
+  }
+  
+  /// Asynchronous method to ensure that the parent download object is kept in sync
+  /// - Parameter download: The potential child download whose parent we want to update
+  private func asyncUpdateParentDownloadState(for download: Download) {
+    workerQueue.async { [weak self] in
+      guard let self = self else { return }
+      
+      do {
+        var parentDownload: Download?
+        try self.db.read { db in
+          parentDownload = try download.parentDownload.fetchOne(db)
+        }
+        if let parentDownload = parentDownload {
+          try self.updateCollectionDownloadState(collectionDownload: parentDownload)
+        }
+      } catch {
+        Failure
+          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .log()
+      }
+    }
+  }
+  
+  /// Asynchronous method to ensure that this parent download is kept in sync with its kids
+  /// - Parameter parentDownload: The parent object to update
+  private func asyncUpdateDownloadState(forParentDownload parentDownload: Download) {
+    workerQueue.async { [weak self] in
+      guard let self = self else { return }
+      
+      do {
+        try self.updateCollectionDownloadState(collectionDownload: parentDownload)
+      } catch {
+        Failure
+          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .log()
+      }
     }
   }
   
@@ -260,9 +293,13 @@ extension PersistenceStore {
     var download = collectionDownload
     
     _ = try db.write { db in
-      try download.updateChanges(db) {
-        $0.state = downloadSummary.state
-        $0.progress = downloadSummary.progress
+      if downloadSummary.childrenRequested == 0 {
+        try download.delete(db)
+      } else {
+        try download.updateChanges(db) {
+          $0.state = downloadSummary.state
+          $0.progress = downloadSummary.progress
+        }
       }
     }
   }
@@ -287,13 +324,22 @@ extension PersistenceStore {
     try db.write { db in
       try download.update(db)
     }
+    asyncUpdateParentDownloadState(for: download)
   }
   
   /// Delete a download
   /// - Parameter id: The UUID of the download to delete
   func deleteDownload(withId id: UUID) throws -> Bool {
     try db.write { db in
-      try Download.deleteOne(db, key: id)
+      if let download = try Download.fetchOne(db, key: id) {
+        let parentDownload = try download.parentDownload.fetchOne(db)
+        let response = try download.delete(db)
+        if let parentDownload = parentDownload {
+          asyncUpdateDownloadState(forParentDownload: parentDownload)
+        }
+        return response
+      }
+      return false
     }
   }
   

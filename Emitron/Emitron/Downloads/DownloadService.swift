@@ -186,7 +186,7 @@ extension DownloadService: DownloadAction {
       // 1. Find the download.
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
       // 2. Is it already downloading?
-      if [.inProgress, .paused].contains(download.state) {
+      if [.inProgress, .paused].contains(download.state) && download.remoteUrl != nil {
         // It's in the download process, so let's ask it to cancel it. The delegate callback will handle deleting the value in the persistence store.
         try downloadProcessor.cancelDownload(download)
       } else {
@@ -211,7 +211,9 @@ extension DownloadService: DownloadAction {
       // 1. Find the download
       guard let download = try persistenceStore.download(forContentId: contentId) else { return }
       // 2. Delete the file from disk
-      try deleteFile(for: download)
+      if [.complete].contains(download.state) && download.remoteUrl != nil {
+        try deleteFile(for: download)
+      }
       // 3. Delete the persisted record
       if try !persistenceStore.deleteDownload(withId: download.id) {
         Failure
