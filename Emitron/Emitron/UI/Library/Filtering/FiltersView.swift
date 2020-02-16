@@ -71,7 +71,7 @@ struct FiltersView: View {
       
       HStack {
         
-        MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
+        MainButtonView(title: "Clear All", type: .secondary(withArrow: false)) {
           self.filters.removeAll()
           self.libraryRepository.filters = self.filters
           self.presentationMode.wrappedValue.dismiss()
