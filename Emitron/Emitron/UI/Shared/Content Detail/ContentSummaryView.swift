@@ -42,7 +42,7 @@ struct ContentSummaryView: View {
   }
   
   var canDownload: Bool {
-    sessionController.user!.canDownload
+    sessionController.user?.canDownload ?? false
   }
   
   var body: some View {
