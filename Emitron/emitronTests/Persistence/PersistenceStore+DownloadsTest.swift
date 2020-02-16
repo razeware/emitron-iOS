@@ -93,12 +93,20 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
     
-    let updatedCollectionDownload = try database.read { db in
-      try Download.filter(key: collectionDownload.id).fetchOne(db)
+    let collectionExpectation = XCTestExpectation()
+    
+    persistenceStore.workerQueue.async {
+      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+        try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
+      }
+      
+      XCTAssertEqual(.inProgress, updatedCollectionDownload?.state)
+      XCTAssertEqual(0, updatedCollectionDownload?.progress)
+      
+      collectionExpectation.fulfill()
     }
     
-    XCTAssertEqual(.inProgress, updatedCollectionDownload?.state)
-    XCTAssertEqual(0, updatedCollectionDownload?.progress)
+    wait(for: [collectionExpectation], timeout: 1)
   }
   
   func testTransitionEpisodeToDownloadedUpdatesCollection() throws {
@@ -118,12 +126,20 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
     
-    let updatedCollectionDownload = try database.read { db in
-      try Download.filter(key: collectionDownload.id).fetchOne(db)
+    let collectionExpectation = XCTestExpectation()
+    
+    persistenceStore.workerQueue.async {
+      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+        try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
+      }
+      
+      XCTAssertEqual(.inProgress, updatedCollectionDownload?.state)
+      XCTAssertEqual(0.5, updatedCollectionDownload?.progress)
+      
+      collectionExpectation.fulfill()
     }
     
-    XCTAssertEqual(.inProgress, updatedCollectionDownload?.state)
-    XCTAssertEqual(0.5, updatedCollectionDownload?.progress)
+    wait(for: [collectionExpectation], timeout: 1)
   }
   
   func testTransitionFinalEpisdeToDownloadedUpdatesCollection() throws {
@@ -150,12 +166,20 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
     }
     
-    let updatedCollectionDownload = try database.read { db in
-      try Download.filter(key: collectionDownload.id).fetchOne(db)
+    let collectionExpectation = XCTestExpectation()
+    
+    persistenceStore.workerQueue.async {
+      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+        try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
+      }
+      
+      XCTAssertEqual(.complete, updatedCollectionDownload?.state)
+      XCTAssertEqual(1, updatedCollectionDownload?.progress)
+      
+      collectionExpectation.fulfill()
     }
     
-    XCTAssertEqual(.complete, updatedCollectionDownload?.state)
-    XCTAssertEqual(1, updatedCollectionDownload?.progress)
+    wait(for: [collectionExpectation], timeout: 1)
   }
   
   func testTransitionNonFinalEpisodeToDownloadedUpdatesCollection() throws {
@@ -175,12 +199,20 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .complete)
     try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
     
-    let updatedCollectionDownload = try database.read { db in
-      try Download.filter(key: collectionDownload.id).fetchOne(db)
+    let collectionExpectation = XCTestExpectation()
+    
+    persistenceStore.workerQueue.async {
+      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+        try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
+      }
+      
+      XCTAssertEqual(.paused, updatedCollectionDownload?.state)
+      XCTAssertEqual(1, updatedCollectionDownload?.progress)
+      
+      collectionExpectation.fulfill()
     }
     
-    XCTAssertEqual(.paused, updatedCollectionDownload?.state)
-    XCTAssertEqual(1, updatedCollectionDownload?.progress)
+    wait(for: [collectionExpectation], timeout: 1)
   }
   
   // MARK: - Collection Download Utilities
