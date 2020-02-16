@@ -158,6 +158,12 @@ enum EmitronDatabase {
       }
     }
     
+    migrator.registerMigration("addOrdinalToDownload") { db in
+      try db.alter(table: "download", body: { t in
+        t.add(column: "ordinal", .integer).notNull().defaults(to: 0)
+      })
+    }
+    
     //: Add future migrations below here, to ensure consistency
     
     return migrator

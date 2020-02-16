@@ -37,6 +37,7 @@ enum PersistenceStoreError: Error {
 // The object responsible for managing and accessing cached content
 final class PersistenceStore {
   let db: DatabaseWriter
+  let workerQueue = DispatchQueue(label: "com.razeware.emitron.persistence", qos: .background)
   
   init(db: DatabaseWriter) {
     self.db = db

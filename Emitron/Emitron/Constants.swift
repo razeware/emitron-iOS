@@ -71,7 +71,7 @@ enum Constants {
   static let progressRemovedError = "There was a problem removing progress."
   static let progressMarkedAsCompleteError = "There was a problem marking content as complete."
   
-  static let downloadRequestedSuccessfully = "Downloaded enqueued."
+  static let downloadRequestedSuccessfully = "Download enqueued."
   static let downloadRequestedButQueueInactive = "Download will begin when WiFi available."
   static let downloadNotPermitted = "Download not permitted."
   static let downloadContentNotFound = "Invalid download request."
