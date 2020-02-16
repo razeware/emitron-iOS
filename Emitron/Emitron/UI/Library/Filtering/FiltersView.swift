@@ -47,7 +47,7 @@ struct FiltersView: View {
         Spacer()
         
         Text("Filters")
-          .font(.uiHeadline)
+          .font(.uiTitle5)
           .foregroundColor(.titleText)
         
         Spacer()

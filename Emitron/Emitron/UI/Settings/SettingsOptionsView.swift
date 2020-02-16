@@ -46,7 +46,7 @@ struct SettingsOptionsView: View {
         Spacer()
         
         Text(self.selectedSettingsOption.title)
-          .font(.uiHeadline)
+          .font(.uiTitle5)
           .foregroundColor(.titleText)
           .padding([.top], 20)
         
