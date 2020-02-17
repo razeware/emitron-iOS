@@ -78,6 +78,34 @@ extension Color {
     Color("proTagForeground")
   }
   
+  static var proTagBorder: Color {
+    Color("proTagBorder")
+  }
+  
+  static var filterTagBackground: Color {
+    Color("filterTagBackground")
+  }
+  
+  static var filterTagIcon: Color {
+    Color("filterTagIcon")
+  }
+  
+  static var filterTagText: Color {
+    Color("filterTagText")
+  }
+  
+  static var filterTagDestructiveBackground: Color {
+    Color("filterTagDestructiveBackground")
+  }
+  
+  static var filterTagDestructiveIcon: Color {
+    Color("filterTagDestructiveIcon")
+  }
+  
+  static var filterTagDestructiveText: Color {
+    Color("filterTagDestructiveText")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }
@@ -130,12 +158,32 @@ extension Color {
     Color("shadowColor")
   }
   
-  static var toggleSelected: Color {
-    Color("toggleSelected")
+  static var toggleTextSelected: Color {
+    Color("toggleTextSelected")
   }
   
-  static var toggleDeselected: Color {
-    Color("toggleDeselected")
+  static var toggleTextDeselected: Color {
+    Color("toggleTextDeselected")
+  }
+  
+  static var toggleLineSelected: Color {
+    Color("toggleLineSelected")
+  }
+  
+  static var toggleLineDeselected: Color {
+    Color("toggleLineDeselected")
+  }
+  
+  static var checkmarkBackground: Color {
+    Color("checkmarkBackground")
+  }
+  
+  static var checkmarkBorder: Color {
+    Color("checkmarkBorder")
+  }
+  
+  static var checkmarkColor: Color {
+    Color("checkmarkColor")
   }
   
   static var appBlack: Color {
@@ -160,5 +208,21 @@ extension Color {
   
   static var snackTabBg: Color {
     Color("snackTagBg")
+  }
+  
+  static var searchFieldBackground: Color {
+    Color("searchFieldBackground")
+  }
+  
+  static var searchFieldBorder: Color {
+    Color("searchFieldBorder")
+  }
+  
+  static var searchFieldIcon: Color {
+    Color("searchFieldIcon")
+  }
+  
+  static var searchFieldText: Color {
+    Color("searchFieldText")
   }
 }

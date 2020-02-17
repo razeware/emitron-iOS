@@ -66,7 +66,6 @@ struct LibraryView: View {
     }
     .padding([.leading, .trailing], 20)
     .background(Color.backgroundColor)
-    .shadow(color: Color.shadowColor, radius: 1, x: 0, y: 2)
   }
 
   private var searchField: some View {

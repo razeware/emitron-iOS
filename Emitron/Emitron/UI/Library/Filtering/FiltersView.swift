@@ -47,7 +47,7 @@ struct FiltersView: View {
         Spacer()
         
         Text("Filters")
-          .font(.uiHeadline)
+          .font(.uiTitle5)
           .foregroundColor(.titleText)
         
         Spacer()
@@ -71,7 +71,7 @@ struct FiltersView: View {
       
       HStack {
         
-        MainButtonView(title: "Clear all", type: .secondary(withArrow: false)) {
+        MainButtonView(title: "Clear All", type: .secondary(withArrow: false)) {
           self.filters.removeAll()
           self.libraryRepository.filters = self.filters
           self.presentationMode.wrappedValue.dismiss()
@@ -84,7 +84,7 @@ struct FiltersView: View {
       }
       .padding([.leading, .trailing, .bottom], 18)
     }
-    .background(Color.modalBackground)
+    .background(Color.backgroundColor)
   }
   
   private func constructScrollView() -> some View {

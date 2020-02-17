@@ -32,8 +32,8 @@ import CoreGraphics.CGBase
 enum Constants {
   static let filters = "Filters"
   static let clearAll = "Clear All"
-  static let search = "Search"
-  static let loading = "Loading..."
+  static let search = "Search…"
+  static let loading = "Loading…"
   static let library = "Library"
   static let myTutorials = "My Tutorials"
   static let downloads = "Downloads"

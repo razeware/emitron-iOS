@@ -36,7 +36,7 @@ struct NoResultsView: View {
   var body: some View {
     VStack {
       headerView
-
+      
       Spacer()
 
       Image(contentScreen.emptyImageName)
@@ -53,6 +53,7 @@ struct NoResultsView: View {
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
+        .padding([.bottom], 20)
         .padding([.leading, .trailing], 55)
       
       Spacer()
@@ -63,10 +64,9 @@ struct NoResultsView: View {
           type: .primary(withArrow: true)) {
             self.tabViewModel.selectedTab = .library
         }
-          .padding([.leading, .trailing, .bottom], 20)
+        .padding([.horizontal, .bottom], 20)
       }
     }
-    .background(Color.backgroundColor)
   }
 }
 

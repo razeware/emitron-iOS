@@ -74,7 +74,6 @@ struct TextListItemView: View {
         progressBar
       }
     }
-    .padding([.trailing], 20)
   }
   
   private var progressBar: AnyView {

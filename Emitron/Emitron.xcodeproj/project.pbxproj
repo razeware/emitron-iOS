@@ -162,6 +162,7 @@
 		22C6410123F809CE00CBFDE5 /* PagingIndicatorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410023F809CE00CBFDE5 /* PagingIndicatorView.swift */; };
 		22C6410323F891D100CBFDE5 /* ArrowInCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */; };
 		22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */; };
+		22C6410823FA903F00CBFDE5 /* TagView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C6410723FA903F00CBFDE5 /* TagView.swift */; };
 		22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */; };
 		22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */; };
 		22C914C623BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */; };
@@ -438,6 +439,7 @@
 		22C6410023F809CE00CBFDE5 /* PagingIndicatorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PagingIndicatorView.swift; sourceTree = "<group>"; };
 		22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ArrowInCircleView.swift; sourceTree = "<group>"; };
 		22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SpinningCircleView.swift; sourceTree = "<group>"; };
+		22C6410723FA903F00CBFDE5 /* TagView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TagView.swift; sourceTree = "<group>"; };
 		22C914C123BD7E7E00A05E00 /* ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentServiceAdapter.swift; sourceTree = "<group>"; };
 		22C914C323BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BookmarksService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
 		22C914C523BD8F3900A05E00 /* ProgressionsService+ContentServiceAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ProgressionsService+ContentServiceAdapter.swift"; sourceTree = "<group>"; };
@@ -984,6 +986,16 @@
 			path = "Download Icon";
 			sourceTree = "<group>";
 		};
+		22C6410923FA904500CBFDE5 /* Tags */ = {
+			isa = PBXGroup;
+			children = (
+				22C6410723FA903F00CBFDE5 /* TagView.swift */,
+				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
+				8B7E96DC2357A65F0083DA38 /* ProTag.swift */,
+			);
+			path = Tags;
+			sourceTree = "<group>";
+		};
 		22C914C023BD7E6700A05E00 /* Service Adapters */ = {
 			isa = PBXGroup;
 			children = (
@@ -1447,13 +1459,12 @@
 		B6FC15AC22CB52570078CEDB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
+				22C6410923FA904500CBFDE5 /* Tags */,
 				22C6410423F893CB00CBFDE5 /* Download Icon */,
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
-				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
-				8B7E96DC2357A65F0083DA38 /* ProTag.swift */,
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
 				229F0AC323BB29230004DD4F /* Video */,
@@ -1899,6 +1910,7 @@
 				22B8266623AF5D2100D4BA23 /* ContentAdapter.swift in Sources */,
 				223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */,
 				223D77B123B0C0B2005BE95D /* Category.swift in Sources */,
+				22C6410823FA903F00CBFDE5 /* TagView.swift in Sources */,
 				22E2267623C9BD3900A83601 /* DynamicContentState.swift in Sources */,
 				2228E40023B9891600E103AA /* LoginView.swift in Sources */,
 				2213193F23E4E85500F15816 /* NoResultsView.swift in Sources */,

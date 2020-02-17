@@ -55,7 +55,7 @@ struct SettingsView: View {
         Spacer()
         
         Text(Constants.settings)
-          .font(.uiHeadline)
+          .font(.uiTitle5)
           .foregroundColor(.titleText)
           .padding([.top], 20)
         

@@ -80,6 +80,7 @@ struct ContentListView: View {
     }
       .if(withDelete) { $0.onDelete(perform: self.delete) }
       .listRowInsets(EdgeInsets())
+      .background(Color.backgroundColor)
   }
   
   private var appropriateCardsView: some View {
@@ -105,32 +106,36 @@ struct ContentListView: View {
   }
   
   private var loadingView: some View {
-    List {
+    ZStack {
+      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      
       VStack {
         headerView
-        Spacer(minLength: 50)
+        Spacer()
         LoadingView()
+        Spacer()
       }
-        .listRowInsets(EdgeInsets())
     }
   }
   
   private var noResultsView: some View {
-    List {
+    ZStack {
+      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      
       NoResultsView(
         contentScreen: contentScreen,
         headerView: headerView
       )
-        .listRowInsets(EdgeInsets())
     }
   }
   
   private var reloadView: some View {
-    List {
+    ZStack {
+      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      
       ReloadView(headerView: headerView) {
         self.contentRepository.reload()
       }
-        .listRowInsets(EdgeInsets())
     }
   }
   

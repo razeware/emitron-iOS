@@ -60,9 +60,8 @@ struct ReloadView: View {
         title: "Reload",
         type: .primary(withArrow: false),
         callback: reloadHandler)
-        .padding([.leading, .trailing, .bottom], 20)
+        .padding([.horizontal, .bottom], 20)
     }
-    .background(Color.backgroundColor)
   }
 }
 

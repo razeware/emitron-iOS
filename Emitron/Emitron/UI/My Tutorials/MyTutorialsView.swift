@@ -130,6 +130,7 @@ struct MyTutorialView: View {
           .padding([.top], .sidePadding)
       }
       .padding([.horizontal], 18)
+      .background(Color.backgroundColor)
     )
   }
 
