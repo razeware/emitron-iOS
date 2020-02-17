@@ -67,4 +67,13 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   var name: String {
     self.rawValue
   }
+  
+  var allowsMultipleValues: Bool {
+    switch self {
+    case .subscriptionPlans, .search, .none:
+      return false
+    default:
+      return true
+    }
+  }
 }

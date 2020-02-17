@@ -30,6 +30,7 @@ import Foundation
 import Combine
 
 class Filters: ObservableObject {
+  @Published var searchStr: String = ""
   var all: Set<Filter> {
     didSet {
       platforms.filters = all.filter { $0.groupType == .platforms }.sorted()
@@ -81,8 +82,6 @@ class Filters: ObservableObject {
       .filters(for: [.contentTypes(types: [.collection, .screencast])])
       .map { Filter(groupType: .contentTypes, param: $0, isOn: true) }
   }
-  
-  @Published var searchStr: String = "" 
   
   var searchQuery: String? {
     didSet {
@@ -163,6 +162,19 @@ class Filters: ObservableObject {
     
     // Load the sort from the settings manager
     self.sortFilter = SettingsManager.current.sortFilter
+  }
+  
+  func update(with filter: Filter) {
+    if !filter.groupType.allowsMultipleValues && filter.isOn {
+      // If you're only allowed one of this type, then let's turn the existing ones off
+      let filtersToUpdate = all.filter { $0 != filter && $0.groupType == filter.groupType && $0.isOn }
+      filtersToUpdate.forEach {
+        $0.isOn.toggle()
+      }
+    }
+    // Add the updated filter
+    all.update(with: filter)
+    commitUpdates()
   }
   
   func updatePlatformFilters(for domains: [Domain]) {
