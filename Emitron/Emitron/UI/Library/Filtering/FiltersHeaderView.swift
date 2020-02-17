@@ -41,7 +41,7 @@ private enum Layout {
 
 struct FiltersHeaderView: View {
   var filterGroup: FilterGroup
-  var filters: Filters
+  @ObservedObject var filters: Filters
   
   @State var isExpanded: Bool = false
   
@@ -96,8 +96,7 @@ struct FiltersHeaderView: View {
       ForEach(Array(filterGroup.filters), id: \.self) { filter in
         TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
           filter.isOn.toggle()
-          self.filters.all.update(with: filter)
-          self.filters.commitUpdates()
+          self.filters.update(with: filter)
         })
           .padding([.leading, .trailing], 14)
       }

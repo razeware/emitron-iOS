@@ -62,7 +62,6 @@ struct TabNavView: View {
     }
     .accentColor(Color.accent)
     .edgesIgnoringSafeArea([.top])
-    .background(Color.backgroundColor)
   }
 }
 

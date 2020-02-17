@@ -30,7 +30,6 @@ import SwiftUI
 
 private extension CGFloat {
   static let filterButtonSide: CGFloat = 27
-  static let sidePadding: CGFloat = 18
   static let searchFilterPadding: CGFloat = 30
   static let filterSpacing: CGFloat = 6
   static let filtersPaddingTop: CGFloat = 12
@@ -62,10 +61,10 @@ struct LibraryView: View {
           .padding([.top], 10)
       }
       numberAndSortView
-        .padding([.top, .bottom], 10)
+        .padding([.vertical], 10)
     }
-    .padding([.leading, .trailing], 20)
-    .background(Color.backgroundColor)
+      .padding([.horizontal], .sidePadding)
+      .background(Color.backgroundColor)
   }
 
   private var searchField: some View {
@@ -121,7 +120,7 @@ struct LibraryView: View {
           self.filters.removeAll()
           self.libraryRepository.filters = self.filters
         }
-
+        
         ForEach(self.filters.applied, id: \.self) { filter in
           AppliedFilterTagButton(name: filter.filterName, type: .default) {
             if filter.isSearch {
@@ -135,7 +134,9 @@ struct LibraryView: View {
           }
         }
       }
+        .padding([.horizontal], .sidePadding)
     }
+      .padding([.horizontal], -.sidePadding)
   }
 
   private func updateFilters() {
@@ -148,15 +149,13 @@ struct LibraryView: View {
     libraryRepository.filters = filters
   }
 
-  private var contentView: AnyView {
+  private var contentView: some View {
     let header = AnyView(contentControlsSection)
-    let contentSectionView = ContentListView(
+    return ContentListView(
       contentRepository: libraryRepository,
       downloadAction: DownloadService.current,
       contentScreen: .library,
       headerView: header
     )
-    
-    return AnyView(contentSectionView)
   }
 }

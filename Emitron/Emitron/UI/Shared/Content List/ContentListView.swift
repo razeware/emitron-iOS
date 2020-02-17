@@ -63,7 +63,7 @@ struct ContentListView: View {
           model: partialContent,
           dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
-          .padding(10)
+          .padding([.vertical], .sidePadding / 2)
         NavigationLink(
           destination: ContentDetailView(
             content: partialContent,
@@ -75,11 +75,12 @@ struct ContentListView: View {
         }
           .buttonStyle(PlainButtonStyle())
           //HACK: to remove navigation chevrons
-          .padding(.trailing, -10.0)
+          .padding(.trailing, -2 * .sidePadding)
       }
     }
       .if(withDelete) { $0.onDelete(perform: self.delete) }
       .listRowInsets(EdgeInsets())
+      .padding([.horizontal], .sidePadding)
       .background(Color.backgroundColor)
   }
   
