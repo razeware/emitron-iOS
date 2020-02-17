@@ -90,16 +90,18 @@ struct ChildContentListingView: View {
     }
   }
   
-  private func episodeRow(model: ChildContentListDisplayable) -> AnyView {
+  private func episodeRow(model: ChildContentListDisplayable) -> some View {
     
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     
     if model.professional && !sessionController.user!.canStreamPro {
-      return AnyView(TextListItemView(
-        dynamicContentViewModel: childDynamicContentViewModel,
-        content: model)
-          .padding([.leading, .trailing], 20)
-          .padding([.bottom], 20))
+      return AnyView(
+        TextListItemView(
+          dynamicContentViewModel: childDynamicContentViewModel,
+          content: model
+        )
+          .padding([.horizontal, .bottom], 20)
+      )
     } else {
       let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
       
@@ -110,12 +112,15 @@ struct ChildContentListingView: View {
             MessageBus.current.dismiss()
           }
         ) {
-        TextListItemView(dynamicContentViewModel: childDynamicContentViewModel, content: model)
-          .padding([.leading, .trailing], 20)
-          .padding([.bottom], 20)
+          TextListItemView(
+            dynamicContentViewModel: childDynamicContentViewModel,
+            content: model
+          )
+            .padding([.horizontal, .bottom], 20)
       }
         //HACK: to remove navigation chevrons
-        .padding(.trailing, -32.0))
+        .padding(.trailing, -15.0)
+      )
     }
   }
   
