@@ -209,4 +209,20 @@ extension Color {
   static var snackTabBg: Color {
     Color("snackTagBg")
   }
+  
+  static var searchFieldBackground: Color {
+    Color("searchFieldBackground")
+  }
+  
+  static var searchFieldBorder: Color {
+    Color("searchFieldBorder")
+  }
+  
+  static var searchFieldIcon: Color {
+    Color("searchFieldIcon")
+  }
+  
+  static var searchFieldText: Color {
+    Color("searchFieldText")
+  }
 }

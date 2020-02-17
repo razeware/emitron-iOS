@@ -42,13 +42,15 @@ struct SearchFieldView: View {
   var body: some View {
     HStack {
       Image(systemName: "magnifyingglass")
-        .foregroundColor(.iconButton)
+        .foregroundColor(.searchFieldIcon)
+        .frame(height: 25)
       
       TextField(Constants.search, text: $searchString) {
         self.action()
       }
         .keyboardType(.webSearch)
         .font(.uiBodyCustom)
+        .foregroundColor(.searchFieldText)
         .contentShape(Rectangle())
       
       if !searchString.isEmpty {
@@ -59,12 +61,12 @@ struct SearchFieldView: View {
           Image(systemName: "multiply.circle.fill")
             // If we don't enforce a frame, the button doesn't register the tap action
             .frame(width: 25, height: 25, alignment: .center)
-            .foregroundColor(.iconButton)
+            .foregroundColor(.searchFieldIcon)
         }
       }
     }
-      .padding([.vertical], 8)
-      .padding([.horizontal], 15)
+      .padding([.vertical], 6)
+      .padding([.horizontal], 10)
       .background(GeometryReader { proxy in
         Color.clear.preference(key: SizeKey.self, value: proxy.size)
       })
@@ -77,10 +79,10 @@ struct SearchFieldView: View {
   
   var background: some View {
     RoundedRectangle(cornerRadius: 9)
-      .fill(Color.cardBackground)
+      .fill(Color.searchFieldBackground)
       .overlay(
         RoundedRectangle(cornerRadius: 9)
-          .stroke(Color.borderColor, lineWidth: 2)
+          .stroke(Color.searchFieldBorder, lineWidth: 2)
       )
   }
 }
