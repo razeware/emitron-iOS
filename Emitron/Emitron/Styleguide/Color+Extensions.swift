@@ -82,6 +82,30 @@ extension Color {
     Color("proTagBorder")
   }
   
+  static var filterTagBackground: Color {
+    Color("filterTagBackground")
+  }
+  
+  static var filterTagIcon: Color {
+    Color("filterTagIcon")
+  }
+  
+  static var filterTagText: Color {
+    Color("filterTagText")
+  }
+  
+  static var filterTagDestructiveBackground: Color {
+    Color("filterTagDestructiveBackground")
+  }
+  
+  static var filterTagDestructiveIcon: Color {
+    Color("filterTagDestructiveIcon")
+  }
+  
+  static var filterTagDestructiveText: Color {
+    Color("filterTagDestructiveText")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }

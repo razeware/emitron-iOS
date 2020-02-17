@@ -48,19 +48,22 @@ struct SearchFieldView: View {
         self.action()
       }
         .keyboardType(.webSearch)
+        .font(.uiBodyCustom)
         .contentShape(Rectangle())
       
-      Button(action: {
-        self.searchString = ""
-        self.action()
-      }) {
-        Image(systemName: "multiply.circle.fill")
-          // If we don't enforce a frame, the button doesn't register the tap action
-          .frame(width: 25, height: 25, alignment: .center)
-          .foregroundColor(.iconButton)
+      if !searchString.isEmpty {
+        Button(action: {
+          self.searchString = ""
+          self.action()
+        }) {
+          Image(systemName: "multiply.circle.fill")
+            // If we don't enforce a frame, the button doesn't register the tap action
+            .frame(width: 25, height: 25, alignment: .center)
+            .foregroundColor(.iconButton)
+        }
       }
     }
-      .padding([.vertical], 11)
+      .padding([.vertical], 8)
       .padding([.horizontal], 15)
       .background(GeometryReader { proxy in
         Color.clear.preference(key: SizeKey.self, value: proxy.size)

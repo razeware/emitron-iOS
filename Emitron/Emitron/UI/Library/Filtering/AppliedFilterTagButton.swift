@@ -32,25 +32,43 @@ enum AppliedFilterType {
   case `default`
   case destructive
   
-  var color: Color {
+  var backgroundColor: Color {
     switch self {
     case .default:
-      return .secondaryButtonBackground
+      return .filterTagBackground
     case .destructive:
-      return .destructiveButtonBackground
+      return .filterTagDestructiveBackground
+    }
+  }
+  
+  var textColor: Color {
+    switch self {
+    case .default:
+      return .filterTagText
+    case .destructive:
+      return .filterTagDestructiveText
+    }
+  }
+  
+  var iconColor: Color {
+    switch self {
+    case .default:
+      return .filterTagIcon
+    case .destructive:
+      return .filterTagDestructiveIcon
     }
   }
 }
 
 private enum Layout {
   struct Padding {
-    let overall: CGFloat = 12
+    let overall: CGFloat = 10
     let textTrailing: CGFloat = 2
   }
   
   static let padding = Padding()
   static let cornerRadius: CGFloat = 9
-  static let imageSize: CGFloat = 15
+  static let imageSize: CGFloat = 10
 }
 
 struct AppliedFilterTagButton: View {
@@ -60,18 +78,17 @@ struct AppliedFilterTagButton: View {
   
   var body: some View {
     Button(action: removeFilterAction) {
-      HStack {
+      HStack(spacing: 7) {
         Text(name)
-          .foregroundColor(.buttonText)
+          .foregroundColor(type.textColor)
           .font(.uiButtonLabelSmall)
-          .padding([.trailing], Layout.padding.textTrailing)
-        Image.closeWhite
+        Image(systemName: "multiply")
           .resizable()
           .frame(width: Layout.imageSize, height: Layout.imageSize)
-          .foregroundColor(.buttonText)
+          .foregroundColor(type.iconColor)
       }
       .padding(.all, Layout.padding.overall)
-        .background(type.color)
+        .background(type.backgroundColor)
         .cornerRadius(Layout.cornerRadius)
     }
   }
@@ -80,9 +97,20 @@ struct AppliedFilterTagButton: View {
 #if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
-    AppliedFilterTagButton(name: "Test Filter", type: .default) {
-      print("This is just a test.")
+    SwiftUI.Group {
+      tags.colorScheme(.dark)
+      tags.colorScheme(.light)
     }
+  }
+  
+  static var tags: some View {
+    HStack {
+      AppliedFilterTagButton(name: "Clear All", type: .destructive) { }
+      AppliedFilterTagButton(name: "Test Filter", type: .default) { }
+      AppliedFilterTagButton(name: "Another", type: .default) { }
+    }
+    .padding()
+    .background(Color.backgroundColor)
   }
 }
 #endif
