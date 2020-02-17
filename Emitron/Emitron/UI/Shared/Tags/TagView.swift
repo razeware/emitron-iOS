@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,24 +28,35 @@
 
 import SwiftUI
 
-struct CompletedTag: View {
+struct TagView: View {
+  let text: String
+  let textColor: Color
+  let backgroundColor: Color
+  let borderColor: Color
+  
   var body: some View {
-    ZStack {
-      Rectangle()
-        .foregroundColor(.accentTagBackground)
-        .cornerRadius(6)
-        .frame(width: 80, height: 24) // ISSUE: Commenting out this line causes the entire app to crash, yay
-      
-      Text("COMPLETED")
-        .foregroundColor(.accentTagForeground)
-        .font(.uiUppercaseTag)
-        .kerning(0.5)
-    }
+    Text(text.uppercased())
+      .foregroundColor(textColor)
+      .font(.uiUppercaseTag)
+      .kerning(0.5)
+      .padding([.vertical], 5)
+      .padding([.horizontal], 7)
+      .background(backgroundColor)
+      .overlay(
+        RoundedRectangle(cornerRadius: 6)
+          .stroke(borderColor, lineWidth: 4)
+      )
+      .cornerRadius(6) // This is a bit hacky.
   }
 }
 
-struct CompletedTag_Previews: PreviewProvider {
+struct TagView_Previews: PreviewProvider {
   static var previews: some View {
-    CompletedTag()
+    TagView(
+      text: "this is a tag",
+      textColor: Color.white,
+      backgroundColor: Color.red,
+      borderColor: Color.yellow
+    )
   }
 }

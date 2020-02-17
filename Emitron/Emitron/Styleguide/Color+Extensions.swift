@@ -78,6 +78,10 @@ extension Color {
     Color("proTagForeground")
   }
   
+  static var proTagBorder: Color {
+    Color("proTagBorder")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }

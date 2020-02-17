@@ -1,15 +1,15 @@
 /// Copyright (c) 2019 Razeware LLC
-///
+/// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
 /// in the Software without restriction, including without limitation the rights
 /// to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
 /// copies of the Software, and to permit persons to whom the Software is
 /// furnished to do so, subject to the following conditions:
-///
+/// 
 /// The above copyright notice and this permission notice shall be included in
 /// all copies or substantial portions of the Software.
-///
+/// 
 /// Notwithstanding the foregoing, you may not use, copy, modify, merge, publish,
 /// distribute, sublicense, create a derivative work, and/or sell copies of the
 /// Software in any work that is designed, intended, or marketed for pedagogical or
@@ -17,7 +17,7 @@
 /// or information technology.  Permission for such use, copying, modification,
 /// merger, publication, distribution, sublicensing, creation of derivative works,
 /// or sale is expressly withheld.
-///
+/// 
 /// THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
 /// IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
 /// FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -28,29 +28,28 @@
 
 import SwiftUI
 
-struct ProTag: View {
+struct CompletedTag: View {
   var body: some View {
-    Text("PRO")
-      .foregroundColor(.proTagForeground)
-      .font(.uiUppercaseTag)
-      .padding([.vertical], 5)
-      .padding([.horizontal], 7)
-      .background(Color.proTagBackground)
-      .overlay(
-        RoundedRectangle(cornerRadius: 6)
-          .stroke(Color.proTagForeground, lineWidth: 4)
-      )
-      .cornerRadius(6) // This is a bit hacky.
+    TagView(
+      text: "completed",
+      textColor: .accentTagForeground,
+      backgroundColor: .accentTagBackground,
+      borderColor: .accentTagBackground
+    )
   }
 }
 
-struct ProTag_Previews: PreviewProvider {
+struct CompletedTag_Previews: PreviewProvider {
   static var previews: some View {
     VStack(spacing: 10) {
-      ProTag().colorScheme(.light)
-      ProTag().colorScheme(.dark)
+      completedTag.colorScheme(.light)
+      completedTag.colorScheme(.dark)
     }
+  }
+  
+  static var completedTag: some View {
+    CompletedTag()
       .padding()
-      .background(Color.green)
+      .background(Color.backgroundColor)
   }
 }
