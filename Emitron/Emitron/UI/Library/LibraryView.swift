@@ -116,9 +116,11 @@ struct LibraryView: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
-        AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
-          self.filters.removeAll()
-          self.libraryRepository.filters = self.filters
+        if self.filters.applied.count > 1 {
+          AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
+            self.filters.removeAll()
+            self.libraryRepository.filters = self.filters
+          }
         }
         
         ForEach(self.filters.applied, id: \.self) { filter in
