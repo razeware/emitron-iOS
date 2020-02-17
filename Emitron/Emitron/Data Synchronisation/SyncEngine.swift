@@ -372,8 +372,7 @@ extension SyncEngine: SyncAction {
     // TODO: Update if persisted
     
     // 4. Check whether we need to update a parent
-    if progression.finished,
-      let parentContent = repository.parentContent(for: contentId),
+    if let parentContent = repository.parentContent(for: contentId),
       let childProgressUpdate = repository.childProgress(for: parentContent.id),
       var existingProgression = repository.progression(for: parentContent.id) {
       existingProgression.progress = childProgressUpdate.completed
