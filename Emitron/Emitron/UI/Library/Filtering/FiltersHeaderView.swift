@@ -41,7 +41,7 @@ private enum Layout {
 
 struct FiltersHeaderView: View {
   var filterGroup: FilterGroup
-  var filters: Filters
+  @ObservedObject var filters: Filters
   
   @State var isExpanded: Bool = false
   
