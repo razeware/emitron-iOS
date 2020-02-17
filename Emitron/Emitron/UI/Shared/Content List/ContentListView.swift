@@ -80,6 +80,7 @@ struct ContentListView: View {
     }
       .if(withDelete) { $0.onDelete(perform: self.delete) }
       .listRowInsets(EdgeInsets())
+      .background(Color.backgroundColor)
   }
   
   private var appropriateCardsView: some View {
