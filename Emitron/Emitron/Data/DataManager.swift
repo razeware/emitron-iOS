@@ -83,6 +83,7 @@ final class DataManager: ObservableObject {
     
     // Empty the caches
     dataCache = DataCache()
+    filters = Filters()
     
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
