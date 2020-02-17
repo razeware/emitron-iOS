@@ -28,10 +28,6 @@
 
 import SwiftUI
 
-private extension CGFloat {
-  static let sidePadding: CGFloat = 18
-}
-
 enum MyTutorialsState: String {
   case inProgress
   case completed
@@ -129,7 +125,7 @@ struct MyTutorialView: View {
           })
           .padding([.top], .sidePadding)
       }
-      .padding([.horizontal], 18)
+      .padding([.horizontal], .sidePadding)
       .background(Color.backgroundColor)
     )
   }
