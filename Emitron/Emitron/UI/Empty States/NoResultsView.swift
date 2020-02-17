@@ -36,38 +36,37 @@ struct NoResultsView: View {
   var body: some View {
     VStack {
       headerView
+      
+      Spacer()
 
-      VStack {
+      Image(contentScreen.emptyImageName)
+        .padding([.bottom], 30)
 
-        Image(contentScreen.emptyImageName)
-          .padding([.bottom], 30)
+      Text(contentScreen.titleMessage)
+        .font(.uiTitle2)
+        .foregroundColor(.titleText)
+        .multilineTextAlignment(.center)
+        .padding([.bottom], 20)
+        .padding([.leading, .trailing], 55)
 
-        Text(contentScreen.titleMessage)
-          .font(.uiTitle2)
-          .foregroundColor(.titleText)
-          .multilineTextAlignment(.center)
-          .padding([.bottom], 20)
-          .padding([.leading, .trailing], 55)
-
-        Text(contentScreen.detailMesage)
-          .font(.uiLabel)
-          .foregroundColor(.contentText)
-          .multilineTextAlignment(.center)
-          .padding([.bottom], 20)
-          .padding([.leading, .trailing], 55)
-        
-        if contentScreen.showExploreButton {
-          MainButtonView(
-            title: "Explore Tutorials",
-            type: .primary(withArrow: true)) {
-              self.tabViewModel.selectedTab = .library
-          }
-            .padding([.horizontal], 20)
+      Text(contentScreen.detailMesage)
+        .font(.uiLabel)
+        .foregroundColor(.contentText)
+        .multilineTextAlignment(.center)
+        .padding([.bottom], 20)
+        .padding([.leading, .trailing], 55)
+      
+      Spacer()
+      
+      if contentScreen.showExploreButton {
+        MainButtonView(
+          title: "Explore Tutorials",
+          type: .primary(withArrow: true)) {
+            self.tabViewModel.selectedTab = .library
         }
+        .padding([.horizontal, .bottom], 20)
       }
-        .padding([.vertical], 40)
     }
-      .background(Color.backgroundColor)
   }
 }
 

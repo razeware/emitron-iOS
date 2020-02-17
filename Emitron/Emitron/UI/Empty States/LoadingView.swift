@@ -36,8 +36,6 @@ struct LoadingView: View {
       Text("Loading...")
         .font(.uiHeadline)
     }
-      .padding([.vertical], 50)
-      .background(Color.backgroundColor)
   }
 }
 
