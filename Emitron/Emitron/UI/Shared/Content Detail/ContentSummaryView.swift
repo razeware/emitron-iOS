@@ -47,11 +47,11 @@ struct ContentSummaryView: View {
   
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
-    return contentView(content: content)
+    return contentView
   }
   
-  private func contentView(content: ContentListDisplayable) -> AnyView {
-    AnyView(VStack(alignment: .leading) {
+  private var contentView: some View {
+    VStack(alignment: .leading) {
       HStack {
         Text(content.technologyTripleString.uppercased())
           .font(.uiUppercase)
@@ -92,7 +92,7 @@ struct ContentSummaryView: View {
           
           bookmarkButton
           
-          completedTag(content: content)
+          completedTag
         })
           .padding([.top], 15)
       }
@@ -115,10 +115,10 @@ struct ContentSummaryView: View {
         .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .lineSpacing(3)
-    })
+    }
   }
   
-  private func completedTag(content: ContentListDisplayable) -> CompletedTag? {
+  private var completedTag: CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
     }

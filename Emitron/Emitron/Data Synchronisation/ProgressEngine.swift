@@ -131,8 +131,7 @@ final class ProgressEngine {
             // Update the cache and return the updated progression
             self.repository.apply(update: cacheUpdate)
             // Do we need to update the parent?
-            if progression.finished,
-              let parentContent = self.repository.parentContent(for: contentId),
+            if let parentContent = self.repository.parentContent(for: contentId),
               let childProgressUpdate = self.repository.childProgress(for: parentContent.id),
               var existingProgression = self.repository.progression(for: parentContent.id) {
               existingProgression.progress = childProgressUpdate.completed
