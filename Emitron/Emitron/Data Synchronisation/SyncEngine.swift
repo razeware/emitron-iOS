@@ -388,7 +388,7 @@ extension SyncEngine: SyncAction {
     try persistenceStore.removeProgressSyncRequest(for: contentId, progressionId: progression.id)
     
     // 2. Create cache update and pass to respository
-    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [progression.id])
+    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [contentId])
     repository.apply(update: cacheUpdate)
     
     // 3. Remove if persisted
