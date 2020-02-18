@@ -65,6 +65,7 @@ struct CardView: View {
             .frame(width: 60, height: 60)
             .transition(.opacity)
             .cornerRadius(6)
+            .padding([.bottom], 12)
         }
 
         Text(model.descriptionPlainText)
@@ -88,7 +89,8 @@ struct CardView: View {
         }
         .padding([.top], 24)
       }
-      .padding(15)
+      .padding([.top, .horizontal], 15)
+      .padding([.bottom], 20)
       
       progressBar
     }
@@ -171,7 +173,7 @@ struct CardView_Previews: PreviewProvider {
   static var list: some View {
     List {
       CardView(
-        model: MockContentListDisplayable(professional: false),
+        model: MockContentListDisplayable(name: "Short Title", professional: false),
         dynamicContent: MockDynamicContentDisplayable()
       )
       CardView(
