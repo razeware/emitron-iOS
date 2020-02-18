@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 final class InProgressRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
@@ -40,5 +41,9 @@ final class InProgressRepository: ContentRepository {
     set {
       preconditionFailure("Not allowed to use setter on this variable.(value: \(newValue))")
     }
+  }
+  
+  override var invalidationPublisher: AnyPublisher<Void, Never>? {
+    repository.cachedProgressionsInvalidated
   }
 }

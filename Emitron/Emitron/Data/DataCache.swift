@@ -45,6 +45,11 @@ final class DataCache: ObservableObject {
     case updated
   }
   
+  enum CacheInvalidation {
+    case progressions
+    case bookmarks
+  }
+  
   private var contents: [Int: Content] = [Int: Content]()
   private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
   private var progressions: [Int: Progression] = [Int: Progression]()
@@ -54,6 +59,8 @@ final class DataCache: ObservableObject {
   private var contentCategories: [Int: [ContentCategory]] = [Int: [ContentCategory]]()
   
   private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
+  
+  let cacheWasInvalidated = PassthroughSubject<CacheInvalidation, Never>()
 }
 
 extension DataCache {
@@ -74,6 +81,15 @@ extension DataCache {
     
     cacheUpdate.bookmarkDeletionContentIds.forEach { self.bookmarks.removeValue(forKey: $0) }
     cacheUpdate.progressionDeletionContentIds.forEach { self.progressions.removeValue(forKey: $0) }
+    
+    // Send cach invalidations
+    if !cacheUpdate.bookmarks.isEmpty || !cacheUpdate.bookmarkDeletionContentIds.isEmpty {
+      cacheWasInvalidated.send(.bookmarks)
+    }
+    
+    if !cacheUpdate.progressions.isEmpty || !cacheUpdate.progressionDeletionContentIds.isEmpty {
+      cacheWasInvalidated.send(.progressions)
+    }
     
     objectDidChange.send(.updated)
   }
