@@ -70,7 +70,7 @@ extension Int {
       timeString = "\(intMinutes) mins"
     case (1, 0):
       timeString = "\(intHours) hr"
-    case (_, 1):
+    case (_, 0):
       timeString = "\(intHours) hrs"
     case (1, 1):
       timeString = "\(intHours) hr, \(intMinutes) min"
@@ -78,10 +78,8 @@ extension Int {
       timeString = "\(intHours) hr, \(intMinutes) mins"
     case (_, 1):
       timeString = "\(intHours) hrs, \(intMinutes) min"
-    case (1..., 1...):
+    case (_, _):
       timeString = "\(intHours) hrs, \(intMinutes) mins"
-    default:
-      break
     }
     
     return timeString
