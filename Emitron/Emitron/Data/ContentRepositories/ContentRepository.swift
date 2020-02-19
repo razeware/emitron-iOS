@@ -103,6 +103,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       case .failure(let error):
         self.currentPage -= 1
         self.state = .failed
+        self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
@@ -170,7 +171,9 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private func configureInvalidationSubscription() {
     if let invalidationPublisher = invalidationPublisher {
       self.invalidationSubscription = invalidationPublisher
-        .sink {
+        .sink { [weak self] in
+          guard let self = self else { return }
+          
           // If we're invalidating the cache then we need to set this to initial status again
           self.state = .initial
           self.objectWillChange.send()

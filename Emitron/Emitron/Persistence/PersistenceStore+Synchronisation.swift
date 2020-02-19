@@ -213,6 +213,7 @@ extension PersistenceStore {
       
       return try SyncRequest.fetchAll(db, request)
     }
+    .removeDuplicates()
     .publisher(in: db)
   }
   
