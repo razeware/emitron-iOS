@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 final class BookmarkRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
@@ -38,5 +39,9 @@ final class BookmarkRepository: ContentRepository {
     set {
       preconditionFailure("Not allowed to use setter on this variable. [Value: \(newValue)]")
     }
+  }
+  
+  override var invalidationPublisher: AnyPublisher<Void, Never>? {
+    repository.cachedBookmarksInvalidated
   }
 }

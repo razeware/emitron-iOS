@@ -39,7 +39,18 @@ struct Progression: Equatable, Codable {
 
 extension Progression {
   var finished: Bool {
-    progressProportion > 0.9
+    // This is a really nasty hack. And I take full responsbility for it. But
+    // I'm also incredibly lazy. Basically, collections need to be fully complete
+    // before being marked as complete. Whereas videos should only be 90% complete.
+    // Since we don't know whether this is a video or a collection, we're gonna
+    // make the assumption that collections have fewer than 60 items, and videos
+    // are longer than a minute. We should probably fix this another day. I am
+    // reasonably confident that we never will.
+    if target <= 60 {
+      return target == progress
+    } else {
+      return progressProportion > 0.9
+    }
   }
   
   var progressProportion: Double {

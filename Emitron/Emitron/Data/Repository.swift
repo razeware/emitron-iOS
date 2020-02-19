@@ -185,3 +185,22 @@ extension Repository {
     }
   }
 }
+
+// MARK: - Cache invalidations
+extension Repository {
+  var cachedBookmarksInvalidated: AnyPublisher<Void, Never> {
+    dataCache
+      .cacheWasInvalidated
+      .filter { $0 == .bookmarks }
+      .map { _ in () }
+      .eraseToAnyPublisher()
+  }
+  
+  var cachedProgressionsInvalidated: AnyPublisher<Void, Never> {
+    dataCache
+      .cacheWasInvalidated
+      .filter { $0 == .progressions }
+      .map { _ in () }
+      .eraseToAnyPublisher()
+  }
+}

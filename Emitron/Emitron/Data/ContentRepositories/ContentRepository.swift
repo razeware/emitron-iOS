@@ -53,6 +53,9 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private var contentIds: [Int] = [Int]()
   private var contentSubscription: AnyCancellable?
+  // Provide a value for this in a subclass to subscribe to invalidation notifcations
+  var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
+  private var invalidationSubscription: AnyCancellable?
   
   var isEmpty: Bool {
     contents.isEmpty
@@ -75,7 +78,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     self.downloadAction = downloadAction
     self.syncAction = syncAction
     self.serviceAdapter = serviceAdapter
-    configureSubscription()
+    configureInvalidationSubscription()
   }
 
   func loadMore() {
@@ -100,6 +103,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       case .failure(let error):
         self.currentPage -= 1
         self.state = .failed
+        self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
@@ -109,7 +113,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
         self.state = .hasData
-        self.configureSubscription()
+        self.configureContentSubscription()
       }
     }
   }
@@ -143,12 +147,12 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
         self.state = .hasData
-        self.configureSubscription()
+        self.configureContentSubscription()
       }
     }
   }
   
-  private func configureSubscription() {
+  private func configureContentSubscription() {
     self.contentSubscription = self.repository
       .contentSummaryState(for: self.contentIds)
       .sink(receiveCompletion: { [weak self] error in
@@ -162,6 +166,19 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       
       self.contents = contentSummaryStates
     })
+  }
+  
+  private func configureInvalidationSubscription() {
+    if let invalidationPublisher = invalidationPublisher {
+      self.invalidationSubscription = invalidationPublisher
+        .sink { [weak self] in
+          guard let self = self else { return }
+          
+          // If we're invalidating the cache then we need to set this to initial status again
+          self.state = .initial
+          self.objectWillChange.send()
+        }
+    }
   }
   
   func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {

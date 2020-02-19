@@ -372,8 +372,7 @@ extension SyncEngine: SyncAction {
     // TODO: Update if persisted
     
     // 4. Check whether we need to update a parent
-    if progression.finished,
-      let parentContent = repository.parentContent(for: contentId),
+    if let parentContent = repository.parentContent(for: contentId),
       let childProgressUpdate = repository.childProgress(for: parentContent.id),
       var existingProgression = repository.progression(for: parentContent.id) {
       existingProgression.progress = childProgressUpdate.completed
@@ -389,7 +388,7 @@ extension SyncEngine: SyncAction {
     try persistenceStore.removeProgressSyncRequest(for: contentId, progressionId: progression.id)
     
     // 2. Create cache update and pass to respository
-    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [progression.id])
+    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [contentId])
     repository.apply(update: cacheUpdate)
     
     // 3. Remove if persisted
