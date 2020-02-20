@@ -26,45 +26,65 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
-  case half
-  case standard
-  case onePointFive
-  case double
+struct SettingsList: View {
+  @ObservedObject var settingsManager = SettingsManager.current
   
-  static func fromDisplay(_ value: String) -> PlaybackSpeed? {
-    allCases.first { $0.display == value }
-  }
-  
-  var rate: Float {
-    switch self {
-    case .half:
-      return 0.5
-    case .standard:
-      return 1.0
-    case .onePointFive:
-      return 1.5
-    case .double:
-      return 2.0
+  var body: some View {
+    VStack(spacing: 0) {
+      ForEach(SettingsOption.allCases) { option in
+        self.row(for: option)
+      }
     }
   }
   
-  var display: String {
-    switch self {
-    case .half:
-      return "0.5x"
-    case .standard:
-      return "1.0x"
-    case .onePointFive:
-      return "1.5x"
-    case .double:
-      return "2.0x"
+  private func row(for option: SettingsOption) -> AnyView {
+    switch option {
+    case .closedCaptionOn:
+      return AnyView(SettingsToggleRow(
+        title: option.title,
+        isOn: $settingsManager.closedCaptionOn
+      ))
+    case .wifiOnlyDownloads:
+      return AnyView(SettingsToggleRow(
+        title: option.title,
+        isOn: $settingsManager.wifiOnlyDownloads
+      ))
+    case .downloadQuality:
+      return AnyView(
+        NavigationLink(
+          destination: SettingsSelectionView(
+            title: option.title,
+            settingsOption: $settingsManager.downloadQuality
+          )
+        ) {
+          SettingsDisclosureRow(title: option.title)
+        })
+    case .playbackSpeed:
+      return AnyView(
+        NavigationLink(
+          destination: SettingsSelectionView(
+            title: option.title,
+            settingsOption: $settingsManager.playbackSpeed
+          )
+        ) {
+          SettingsDisclosureRow(title: option.title)
+      })
+    }
+  }
+}
+
+struct SettingsList_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      list.colorScheme(.dark)
+      list.colorScheme(.light)
     }
   }
   
-  static var selectableCases: [PlaybackSpeed] {
-    allCases
+  static var list: some View {
+    SettingsList()
+      .background(Color.backgroundColor)
   }
 }

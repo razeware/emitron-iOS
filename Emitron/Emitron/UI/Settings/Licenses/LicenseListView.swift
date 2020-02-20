@@ -46,7 +46,7 @@ struct LicenseListView: View {
               .foregroundColor(.contentText)
           }
             .navigationBarTitle("Software Licenses")
-          .navigationBarItems(trailing: self.dismissButton)
+            .navigationBarItems(trailing: self.dismissButton)
         }
       }
       .padding(10)

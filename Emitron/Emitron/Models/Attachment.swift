@@ -29,7 +29,7 @@
 import Foundation
 
 struct Attachment: Codable {
-  enum Kind: Int, Codable, CaseIterable {
+  enum Kind: Int, Codable, CaseIterable, SettingsSelectable {
     case stream
     case sdVideoFile
     case hdVideoFile
@@ -74,6 +74,10 @@ struct Attachment: Codable {
     }
     
     static var downloads: [Kind] {
+      [.sdVideoFile, .hdVideoFile]
+    }
+    
+    static var selectableCases: [Attachment.Kind] {
       [.sdVideoFile, .hdVideoFile]
     }
   }

@@ -30,131 +30,79 @@ import SwiftUI
 
 // These views could really do with a refactor. The data flow is a mess
 
+enum SettingsLayout {
+  static let rowSpacing: CGFloat = 11
+}
+
 struct SettingsView: View {
-  @State private var settingsOptionsPresented: Bool = false
-  @State private var licensesPresented: Bool = false
-  @State var selectedOption: SettingsOption = .playbackSpeed
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
-  private var showLogoutButton: Bool
-  
-  init(showLogoutButton: Bool) {
-    self.showLogoutButton = showLogoutButton
-  }
+  @ObservedObject private var settingsManager = SettingsManager.current
+  @State private var licensesPresented: Bool = false
+  var showLogoutButton: Bool
   
   var body: some View {
-    VStack {
-      HStack {
-        Rectangle()
-          .frame(width: 27, height: 27, alignment: .center)
-          .foregroundColor(.clear)
-          .padding([.leading], 18)
+    NavigationView {
+      VStack {
+        
+        SettingsList()
+          .navigationBarTitle(Constants.settings)
+          .navigationBarItems(trailing: dismissButton)
+          .padding([.horizontal], 20)
         
         Spacer()
         
-        Text(Constants.settings)
-          .font(.uiTitle5)
-          .foregroundColor(.titleText)
-          .padding([.top], 20)
+        Button(action: {
+          self.licensesPresented.toggle()
+        }) {
+          Text("Software Licenses")
+        }
+          .sheet(isPresented: $licensesPresented) {
+            LicenseListView(visible: self.$licensesPresented)
+          }
+          .padding([.bottom], 25)
         
-        Spacer()
-        
-        SwiftUI.Group {
-          Button(action: {
-            self.presentationMode.wrappedValue.dismiss()
-          }) {
-            Image.close
-              .frame(width: 27, height: 27, alignment: .center)
-              .padding(.trailing, 18)
-              .padding([.top], 20)
-              .foregroundColor(.iconButton)
-          }
-        }
-      }
-      VStack(spacing: 0) {
-        ForEach(SettingsOption.allCases) { option in
-          TitleDetailView(callback: {
-            self.selectedOption = option
-            
-            // Only navigate to SettingsOptionsView if view isn't a toggle
-            if !option.isToggle {
-              self.settingsOptionsPresented.toggle()
-            } else {
-              switch option {
-              case .closedCaptionOn:
-                SettingsManager.current.closedCaptionOn.toggle()
-              case .wifiOnlyDownloads:
-                SettingsManager.current.wifiOnlyDownloads.toggle()
-              case .downloadQuality, .playbackSpeed:
-                // No-op
-                return
-              }
+        if showLogoutButton {
+          VStack {
+            if sessionController.user != nil {
+              Text("Logged in as \(sessionController.user?.username ?? "")")
+                .font(.uiCaption)
+                .foregroundColor(.contentText)
             }
-          }, title: option.title,
-             detail: self.populateDetail(for: option),
-             isToggle: option.isToggle,
-             isOn: self.isOn(for: option),
-             rightImage: Image(systemName: "chevron.right"))
-            .sheet(isPresented: self.$settingsOptionsPresented) {
-              SettingsOptionsView(
-                isPresented: self.$settingsOptionsPresented,
-                isOn: false,
-                selectedSettingsOption: self.$selectedOption
-              )
+            MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+              self.sessionController.logout()
+              self.presentationMode.wrappedValue.dismiss()
             }
-        }
-      }
-        .padding([.horizontal], 20)
-      
-      Spacer()
-      
-      Button(action: {
-        self.licensesPresented.toggle()
-      }) {
-        Text("Software Licenses")
-      }
-        .sheet(isPresented: $licensesPresented) {
-          LicenseListView(visible: self.$licensesPresented)
-        }
-        .padding([.bottom], 25)
-      
-      if showLogoutButton {
-        VStack {
-          if sessionController.user != nil {
-            Text("Logged in as \(sessionController.user?.username ?? "")")
-              .font(.uiCaption)
-              .foregroundColor(.contentText)
           }
-          MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-            self.sessionController.logout()
-            self.presentationMode.wrappedValue.dismiss()
-          }
+          .padding([.bottom, .horizontal], 18)
         }
-        .padding([.bottom, .horizontal], 18)
       }
-    }
-    .background(Color.modalBackground)
-  }
-  
-  private func populateDetail(for option: SettingsOption) -> String {
-    switch option {
-    case .closedCaptionOn, .wifiOnlyDownloads:
-      return ""
-    case .downloadQuality:
-      return SettingsManager.current.downloadQuality.display
-    case .playbackSpeed:
-      return SettingsManager.current.playbackSpeed.display
+        .background(Color.backgroundColor)
     }
   }
   
-  private func isOn(for option: SettingsOption) -> Bool {
-    switch option {
-    case .closedCaptionOn:
-      return SettingsManager.current.closedCaptionOn
-    case .wifiOnlyDownloads:
-      return SettingsManager.current.wifiOnlyDownloads
-    default:
-      return false
+  var dismissButton: some View {
+    Button(action: {
+      self.presentationMode.wrappedValue.dismiss()
+    }) {
+      Image.close
+        .foregroundColor(.iconButton)
     }
   }
 }
+
+//#if DEBUG
+//struct SettingsView_Previews: PreviewProvider {
+//  static var previews: some View {
+//    SwiftUI.Group {
+//      settingsView.colorScheme(.dark)
+//      settingsView.colorScheme(.light)
+//    }
+//  }
+//
+//  static var settingsView: some View {
+//    SettingsView(showLogoutButton: true)
+//      .background(Color.backgroundColor)
+//  }
+//}
+//#endif
