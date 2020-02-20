@@ -36,13 +36,13 @@ struct ProContentLockedOverlayView: View {
         
         Text("Pro Course")
           .font(.uiTitle1)
-          .foregroundColor(.white)
+          .foregroundColor(.titleText)
       }
       
       Text(Constants.detailContentLockedCosPro)
         .multilineTextAlignment(.center)
         .font(.uiLabel)
-        .foregroundColor(.white)
+        .foregroundColor(.titleText)
         .padding([.leading, .trailing], 20)
         .lineLimit(3)
         .fixedSize(horizontal: false, vertical: true)
