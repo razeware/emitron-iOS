@@ -70,7 +70,7 @@ struct SettingsList: View {
           )
         ) {
           SettingsDisclosureRow(title: option.title)
-      })
+        })
     }
   }
 }

@@ -72,10 +72,9 @@ struct CardView: View {
           .lineSpacing(3)
           .foregroundColor(.contentText)
         
-        HStack {
+        HStack(spacing: 8) {
           if model.professional {
             ProTag()
-              .padding([.trailing], 5)
           }
           
           completedTagOrReleasedAt
