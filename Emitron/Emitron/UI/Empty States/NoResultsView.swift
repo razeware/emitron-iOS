@@ -50,6 +50,7 @@ struct NoResultsView: View {
         .padding([.leading, .trailing], 55)
 
       Text(contentScreen.detailMesage)
+        .lineSpacing(8)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)

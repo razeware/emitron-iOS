@@ -49,6 +49,7 @@ struct ReloadView: View {
         .padding([.leading, .trailing, .bottom], 20)
       
       Text("Please try again.")
+        .lineSpacing(8)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
