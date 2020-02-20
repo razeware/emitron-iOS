@@ -138,6 +138,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       switch result {
       case .failure(let error):
         self.state = .failed
+        self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log(additionalParams: nil)
