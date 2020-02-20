@@ -32,10 +32,7 @@ import KingfisherSwiftUI
 struct CardView: View {
   let model: ContentListDisplayable
   let dynamicContent: DynamicContentDisplayable
-  private let animation: Animation = .easeIn
 
-  //TODO - Multiline Text: There are some issues with giving views frames that result in .lineLimit(nil) not respecting the command, and
-  // results in truncating the text
   var body: some View {
     VStack(spacing: 0) {
       VStack(alignment: .leading, spacing: 0) {
@@ -108,7 +105,7 @@ struct CardView: View {
   
   private var progressBar: AnyView? {
     if case .inProgress(let progress) = dynamicContent.viewProgress {
-      return AnyView(ProgressBarView(progress: progress, isRounded: true))
+      return AnyView(ProgressBarView(progress: progress, isRounded: true, backgroundColor: .clear))
     } else {
       return nil
     }
