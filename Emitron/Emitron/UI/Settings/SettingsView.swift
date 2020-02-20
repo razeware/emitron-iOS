@@ -31,8 +31,6 @@ import SwiftUI
 // These views could really do with a refactor. The data flow is a mess
 
 struct SettingsView: View {
-  var rows: [SettingsOption] = [.playbackSpeed, .wifiOnlyDownloads, .downloadQuality, .closedCaptionOn]
-  
   @State private var settingsOptionsPresented: Bool = false
   @State private var licensesPresented: Bool = false
   @State var selectedOption: SettingsOption = .playbackSpeed
@@ -95,7 +93,7 @@ struct SettingsView: View {
           }, title: option.title,
              detail: self.populateDetail(for: option),
              isToggle: option.isToggle,
-             isOn: false,
+             isOn: self.isOn(for: option),
              rightImage: Image(systemName: "chevron.right"))
             .sheet(isPresented: self.$settingsOptionsPresented) {
               SettingsOptionsView(
@@ -146,6 +144,17 @@ struct SettingsView: View {
       return SettingsManager.current.downloadQuality.display
     case .playbackSpeed:
       return SettingsManager.current.playbackSpeed.display
+    }
+  }
+  
+  private func isOn(for option: SettingsOption) -> Bool {
+    switch option {
+    case .closedCaptionOn:
+      return SettingsManager.current.closedCaptionOn
+    case .wifiOnlyDownloads:
+      return SettingsManager.current.wifiOnlyDownloads
+    default:
+      return false
     }
   }
 }
