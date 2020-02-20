@@ -1,4 +1,4 @@
-/// Copyright (c) 2019 Razeware LLC
+/// Copyright (c) 2020 Razeware LLC
 /// 
 /// Permission is hereby granted, free of charge, to any person obtaining a copy
 /// of this software and associated documentation files (the "Software"), to deal
@@ -28,78 +28,31 @@
 
 import SwiftUI
 
-private enum Layout {
-  static let padding: CGFloat = 11
-}
-
-struct TitleDetailView: View {
-  
-  var callback: (() -> Void)?
-  var title: String
-  var detail: String?
-  var isToggle: Bool
-  var isOn: Bool
-  var rightImage: Image?
+struct SettingsDisclosureRow: View {
+  let title: String
   
   var body: some View {
-    Button(action: {
-      if !self.isToggle {
-        self.callback?()
-      }
-    }, label: {
-      
-      VStack(spacing: 0) {
-        HStack {
-          Text(self.title)
-            .foregroundColor(.titleText)
-            .font(.uiBodyAppleDefault)
-            .padding([.vertical], Layout.padding)
-          
-          Spacer()
-          
-          self.textOrToggleView()
-          self.addRightImage()
-        }
-        
-        Rectangle()
-          .frame(height: 1)
-          .foregroundColor(Color.separator)
-      }
-    })
-  }
-  
-  private func textOrToggleView() -> AnyView? {
-    if let detail = detail, !isToggle {
-      return AnyView(
-        Text(detail)
-          .foregroundColor(.iconButton)
+    VStack(alignment: .leading, spacing: 0) {
+      HStack {
+        Text(title)
           .font(.uiBodyAppleDefault)
-      )
-    } else if self.isToggle {
-      return AnyView(
-        CustomToggleView(isOn: self.isOn) {
-          self.callback?()
-        }
-      )
-    }
-    
-    return nil
-  }
-  
-  private func addRightImage() -> AnyView? {
-    if let rightImage = rightImage, !self.isToggle {
-      return AnyView(
-        rightImage
+          .foregroundColor(.titleText)
+          .padding([.vertical], SettingsLayout.rowSpacing)
+        
+        Spacer()
+        
+        Image(systemName: "chevron.right")
           .foregroundColor(.iconButton)
-      )
+      }
+
+      Rectangle()
+        .fill(Color.separator)
+        .frame(height: 1)
     }
-    
-    return nil
   }
 }
 
-#if DEBUG
-struct TitleDetailsView_Previews: PreviewProvider {
+struct SettingsDisclosureRow_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
       rows.colorScheme(.dark)
@@ -108,22 +61,8 @@ struct TitleDetailsView_Previews: PreviewProvider {
   }
   
   static var rows: some View {
-    VStack(spacing: 0) {
-      TitleDetailView(
-        title: "Title",
-        detail: "Detail",
-        isToggle: false,
-        isOn: false,
-        rightImage: Image(systemName: "chevron.right")
-      )
-      
-      TitleDetailView(
-        title: "Boolean",
-        detail: "Detail",
-        isToggle: true,
-        isOn: true
-      )
-    }.background(Color.backgroundColor)
+    SettingsDisclosureRow(title: "Disclosure")
+      .padding()
+      .background(Color.backgroundColor)
   }
 }
-#endif

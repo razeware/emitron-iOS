@@ -26,45 +26,67 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
-  case half
-  case standard
-  case onePointFive
-  case double
+struct SettingsSelectionView<Setting: SettingsSelectable>: View {
+  let title: String
+  @Binding var settingsOption: Setting
   
-  static func fromDisplay(_ value: String) -> PlaybackSpeed? {
-    allCases.first { $0.display == value }
+  var body: some View {
+    VStack {
+      ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
+        VStack(spacing: 0) {
+          Button(action: {
+            self.settingsOption = option
+          }) {
+            HStack {
+              Text(option.display)
+                .font(.uiBodyAppleDefault)
+                .foregroundColor(.titleText)
+                .padding([.vertical], SettingsLayout.rowSpacing)
+            
+              Spacer()
+              
+              if option == self.settingsOption {
+                Image.checkmark
+                  .foregroundColor(.iconButton)
+              }
+            }
+          }
+          
+          Rectangle()
+            .fill(Color.separator)
+            .frame(height: 1)
+        }
+      }
+      
+      Spacer()
+    }
+      .navigationBarTitle(
+        Text(title)
+          .font(.uiTitle5)
+          .foregroundColor(.titleText),
+        displayMode: .inline
+      )
+        .padding(20)
+        .background(Color.backgroundColor)
   }
-  
-  var rate: Float {
-    switch self {
-    case .half:
-      return 0.5
-    case .standard:
-      return 1.0
-    case .onePointFive:
-      return 1.5
-    case .double:
-      return 2.0
+}
+
+struct SettingsSelectionView_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      view.colorScheme(.dark)
+      view.colorScheme(.light)
     }
   }
   
-  var display: String {
-    switch self {
-    case .half:
-      return "0.5x"
-    case .standard:
-      return "1.0x"
-    case .onePointFive:
-      return "1.5x"
-    case .double:
-      return "2.0x"
+  static var view: some View {
+    VStack {
+      SettingsSelectionView(title: "Download", settingsOption: .constant(Attachment.Kind.sdVideoFile))
+      SettingsSelectionView(title: "Playback Speed", settingsOption: .constant(PlaybackSpeed.standard))
     }
-  }
-  
-  static var selectableCases: [PlaybackSpeed] {
-    allCases
+      .padding()
+      .background(Color.backgroundColor)
   }
 }

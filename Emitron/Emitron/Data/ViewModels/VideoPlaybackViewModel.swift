@@ -317,6 +317,8 @@ final class VideoPlaybackViewModel {
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
       if let option = options.first, SettingsManager.current.closedCaptionOn {
         playerItem.select(option, in: group)
+      } else {
+        playerItem.select(nil, in: group)
       }
     }
   }

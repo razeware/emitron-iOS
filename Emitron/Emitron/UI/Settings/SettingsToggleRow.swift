@@ -26,45 +26,44 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
-  case half
-  case standard
-  case onePointFive
-  case double
+struct SettingsToggleRow: View {
+  let title: String
+  @Binding var isOn: Bool
   
-  static func fromDisplay(_ value: String) -> PlaybackSpeed? {
-    allCases.first { $0.display == value }
-  }
-  
-  var rate: Float {
-    switch self {
-    case .half:
-      return 0.5
-    case .standard:
-      return 1.0
-    case .onePointFive:
-      return 1.5
-    case .double:
-      return 2.0
+  var body: some View {
+    VStack(spacing: 0) {
+      Toggle(isOn: $isOn) {
+        Text(title)
+          .foregroundColor(.titleText)
+          .font(.uiBodyAppleDefault)
+          .padding([.vertical], SettingsLayout.rowSpacing)
+      }
+      
+      Rectangle()
+        .fill(Color.separator)
+        .frame(height: 1)
     }
-  }
-  
-  var display: String {
-    switch self {
-    case .half:
-      return "0.5x"
-    case .standard:
-      return "1.0x"
-    case .onePointFive:
-      return "1.5x"
-    case .double:
-      return "2.0x"
-    }
-  }
-  
-  static var selectableCases: [PlaybackSpeed] {
-    allCases
   }
 }
+
+#if DEBUG
+struct SettingsToggleRow_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      rows.colorScheme(.dark)
+      rows.colorScheme(.light)
+    }
+  }
+  
+  static var rows: some View {
+    VStack(spacing: 0) {
+      SettingsToggleRow(title: "Boolean Row [Off]", isOn: .constant(false))
+      SettingsToggleRow(title: "Boolean Row [On]", isOn: .constant(true))
+    }
+    .padding()
+    .background(Color.backgroundColor)
+  }
+}
+#endif

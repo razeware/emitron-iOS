@@ -44,4 +44,8 @@ extension Image {
   static var materialIconPlay: Image {
     Image("materialIconPlay")
   }
+  
+  static var checkmark: Image {
+    Image("checkmark")
+  }
 }

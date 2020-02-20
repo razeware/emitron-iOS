@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 enum SettingsOption: Int, Identifiable, CaseIterable {
   case playbackSpeed

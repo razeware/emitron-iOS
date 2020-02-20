@@ -29,7 +29,7 @@
 import Foundation
 import Combine
 
-final class SettingsManager {
+final class SettingsManager: ObservableObject {
   // MARK: Internal Properties
   private let jsonEncoder = JSONEncoder()
   private let jsonDecoder = JSONDecoder()
@@ -84,6 +84,7 @@ extension SettingsManager: EmitronSettings {
       return Set(data.compactMap { try? jsonDecoder.decode(Filter.self, from: $0) })
     }
     set {
+      objectWillChange.send()
       let encodedFilters = newValue.compactMap { try? jsonEncoder.encode($0) }
       userDefaults.set(encodedFilters, forKey: .filters)
     }
@@ -98,6 +99,7 @@ extension SettingsManager: EmitronSettings {
       return sortFilter
     }
     set {
+      objectWillChange.send()
       let encodedFilter = try? jsonEncoder.encode(newValue)
       userDefaults.set(encodedFilter, forKey: .sortFilters)
     }
@@ -108,6 +110,7 @@ extension SettingsManager: EmitronSettings {
       userDefaults.object(forKey: .playbackToken) as? String
     }
     set {
+      objectWillChange.send()
       userDefaults.set(newValue, forKey: .playbackToken)
     }
   }
@@ -121,6 +124,7 @@ extension SettingsManager: EmitronSettings {
       return playbackSpeed
     }
     set {
+      objectWillChange.send()
       userDefaults.set(newValue.rawValue, forKey: .playbackSpeed)
       playbackSpeedSubject.send(newValue)
     }
@@ -131,6 +135,7 @@ extension SettingsManager: EmitronSettings {
       userDefaults.object(forKey: .closedCaptionOn) as? Bool ?? false
     }
     set {
+      objectWillChange.send()
       userDefaults.set(newValue, forKey: .closedCaptionOn)
       closedCaptionOnSubject.send(newValue)
     }
@@ -146,6 +151,7 @@ extension SettingsManager: EmitronSettings {
       return downloadQuality
     }
     set {
+      objectWillChange.send()
       userDefaults.set(newValue.rawValue, forKey: .downloadQuality)
       downloadQualitySubject.send(newValue)
     }
@@ -156,6 +162,7 @@ extension SettingsManager: EmitronSettings {
       userDefaults.object(forKey: .wifiOnlyDownloads) as? Bool ?? false
     }
     set {
+      objectWillChange.send()
       userDefaults.set(newValue, forKey: .wifiOnlyDownloads)
       wifiOnlyDownloadsSubject.send(newValue)
     }
