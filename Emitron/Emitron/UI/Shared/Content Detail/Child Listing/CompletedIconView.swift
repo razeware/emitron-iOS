@@ -36,7 +36,7 @@ struct CompletedIconView: View {
         .foregroundColor(Color.accent)
         .cornerRadius(6)
       
-      Image("checkmark")
+      Image.checkmark
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
         .foregroundColor(Color.buttonText)
