@@ -48,7 +48,7 @@ enum ContentScreen {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library:
-      return "We couldn't find anything with that search criteria"
+      return "We couldn't find anything"
     case .downloads(permitted: true):
       return "You haven't downloaded any tutorials yet"
     case .downloads(permitted: false):
@@ -65,7 +65,7 @@ enum ContentScreen {
   var detailMesage: String {
     switch self {
     case .library:
-      return "Try removing some filters or checking your WiFi settings."
+      return "Try removing some filters."
     case .bookmarked:
       return "Tap the bookmark icon to bookmark a video course or screencast."
     case .inProgress:
