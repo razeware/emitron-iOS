@@ -28,10 +28,18 @@
 
 import SwiftUI
 
+enum DownloadIconLayout {
+  static let size: CGFloat = 20
+}
+
 struct DownloadIcon: View {
   let downloadProgress: DownloadProgressDisplayable
   
   var body: some View {
+    icon.frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+  }
+  
+  var icon: some View {
     switch downloadProgress {
     case .downloadable:
       return AnyView(ArrowInCircleView(fillColour: .activeIcon))

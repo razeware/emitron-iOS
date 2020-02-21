@@ -77,7 +77,7 @@ struct TagView: View {
 
 struct TagView_Previews: PreviewProvider {
   static var previews: some View {
-      VStack(spacing: 20) {
+    VStack(spacing: 20) {
       TagView(
         text: "this is a tag",
         textColor: Color.white,

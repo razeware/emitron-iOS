@@ -41,6 +41,10 @@ extension Image {
     Image("padlock")
   }
   
+  static var download: Image {
+    Image("download")
+  }
+  
   static var materialIconPlay: Image {
     Image("materialIconPlay")
   }
