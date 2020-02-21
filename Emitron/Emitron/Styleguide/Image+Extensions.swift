@@ -48,4 +48,8 @@ extension Image {
   static var checkmark: Image {
     Image("checkmark")
   }
+  
+  static var artworkDownloadSwitch: Image {
+    Image("artworkDownloadSwitch")
+  }
 }
