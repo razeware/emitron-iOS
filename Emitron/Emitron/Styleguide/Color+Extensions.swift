@@ -90,6 +90,10 @@ extension Color {
     Color("filterTagIcon")
   }
   
+  static var filterTagShadow: Color {
+    Color("filterTagShadow")
+  }
+  
   static var filterTagText: Color {
     Color("filterTagText")
   }
@@ -100,6 +104,10 @@ extension Color {
   
   static var filterTagDestructiveIcon: Color {
     Color("filterTagDestructiveIcon")
+  }
+  
+  static var filterTagDestructiveShadow: Color {
+    Color("filterTagDestructiveShadow")
   }
   
   static var filterTagDestructiveText: Color {
