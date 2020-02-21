@@ -32,17 +32,36 @@ struct CourseHeaderView: View {
   let name: String
   
   var body: some View {
-    Text(name)
-      .font(.uiTitle3)
-      .foregroundColor(.titleText)
-      .padding([.bottom], 10)
+    VStack(alignment: .leading, spacing: 12) {
+      Text(name)
+        .font(.uiTitle3)
+        .foregroundColor(.titleText)
+      
+      Rectangle()
+        .fill(Color.borderColor)
+        .frame(height: 1)
+    }
+    .padding([.bottom], 16)
   }
 }
 
 #if DEBUG
 struct CourseHeaderView_Previews: PreviewProvider {
-    static var previews: some View {
-        CourseHeaderView(name: "Intro")
+  static var previews: some View {
+    SwiftUI.Group {
+      headers.colorScheme(.light)
+      headers.colorScheme(.dark)
     }
+  }
+  
+  static var headers: some View {
+    VStack(spacing: 20) {
+      CourseHeaderView(name: "Intro")
+      CourseHeaderView(name: "Middle Part")
+      CourseHeaderView(name: "Conclusion")
+    }
+      .padding()
+      .background(Color.backgroundColor)
+  }
 }
 #endif
