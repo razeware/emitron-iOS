@@ -28,13 +28,13 @@
 
 import SwiftUI
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
 struct VideoOverlayButtonView: View {
+  private struct SizeKey: PreferenceKey {
+    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+      value = value ?? nextValue()
+    }
+  }
+  
   @State private var size: CGSize?
   var text: String?
   

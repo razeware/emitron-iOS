@@ -54,13 +54,13 @@ enum MainButtonType {
   }
 }
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
 struct MainButtonView: View {
+  private struct SizeKey: PreferenceKey {
+    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+      value = value ?? nextValue()
+    }
+  }
+  
   @State private var height: CGFloat?
   var title: String
   var type: MainButtonType

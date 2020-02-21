@@ -132,7 +132,7 @@ struct CardView: View {
     )
   }
 }
-/*
+
 #if DEBUG
 struct MockContentListDisplayable: ContentListDisplayable {
   var id: Int = 1
@@ -204,4 +204,3 @@ struct CardView_Previews: PreviewProvider {
   }
 }
 #endif
-*/

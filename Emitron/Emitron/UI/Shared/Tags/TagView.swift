@@ -28,13 +28,13 @@
 
 import SwiftUI
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
 struct TagView: View {
+  private struct SizeKey: PreferenceKey {
+    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+      value = value ?? nextValue()
+    }
+  }
+  
   @State private var height: CGFloat?
   
   let text: String

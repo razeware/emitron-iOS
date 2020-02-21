@@ -28,13 +28,13 @@
 
 import SwiftUI
 
-private struct SizeKey: PreferenceKey {
-  static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-    value = value ?? nextValue()
-  }
-}
-
 struct SearchFieldView: View {
+  private struct SizeKey: PreferenceKey {
+    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+      value = value ?? nextValue()
+    }
+  }
+  
   @Binding var searchString: String
   var action: () -> Void = {}
   @State private var height: CGFloat?
