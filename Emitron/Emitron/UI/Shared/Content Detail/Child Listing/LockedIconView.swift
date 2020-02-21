@@ -30,20 +30,26 @@ import SwiftUI
 
 struct LockedIconView: View {
   var body: some View {
-    ZStack {
-      Rectangle()
-        .frame(width: .childContentButtonSide, height: .childContentButtonSide, alignment: .center)
-        .foregroundColor(.secondaryButtonBackground)
-        .cornerRadius(6)
-      
-      Image.padlock
-        .frame(width: 10, height: 15, alignment: .center)
-    }
+    Image.padlock
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(width: 18.0, height: 18.0)
+      .foregroundColor(.activeIcon)
+      .frame(width: .childContentButtonSide, height: .childContentButtonSide)
   }
 }
 
 struct LockedIconView_Previews: PreviewProvider {
   static var previews: some View {
+    HStack {
+      padlock.colorScheme(.dark)
+      padlock.colorScheme(.light)
+    }
+  }
+  
+  static var padlock: some View {
     LockedIconView()
+      .padding()
+      .background(Color.backgroundColor)
   }
 }
