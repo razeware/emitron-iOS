@@ -58,14 +58,6 @@ struct SnackbarView: View {
   
   var body: some View {
     HStack {
-      Text(state.status.tagText)
-        .kerning(0.34)
-        .padding(CGFloat(5.5))
-        .background(Color.snackTabBg)
-        .foregroundColor(state.status.color)
-        .cornerRadius(CGFloat(8.5))
-        .font(.uiUppercase)
-      
       Text(state.message)
         .font(.uiBodyCustom)
         .foregroundColor(Color.snackText)
