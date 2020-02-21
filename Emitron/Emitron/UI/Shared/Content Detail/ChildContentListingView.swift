@@ -125,13 +125,14 @@ struct ChildContentListingView: View {
   }
   
   private var loadingView: some View {
-    // HACK: To put it in the middle we have to wrap it in Geometry Reader
-    GeometryReader { _ in
+    HStack {
+      Spacer()
       LoadingView()
+      Spacer()
     }
-    .listRowInsets(EdgeInsets())
-    .listRowBackground(Color.backgroundColor)
-    .background(Color.backgroundColor)
+      .listRowInsets(EdgeInsets())
+      .listRowBackground(Color.backgroundColor)
+      .background(Color.backgroundColor)
   }
   
   private var reloadView: AnyView? {
