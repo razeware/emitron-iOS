@@ -41,6 +41,10 @@ extension Image {
     Image("padlock")
   }
   
+  static var bookmark: Image {
+    Image("bookmark")
+  }
+  
   static var download: Image {
     Image("download")
   }

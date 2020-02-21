@@ -125,9 +125,10 @@ struct CardView: View {
     guard dynamicContent.bookmarked else { return nil }
     
     return AnyView(
-      Image("bookmarkActive")
+      Image.bookmark
         .resizable()
         .frame(width: 21, height: 21)
+        .foregroundColor(Color.inactiveIcon)
     )
   }
 }

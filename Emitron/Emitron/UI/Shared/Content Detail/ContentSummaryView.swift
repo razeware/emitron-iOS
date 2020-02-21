@@ -29,7 +29,7 @@
 import SwiftUI
 
 private enum Layout {
-  static let buttonSize: CGFloat = 21
+  static let buttonSize: CGFloat = 20
 }
 
 struct ContentSummaryView: View {
@@ -129,12 +129,13 @@ struct ContentSummaryView: View {
     //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     
-    let imageName = dynamicContentViewModel.bookmarked ? "bookmarkActive" : "bookmarkInactive"
+    let colour = dynamicContentViewModel.bookmarked ? Color.inactiveIcon : .activeIcon
     
     return AnyView(
-      Image(imageName)
+      Image.bookmark
         .resizable()
         .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+      .foregroundColor(colour)
         .onTapGesture {
           self.bookmark()
         }
