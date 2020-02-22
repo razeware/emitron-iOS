@@ -36,12 +36,16 @@ struct ContentListView: View {
 
   var body: some View {
     contentView
+      .onAppear {
+        if self.contentRepository.state == .initial {
+          self.contentRepository.reload()
+        }
+      }
   }
 
   private var contentView: AnyView {
     switch contentRepository.state {
     case .initial:
-      contentRepository.reload()
       return AnyView(loadingView)
     case .loading:
       return AnyView(loadingView)
@@ -59,7 +63,7 @@ struct ContentListView: View {
   private func cardTableNavView(withDelete: Bool = false) -> some View {
       ForEach(contentRepository.contents, id: \.id) { partialContent in
         ZStack {
-          CardContainerView(
+          CardView(
             model: partialContent,
             dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
           )
