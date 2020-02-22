@@ -29,6 +29,19 @@ platform :ios do
     slack(message: 'emitron::β successfully uploaded to TestFlight!')
   end
 
+  desc 'Push a new production build to TestFlight'
+  lane :ci_release do
+    setup_ci(provider: 'travis', force: true) # Until GA are properly supported
+    sync_code_signing(type: 'appstore', readonly: true)
+    Dir.chdir('..') do
+      sh 'xcodebuild -resolvePackageDependencies'
+    end
+    build_app(scheme: 'Emitron', configuration: 'Release')
+    changelog_from_git_commits
+    upload_to_testflight(skip_waiting_for_build_processing: true)
+    slack(message: 'emitron::release successfully uploaded to TestFlight!')
+  end
+
   lane :tests do
     Dir.chdir('..') do
       sh 'xcodebuild -resolvePackageDependencies'
