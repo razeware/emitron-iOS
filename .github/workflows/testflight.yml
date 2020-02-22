@@ -1,0 +1,43 @@
+name: Push to Testflight
+
+on:
+  push:
+    branches:
+      - development
+
+jobs:
+  build:
+
+    runs-on: macOS-latest
+
+    steps:
+    - uses: actions/checkout@v1
+    - name: Switch to Xcode 11.3
+      run: sudo xcode-select --switch /Applications/Xcode_11.3.app
+    - name: Update fastlane
+      run: |
+        cd Emitron
+        bundle install
+        bundle exec fastlane -v
+    - name: Download secrets
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        scripts/download_s3.sh development > Emitron/Emitron/Configuration/secrets.development.xcconfig
+        scripts/download_s3.sh beta > Emitron/Emitron/Configuration/secrets.beta.xcconfig
+        scripts/download_s3.sh production > Emitron/Emitron/Configuration/secrets.production.xcconfig
+    - name: Execute fastlane
+      env:
+        FASTLANE_USER: engineering@razeware.com
+        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
+        FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
+        MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+        MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
+        SLACK_URL: ${{ secrets.SLACK_URL }}
+        FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
+        FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
+      run: |
+        cd Emitron
+        bundle exec fastlane -v
+        bundle exec fastlane ci_beta

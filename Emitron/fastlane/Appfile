@@ -1,0 +1,13 @@
+app_identifier('com.razeware.emitron.ios') # The bundle identifier of your app
+apple_id('engineering@razeware.com') # Your Apple email address
+
+itc_team_id('279596') # App Store Connect Team ID
+team_id('KFCNEC27GU') # Developer Portal Team ID
+
+# For more information about the Appfile, see:
+#     https://docs.fastlane.tools/advanced/#appfile
+
+
+for_lane :ci_beta do
+  app_identifier('com.razeware.emitron.ios.beta')
+end

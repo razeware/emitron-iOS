@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="19B88" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+    <entity name="Bookmark" representedClassName="Bookmark" syncable="YES">
+        <attribute name="createdAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="content" maxCount="1" deletionRule="Nullify" destinationEntity="Content" inverseName="bookmark" inverseEntity="Content"/>
+    </entity>
+    <entity name="Category" representedClassName="Category" syncable="YES">
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="ordinal" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="uri" attributeType="String"/>
+        <relationship name="contents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Content" inverseName="categories" inverseEntity="Content"/>
+    </entity>
+    <entity name="Content" representedClassName="Content" syncable="YES">
+        <attribute name="bookmarked" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="cardArtworkUrl" attributeType="URI"/>
+        <attribute name="contentTypeString" attributeType="String"/>
+        <attribute name="contributorString" attributeType="String"/>
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="difficulty" attributeType="String"/>
+        <attribute name="duration" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="free" attributeType="Boolean" defaultValueString="NO" usesScalarValueType="YES"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="index" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="popularity" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="releasedAt" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="technologyTripleString" attributeType="String"/>
+        <attribute name="uri" attributeType="String"/>
+        <attribute name="videoID" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="bookmark" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Bookmark" inverseName="content" inverseEntity="Bookmark"/>
+        <relationship name="categories" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Category" inverseName="contents" inverseEntity="Category"/>
+        <relationship name="childGroups" optional="YES" toMany="YES" deletionRule="Cascade" ordered="YES" destinationEntity="Group" inverseName="parentContent" inverseEntity="Group"/>
+        <relationship name="domains" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Domain" inverseName="contents" inverseEntity="Domain"/>
+        <relationship name="download" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="Download" inverseName="content" inverseEntity="Download"/>
+        <relationship name="parentGroup" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Group" inverseName="childContents" inverseEntity="Group"/>
+        <relationship name="progression" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="Progression" inverseName="content" inverseEntity="Progression"/>
+    </entity>
+    <entity name="Domain" representedClassName="Domain" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="level" attributeType="String"/>
+        <attribute name="name" attributeType="String"/>
+        <attribute name="slug" attributeType="String"/>
+        <relationship name="contents" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="Content" inverseName="domains" inverseEntity="Content"/>
+    </entity>
+    <entity name="Download" representedClassName="Download" syncable="YES">
+        <attribute name="dateRequested" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="fileName" optional="YES" attributeType="String"/>
+        <attribute name="id" attributeType="UUID" usesScalarValueType="NO"/>
+        <attribute name="lastValidated" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="localUrl" optional="YES" attributeType="URI"/>
+        <attribute name="progress" attributeType="Float" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="remoteUrl" optional="YES" attributeType="URI"/>
+        <attribute name="stateInt" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="content" maxCount="1" deletionRule="Nullify" destinationEntity="Content" inverseName="download" inverseEntity="Content"/>
+    </entity>
+    <entity name="Group" representedClassName="Group" syncable="YES">
+        <attribute name="desc" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="ordinal" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <relationship name="childContents" toMany="YES" deletionRule="Nullify" ordered="YES" destinationEntity="Content" inverseName="parentGroup" inverseEntity="Content"/>
+        <relationship name="parentContent" maxCount="1" deletionRule="Nullify" destinationEntity="Content" inverseName="childGroups" inverseEntity="Content"/>
+    </entity>
+    <entity name="Progression" representedClassName="Progression" syncable="YES">
+        <attribute name="createdAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <attribute name="finished" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="id" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="percentComplete" optional="YES" attributeType="Double" defaultValueString="0.0" usesScalarValueType="YES"/>
+        <attribute name="progress" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="target" optional="YES" attributeType="Integer 64" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="updatedAt" optional="YES" attributeType="Date" usesScalarValueType="NO"/>
+        <relationship name="content" maxCount="1" deletionRule="Nullify" destinationEntity="Content" inverseName="progression" inverseEntity="Content"/>
+    </entity>
+    <elements>
+        <element name="Bookmark" positionX="-362.64453125" positionY="-861.57421875" width="128" height="88"/>
+        <element name="Category" positionX="-441.73828125" positionY="-760.60546875" width="128" height="118"/>
+        <element name="Content" positionX="-33.51171875" positionY="-918.859375" width="128" height="388"/>
+        <element name="Domain" positionX="-436.765625" positionY="-606.31640625" width="128" height="133"/>
+        <element name="Download" positionX="-369.83203125" positionY="-432.92578125" width="128" height="178"/>
+        <element name="Group" positionX="193.703125" positionY="-689.27734375" width="128" height="133"/>
+        <element name="Progression" positionX="-65.2578125" positionY="-422.87109375" width="128" height="163"/>
+    </elements>
+</model>

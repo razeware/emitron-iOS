@@ -1,0 +1,81 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "domains",
+      "attributes": {
+        "name": "iOS \u0026 Swift",
+        "slug": "ios",
+        "description": "Learn iOS development in Swift",
+        "level": "production",
+        "ordinal": 1
+      }
+    },
+    {
+      "id": "2",
+      "type": "domains",
+      "attributes": {
+        "name": "Android \u0026 Kotlin",
+        "slug": "android",
+        "description": "Learn Android development in Kotlin",
+        "level": "production",
+        "ordinal": 2
+      }
+    },
+    {
+      "id": "8",
+      "type": "domains",
+      "attributes": {
+        "name": "Server-Side Swift",
+        "slug": "server-side-swift",
+        "description": "Learn web development with Swift",
+        "level": "beta",
+        "ordinal": 3
+      }
+    },
+    {
+      "id": "3",
+      "type": "domains",
+      "attributes": {
+        "name": "Unity",
+        "slug": "unity",
+        "description": "Learn how to create games in Unity, a powerful and popular game engine.",
+        "level": "beta",
+        "ordinal": 4
+      }
+    },
+    {
+      "id": "9",
+      "type": "domains",
+      "attributes": {
+        "name": "Flutter",
+        "slug": "flutter",
+        "description": "Learn multi-platform development with Flutter using our high-quality step-by-step tutorials!",
+        "level": "beta",
+        "ordinal": 5
+      }
+    },
+    {
+      "id": "5",
+      "type": "domains",
+      "attributes": {
+        "name": "macOS",
+        "slug": "macos",
+        "description": "Learn macOS development",
+        "level": "archived",
+        "ordinal": 7
+      }
+    },
+    {
+      "id": "6",
+      "type": "domains",
+      "attributes": {
+        "name": "Archive",
+        "slug": "archive",
+        "description": "",
+        "level": "archived",
+        "ordinal": 9
+      }
+    }
+  ]
+}
