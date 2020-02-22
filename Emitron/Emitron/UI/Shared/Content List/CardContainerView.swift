@@ -33,9 +33,7 @@ struct CardContainerView: View {
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   
   var body: some View {
-    dynamicContentViewModel.initialiseIfRequired()
-    
-    return CardView(
+    CardView(
       model: model,
       dynamicContent: dynamicContentViewModel as DynamicContentDisplayable
     )
@@ -47,6 +45,9 @@ struct CardContainerView: View {
       // better way at the moment. Sorry.
       .if(dynamicContentViewModel.state != .hasData) {
         $0.background(Color.clear)
+      }
+      .onAppear {
+        self.dynamicContentViewModel.initialiseIfRequired()
       }
   }
 }
