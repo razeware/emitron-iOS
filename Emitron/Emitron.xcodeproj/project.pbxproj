@@ -611,6 +611,7 @@
 		2200E45C23BD9F5F00507B1A /* ViewModels */ = {
 			isa = PBXGroup;
 			children = (
+				8BFC74C22364A9BE001979F1 /* ContentScreen.swift */,
 				22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */,
 				22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */,
 				22E2267923CA22C200A83601 /* DataCacheChildContentsViewModel.swift */,
@@ -917,6 +918,7 @@
 				2228E40323B999B100E103AA /* Other Repositories */,
 				22B8265F23AF5B3E00D4BA23 /* DataCache.swift */,
 				B621DD5022F5EEC500A1F27A /* DataManager.swift */,
+				B62B9A8322DF771200122CE8 /* DataState.swift */,
 				223D77D023B0DD3A005BE95D /* Repository.swift */,
 			);
 			path = Data;
@@ -1133,14 +1135,6 @@
 			path = UIKit;
 			sourceTree = "<group>";
 		};
-		8BFC74BF23649FB4001979F1 /* ContentVMs */ = {
-			isa = PBXGroup;
-			children = (
-				8BFC74C22364A9BE001979F1 /* ContentScreen.swift */,
-			);
-			path = ContentVMs;
-			sourceTree = "<group>";
-		};
 		9535A4FF22D657B0000DA861 /* Persistence */ = {
 			isa = PBXGroup;
 			children = (
@@ -1290,7 +1284,7 @@
 				B6C4F3D322E6EE200087ED10 /* Filters */,
 				B6DF2FAD22CA435A0081A3A3 /* Guardpost */,
 				B6C4F3E022E72CED0087ED10 /* Logging */,
-				B6FC15C822CB5D950078CEDB /* ModelControllers */,
+				B6FC15C822CB5D950078CEDB /* Sessions */,
 				95CD793D22F0C0890080C407 /* Models */,
 				B6DF2F9222CA012C0081A3A3 /* Networking */,
 				9535A4FF22D657B0000DA861 /* Persistence */,
@@ -1340,16 +1334,17 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
-				22C640FD23F805D900CBFDE5 /* Generic */,
-				2213193D23E4E83300F15816 /* Empty States */,
-				22E88F5F23DF8D7C0016EB36 /* Settings */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
-				B6FC15AA22CB52430078CEDB /* Downloads */,
-				B6FC15A922CB523C0078CEDB /* Library */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
+				B6FC15AA22CB52430078CEDB /* Downloads */,
+				2213193D23E4E83300F15816 /* Empty States */,
+				22C640FD23F805D900CBFDE5 /* Generic */,
+				B6FC15A922CB523C0078CEDB /* Library */,
 				B6FC15AB22CB52480078CEDB /* My Tutorials */,
+				22E88F5F23DF8D7C0016EB36 /* Settings */,
 				B6FC15AC22CB52570078CEDB /* Shared */,
 				8B28D2B123546CFD005FCC08 /* UIKit */,
+				229F0AC323BB29230004DD4F /* Video */,
 			);
 			path = UI;
 			sourceTree = "<group>";
@@ -1482,20 +1477,17 @@
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
-				229F0AC323BB29230004DD4F /* Video */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
 		};
-		B6FC15C822CB5D950078CEDB /* ModelControllers */ = {
+		B6FC15C822CB5D950078CEDB /* Sessions */ = {
 			isa = PBXGroup;
 			children = (
-				8BFC74BF23649FB4001979F1 /* ContentVMs */,
-				B62B9A8322DF771200122CE8 /* DataState.swift */,
 				95A4513322E224B500D24E56 /* SessionController.swift */,
 				2213193B23E47B6A00F15816 /* SessionController+States.swift */,
 			);
-			path = ModelControllers;
+			path = Sessions;
 			sourceTree = "<group>";
 		};
 		B6FC15D322CB664B0078CEDB /* Services */ = {

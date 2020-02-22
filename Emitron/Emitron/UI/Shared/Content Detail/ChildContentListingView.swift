@@ -103,10 +103,12 @@ struct ChildContentListingView: View {
           .padding([.horizontal, .bottom], 20)
       )
     } else {
-      let childVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = {
+        childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+      }
       
       return AnyView(NavigationLink(destination:
-        VideoView(viewModel: childVideoPlaybackViewModel)
+        VideoView(viewModelProvider: childVideoPlaybackViewModelProvider)
           .onDisappear {
             // In case there's a left-over message from the nav view
             MessageBus.current.dismiss()
