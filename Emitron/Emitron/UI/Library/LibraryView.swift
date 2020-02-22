@@ -68,7 +68,7 @@ struct LibraryView: View {
   }
 
   private var searchField: some View {
-    SearchFieldView() { searchString in
+    SearchFieldView { searchString in
       self.filters.searchStr = searchString
       self.updateFilters()
     }
