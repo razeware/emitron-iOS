@@ -52,7 +52,7 @@ struct PagerView<Content: View>: View {
           .frame(width: proxy.size.width, alignment: .leading)
           .offset(x: -CGFloat(self.currentIndex) * proxy.size.width)
           .offset(x: self.translation)
-          .animation(.interactiveSpring())
+        .animation(.interactiveSpring())
           .gesture(
             DragGesture()
               .updating(self.$translation) { value, state, _ in
@@ -60,7 +60,11 @@ struct PagerView<Content: View>: View {
               }
               .onEnded { value in
                 let offset = value.translation.width / proxy.size.width
-                let newIndex = (CGFloat(self.currentIndex) - offset).rounded()
+                if abs(offset) < 0.1 {
+                  return
+                }
+                let newIndex = offset < 0 ? self.currentIndex + 1 : self.currentIndex - 1
+                print("New Index: \(newIndex) :: Offset: \(offset)")
                 self.currentIndex = Int(newIndex).clamped(to: 0...(self.pageCount - 1))
               }
           )

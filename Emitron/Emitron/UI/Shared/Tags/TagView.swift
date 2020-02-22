@@ -29,16 +29,38 @@
 import SwiftUI
 
 struct TagView: View {
+  private struct SizeKey: PreferenceKey {
+    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
+      value = value ?? nextValue()
+    }
+  }
+  
+  @State private var height: CGFloat?
+  
   let text: String
   let textColor: Color
   let backgroundColor: Color
   let borderColor: Color
+  var image: Image?
   
   var body: some View {
-    Text(text.uppercased())
-      .foregroundColor(textColor)
-      .font(.uiUppercaseTag)
-      .kerning(0.5)
+    HStack(spacing: 3) {
+      image?
+        .resizable()
+        .aspectRatio(contentMode: .fit)
+        .foregroundColor(textColor)
+        .frame(height: height)
+      
+      Text(text.uppercased())
+        .foregroundColor(textColor)
+        .font(.uiUppercaseTag)
+        .kerning(0.5)
+        .background(
+          GeometryReader { proxy in
+            Color.clear.preference(key: SizeKey.self, value: proxy.size)
+          }
+        )
+    }
       .padding([.vertical], 5)
       .padding([.horizontal], 7)
       .background(backgroundColor)
@@ -47,16 +69,29 @@ struct TagView: View {
           .stroke(borderColor, lineWidth: 4)
       )
       .cornerRadius(6) // This is a bit hacky.
+      .onPreferenceChange(SizeKey.self) { size in
+        self.height = size?.height
+      }
   }
 }
 
 struct TagView_Previews: PreviewProvider {
   static var previews: some View {
-    TagView(
-      text: "this is a tag",
-      textColor: Color.white,
-      backgroundColor: Color.red,
-      borderColor: Color.yellow
-    )
+    VStack(spacing: 20) {
+      TagView(
+        text: "this is a tag",
+        textColor: Color.white,
+        backgroundColor: Color.red,
+        borderColor: Color.yellow
+      )
+      
+      TagView(
+        text: "with an image",
+        textColor: Color.white,
+        backgroundColor: Color.red,
+        borderColor: Color.yellow,
+        image: Image.checkmark
+      )
+    }
   }
 }

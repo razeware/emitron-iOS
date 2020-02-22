@@ -53,7 +53,7 @@ struct CheckmarkView: View {
             .frame(maxWidth: outerSide, maxHeight: outerSide)
             .foregroundColor(Color.checkmarkBackground)
           
-          Image("checkmark")
+          Image.checkmark
             .resizable()
             .frame(maxWidth: innerSide - 1, maxHeight: innerSide + 1)
             .foregroundColor(Color.checkmarkColor)
@@ -73,7 +73,7 @@ struct CheckmarkView: View {
 #if DEBUG
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
-    CheckmarkView(isOn: false, onChange: { change in
+    CheckmarkView(isOn: true, onChange: { change in
       print("Changed to: \(change)")
     })
   }

@@ -47,14 +47,15 @@ struct NoResultsView: View {
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
         .padding([.bottom], 20)
-        .padding([.leading, .trailing], 55)
+        .padding([.leading, .trailing], 20)
 
       Text(contentScreen.detailMesage)
+        .lineSpacing(5)
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.bottom], 20)
-        .padding([.leading, .trailing], 55)
+        .padding([.leading, .trailing], 20)
       
       Spacer()
       

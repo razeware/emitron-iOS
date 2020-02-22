@@ -28,21 +28,15 @@
 
 import SwiftUI
 
-private enum Layout {
-  static let frame: CGFloat = 18
-}
-
 struct ArrowInCircleView: View {
   let fillColour: Color
   
   var body: some View {
-    Circle()
-      .fill(fillColour)
-      .frame(width: Layout.frame, height: Layout.frame)
-      .overlay(
-        Image(systemName: "arrow.down")
-          .foregroundColor(.backgroundColor), alignment: .top
-      )
+    Image.download
+      .resizable()
+      .aspectRatio(contentMode: .fit)
+      .frame(width: DownloadIconLayout.size)
+      .foregroundColor(fillColour)
   }
 }
 

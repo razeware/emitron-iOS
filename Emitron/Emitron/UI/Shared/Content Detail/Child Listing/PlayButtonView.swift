@@ -30,31 +30,21 @@ import SwiftUI
 
 struct PlayButtonView: View {
   var body: some View {
-    HStack {
-      Spacer()
-      
-      ZStack {
-        Rectangle()
-          .frame(maxWidth: 75, maxHeight: 75)
-          .foregroundColor(.white)
-          .cornerRadius(13)
-        Rectangle()
-          .frame(maxWidth: 65, maxHeight: 65)
-          .foregroundColor(.appBlack)
-          .cornerRadius(11)
-        Image("materialIconPlay")
-          .resizable()
-          .frame(width: 40, height: 40)
-          .foregroundColor(.white)
-      }
-      
-      Spacer()
-    }
+    VideoOverlayButtonView()
   }
 }
 
 struct PlayButtonView_Previews: PreviewProvider {
   static var previews: some View {
+    HStack {
+      button.colorScheme(.dark)
+      button.colorScheme(.light)
+    }
+  }
+  
+  static var button: some View {
     PlayButtonView()
+      .padding()
+      .background(Color.backgroundColor)
   }
 }

@@ -48,24 +48,24 @@ enum ContentScreen {
     switch self {
     // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library:
-      return "We couldn't find anything with that search criteria."
+      return "We couldn't find anything"
     case .downloads(permitted: true):
-      return "You haven't downloaded any tutorials yet."
+      return "You haven't downloaded any tutorials yet"
     case .downloads(permitted: false):
-      return "Professional subscribers only."
+      return "Upgrade your subscription to download videos"
     case .bookmarked:
-      return "You haven't bookmarked any tutorials yet."
+      return "You haven't bookmarked any tutorials yet"
     case .inProgress:
-      return "You don't have any tutorials in progress yet."
+      return "You don't have any tutorials in progress yet"
     case .completed:
-      return "You haven't completed any tutorials yet."
+      return "You haven't completed any tutorials yet"
     }
   }
 
   var detailMesage: String {
     switch self {
     case .library:
-      return "Try removing some filters or checking your WiFi settings."
+      return "Try removing some filters."
     case .bookmarked:
       return "Tap the bookmark icon to bookmark a video course or screencast."
     case .inProgress:
@@ -75,7 +75,7 @@ enum ContentScreen {
     case .downloads(permitted: true):
       return "Tap the download icon to download a video course or episode to watch offline."
     case .downloads(permitted: false):
-      return "Professional subscriber benefits include being able to download videos and watch them offline, access to exclusive content, and more!"
+      return "raywenderlich.com professional subscribers can download videos and watch them offline."
     }
   }
   
@@ -90,8 +90,10 @@ enum ContentScreen {
 
   var emptyImageName: String {
     switch self {
-    case .downloads:
+    case .downloads(permitted: true):
       return "artworkEmptySuitcase"
+    case .downloads(permitted: false):
+      return "artworkDownloadSwitch"
     case .bookmarked:
       return "artworkBookmarks"
     case .inProgress:

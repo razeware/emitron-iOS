@@ -29,7 +29,6 @@
 import SwiftUI
 
 private enum Layout {
-  static let frame: CGFloat = 18
   static let lineWidth: CGFloat = 2
 }
 
@@ -49,7 +48,7 @@ struct SpinningCircleView: View {
     ZStack(alignment: .center) {
       Circle()
         .stroke(Color.activeIcon, lineWidth: Layout.lineWidth)
-        .frame(width: Layout.frame, height: Layout.frame)
+        .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       
       RoundedRectangle(cornerRadius: 1)
         .fill(Color.activeIcon)
@@ -64,7 +63,7 @@ struct SpinningCircleView: View {
         to: animateStrokeEnd ? 0.2 : 0.5
       )
       .stroke(Color.accent, lineWidth: Layout.lineWidth)
-      .frame(width: Layout.frame, height: Layout.frame)
+      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       .rotationEffect(.degrees(animateRotation ? 360 : 0))
       .onAppear {
         withAnimation(

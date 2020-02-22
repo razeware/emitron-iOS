@@ -125,8 +125,8 @@ struct MyTutorialView: View {
           })
           .padding([.top], .sidePadding)
       }
-      .padding([.horizontal], .sidePadding)
-      .background(Color.backgroundColor)
+        .padding([.horizontal], .sidePadding)
+        .background(Color.backgroundColor)
     )
   }
 

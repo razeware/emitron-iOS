@@ -57,31 +57,30 @@ struct ContentListView: View {
   }
 
   private func cardTableNavView(withDelete: Bool = false) -> some View {
-    ForEach(contentRepository.contents, id: \.id) { partialContent in
-      ZStack {
-        CardContainerView(
-          model: partialContent,
-          dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
-        )
-          .padding([.vertical], .sidePadding / 2)
-        NavigationLink(
-          destination: ContentDetailView(
-            content: partialContent,
-            childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+      ForEach(contentRepository.contents, id: \.id) { partialContent in
+        ZStack {
+          CardContainerView(
+            model: partialContent,
             dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
           )
-        ) {
-          EmptyView()
+          NavigationLink(
+            destination: ContentDetailView(
+              content: partialContent,
+              childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
+              dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+            )
+          ) {
+            EmptyView()
+          }
+            .buttonStyle(PlainButtonStyle())
+            //HACK: to remove navigation chevrons
+            .padding(.trailing, -2 * .sidePadding)
         }
-          .buttonStyle(PlainButtonStyle())
-          //HACK: to remove navigation chevrons
-          .padding(.trailing, -2 * .sidePadding)
       }
-    }
-      .if(withDelete) { $0.onDelete(perform: self.delete) }
-      .listRowInsets(EdgeInsets())
-      .padding([.horizontal], .sidePadding)
-      .background(Color.backgroundColor)
+        .if(withDelete) { $0.onDelete(perform: self.delete) }
+        .listRowInsets(EdgeInsets())
+        .padding([.horizontal, .top], .sidePadding)
+        .background(Color.backgroundColor)
   }
   
   private var appropriateCardsView: some View {
@@ -98,10 +97,14 @@ struct ContentListView: View {
         Section(header: self.headerView) {
           self.appropriateCardsView
           self.loadMoreView
+          // Hack to make sure there's some spacing at the bottom of the list
+          Color.clear.frame(height: 0)
         }.listRowInsets(EdgeInsets())
       } else {
         self.appropriateCardsView
         self.loadMoreView
+        // Hack to make sure there's some spacing at the bottom of the list
+        Color.clear.frame(height: 0)
       }
     }
   }

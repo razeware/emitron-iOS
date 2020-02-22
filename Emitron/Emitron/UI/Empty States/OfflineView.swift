@@ -42,6 +42,7 @@ struct OfflineView: View {
       
       Text("Please check internet connection and try again.")
         .font(.uiLabel)
+        .lineSpacing(8)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding([.leading, .trailing], 20)

@@ -58,6 +58,15 @@ enum AppliedFilterType {
       return .filterTagDestructiveIcon
     }
   }
+  
+  var shadowColor: Color {
+    switch self {
+    case .default:
+      return .filterTagShadow
+    case .destructive:
+      return .filterTagDestructiveShadow
+    }
+  }
 }
 
 private enum Layout {
@@ -91,6 +100,9 @@ struct AppliedFilterTagButton: View {
         .background(type.backgroundColor)
         .cornerRadius(Layout.cornerRadius)
     }
+      .shadow(color: type.shadowColor, radius: 1, x: 0, y: 2)
+      .padding(1)
+      .padding([.bottom], 2)
   }
 }
 
