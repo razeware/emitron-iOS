@@ -29,13 +29,13 @@
 import SwiftUI
 
 struct TabNavView: View {
-  @EnvironmentObject var viewModel: TabViewModel
+  @EnvironmentObject var tabViewModel: TabViewModel
   var libraryView: AnyView
   var myTutorialsView: AnyView
   var downloadsView: AnyView
 
   var body: some View {
-    TabView(selection: $viewModel.selectedTab) {
+    TabView(selection: $tabViewModel.selectedTab) {
       NavigationView {
         libraryView
       }.tabItem {

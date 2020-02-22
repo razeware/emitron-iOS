@@ -46,7 +46,6 @@ enum ContentScreen {
 
   var titleMessage: String {
     switch self {
-    // TODO: maybe this should be a func instead & we can pass in the actual search criteria here
     case .library:
       return "We couldn't find anything"
     case .downloads(permitted: true):

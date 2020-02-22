@@ -163,6 +163,10 @@ final class VideoPlaybackViewModel {
     self.player.play()
   }
   
+  func pause() {
+    self.player.pause()
+  }
+  
   private func prepareSubscribers() {
     if let token = playerTimeObserverToken {
       player.removeTimeObserver(token)

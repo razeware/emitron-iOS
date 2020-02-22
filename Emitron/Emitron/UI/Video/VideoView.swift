@@ -49,14 +49,19 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 }
 
 struct VideoView: View {
-  var viewModel: VideoPlaybackViewModel
+  let viewModel: VideoPlaybackViewModel
   
   @Environment(\.presentationMode) var presentationMode
+  @EnvironmentObject var tabViewModel: TabViewModel
+  
+  // This is a bit hacky, but I reckon it might work
+  @State private var owningTab: MainTab?
   
   @State private var settingsPresented: Bool = false
   @State private var playbackVerified: Bool = false
 
   var body: some View {
+    storeOwningTab()
     viewModel.reloadIfRequired()
     verifyVideoPlaybackAllowed()
     return videoView
@@ -75,14 +80,30 @@ struct VideoView: View {
       .onDisappear {
         // Only pause the video if we've dismissed the video.
         // Otherwise, we pause it when we switch to full screen.
-        guard !self.presentationMode.wrappedValue.isPresented else { return }
-        
-        self.viewModel.player.pause()
+        if !self.presentationMode.wrappedValue.isPresented {
+          self.viewModel.pause()
+        }
+        // Also want to pause if we've switched to a different tab
+        if self.owningTab != self.tabViewModel.selectedTab {
+          self.viewModel.pause()
+        }
+        // No-op for other cases (including entering fullscreen video playback)
       }
   }
   
   private var videoView: some View {
     VideoPlayerControllerRepresentable(with: viewModel)
+  }
+  
+  private func storeOwningTab() {
+    // If you don't perform this asynchronously, the @State variable doesn't
+    // get updated. I don't understand enough about state management to explain
+    // why. However, this appears to fix it. That's good enough, right?
+    DispatchQueue.main.async {
+      guard self.owningTab == nil else { return }
+      
+      self.owningTab = self.tabViewModel.selectedTab
+    }
   }
   
   private func verifyVideoPlaybackAllowed() {
