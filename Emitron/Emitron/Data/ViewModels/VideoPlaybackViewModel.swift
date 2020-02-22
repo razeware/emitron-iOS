@@ -203,7 +203,9 @@ final class VideoPlaybackViewModel {
     guard let currentlyPlayingContentId = currentlyPlayingContentId else { return }
     // Update progress
     progressEngine.updateProgress(for: currentlyPlayingContentId, progress: Int(time.seconds))
-      .sink(receiveCompletion: { completion in
+      .sink(receiveCompletion: { [weak self] completion in
+        guard let self = self else { return }
+        
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
             MessageBus.current.post(message: Message(level: .error, message: Constants.simultaneousStreamsError))
@@ -244,7 +246,8 @@ final class VideoPlaybackViewModel {
     state = .loadingAdditional
     let nextContent = contentList[index]
     avItem(for: nextContent)
-      .sink(receiveCompletion: { completion in
+      .sink(receiveCompletion: { [weak self] completion in
+        guard let self = self else { return }
         switch completion {
         case .finished:
           self.state = .hasData
@@ -254,7 +257,8 @@ final class VideoPlaybackViewModel {
             .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to enqueue next playlist item: \(error))")
             .log()
         }
-      }) { playerItem in
+      }) { [weak self] playerItem in
+        guard let self = self else { return }
         // Try to seek if needed
         if let startTime = startTime {
           playerItem.seek(to: CMTime(seconds: startTime, preferredTimescale: 100)) { [weak self] _ in

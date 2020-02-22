@@ -97,8 +97,10 @@ struct ContentDetailView: View {
   }
   
   private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
-    let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
-    return NavigationLink(destination: VideoView(viewModel: viewModel)) {
+    let viewModelProvider: VideoViewModelProvider = {
+      self.dynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+    }
+    return NavigationLink(destination: VideoView(viewModelProvider: viewModelProvider)) {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
           return AnyView(ContinueButtonView())

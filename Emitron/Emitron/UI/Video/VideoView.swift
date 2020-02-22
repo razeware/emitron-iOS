@@ -48,8 +48,11 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   }
 }
 
+typealias VideoViewModelProvider = () -> VideoPlaybackViewModel
+
 struct VideoView: View {
-  let viewModel: VideoPlaybackViewModel
+  let viewModelProvider: VideoViewModelProvider
+  @State private var viewModel: VideoPlaybackViewModel?
   
   @Environment(\.presentationMode) var presentationMode
   @EnvironmentObject var tabViewModel: TabViewModel
@@ -61,9 +64,6 @@ struct VideoView: View {
   @State private var playbackVerified: Bool = false
 
   var body: some View {
-    storeOwningTab()
-    viewModel.reloadIfRequired()
-    verifyVideoPlaybackAllowed()
     return videoView
       .navigationBarItems(trailing:
         SwiftUI.Group {
@@ -81,33 +81,43 @@ struct VideoView: View {
         // Only pause the video if we've dismissed the video.
         // Otherwise, we pause it when we switch to full screen.
         if !self.presentationMode.wrappedValue.isPresented {
-          self.viewModel.pause()
+          self.viewModel?.pause()
         }
         // Also want to pause if we've switched to a different tab
         if self.owningTab != self.tabViewModel.selectedTab {
-          self.viewModel.pause()
+          self.viewModel?.pause()
         }
         // No-op for other cases (including entering fullscreen video playback)
       }
-  }
-  
-  private var videoView: some View {
-    VideoPlayerControllerRepresentable(with: viewModel)
-  }
-  
-  private func storeOwningTab() {
-    // If you don't perform this asynchronously, the @State variable doesn't
-    // get updated. I don't understand enough about state management to explain
-    // why. However, this appears to fix it. That's good enough, right?
-    DispatchQueue.main.async {
-      guard self.owningTab == nil else { return }
-      
-      self.owningTab = self.tabViewModel.selectedTab
+    .onAppear {
+      self.checkViewModelLoaded()
+      self.storeOwningTab()
+      self.viewModel?.reloadIfRequired()
+      self.verifyVideoPlaybackAllowed()
     }
   }
   
+  private var videoView: AnyView? {
+    if let viewModel = viewModel {
+      return AnyView(VideoPlayerControllerRepresentable(with: viewModel))
+    }
+    return nil
+  }
+  
+  private func checkViewModelLoaded() {
+    guard self.viewModel == nil else { return }
+  
+    self.viewModel = self.viewModelProvider()
+  }
+  
+  private func storeOwningTab() {
+    guard self.owningTab == nil else { return }
+    
+    self.owningTab = self.tabViewModel.selectedTab
+  }
+  
   private func verifyVideoPlaybackAllowed() {
-    guard !playbackVerified else { return }
+    guard !playbackVerified, let viewModel = viewModel else { return }
     do {
       if try viewModel.canPlayOrDisplayError() {
         playbackVerified = true
