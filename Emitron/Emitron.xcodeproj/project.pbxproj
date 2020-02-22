@@ -1348,6 +1348,7 @@
 				B6FC15A922CB523C0078CEDB /* Library */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AB22CB52480078CEDB /* My Tutorials */,
+				229F0AC323BB29230004DD4F /* Video */,
 				B6FC15AC22CB52570078CEDB /* Shared */,
 				8B28D2B123546CFD005FCC08 /* UIKit */,
 			);
@@ -1482,7 +1483,6 @@
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
-				229F0AC323BB29230004DD4F /* Video */,
 			);
 			path = Shared;
 			sourceTree = "<group>";

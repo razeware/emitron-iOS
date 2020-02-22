@@ -39,9 +39,6 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> AVPlayerViewController {
     let viewController = AVPlayerViewController()
     viewController.player = viewModel.player
-    viewController.entersFullScreenWhenPlaybackBegins = true
-    viewController.exitsFullScreenWhenPlaybackEnds = true
-    viewController.modalPresentationStyle = .fullScreen
     viewModel.play()
     return viewController
   }
@@ -53,6 +50,8 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
 
 struct VideoView: View {
   var viewModel: VideoPlaybackViewModel
+  
+  @Environment(\.presentationMode) var presentationMode
   
   @State private var settingsPresented: Bool = false
   @State private var playbackVerified: Bool = false
@@ -74,6 +73,10 @@ struct VideoView: View {
         SettingsView(showLogoutButton: false)
       }
       .onDisappear {
+        // Only pause the video if we've dismissed the video.
+        // Otherwise, we pause it when we switch to full screen.
+        guard !self.presentationMode.wrappedValue.isPresented else { return }
+        
         self.viewModel.player.pause()
       }
   }
