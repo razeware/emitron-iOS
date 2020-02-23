@@ -94,6 +94,7 @@ struct FiltersView: View {
           self.constructFilterView(filterGroup: filterGroup)
         }
       }
+        .padding([.bottom], 30)
     }
   }
   

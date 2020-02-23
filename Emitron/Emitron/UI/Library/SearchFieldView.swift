@@ -72,6 +72,8 @@ struct SearchFieldView: View {
       })
       .frame(height: height)
       .background(background)
+      .padding(1)
+      .padding([.bottom], 2)
       .onPreferenceChange(SizeKey.self) { size in
         self.height = size?.height
       }
@@ -80,6 +82,7 @@ struct SearchFieldView: View {
   var background: some View {
     RoundedRectangle(cornerRadius: 9)
       .fill(Color.searchFieldBackground)
+      .shadow(color: Color.searchFieldShadow, radius: 1, x: 0, y: 2)
       .overlay(
         RoundedRectangle(cornerRadius: 9)
           .stroke(Color.searchFieldBorder, lineWidth: 2)

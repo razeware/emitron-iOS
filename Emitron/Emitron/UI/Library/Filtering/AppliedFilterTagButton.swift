@@ -96,7 +96,7 @@ struct AppliedFilterTagButton: View {
           .frame(width: Layout.imageSize, height: Layout.imageSize)
           .foregroundColor(type.iconColor)
       }
-      .padding(.all, Layout.padding.overall)
+        .padding(.all, Layout.padding.overall)
         .background(type.backgroundColor)
         .cornerRadius(Layout.cornerRadius)
     }
