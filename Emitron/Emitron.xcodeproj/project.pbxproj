@@ -84,7 +84,6 @@
 		223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DC23B3473C005BE95D /* LibraryRepository.swift */; };
 		223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DE23B6515A005BE95D /* ContentRepository.swift */; };
 		223D77E123B84C00005BE95D /* CompletedRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77E023B84C00005BE95D /* CompletedRepository.swift */; };
-		224D298A23F5E51600E4F4B6 /* CardContainerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298923F5E51600E4F4B6 /* CardContainerView.swift */; };
 		224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
@@ -179,6 +178,7 @@
 		22D17708235078030038333D /* Configuration.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D17707235078030038333D /* Configuration.swift */; };
 		22D382BC2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */; };
 		22D39FC823EC0AEA0058599D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D39FC723EC0AEA0058599D /* LoadingView.swift */; };
+		22DC50592401F74800A6E808 /* CardViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC50582401F74800A6E808 /* CardViewContainer.swift */; };
 		22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */; };
 		22E2267623C9BD3900A83601 /* DynamicContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267523C9BD3900A83601 /* DynamicContentState.swift */; };
 		22E2267823CA200E00A83601 /* ChildContentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */; };
@@ -371,7 +371,6 @@
 		223D77DC23B3473C005BE95D /* LibraryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRepository.swift; sourceTree = "<group>"; };
 		223D77DE23B6515A005BE95D /* ContentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRepository.swift; sourceTree = "<group>"; };
 		223D77E023B84C00005BE95D /* CompletedRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedRepository.swift; sourceTree = "<group>"; };
-		224D298923F5E51600E4F4B6 /* CardContainerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardContainerView.swift; sourceTree = "<group>"; };
 		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
@@ -464,6 +463,7 @@
 		22D17707235078030038333D /* Configuration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Configuration.swift; sourceTree = "<group>"; };
 		22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManagerTest.swift; sourceTree = "<group>"; };
 		22D39FC723EC0AEA0058599D /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
+		22DC50582401F74800A6E808 /* CardViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewContainer.swift; sourceTree = "<group>"; };
 		22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentViewModel.swift; sourceTree = "<group>"; };
 		22E2267523C9BD3900A83601 /* DynamicContentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentState.swift; sourceTree = "<group>"; };
 		22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentsViewModel.swift; sourceTree = "<group>"; };
@@ -832,7 +832,7 @@
 			children = (
 				B60FF7BD23000ABD00F36B32 /* CardView.swift */,
 				B6FC15A722CB51D60078CEDB /* ContentListView.swift */,
-				224D298923F5E51600E4F4B6 /* CardContainerView.swift */,
+				22DC50582401F74800A6E808 /* CardViewContainer.swift */,
 			);
 			path = "Content List";
 			sourceTree = "<group>";
@@ -1784,6 +1784,7 @@
 				22BE655323F2D0CB00717369 /* PermissionsLoadingView.swift in Sources */,
 				B6DF2FBF22CA861C0081A3A3 /* String+Base64.swift in Sources */,
 				22BFE76423DAD4BC00495BA9 /* SyncRequest.swift in Sources */,
+				22DC50592401F74800A6E808 /* CardViewContainer.swift in Sources */,
 				22E2267A23CA22C200A83601 /* DataCacheChildContentsViewModel.swift in Sources */,
 				22B8265B23AF18E400D4BA23 /* DomainAdapter.swift in Sources */,
 				B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */,
@@ -1831,7 +1832,6 @@
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
 				22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */,
 				223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */,
-				224D298A23F5E51600E4F4B6 /* CardContainerView.swift in Sources */,
 				2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */,
 				222EEF7B23CDC24500B025A4 /* VideoPlaybackViewModel.swift in Sources */,
 				223D77AB23B0C099005BE95D /* Download.swift in Sources */,

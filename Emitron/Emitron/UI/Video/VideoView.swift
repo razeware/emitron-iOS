@@ -39,7 +39,6 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   func makeUIViewController(context: UIViewControllerRepresentableContext<VideoPlayerControllerRepresentable>) -> AVPlayerViewController {
     let viewController = AVPlayerViewController()
     viewController.player = viewModel.player
-    viewModel.play()
     return viewController
   }
   
@@ -64,7 +63,7 @@ struct VideoView: View {
   @State private var playbackVerified: Bool = false
 
   var body: some View {
-    return videoView
+    videoView
       .navigationBarItems(trailing:
         SwiftUI.Group {
           Button(action: {
@@ -94,6 +93,7 @@ struct VideoView: View {
       self.storeOwningTab()
       self.viewModel?.reloadIfRequired()
       self.verifyVideoPlaybackAllowed()
+      self.viewModel?.play()
     }
   }
   

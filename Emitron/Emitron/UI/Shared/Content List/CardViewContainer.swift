@@ -28,31 +28,11 @@
 
 import SwiftUI
 
-struct CardContainerView: View {
-  let model: ContentListDisplayable
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+struct CardViewContainer: View {
+  @State var model: ContentListDisplayable
+  @State var dynamicContentViewModel: DynamicContentViewModel
   
   var body: some View {
-    dynamicContentViewModel.initialiseIfRequired()
-    
-    return CardView(
-      model: model,
-      dynamicContent: dynamicContentViewModel as DynamicContentDisplayable
-    )
-      // This if is a no-op that ensures that this view will realise that
-      // it should redraw the card if the dynamic content view model changes
-      // We do it so that we can easily work on the appearance of the card
-      // with mock data, adopting the DynamicContentDisplayable protocol.
-      // This might not be the best way to do it. But I don't know of a
-      // better way at the moment. Sorry.
-      .if(dynamicContentViewModel.state != .hasData) {
-        $0.background(Color.clear)
-      }
+    CardView(model: model, dynamicContentViewModel: dynamicContentViewModel)
   }
 }
-
-//struct CardContainerView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    CardContainerView()
-//  }
-//}
