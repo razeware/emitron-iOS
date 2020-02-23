@@ -170,10 +170,6 @@ extension Color {
     Color("listHeaderBackground")
   }
   
-  static var shadowColor: Color {
-    Color("shadowColor")
-  }
-  
   static var toggleTextSelected: Color {
     Color("toggleTextSelected")
   }
@@ -240,5 +236,9 @@ extension Color {
   
   static var searchFieldText: Color {
     Color("searchFieldText")
+  }
+  
+  static var searchFieldShadow: Color {
+    Color("searchFieldShadow")
   }
 }

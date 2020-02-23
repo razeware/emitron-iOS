@@ -70,7 +70,6 @@ struct FiltersHeaderView: View {
         .padding(1)
         .padding([.bottom], 2)
         
-      
       if isExpanded {
         expandedView
       }
