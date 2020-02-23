@@ -32,12 +32,15 @@ import KingfisherSwiftUI
 struct VerticalFadeImageView: View {
   var imageUrl: URL?
   var blurred: Bool = false
+  var width: CGFloat?
+  var height: CGFloat?
   
   var body: some View {
     ZStack {
       KFImage(imageUrl)
         .resizable()
-        .aspectRatio(contentMode: .fit)
+        .aspectRatio(contentMode: .fill)
+        .frame(width: width, height: height, alignment: .top)
         .blur(radius: blurred ? Constants.blurRadius : 0)
         .clipped()
       

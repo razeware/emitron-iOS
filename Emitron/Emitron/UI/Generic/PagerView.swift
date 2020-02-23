@@ -64,7 +64,6 @@ struct PagerView<Content: View>: View {
                   return
                 }
                 let newIndex = offset < 0 ? self.currentIndex + 1 : self.currentIndex - 1
-                print("New Index: \(newIndex) :: Offset: \(offset)")
                 self.currentIndex = Int(newIndex).clamped(to: 0...(self.pageCount - 1))
               }
           )
