@@ -63,7 +63,7 @@ struct ContentListView: View {
   private func cardTableNavView(withDelete: Bool = false) -> some View {
       ForEach(contentRepository.contents, id: \.id) { partialContent in
         ZStack {
-          CardView(
+          CardViewContainer(
             model: partialContent,
             dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
           )
