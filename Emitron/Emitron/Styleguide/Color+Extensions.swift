@@ -114,6 +114,14 @@ extension Color {
     Color("filterTagDestructiveText")
   }
   
+  static var filterHeaderBackground: Color {
+    Color("filterHeaderBackground")
+  }
+  
+  static var filterHeaderShadow: Color {
+    Color("filterHeaderShadow")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }

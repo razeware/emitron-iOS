@@ -47,18 +47,9 @@ struct FiltersHeaderView: View {
   
   var body: some View {
     VStack {
-      ZStack {
-        ZStack {
-          RoundedRectangle(cornerRadius: Layout.cornerRadius)
-          .foregroundColor(Color.borderColor)
-          .frame(minHeight: 50)
-          
-          RoundedRectangle(cornerRadius: Layout.cornerRadius - 1.5)
-          .foregroundColor(Color.listHeaderBackground)
-          .frame(minHeight: 46)
-          .padding(2)
-        }
-        
+      Button(action: {
+        self.isExpanded.toggle()
+      }) {
         HStack {
           Text(filterGroup.type.name)
             .foregroundColor(.titleText)
@@ -66,20 +57,19 @@ struct FiltersHeaderView: View {
           
           Spacer()
           
-          Button(action: {
-            self.isExpanded.toggle()
-          }) {
-            Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
-              .foregroundColor(.contentText)
-              .font(.uiLabelBold)
-          }
+          Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
+            .foregroundColor(.contentText)
+            .font(.uiLabelBold)
         }
         .padding([.top, .bottom], Layout.padding.overall)
         .padding([.trailing, .leading], Layout.padding.textTrailing)
+        .background(Color.filterHeaderBackground)
+        .cornerRadius(Layout.cornerRadius)
       }
-      .onTapGesture {
-        self.isExpanded.toggle()
-      }
+        .shadow(color: Color.filterHeaderShadow, radius: 1, x: 0, y: 2)
+        .padding(1)
+        .padding([.bottom], 2)
+        
       
       if isExpanded {
         expandedView
@@ -107,14 +97,30 @@ struct FiltersHeaderView: View {
 #if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
+    SwiftUI.Group {
+      filters.colorScheme(.dark)
+      filters.colorScheme(.light)
+    }
+  }
+  
+  static var filters: some View {
     let filters = Param
       .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     
-    return FiltersHeaderView(
-      filterGroup: FilterGroup(type: .difficulties, filters: filters),
-      filters: Filters()
-    )
+    return VStack {
+      FiltersHeaderView(
+        filterGroup: FilterGroup(type: .difficulties, filters: filters),
+        filters: Filters(),
+        isExpanded: true
+      )
+      FiltersHeaderView(
+        filterGroup: FilterGroup(type: .categories, filters: filters),
+        filters: Filters()
+      )
+    }
+      .padding()
+      .background(Color.backgroundColor)
   }
 }
 #endif
