@@ -38,27 +38,33 @@ struct TabNavView: View {
     TabView(selection: $tabViewModel.selectedTab) {
       NavigationView {
         libraryView
-      }.tabItem {
-        Text(Constants.library)
-        Image("library")
       }
-      .tag(MainTab.library)
+        .tabItem {
+          Text(Constants.library)
+          Image("library")
+        }
+        .tag(MainTab.library)
+        .navigationViewStyle(StackNavigationViewStyle())
 
       NavigationView {
         downloadsView
-      }.tabItem {
-        Text(Constants.downloads)
-        Image("downloadTabInactive")
       }
-      .tag(MainTab.downloads)
+        .tabItem {
+          Text(Constants.downloads)
+          Image("downloadTabInactive")
+        }
+        .tag(MainTab.downloads)
+        .navigationViewStyle(StackNavigationViewStyle())
 
       NavigationView {
         myTutorialsView
-      }.tabItem {
-        Text(Constants.myTutorials)
-        Image("myTutorials")
       }
-      .tag(MainTab.myTutorials)
+        .tabItem {
+          Text(Constants.myTutorials)
+          Image("myTutorials")
+        }
+        .tag(MainTab.myTutorials)
+        .navigationViewStyle(StackNavigationViewStyle())
     }
     .accentColor(Color.accent)
     .edgesIgnoringSafeArea([.top])
