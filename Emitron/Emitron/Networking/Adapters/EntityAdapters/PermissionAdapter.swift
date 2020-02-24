@@ -29,12 +29,11 @@
 import Foundation
 
 struct PermissionAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Permission {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Permission? {
     guard resource.entityType == .permission else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let name = resource.attributes["name"] as? String,
       let tagString = resource.attributes["tag"] as? String,
-      let tag = Permission.Tag(from: tagString),
       let createdAtString = resource.attributes["created_at"] as? String,
       let createdAt = createdAtString.iso8601,
       let updatedAtString = resource.attributes["updated_at"] as? String,
@@ -42,6 +41,8 @@ struct PermissionAdapter: EntityAdapter {
     else {
       throw EntityAdapterError.invalidOrMissingAttributes
     }
+    
+    guard let tag = Permission.Tag(from: tagString) else { return nil }
     
     return Permission(id: resource.id,
                       name: name,
