@@ -113,8 +113,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         try downloadAction.deleteDownload(contentId: contentId)
         MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
       case .notDownloadable:
-        // No-op
-        return
+        try downloadAction.cancelDownload(contentId: contentId)
+        MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadReset))
       }
     } catch {
       Failure

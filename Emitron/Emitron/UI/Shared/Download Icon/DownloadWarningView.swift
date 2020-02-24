@@ -28,60 +28,29 @@
 
 import SwiftUI
 
-enum DownloadIconLayout {
-  static let size: CGFloat = 20
-  static let lineWidth: CGFloat = 2
-}
-
-struct DownloadIcon: View {
-  let downloadProgress: DownloadProgressDisplayable
-  
+struct DownloadWarningView: View {
   var body: some View {
-    icon.frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
-  }
-  
-  var icon: some View {
-    switch downloadProgress {
-    case .downloadable:
-      return AnyView(ArrowInCircleView(fillColour: .activeIcon))
-    case .enqueued:
-      return AnyView(SpinningCircleView())
-    case .inProgress(progress: let progress):
-      return AnyView(CircularProgressBar(progress: progress))
-    case .downloaded:
-      return AnyView(ArrowInCircleView(fillColour: .accent))
-    case .notDownloadable:
-      return AnyView(DownloadWarningView())
-    }
+    Image(systemName: "exclamationmark.triangle.fill")
+      .resizable()
+      .font(Font.title.weight(.bold))
+      .foregroundColor(Color.warning)
+      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
   }
 }
 
-struct DownloadIcon_Previews: PreviewProvider {
+#if DEBUG
+struct DownloadWarningView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      selectionList.colorScheme(.light)
-      selectionList.colorScheme(.dark)
+    HStack {
+      icon.colorScheme(.dark)
+      icon.colorScheme(.light)
     }
   }
   
-  static var selectionList: some View {
-    VStack {
-      icon(for: .downloadable)
-      icon(for: .enqueued)
-      icon(for: .inProgress(progress: 0.3))
-      icon(for: .inProgress(progress: 0.7))
-      icon(for: .inProgress(progress: 0.8))
-      icon(for: .downloaded)
-      icon(for: .notDownloadable)
-    }
-      .padding(20)
+  static var icon: some View {
+    DownloadWarningView()
+      .padding()
       .background(Color.backgroundColor)
   }
-  
-  static func icon(for state: DownloadProgressDisplayable) -> some View {
-    HStack {
-      Text(state.description)
-      DownloadIcon(downloadProgress: state)
-    }
-  }
 }
+#endif
