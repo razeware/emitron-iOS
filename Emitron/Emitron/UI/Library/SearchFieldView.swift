@@ -35,8 +35,8 @@ struct SearchFieldView: View {
     }
   }
   
-  @Binding var searchString: String
-  var action: () -> Void = {}
+  @State var searchString: String = ""
+  var action: (String) -> Void = { _ in }
   @State private var height: CGFloat?
   
   var body: some View {
@@ -46,7 +46,7 @@ struct SearchFieldView: View {
         .frame(height: 25)
       
       TextField(Constants.search, text: $searchString) {
-        self.action()
+        self.action(self.searchString)
       }
         .keyboardType(.webSearch)
         .font(.uiBodyCustom)
@@ -56,7 +56,7 @@ struct SearchFieldView: View {
       if !searchString.isEmpty {
         Button(action: {
           self.searchString = ""
-          self.action()
+          self.action(self.searchString)
         }) {
           Image(systemName: "multiply.circle.fill")
             // If we don't enforce a frame, the button doesn't register the tap action
@@ -72,6 +72,8 @@ struct SearchFieldView: View {
       })
       .frame(height: height)
       .background(background)
+      .padding(1)
+      .padding([.bottom], 2)
       .onPreferenceChange(SizeKey.self) { size in
         self.height = size?.height
       }
@@ -80,6 +82,7 @@ struct SearchFieldView: View {
   var background: some View {
     RoundedRectangle(cornerRadius: 9)
       .fill(Color.searchFieldBackground)
+      .shadow(color: Color.searchFieldShadow, radius: 1, x: 0, y: 2)
       .overlay(
         RoundedRectangle(cornerRadius: 9)
           .stroke(Color.searchFieldBorder, lineWidth: 2)
@@ -97,9 +100,9 @@ struct SearchFieldView_Previews: PreviewProvider {
   
   static var searchFields: some View {
     VStack(spacing: 20) {
-      SearchFieldView(searchString: .constant(""))
-      SearchFieldView(searchString: .constant("Hello"))
-      SearchFieldView(searchString: .constant("Testing"))
+      SearchFieldView(searchString: "")
+      SearchFieldView(searchString: "Hello")
+      SearchFieldView(searchString: "Testing")
     }
       .padding(20)
       .background(Color.backgroundColor)

@@ -30,7 +30,7 @@ import SwiftUI
 
 private extension CGFloat {
   static let filterButtonSide: CGFloat = 27
-  static let searchFilterPadding: CGFloat = 30
+  static let searchFilterPadding: CGFloat = 15
   static let filterSpacing: CGFloat = 6
   static let filtersPaddingTop: CGFloat = 12
 }
@@ -68,7 +68,8 @@ struct LibraryView: View {
   }
 
   private var searchField: some View {
-    SearchFieldView(searchString: $filters.searchStr) {
+    SearchFieldView(searchString: filters.searchStr) { searchString in
+      self.filters.searchStr = searchString
       self.updateFilters()
     }
   }
@@ -76,6 +77,8 @@ struct LibraryView: View {
   private var searchAndFilterControls: some View {
     HStack {
       searchField
+      
+      Spacer()
 
       Button(action: {
         self.filtersPresented = true
@@ -84,7 +87,7 @@ struct LibraryView: View {
           .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
       })
-        .padding([.leading], .searchFilterPadding)
+        .padding([.horizontal], .searchFilterPadding)
     }
   }
 

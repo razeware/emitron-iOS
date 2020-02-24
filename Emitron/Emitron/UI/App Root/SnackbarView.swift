@@ -61,6 +61,7 @@ struct SnackbarView: View {
       Text(state.message)
         .font(.uiBodyCustom)
         .foregroundColor(Color.snackText)
+        .animation(.none)
       
       Spacer()
       

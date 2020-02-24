@@ -114,6 +114,14 @@ extension Color {
     Color("filterTagDestructiveText")
   }
   
+  static var filterHeaderBackground: Color {
+    Color("filterHeaderBackground")
+  }
+  
+  static var filterHeaderShadow: Color {
+    Color("filterHeaderShadow")
+  }
+  
   static var primaryButtonBackground: Color {
     Color("primaryButtonBackground")
   }
@@ -160,10 +168,6 @@ extension Color {
   
   static var listHeaderBackground: Color {
     Color("listHeaderBackground")
-  }
-  
-  static var shadowColor: Color {
-    Color("shadowColor")
   }
   
   static var toggleTextSelected: Color {
@@ -232,5 +236,9 @@ extension Color {
   
   static var searchFieldText: Color {
     Color("searchFieldText")
+  }
+  
+  static var searchFieldShadow: Color {
+    Color("searchFieldShadow")
   }
 }

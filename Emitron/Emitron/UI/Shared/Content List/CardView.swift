@@ -28,10 +28,11 @@
 
 import SwiftUI
 import KingfisherSwiftUI
+import Combine
 
 struct CardView: View {
   let model: ContentListDisplayable
-  let dynamicContent: DynamicContentDisplayable
+  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
 
   var body: some View {
     VStack(spacing: 0) {
@@ -92,6 +93,9 @@ struct CardView: View {
     }
     .background(Color.cardBackground)
     .cornerRadius(6)
+    .onAppear {
+      self.dynamicContentViewModel.initialiseIfRequired()
+    }
   }
   
   private var name: String {
@@ -103,7 +107,7 @@ struct CardView: View {
   }
   
   private var progressBar: AnyView? {
-    if case .inProgress(let progress) = dynamicContent.viewProgress {
+    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
       return AnyView(ProgressBarView(progress: progress, isRounded: true, backgroundColor: .clear))
     } else {
       return nil
@@ -111,7 +115,7 @@ struct CardView: View {
   }
   
   private var completedTagOrReleasedAt: AnyView {
-    if case .completed = dynamicContent.viewProgress {
+    if case .completed = dynamicContentViewModel.viewProgress {
       return AnyView(CompletedTag())
     } else {
       return AnyView(Text(model.releasedAtDateTimeString)
@@ -122,7 +126,7 @@ struct CardView: View {
   }
   
   private var bookmarkButton: AnyView? {
-    guard dynamicContent.bookmarked else { return nil }
+    guard dynamicContentViewModel.bookmarked else { return nil }
     
     return AnyView(
       Image.bookmark
@@ -133,6 +137,12 @@ struct CardView: View {
   }
 }
 
+/*
+ // Commenting this out for now. It's really helpful for building the UI. But
+ // it relies on the CardView not needing an observable object. However, without
+ // that, it's really hard to get the dynamic updates happening as expected. I've
+ // left it here cos it's quite useful. Switch the type, and you can get it running.
+ 
 #if DEBUG
 struct MockContentListDisplayable: ContentListDisplayable {
   var id: Int = 1
@@ -204,3 +214,4 @@ struct CardView_Previews: PreviewProvider {
   }
 }
 #endif
+*/

@@ -17,29 +17,28 @@ default_platform(:ios)
 
 platform :ios do
   desc 'Push a new beta build to TestFlight'
-  lane :ci_beta do
-    setup_ci(provider: 'travis', force: true) # Until GA are properly supported
-    sync_code_signing(type: 'appstore', readonly: true)
-    Dir.chdir('..') do
-      sh 'xcodebuild -resolvePackageDependencies'
-    end
-    build_app(scheme: 'Emitron', configuration: 'Beta')
+  lane :ci_upload_beta_testflight do
+    prepare_ci_build('Beta')
     changelog_from_git_commits
-    upload_to_testflight(skip_waiting_for_build_processing: true)
+    upload_to_testflight(app_identifier: 'com.razeware.emitron.ios.beta',
+                         skip_waiting_for_build_processing: true)
     slack(message: 'emitron::β successfully uploaded to TestFlight!')
   end
 
   desc 'Push a new production build to TestFlight'
-  lane :ci_release do
-    setup_ci(provider: 'travis', force: true) # Until GA are properly supported
-    sync_code_signing(type: 'appstore', readonly: true)
-    Dir.chdir('..') do
-      sh 'xcodebuild -resolvePackageDependencies'
-    end
-    build_app(scheme: 'Emitron', configuration: 'Release')
+  lane :ci_upload_release_testflight do
+    prepare_ci_build('Release')
     changelog_from_git_commits
-    upload_to_testflight(skip_waiting_for_build_processing: true)
+    upload_to_testflight(app_identifier: 'com.razeware.emitron.ios',
+                         skip_waiting_for_build_processing: true)
     slack(message: 'emitron::release successfully uploaded to TestFlight!')
+  end
+
+  desc 'Push a new release version to App Store Connect ready for release'
+  lane :ci_upload_release_appstore do
+    prepare_ci_build('Release')
+    upload_to_app_store(app_identifier: 'com.razeware.emitron.ios')
+    slack(message: 'emitron successfully uploaded to App Store Connect!')
   end
 
   lane :tests do
@@ -48,6 +47,15 @@ platform :ios do
     end
     run_tests(scheme: 'Emitron')
   end
+end
+
+def prepare_ci_build(configuration)
+  setup_ci(provider: 'travis', force: true) # Until GA are properly supported
+  sync_code_signing(type: 'appstore', readonly: true)
+  Dir.chdir('..') do
+    sh 'xcodebuild -resolvePackageDependencies'
+  end
+  build_app(scheme: 'Emitron', configuration: configuration)
 end
 
 error do |_lane, exception|

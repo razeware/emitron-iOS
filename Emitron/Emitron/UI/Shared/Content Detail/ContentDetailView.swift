@@ -45,6 +45,7 @@ struct ContentDetailView: View {
   }
   
   var imageRatio: CGFloat = 283 / 375
+  var maxImageHeight: CGFloat = 384
   
   var body: some View {
     contentView
@@ -97,8 +98,10 @@ struct ContentDetailView: View {
   }
   
   private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
-    let viewModel = dynamicContentViewModel.videoPlaybackViewModel(apiClient: sessionController.client)
-    return NavigationLink(destination: VideoView(viewModel: viewModel)) {
+    let viewModelProvider: VideoViewModelProvider = {
+      self.dynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+    }
+    return NavigationLink(destination: VideoView(viewModelProvider: viewModelProvider)) {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
           return AnyView(ContinueButtonView())
@@ -120,8 +123,12 @@ struct ContentDetailView: View {
   private func headerImagePlayableContent(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
-        VerticalFadeImageView(imageUrl: content.cardArtworkUrl)
-          .frame(width: width, height: width * imageRatio)
+        VerticalFadeImageView(
+          imageUrl: content.cardArtworkUrl,
+          blurred: false,
+          width: width,
+          height: min(width * imageRatio, maxImageHeight)
+        )
         
         continueOrPlayButton
           .padding(.trailing, -32.0) // HACK: to remove navigation chevrons
@@ -133,8 +140,12 @@ struct ContentDetailView: View {
   
   private func headerImageLockedProContent(for width: CGFloat) -> some View {
     ZStack {
-      VerticalFadeImageView(imageUrl: content.cardArtworkUrl, blurred: true)
-        .frame(width: width, height: width * imageRatio)
+      VerticalFadeImageView(
+        imageUrl: content.cardArtworkUrl,
+        blurred: true,
+        width: width,
+        height: min(width * imageRatio, maxImageHeight)
+      )
       
       ProContentLockedOverlayView()
     }

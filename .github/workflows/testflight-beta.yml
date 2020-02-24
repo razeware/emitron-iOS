@@ -3,7 +3,7 @@ name: Push to Testflight
 on:
   push:
     branches:
-      - master
+      - development
 
 jobs:
   build:
@@ -40,4 +40,4 @@ jobs:
       run: |
         cd Emitron
         bundle exec fastlane -v
-        bundle exec fastlane ci_upload_release_testflight
+        bundle exec fastlane ci_upload_beta_testflight
