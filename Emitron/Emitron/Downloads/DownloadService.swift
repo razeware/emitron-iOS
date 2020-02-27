@@ -168,7 +168,7 @@ extension DownloadService: DownloadAction {
       contentLookup: contentLookup
     )
     .flatMap {
-        self.persistenceStore.createDownloads(for: contentPersistableState.content)
+      self.persistenceStore.createDownloads(for: contentPersistableState.content)
     }
     .map {
       switch self.status {

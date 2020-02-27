@@ -63,18 +63,26 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func populateSampleScreencast() throws -> Content {
     let screencast = ContentTest.Mocks.screencast
     let fullState = ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
-    try persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
+    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
       ContentPersistableState.persistableState(for: contentId, with: screencast.1)
     }
+    .record()
+    
+    _ = try wait(for: recorder.completion, timeout: 1)
+    
     return screencast.0
   }
   
   func populateSampleCollection() throws -> Content {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
-    try persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
+    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
       ContentPersistableState.persistableState(for: contentId, with: collection.1)
     }
+    .record()
+    
+    _ = try wait(for: recorder.completion, timeout: 1)
+    
     return collection.0
   }
   
@@ -350,12 +358,21 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   }
   
   // MARK: - Creating Downloads
+  private func createDownloads(for content: Content) throws {
+    let recorder = persistenceStore.createDownloads(for: content).record()
+    
+    let completion = try wait(for: recorder.completion, timeout: 1)
+    if case .failure = completion {
+      XCTFail("Failed to create downloads")
+    }
+  }
+  
   func testCreateDownloadsCreatesSingleDownloadForScreencast() throws {
     let screencast = try populateSampleScreencast()
     
     XCTAssertEqual(0, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: screencast)
+    try createDownloads(for: screencast)
     
     XCTAssertEqual(1, getAllDownloads().count)
   }
@@ -366,7 +383,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     XCTAssertEqual(0, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: episodes.first!)
+    try createDownloads(for: episodes.first!)
     
     XCTAssertEqual(2, getAllDownloads().count)
   }
@@ -377,11 +394,11 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     XCTAssertEqual(0, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: episodes.first!)
+    try createDownloads(for: episodes.first!)
     
     XCTAssertEqual(2, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: episodes[2])
+    try createDownloads(for: episodes[2])
     
     XCTAssertEqual(3, getAllDownloads().count)
   }
@@ -392,11 +409,11 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     XCTAssertEqual(0, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: episodes.first!)
+    try createDownloads(for: episodes.first!)
     
     XCTAssertEqual(2, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: episodes.first!)
+    try createDownloads(for: episodes.first!)
     
     XCTAssertEqual(2, getAllDownloads().count)
   }
@@ -406,7 +423,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     XCTAssertEqual(0, getAllDownloads().count)
     
-    try persistenceStore.createDownloads(for: collection)
+    try createDownloads(for: collection)
     
     XCTAssertEqual(getAllContents().count, getAllDownloads().count)
     XCTAssertGreaterThan(getAllContents().count, 0)
@@ -415,7 +432,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   // MARK: - Queue management
   func testDownloadListDoesNotContainEpisodes() throws {
     let collection = try populateSampleCollection()
-    try persistenceStore.createDownloads(for: collection)
+    try createDownloads(for: collection)
     
     let recorder = persistenceStore.downloadList().record()
     
@@ -429,7 +446,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   
   func testDownloadsInStateDoesNotContainCollections() throws {
     let collection = try populateSampleCollection()
-    try persistenceStore.createDownloads(for: collection)
+    try createDownloads(for: collection)
     
     let recorder = persistenceStore.downloads(in: .inProgress).record()
     
@@ -452,7 +469,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   
   func testDownloadQueueDoesNotContainCollections() throws {
     let collection = try populateSampleCollection()
-    try persistenceStore.createDownloads(for: collection)
+    try createDownloads(for: collection)
     
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     
@@ -475,7 +492,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   
   func testDownloadQueueReturnsCorrectNumberOfItems() throws {
     let collection = try populateSampleCollection()
-    try persistenceStore.createDownloads(for: collection)
+    try createDownloads(for: collection)
     
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     

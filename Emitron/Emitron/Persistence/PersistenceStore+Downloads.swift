@@ -419,6 +419,7 @@ extension PersistenceStore {
             try childContent.forEach { contentItem in
               try self.createDownload(for: contentItem, inDatabase: db)
             }
+            promise(.success(()))
           }
         } catch {
           promise(.failure(error))
