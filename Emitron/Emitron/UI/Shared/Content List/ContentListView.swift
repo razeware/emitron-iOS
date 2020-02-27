@@ -174,6 +174,7 @@ struct ContentListView: View {
       
       self.downloadAction
         .deleteDownload(contentId: content.id)
+        .receive(on: RunLoop.main)
         .sink(receiveCompletion: { completion in
           if case .failure(let error) = completion {
             Failure

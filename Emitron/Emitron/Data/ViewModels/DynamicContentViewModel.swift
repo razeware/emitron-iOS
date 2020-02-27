@@ -98,6 +98,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
           return nil
         }
       }
+      .receive(on: RunLoop.main)
       .sink(receiveCompletion: { completion in
         if case .failure(let error) = completion {
           MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
@@ -114,6 +115,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
 
     case .enqueued, .inProgress:
       downloadAction.cancelDownload(contentId: contentId)
+        .receive(on: RunLoop.main)
         .sink(receiveCompletion: { completion in
           if case .failure(let error) = completion {
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
@@ -125,6 +127,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       
     case .downloaded:
       downloadAction.deleteDownload(contentId: contentId)
+        .receive(on: RunLoop.main)
         .sink(receiveCompletion: { completion in
           if case .failure(let error) = completion {
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
@@ -136,6 +139,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       
     case .notDownloadable:
       downloadAction.cancelDownload(contentId: contentId)
+        .receive(on: RunLoop.main)
         .sink(receiveCompletion: { completion in
           if case .failure(let error) = completion {
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
