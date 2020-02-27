@@ -43,6 +43,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   @Published var bookmarked: Bool = false
   
   private var subscriptions = Set<AnyCancellable>()
+  private var downloadActionSubscriptions = Set<AnyCancellable>()
   
   init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction) {
     self.contentId = contentId
@@ -85,42 +86,64 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   func downloadTapped() {
     guard state == .hasData else { return }
     
-    do {
-      switch downloadProgress {
-      case .downloadable:
-        let result = downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
-          do {
-            return try self.repository.contentPersistableState(for: contentId)
-          } catch {
-            Failure
-              .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
-              .log()
-            return nil
-          }
+    switch downloadProgress {
+    case .downloadable:
+      downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
+        do {
+          return try self.repository.contentPersistableState(for: contentId)
+        } catch {
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+            .log()
+          return nil
         }
+      }
+      .sink(receiveCompletion: { completion in
+        if case .failure(let error) = completion {
+          MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+        }
+      }) { result in
         switch result {
         case .downloadRequestedSuccessfully:
           MessageBus.current.post(message: Message(level: .success, message: Constants.downloadRequestedSuccessfully))
         case .downloadRequestedButQueueInactive:
           MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadRequestedButQueueInactive))
-        case .problemRequestingDownload(let message, _):
-          MessageBus.current.post(message: Message(level: .error, message: message))
         }
-      case .enqueued, .inProgress:
-        try downloadAction.cancelDownload(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
-      case .downloaded:
-        try downloadAction.deleteDownload(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
-      case .notDownloadable:
-        try downloadAction.cancelDownload(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadReset))
       }
-    } catch {
-      Failure
-        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to perform download action:  \(error)")
-        .log()
-      MessageBus.current.post(message: Message(level: .error, message: Constants.downloadUnspecifiedProblem))
+      .store(in: &downloadActionSubscriptions)
+
+    case .enqueued, .inProgress:
+      downloadAction.cancelDownload(contentId: contentId)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
+        }
+        .store(in: &downloadActionSubscriptions)
+      
+    case .downloaded:
+      downloadAction.deleteDownload(contentId: contentId)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+        }
+        .store(in: &downloadActionSubscriptions)
+      
+    case .notDownloadable:
+      downloadAction.cancelDownload(contentId: contentId)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadReset))
+        }
+        .store(in: &downloadActionSubscriptions)
     }
   }
   

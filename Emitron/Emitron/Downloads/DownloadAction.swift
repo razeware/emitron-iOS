@@ -27,31 +27,38 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 
 enum RequestDownloadResult {
   case downloadRequestedSuccessfully
   case downloadRequestedButQueueInactive
-  case problemRequestingDownload(String, Error? = nil)
 }
 
-extension RequestDownloadResult: Equatable {
-  // Can't synthesise this becuase we might have an Error, which isn't Equatable
-  static func == (lhs: RequestDownloadResult, rhs: RequestDownloadResult) -> Bool {
-    switch (lhs, rhs) {
-    case (.downloadRequestedSuccessfully, .downloadRequestedSuccessfully):
-      return true
-    case (.downloadRequestedButQueueInactive, .downloadRequestedButQueueInactive):
-      return true
-    case (.problemRequestingDownload(let lhsReason, _), .problemRequestingDownload(let rhsReason, _)):
-      return lhsReason == rhsReason
-    default:
-      return false
+enum DownloadActionError: Error {
+  case downloadNotPermitted
+  case downloadContentNotFound
+  case problemRequestingDownload
+  case unableToCancelDownload
+  case unableToDeleteDownload
+  
+  var localizedDescription: String {
+    switch self {
+    case .downloadNotPermitted:
+      return Constants.downloadNotPermitted
+    case .downloadContentNotFound:
+      return Constants.downloadContentNotFound
+    case .problemRequestingDownload:
+      return Constants.downloadRequestProblem
+    case .unableToCancelDownload:
+      return "TODO"
+    case .unableToDeleteDownload:
+      return "TODO"
     }
   }
 }
 
 protocol DownloadAction {
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult
-  func cancelDownload(contentId: Int) throws
-  func deleteDownload(contentId: Int) throws
+  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError>
+  func cancelDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError>
+  func deleteDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError>
 }

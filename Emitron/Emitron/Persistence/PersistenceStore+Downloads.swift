@@ -27,6 +27,7 @@
 /// THE SOFTWARE.
 
 import Foundation
+import Combine
 import GRDB
 import GRDBCombine
 
@@ -343,6 +344,37 @@ extension PersistenceStore {
     }
   }
   
+  /// Delete the downloads without selected IDs.
+  /// - Parameter ids: Array of UUIDs for the downloads to delete
+  func deleteDownloads(withIds ids: [UUID]) -> Future<Void, Error> {
+    Future { promise in
+      self.workerQueue.async { [weak self] in
+        guard let self = self else { return }
+        
+        do {
+          try self.db.write { db in
+            let downloads = try ids.compactMap { try Download.fetchOne(db, key: $0) }
+            let parentDownloads = try Set(downloads.compactMap { try $0.parentDownload.fetchOne(db) })
+            // Only update parents that we're not gonna delete
+            let parentsThatNeedUpdating = parentDownloads.subtracting(downloads)
+            
+            // Delete all the downloads requested
+            try Download.deleteAll(db, keys: ids)
+            
+            // And update any parents that need doing
+            parentsThatNeedUpdating.forEach {
+              self.asyncUpdateDownloadState(forParentDownload: $0)
+            }
+            
+            promise(.success(()))
+          }
+        } catch {
+          promise(.failure(error))
+        }
+      }
+    }
+  }
+  
   /// Delete all the downloads in the database
   func deleteDownloads() throws {
     _ = try db.write { db in
@@ -352,31 +384,50 @@ extension PersistenceStore {
   
   /// Save the entire graph of models to supprt this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.
-  func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) throws {
-    try db.write { db in
-      try persistContentItem(for: contentPersistableState, inDatabase: db, withChildren: true, withParent: true, contentLookup: contentLookup)
-    }
-  }
-  
-  func createDownloads(for content: Content) throws {
-    try db.write { db in
-      // Create it for this content item
-      try createDownload(for: content, inDatabase: db)
-      
-      // Also need to create one for the parent
-      if let parentContent = try content.parentContent.fetchOne(db) {
-        try createDownload(for: parentContent, inDatabase: db)
-      }
-      
-      // And now for any children that might exist
-      let childContent = try content.childContents.order(Content.Columns.ordinal.asc).fetchAll(db)
-      try childContent.forEach { contentItem in
-        try createDownload(for: contentItem, inDatabase: db)
+  func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) -> Future<Void, Error> {
+    Future { promise in
+      self.workerQueue.async { [weak self] in
+        guard let self = self else { return }
+        do {
+          try self.db.write { db in
+            try self.persistContentItem(for: contentPersistableState, inDatabase: db, withChildren: true, withParent: true, contentLookup: contentLookup)
+          }
+          promise(.success(()))
+        } catch {
+          promise(.failure(error))
+        }
       }
     }
   }
   
-  func createDownload(for content: Content, inDatabase db: Database) throws {
+  func createDownloads(for content: Content) -> Future<Void, Error> {
+    Future { promise in
+      self.workerQueue.async { [weak self] in
+        guard let self = self else { return }
+        do {
+          try self.db.write { db in
+            // Create it for this content item
+            try self.createDownload(for: content, inDatabase: db)
+            
+            // Also need to create one for the parent
+            if let parentContent = try content.parentContent.fetchOne(db) {
+              try self.createDownload(for: parentContent, inDatabase: db)
+            }
+            
+            // And now for any children that might exist
+            let childContent = try content.childContents.order(Content.Columns.ordinal.asc).fetchAll(db)
+            try childContent.forEach { contentItem in
+              try self.createDownload(for: contentItem, inDatabase: db)
+            }
+          }
+        } catch {
+          promise(.failure(error))
+        }
+      }
+    }
+  }
+  
+  private func createDownload(for content: Content, inDatabase db: Database) throws {
     // Check whether this already exists
     if try content.download.fetchCount(db) > 0 {
       return
