@@ -84,6 +84,8 @@
 		223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DC23B3473C005BE95D /* LibraryRepository.swift */; };
 		223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77DE23B6515A005BE95D /* ContentRepository.swift */; };
 		223D77E123B84C00005BE95D /* CompletedRepository.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223D77E023B84C00005BE95D /* CompletedRepository.swift */; };
+		223DECEE240926700017F7CA /* DownloadDeletionConfirmation.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223DECED2409266F0017F7CA /* DownloadDeletionConfirmation.swift */; };
+		223DECF0240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift in Sources */ = {isa = PBXBuildFile; fileRef = 223DECEF240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift */; };
 		224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
@@ -94,7 +96,6 @@
 		2288EF0D23741B9700514043 /* DownloadServiceTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF0C23741B9700514043 /* DownloadServiceTest.swift */; };
 		2288EF142374298200514043 /* ContentTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF132374298200514043 /* ContentTest.swift */; };
 		2288EF162374299500514043 /* DownloadTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF152374299500514043 /* DownloadTest.swift */; };
-		228D0FE823E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */; };
 		228D0FEB23E01FDD00CEA6F1 /* SettingsManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 228D0FEA23E01FDD00CEA6F1 /* SettingsManagerTest.swift */; };
 		229935D023FE8C6F00D3D16A /* SettingsSelectable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229935CF23FE8C6F00D3D16A /* SettingsSelectable.swift */; };
 		229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F0AB623BACC320004DD4F /* ContentSummaryState+Fetchable.swift */; };
@@ -179,6 +180,7 @@
 		22D382BC2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */; };
 		22D39FC823EC0AEA0058599D /* LoadingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22D39FC723EC0AEA0058599D /* LoadingView.swift */; };
 		22DC50592401F74800A6E808 /* CardViewContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC50582401F74800A6E808 /* CardViewContainer.swift */; };
+		22DC505B2403EA0600A6E808 /* DownloadWarningView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22DC505A2403EA0600A6E808 /* DownloadWarningView.swift */; };
 		22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */; };
 		22E2267623C9BD3900A83601 /* DynamicContentState.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267523C9BD3900A83601 /* DynamicContentState.swift */; };
 		22E2267823CA200E00A83601 /* ChildContentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */; };
@@ -371,6 +373,8 @@
 		223D77DC23B3473C005BE95D /* LibraryRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LibraryRepository.swift; sourceTree = "<group>"; };
 		223D77DE23B6515A005BE95D /* ContentRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentRepository.swift; sourceTree = "<group>"; };
 		223D77E023B84C00005BE95D /* CompletedRepository.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedRepository.swift; sourceTree = "<group>"; };
+		223DECED2409266F0017F7CA /* DownloadDeletionConfirmation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadDeletionConfirmation.swift; sourceTree = "<group>"; };
+		223DECEF240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DownloadDeletionConfirmation+Alert.swift"; sourceTree = "<group>"; };
 		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
@@ -380,7 +384,6 @@
 		2288EF0C23741B9700514043 /* DownloadServiceTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadServiceTest.swift; sourceTree = "<group>"; };
 		2288EF132374298200514043 /* ContentTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentTest.swift; sourceTree = "<group>"; };
 		2288EF152374299500514043 /* DownloadTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadTest.swift; sourceTree = "<group>"; };
-		228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "RequestDownloadResult+Testable.swift"; sourceTree = "<group>"; };
 		228D0FEA23E01FDD00CEA6F1 /* SettingsManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManagerTest.swift; sourceTree = "<group>"; };
 		228D0FEF23E0344E00CEA6F1 /* secrets.beta.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; path = secrets.beta.xcconfig; sourceTree = "<group>"; };
 		229935CF23FE8C6F00D3D16A /* SettingsSelectable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsSelectable.swift; sourceTree = "<group>"; };
@@ -464,6 +467,7 @@
 		22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManagerTest.swift; sourceTree = "<group>"; };
 		22D39FC723EC0AEA0058599D /* LoadingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoadingView.swift; sourceTree = "<group>"; };
 		22DC50582401F74800A6E808 /* CardViewContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardViewContainer.swift; sourceTree = "<group>"; };
+		22DC505A2403EA0600A6E808 /* DownloadWarningView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadWarningView.swift; sourceTree = "<group>"; };
 		22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentViewModel.swift; sourceTree = "<group>"; };
 		22E2267523C9BD3900A83601 /* DynamicContentState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentState.swift; sourceTree = "<group>"; };
 		22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentsViewModel.swift; sourceTree = "<group>"; };
@@ -613,6 +617,7 @@
 			children = (
 				8BFC74C22364A9BE001979F1 /* ContentScreen.swift */,
 				22E2267023C9B69700A83601 /* DynamicContentViewModel.swift */,
+				223DECED2409266F0017F7CA /* DownloadDeletionConfirmation.swift */,
 				22E2267723CA200E00A83601 /* ChildContentsViewModel.swift */,
 				22E2267923CA22C200A83601 /* DataCacheChildContentsViewModel.swift */,
 				222EEF7A23CDC24400B025A4 /* VideoPlaybackViewModel.swift */,
@@ -893,7 +898,6 @@
 				2288EF0C23741B9700514043 /* DownloadServiceTest.swift */,
 				22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */,
 				22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */,
-				228D0FE723E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift */,
 			);
 			path = Downloads;
 			sourceTree = "<group>";
@@ -996,6 +1000,7 @@
 				22C6410223F891D100CBFDE5 /* ArrowInCircleView.swift */,
 				B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */,
 				22C6410523F893F400CBFDE5 /* SpinningCircleView.swift */,
+				22DC505A2403EA0600A6E808 /* DownloadWarningView.swift */,
 			);
 			path = "Download Icon";
 			sourceTree = "<group>";
@@ -1453,6 +1458,7 @@
 			isa = PBXGroup;
 			children = (
 				B6C0F0D222D5D46D00012839 /* DownloadsView.swift */,
+				223DECEF240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift */,
 			);
 			path = Downloads;
 			sourceTree = "<group>";
@@ -1689,7 +1695,6 @@
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
 				22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */,
 				221E609E23856F4000E92155 /* VideosServiceMock.swift in Sources */,
-				228D0FE823E01DF600CEA6F1 /* RequestDownloadResult+Testable.swift in Sources */,
 				2237AAB423C33708008E9976 /* ProgressionAdapterTest.swift in Sources */,
 				220D971123C032DF005C746C /* Domain+Mocks.swift in Sources */,
 				2237AAAE23C336DF008E9976 /* DomainAdapterTest.swift in Sources */,
@@ -1761,6 +1766,7 @@
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
 				222EEF7023CAD65200B025A4 /* ChildContentsState+Fetchable.swift in Sources */,
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
+				223DECF0240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift in Sources */,
 				B6C0F0DB22D5E65900012839 /* UIViewController+Extensions.swift in Sources */,
 				B6419BB322EF5622003AC14E /* Logger.swift in Sources */,
 				223D77A523B06FFA005BE95D /* AttachmentAdapter.swift in Sources */,
@@ -1837,6 +1843,7 @@
 				223D77AB23B0C099005BE95D /* Download.swift in Sources */,
 				22C0514023A4FBCC004D1223 /* Group+Persistence.swift in Sources */,
 				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
+				22DC505B2403EA0600A6E808 /* DownloadWarningView.swift in Sources */,
 				22E2268023CA2D7F00A83601 /* Group+GroupDisplayable.swift in Sources */,
 				22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */,
 				222C0AAC23DF05D700D65EBD /* PlaybackSpeed.swift in Sources */,
@@ -1856,6 +1863,7 @@
 				B6D7DC5322C7B3FE006DD325 /* Color+Extensions.swift in Sources */,
 				223D77DB23B3472D005BE95D /* DownloadRepository.swift in Sources */,
 				B6D8EB2B22CBA94700DE29AF /* VideosRequest.swift in Sources */,
+				223DECEE240926700017F7CA /* DownloadDeletionConfirmation.swift in Sources */,
 				B6E21A3222F61305006CB22F /* Refreshable.swift in Sources */,
 				22C914C223BD7E7E00A05E00 /* ContentServiceAdapter.swift in Sources */,
 				22C4EAED23DEF910001A3FDA /* SettingsManager.swift in Sources */,

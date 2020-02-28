@@ -101,12 +101,17 @@ class DownloadQueueManagerTest: XCTestCase {
     )
   }
   
-  func sampleDownload() -> Download {
+  func sampleDownload() throws -> Download {
     let screencast = ContentTest.Mocks.screencast
-    let result = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
       self.persistableState(for: screencast.0, with: screencast.1)
     }
-    XCTAssert(result.successful)
+    .record()
+    
+    let completion = try wait(for: recorder.completion, timeout: 1)
+    
+    XCTAssert(completion == .finished)
+    
     return getAllDownloads().first!
   }
   
@@ -126,7 +131,7 @@ class DownloadQueueManagerTest: XCTestCase {
   func testPendingStreamSendsNewDownloads() throws {
     let recorder = queueManager.pendingStream.record()
     
-    var download = sampleDownload()
+    var download = try sampleDownload()
     try database.write { db in
       try download.save(db)
     }
@@ -137,7 +142,7 @@ class DownloadQueueManagerTest: XCTestCase {
   }
   
   func testPendingStreamSendingPreExistingDownloads() throws {
-    var download = sampleDownload()
+    var download = try sampleDownload()
     try database.write { db in
       try download.save(db)
     }

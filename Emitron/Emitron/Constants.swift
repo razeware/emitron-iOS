@@ -78,6 +78,7 @@ enum Constants {
   static let downloadRequestProblem = "Problem requesting download."
   static let downloadCancelled = "Download cancelled."
   static let downloadDeleted = "Download deleted."
+  static let downloadReset = "Download reset."
   static let downloadUnspecifiedProblem = "Problem with download action."
   
   static let simultaneousStreamsError = "You can only stream on one device at a time."

@@ -28,10 +28,6 @@
 
 import SwiftUI
 
-private enum Layout {
-  static let lineWidth: CGFloat = 2
-}
-
 struct CircularProgressBar: View {
   var progress: Double
 
@@ -45,7 +41,7 @@ struct CircularProgressBar: View {
   var background: some View {
     ZStack(alignment: .center) {
       Circle()
-        .stroke(Color.activeIcon, lineWidth: Layout.lineWidth)
+        .stroke(Color.activeIcon, lineWidth: DownloadIconLayout.lineWidth)
         .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       
       RoundedRectangle(cornerRadius: 1)
@@ -57,7 +53,7 @@ struct CircularProgressBar: View {
   var circleOverlay: some View {
     Circle()
       .trim(from: 0.0, to: CGFloat(progress))
-      .stroke(Color.inactiveIcon, lineWidth: Layout.lineWidth)
+      .stroke(Color.inactiveIcon, lineWidth: DownloadIconLayout.lineWidth)
       .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       .rotationEffect(.degrees(-90), anchor: .center)
   }

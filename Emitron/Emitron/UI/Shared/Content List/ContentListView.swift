@@ -27,8 +27,10 @@
 /// THE SOFTWARE.
 
 import SwiftUI
+import Combine
 
 struct ContentListView: View {
+  @State private var deleteSubscriptions = Set<AnyCancellable>()
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
@@ -170,13 +172,20 @@ struct ContentListView: View {
     DispatchQueue.main.async {
       let content = self.contentRepository.contents[index]
       
-      do {
-        try self.downloadAction.deleteDownload(contentId: content.id)
-      } catch {
-        Failure
-          .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
-        .log()
-      }
+      self.downloadAction
+        .deleteDownload(contentId: content.id)
+        .receive(on: RunLoop.main)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            Failure
+              .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
+              .log()
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+        }
+        .store(in: &self.deleteSubscriptions)
     }
   }
 }

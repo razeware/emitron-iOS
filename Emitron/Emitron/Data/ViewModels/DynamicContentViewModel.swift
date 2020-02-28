@@ -43,6 +43,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   @Published var bookmarked: Bool = false
   
   private var subscriptions = Set<AnyCancellable>()
+  private var downloadActionSubscriptions = Set<AnyCancellable>()
   
   init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction) {
     self.contentId = contentId
@@ -82,46 +83,81 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       .store(in: &subscriptions)
   }
   
-  func downloadTapped() {
-    guard state == .hasData else { return }
+  func downloadTapped() -> DownloadDeletionConfirmation? {
+    guard state == .hasData else { return nil }
     
-    do {
-      switch downloadProgress {
-      case .downloadable:
-        let result = downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
-          do {
-            return try self.repository.contentPersistableState(for: contentId)
-          } catch {
-            Failure
-              .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
-              .log()
-            return nil
-          }
+    switch downloadProgress {
+    case .downloadable:
+      downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
+        do {
+          return try self.repository.contentPersistableState(for: contentId)
+        } catch {
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+            .log()
+          return nil
         }
+      }
+      .receive(on: RunLoop.main)
+      .sink(receiveCompletion: { completion in
+        if case .failure(let error) = completion {
+          MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+        }
+      }) { result in
         switch result {
         case .downloadRequestedSuccessfully:
           MessageBus.current.post(message: Message(level: .success, message: Constants.downloadRequestedSuccessfully))
         case .downloadRequestedButQueueInactive:
           MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadRequestedButQueueInactive))
-        case .problemRequestingDownload(let message, _):
-          MessageBus.current.post(message: Message(level: .error, message: message))
         }
-      case .enqueued, .inProgress:
-        try downloadAction.cancelDownload(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
-      case .downloaded:
-        try downloadAction.deleteDownload(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
-      case .notDownloadable:
-        // No-op
-        return
       }
-    } catch {
-      Failure
-        .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to perform download action:  \(error)")
-        .log()
-      MessageBus.current.post(message: Message(level: .error, message: Constants.downloadUnspecifiedProblem))
+      .store(in: &downloadActionSubscriptions)
+
+    case .enqueued, .inProgress:
+      downloadAction.cancelDownload(contentId: contentId)
+        .receive(on: RunLoop.main)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
+        }
+        .store(in: &downloadActionSubscriptions)
+      
+    case .downloaded:
+      return DownloadDeletionConfirmation(
+        contentId: contentId,
+        title: "Confirm Delete",
+        message: "Are you sure you want to delete this download?"
+      ) { [weak self] in
+        guard let self = self else { return }
+        
+        self.downloadAction.deleteDownload(contentId: self.contentId)
+          .receive(on: RunLoop.main)
+          .sink(receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+              MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            }
+          }) { _ in
+            MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+          }
+        .store(in: &self.downloadActionSubscriptions)
+      }
+      
+    case .notDownloadable:
+      downloadAction.cancelDownload(contentId: contentId)
+        .receive(on: RunLoop.main)
+        .sink(receiveCompletion: { completion in
+          if case .failure(let error) = completion {
+            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          }
+        }) { _ in
+          MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadReset))
+        }
+        .store(in: &downloadActionSubscriptions)
     }
+    return nil
   }
   
   func bookmarkTapped() {

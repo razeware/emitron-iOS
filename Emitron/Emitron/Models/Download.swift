@@ -103,3 +103,15 @@ extension Download {
       ordinal: content.ordinal ?? 0)
   }
 }
+
+extension Download {
+  var isDownloading: Bool {
+    [.inProgress, .paused].contains(state) && remoteUrl != nil
+  }
+  
+  var isDownloaded: Bool {
+    [.complete].contains(state) && remoteUrl != nil
+  }
+}
+
+extension Download: Hashable { }

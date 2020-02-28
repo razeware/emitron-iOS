@@ -146,6 +146,10 @@ extension Color {
     Color("alarm")
   }
   
+  static var warning: Color {
+    Color("warning")
+  }
+  
   static var borderColor: Color {
     Color("borderColor")
   }

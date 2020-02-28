@@ -28,60 +28,19 @@
 
 import SwiftUI
 
-enum DownloadIconLayout {
-  static let size: CGFloat = 20
-  static let lineWidth: CGFloat = 2
-}
-
-struct DownloadIcon: View {
-  let downloadProgress: DownloadProgressDisplayable
-  
-  var body: some View {
-    icon.frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
-  }
-  
-  var icon: some View {
-    switch downloadProgress {
-    case .downloadable:
-      return AnyView(ArrowInCircleView(fillColour: .activeIcon))
-    case .enqueued:
-      return AnyView(SpinningCircleView())
-    case .inProgress(progress: let progress):
-      return AnyView(CircularProgressBar(progress: progress))
-    case .downloaded:
-      return AnyView(ArrowInCircleView(fillColour: .accent))
-    case .notDownloadable:
-      return AnyView(DownloadWarningView())
-    }
+extension DownloadDeletionConfirmation {
+  var alert: Alert {
+    Alert(
+      title: Text(title),
+      message: Text(message),
+      primaryButton: .destructive(Text("Delete"), action: confirm),
+      secondaryButton: .cancel()
+    )
   }
 }
 
-struct DownloadIcon_Previews: PreviewProvider {
-  static var previews: some View {
-    SwiftUI.Group {
-      selectionList.colorScheme(.light)
-      selectionList.colorScheme(.dark)
-    }
-  }
-  
-  static var selectionList: some View {
-    VStack {
-      icon(for: .downloadable)
-      icon(for: .enqueued)
-      icon(for: .inProgress(progress: 0.3))
-      icon(for: .inProgress(progress: 0.7))
-      icon(for: .inProgress(progress: 0.8))
-      icon(for: .downloaded)
-      icon(for: .notDownloadable)
-    }
-      .padding(20)
-      .background(Color.backgroundColor)
-  }
-  
-  static func icon(for state: DownloadProgressDisplayable) -> some View {
-    HStack {
-      Text(state.description)
-      DownloadIcon(downloadProgress: state)
-    }
+extension DownloadDeletionConfirmation: Identifiable {
+  var id: Int {
+    contentId
   }
 }

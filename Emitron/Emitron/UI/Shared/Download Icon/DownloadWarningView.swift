@@ -26,16 +26,31 @@
 /// OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 /// THE SOFTWARE.
 
-import Foundation
-@testable import Emitron
+import SwiftUI
 
-extension RequestDownloadResult {
-  var successful: Bool {
-    switch self {
-    case .downloadRequestedButQueueInactive, .downloadRequestedSuccessfully:
-      return true
-    case .problemRequestingDownload:
-      return false
-    }
+struct DownloadWarningView: View {
+  var body: some View {
+    Image(systemName: "exclamationmark.triangle.fill")
+      .resizable()
+      .font(Font.title.weight(.bold))
+      .foregroundColor(Color.warning)
+      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
   }
 }
+
+#if DEBUG
+struct DownloadWarningView_Previews: PreviewProvider {
+  static var previews: some View {
+    HStack {
+      icon.colorScheme(.dark)
+      icon.colorScheme(.light)
+    }
+  }
+  
+  static var icon: some View {
+    DownloadWarningView()
+      .padding()
+      .background(Color.backgroundColor)
+  }
+}
+#endif
