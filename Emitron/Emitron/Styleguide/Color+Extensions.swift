@@ -241,4 +241,24 @@ extension Color {
   static var searchFieldShadow: Color {
     Color("searchFieldShadow")
   }
+  
+  static var downloadButtonDownloaded: Color {
+    Color("downloadButtonDownloaded")
+  }
+  
+  static var downloadButtonDownloadingBackground: Color {
+    Color("downloadButtonDownloadingBackground")
+  }
+  
+  static var downloadButtonDownloadingForeground: Color {
+    Color("downloadButtonDownloadingForeground")
+  }
+  
+  static var downloadButtonNotDownloaded: Color {
+    Color("downloadButtonNotDownloaded")
+  }
+  
+  static var downloadButtonWarning: Color {
+    Color("downloadButtonWarning")
+  }
 }

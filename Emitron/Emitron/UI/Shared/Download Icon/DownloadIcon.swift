@@ -43,13 +43,13 @@ struct DownloadIcon: View {
   var icon: some View {
     switch downloadProgress {
     case .downloadable:
-      return AnyView(ArrowInCircleView(fillColour: .activeIcon))
+      return AnyView(ArrowInCircleView(fillColour: .downloadButtonNotDownloaded))
     case .enqueued:
       return AnyView(SpinningCircleView())
     case .inProgress(progress: let progress):
       return AnyView(CircularProgressBar(progress: progress))
     case .downloaded:
-      return AnyView(ArrowInCircleView(fillColour: .accent))
+      return AnyView(ArrowInCircleView(fillColour: .downloadButtonDownloaded))
     case .notDownloadable:
       return AnyView(DownloadWarningView())
     }
