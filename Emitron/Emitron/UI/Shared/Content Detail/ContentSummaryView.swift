@@ -36,6 +36,7 @@ struct ContentSummaryView: View {
   var content: ContentListDisplayable
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   @EnvironmentObject var sessionController: SessionController
+  @State private var deletionConfirmation: DownloadDeletionConfirmation?
   
   var courseLocked: Bool {
     content.professional && !sessionController.user!.canStreamPro
@@ -88,6 +89,7 @@ struct ContentSummaryView: View {
               .onTapGesture {
                 self.download()
               }
+              .alert(item: $deletionConfirmation) { $0.alert }
           }
           
           bookmarkButton
@@ -143,7 +145,7 @@ struct ContentSummaryView: View {
   }
   
   private func download() {
-    dynamicContentViewModel.downloadTapped()
+    deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
   private func bookmark() {

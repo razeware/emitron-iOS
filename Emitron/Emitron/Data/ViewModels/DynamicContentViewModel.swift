@@ -83,8 +83,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       .store(in: &subscriptions)
   }
   
-  func downloadTapped() {
-    guard state == .hasData else { return }
+  func downloadTapped() -> DownloadDeletionConfirmation? {
+    guard state == .hasData else { return nil }
     
     switch downloadProgress {
     case .downloadable:
@@ -126,16 +126,24 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         .store(in: &downloadActionSubscriptions)
       
     case .downloaded:
-      downloadAction.deleteDownload(contentId: contentId)
-        .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { completion in
-          if case .failure(let error) = completion {
-            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+      return DownloadDeletionConfirmation(
+        contentId: contentId,
+        title: "Confirm Delete",
+        message: "Are you sure you want to delete this download?"
+      ) { [weak self] in
+        guard let self = self else { return }
+        
+        self.downloadAction.deleteDownload(contentId: self.contentId)
+          .receive(on: RunLoop.main)
+          .sink(receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+              MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            }
+          }) { _ in
+            MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
           }
-        }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
-        }
-        .store(in: &downloadActionSubscriptions)
+        .store(in: &self.downloadActionSubscriptions)
+      }
       
     case .notDownloadable:
       downloadAction.cancelDownload(contentId: contentId)
@@ -149,6 +157,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         }
         .store(in: &downloadActionSubscriptions)
     }
+    return nil
   }
   
   func bookmarkTapped() {
