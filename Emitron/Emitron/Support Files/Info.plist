@@ -35,11 +35,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>SSO_SECRET</key>
 	<string>$(SSO_SECRET)</string>
 	<key>UIAppFonts</key>
