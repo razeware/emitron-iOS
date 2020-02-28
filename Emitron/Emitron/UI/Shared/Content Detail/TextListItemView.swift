@@ -57,10 +57,11 @@ struct TextListItemView: View {
           VStack(alignment: .leading, spacing: 5) {
             Text(content.name)
               .font(.uiTitle5)
+              .lineSpacing(3)
               .foregroundColor(.titleText)
             
             Text(content.duration.minuteSecondTimeFromSeconds)
-              .font(.uiCaption)
+              .font(.uiFootnote)
               .foregroundColor(.contentText)
           }
             
