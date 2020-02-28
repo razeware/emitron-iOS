@@ -41,6 +41,15 @@ enum AppliedFilterType {
     }
   }
   
+  var borderColor: Color {
+    switch self {
+    case .default:
+      return .filterTagBorder
+    case .destructive:
+      return .filterTagDestructiveBorder
+    }
+  }
+  
   var textColor: Color {
     switch self {
     case .default:
@@ -56,15 +65,6 @@ enum AppliedFilterType {
       return .filterTagIcon
     case .destructive:
       return .filterTagDestructiveIcon
-    }
-  }
-  
-  var shadowColor: Color {
-    switch self {
-    case .default:
-      return .filterTagShadow
-    case .destructive:
-      return .filterTagDestructiveShadow
     }
   }
 }
@@ -97,12 +97,16 @@ struct AppliedFilterTagButton: View {
           .foregroundColor(type.iconColor)
       }
         .padding(.all, Layout.padding.overall)
-        .background(type.backgroundColor)
-        .cornerRadius(Layout.cornerRadius)
+    .background(
+      RoundedRectangle(cornerRadius: Layout.cornerRadius)
+        .fill(type.backgroundColor)
+        .overlay(
+          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+            .stroke(type.borderColor, lineWidth: 2)
+        )
+      )
     }
-      .shadow(color: type.shadowColor, radius: 1, x: 0, y: 2)
-      .padding(1)
-      .padding([.bottom], 2)
+    .padding(1)
   }
 }
 
