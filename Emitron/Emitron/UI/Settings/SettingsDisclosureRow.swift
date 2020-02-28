@@ -30,6 +30,7 @@ import SwiftUI
 
 struct SettingsDisclosureRow: View {
   let title: String
+  let value: String
   
   var body: some View {
     VStack(alignment: .leading, spacing: 0) {
@@ -40,6 +41,10 @@ struct SettingsDisclosureRow: View {
           .padding([.vertical], SettingsLayout.rowSpacing)
         
         Spacer()
+        
+        Text(value)
+          .font(.uiBodyAppleDefault)
+          .foregroundColor(.contentText)
         
         Image(systemName: "chevron.right")
           .foregroundColor(.iconButton)
@@ -61,7 +66,7 @@ struct SettingsDisclosureRow_Previews: PreviewProvider {
   }
   
   static var rows: some View {
-    SettingsDisclosureRow(title: "Disclosure")
+    SettingsDisclosureRow(title: "Disclosure", value: "HELLO")
       .padding()
       .background(Color.backgroundColor)
   }

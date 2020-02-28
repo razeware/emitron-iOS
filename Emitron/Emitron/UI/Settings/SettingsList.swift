@@ -59,7 +59,7 @@ struct SettingsList: View {
             settingsOption: $settingsManager.downloadQuality
           )
         ) {
-          SettingsDisclosureRow(title: option.title)
+          SettingsDisclosureRow(title: option.title, value: settingsManager.downloadQuality.display)
         })
     case .playbackSpeed:
       return AnyView(
@@ -69,7 +69,7 @@ struct SettingsList: View {
             settingsOption: $settingsManager.playbackSpeed
           )
         ) {
-          SettingsDisclosureRow(title: option.title)
+          SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
         })
     }
   }
