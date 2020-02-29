@@ -33,7 +33,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
   @Binding var settingsOption: Setting
   
   var body: some View {
-    VStack {
+    VStack(spacing: 0) {
       ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
         VStack(spacing: 0) {
           Button(action: {
