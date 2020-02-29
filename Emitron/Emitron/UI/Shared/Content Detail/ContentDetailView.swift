@@ -52,7 +52,7 @@ struct ContentDetailView: View {
   }
   
   var contentView: some View {
-    let scrollView = GeometryReader { geometry in
+    GeometryReader { geometry in
       List {
         Section {
           
@@ -73,17 +73,6 @@ struct ContentDetailView: View {
           .background(Color.backgroundColor)
       }
     }
-    .navigationBarItems(trailing:
-      SwiftUI.Group {
-        Button(action: {
-          self.refreshContentDetails()
-        }) {
-          Image(systemName: "arrow.clockwise")
-            .foregroundColor(.iconButton)
-        }
-      })
-    
-    return scrollView
       .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
@@ -156,10 +145,5 @@ struct ContentDetailView: View {
       return AnyView(ProgressBarView(progress: progress, isRounded: false))
     }
     return nil
-  }
-  
-  private func refreshContentDetails() {
-    dynamicContentViewModel.reload()
-    childContentsViewModel.reload()
   }
 }

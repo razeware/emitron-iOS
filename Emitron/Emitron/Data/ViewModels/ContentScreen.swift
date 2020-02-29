@@ -74,7 +74,7 @@ enum ContentScreen {
     case .downloads(permitted: true):
       return "Tap the download icon to download a video course or episode to watch offline."
     case .downloads(permitted: false):
-      return "raywenderlich.com professional subscribers can download videos and watch them offline."
+      return "raywenderlich.com Professional subscribers can download videos and watch them offline.\n\nVisit raywenderlich.com/subscription to upgrade and start downloading videos today!"
     }
   }
   

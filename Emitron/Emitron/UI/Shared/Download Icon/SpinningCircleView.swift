@@ -47,11 +47,11 @@ struct SpinningCircleView: View {
   var background: some View {
     ZStack(alignment: .center) {
       Circle()
-        .stroke(Color.activeIcon, lineWidth: Layout.lineWidth)
+        .stroke(Color.downloadButtonDownloadingBackground, lineWidth: Layout.lineWidth)
         .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       
       RoundedRectangle(cornerRadius: 1)
-        .fill(Color.activeIcon)
+        .fill(Color.downloadButtonDownloadingBackground)
         .frame(width: 6, height: 6)
     }
   }
@@ -62,7 +62,7 @@ struct SpinningCircleView: View {
         from: animateStrokeStart ? 0.2 : 0.1,
         to: animateStrokeEnd ? 0.2 : 0.5
       )
-      .stroke(Color.accent, lineWidth: Layout.lineWidth)
+      .stroke(Color.downloadButtonDownloadingForeground, lineWidth: Layout.lineWidth)
       .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
       .rotationEffect(.degrees(animateRotation ? 360 : 0))
       .onAppear {

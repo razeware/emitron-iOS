@@ -79,7 +79,7 @@ extension Font {
     Font.footnote
   }
   static var uiCaption: Font {
-    Font.system(size: 13.0)
+    Font.system(size: 14.0)
   }
   static var uiUppercase: Font {
     Font.system(size: 12.0).weight(.semibold)

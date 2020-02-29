@@ -50,6 +50,20 @@ struct SettingsView: View {
           .navigationBarItems(trailing: dismissButton)
           .padding([.horizontal], 20)
         
+        Section(header:
+          HStack {
+            Text("App Icon")
+              .font(.uiTitle4)
+              .foregroundColor(.titleText)
+            
+            Spacer()
+          }
+            .padding([.top], 20)
+        ) {
+          IconChooserView()
+        }
+        .padding([.horizontal], 20)
+        
         Spacer()
         
         Button(action: {
