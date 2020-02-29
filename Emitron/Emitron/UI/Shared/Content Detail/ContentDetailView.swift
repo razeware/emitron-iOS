@@ -87,8 +87,11 @@ struct ContentDetailView: View {
   }
   
   private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
-    let viewModelProvider: VideoViewModelProvider = {
-      self.dynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+    let viewModelProvider: VideoViewModelProvider = { dismissClosure in
+      self.dynamicContentViewModel.videoPlaybackViewModel(
+        apiClient: self.sessionController.client,
+        dismissClosure: dismissClosure
+      )
     }
     return NavigationLink(destination: VideoView(viewModelProvider: viewModelProvider)) {
       if case .hasData = childContentsViewModel.state {

@@ -57,6 +57,7 @@ final class VideoPlaybackViewModel {
   private let contentsService: ContentsService
   private let progressEngine: ProgressEngine
   private let sessionController: SessionController
+  private let dismiss: () -> Void
   
   // These are the content models that this view model is capable of playing. In this order.
   private var contentList = [VideoPlaybackState]()
@@ -84,7 +85,8 @@ final class VideoPlaybackViewModel {
        videosService: VideosService,
        contentsService: ContentsService,
        syncAction: SyncAction,
-       sessionController: SessionController = .current) {
+       sessionController: SessionController = .current,
+       dismissClosure: @escaping () -> Void = { }) {
     self.initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
@@ -95,6 +97,7 @@ final class VideoPlaybackViewModel {
       syncAction: syncAction
     )
     self.sessionController = sessionController
+    self.dismiss = dismissClosure
     
     prepareSubscribers()
   }
@@ -195,6 +198,18 @@ final class VideoPlaybackViewModel {
         guard let playerItem = self?.player.currentItem else { return }
         
         self?.addClosedCaptions(for: playerItem)
+      }
+      .store(in: &subscriptions)
+    
+    NotificationCenter.default
+      .publisher(for: .AVPlayerItemDidPlayToEndTime)
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        
+        if self.player.items().last == self.player.currentItem {
+          // We're done. Let's dismiss the player
+          self.dismiss()
+        }
       }
       .store(in: &subscriptions)
   }

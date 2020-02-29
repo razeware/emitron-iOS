@@ -47,7 +47,7 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   }
 }
 
-typealias VideoViewModelProvider = () -> VideoPlaybackViewModel
+typealias VideoViewModelProvider = (_ dismiss: @escaping () -> Void) -> VideoPlaybackViewModel
 
 struct VideoView: View {
   let viewModelProvider: VideoViewModelProvider
@@ -107,7 +107,9 @@ struct VideoView: View {
   private func checkViewModelLoaded() {
     guard self.viewModel == nil else { return }
   
-    self.viewModel = self.viewModelProvider()
+    self.viewModel = self.viewModelProvider {
+      self.presentationMode.wrappedValue.dismiss()
+    }
   }
   
   private func storeOwningTab() {

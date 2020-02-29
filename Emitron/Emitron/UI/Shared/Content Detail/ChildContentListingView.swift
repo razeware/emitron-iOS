@@ -103,8 +103,11 @@ struct ChildContentListingView: View {
           .padding([.horizontal, .bottom], 20)
       )
     } else {
-      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = {
-        childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = { dismissClosure in
+        childDynamicContentViewModel.videoPlaybackViewModel(
+          apiClient: self.sessionController.client,
+          dismissClosure: dismissClosure
+        )
       }
       
       return AnyView(NavigationLink(destination:
