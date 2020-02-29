@@ -258,7 +258,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let anotherCompletion = try wait(for: anotherRecorder.completion, timeout: 1)
+    let anotherCompletion = try wait(for: anotherRecorder.completion, timeout: 2)
     XCTAssert(anotherCompletion == .finished)
     
     // Adds all episodes and the collection to the DB
