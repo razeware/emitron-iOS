@@ -170,6 +170,10 @@ extension Color {
     Color("listHeaderBackground")
   }
   
+  static var appIconBorder: Color {
+    Color("appIconBorder")
+  }
+  
   static var toggleTextSelected: Color {
     Color("toggleTextSelected")
   }

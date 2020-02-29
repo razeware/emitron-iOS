@@ -104,6 +104,10 @@
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
 		2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */; };
+		2278AE4324099EBD00855221 /* IconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE4224099EBD00855221 /* IconManager.swift */; };
+		2278AE452409E1D900855221 /* IconChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE442409E1D900855221 /* IconChooserView.swift */; };
+		2278AE48240A4BBC00855221 /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE47240A4BBC00855221 /* IconView.swift */; };
+		2278AE4A240A565C00855221 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE49240A565C00855221 /* Icon.swift */; };
 		2280E52323C81B3800F3913D /* PublishedPrePostFacto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2280E52223C81B3800F3913D /* PublishedPrePostFacto.swift */; };
 		2280E52823C8270600F3913D /* PublishedPrePostFactoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2280E52723C8270600F3913D /* PublishedPrePostFactoTest.swift */; };
 		2288EF0B2374057000514043 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF092374056D00514043 /* DownloadService.swift */; };
@@ -406,6 +410,10 @@
 		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
+		2278AE4224099EBD00855221 /* IconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconManager.swift; sourceTree = "<group>"; };
+		2278AE442409E1D900855221 /* IconChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconChooserView.swift; sourceTree = "<group>"; };
+		2278AE47240A4BBC00855221 /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
+		2278AE49240A565C00855221 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
 		2280E52223C81B3800F3913D /* PublishedPrePostFacto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedPrePostFacto.swift; sourceTree = "<group>"; };
 		2280E52723C8270600F3913D /* PublishedPrePostFactoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedPrePostFactoTest.swift; sourceTree = "<group>"; };
 		2288EF092374056D00514043 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
@@ -838,6 +846,15 @@
 			path = Displayable;
 			sourceTree = "<group>";
 		};
+		2278AE46240A4BAC00855221 /* Icons */ = {
+			isa = PBXGroup;
+			children = (
+				2278AE442409E1D900855221 /* IconChooserView.swift */,
+				2278AE47240A4BBC00855221 /* IconView.swift */,
+			);
+			path = Icons;
+			sourceTree = "<group>";
+		};
 		2280E52123C7690200F3913D /* Combine */ = {
 			isa = PBXGroup;
 			children = (
@@ -1029,6 +1046,7 @@
 				22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */,
 				22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */,
 				229935CF23FE8C6F00D3D16A /* SettingsSelectable.swift */,
+				2278AE4224099EBD00855221 /* IconManager.swift */,
 			);
 			path = Settings;
 			sourceTree = "<group>";
@@ -1144,6 +1162,7 @@
 		22E88F5F23DF8D7C0016EB36 /* Settings */ = {
 			isa = PBXGroup;
 			children = (
+				2278AE46240A4BAC00855221 /* Icons */,
 				22EFB7FE23ECB3C4005AD8CD /* Licenses */,
 				B6FC15AD22CB529E0078CEDB /* SettingsView.swift */,
 				229F4A1523FE7ECB006E2DE6 /* SettingsToggleRow.swift */,
@@ -1236,6 +1255,7 @@
 				22F2C45823EF7987007ED4A1 /* ContentDifficulty.swift */,
 				22F2C45A23EF79C1007ED4A1 /* ContentType.swift */,
 				22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */,
+				2278AE49240A565C00855221 /* Icon.swift */,
 			);
 			path = Models;
 			sourceTree = "<group>";
@@ -1805,6 +1825,7 @@
 				B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */,
 				229F0AC023BB23D00004DD4F /* DownloadAction.swift in Sources */,
 				2213194123E4E85F00F15816 /* OfflineView.swift in Sources */,
+				2278AE4324099EBD00855221 /* IconManager.swift in Sources */,
 				223D77AF23B0C0AA005BE95D /* Bookmark.swift in Sources */,
 				22EFB80423ECB5A3005AD8CD /* FossLicense.swift in Sources */,
 				229F4A1823FE7EDB006E2DE6 /* SettingsDisclosureRow.swift in Sources */,
@@ -1832,6 +1853,7 @@
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
 				223DECF0240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift in Sources */,
 				B6C0F0DB22D5E65900012839 /* UIViewController+Extensions.swift in Sources */,
+				2278AE48240A4BBC00855221 /* IconView.swift in Sources */,
 				B6419BB322EF5622003AC14E /* Logger.swift in Sources */,
 				223D77A523B06FFA005BE95D /* AttachmentAdapter.swift in Sources */,
 				223D77B523B0C0CA005BE95D /* Domain.swift in Sources */,
@@ -1907,6 +1929,7 @@
 				223D77AB23B0C099005BE95D /* Download.swift in Sources */,
 				22C0514023A4FBCC004D1223 /* Group+Persistence.swift in Sources */,
 				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
+				2278AE4A240A565C00855221 /* Icon.swift in Sources */,
 				22DC505B2403EA0600A6E808 /* DownloadWarningView.swift in Sources */,
 				22E2268023CA2D7F00A83601 /* Group+GroupDisplayable.swift in Sources */,
 				22E2267123C9B69700A83601 /* DynamicContentViewModel.swift in Sources */,
@@ -1991,6 +2014,7 @@
 				222EEF7D23CE099C00B025A4 /* VideoPlaybackState.swift in Sources */,
 				B6FC15A822CB51D60078CEDB /* ContentListView.swift in Sources */,
 				22C4EAE423DE0958001A3FDA /* PersistenceStore+Keychain.swift in Sources */,
+				2278AE452409E1D900855221 /* IconChooserView.swift in Sources */,
 				22B8266623AF5D2100D4BA23 /* ContentAdapter.swift in Sources */,
 				223D77DD23B3473C005BE95D /* LibraryRepository.swift in Sources */,
 				223D77B123B0C0B2005BE95D /* Category.swift in Sources */,

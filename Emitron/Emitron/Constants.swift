@@ -88,6 +88,9 @@ enum Constants {
   static let videoPlaybackCannotStreamWhenOffline = "Cannot stream video when offline."
   static let videoPlaybackInvalidPermissions = "You don't have the required permissions to view this video."
   
+  static let appIconUpdatedSuccessfully = "You app icon has been updated!"
+  static let appIconUpdateProblem = "There was a problem updating the app icon."
+  
   // Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"

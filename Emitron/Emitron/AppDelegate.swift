@@ -42,6 +42,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var downloadService: DownloadService!
   fileprivate var messageBus = MessageBus()
   fileprivate var settingsManager: SettingsManager!
+  fileprivate var iconManager = IconManager()
   
   func application(_ application: UIApplication,
                    didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
@@ -160,5 +161,11 @@ extension MessageBus {
 extension SettingsManager {
   static var current: SettingsManager {
     (UIApplication.shared.delegate as! AppDelegate).settingsManager
+  }
+}
+
+extension IconManager {
+  static var current: IconManager {
+    (UIApplication.shared.delegate as! AppDelegate).iconManager
   }
 }
