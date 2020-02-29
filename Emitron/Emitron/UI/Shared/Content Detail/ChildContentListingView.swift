@@ -102,17 +102,29 @@ struct ChildContentListingView: View {
         )
           .padding([.horizontal, .bottom], 20)
       )
+    } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
+      return AnyView(
+        Button(action: {
+          MessageBus.current
+            .post(message: Message(level: .warning, message: Constants.videoPlaybackExpiredPermissions))
+        }) {
+          TextListItemView(
+            dynamicContentViewModel: childDynamicContentViewModel,
+            content: model
+          )
+            .padding([.horizontal, .bottom], 20)
+        }
+      )
     } else {
-      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = {
-        childDynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = { dismissClosure in
+        childDynamicContentViewModel.videoPlaybackViewModel(
+          apiClient: self.sessionController.client,
+          dismissClosure: dismissClosure
+        )
       }
       
       return AnyView(NavigationLink(destination:
-        VideoView(viewModelProvider: childVideoPlaybackViewModelProvider)
-          .onDisappear {
-            // In case there's a left-over message from the nav view
-            MessageBus.current.dismiss()
-          }
+          VideoView(viewModelProvider: childVideoPlaybackViewModelProvider)
         ) {
           TextListItemView(
             dynamicContentViewModel: childDynamicContentViewModel,

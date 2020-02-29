@@ -34,6 +34,7 @@ enum VideoPlaybackViewModelError: Error {
   case invalidOrMissingAttribute(String)
   case cannotStreamWhenOffline
   case invalidPermissions
+  case expiredPermissions
   
   var localizedDescription: String {
     switch self {
@@ -43,6 +44,26 @@ enum VideoPlaybackViewModelError: Error {
       return Constants.videoPlaybackCannotStreamWhenOffline
     case .invalidPermissions:
       return Constants.videoPlaybackInvalidPermissions
+    case .expiredPermissions:
+      return Constants.videoPlaybackExpiredPermissions
+    }
+  }
+  
+  var messageLevel: Message.Level {
+    switch self {
+    case .expiredPermissions:
+      return .warning
+    default:
+      return .error
+    }
+  }
+  
+  var messageAutoDismiss: Bool {
+    switch self {
+    case .expiredPermissions:
+      return true
+    default:
+      return false
     }
   }
 }
@@ -57,6 +78,7 @@ final class VideoPlaybackViewModel {
   private let contentsService: ContentsService
   private let progressEngine: ProgressEngine
   private let sessionController: SessionController
+  private let dismiss: () -> Void
   
   // These are the content models that this view model is capable of playing. In this order.
   private var contentList = [VideoPlaybackState]()
@@ -84,7 +106,8 @@ final class VideoPlaybackViewModel {
        videosService: VideosService,
        contentsService: ContentsService,
        syncAction: SyncAction,
-       sessionController: SessionController = .current) {
+       sessionController: SessionController = .current,
+       dismissClosure: @escaping () -> Void = { }) {
     self.initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
@@ -95,6 +118,7 @@ final class VideoPlaybackViewModel {
       syncAction: syncAction
     )
     self.sessionController = sessionController
+    self.dismiss = dismissClosure
     
     prepareSubscribers()
   }
@@ -123,11 +147,16 @@ final class VideoPlaybackViewModel {
       return true
     }
     
-    // If we've got a download, then we're ok too
+    // If we've got a download, then we might be ok
     if let download = contentItem.download,
       download.state == .complete,
       download.localUrl != nil {
-      return true
+      // We have a download, but are we still authenticated?
+      if sessionController.hasCurrentDownloadPermissions {
+        return true
+      } else {
+        throw VideoPlaybackViewModelError.expiredPermissions
+      }
     } else {
       // We can't stream cos we're offline, and we don't have a download
       throw VideoPlaybackViewModelError.cannotStreamWhenOffline
@@ -195,6 +224,18 @@ final class VideoPlaybackViewModel {
         guard let playerItem = self?.player.currentItem else { return }
         
         self?.addClosedCaptions(for: playerItem)
+      }
+      .store(in: &subscriptions)
+    
+    NotificationCenter.default
+      .publisher(for: .AVPlayerItemDidPlayToEndTime)
+      .sink { [weak self] _ in
+        guard let self = self else { return }
+        
+        if self.player.items().last == self.player.currentItem {
+          // We're done. Let's dismiss the player
+          self.dismiss()
+        }
       }
       .store(in: &subscriptions)
   }

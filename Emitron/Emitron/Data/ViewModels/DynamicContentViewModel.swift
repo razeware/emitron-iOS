@@ -212,7 +212,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     }
   }
   
-  func videoPlaybackViewModel(apiClient: RWAPI) -> VideoPlaybackViewModel {
+  func videoPlaybackViewModel(apiClient: RWAPI, dismissClosure: @escaping () -> Void) -> VideoPlaybackViewModel {
     let videosService = VideosService(client: apiClient)
     let contentsService = ContentsService(client: apiClient)
     return VideoPlaybackViewModel(
@@ -220,7 +220,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       repository: repository,
       videosService: videosService,
       contentsService: contentsService,
-      syncAction: syncAction
+      syncAction: syncAction,
+      dismissClosure: dismissClosure
     )
   }
 }

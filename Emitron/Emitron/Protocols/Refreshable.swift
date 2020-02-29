@@ -34,8 +34,9 @@ protocol Refreshable {
   var lastRefreshedDate: Date? { get }
   var shouldRefresh: Bool { get }
 
-  // Every class that conforms to the protocol has to call this function after the "refreshable" action has been completed to store the date it was last updated on
-  func saveOrReplaceRefreshableUpdateDate()
+  // Every class that conforms to the protocol has to call this function
+  // after the "refreshable" action has been completed to store the date it was last updated on
+  func saveOrReplaceRefreshableUpdateDate(_ date: Date)
 }
 
 extension Refreshable {
@@ -64,8 +65,8 @@ extension Refreshable {
     return true
   }
   
-  func saveOrReplaceRefreshableUpdateDate() {
-    UserDefaults.standard.set(Date(),
+  func saveOrReplaceRefreshableUpdateDate(_ date: Date = Date()) {
+    UserDefaults.standard.set(date,
                               forKey: self.refreshableUserDefaultsKey)
   }
 }

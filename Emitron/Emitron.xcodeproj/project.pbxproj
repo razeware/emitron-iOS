@@ -108,6 +108,7 @@
 		2278AE4A240A565C00855221 /* Icon.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE49240A565C00855221 /* Icon.swift */; };
 		2278AE4D240A67F600855221 /* app-icon--default@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2278AE4B240A67F600855221 /* app-icon--default@2x.png */; };
 		2278AE4E240A67F600855221 /* app-icon--default@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 2278AE4C240A67F600855221 /* app-icon--default@3x.png */; };
+		2278AE50240A74C400855221 /* UIApplication+DismissKeyboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE4F240A74C400855221 /* UIApplication+DismissKeyboard.swift */; };
 		2280E52323C81B3800F3913D /* PublishedPrePostFacto.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2280E52223C81B3800F3913D /* PublishedPrePostFacto.swift */; };
 		2280E52823C8270600F3913D /* PublishedPrePostFactoTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2280E52723C8270600F3913D /* PublishedPrePostFactoTest.swift */; };
 		2288EF0B2374057000514043 /* DownloadService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2288EF092374056D00514043 /* DownloadService.swift */; };
@@ -414,6 +415,7 @@
 		2278AE49240A565C00855221 /* Icon.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Icon.swift; sourceTree = "<group>"; };
 		2278AE4B240A67F600855221 /* app-icon--default@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default@2x.png"; sourceTree = "<group>"; };
 		2278AE4C240A67F600855221 /* app-icon--default@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default@3x.png"; sourceTree = "<group>"; };
+		2278AE4F240A74C400855221 /* UIApplication+DismissKeyboard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIApplication+DismissKeyboard.swift"; sourceTree = "<group>"; };
 		2280E52223C81B3800F3913D /* PublishedPrePostFacto.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedPrePostFacto.swift; sourceTree = "<group>"; };
 		2280E52723C8270600F3913D /* PublishedPrePostFactoTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PublishedPrePostFactoTest.swift; sourceTree = "<group>"; };
 		2288EF092374056D00514043 /* DownloadService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadService.swift; sourceTree = "<group>"; };
@@ -1315,6 +1317,7 @@
 				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
 				22BE654E23F1F66E00717369 /* Comparable+Clamped.swift */,
 				22C640F523F604E700CBFDE5 /* View+If.swift */,
+				2278AE4F240A74C400855221 /* UIApplication+DismissKeyboard.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1899,6 +1902,7 @@
 				22B8265D23AF37FE00D4BA23 /* ProgressionAdapter.swift in Sources */,
 				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
 				222C0AB023DF554E00D65EBD /* SettingsOption.swift in Sources */,
+				2278AE50240A74C400855221 /* UIApplication+DismissKeyboard.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				22C0513A23A4FBB0004D1223 /* ContentCategory+Persistence.swift in Sources */,
 				22C4EAF123DEFA76001A3FDA /* EmitronSettings.swift in Sources */,

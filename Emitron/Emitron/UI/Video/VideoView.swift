@@ -47,7 +47,7 @@ struct VideoPlayerControllerRepresentable: UIViewControllerRepresentable {
   }
 }
 
-typealias VideoViewModelProvider = () -> VideoPlaybackViewModel
+typealias VideoViewModelProvider = (_ dismiss: @escaping () -> Void) -> VideoPlaybackViewModel
 
 struct VideoView: View {
   let viewModelProvider: VideoViewModelProvider
@@ -107,7 +107,9 @@ struct VideoView: View {
   private func checkViewModelLoaded() {
     guard self.viewModel == nil else { return }
   
-    self.viewModel = self.viewModelProvider()
+    self.viewModel = self.viewModelProvider {
+      self.presentationMode.wrappedValue.dismiss()
+    }
   }
   
   private func storeOwningTab() {
@@ -123,8 +125,15 @@ struct VideoView: View {
         playbackVerified = true
       }
     } catch {
+      self.presentationMode.wrappedValue.dismiss()
       if let viewModelError = error as? VideoPlaybackViewModelError {
-        MessageBus.current.post(message: Message(level: .error, message: viewModelError.localizedDescription, autoDismiss: false))
+        MessageBus.current.post(
+          message: Message(
+            level: viewModelError.messageLevel,
+            message: viewModelError.localizedDescription,
+            autoDismiss: viewModelError.messageAutoDismiss
+          )
+        )
       }
     }
   }

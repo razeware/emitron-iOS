@@ -39,13 +39,12 @@ struct ContentListView: View {
   var body: some View {
     contentView
       .onAppear {
-        if self.contentRepository.state == .initial {
-          self.contentRepository.reload()
-        }
+        UIApplication.dismissKeyboard()
       }
   }
 
   private var contentView: AnyView {
+    reloadIfRequired()
     switch contentRepository.state {
     case .initial:
       return AnyView(loadingView)
@@ -59,6 +58,12 @@ struct ContentListView: View {
       return AnyView(listView)
     case .failed:
       return AnyView(reloadView)
+    }
+  }
+  
+  private func reloadIfRequired() {
+    if self.contentRepository.state == .initial {
+      self.contentRepository.reload()
     }
   }
 
@@ -113,6 +118,11 @@ struct ContentListView: View {
         Color.clear.frame(height: 0)
       }
     }
+      .gesture(
+        DragGesture().onChanged { _ in
+          UIApplication.dismissKeyboard()
+        }
+      )
   }
   
   private var loadingView: some View {
