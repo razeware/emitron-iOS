@@ -42,6 +42,7 @@ struct ContentListView: View {
         if self.contentRepository.state == .initial {
           self.contentRepository.reload()
         }
+        UIApplication.dismissKeyboard()
       }
   }
 
@@ -113,6 +114,11 @@ struct ContentListView: View {
         Color.clear.frame(height: 0)
       }
     }
+      .gesture(
+        DragGesture().onChanged { _ in
+          UIApplication.dismissKeyboard()
+        }
+      )
   }
   
   private var loadingView: some View {
