@@ -125,8 +125,15 @@ struct VideoView: View {
         playbackVerified = true
       }
     } catch {
+      self.presentationMode.wrappedValue.dismiss()
       if let viewModelError = error as? VideoPlaybackViewModelError {
-        MessageBus.current.post(message: Message(level: .error, message: viewModelError.localizedDescription, autoDismiss: false))
+        MessageBus.current.post(
+          message: Message(
+            level: viewModelError.messageLevel,
+            message: viewModelError.localizedDescription,
+            autoDismiss: viewModelError.messageAutoDismiss
+          )
+        )
       }
     }
   }

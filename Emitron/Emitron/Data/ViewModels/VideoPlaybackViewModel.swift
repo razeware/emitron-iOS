@@ -34,6 +34,7 @@ enum VideoPlaybackViewModelError: Error {
   case invalidOrMissingAttribute(String)
   case cannotStreamWhenOffline
   case invalidPermissions
+  case expiredPermissions
   
   var localizedDescription: String {
     switch self {
@@ -43,6 +44,26 @@ enum VideoPlaybackViewModelError: Error {
       return Constants.videoPlaybackCannotStreamWhenOffline
     case .invalidPermissions:
       return Constants.videoPlaybackInvalidPermissions
+    case .expiredPermissions:
+      return Constants.videoPlaybackExpiredPermissions
+    }
+  }
+  
+  var messageLevel: Message.Level {
+    switch self {
+    case .expiredPermissions:
+      return .warning
+    default:
+      return .error
+    }
+  }
+  
+  var messageAutoDismiss: Bool {
+    switch self {
+    case .expiredPermissions:
+      return true
+    default:
+      return false
     }
   }
 }
@@ -126,11 +147,16 @@ final class VideoPlaybackViewModel {
       return true
     }
     
-    // If we've got a download, then we're ok too
+    // If we've got a download, then we might be ok
     if let download = contentItem.download,
       download.state == .complete,
       download.localUrl != nil {
-      return true
+      // We have a download, but are we still authenticated?
+      if sessionController.hasCurrentDownloadPermissions {
+        return true
+      } else {
+        throw VideoPlaybackViewModelError.expiredPermissions
+      }
     } else {
       // We can't stream cos we're offline, and we don't have a download
       throw VideoPlaybackViewModelError.cannotStreamWhenOffline

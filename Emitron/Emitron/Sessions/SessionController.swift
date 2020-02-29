@@ -92,6 +92,17 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     user?.hasPermissionToUseApp ?? false
   }
   
+  var hasCurrentDownloadPermissions: Bool {
+    guard user?.canDownload ?? false else { return false }
+    
+    if case .loaded(let date) = permissionState,
+      let permissionsLastConfirmedDate = date,
+      Date().timeIntervalSince(permissionsLastConfirmedDate) < Constants.videoPlaybackOfflinePermissionsCheckPeriod {
+      return true
+    }
+    return false
+  }
+  
   // MARK: - Initializers
   init(guardpost: Guardpost) {
     dispatchPrecondition(condition: .onQueue(.main))
