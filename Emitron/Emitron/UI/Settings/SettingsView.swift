@@ -37,6 +37,7 @@ enum SettingsLayout {
 struct SettingsView: View {
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager = SettingsManager.current
   @State private var licensesPresented: Bool = false
   var showLogoutButton: Bool
@@ -86,6 +87,7 @@ struct SettingsView: View {
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
               self.sessionController.logout()
               self.presentationMode.wrappedValue.dismiss()
+              self.tabViewModel.selectedTab = .library
             }
           }
           .padding([.bottom, .horizontal], 18)

@@ -61,7 +61,10 @@ struct MyTutorialView: View {
   // Initialization
   @State var state: MyTutorialsState
 
+  // We need to pull these in to pass them to the settings view. We don't actually use them here.
+  // I think this is a bug.
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var tabViewModel: TabViewModel
   
   @ObservedObject var inProgressRepository: InProgressRepository
   @ObservedObject var completedRepository: CompletedRepository
@@ -89,6 +92,7 @@ struct MyTutorialView: View {
         SettingsView(showLogoutButton: true)
           // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
           .environmentObject(self.sessionController)
+          .environmentObject(self.tabViewModel)
       }
     .onDisappear {
       self.reloadProgression = true
