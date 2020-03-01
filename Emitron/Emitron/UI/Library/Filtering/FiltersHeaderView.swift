@@ -66,6 +66,7 @@ struct FiltersHeaderView: View {
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
       }
+        .accessibility(label: Text(filterGroup.type.name))
         
       if isExpanded {
         expandedView

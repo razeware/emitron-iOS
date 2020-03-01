@@ -87,6 +87,7 @@ struct ContentSummaryView: View {
                 self.download()
               }
               .alert(item: $deletionConfirmation) { $0.alert }
+              .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
           }
           
           bookmarkButton
@@ -133,6 +134,7 @@ struct ContentSummaryView: View {
         .onTapGesture {
           self.bookmark()
         }
+      .accessibility(label: Text("Bookmark course"))
     )
   }
   

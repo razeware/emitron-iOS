@@ -185,7 +185,8 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   
   // Download completed—move the file to the appropriate place and update the DB
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-    guard let downloadId = downloadTask.downloadId else { return }
+    guard let downloadId = downloadTask.downloadId,
+      let delegate = delegate else { return }
     
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
     guard let localUrl = download?.localUrl else { return }

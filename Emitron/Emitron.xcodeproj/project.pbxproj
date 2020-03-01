@@ -126,6 +126,7 @@
 		229F4A1623FE7ECB006E2DE6 /* SettingsToggleRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F4A1523FE7ECB006E2DE6 /* SettingsToggleRow.swift */; };
 		229F4A1823FE7EDB006E2DE6 /* SettingsDisclosureRow.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F4A1723FE7EDB006E2DE6 /* SettingsDisclosureRow.swift */; };
 		229F4A1A23FE7EEC006E2DE6 /* SettingsSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 229F4A1923FE7EEC006E2DE6 /* SettingsSelectionView.swift */; };
+		22A14251240BBFD7001EB541 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 22A14250240BBFD7001EB541 /* CombineExpectations */; };
 		22A265AD23967B21000DD276 /* UserMCMock.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AC23967B21000DD276 /* UserMCMock.swift */; };
 		22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AF2396CDBE000DD276 /* User+Mocks.swift */; };
 		22A265B22396CE82000DD276 /* Permissions+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B12396CE82000DD276 /* Permissions+Mocks.swift */; };
@@ -646,6 +647,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				22A14251240BBFD7001EB541 /* CombineExpectations in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1645,6 +1647,9 @@
 				225670AD240AFD3100BD05AE /* PBXTargetDependency */,
 			);
 			name = emitronScreenshots;
+			packageProductDependencies = (
+				22A14250240BBFD7001EB541 /* CombineExpectations */,
+			);
 			productName = emitronScreenshots;
 			productReference = 225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */;
 			productType = "com.apple.product-type.bundle.ui-testing";
@@ -2619,6 +2624,11 @@
 
 /* Begin XCSwiftPackageProductDependency section */
 		2253632523A9EC8C0013F333 /* CombineExpectations */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2253632423A9EC8C0013F333 /* XCRemoteSwiftPackageReference "CombineExpectations" */;
+			productName = CombineExpectations;
+		};
+		22A14250240BBFD7001EB541 /* CombineExpectations */ = {
 			isa = XCSwiftPackageProductDependency;
 			package = 2253632423A9EC8C0013F333 /* XCRemoteSwiftPackageReference "CombineExpectations" */;
 			productName = CombineExpectations;

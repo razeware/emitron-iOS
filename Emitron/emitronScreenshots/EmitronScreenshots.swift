@@ -29,42 +29,43 @@
 import XCTest
 
 class EmitronScreenshots: XCTestCase {
+  func testTakeSnapshots() {
+    let app = XCUIApplication()
+    setupSnapshot(app)
+    app.launch()
 
-    override func setUp() {
-        // Put setup code here. This method is called before the invocation of each test method in the class.
+    let contentList = app.descendants(matching: .any)
+                         .matching(identifier: "contentListView")
+                         .element
+    _ = contentList.waitForExistence(timeout: 20)
+    snapshot("01Library")
+    
+    // Reset filters
+    app.buttons.matching(identifier: "Filter Library").element.tap()
+    app.buttons.matching(identifier: "Clear All").element.tap()
+    
+    // Now set some and screenshot
+    app.buttons.matching(identifier: "Filter Library").element.tap()
+    app.buttons.matching(identifier: "Platforms").element.tap()
+    app.descendants(matching: .any).matching(identifier: "Toggle iOS & Swift").element.tap()
+    app.buttons.matching(identifier: "Content Type").element.tap()
+    app.descendants(matching: .any).matching(identifier: "Toggle Video Course").element.tap()
+    snapshot("02Filters")
+    
+    app.buttons.matching(identifier: "Apply").element.tap()
+    snapshot("03FilteredLibrary")
+    
+    app.tables.cells.element(boundBy: 1).tap()
+    _ = app.descendants(matching: .any).matching(identifier: "childContentList").element.waitForExistence(timeout: 10)
+    app.descendants(matching: .any).matching(identifier: "Bookmark course").element.tap()
+    snapshot("04Course")
+    
+    app.descendants(matching: .any).matching(identifier: "Download course").element.tap()
+    app.tabBars.buttons.matching(identifier: "Downloads").element.tap()
+    snapshot("05Downloads")
 
-        // In UI tests it is usually best to stop immediately when a failure occurs.
-        continueAfterFailure = false
-
-        // In UI tests it’s important to set the initial state - such as interface orientation - required for your tests before they run. The setUp method is a good place to do this.
-    }
-
-    override func tearDown() {
-        // Put teardown code here. This method is called after the invocation of each test method in the class.
-    }
-
-    func testExample() {
-      
-      
-      
-        // UI tests must launch the application that they test.
-        let app = XCUIApplication()
-      print(app.launchArguments)
-      
-        app.launch()
-      
-      XCUIApplication().buttons["Sign In"].tap()
-
-        // Use recording to get started writing UI tests.
-        // Use XCTAssert and related functions to verify your tests produce the correct results.
-    }
-
-    func testLaunchPerformance() {
-        if #available(macOS 10.15, iOS 13.0, tvOS 13.0, *) {
-            // This measures how long it takes to launch your application.
-            measure(metrics: [XCTOSSignpostMetric.applicationLaunch]) {
-                XCUIApplication().launch()
-            }
-        }
-    }
+    app.tabBars.buttons.matching(identifier: "My Tutorials").element.tap()
+    app.buttons.matching(identifier: "Bookmarks").element.tap()
+    snapshot("06Bookmarks")
+  }
 }

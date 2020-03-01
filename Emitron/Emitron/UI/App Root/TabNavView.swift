@@ -45,6 +45,7 @@ struct TabNavView: View {
         }
         .tag(MainTab.library)
         .navigationViewStyle(StackNavigationViewStyle())
+        .accessibility(label: Text(Constants.library))
 
       NavigationView {
         downloadsView
@@ -55,6 +56,7 @@ struct TabNavView: View {
         }
         .tag(MainTab.downloads)
         .navigationViewStyle(StackNavigationViewStyle())
+        .accessibility(label: Text(Constants.downloads))
 
       NavigationView {
         myTutorialsView
@@ -65,6 +67,7 @@ struct TabNavView: View {
         }
         .tag(MainTab.myTutorials)
         .navigationViewStyle(StackNavigationViewStyle())
+        .accessibility(label: Text(Constants.myTutorials))
     }
     .accentColor(Color.accent)
     .edgesIgnoringSafeArea([.top])
