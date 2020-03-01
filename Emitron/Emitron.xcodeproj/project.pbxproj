@@ -98,10 +98,13 @@
 		223DED1524099C5F0017F7CA /* app-icon--default.beta@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223DED1324099C5F0017F7CA /* app-icon--default.beta@3x.png */; };
 		223DED1824099CBB0017F7CA /* app-icon--default.dev@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223DED1624099CBB0017F7CA /* app-icon--default.dev@2x.png */; };
 		223DED1924099CBB0017F7CA /* app-icon--default.dev@3x.png in Resources */ = {isa = PBXBuildFile; fileRef = 223DED1724099CBB0017F7CA /* app-icon--default.dev@3x.png */; };
+		22454713240B3234005FD494 /* User+Backdoor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22454712240B3234005FD494 /* User+Backdoor.swift */; };
+		22454715240BB035005FD494 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22454714240BB034005FD494 /* SnapshotHelper.swift */; };
 		224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
 		2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */; };
+		225670AA240AFD3100BD05AE /* EmitronScreenshots.swift in Sources */ = {isa = PBXBuildFile; fileRef = 225670A9240AFD3100BD05AE /* EmitronScreenshots.swift */; };
 		2278AE4324099EBD00855221 /* IconManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE4224099EBD00855221 /* IconManager.swift */; };
 		2278AE452409E1D900855221 /* IconChooserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE442409E1D900855221 /* IconChooserView.swift */; };
 		2278AE48240A4BBC00855221 /* IconView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2278AE47240A4BBC00855221 /* IconView.swift */; };
@@ -311,6 +314,13 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
+		225670AC240AFD3100BD05AE /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = B6D7DC2322C79743006DD325 /* Project object */;
+			proxyType = 1;
+			remoteGlobalIDString = B6D7DC2A22C79743006DD325;
+			remoteInfo = emitron;
+		};
 		22D176C223460A060038333D /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = B6D7DC2322C79743006DD325 /* Project object */;
@@ -406,9 +416,14 @@
 		223DED1324099C5F0017F7CA /* app-icon--default.beta@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.beta@3x.png"; sourceTree = "<group>"; };
 		223DED1624099CBB0017F7CA /* app-icon--default.dev@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev@2x.png"; sourceTree = "<group>"; };
 		223DED1724099CBB0017F7CA /* app-icon--default.dev@3x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev@3x.png"; sourceTree = "<group>"; };
+		22454712240B3234005FD494 /* User+Backdoor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Backdoor.swift"; sourceTree = "<group>"; };
+		22454714240BB034005FD494 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
+		225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emitronScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		225670A9240AFD3100BD05AE /* EmitronScreenshots.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronScreenshots.swift; sourceTree = "<group>"; };
+		225670AB240AFD3100BD05AE /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		2278AE4224099EBD00855221 /* IconManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconManager.swift; sourceTree = "<group>"; };
 		2278AE442409E1D900855221 /* IconChooserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconChooserView.swift; sourceTree = "<group>"; };
 		2278AE47240A4BBC00855221 /* IconView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = IconView.swift; sourceTree = "<group>"; };
@@ -627,6 +642,13 @@
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
+		225670A4240AFD3100BD05AE /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22D176BA23460A060038333D /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
@@ -846,6 +868,23 @@
 				224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */,
 			);
 			path = Displayable;
+			sourceTree = "<group>";
+		};
+		2256709E240AF3FD00BD05AE /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		225670A8240AFD3100BD05AE /* emitronScreenshots */ = {
+			isa = PBXGroup;
+			children = (
+				22454714240BB034005FD494 /* SnapshotHelper.swift */,
+				225670A9240AFD3100BD05AE /* EmitronScreenshots.swift */,
+				225670AB240AFD3100BD05AE /* Info.plist */,
+			);
+			path = emitronScreenshots;
 			sourceTree = "<group>";
 		};
 		2278AE46240A4BAC00855221 /* Icons */ = {
@@ -1327,7 +1366,9 @@
 			children = (
 				B6D7DC2D22C79743006DD325 /* Emitron */,
 				22D176BE23460A060038333D /* emitronTests */,
+				225670A8240AFD3100BD05AE /* emitronScreenshots */,
 				B6D7DC2C22C79743006DD325 /* Products */,
+				2256709E240AF3FD00BD05AE /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
@@ -1338,6 +1379,7 @@
 			children = (
 				B6D7DC2B22C79743006DD325 /* raywenderlich.app */,
 				22D176BD23460A060038333D /* emitronTests.xctest */,
+				225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -1565,6 +1607,7 @@
 			children = (
 				95A4513322E224B500D24E56 /* SessionController.swift */,
 				2213193B23E47B6A00F15816 /* SessionController+States.swift */,
+				22454712240B3234005FD494 /* User+Backdoor.swift */,
 			);
 			path = Sessions;
 			sourceTree = "<group>";
@@ -1588,6 +1631,24 @@
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
+		225670A6240AFD3100BD05AE /* emitronScreenshots */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 225670AE240AFD3100BD05AE /* Build configuration list for PBXNativeTarget "emitronScreenshots" */;
+			buildPhases = (
+				225670A3240AFD3100BD05AE /* Sources */,
+				225670A4240AFD3100BD05AE /* Frameworks */,
+				225670A5240AFD3100BD05AE /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				225670AD240AFD3100BD05AE /* PBXTargetDependency */,
+			);
+			name = emitronScreenshots;
+			productName = emitronScreenshots;
+			productReference = 225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */;
+			productType = "com.apple.product-type.bundle.ui-testing";
+		};
 		22D176BC23460A060038333D /* emitronTests */ = {
 			isa = PBXNativeTarget;
 			buildConfigurationList = 22D176C623460A060038333D /* Build configuration list for PBXNativeTarget "emitronTests" */;
@@ -1641,10 +1702,14 @@
 		B6D7DC2322C79743006DD325 /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastSwiftUpdateCheck = 1110;
+				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1100;
 				ORGANIZATIONNAME = Razeware;
 				TargetAttributes = {
+					225670A6240AFD3100BD05AE = {
+						CreatedOnToolsVersion = 11.3.1;
+						TestTargetID = B6D7DC2A22C79743006DD325;
+					};
 					22D176BC23460A060038333D = {
 						CreatedOnToolsVersion = 11.1;
 						TestTargetID = B6D7DC2A22C79743006DD325;
@@ -1676,11 +1741,19 @@
 			targets = (
 				B6D7DC2A22C79743006DD325 /* emitron */,
 				22D176BC23460A060038333D /* emitronTests */,
+				225670A6240AFD3100BD05AE /* emitronScreenshots */,
 			);
 		};
 /* End PBXProject section */
 
 /* Begin PBXResourcesBuildPhase section */
+		225670A5240AFD3100BD05AE /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22D176BB23460A060038333D /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1770,6 +1843,15 @@
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
+		225670A3240AFD3100BD05AE /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				225670AA240AFD3100BD05AE /* EmitronScreenshots.swift in Sources */,
+				22454715240BB035005FD494 /* SnapshotHelper.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 		22D176B923460A060038333D /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
@@ -1993,6 +2075,7 @@
 				2213195623EB7A7800F15816 /* CompletedIconView.swift in Sources */,
 				22ADBB452400731D003E8346 /* VideoOverlayButtonView.swift in Sources */,
 				2213194723EAFBD700F15816 /* VerticalFadeImageView.swift in Sources */,
+				22454713240B3234005FD494 /* User+Backdoor.swift in Sources */,
 				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
 				22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */,
@@ -2049,6 +2132,11 @@
 /* End PBXSourcesBuildPhase section */
 
 /* Begin PBXTargetDependency section */
+		225670AD240AFD3100BD05AE /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			target = B6D7DC2A22C79743006DD325 /* emitron */;
+			targetProxy = 225670AC240AFD3100BD05AE /* PBXContainerItemProxy */;
+		};
 		22D176C323460A060038333D /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			target = B6D7DC2A22C79743006DD325 /* emitron */;
@@ -2068,6 +2156,66 @@
 /* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
+		225670AF240AFD3100BD05AE /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
+				INFOPLIST_FILE = emitronScreenshots/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitronScreenshots;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = emitron;
+			};
+			name = Debug;
+		};
+		225670B0240AFD3100BD05AE /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
+				INFOPLIST_FILE = emitronScreenshots/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitronScreenshots;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = emitron;
+			};
+			name = Release;
+		};
+		225670B1240AFD3100BD05AE /* Beta */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = KFCNEC27GU;
+				INFOPLIST_FILE = emitronScreenshots/Info.plist;
+				IPHONEOS_DEPLOYMENT_TARGET = 13.2;
+				LD_RUNPATH_SEARCH_PATHS = (
+					"$(inherited)",
+					"@executable_path/Frameworks",
+					"@loader_path/Frameworks",
+				);
+				PRODUCT_BUNDLE_IDENTIFIER = com.razeware.emitronScreenshots;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 5.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				TEST_TARGET_NAME = emitron;
+			};
+			name = Beta;
+		};
 		228D0FEC23E030CA00CEA6F1 /* Beta */ = {
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 228D0FEF23E0344E00CEA6F1 /* secrets.beta.xcconfig */;
@@ -2384,6 +2532,16 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		225670AE240AFD3100BD05AE /* Build configuration list for PBXNativeTarget "emitronScreenshots" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				225670AF240AFD3100BD05AE /* Debug */,
+				225670B0240AFD3100BD05AE /* Release */,
+				225670B1240AFD3100BD05AE /* Beta */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		22D176C623460A060038333D /* Build configuration list for PBXNativeTarget "emitronTests" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (

@@ -108,7 +108,8 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     dispatchPrecondition(condition: .onQueue(.main))
     
     self.guardpost = guardpost
-    let user = guardpost.currentUser
+
+    let user = User.backdoor ?? guardpost.currentUser
     self.user = user
     self.client = RWAPI(authToken: user?.token ?? "")
     self.permissionsService = PermissionsService(client: self.client)
@@ -144,6 +145,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
               .log(additionalParams: nil)
           case .success(let user):
             self.user = user
+            print(user)
             
             Event
               .login(from: "SessionController")
