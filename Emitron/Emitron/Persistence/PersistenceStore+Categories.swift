@@ -35,7 +35,7 @@ extension PersistenceStore {
   func categoryList() throws -> [Category] {
     try db.read { db in
       try Category
-        .order(Category.Columns.ordinal.asc)
+        .order(Category.Columns.name.asc)
         .fetchAll(db)
     }
   }

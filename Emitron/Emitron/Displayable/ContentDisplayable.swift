@@ -91,6 +91,19 @@ enum DownloadProgressDisplayable: CustomStringConvertible {
       return "downloaded"
     }
   }
+  
+  var accessibilityDescription: String {
+    switch self {
+    case .notDownloadable:
+      return "Reset download"
+    case .downloadable:
+      return "Download"
+    case .enqueued, .inProgress:
+      return "Cancel download"
+    case .downloaded:
+      return "Delete download"
+    }
+  }
 }
 
 // MARK: - Content Listing

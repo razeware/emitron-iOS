@@ -30,12 +30,23 @@
       codeCoverageEnabled = "YES">
       <Testables>
          <TestableReference
-            skipped = "NO">
+            skipped = "NO"
+            testExecutionOrdering = "random">
             <BuildableReference
                BuildableIdentifier = "primary"
                BlueprintIdentifier = "22D176BC23460A060038333D"
                BuildableName = "emitronTests.xctest"
                BlueprintName = "emitronTests"
+               ReferencedContainer = "container:Emitron.xcodeproj">
+            </BuildableReference>
+         </TestableReference>
+         <TestableReference
+            skipped = "YES">
+            <BuildableReference
+               BuildableIdentifier = "primary"
+               BlueprintIdentifier = "225670A6240AFD3100BD05AE"
+               BuildableName = "emitronScreenshots.xctest"
+               BlueprintName = "emitronScreenshots"
                ReferencedContainer = "container:Emitron.xcodeproj">
             </BuildableReference>
          </TestableReference>
@@ -61,6 +72,12 @@
             ReferencedContainer = "container:Emitron.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
+      <CommandLineArguments>
+         <CommandLineArgument
+            argument = "-userBackdoorToken FILL_THIS_IN"
+            isEnabled = "NO">
+         </CommandLineArgument>
+      </CommandLineArguments>
       <EnvironmentVariables>
          <EnvironmentVariable
             key = "OS_ACTIVITY_MODE"

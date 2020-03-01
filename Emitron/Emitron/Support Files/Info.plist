@@ -8,6 +8,76 @@
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleExecutable</key>
 	<string>$(EXECUTABLE_NAME)</string>
+	<key>CFBundleIcons</key>
+	<dict>
+		<key>CFBundleAlternateIcons</key>
+		<dict>
+			<key>black-multi</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>app-icon--black-multi</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+				<key>ordinal</key>
+				<integer>3</integer>
+			</dict>
+			<key>black-white</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>app-icon--black-white</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+				<key>ordinal</key>
+				<integer>2</integer>
+			</dict>
+			<key>multi-black</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>app-icon--multi-black</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+				<key>ordinal</key>
+				<integer>4</integer>
+			</dict>
+			<key>white-black</key>
+			<dict>
+				<key>CFBundleIconFiles</key>
+				<array>
+					<string>app-icon--white-black</string>
+				</array>
+				<key>UIPrerenderedIcon</key>
+				<false/>
+				<key>ordinal</key>
+				<integer>1</integer>
+			</dict>
+		</dict>
+		<key>CFBundlePrimaryIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string>app-icon--default${BUNDLE_ID_SUFFIX}</string>
+			</array>
+			<key>UIPrerenderedIcon</key>
+			<false/>
+		</dict>
+		<key>UINewsstandIcon</key>
+		<dict>
+			<key>CFBundleIconFiles</key>
+			<array>
+				<string></string>
+			</array>
+			<key>UINewsstandBindingEdge</key>
+			<string>UINewsstandBindingEdgeLeft</string>
+			<key>UINewsstandBindingType</key>
+			<string>UINewsstandBindingTypeMagazine</string>
+		</dict>
+	</dict>
 	<key>CFBundleIdentifier</key>
 	<string>$(PRODUCT_BUNDLE_IDENTIFIER)</string>
 	<key>CFBundleInfoDictionaryVersion</key>
@@ -35,11 +105,6 @@
 	<false/>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
-	<key>NSAppTransportSecurity</key>
-	<dict>
-		<key>NSAllowsArbitraryLoads</key>
-		<true/>
-	</dict>
 	<key>SSO_SECRET</key>
 	<string>$(SSO_SECRET)</string>
 	<key>UIAppFonts</key>

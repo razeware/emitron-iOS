@@ -33,7 +33,7 @@ struct LockedIconView: View {
     Image.padlock
       .resizable()
       .aspectRatio(contentMode: .fit)
-      .frame(width: 18.0, height: 18.0)
+      .frame(width: 28.0, height: 28.0)
       .foregroundColor(.activeIcon)
       .frame(width: .childContentButtonSide, height: .childContentButtonSide)
   }

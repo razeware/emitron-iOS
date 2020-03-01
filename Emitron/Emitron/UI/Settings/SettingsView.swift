@@ -37,6 +37,7 @@ enum SettingsLayout {
 struct SettingsView: View {
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager = SettingsManager.current
   @State private var licensesPresented: Bool = false
   var showLogoutButton: Bool
@@ -49,6 +50,20 @@ struct SettingsView: View {
           .navigationBarTitle(Constants.settings)
           .navigationBarItems(trailing: dismissButton)
           .padding([.horizontal], 20)
+        
+        Section(header:
+          HStack {
+            Text("App Icon")
+              .font(.uiTitle4)
+              .foregroundColor(.titleText)
+            
+            Spacer()
+          }
+            .padding([.top], 20)
+        ) {
+          IconChooserView()
+        }
+        .padding([.horizontal], 20)
         
         Spacer()
         
@@ -72,6 +87,7 @@ struct SettingsView: View {
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
               self.sessionController.logout()
               self.presentationMode.wrappedValue.dismiss()
+              self.tabViewModel.selectedTab = .library
             }
           }
           .padding([.bottom, .horizontal], 18)

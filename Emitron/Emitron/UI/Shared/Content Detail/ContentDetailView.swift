@@ -52,7 +52,7 @@ struct ContentDetailView: View {
   }
   
   var contentView: some View {
-    let scrollView = GeometryReader { geometry in
+    GeometryReader { geometry in
       List {
         Section {
           
@@ -73,17 +73,6 @@ struct ContentDetailView: View {
           .background(Color.backgroundColor)
       }
     }
-    .navigationBarItems(trailing:
-      SwiftUI.Group {
-        Button(action: {
-          self.refreshContentDetails()
-        }) {
-          Image(systemName: "arrow.clockwise")
-            .foregroundColor(.iconButton)
-        }
-      })
-    
-    return scrollView
       .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
@@ -98,8 +87,11 @@ struct ContentDetailView: View {
   }
   
   private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
-    let viewModelProvider: VideoViewModelProvider = {
-      self.dynamicContentViewModel.videoPlaybackViewModel(apiClient: self.sessionController.client)
+    let viewModelProvider: VideoViewModelProvider = { dismissClosure in
+      self.dynamicContentViewModel.videoPlaybackViewModel(
+        apiClient: self.sessionController.client,
+        dismissClosure: dismissClosure
+      )
     }
     return NavigationLink(destination: VideoView(viewModelProvider: viewModelProvider)) {
       if case .hasData = childContentsViewModel.state {
@@ -156,10 +148,5 @@ struct ContentDetailView: View {
       return AnyView(ProgressBarView(progress: progress, isRounded: false))
     }
     return nil
-  }
-  
-  private func refreshContentDetails() {
-    dynamicContentViewModel.reload()
-    childContentsViewModel.reload()
   }
 }

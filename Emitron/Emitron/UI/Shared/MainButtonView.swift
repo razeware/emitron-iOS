@@ -91,6 +91,7 @@ struct MainButtonView: View {
               Spacer()
               
               Image(systemName: "arrow.right")
+                .font(Font.system(size: 14, weight: .bold))
                 .frame(width: height, height: height)
                 .foregroundColor(type.color)
                 .background(

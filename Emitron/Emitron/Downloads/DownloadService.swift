@@ -141,91 +141,132 @@ final class DownloadService {
 
 // MARK: - DownloadAction Methods
 extension DownloadService: DownloadAction {  
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> RequestDownloadResult {
+  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError> {
     guard videosService != nil else {
       Failure
         .fetch(from: String(describing: type(of: self)), reason: "User not allowed to request downloads")
         .log()
-      return .problemRequestingDownload(Constants.downloadNotPermitted)
+      return Future { promise in
+        promise(.failure(.problemRequestingDownload))
+      }
+        .eraseToAnyPublisher()
     }
     
     guard let contentPersistableState = contentLookup(contentId) else {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to locate content to persist")
         .log()
-      return .problemRequestingDownload(Constants.downloadContentNotFound)
+      return Future { promise in
+        promise(.failure(.problemRequestingDownload))
+      }
+        .eraseToAnyPublisher()
     }
     
-    do {
       // Let's ensure that all the relevant content is stored locally
-      try persistenceStore.persistContentGraph(for: contentPersistableState, contentLookup: contentLookup)
-      // Now create the appropriate download objects.
-      try persistenceStore.createDownloads(for: contentPersistableState.content)
-      // Send status message
-      switch status {
+    return persistenceStore.persistContentGraph(
+      for: contentPersistableState,
+      contentLookup: contentLookup
+    )
+    .flatMap {
+      self.persistenceStore.createDownloads(for: contentPersistableState.content)
+    }
+    .map {
+      switch self.status {
       case .active:
-        return .downloadRequestedSuccessfully
+        return RequestDownloadResult.downloadRequestedSuccessfully
       case .inactive:
-        return .downloadRequestedButQueueInactive
+        return RequestDownloadResult.downloadRequestedButQueueInactive
       }
-    } catch {
+    }
+    .mapError { error in
       Failure
         .saveToPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem requesting the download: \(error)")
         .log()
-      return .problemRequestingDownload(Constants.downloadRequestProblem, error)
+      return DownloadActionError.problemRequestingDownload
     }
+    .eraseToAnyPublisher()
   }
   
-  func cancelDownload(contentId: Int) throws {
-    do {
-      // 0. If there are some children, then let's cancel all of them first.
-      if let children = try persistenceStore.childContentsForDownloadedContent(with: contentId) {
-        try children.contents.forEach { try cancelDownload(contentId: $0.id) }
+  func cancelDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError> {
+    var contentIds = [Int]()
+    
+    // 0. If there are some children, then let's find their content ids too
+    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
+      contentIds = children.contents.map { $0.id }
+    }
+    contentIds += [contentId]
+    
+    // 1. Find the downloads.
+    let downloads = contentIds.compactMap {
+      try? persistenceStore.download(forContentId: $0)
+    }
+    // 2. Is it already downloading?
+    let currentlyDownloading = downloads.filter { $0.isDownloading }
+    let notYetDownloading = downloads.filter { !$0.isDownloading }
+    
+    return Future { promise in
+      do {
+        // It's in the download process, so let's ask it to cancel it.
+        // The delegate callback will handle deleting the value in
+        // the persistence store.
+        try currentlyDownloading.forEach { try self.downloadProcessor.cancelDownload($0) }
+        promise(.success(()))
+      } catch {
+        promise(.failure(error))
       }
-      
-      // 1. Find the download.
-      guard let download = try persistenceStore.download(forContentId: contentId) else { return }
-      // 2. Is it already downloading?
-      if [.inProgress, .paused].contains(download.state) && download.remoteUrl != nil {
-        // It's in the download process, so let's ask it to cancel it. The delegate callback will handle deleting the value in the persistence store.
-        try downloadProcessor.cancelDownload(download)
-      } else {
-        // Don't have it in the processor, so we just need to delete the download model
-        try _ = persistenceStore.deleteDownload(withId: download.id)
-      }
-    } catch {
+    }
+    .flatMap {
+      // Don't have it in the processor, so we just need to
+      // delete the download model
+      self.persistenceStore
+        .deleteDownloads(withIds: notYetDownloading.map { $0.id })
+    }
+    .mapError { error in
       Failure
         .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentId: \(contentId)): \(error)")
         .log()
-      throw DownloadServiceError.unableToCancelDownload
+      return DownloadActionError.unableToCancelDownload
     }
+    .eraseToAnyPublisher()
   }
   
-  func deleteDownload(contentId: Int) throws {
-    do {
-      // 0. If there are some children, the let's delete all of them first.
-      if let children = try persistenceStore.childContentsForDownloadedContent(with: contentId) {
-        try children.contents.forEach { try deleteDownload(contentId: $0.id) }
+  func deleteDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError> {
+    var contentIds = [Int]()
+    
+    // 0. If there are some children, the let's find their content ids too
+    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
+      contentIds = children.contents.map { $0.id }
+    }
+    contentIds += [contentId]
+    
+    // 1. Find the downloads
+    let downloads = contentIds.compactMap {
+      try? persistenceStore.download(forContentId: $0)
+    }
+    
+    return Future { promise in
+      do {
+        // 2. Delete the file from disk
+        try downloads
+          .filter { $0.isDownloaded }
+          .forEach { try self.deleteFile(for: $0) }
+        promise(.success(()))
+      } catch {
+        promise(.failure(error))
       }
-      
-      // 1. Find the download
-      guard let download = try persistenceStore.download(forContentId: contentId) else { return }
-      // 2. Delete the file from disk
-      if [.complete].contains(download.state) && download.remoteUrl != nil {
-        try deleteFile(for: download)
-      }
+    }
+    .flatMap {
       // 3. Delete the persisted record
-      if try !persistenceStore.deleteDownload(withId: download.id) {
-        Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the Download record from the DB (contentId: \(contentId))")
-        .log()
-      }
-    } catch {
+      self.persistenceStore
+        .deleteDownloads(withIds: downloads.map { $0.id })
+    }
+    .mapError { error in
       Failure
         .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the download (contentId: \(contentId)): \(error)")
         .log()
-      throw DownloadServiceError.unableToDeleteDownload
+      return DownloadActionError.unableToDeleteDownload
     }
+    .eraseToAnyPublisher()
   }
 }
 

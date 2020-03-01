@@ -45,10 +45,18 @@ struct ProgressBarView: View {
         .foregroundColor(self.backgroundColor)
         .cornerRadius(self.isRounded ? self.height / 2 : 0)
         .overlay(
-          Rectangle()
-            .frame(width: geometry.size.width * self.adjustedProgress, height: self.height)
-            .foregroundColor(.accent)
-            .cornerRadius(self.isRounded ? self.height / 2 : 0),
+          ZStack(alignment: .leading) {
+            Rectangle()
+              .frame(width: geometry.size.width * self.adjustedProgress, height: self.height)
+              .foregroundColor(.accent)
+              .cornerRadius(self.height / 2)
+            
+            if !self.isRounded {
+              Rectangle()
+                .frame(width: self.height, height: self.height)
+                .foregroundColor(.accent)
+            }
+          },
           alignment: .leading
         )
     }.frame(height: self.height)

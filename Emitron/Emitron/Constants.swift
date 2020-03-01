@@ -53,6 +53,7 @@ enum Constants {
   
   // Video playback
   static let videoPlaybackProgressTrackingInterval: Int = 5
+  static let videoPlaybackOfflinePermissionsCheckPeriod: TimeInterval = 7 * 24 * 60 * 60
   
   // Message Banner
   static let autoDismissTime: TimeInterval = 3
@@ -78,6 +79,7 @@ enum Constants {
   static let downloadRequestProblem = "Problem requesting download."
   static let downloadCancelled = "Download cancelled."
   static let downloadDeleted = "Download deleted."
+  static let downloadReset = "Download reset."
   static let downloadUnspecifiedProblem = "Problem with download action."
   
   static let simultaneousStreamsError = "You can only stream on one device at a time."
@@ -86,6 +88,10 @@ enum Constants {
   
   static let videoPlaybackCannotStreamWhenOffline = "Cannot stream video when offline."
   static let videoPlaybackInvalidPermissions = "You don't have the required permissions to view this video."
+  static let videoPlaybackExpiredPermissions = "Download expired. Please reconnect to the internet to reverify."
+  
+  static let appIconUpdatedSuccessfully = "You app icon has been updated!"
+  static let appIconUpdateProblem = "There was a problem updating the app icon."
   
   // Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"

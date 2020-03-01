@@ -78,7 +78,10 @@ extension Filter: Hashable {
 // MARK: - Comparable
 extension Filter: Comparable {
   static func < (lhs: Filter, rhs: Filter) -> Bool {
-    lhs.sortOrdinal < rhs.sortOrdinal
+    if lhs.groupType == .categories && rhs.groupType == .categories {
+      return lhs.filterName < rhs.filterName
+    }
+    return lhs.sortOrdinal < rhs.sortOrdinal
   }
 }
 

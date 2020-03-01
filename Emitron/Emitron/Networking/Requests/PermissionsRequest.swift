@@ -42,6 +42,6 @@ struct PermissionsRequest: Request {
   func handle(response: Data) throws -> [Permission] {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
-    return try doc.data.map { try PermissionAdapter.process(resource: $0) }
+    return try doc.data.compactMap { try PermissionAdapter.process(resource: $0) }
   }
 }

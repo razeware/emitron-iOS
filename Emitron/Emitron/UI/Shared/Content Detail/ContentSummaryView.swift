@@ -36,6 +36,7 @@ struct ContentSummaryView: View {
   var content: ContentListDisplayable
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   @EnvironmentObject var sessionController: SessionController
+  @State private var deletionConfirmation: DownloadDeletionConfirmation?
   
   var courseLocked: Bool {
     content.professional && !sessionController.user!.canStreamPro
@@ -57,7 +58,7 @@ struct ContentSummaryView: View {
           .font(.uiUppercase)
           .foregroundColor(.contentText)
           .kerning(0.5)
-        // ISSUE: This isn't wrapping to multiple lines, not sure why yet, only .footnote and .caption seem to do it properly without setting a frame? Further investigaiton needed
+        
         Spacer()
         
         if content.professional {
@@ -69,9 +70,6 @@ struct ContentSummaryView: View {
       Text(content.name)
         .font(.uiTitle1)
         .lineLimit(nil)
-        //.frame(idealHeight: .infinity) // ISSUE: This line is causing a crash
-        // ISSUE: Somehow spacing is added here without me actively setting it to a positive value, so we have to decrease, or leave at 0
-        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .foregroundColor(.titleText)
       
@@ -88,6 +86,8 @@ struct ContentSummaryView: View {
               .onTapGesture {
                 self.download()
               }
+              .alert(item: $deletionConfirmation) { $0.alert }
+              .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
           }
           
           bookmarkButton
@@ -101,18 +101,13 @@ struct ContentSummaryView: View {
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        // ISSUE: Below line causes a crash, but somehow the UI renders the text into multiple lines, with the addition of
-        // '.frame(idealHeight: .infinity)' to the TITLE...
-        //.frame(idealHeight: .infinity)
-        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 15)
         .lineLimit(nil)
       
       Text("By \(content.contributorString)")
-        .font(.uiFootnote)
+        .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .fixedSize(horizontal: false, vertical: true)
         .padding([.top], 10)
         .lineSpacing(3)
     }
@@ -139,11 +134,12 @@ struct ContentSummaryView: View {
         .onTapGesture {
           self.bookmark()
         }
+      .accessibility(label: Text("Bookmark course"))
     )
   }
   
   private func download() {
-    dynamicContentViewModel.downloadTapped()
+    deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
   private func bookmark() {

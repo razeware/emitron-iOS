@@ -56,7 +56,7 @@ class PermissionAdapterTest: XCTestCase {
   func testValidResourceProcessedCorrectly() throws {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let permission = try PermissionAdapter.process(resource: resource)
+    guard let permission = try PermissionAdapter.process(resource: resource) else { return XCTFail("Expected non-nil permission") }
     
     XCTAssertEqual(1234, permission.id)
     XCTAssertEqual("Downloadable Videos", permission.name)
@@ -90,15 +90,13 @@ class PermissionAdapterTest: XCTestCase {
     }
   }
   
-  func testInvalidTagThrows() throws {
+  func testInvalidTagReturnsNil() throws {
     var sample = sampleResource
     sample["attributes"]["tag"] = "invalid"
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    XCTAssertThrowsError(try PermissionAdapter.process(resource: resource)) { error in
-      XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
-    }
+    XCTAssertNil(try PermissionAdapter.process(resource: resource))
   }
   
   func testInvalidCreatedAtThrows() throws {

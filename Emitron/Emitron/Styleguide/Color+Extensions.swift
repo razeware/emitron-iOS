@@ -86,12 +86,12 @@ extension Color {
     Color("filterTagBackground")
   }
   
-  static var filterTagIcon: Color {
-    Color("filterTagIcon")
+  static var filterTagBorder: Color {
+    Color("filterTagBorder")
   }
   
-  static var filterTagShadow: Color {
-    Color("filterTagShadow")
+  static var filterTagIcon: Color {
+    Color("filterTagIcon")
   }
   
   static var filterTagText: Color {
@@ -102,12 +102,12 @@ extension Color {
     Color("filterTagDestructiveBackground")
   }
   
-  static var filterTagDestructiveIcon: Color {
-    Color("filterTagDestructiveIcon")
+  static var filterTagDestructiveBorder: Color {
+    Color("filterTagDestructiveBorder")
   }
   
-  static var filterTagDestructiveShadow: Color {
-    Color("filterTagDestructiveShadow")
+  static var filterTagDestructiveIcon: Color {
+    Color("filterTagDestructiveIcon")
   }
   
   static var filterTagDestructiveText: Color {
@@ -116,10 +116,6 @@ extension Color {
   
   static var filterHeaderBackground: Color {
     Color("filterHeaderBackground")
-  }
-  
-  static var filterHeaderShadow: Color {
-    Color("filterHeaderShadow")
   }
   
   static var primaryButtonBackground: Color {
@@ -146,6 +142,10 @@ extension Color {
     Color("alarm")
   }
   
+  static var warning: Color {
+    Color("warning")
+  }
+  
   static var borderColor: Color {
     Color("borderColor")
   }
@@ -168,6 +168,10 @@ extension Color {
   
   static var listHeaderBackground: Color {
     Color("listHeaderBackground")
+  }
+  
+  static var appIconBorder: Color {
+    Color("appIconBorder")
   }
   
   static var toggleTextSelected: Color {
@@ -240,5 +244,25 @@ extension Color {
   
   static var searchFieldShadow: Color {
     Color("searchFieldShadow")
+  }
+  
+  static var downloadButtonDownloaded: Color {
+    Color("downloadButtonDownloaded")
+  }
+  
+  static var downloadButtonDownloadingBackground: Color {
+    Color("downloadButtonDownloadingBackground")
+  }
+  
+  static var downloadButtonDownloadingForeground: Color {
+    Color("downloadButtonDownloadingForeground")
+  }
+  
+  static var downloadButtonNotDownloaded: Color {
+    Color("downloadButtonNotDownloaded")
+  }
+  
+  static var downloadButtonWarning: Color {
+    Color("downloadButtonWarning")
   }
 }

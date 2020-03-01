@@ -66,9 +66,7 @@ struct FiltersHeaderView: View {
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
       }
-        .shadow(color: Color.filterHeaderShadow, radius: 1, x: 0, y: 2)
-        .padding(1)
-        .padding([.bottom], 2)
+        .accessibility(label: Text(filterGroup.type.name))
         
       if isExpanded {
         expandedView
