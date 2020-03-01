@@ -123,6 +123,7 @@ struct ContentListView: View {
           UIApplication.dismissKeyboard()
         }
       )
+      .accessibility(identifier: "contentListView")
   }
   
   private var loadingView: some View {

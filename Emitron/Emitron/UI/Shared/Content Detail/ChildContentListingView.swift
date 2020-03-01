@@ -73,6 +73,7 @@ struct ChildContentListingView: View {
       }
     }
     .listRowBackground(Color.backgroundColor)
+    .accessibility(identifier: "childContentList")
   }
   
   private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
