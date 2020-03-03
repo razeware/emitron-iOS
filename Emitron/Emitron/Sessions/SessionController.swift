@@ -243,3 +243,27 @@ extension SessionController: ASWebAuthenticationPresentationContextProviding {
     UIApplication.shared.windows.first!
   }
 }
+
+// MARK: - Content Access Permissions
+extension SessionController {
+  func canPlay(content: Ownable) -> Bool {
+    // Can always play free content
+    if content.free {
+      return true
+    }
+    // If the content isn't free then we must have a user
+    guard let user = user else { return false }
+    
+    switch (content.professional, user.canStream, user.canStreamPro) {
+    case (false, true, _):
+      // If it's non-pro, then as long as you can stream, you're golden
+      return true
+    case (true, _, true):
+      // If it's pro, and you can stream pro, then great
+      return true
+    default:
+      // Other wise, it's a no—sorry.
+      return false
+    }
+  }
+}

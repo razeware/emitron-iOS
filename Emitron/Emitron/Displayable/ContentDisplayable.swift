@@ -109,12 +109,11 @@ enum DownloadProgressDisplayable: CustomStringConvertible {
 // MARK: - Content Listing
 
 /// Suitable for content listing view, and the summary section of the content details view
-protocol ContentListDisplayable {
+protocol ContentListDisplayable: Ownable {
   var id: Int { get }
   var name: String { get }
   var cardViewSubtitle: String { get }
   var descriptionPlainText: String { get }
-  var professional: Bool { get }
   var releasedAt: Date { get }
   var duration: Int { get }
   var releasedAtDateTimeString: String { get }
@@ -144,11 +143,10 @@ extension ContentListDisplayable {
 // For display on the content details view page
 
 /// Required to display a line item in the table. These should all be .episode
-protocol ChildContentListDisplayable {
+protocol ChildContentListDisplayable: Ownable {
   var id: Int { get }
   var name: String { get }
   var ordinal: Int? { get }
-  var professional: Bool { get }
   var duration: Int { get }
   var groupId: Int? { get }
   var videoIdentifier: Int? { get }

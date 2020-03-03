@@ -286,6 +286,11 @@ final class VideoPlaybackViewModel {
   private func enqueue(index: Int, startTime: Double? = nil) {
     state = .loadingAdditional
     let nextContent = contentList[index]
+    guard sessionController.canPlay(content: nextContent.content) else {
+      // This user doesn't have permission to play this content. So skip to the next.
+      self.nextContentToEnqueueIndex += 1
+      return enqueueNext()
+    }
     avItem(for: nextContent)
       .sink(receiveCompletion: { [weak self] completion in
         guard let self = self else { return }

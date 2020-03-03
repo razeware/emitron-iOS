@@ -101,6 +101,8 @@
 		22454713240B3234005FD494 /* User+Backdoor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22454712240B3234005FD494 /* User+Backdoor.swift */; };
 		22454715240BB035005FD494 /* SnapshotHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22454714240BB034005FD494 /* SnapshotHelper.swift */; };
 		224D298C23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */; };
+		22532605240E986800F5FD07 /* Ownable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22532604240E986800F5FD07 /* Ownable.swift */; };
+		22532608240E98AA00F5FD07 /* Content+Ownable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22532607240E98AA00F5FD07 /* Content+Ownable.swift */; };
 		2253632623A9EC8C0013F333 /* CombineExpectations in Frameworks */ = {isa = PBXBuildFile; productRef = 2253632523A9EC8C0013F333 /* CombineExpectations */; };
 		2253632923AB16EB0013F333 /* ContentDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632823AB16EB0013F333 /* ContentDisplayable.swift */; };
 		2253632D23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */; };
@@ -420,6 +422,8 @@
 		22454712240B3234005FD494 /* User+Backdoor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Backdoor.swift"; sourceTree = "<group>"; };
 		22454714240BB034005FD494 /* SnapshotHelper.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SnapshotHelper.swift; sourceTree = "<group>"; };
 		224D298B23F5E5DB00E4F4B6 /* DynamicContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DynamicContentDisplayable.swift; sourceTree = "<group>"; };
+		22532604240E986800F5FD07 /* Ownable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Ownable.swift; sourceTree = "<group>"; };
+		22532607240E98AA00F5FD07 /* Content+Ownable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Content+Ownable.swift"; sourceTree = "<group>"; };
 		2253632823AB16EB0013F333 /* ContentDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDisplayable.swift; sourceTree = "<group>"; };
 		2253632C23AB2F1D0013F333 /* ContentSummaryState+ContentListDisplayable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSummaryState+ContentListDisplayable.swift"; sourceTree = "<group>"; };
 		225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = emitronScreenshots.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -858,6 +862,15 @@
 				223DECF224098AE90017F7CA /* app-icon--white-black@3x.png */,
 			);
 			path = "App Icons";
+			sourceTree = "<group>";
+		};
+		22532606240E988500F5FD07 /* Ownable */ = {
+			isa = PBXGroup;
+			children = (
+				22532604240E986800F5FD07 /* Ownable.swift */,
+				22532607240E98AA00F5FD07 /* Content+Ownable.swift */,
+			);
+			path = Ownable;
 			sourceTree = "<group>";
 		};
 		2253632723AB16CF0013F333 /* Displayable */ = {
@@ -1400,6 +1413,7 @@
 				223DECF1240989430017F7CA /* App Icons */,
 				22D177032350748E0038333D /* Configuration */,
 				B62B9A7D22DF769000122CE8 /* Constants.swift */,
+				22532606240E988500F5FD07 /* Ownable */,
 				22A36F4E236F768A0064A406 /* Downloads */,
 				2253632723AB16CF0013F333 /* Displayable */,
 				B6D4529622CAB3E700BFB812 /* Extensions */,
@@ -1928,6 +1942,7 @@
 				95A4513522E224B500D24E56 /* SessionController.swift in Sources */,
 				222B0DC723FEB92F009C8F81 /* SettingsList.swift in Sources */,
 				22F2C45B23EF79C1007ED4A1 /* ContentType.swift in Sources */,
+				22532605240E986800F5FD07 /* Ownable.swift in Sources */,
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
 				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
@@ -1980,6 +1995,7 @@
 				22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */,
 				22C6410123F809CE00CBFDE5 /* PagingIndicatorView.swift in Sources */,
 				223D77BB23B0C0EA005BE95D /* Progression.swift in Sources */,
+				22532608240E98AA00F5FD07 /* Content+Ownable.swift in Sources */,
 				229F4A1A23FE7EEC006E2DE6 /* SettingsSelectionView.swift in Sources */,
 				22B8266223AF5CD700D4BA23 /* CategoryAdapter.swift in Sources */,
 				22B8266E23B0617800D4BA23 /* ContentDomainAdapter.swift in Sources */,

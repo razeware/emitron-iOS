@@ -95,7 +95,7 @@ struct ChildContentListingView: View {
     
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     
-    if model.professional && !sessionController.user!.canStreamPro {
+    if !sessionController.canPlay(content: model) {
       return AnyView(
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
