@@ -50,9 +50,9 @@ enum DownloadActionError: Error {
     case .problemRequestingDownload:
       return Constants.downloadRequestProblem
     case .unableToCancelDownload:
-      return "TODO"
+      return Constants.downloadUnableToCancel
     case .unableToDeleteDownload:
-      return "TODO"
+      return Constants.downloadUnableToDelete
     }
   }
 }
