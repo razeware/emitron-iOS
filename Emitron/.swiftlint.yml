@@ -61,7 +61,6 @@ disabled_rules: # rule identifiers to exclude from running
   - force_cast
   - line_length
   - multiple_closures_with_trailing_closure
-  - orphaned_doc_comment
   - todo
   - trailing_whitespace
 
