@@ -34,7 +34,7 @@ struct OfflineView: View {
       Image("emojiCrying")
         .padding([.bottom], 30)
       
-      Text("No Connection.")
+      Text("No Connection")
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
