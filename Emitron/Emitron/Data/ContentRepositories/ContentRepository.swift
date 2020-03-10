@@ -156,6 +156,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private func configureContentSubscription() {
     self.contentSubscription = self.repository
       .contentSummaryState(for: self.contentIds)
+      .removeDuplicates()
       .sink(receiveCompletion: { [weak self] error in
         guard let self = self else { return }
         

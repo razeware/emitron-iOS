@@ -31,13 +31,18 @@ import Combine
 
 struct ContentListView: View {
   @State private var deleteSubscriptions = Set<AnyCancellable>()
+  @State private var currentlyDisplayedContentId: Int?
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
   var headerView: AnyView?
 
   var body: some View {
-    contentView
+    SwiftUI.Group {
+      contentView
+      
+      temporaryNavLinkForCurrentlyDisplayedContent
+    }
       .onAppear {
         UIApplication.dismissKeyboard()
       }
@@ -68,30 +73,37 @@ struct ContentListView: View {
   }
 
   private func cardTableNavView(withDelete: Bool = false) -> some View {
-      ForEach(contentRepository.contents, id: \.id) { partialContent in
-        ZStack {
-          CardViewContainer(
-            model: partialContent,
-            dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
-          )
-          NavigationLink(
-            destination: ContentDetailView(
-              content: partialContent,
-              childContentsViewModel: self.contentRepository.childContentsViewModel(for: partialContent.id),
-              dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
-            )
-          ) {
-            EmptyView()
-          }
-            .buttonStyle(PlainButtonStyle())
-            //HACK: to remove navigation chevrons
-            .padding(.trailing, -2 * .sidePadding)
-        }
+    ForEach(contentRepository.contents, id: \.id) { partialContent in
+      ZStack {
+        CardViewContainer(
+          model: partialContent,
+          dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+        )
+        
+        self.navLink(for: partialContent)
+          .buttonStyle(PlainButtonStyle())
+          //HACK: to remove navigation chevrons
+          .padding(.trailing, -2 * .sidePadding)
       }
-        .if(withDelete) { $0.onDelete(perform: self.delete) }
-        .listRowInsets(EdgeInsets())
-        .padding([.horizontal, .top], .sidePadding)
-        .background(Color.backgroundColor)
+    }
+      .if(withDelete) { $0.onDelete(perform: self.delete) }
+      .listRowInsets(EdgeInsets())
+      .padding([.horizontal, .top], .sidePadding)
+      .background(Color.backgroundColor)
+  }
+  
+  private func navLink(for content: ContentListDisplayable) -> some View {
+    NavigationLink(
+      destination: ContentDetailView(
+        content: content,
+        childContentsViewModel: self.contentRepository.childContentsViewModel(for: content.id),
+        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: content.id)
+      ),
+      tag: content.id,
+      selection: self.$currentlyDisplayedContentId
+    ) {
+      EmptyView()
+    }
   }
   
   private var appropriateCardsView: some View {
@@ -174,6 +186,20 @@ struct ContentListView: View {
     } else {
       return nil
     }
+  }
+  
+  private var temporaryNavLinkForCurrentlyDisplayedContent: AnyView? {
+    guard let currentlyDisplayedContentId = currentlyDisplayedContentId else { return nil }
+    if contentRepository.state == .hasData && contentRepository.contents.map({ $0.id }).contains(currentlyDisplayedContentId) {
+      return nil
+    }
+
+    return AnyView(NavigationLink(
+      destination: EmptyView(),
+      tag: currentlyDisplayedContentId,
+      selection: .constant(nil)) {
+        EmptyView()
+    })
   }
 
   private func delete(at offsets: IndexSet) {
