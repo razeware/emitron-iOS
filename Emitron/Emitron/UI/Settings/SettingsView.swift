@@ -95,6 +95,7 @@ struct SettingsView: View {
       }
         .background(Color.backgroundColor)
     }
+      .navigationViewStyle(StackNavigationViewStyle())
   }
   
   var dismissButton: some View {
