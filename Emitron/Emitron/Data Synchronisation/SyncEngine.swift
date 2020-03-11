@@ -141,6 +141,8 @@ extension SyncEngine {
 
 extension SyncEngine {
   private func syncBookmarkCreations(syncRequests: [SyncRequest]) {
+    guard !syncRequests.isEmpty else { return }
+    
     Event
       .syncEngine(action: "SyncingBookmarkCreations")
       .log()
@@ -168,6 +170,8 @@ extension SyncEngine {
   }
   
   private func syncBookmarkDeletions(syncRequests: [SyncRequest]) {
+    guard !syncRequests.isEmpty else { return }
+    
     Event
       .syncEngine(action: "SyncingBookmarkDeletions")
       .log()
@@ -201,6 +205,8 @@ extension SyncEngine {
   }
   
   private func syncWatchStats(syncRequests: [SyncRequest]) {
+    guard !syncRequests.isEmpty else { return }
+    
     Event
       .syncEngine(action: "SyncingWatchStats")
       .log()
@@ -229,6 +235,8 @@ extension SyncEngine {
   }
   
   private func syncProgressionUpdates(syncRequests: [SyncRequest]) {
+    guard !syncRequests.isEmpty else { return }
+    
     Event
       .syncEngine(action: "SyncingProgressionUpdates")
       .log()
@@ -259,6 +267,8 @@ extension SyncEngine {
   }
   
   private func syncProgressionDeletions(syncRequests: [SyncRequest]) {
+    guard !syncRequests.isEmpty else { return }
+    
     Event
       .syncEngine(action: "SyncingProgressionDeletions")
       .log()

@@ -49,9 +49,10 @@ struct LicenseListView: View {
             .navigationBarItems(trailing: self.dismissButton)
         }
       }
-      .padding(10)
-      .background(Color.backgroundColor)
+        .padding(10)
+        .background(Color.backgroundColor)
     }
+      .navigationViewStyle(StackNavigationViewStyle())
   }
   
   var dismissButton: some View {

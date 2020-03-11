@@ -68,6 +68,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private func configureSubscriptions() {
     repository
       .contentDynamicState(for: contentId)
+      .removeDuplicates()
       .sink(receiveCompletion: { completion in
         self.state = .failed
         Failure

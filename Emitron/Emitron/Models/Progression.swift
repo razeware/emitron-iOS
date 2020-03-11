@@ -28,13 +28,24 @@
 
 import Foundation
 
-struct Progression: Equatable, Codable {
+struct Progression: Codable {
   var id: Int
   var target: Int
   var progress: Int
   var createdAt: Date
   var updatedAt: Date
   var contentId: Int
+}
+
+extension Progression: Equatable {
+  static func == (lhs: Progression, rhs: Progression) -> Bool {
+    lhs.id == rhs.id &&
+      lhs.target == rhs.target &&
+      lhs.progress == rhs.progress &&
+      lhs.createdAt.equalEnough(to: rhs.createdAt) &&
+      lhs.updatedAt.equalEnough(to: rhs.updatedAt) &&
+      lhs.contentId == rhs.contentId
+  }
 }
 
 extension Progression {
