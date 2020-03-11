@@ -28,8 +28,16 @@
 
 import Foundation
 
-struct Bookmark: Equatable, Codable {
+struct Bookmark: Codable {
   var id: Int
   var createdAt: Date
   var contentId: Int
+}
+
+extension Bookmark: Equatable {
+  static func == (lhs: Bookmark, rhs: Bookmark) -> Bool {
+    lhs.id == rhs.id &&
+      lhs.createdAt.equalEnough(to: rhs.createdAt) &&
+      lhs.contentId == rhs.contentId
+  }
 }

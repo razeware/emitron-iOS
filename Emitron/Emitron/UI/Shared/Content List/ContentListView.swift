@@ -31,20 +31,16 @@ import Combine
 
 struct ContentListView: View {
   @State private var deleteSubscriptions = Set<AnyCancellable>()
-  @State private var currentlyDisplayedContentId: Int?
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
   var headerView: AnyView?
 
   var body: some View {
-    SwiftUI.Group {
-      contentView
-      
-      temporaryNavLinkForCurrentlyDisplayedContent
-    }
+    contentView
       .onAppear {
         UIApplication.dismissKeyboard()
+        self.reloadIfRequired()
       }
   }
 
@@ -98,10 +94,7 @@ struct ContentListView: View {
         content: content,
         childContentsViewModel: self.contentRepository.childContentsViewModel(for: content.id),
         dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: content.id)
-      ),
-      tag: content.id,
-      selection: self.$currentlyDisplayedContentId
-    ) {
+      )) {
       EmptyView()
     }
   }
@@ -186,20 +179,6 @@ struct ContentListView: View {
     } else {
       return nil
     }
-  }
-  
-  private var temporaryNavLinkForCurrentlyDisplayedContent: AnyView? {
-    guard let currentlyDisplayedContentId = currentlyDisplayedContentId else { return nil }
-    if contentRepository.state == .hasData && contentRepository.contents.map({ $0.id }).contains(currentlyDisplayedContentId) {
-      return nil
-    }
-
-    return AnyView(NavigationLink(
-      destination: EmptyView(),
-      tag: currentlyDisplayedContentId,
-      selection: .constant(nil)) {
-        EmptyView()
-    })
   }
 
   private func delete(at offsets: IndexSet) {

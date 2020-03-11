@@ -66,9 +66,9 @@ struct MyTutorialView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
   
-  @ObservedObject var inProgressRepository: InProgressRepository
-  @ObservedObject var completedRepository: CompletedRepository
-  @ObservedObject var bookmarkRepository: BookmarkRepository
+  var inProgressRepository: InProgressRepository
+  var completedRepository: CompletedRepository
+  var bookmarkRepository: BookmarkRepository
   @ObservedObject var domainRepository: DomainRepository
 
   @State private var settingsPresented: Bool = false

@@ -178,7 +178,10 @@ class ContentRepository: ObservableObject, ContentPaginatable {
           
           // If we're invalidating the cache then we need to set this to initial status again
           self.state = .initial
-          self.objectWillChange.send()
+          // We're not gonna broadcast this change. If you do it'll wreak havoc with the content
+          // list and nav view—where the nav link for the currently displayed detail view disappears
+          // from underneath us. Instead we check the state of this repo each time the content
+          // listing appears. This doesn't feel that great, but it's what seems to work.
         }
     }
   }
