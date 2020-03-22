@@ -31,6 +31,8 @@ import KingfisherSwiftUI
 import UIKit
 
 struct ContentDetailView: View {
+  @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+  
   var content: ContentListDisplayable
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
@@ -48,7 +50,13 @@ struct ContentDetailView: View {
   var maxImageHeight: CGFloat = 384
   
   var body: some View {
-    contentView
+    ZStack {
+      contentView
+      
+      if currentlyDisplayedVideoPlaybackViewModel != nil {
+        FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel)
+      }
+    }
   }
   
   var contentView: some View {
@@ -69,7 +77,10 @@ struct ContentDetailView: View {
         .listRowInsets(EdgeInsets())
         .listRowBackground(Color.backgroundColor)
         
-        ChildContentListingView(childContentsViewModel: self.childContentsViewModel)
+        ChildContentListingView(
+          childContentsViewModel: self.childContentsViewModel,
+          currentlyDisplayedVideoPlaybackViewModel: self.$currentlyDisplayedVideoPlaybackViewModel
+        )
           .background(Color.backgroundColor)
       }
     }
@@ -86,14 +97,15 @@ struct ContentDetailView: View {
     }
   }
   
-  private var continueOrPlayButton: NavigationLink<AnyView, VideoView> {
-    let viewModelProvider: VideoViewModelProvider = { dismissClosure in
-      self.dynamicContentViewModel.videoPlaybackViewModel(
+  private var continueOrPlayButton: Button<AnyView> {
+    Button(action: {
+      self.currentlyDisplayedVideoPlaybackViewModel = self.dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: self.sessionController.client,
-        dismissClosure: dismissClosure
+        dismissClosure: {
+          self.currentlyDisplayedVideoPlaybackViewModel = nil
+        }
       )
-    }
-    return NavigationLink(destination: VideoView(viewModelProvider: viewModelProvider)) {
+    }) {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
           return AnyView(ContinueButtonView())
@@ -123,7 +135,6 @@ struct ContentDetailView: View {
         )
         
         continueOrPlayButton
-          .padding(.trailing, -32.0) // HACK: to remove navigation chevrons
       }
       
       progressBar
