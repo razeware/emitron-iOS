@@ -196,6 +196,10 @@
 		22C3F125241A2655002812CB /* app-icon--default.dev-ipadpro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F11F241A2654002812CB /* app-icon--default.dev-ipadpro@2x.png */; };
 		22C3F126241A2655002812CB /* app-icon--default.beta-ipadpro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */; };
 		22C3F127241A2655002812CB /* app-icon--default.dev-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */; };
+		22C3F1532427954A002812CB /* LandscapeAVPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */; };
+		22C3F155242795A1002812CB /* PortraitHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F154242795A1002812CB /* PortraitHostingController.swift */; };
+		22C3F15724279692002812CB /* FullScreenVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */; };
+		22C3F159242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */; };
 		22C4EADB23DB8A5A001A3FDA /* WatchStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */; };
 		22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */; };
 		22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */; };
@@ -324,7 +328,6 @@
 		B6FC15AE22CB529E0078CEDB /* SettingsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15AD22CB529E0078CEDB /* SettingsView.swift */; };
 		B6FC15B122CB53220078CEDB /* TextListItemView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B022CB53220078CEDB /* TextListItemView.swift */; };
 		B6FC15B522CB53730078CEDB /* ContentDetailView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15B422CB53730078CEDB /* ContentDetailView.swift */; };
-		B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15BA22CB55160078CEDB /* VideoView.swift */; };
 		B6FC15C122CB55C40078CEDB /* JSONAPIResource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */; };
 		B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */; };
 		B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */; };
@@ -531,6 +534,10 @@
 		22C3F11F241A2654002812CB /* app-icon--default.dev-ipadpro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev-ipadpro@2x.png"; sourceTree = "<group>"; };
 		22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.beta-ipadpro@2x.png"; sourceTree = "<group>"; };
 		22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev-ipad@2x.png"; sourceTree = "<group>"; };
+		22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeAVPlayerViewController.swift; sourceTree = "<group>"; };
+		22C3F154242795A1002812CB /* PortraitHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitHostingController.swift; sourceTree = "<group>"; };
+		22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerViewController.swift; sourceTree = "<group>"; };
+		22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerRepresentable.swift; sourceTree = "<group>"; };
 		22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsService.swift; sourceTree = "<group>"; };
 		22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsRequest.swift; sourceTree = "<group>"; };
 		22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+WatchStat.swift"; sourceTree = "<group>"; };
@@ -672,7 +679,6 @@
 		B6FC15AD22CB529E0078CEDB /* SettingsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsView.swift; sourceTree = "<group>"; };
 		B6FC15B022CB53220078CEDB /* TextListItemView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TextListItemView.swift; sourceTree = "<group>"; };
 		B6FC15B422CB53730078CEDB /* ContentDetailView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentDetailView.swift; sourceTree = "<group>"; };
-		B6FC15BA22CB55160078CEDB /* VideoView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoView.swift; sourceTree = "<group>"; };
 		B6FC15C022CB55C40078CEDB /* JSONAPIResource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIResource.swift; sourceTree = "<group>"; };
 		B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIRelationship.swift; sourceTree = "<group>"; };
 		B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIError.swift; sourceTree = "<group>"; };
@@ -1036,7 +1042,9 @@
 		229F0AC323BB29230004DD4F /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				B6FC15BA22CB55160078CEDB /* VideoView.swift */,
+				22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */,
+				22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */,
+				22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -1524,6 +1532,7 @@
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
 			isa = PBXGroup;
 			children = (
+				22C3F154242795A1002812CB /* PortraitHostingController.swift */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
@@ -1660,14 +1669,14 @@
 		B6FC15AC22CB52570078CEDB /* Shared */ = {
 			isa = PBXGroup;
 			children = (
-				22C6410923FA904500CBFDE5 /* Tags */,
-				22C6410423F893CB00CBFDE5 /* Download Icon */,
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
 				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
 				229F0AC223BB27820004DD4F /* Content Detail */,
 				229F0AC123BB27790004DD4F /* Content List */,
+				22C6410423F893CB00CBFDE5 /* Download Icon */,
+				22C6410923FA904500CBFDE5 /* Tags */,
 			);
 			path = Shared;
 			sourceTree = "<group>";
@@ -2019,6 +2028,7 @@
 				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
 				B6C0F0CF22D5D3EE00012839 /* TabNavView.swift in Sources */,
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
+				22C3F15724279692002812CB /* FullScreenVideoPlayerViewController.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* MainView.swift in Sources */,
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
@@ -2074,8 +2084,8 @@
 				22C640FA23F609B600CBFDE5 /* SearchFieldView.swift in Sources */,
 				22BE654F23F1F66E00717369 /* Comparable+Clamped.swift in Sources */,
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
+				22C3F1532427954A002812CB /* LandscapeAVPlayerViewController.swift in Sources */,
 				22B8265D23AF37FE00D4BA23 /* ProgressionAdapter.swift in Sources */,
-				B6FC15BB22CB55160078CEDB /* VideoView.swift in Sources */,
 				222C0AB023DF554E00D65EBD /* SettingsOption.swift in Sources */,
 				2278AE50240A74C400855221 /* UIApplication+DismissKeyboard.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
@@ -2101,6 +2111,7 @@
 				22C4EAEF23DEF91D001A3FDA /* SettingsKey.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
+				22C3F159242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift in Sources */,
 				22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */,
 				223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */,
 				2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */,
@@ -2163,6 +2174,7 @@
 				22B8265923AF109800D4BA23 /* EntityAdapter.swift in Sources */,
 				B6C4F3DF22E710640087ED10 /* PersistenceStore.swift in Sources */,
 				22C0513423A4FB8E004D1223 /* Bookmark+Persistence.swift in Sources */,
+				22C3F155242795A1002812CB /* PortraitHostingController.swift in Sources */,
 				22B8266A23AF608A00D4BA23 /* DataCacheUpdate.swift in Sources */,
 				B6C4F3CB22E6E44A0087ED10 /* TitleCheckmarkView.swift in Sources */,
 				2213195623EB7A7800F15816 /* CompletedIconView.swift in Sources */,

@@ -71,7 +71,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         .environmentObject(sessionController)
         .environmentObject(dataManager)
       
-      window.rootViewController = UIHostingController(rootView: mainView)
+      window.rootViewController = PortraitHostingController(rootView: mainView)
       self.window = window
       window.rootViewController?.view.backgroundColor = UIColor.backgroundColor
       // TODO: When a modifier is available this should be refactored

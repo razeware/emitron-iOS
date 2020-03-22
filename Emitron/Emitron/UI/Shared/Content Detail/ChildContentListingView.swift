@@ -30,6 +30,7 @@ import SwiftUI
 
 struct ChildContentListingView: View {
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
+  @Binding var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   @EnvironmentObject var sessionController: SessionController
   
   var body: some View {
@@ -117,25 +118,20 @@ struct ChildContentListingView: View {
         }
       )
     } else {
-      let childVideoPlaybackViewModelProvider: VideoViewModelProvider = { dismissClosure in
-        childDynamicContentViewModel.videoPlaybackViewModel(
+      return AnyView(Button(action: {
+        self.currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
           apiClient: self.sessionController.client,
-          dismissClosure: dismissClosure
+          dismissClosure: {
+            self.currentlyDisplayedVideoPlaybackViewModel = nil
+          }
         )
-      }
-      
-      return AnyView(NavigationLink(destination:
-          VideoView(viewModelProvider: childVideoPlaybackViewModelProvider)
-        ) {
-          TextListItemView(
-            dynamicContentViewModel: childDynamicContentViewModel,
-            content: model
-          )
-            .padding([.horizontal, .bottom], 20)
-      }
-        //HACK: to remove navigation chevrons
-        .padding(.trailing, -15.0)
-      )
+      }) {
+        TextListItemView(
+          dynamicContentViewModel: childDynamicContentViewModel,
+          content: model
+        )
+          .padding([.horizontal, .bottom], 20)
+      })
     }
   }
   
