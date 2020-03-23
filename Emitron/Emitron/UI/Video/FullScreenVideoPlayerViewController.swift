@@ -55,6 +55,7 @@ extension FullScreenVideoPlayerViewController {
       viewController.player = viewModel?.player
       viewController.delegate = self
       present(viewController, animated: true)
+      viewModel?.play()
     }
   }
 }
