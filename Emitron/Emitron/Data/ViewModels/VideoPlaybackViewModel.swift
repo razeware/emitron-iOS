@@ -209,6 +209,17 @@ final class VideoPlaybackViewModel {
       self.handleTimeUpdate(time: time)
     }
     
+    player.publisher(for: \.rate)
+      .removeDuplicates()
+      .sink { [weak self] rate in
+        guard let self = self,
+          rate != 0,
+          rate != SettingsManager.current.playbackSpeed.rate else { return }
+        
+        self.player.rate = SettingsManager.current.playbackSpeed.rate
+      }
+      .store(in: &subscriptions)
+    
     SettingsManager.current
       .playbackSpeedPublisher
       .removeDuplicates()
