@@ -196,7 +196,6 @@
 		22C3F125241A2655002812CB /* app-icon--default.dev-ipadpro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F11F241A2654002812CB /* app-icon--default.dev-ipadpro@2x.png */; };
 		22C3F126241A2655002812CB /* app-icon--default.beta-ipadpro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */; };
 		22C3F127241A2655002812CB /* app-icon--default.dev-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */; };
-		22C3F1532427954A002812CB /* LandscapeAVPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */; };
 		22C3F155242795A1002812CB /* PortraitHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F154242795A1002812CB /* PortraitHostingController.swift */; };
 		22C3F15724279692002812CB /* FullScreenVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */; };
 		22C3F159242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */; };
@@ -534,7 +533,6 @@
 		22C3F11F241A2654002812CB /* app-icon--default.dev-ipadpro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev-ipadpro@2x.png"; sourceTree = "<group>"; };
 		22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.beta-ipadpro@2x.png"; sourceTree = "<group>"; };
 		22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev-ipad@2x.png"; sourceTree = "<group>"; };
-		22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandscapeAVPlayerViewController.swift; sourceTree = "<group>"; };
 		22C3F154242795A1002812CB /* PortraitHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitHostingController.swift; sourceTree = "<group>"; };
 		22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerViewController.swift; sourceTree = "<group>"; };
 		22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerRepresentable.swift; sourceTree = "<group>"; };
@@ -1042,7 +1040,6 @@
 		229F0AC323BB29230004DD4F /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				22C3F1522427954A002812CB /* LandscapeAVPlayerViewController.swift */,
 				22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */,
 				22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */,
 			);
@@ -2084,7 +2081,6 @@
 				22C640FA23F609B600CBFDE5 /* SearchFieldView.swift in Sources */,
 				22BE654F23F1F66E00717369 /* Comparable+Clamped.swift in Sources */,
 				B6C4F3D222E6ECA50087ED10 /* CheckmarkView.swift in Sources */,
-				22C3F1532427954A002812CB /* LandscapeAVPlayerViewController.swift in Sources */,
 				22B8265D23AF37FE00D4BA23 /* ProgressionAdapter.swift in Sources */,
 				222C0AB023DF554E00D65EBD /* SettingsOption.swift in Sources */,
 				2278AE50240A74C400855221 /* UIApplication+DismissKeyboard.swift in Sources */,

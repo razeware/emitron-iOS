@@ -51,7 +51,7 @@ extension FullScreenVideoPlayerViewController {
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     if !isFullscreen {
-      let viewController = LandscapeAVPlayerViewController()
+      let viewController = AVPlayerViewController()
       viewController.player = viewModel?.player
       viewController.delegate = self
       present(viewController, animated: true)
