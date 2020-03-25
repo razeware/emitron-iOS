@@ -70,7 +70,6 @@ struct TabNavView: View {
         .accessibility(label: Text(Constants.myTutorials))
     }
     .accentColor(Color.accent)
-    .edgesIgnoringSafeArea([.top])
   }
 }
 
