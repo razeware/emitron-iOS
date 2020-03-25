@@ -77,23 +77,6 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       // TODO: When a modifier is available this should be refactored
       window.tintColor = UIColor.accent
       
-      let statusBarHeight: CGFloat = windowScene.statusBarManager?.statusBarFrame.height ?? 0
-      
-      let statusbarView = UIView()
-      statusbarView.backgroundColor = UIColor.backgroundColor
-      let view = window.rootViewController!.view!
-      view.addSubview(statusbarView)
-      
-      statusbarView.translatesAutoresizingMaskIntoConstraints = false
-      statusbarView.heightAnchor
-        .constraint(equalToConstant: statusBarHeight).isActive = true
-      statusbarView.widthAnchor
-        .constraint(equalTo: view.widthAnchor, multiplier: 1.0).isActive = true
-      statusbarView.topAnchor
-        .constraint(equalTo: view.topAnchor).isActive = true
-      statusbarView.centerXAnchor
-        .constraint(equalTo: view.centerXAnchor).isActive = true
-      
       window.makeKeyAndVisible()
     }
   }
