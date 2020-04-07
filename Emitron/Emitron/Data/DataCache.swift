@@ -321,26 +321,19 @@ extension DataCache {
     guard !contentList.isEmpty else { throw DataCacheError.cacheMiss }
     
     // We'll assume that the contents is already ordered. It is if it comes from child/sibling contents
-    let orderedProgressions = contentList.compactMap { progressions[$0.id] }
+    let orderedProgressions = contentList.map { progressions[$0.id] }
     
-    // No child progressions—let's start with the first item of content
-    if orderedProgressions.isEmpty {
-      return contentList.first!
+    // Find the first index where there's a missing or incomplete progression
+    guard let incompleteOrNotStartedIndex = orderedProgressions.firstIndex(where: { progression in
+      guard let progression = progression else { return true }
+      
+      return !progression.finished
+    }) else {
+      // If we didn't find one, start at the beginning
+      return contentList[0]
     }
     
-    // The last progression is the furthest through the content
-    guard let lastProgression = orderedProgressions.last,
-      let lastContentIndex = contentList.firstIndex(where: { $0.id == lastProgression.contentId })
-      else { return contentList[0] }
-    // If it's not finished, then we're part way through it—return this item of content
-    if !lastProgression.finished {
-      return contentList[lastContentIndex]
-    }
-    // Need the next one—does it exist?
-    if lastContentIndex + 1 < contentList.endIndex {
-      return contentList[lastContentIndex + 1]
-    }
-    // Must have completed the final episode. Let's start at the beginning again.
-    return contentList[0]
+    // Otherwise, we've found the one we need
+    return contentList[incompleteOrNotStartedIndex]
   }
 }
