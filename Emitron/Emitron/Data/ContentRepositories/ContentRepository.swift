@@ -33,7 +33,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   let repository: Repository
   let contentsService: ContentsService
   let downloadAction: DownloadAction
-  let syncAction: SyncAction
+  weak var syncAction: SyncAction?
   let serviceAdapter: ContentServiceAdapter!
   
   private (set) var currentPage: Int = 1

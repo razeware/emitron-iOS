@@ -55,13 +55,13 @@ final class ProgressEngine {
   
   private let contentsService: ContentsService
   private let repository: Repository
-  private let syncAction: SyncAction
+  private weak var syncAction: SyncAction?
   private var mode: Mode = .offline
   private let networkMonitor = NWPathMonitor()
   
   private var playbackToken: String?
   
-  init(contentsService: ContentsService, repository: Repository, syncAction: SyncAction) {
+  init(contentsService: ContentsService, repository: Repository, syncAction: SyncAction?) {
     self.contentsService = contentsService
     self.repository = repository
     self.syncAction = syncAction
@@ -101,8 +101,8 @@ final class ProgressEngine {
     switch mode {
     case .offline:
       do {
-        try syncAction.updateProgress(for: contentId, progress: progress)
-        try syncAction.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
+        try syncAction?.updateProgress(for: contentId, progress: progress)
+        try syncAction?.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
         
         return Future { promise in
           promise(.success(progression))
