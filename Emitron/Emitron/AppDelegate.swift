@@ -100,18 +100,6 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Use this method to release any resources that were specific to the discarded scenes, as they will not return.
   }
   
-  // handle orientation for the device
-  func application (_ application: UIApplication, supportedInterfaceOrientationsFor window: UIWindow?) -> UIInterfaceOrientationMask {
-      guard let viewController = (window?.rootViewController?.presentedViewController) else {
-          return .portrait
-      }
-      if viewController.isKind(of: NSClassFromString("AVFullScreenViewController")!) {
-          return .allButUpsideDown
-      } else {
-          return .portrait
-      }
-  }
-  
   // For dealing with downloading of videos in the background
   func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
     assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")

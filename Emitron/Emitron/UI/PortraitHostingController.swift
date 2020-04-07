@@ -26,15 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-protocol SyncAction: AnyObject {
-  func createBookmark(for contentId: Int) throws
-  func deleteBookmark(for contentId: Int) throws
-  
-  func markContentAsComplete(contentId: Int) throws
-  func removeProgress(for contentId: Int) throws
-  func updateProgress(for contentId: Int, progress: Int) throws
-  
-  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws
+class PortraitHostingController<Content>: UIHostingController<Content> where Content: View {
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    // iPads can have any orientation. Everything else should be portrait only.
+    UIDevice.current.userInterfaceIdiom == .pad ? .all : .portrait
+  }
 }

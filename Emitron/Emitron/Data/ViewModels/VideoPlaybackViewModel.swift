@@ -35,6 +35,7 @@ enum VideoPlaybackViewModelError: Error {
   case cannotStreamWhenOffline
   case invalidPermissions
   case expiredPermissions
+  case unableToLoadArtwork
   
   var localizedDescription: String {
     switch self {
@@ -46,6 +47,8 @@ enum VideoPlaybackViewModelError: Error {
       return Constants.videoPlaybackInvalidPermissions
     case .expiredPermissions:
       return Constants.videoPlaybackExpiredPermissions
+    case .unableToLoadArtwork:
+      return "VideoPlaybackViewModelError::unableToLoadArtwork"
     }
   }
   
@@ -96,16 +99,18 @@ final class VideoPlaybackViewModel {
     contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
+  private var currentItemStateSubscription: AnyCancellable?
 
   let player = AVQueuePlayer()
   private var playerTimeObserverToken: Any?
   var state: DataState = .initial
+  private var shouldBePlaying = false
   
   init(contentId: Int,
        repository: Repository,
        videosService: VideosService,
        contentsService: ContentsService,
-       syncAction: SyncAction,
+       syncAction: SyncAction?,
        sessionController: SessionController = .current,
        dismissClosure: @escaping () -> Void = { }) {
     self.initialContentId = contentId
@@ -189,10 +194,11 @@ final class VideoPlaybackViewModel {
   
   func play() {
     self.progressEngine.playbackStarted()
-    self.player.play()
+    self.shouldBePlaying = true
   }
   
   func pause() {
+    self.shouldBePlaying = false
     self.player.pause()
   }
   
@@ -208,6 +214,38 @@ final class VideoPlaybackViewModel {
       guard let self = self else { return }
       self.handleTimeUpdate(time: time)
     }
+    
+    player.publisher(for: \.rate)
+      .removeDuplicates()
+      .sink { [weak self] rate in
+        self?.shouldBePlaying = rate == 0
+        
+        guard let self = self,
+          rate != 0,
+          rate != SettingsManager.current.playbackSpeed.rate else { return }
+        
+        self.player.rate = SettingsManager.current.playbackSpeed.rate
+      }
+      .store(in: &subscriptions)
+    
+     player.publisher(for: \.currentItem)
+      .removeDuplicates()
+      .sink { [weak self] item in
+        guard let self = self,
+          let item = item else { return }
+        
+        self.currentItemStateSubscription = item.publisher(for: \.status)
+          .removeDuplicates()
+          .sink { [weak self] status in
+            guard let self = self,
+              status == .readyToPlay,
+              self.shouldBePlaying,
+              self.player.rate == 0 else { return }
+            
+            self.player.play()
+          }
+      }
+      .store(in: &subscriptions)
     
     SettingsManager.current
       .playbackSpeedPublisher
@@ -337,6 +375,7 @@ final class VideoPlaybackViewModel {
         download.state == .complete,
         let localUrl = download.localUrl {
         let item = AVPlayerItem(url: localUrl)
+        self.addMetadata(from: state, to: item)
         self.addClosedCaptions(for: item)
         // Add it to the cache
         self.playerItems[state.content.id] = item
@@ -355,6 +394,7 @@ final class VideoPlaybackViewModel {
         case .success(let response):
           guard response.kind == .stream else { return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("Not A Stream"))) }
           let item = AVPlayerItem(url: response.url)
+          self.addMetadata(from: state, to: item)
           self.addClosedCaptions(for: item)
           // Add it to the cache
           self.playerItems[state.content.id] = item
@@ -375,6 +415,37 @@ final class VideoPlaybackViewModel {
         playerItem.select(nil, in: group)
       }
     }
+  }
+  
+  private func addMetadata(from state: VideoPlaybackState, to playerItem: AVPlayerItem) {
+    let title = AVMutableMetadataItem()
+    title.identifier = .commonIdentifierTitle
+    title.value = state.content.name as NSString
+    
+    let description = AVMutableMetadataItem()
+    description.identifier = .commonIdentifierDescription
+    description.value = state.content.descriptionPlainText as NSString
+    
+    let artwork = AVMutableMetadataItem()
+    artwork.identifier = .commonIdentifierArtwork
+
+    let deferredArtwork = AVMetadataItem(propertiesOf: artwork) { request in
+      guard let url = state.content.cardArtworkUrl else {
+        request.respond(error: VideoPlaybackViewModelError.unableToLoadArtwork)
+        return
+      }
+      
+      let task = URLSession.shared.dataTask(with: url) { data, _, _ in
+        guard let data = data else {
+          request.respond(error: VideoPlaybackViewModelError.unableToLoadArtwork)
+          return
+        }
+        request.respond(value: data as NSData)
+      }
+      task.resume()
+    }
+    
+    playerItem.externalMetadata = [title, description, deferredArtwork]
   }
 
   private func update(progression: Progression) {

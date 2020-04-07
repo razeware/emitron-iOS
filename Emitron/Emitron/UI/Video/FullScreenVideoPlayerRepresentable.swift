@@ -26,15 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import SwiftUI
 
-protocol SyncAction: AnyObject {
-  func createBookmark(for contentId: Int) throws
-  func deleteBookmark(for contentId: Int) throws
+struct FullScreenVideoPlayerRepresentable: UIViewControllerRepresentable {
+  @Binding var viewModel: VideoPlaybackViewModel?
   
-  func markContentAsComplete(contentId: Int) throws
-  func removeProgress(for contentId: Int) throws
-  func updateProgress(for contentId: Int, progress: Int) throws
+  func makeUIViewController(context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) -> FullScreenVideoPlayerViewController {
+    FullScreenVideoPlayerViewController(viewModel: $viewModel)
+  }
   
-  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws
+  func updateUIViewController(_ uiViewController: FullScreenVideoPlayerViewController, context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) {
+    // No-op
+  }
 }

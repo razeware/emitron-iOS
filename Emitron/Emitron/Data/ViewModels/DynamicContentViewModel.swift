@@ -33,7 +33,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private let contentId: Int
   private let repository: Repository
   private let downloadAction: DownloadAction
-  private let syncAction: SyncAction
+  private weak var syncAction: SyncAction?
   
   private var dynamicContentState: DynamicContentState?
   
@@ -45,7 +45,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private var subscriptions = Set<AnyCancellable>()
   private var downloadActionSubscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction) {
+  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?) {
     self.contentId = contentId
     self.repository = repository
     self.downloadAction = downloadAction
@@ -69,12 +69,14 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     repository
       .contentDynamicState(for: contentId)
       .removeDuplicates()
-      .sink(receiveCompletion: { completion in
-        self.state = .failed
+      .sink(receiveCompletion: { [weak self] completion in
+        self?.state = .failed
         Failure
           .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
           .log()
-      }) { contentState in
+      }) { [weak self] contentState in
+        guard let self = self else { return }
+
         self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
         self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
         self.bookmarked = contentState.bookmark != nil
@@ -162,7 +164,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   }
   
   func bookmarkTapped() {
-    guard state == .hasData  else { return }
+    guard state == .hasData,
+      let syncAction = syncAction else { return }
     
     if bookmarked {
       do {
@@ -188,7 +191,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   }
   
   func completedTapped() {
-    guard state == .hasData else { return }
+    guard state == .hasData,
+      let syncAction = syncAction else { return }
     
     if case .completed = viewProgress {
       do {
