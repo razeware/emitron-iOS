@@ -85,9 +85,12 @@ struct SettingsView: View {
                 .foregroundColor(.contentText)
             }
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              self.sessionController.logout()
               self.presentationMode.wrappedValue.dismiss()
-              self.tabViewModel.selectedTab = .library
+              // This is hacky. But without it, the sheet doesn't actually dismiss.
+              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                self.sessionController.logout()
+                self.tabViewModel.selectedTab = .library
+              }
             }
           }
           .padding([.bottom, .horizontal], 18)
