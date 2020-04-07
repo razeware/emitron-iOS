@@ -99,10 +99,12 @@ final class VideoPlaybackViewModel {
     contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
+  private var currentItemStateSubscription: AnyCancellable?
 
   let player = AVQueuePlayer()
   private var playerTimeObserverToken: Any?
   var state: DataState = .initial
+  private var shouldBePlaying = false
   
   init(contentId: Int,
        repository: Repository,
@@ -192,10 +194,11 @@ final class VideoPlaybackViewModel {
   
   func play() {
     self.progressEngine.playbackStarted()
-    self.player.play()
+    self.shouldBePlaying = true
   }
   
   func pause() {
+    self.shouldBePlaying = false
     self.player.pause()
   }
   
@@ -215,11 +218,32 @@ final class VideoPlaybackViewModel {
     player.publisher(for: \.rate)
       .removeDuplicates()
       .sink { [weak self] rate in
+        self?.shouldBePlaying = rate == 0
+        
         guard let self = self,
           rate != 0,
           rate != SettingsManager.current.playbackSpeed.rate else { return }
         
         self.player.rate = SettingsManager.current.playbackSpeed.rate
+      }
+      .store(in: &subscriptions)
+    
+     player.publisher(for: \.currentItem)
+      .removeDuplicates()
+      .sink { [weak self] item in
+        guard let self = self,
+          let item = item else { return }
+        
+        self.currentItemStateSubscription = item.publisher(for: \.status)
+          .removeDuplicates()
+          .sink { [weak self] status in
+            guard let self = self,
+              status == .readyToPlay,
+              self.shouldBePlaying,
+              self.player.rate == 0 else { return }
+            
+            self.player.play()
+          }
       }
       .store(in: &subscriptions)
     
