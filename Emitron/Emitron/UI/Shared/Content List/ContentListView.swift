@@ -68,7 +68,7 @@ struct ContentListView: View {
     }
   }
 
-  private func cardTableNavView(withDelete: Bool = false) -> some View {
+  private var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
         CardViewContainer(
@@ -82,7 +82,7 @@ struct ContentListView: View {
           .padding(.trailing, -2 * .sidePadding)
       }
     }
-      .if(withDelete) { $0.onDelete(perform: self.delete) }
+      .if(allowDelete) { $0.onDelete(perform: self.delete) }
       .listRowInsets(EdgeInsets())
       .padding([.horizontal, .top], .sidePadding)
       .background(Color.backgroundColor)
@@ -99,35 +99,36 @@ struct ContentListView: View {
     }
   }
   
-  private var appropriateCardsView: some View {
+  private var allowDelete: Bool {
     if case .downloads = contentScreen {
-      return cardTableNavView(withDelete: true)
-    } else {
-      return cardTableNavView(withDelete: false)
+      return true
     }
+    return false
   }
   
   private var listView: some View {
     List {
       if self.headerView != nil {
         Section(header: self.headerView) {
-          self.appropriateCardsView
+          self.cardsView
           self.loadMoreView
           // Hack to make sure there's some spacing at the bottom of the list
           Color.clear.frame(height: 0)
         }.listRowInsets(EdgeInsets())
       } else {
-        self.appropriateCardsView
+        self.cardsView
         self.loadMoreView
         // Hack to make sure there's some spacing at the bottom of the list
         Color.clear.frame(height: 0)
       }
     }
-      .gesture(
-        DragGesture().onChanged { _ in
-          UIApplication.dismissKeyboard()
-        }
-      )
+      .if(!allowDelete) {
+        $0.gesture(
+          DragGesture().onChanged { _ in
+            UIApplication.dismissKeyboard()
+          }
+        )
+      }
       .accessibility(identifier: "contentListView")
   }
   

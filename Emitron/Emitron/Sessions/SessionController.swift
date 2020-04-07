@@ -51,7 +51,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
 
   // Managing the state of the current session
   private(set) var sessionState: SessionState = .unknown
-  private(set) var userState: UserState = .notLoggedIn
+  @Published private(set) var userState: UserState = .notLoggedIn
   @Published private(set) var permissionState: PermissionState = .notLoaded
   
   @PublishedPrePostFacto var user: User? {
