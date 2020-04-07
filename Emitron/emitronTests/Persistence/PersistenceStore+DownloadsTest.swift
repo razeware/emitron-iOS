@@ -187,7 +187,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 2)
   }
   
   func testTransitionNonFinalEpisodeToDownloadedUpdatesCollection() throws {
