@@ -53,7 +53,7 @@ struct LoginView: View {
             .multilineTextAlignment(.center)
             .padding([.bottom], 15)
           
-          Text("raywenderlich Subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
+          Text("raywenderlich subscribers can watch over\n2,000+ video tutorials on iPhone and iPad.")
             .font(.uiLabel)
             .foregroundColor(.contentText)
             .multilineTextAlignment(.center)
@@ -73,7 +73,7 @@ struct LoginView: View {
             .multilineTextAlignment(.center)
             .padding([.bottom], 15)
           
-          Text("Professional Subscribers can download and\nwatch videos even when they're offline.")
+          Text("Professional subscribers can download and\nwatch videos even when they're offline.")
             .font(.uiLabel)
             .foregroundColor(.contentText)
             .multilineTextAlignment(.center)

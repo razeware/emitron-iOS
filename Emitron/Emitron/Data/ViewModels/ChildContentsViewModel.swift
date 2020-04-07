@@ -32,7 +32,7 @@ import Combine
 class ChildContentsViewModel: ObservableObject {
   let parentContentId: Int
   let downloadAction: DownloadAction
-  let syncAction: SyncAction
+  weak var syncAction: SyncAction?
   let repository: Repository
   
   var state: DataState = .initial
@@ -43,7 +43,7 @@ class ChildContentsViewModel: ObservableObject {
   
   init(parentContentId: Int,
        downloadAction: DownloadAction,
-       syncAction: SyncAction,
+       syncAction: SyncAction?,
        repository: Repository) {
     self.parentContentId = parentContentId
     self.downloadAction = downloadAction

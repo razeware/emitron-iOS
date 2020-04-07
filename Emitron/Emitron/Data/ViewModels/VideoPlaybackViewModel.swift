@@ -110,7 +110,7 @@ final class VideoPlaybackViewModel {
        repository: Repository,
        videosService: VideosService,
        contentsService: ContentsService,
-       syncAction: SyncAction,
+       syncAction: SyncAction?,
        sessionController: SessionController = .current,
        dismissClosure: @escaping () -> Void = { }) {
     self.initialContentId = contentId

@@ -79,23 +79,21 @@ struct ContentSummaryView: View {
         .lineSpacing(3)
         .padding([.top], 10)
       
-      if !courseLocked {
-        HStack(spacing: 30, content: {
-          if canDownload {
-            DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-              .onTapGesture {
-                self.download()
-              }
-              .alert(item: $deletionConfirmation) { $0.alert }
-              .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
-          }
-          
-          bookmarkButton
-          
-          completedTag
-        })
-          .padding([.top], 15)
-      }
+      HStack(spacing: 30, content: {
+        if canDownload {
+          DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+            .onTapGesture {
+              self.download()
+            }
+            .alert(item: $deletionConfirmation) { $0.alert }
+            .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
+        }
+        
+        bookmarkButton
+        
+        completedTag
+      })
+        .padding([.top], 15)
       
       Text(content.descriptionPlainText)
         .font(.uiCaption)

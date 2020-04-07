@@ -28,7 +28,7 @@
 
 import Foundation
 
-protocol SyncAction {
+protocol SyncAction: AnyObject {
   func createBookmark(for contentId: Int) throws
   func deleteBookmark(for contentId: Int) throws
   
