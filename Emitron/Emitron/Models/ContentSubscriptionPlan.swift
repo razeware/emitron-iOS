@@ -39,9 +39,9 @@ enum ContentSubscriptionPlan: Int, Codable {
   var displayString: String {
     switch self {
     case .beginner:
-      return "Beginner Subscription"
+      return "Beginner"
     case .professional:
-      return "Pro Subscription"
+      return "Professional"
     }
   }
   

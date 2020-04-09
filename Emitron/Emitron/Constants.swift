@@ -102,7 +102,7 @@ enum Constants {
   static let settingsClosedCaptionOnLabel = "Subtitles"
   
   // Detail View
-  static let detailContentLockedCosPro = "To unlock this course visit raywenderlich.com/subscription for more information"
+  static let detailContentLockedCosPro = "Upgrade your account to watch this and other Pro courses"
   
   // Pull-to-refresh
   static let pullToRefreshPullMessage = "Pull to refresh"
