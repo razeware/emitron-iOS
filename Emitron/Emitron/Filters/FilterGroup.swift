@@ -58,7 +58,7 @@ struct FilterGroup: Hashable {
 enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case platforms = "Platforms"
   case categories = "Categories"
-  case subscriptionPlans = "Subscription Plans"
+  case subscriptionPlans = "Membership Level"
   case contentTypes = "Content Type"
   case difficulties = "Difficulty"
   case search = "Search"

@@ -51,7 +51,7 @@ enum ContentScreen {
     case .downloads(permitted: true):
       return "You haven't downloaded any tutorials yet"
     case .downloads(permitted: false):
-      return "Upgrade your subscription to download videos"
+      return "Upgrade your account to download videos"
     case .bookmarked:
       return "You haven't bookmarked any tutorials yet"
     case .inProgress:
@@ -74,7 +74,7 @@ enum ContentScreen {
     case .downloads(permitted: true):
       return "Tap the download icon to download a video course or episode to watch offline."
     case .downloads(permitted: false):
-      return "raywenderlich.com Professional subscribers can download videos and watch them offline.\n\nVisit raywenderlich.com/subscription to upgrade and start downloading videos today!"
+      return "Members on the Professional plan are able to download videos and watch them offline."
     }
   }
   
