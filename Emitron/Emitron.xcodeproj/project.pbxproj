@@ -2385,7 +2385,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2588,7 +2588,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2614,7 +2614,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.3;
+				MARKETING_VERSION = 1.0.4;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
