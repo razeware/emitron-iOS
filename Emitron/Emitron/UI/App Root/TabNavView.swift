@@ -79,6 +79,6 @@ struct TabNavView_Previews: PreviewProvider {
       libraryView: AnyView(Text("LIBRARY")),
       myTutorialsView: AnyView(Text("MY TUTORIALS")),
       downloadsView: AnyView(Text("DOWNLOADS"))
-    )
+    ).environmentObject(TabViewModel())
   }
 }

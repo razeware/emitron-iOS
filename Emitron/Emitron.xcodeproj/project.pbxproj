@@ -1101,7 +1101,6 @@
 				22C914C023BD7E6700A05E00 /* Service Adapters */,
 				223D77E223B8859E005BE95D /* ContentRepositories */,
 				2228E40323B999B100E103AA /* Other Repositories */,
-				22B8265F23AF5B3E00D4BA23 /* DataCache.swift */,
 				B621DD5022F5EEC500A1F27A /* DataManager.swift */,
 				B62B9A8322DF771200122CE8 /* DataState.swift */,
 				223D77D023B0DD3A005BE95D /* Repository.swift */,
@@ -1351,6 +1350,7 @@
 		95CD793D22F0C0890080C407 /* Models */ = {
 			isa = PBXGroup;
 			children = (
+				22B8265F23AF5B3E00D4BA23 /* DataCache.swift */,
 				223D77AC23B0C0A2005BE95D /* Attachment.swift */,
 				223D77AE23B0C0AA005BE95D /* Bookmark.swift */,
 				223D77B023B0C0B2005BE95D /* Category.swift */,

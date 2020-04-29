@@ -65,8 +65,8 @@ struct LogoutView: View {
   }
 }
 
-//struct LogoutView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    LogoutView()
-//  }
-//}
+struct LogoutView_Previews: PreviewProvider {
+  static var previews: some View {
+    LogoutView()
+  }
+}
