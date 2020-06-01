@@ -70,12 +70,11 @@ enum AppliedFilterType {
 }
 
 private enum Layout {
-  struct Padding {
-    let overall: CGFloat = 10
-    let textTrailing: CGFloat = 2
+  enum Padding {
+    static let overall: CGFloat = 10
+    static let textTrailing: CGFloat = 2
   }
   
-  static let padding = Padding()
   static let cornerRadius: CGFloat = 9
   static let imageSize: CGFloat = 10
 }
@@ -96,7 +95,7 @@ struct AppliedFilterTagButton: View {
           .frame(width: Layout.imageSize, height: Layout.imageSize)
           .foregroundColor(type.iconColor)
       }
-        .padding(.all, Layout.padding.overall)
+        .padding(.all, Layout.Padding.overall)
     .background(
       RoundedRectangle(cornerRadius: Layout.cornerRadius)
         .fill(type.backgroundColor)
