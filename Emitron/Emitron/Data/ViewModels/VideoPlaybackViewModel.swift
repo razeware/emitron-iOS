@@ -222,14 +222,14 @@ private extension VideoPlaybackViewModel {
         self?.shouldBePlaying = rate == 0
         
         guard let self = self,
-          rate != 0,
-          rate != SettingsManager.current.playbackSpeed.rate else { return }
+          ![0, SettingsManager.current.playbackSpeed.rate].contains(rate)
+          else { return }
         
         self.player.rate = SettingsManager.current.playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
-     player.publisher(for: \.currentItem)
+    player.publisher(for: \.currentItem)
       .removeDuplicates()
       .sink { [weak self] item in
         guard let self = self,
@@ -260,9 +260,9 @@ private extension VideoPlaybackViewModel {
       .closedCaptionOnPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
-        guard let playerItem = self?.player.currentItem else { return }
-        
-        self?.addClosedCaptions(for: playerItem)
+        guard let self = self else { return }
+
+        self.player.currentItem.map(self.addClosedCaptions)
       }
       .store(in: &subscriptions)
     
@@ -406,7 +406,7 @@ private extension VideoPlaybackViewModel {
   }
   
   func addClosedCaptions(for playerItem: AVPlayerItem) {
-    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
+    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) {
       let locale = Locale(identifier: "en")
       let options =
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
