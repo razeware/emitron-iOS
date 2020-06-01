@@ -46,7 +46,7 @@ class DownloadQueueManagerTest: XCTestCase {
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
-    let userModelController = UserMCMock.withDownloads
+    let userModelController = UserMCMock(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })

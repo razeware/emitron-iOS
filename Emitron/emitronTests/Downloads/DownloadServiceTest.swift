@@ -42,7 +42,7 @@ class DownloadServiceTest: XCTestCase {
     // swiftlint:disable:next force_try
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
-    userModelController = UserMCMock.withDownloads
+    userModelController = .init(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })
@@ -68,9 +68,7 @@ class DownloadServiceTest: XCTestCase {
   
   func getAllDownloads() -> [Download] {
     // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Download.fetchAll(db)
-    }
+    try! database.read(Download.fetchAll)
   }
   
   func getAllDownloadQueueItems() -> [PersistenceStore.DownloadQueueItem] {
@@ -109,11 +107,14 @@ class DownloadServiceTest: XCTestCase {
     // Create a sample file
     let directory = downloadsDirectory(fileManager: fileManager)
     let sampleFile = directory.appendingPathComponent("sample_file")
-    
-    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
-    
-    fileManager.createFile(atPath: sampleFile.path, contents: .none, attributes: .none)
-    XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
+
+    var fileExists: Bool {
+      fileManager.fileExists(atPath: sampleFile.path)
+    }
+
+    XCTAssertFalse(fileExists)
+    fileManager.createFile(atPath: sampleFile.path, contents: .none)
+    XCTAssert(fileExists)
     
     return sampleFile
   }
@@ -475,14 +476,14 @@ class DownloadServiceTest: XCTestCase {
     userModelController.user = .none
     userModelController.objectDidChange.send()
     
-    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+    XCTAssertFalse(fileManager.fileExists(atPath: sampleFile.path))
   }
   
   func testEmptiesDownloadsDirectoryWhenUserDoesNotHaveDownloadPermission() {
     let fileManager = FileManager.default
     let sampleFile = createSampleFile(fileManager: fileManager)
     
-    userModelController.user = User.noPermissions
+    userModelController.user = .noPermissions
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService })
@@ -495,7 +496,7 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = createSampleFile(fileManager: fileManager)
     
     userModelController.objectWillChange.send()
-    userModelController.user = User.noPermissions
+    userModelController.user = .noPermissions
     userModelController.objectDidChange.send()
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
@@ -506,7 +507,7 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = createSampleFile(fileManager: fileManager)
     
     userModelController.objectWillChange.send()
-    userModelController.user = User.withDownloads
+    userModelController.user = .withDownloads
     userModelController.objectDidChange.send()
     
     XCTAssert(fileManager.fileExists(atPath: sampleFile.path))

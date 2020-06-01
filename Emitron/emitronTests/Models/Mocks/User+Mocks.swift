@@ -30,8 +30,7 @@
 
 extension User {
   static var withDownloads: User {
-    let user = noPermissions
-    return user.with(permissions: [Permission.downloadVideos])
+    noPermissions.with(permissions: [.downloadVideos])
   }
   
   static var noPermissions: User {
