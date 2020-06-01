@@ -28,6 +28,9 @@
 
 import class Foundation.UserDefaults
 
+/// Strongly-typed `UserDefaults` settings keys.
+/// - Note: Use the `UserDefaults` extensions in `SettingsKey.swift`
+/// to avoid having to use `.rawValue` with these.
 enum SettingsKey: String, CaseIterable {
   // Filters
   case filters
