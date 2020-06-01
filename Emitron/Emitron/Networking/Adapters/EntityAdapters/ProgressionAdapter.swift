@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct ProgressionAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Progression {
     guard resource.entityType == .progression else {

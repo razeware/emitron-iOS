@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
   case half
   case standard

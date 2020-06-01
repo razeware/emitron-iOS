@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 protocol SyncAction: AnyObject {
   func createBookmark(for contentId: Int) throws
   func deleteBookmark(for contentId: Int) throws

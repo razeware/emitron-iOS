@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct BookmarkAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Bookmark {
     guard resource.entityType == .bookmark else {

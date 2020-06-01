@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 extension ProgressionsService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
     progressions(parameters: parameters) { result in

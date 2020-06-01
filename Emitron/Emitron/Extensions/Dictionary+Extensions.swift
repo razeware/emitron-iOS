@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 extension Dictionary {
   mutating func merge<K, V>(_ dicts: [K: V]?...) {
     dicts.forEach { dict in

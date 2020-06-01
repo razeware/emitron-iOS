@@ -27,8 +27,8 @@
 // THE SOFTWARE.
 
 import Foundation
-@testable import Emitron
 import SwiftyJSON
+@testable import Emitron
 
 extension AttachmentTest {
   enum Mocks {

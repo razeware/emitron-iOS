@@ -27,7 +27,6 @@
 // THE SOFTWARE.
 
 import AuthenticationServices
-import Foundation
 
 public enum LoginError: Error {
   case unableToCreateLoginUrl

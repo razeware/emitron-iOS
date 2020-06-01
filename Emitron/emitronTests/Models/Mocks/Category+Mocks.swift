@@ -27,8 +27,8 @@
 // THE SOFTWARE.
 
 import Foundation
-import SwiftyJSON
 import GRDB
+import SwiftyJSON
 @testable import Emitron
 
 extension Emitron.Category {
