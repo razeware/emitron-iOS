@@ -332,7 +332,6 @@
 		B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */; };
 		B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */; };
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
-		B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
 /* End PBXBuildFile section */
@@ -683,7 +682,6 @@
 		B6FC15C222CB55CC0078CEDB /* JSONAPIRelationship.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIRelationship.swift; sourceTree = "<group>"; };
 		B6FC15C422CB55D30078CEDB /* JSONAPIError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIError.swift; sourceTree = "<group>"; };
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
-		B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Dictionary+Extensions.swift"; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -1436,7 +1434,6 @@
 				B6C0F0DC22D5FA1C00012839 /* ContentDetailModel+Extensions.swift */,
 				B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */,
 				B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */,
-				B6FC15CF22CB61350078CEDB /* Dictionary+Extensions.swift */,
 				B6C0F0DE22D5FD4C00012839 /* TimeInterval+Extensions.swift */,
 				B6C0F0DA22D5E65900012839 /* UIViewController+Extensions.swift */,
 				22BE654E23F1F66E00717369 /* Comparable+Clamped.swift */,
@@ -2204,7 +2201,6 @@
 				B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */,
 				B6C4F3BD22E668FC0087ED10 /* FiltersView.swift in Sources */,
 				8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */,
-				B6FC15D022CB61350078CEDB /* Dictionary+Extensions.swift in Sources */,
 				2213194323E4E86900F15816 /* ReloadView.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
 				229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */,

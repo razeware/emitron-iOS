@@ -125,11 +125,11 @@ enum Failure: Log {
     }
   }
   
-  func log(additionalParams: [String: String]?) {
-    let params = ["object": self.object,
-                  "action": self.action,
-                  "reason": self.reason]
-    let allParams = params.merged(additionalParams) as [String: Any]
+  func log(additionalParams: [String: String]) {
+    let params = ["object": object,
+                  "action": action,
+                  "reason": reason]
+    let allParams = params.merging(additionalParams, uniquingKeysWith: { $1 })
     print(allParams)
   }
 }
@@ -159,9 +159,10 @@ enum Event: Log {
     }
   }
 
-  func log(additionalParams: [String: String]?) {
-    let params = ["object": self.object, "action": self.action]
-    let allParams = params.merged(additionalParams) as [String: Any]
+  func log(additionalParams: [String: String]) {
+    let allParams =
+      ["object": object, "action": action]
+      .merging(additionalParams, uniquingKeysWith: { $1 })
     print("EVENT:: \(allParams)")
   }
 }

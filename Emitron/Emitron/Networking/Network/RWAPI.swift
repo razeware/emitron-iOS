@@ -28,6 +28,7 @@
 
 import class Foundation.URLSession
 
+typealias HTTPHeader = (String, String)
 typealias HTTPHeaders = [String: String]
 
 enum RWAPIError: Error {
@@ -61,7 +62,7 @@ struct RWAPI {
   let authToken: String
 
   // MARK: - HTTP Headers
-  let contentTypeHeader: HTTPHeaders = ["Content-Type": "application/vnd.api+json; charset=utf-8"]
+  let contentTypeHeader: HTTPHeader = ("Content-Type", "application/vnd.api+json; charset=utf-8")
   var additionalHeaders: HTTPHeaders = ["RW-App-Token": Configuration.appToken]
 
   // MARK: - Initializers
