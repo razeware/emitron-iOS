@@ -54,9 +54,7 @@ final class SettingsManager: ObservableObject {
   
   // MARK: Methods
   func resetAll() {
-    SettingsKey.allCases.forEach { settingsKey in
-      userDefaults.removeObject(forKey: settingsKey)
-    }
+    SettingsKey.allCases.forEach(userDefaults.removeObject)
   }
 }
 
@@ -78,7 +76,7 @@ extension SettingsManager {
 extension SettingsManager: EmitronSettings {
   var filters: Set<Filter> {
     get {
-      guard let data = userDefaults.object(forKey: .filters) as? [Data] else {
+      guard let data: [Data] = userDefaults[.filters] else {
         return []
       }
       return Set(data.compactMap { try? jsonDecoder.decode(Filter.self, from: $0) })
@@ -86,13 +84,13 @@ extension SettingsManager: EmitronSettings {
     set {
       objectWillChange.send()
       let encodedFilters = newValue.compactMap { try? jsonEncoder.encode($0) }
-      userDefaults.set(encodedFilters, forKey: .filters)
+      userDefaults[.filters] = encodedFilters
     }
   }
   
   var sortFilter: SortFilter {
     get {
-      guard let data = userDefaults.object(forKey: .sortFilters) as? Data,
+      guard let data: Data = userDefaults[.sortFilters],
         let sortFilter = try? jsonDecoder.decode(SortFilter.self, from: data) else {
         return SortFilter.newest
       }
@@ -101,23 +99,23 @@ extension SettingsManager: EmitronSettings {
     set {
       objectWillChange.send()
       let encodedFilter = try? jsonEncoder.encode(newValue)
-      userDefaults.set(encodedFilter, forKey: .sortFilters)
+      userDefaults[.sortFilters] = encodedFilter
     }
   }
   
   var playbackToken: String? {
     get {
-      userDefaults.object(forKey: .playbackToken) as? String
+      userDefaults[.playbackToken]
     }
     set {
       objectWillChange.send()
-      userDefaults.set(newValue, forKey: .playbackToken)
+      userDefaults[.playbackToken] = newValue
     }
   }
   
   var playbackSpeed: PlaybackSpeed {
     get {
-      guard let speed = userDefaults.object(forKey: .playbackSpeed) as? Int,
+      guard let speed: Int = userDefaults[.playbackSpeed],
         let playbackSpeed = PlaybackSpeed(rawValue: speed) else {
           return PlaybackSpeed.standard
       }
@@ -125,25 +123,25 @@ extension SettingsManager: EmitronSettings {
     }
     set {
       objectWillChange.send()
-      userDefaults.set(newValue.rawValue, forKey: .playbackSpeed)
+      userDefaults[.playbackSpeed] = newValue.rawValue
       playbackSpeedSubject.send(newValue)
     }
   }
   
   var closedCaptionOn: Bool {
     get {
-      userDefaults.object(forKey: .closedCaptionOn) as? Bool ?? false
+      userDefaults[.closedCaptionOn] ?? false
     }
     set {
       objectWillChange.send()
-      userDefaults.set(newValue, forKey: .closedCaptionOn)
+      userDefaults[.closedCaptionOn] = newValue
       closedCaptionOnSubject.send(newValue)
     }
   }
   
   var downloadQuality: Attachment.Kind {
     get {
-      guard let quality = userDefaults.object(forKey: .downloadQuality) as? Int,
+      guard let quality: Int = userDefaults[.downloadQuality],
         let downloadQuality = Attachment.Kind(rawValue: quality),
         [.hdVideoFile, .sdVideoFile].contains(downloadQuality) else {
         return Attachment.Kind.hdVideoFile
@@ -152,18 +150,18 @@ extension SettingsManager: EmitronSettings {
     }
     set {
       objectWillChange.send()
-      userDefaults.set(newValue.rawValue, forKey: .downloadQuality)
+      userDefaults[.downloadQuality] = newValue.rawValue
       downloadQualitySubject.send(newValue)
     }
   }
   
   var wifiOnlyDownloads: Bool {
     get {
-      userDefaults.object(forKey: .wifiOnlyDownloads) as? Bool ?? false
+      userDefaults[.wifiOnlyDownloads] ?? false
     }
     set {
       objectWillChange.send()
-      userDefaults.set(newValue, forKey: .wifiOnlyDownloads)
+      userDefaults[.wifiOnlyDownloads] = newValue
       wifiOnlyDownloadsSubject.send(newValue)
     }
   }
