@@ -93,7 +93,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   }
   
   var hasCurrentDownloadPermissions: Bool {
-    guard user?.canDownload ?? false else { return false }
+    guard user?.canDownload == true else { return false }
     
     if case .loaded(let date) = permissionState,
       let permissionsLastConfirmedDate = date,
