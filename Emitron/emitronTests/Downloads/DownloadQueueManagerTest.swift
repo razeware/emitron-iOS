@@ -29,7 +29,6 @@
 import XCTest
 import GRDB
 import Combine
-import CombineExpectations
 @testable import Emitron
 
 class DownloadQueueManagerTest: XCTestCase {

@@ -28,7 +28,6 @@
 
 import XCTest
 import Combine
-import CombineExpectations
 @testable import Emitron
 
 class PublishedPostFactoTest: XCTestCase {

@@ -28,7 +28,6 @@
 
 import XCTest
 import GRDB
-import CombineExpectations
 @testable import Emitron
 
 class PersistenceStore_DownloadsTest: XCTestCase {
