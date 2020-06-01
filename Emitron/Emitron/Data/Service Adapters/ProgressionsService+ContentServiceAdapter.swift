@@ -31,7 +31,7 @@ extension ProgressionsService: ContentServiceAdapter {
     progressions(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.progressions.map { $0.contentId },
+          contentIds: response.progressions.map(\.contentId),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

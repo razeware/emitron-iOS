@@ -209,7 +209,7 @@ class DownloadServiceTest: XCTestCase {
     let completion = try wait(for: recorder.completion, timeout: 2)
     XCTAssert(completion == .finished)
     
-    let allContentIds = fullState.childContents.map({ $0.id }) + [collection.0.id]
+    let allContentIds = fullState.childContents.map(\.id) + [collection.0.id]
     
     XCTAssertEqual(allContentIds.count, getAllContents().count)
     XCTAssertEqual(allContentIds.sorted(), getAllContents().map { Int($0.id) }.sorted())
@@ -286,7 +286,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssert(completion == .finished)
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
-    XCTAssertEqual((fullState.childContents.map { $0.id } + [collection.0.id]) .sorted(), getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual((fullState.childContents.map(\.id) + [collection.0.id]) .sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
@@ -417,8 +417,8 @@ class DownloadServiceTest: XCTestCase {
     // Adds downloads to the collection and the individual episodes
     XCTAssertEqual(fullState.childContents.count + 1, getAllDownloads().count)
     XCTAssertEqual(
-      (fullState.childContents.map { $0.id } + [collection.0.id]).sorted(),
-      getAllDownloads().map { $0.contentId }.sorted()
+      (fullState.childContents.map(\.id) + [collection.0.id]).sorted(),
+      getAllDownloads().map(\.contentId).sorted()
     )
   }
   

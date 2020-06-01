@@ -75,7 +75,7 @@ struct FiltersHeaderView: View {
   }
   
   private var numOfOnFilters: Int {
-    filterGroup.filters.filter { $0.isOn }.count
+    filterGroup.filters.filter(\.isOn).count
   }
   
   private var expandedView: some View {

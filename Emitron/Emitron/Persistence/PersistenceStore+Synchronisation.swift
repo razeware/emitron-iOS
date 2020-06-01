@@ -206,7 +206,7 @@ extension PersistenceStore {
 extension PersistenceStore {
   func syncRequestStream(for types: [SyncRequest.Synchronisation]) -> DatabasePublishers.Value<[SyncRequest]> {
     ValueObservation.tracking { db -> [SyncRequest] in
-      let typeValues = types.map { $0.rawValue }
+      let typeValues = types.map(\.rawValue)
       let request = SyncRequest
         .filter(typeValues.contains(SyncRequest.Columns.type))
         .order(SyncRequest.Columns.date.asc)

@@ -72,7 +72,7 @@ struct TextListItemView: View {
               .onTapGesture {
                 self.download()
               }
-              .alert(item: $deletionConfirmation) { $0.alert }
+              .alert(item: $deletionConfirmation, content: \.alert)
           }
         }
         progressBar

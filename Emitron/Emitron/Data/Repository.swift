@@ -164,7 +164,7 @@ extension Repository {
   
   private func domains(from contentDomains: [ContentDomain]) -> [Domain] {
     do {
-      return try persistenceStore.domains(with: contentDomains.map { $0.domainId })
+      return try persistenceStore.domains( with: contentDomains.map(\.domainId) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
@@ -175,7 +175,7 @@ extension Repository {
   
   private func categories(from contentCategories: [ContentCategory]) -> [Category] {
     do {
-      return try persistenceStore.categories(with: contentCategories.map { $0.categoryId })
+      return try persistenceStore.categories( with: contentCategories.map(\.categoryId) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")

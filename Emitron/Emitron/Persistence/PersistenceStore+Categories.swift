@@ -58,7 +58,7 @@ extension PersistenceStore {
     try db.write { db in
       // Delete categories that no longer exist
       try Category
-        .filter(!categories.map { $0.id }.contains(Category.Columns.id))
+        .filter(!categories.map(\.id).contains(Category.Columns.id))
         .deleteAll(db)
       // And now save all the categories we've been provided
       try categories.forEach { try $0.save(db) }

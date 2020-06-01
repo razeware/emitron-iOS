@@ -172,7 +172,7 @@ extension DataCache {
     
     let completedCount = childContents
       .compactMap { self.progression(for: $0.id) }
-      .filter { $0.finished }
+      .filter(\.finished)
       .count
     return (total: childContents.count, completed: completedCount )
   }
@@ -206,7 +206,7 @@ extension DataCache {
     }
     
     let groups = self.contentIndexedGroups[contentId] ?? []
-    let groupIds = groups.map { $0.id }
+    let groupIds = groups.map(\.id)
     let childContents = self.contents.values.filter { content in
       guard let groupId = content.groupId else { return false }
       return groupIds.contains(groupId)
@@ -239,7 +239,7 @@ extension DataCache {
       let bookmark = self.bookmarks[contentId]
       let progression = self.progressions[contentId]
       let groups = self.contentIndexedGroups[contentId] ?? []
-      let groupIds = groups.map { $0.id }
+      let groupIds = groups.map(\.id)
       let childContents = self.contents.values.filter { content in
         guard let groupId = content.groupId else { return false }
         return groupIds.contains(groupId)
@@ -314,7 +314,7 @@ extension DataCache {
       throw DataCacheError.cacheMiss
     }
     
-    let groupIds = groups.map { $0.id }
+    let groupIds = groups.map(\.id)
     return contents.values.filter {
       guard let groupId = $0.groupId else { return false }
       return groupIds.contains(groupId)

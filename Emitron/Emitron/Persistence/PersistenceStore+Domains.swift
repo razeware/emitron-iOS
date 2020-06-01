@@ -57,7 +57,7 @@ extension PersistenceStore {
     try db.write { db in
       // Delete domains that no longer exist
       try Domain
-        .filter(!domains.map { $0.id }.contains(Domain.Columns.id))
+        .filter(!domains.map(\.id).contains(Domain.Columns.id))
         .deleteAll(db)
       // And now save all the domains we've been provided
       try domains.forEach { try $0.save(db) }

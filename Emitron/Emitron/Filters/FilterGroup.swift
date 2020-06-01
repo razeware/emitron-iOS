@@ -30,7 +30,7 @@ struct FilterGroup: Hashable {
   var type: FilterGroupType
   var filters: [Filter]
   var numApplied: Int {
-    filters.filter { $0.isOn }.count
+    filters.filter(\.isOn).count
   }
   
   init(type: FilterGroupType, filters: [Filter] = []) {
