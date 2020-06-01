@@ -29,7 +29,6 @@
 import Foundation
 
 protocol Refreshable {
-  var refreshableUserDefaultsKey: String { get }
   var refreshableCheckTimeSpan: RefreshableTimeSpan { get }
   var lastRefreshedDate: Date? { get }
   var shouldRefresh: Bool { get }
@@ -40,9 +39,8 @@ protocol Refreshable {
 }
 
 extension Refreshable {
-  
   var lastRefreshedDate: Date? {
-    UserDefaults.standard.object(forKey: self.refreshableUserDefaultsKey) as? Date
+    UserDefaults.standard.object(forKey: refreshableUserDefaultsKey) as? Date
   }
   
   var shouldRefresh: Bool {
@@ -64,10 +62,11 @@ extension Refreshable {
       .log()
     return true
   }
+
+  var refreshableUserDefaultsKey: String { "UserDefaultsRefreshable\(Self.self)" }
   
   func saveOrReplaceRefreshableUpdateDate(_ date: Date = Date()) {
-    UserDefaults.standard.set(date,
-                              forKey: self.refreshableUserDefaultsKey)
+    UserDefaults.standard.set(date, forKey: refreshableUserDefaultsKey)
   }
 }
 

@@ -32,7 +32,6 @@ class DomainRepository: ObservableObject, Refreshable {
   let repository: Repository
   let service: DomainsService
   
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainRepository.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   @Published private (set) var state: DataState = .initial

@@ -31,12 +31,11 @@ import Combine
 class CategoryRepository: Refreshable {
   let repository: Repository
   let service: CategoriesService
-  
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoryRepository.self))"
+
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var categories: [Category] = [Category]()
+  @Published private (set) var categories: [Category] = []
   
   init(repository: Repository, service: CategoriesService) {
     self.repository = repository

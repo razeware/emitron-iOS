@@ -44,7 +44,6 @@ protocol UserModelController {
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
 class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject, Refreshable {
   // MARK: Refreshable
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   private var subscriptions = Set<AnyCancellable>()
