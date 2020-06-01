@@ -57,7 +57,7 @@ final class DataCache: ObservableObject {
   private var contentDomains: [Int: [ContentDomain]] = [:]
   private var contentCategories: [Int: [ContentCategory]] = [:]
   
-  private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
+  private let objectDidChange = CurrentValueSubject<CacheChange, Never>(.updated)
   
   let cacheWasInvalidated = PassthroughSubject<CacheInvalidation, Never>()
 }

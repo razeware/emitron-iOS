@@ -82,7 +82,7 @@ struct SearchFieldView: View {
   var background: some View {
     RoundedRectangle(cornerRadius: 9)
       .fill(Color.searchFieldBackground)
-      .shadow(color: Color.searchFieldShadow, radius: 1, x: 0, y: 2)
+      .shadow(color: .searchFieldShadow, radius: 1, x: 0, y: 2)
       .overlay(
         RoundedRectangle(cornerRadius: 9)
           .stroke(Color.searchFieldBorder, lineWidth: 2)

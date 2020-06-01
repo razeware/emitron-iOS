@@ -62,10 +62,10 @@ struct ToggleControlView: View {
     VStack {
       Text(state.displayString)
         .font(.uiButtonLabelSmall)
-        .foregroundColor(toggleState == state ? Color.toggleTextSelected : Color.toggleTextDeselected)
+        .foregroundColor(toggleState == state ? Color.toggleTextSelected : .toggleTextDeselected)
       
       RoundedRectangle(cornerRadius: 1)
-        .fill(toggleState == state ? Color.toggleLineSelected : Color.toggleLineDeselected)
+        .fill(toggleState == state ? Color.toggleLineSelected : .toggleLineDeselected)
         .frame(height: 2)
     }
   }

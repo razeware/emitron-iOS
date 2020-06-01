@@ -191,7 +191,7 @@ extension Repository {
     dataCache
       .cacheWasInvalidated
       .filter { $0 == .bookmarks }
-      .map { _ in () }
+      .map { _ in }
       .eraseToAnyPublisher()
   }
   
@@ -199,7 +199,7 @@ extension Repository {
     dataCache
       .cacheWasInvalidated
       .filter { $0 == .progressions }
-      .map { _ in () }
+      .map { _ in }
       .eraseToAnyPublisher()
   }
 }

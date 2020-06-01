@@ -45,7 +45,7 @@ final class SettingsManager: ObservableObject {
   private let downloadQualitySubject = PassthroughSubject<Attachment.Kind, Never>()
   
   // MARK: Initialisers
-  init(userDefaults: UserDefaults = UserDefaults.standard, userModelController: UserModelController) {
+  init(userDefaults: UserDefaults = .standard, userModelController: UserModelController) {
     self.userDefaults = userDefaults
     self.userModelController = userModelController
     

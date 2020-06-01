@@ -65,7 +65,7 @@ extension Refreshable {
 
   var refreshableUserDefaultsKey: String { "UserDefaultsRefreshable\(Self.self)" }
   
-  func saveOrReplaceRefreshableUpdateDate(_ date: Date = Date()) {
+  func saveOrReplaceRefreshableUpdateDate(_ date: Date = .init()) {
     UserDefaults.standard.set(date, forKey: refreshableUserDefaultsKey)
   }
 }

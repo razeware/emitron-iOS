@@ -69,7 +69,7 @@ struct TabNavView: View {
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibility(label: Text(Constants.myTutorials))
     }
-    .accentColor(Color.accent)
+    .accentColor(.accent)
   }
 }
 

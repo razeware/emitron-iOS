@@ -58,7 +58,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       NSAttributedString.Key.font: UIFont.uiHeadline
     ]
     
-    UISwitch.appearance().onTintColor = UIColor.accent
+    UISwitch.appearance().onTintColor = .accent
     
     // Use a UIHostingController as window root view controller
     if let windowScene = scene as? UIWindowScene {
@@ -73,9 +73,9 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       
       window.rootViewController = PortraitHostingController(rootView: mainView)
       self.window = window
-      window.rootViewController?.view.backgroundColor = UIColor.backgroundColor
+      window.rootViewController?.view.backgroundColor = .backgroundColor
       // TODO: When a modifier is available this should be refactored
-      window.tintColor = UIColor.accent
+      window.tintColor = .accent
       
       window.makeKeyAndVisible()
     }

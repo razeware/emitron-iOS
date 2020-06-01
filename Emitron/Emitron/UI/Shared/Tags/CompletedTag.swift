@@ -35,7 +35,7 @@ struct CompletedTag: View {
       textColor: .accentTagForeground,
       backgroundColor: .accentTagBackground,
       borderColor: .accentTagBackground,
-      image: Image.checkmark
+      image: .checkmark
     )
   }
 }

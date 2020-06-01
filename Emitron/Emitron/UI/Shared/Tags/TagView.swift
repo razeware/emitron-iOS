@@ -80,17 +80,17 @@ struct TagView_Previews: PreviewProvider {
     VStack(spacing: 20) {
       TagView(
         text: "this is a tag",
-        textColor: Color.white,
-        backgroundColor: Color.red,
-        borderColor: Color.yellow
+        textColor: .white,
+        backgroundColor: .red,
+        borderColor: .yellow
       )
       
       TagView(
         text: "with an image",
-        textColor: Color.white,
-        backgroundColor: Color.red,
-        borderColor: Color.yellow,
-        image: Image.checkmark
+        textColor: .white,
+        backgroundColor: .red,
+        borderColor: .yellow,
+        image: .checkmark
       )
     }
   }
