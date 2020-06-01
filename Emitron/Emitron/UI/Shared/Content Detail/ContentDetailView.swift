@@ -90,7 +90,8 @@ struct ContentDetailView: View {
   
   private func openSettings() {
     // open iPhone settings
-    if let url = URL(string: UIApplication.openSettingsURLString),
+    if
+      let url = URL(string: UIApplication.openSettingsURLString),
       UIApplication.shared.canOpenURL(url)
     { UIApplication.shared.open(url) }
   }
