@@ -32,11 +32,15 @@ class Filters: ObservableObject {
   @Published var searchStr: String = ""
   var all: Set<Filter> {
     didSet {
-      platforms.filters = all.filter { $0.groupType == .platforms }.sorted()
-      categories.filters = all.filter { $0.groupType == .categories }.sorted()
-      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted()
-      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted()
-      subscriptionPlans.filters = all.filter { $0.groupType == .subscriptionPlans }.sorted()
+      let sortedFilters =
+        Dictionary(grouping: all, by: \.groupType)
+        .mapValues { $0.sorted() }
+      
+      platforms.filters = sortedFilters[.platforms] ?? []
+      categories.filters = sortedFilters[.categories] ?? []
+      contentTypes.filters = sortedFilters[.contentTypes] ?? []
+      difficulties.filters = sortedFilters[.difficulties] ?? []
+      subscriptionPlans.filters = sortedFilters[.subscriptionPlans] ?? []
     }
   }
   
