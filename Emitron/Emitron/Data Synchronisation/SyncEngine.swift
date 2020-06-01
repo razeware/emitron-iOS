@@ -71,7 +71,7 @@ extension SyncEngine {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
   }
   
-  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) { { [weak self] completion in
+  private func completionHandler() -> (Subscribers.Completion<Error>) -> Void { { [weak self] completion in
     guard let self = self else { return }
     
     switch completion {

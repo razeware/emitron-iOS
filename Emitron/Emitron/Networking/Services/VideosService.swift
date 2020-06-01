@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 class VideosService: Service {
-  typealias Provider = ((RWAPI) -> VideosService)
+  typealias Provider = (RWAPI) -> VideosService
 
   // MARK: - Internal
   func getVideoStream(for id: Int,
