@@ -29,7 +29,6 @@
 import SwiftUI
 
 struct FiltersView: View {
-  
   @ObservedObject var libraryRepository: LibraryRepository
   @ObservedObject var filters: Filters
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>

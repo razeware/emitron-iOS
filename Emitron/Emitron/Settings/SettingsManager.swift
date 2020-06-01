@@ -92,7 +92,7 @@ extension SettingsManager: EmitronSettings {
     get {
       guard let data: Data = userDefaults[.sortFilters],
         let sortFilter = try? jsonDecoder.decode(SortFilter.self, from: data) else {
-        return SortFilter.newest
+        return .newest
       }
       return sortFilter
     }
@@ -115,11 +115,7 @@ extension SettingsManager: EmitronSettings {
   
   var playbackSpeed: PlaybackSpeed {
     get {
-      guard let speed: Int = userDefaults[.playbackSpeed],
-        let playbackSpeed = PlaybackSpeed(rawValue: speed) else {
-          return PlaybackSpeed.standard
-      }
-      return playbackSpeed
+      userDefaults[.playbackSpeed].flatMap(PlaybackSpeed.init) ?? .standard
     }
     set {
       objectWillChange.send()
@@ -141,10 +137,10 @@ extension SettingsManager: EmitronSettings {
   
   var downloadQuality: Attachment.Kind {
     get {
-      guard let quality: Int = userDefaults[.downloadQuality],
-        let downloadQuality = Attachment.Kind(rawValue: quality),
+      guard let rawValue: Int = userDefaults[.downloadQuality],
+        let downloadQuality = Attachment.Kind(rawValue: rawValue),
         [.hdVideoFile, .sdVideoFile].contains(downloadQuality) else {
-        return Attachment.Kind.hdVideoFile
+        return .hdVideoFile
       }
       return downloadQuality
     }
