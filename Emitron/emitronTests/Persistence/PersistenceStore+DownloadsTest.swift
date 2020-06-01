@@ -155,9 +155,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     var collectionDownload = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try collectionDownload.save(db)
@@ -229,9 +227,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -259,9 +255,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes[0..<10].map { episode in
-      PersistenceMocks.download(for: episode)
-    }
+    let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -289,9 +283,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes[0..<10].map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -319,9 +311,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
