@@ -37,15 +37,14 @@ extension SyncRequest: ProgressionUpdate {
     if type == .markContentComplete {
       return .finished
     }
-    
-    var progress: Int = 0
-    for attribute in attributes {
-      if case .progress(let seconds) = attribute {
-        progress = seconds
+
+    return .progress(
+      attributes.reduce(into: 0) { seconds, attribute in
+        if case .progress(let attributeSeconds) = attribute {
+          seconds = attributeSeconds
+        }
       }
-    }
-    
-    return .progress(progress)
+    )
   }
   
   var updatedAt: Date {
