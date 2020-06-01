@@ -108,7 +108,7 @@ class SettingsManagerTest: XCTestCase {
     XCTAssertEqual(.standard, settingsManager.playbackSpeed)
   }
   
-  func testPlaybackSpeedPublusherSendsUpdates() throws {
+  func testPlaybackSpeedPublisherSendsUpdates() throws {
     let recorder = settingsManager.playbackSpeedPublisher.record()
     
     settingsManager.playbackSpeed = .double
