@@ -133,7 +133,7 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  func canPlayOrDisplayError() throws -> Bool {
+  func verifyCanPlay() throws {
     // Do we have a user
     guard let user = sessionController.user else {
       throw VideoPlaybackViewModelError.invalidPermissions
@@ -148,7 +148,7 @@ final class VideoPlaybackViewModel {
     }
     // If we're online then, that's all good
     if sessionController.sessionState == .online {
-      return true
+      return
     }
     
     // If we've got a download, then we might be ok
@@ -156,11 +156,8 @@ final class VideoPlaybackViewModel {
       download.state == .complete,
       download.localUrl != nil {
       // We have a download, but are we still authenticated?
-      if sessionController.hasCurrentDownloadPermissions {
-        return true
-      } else {
-        throw VideoPlaybackViewModelError.expiredPermissions
-      }
+      guard sessionController.hasCurrentDownloadPermissions
+      else { throw VideoPlaybackViewModelError.expiredPermissions }
     } else {
       // We can't stream cos we're offline, and we don't have a download
       throw VideoPlaybackViewModelError.cannotStreamWhenOffline

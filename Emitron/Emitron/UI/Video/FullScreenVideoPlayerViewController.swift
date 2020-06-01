@@ -64,7 +64,7 @@ extension FullScreenVideoPlayerViewController {
   private func verifyVideoPlaybackAllowed() {
     guard let viewModel = viewModel else { return }
     do {
-      try _ = viewModel.canPlayOrDisplayError()
+      try viewModel.verifyCanPlay()
     } catch {
       if let viewModelError = error as? VideoPlaybackViewModelError {
         MessageBus.current.post(
