@@ -29,7 +29,7 @@
 import struct Foundation.URL
 
 struct ContentAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Content {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Content {
     guard resource.entityType == .content else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let uri = resource.attributes["uri"] as? String,

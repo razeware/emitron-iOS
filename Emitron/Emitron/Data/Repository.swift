@@ -169,7 +169,7 @@ extension Repository {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
         .log()
-      return [Domain]()
+      return []
     }
   }
   
@@ -180,7 +180,7 @@ extension Repository {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")
         .log()
-      return [Category]()
+      return []
     }
   }
 }

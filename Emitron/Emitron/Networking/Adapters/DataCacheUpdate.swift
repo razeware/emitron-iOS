@@ -49,17 +49,17 @@ struct DataCacheUpdate {
   }
   
   init(
-    contents: [Content] = [Content](),
-    bookmarks: [Bookmark] = [Bookmark](),
-    progressions: [Progression] = [Progression](),
-    domains: [Domain] = [Domain](),
-    groups: [Group] = [Group](),
-    categories: [Category] = [Category](),
-    contentCategories: [ContentCategory] = [ContentCategory](),
-    contentDomains: [ContentDomain] = [ContentDomain](),
-    relationships: [EntityRelationship] = [EntityRelationship](),
-    bookmarkDeletionContentIds: [Int] = [Int](),
-    progressionDeletionContentIds: [Int] = [Int]()
+    contents: [Content] = [],
+    bookmarks: [Bookmark] = [],
+    progressions: [Progression] = [],
+    domains: [Domain] = [],
+    groups: [Group] = [],
+    categories: [Category] = [],
+    contentCategories: [ContentCategory] = [],
+    contentDomains: [ContentDomain] = [],
+    relationships: [EntityRelationship] = [],
+    bookmarkDeletionContentIds: [Int] = [],
+    progressionDeletionContentIds: [Int] = []
   ) {
     self.contents = contents
     self.bookmarks = bookmarks
@@ -74,7 +74,7 @@ struct DataCacheUpdate {
     self.progressionDeletionContentIds = progressionDeletionContentIds
   }
   
-  init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = [JSONEntityRelationships]()) throws {
+  init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = []) throws {
     let relationships = DataCacheUpdate.relationships(from: resources, with: jsonEntityRelationships)
     contents = try resources
       .filter({ $0.type == "contents" })
@@ -98,8 +98,8 @@ struct DataCacheUpdate {
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     self.relationships = relationships
     
-    self.bookmarkDeletionContentIds = [Int]()
-    self.progressionDeletionContentIds = [Int]()
+    self.bookmarkDeletionContentIds = []
+    self.progressionDeletionContentIds = []
   }
   
   func merged(with other: DataCacheUpdate) -> DataCacheUpdate {
@@ -116,11 +116,11 @@ struct DataCacheUpdate {
   
   private static func relationships(from resources: [JSONAPIResource], with additionalRelationships: [JSONEntityRelationships]) -> [EntityRelationship] {
     var relationshipsToReturn = additionalRelationships.flatMap { entityRelationship -> [EntityRelationship] in
-      guard let entityId = entityRelationship.entity else { return [EntityRelationship]() }
+      guard let entityId = entityRelationship.entity else { return [] }
       return entityRelationships(from: entityRelationship.jsonRelationships, fromEntity: entityId)
     }
     relationshipsToReturn += resources.flatMap { resource -> [EntityRelationship] in
-      guard let resourceEntityId = resource.entityId else { return [EntityRelationship]() }
+      guard let resourceEntityId = resource.entityId else { return [] }
       return entityRelationships(from: resource.relationships, fromEntity: resourceEntityId)
     }
     return relationshipsToReturn

@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct DomainAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Domain {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Domain {
     guard resource.entityType == .domain else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let name = resource.attributes["name"] as? String,

@@ -35,8 +35,8 @@ class ChildContentsViewModel: ObservableObject {
   let repository: Repository
   
   var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
+  @Published var groups: [GroupDisplayable] = []
+  @Published var contents: [ChildContentListDisplayable] = []
   
   var subscriptions = Set<AnyCancellable>()
   

@@ -35,7 +35,7 @@ class DomainRepository: ObservableObject, Refreshable {
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var domains: [Domain] = [Domain]()
+  @Published private (set) var domains: [Domain] = []
   
   init(repository: Repository, service: DomainsService) {
     self.repository = repository

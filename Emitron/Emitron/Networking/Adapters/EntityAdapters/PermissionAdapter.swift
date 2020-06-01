@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct PermissionAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Permission? {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Permission? {
     guard resource.entityType == .permission else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let name = resource.attributes["name"] as? String,

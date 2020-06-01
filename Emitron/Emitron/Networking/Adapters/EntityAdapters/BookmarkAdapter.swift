@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct BookmarkAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Bookmark {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Bookmark {
     guard resource.entityType == .bookmark else {
       throw EntityAdapterError.invalidResourceTypeForAdapter
     }

@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct CategoryAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Category {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Category {
     guard resource.entityType == .category else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let name = resource.attributes["name"] as? String,

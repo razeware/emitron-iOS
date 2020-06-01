@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct ProgressionAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Progression {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Progression {
     guard resource.entityType == .progression else {
       throw EntityAdapterError.invalidResourceTypeForAdapter
     }

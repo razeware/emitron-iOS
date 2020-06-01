@@ -49,13 +49,13 @@ final class DataCache: ObservableObject {
     case bookmarks
   }
   
-  private var contents: [Int: Content] = [Int: Content]()
-  private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
-  private var progressions: [Int: Progression] = [Int: Progression]()
-  private var contentIndexedGroups: [Int: [Group]] = [Int: [Group]]()
-  private var groupIndexedGroups: [Int: Group] = [Int: Group]()
-  private var contentDomains: [Int: [ContentDomain]] = [Int: [ContentDomain]]()
-  private var contentCategories: [Int: [ContentCategory]] = [Int: [ContentCategory]]()
+  private var contents: [Int: Content] = [:]
+  private var bookmarks: [Int: Bookmark] = [:]
+  private var progressions: [Int: Progression] = [:]
+  private var contentIndexedGroups: [Int: [Group]] = [:]
+  private var groupIndexedGroups: [Int: Group] = [:]
+  private var contentDomains: [Int: [ContentDomain]] = [:]
+  private var contentCategories: [Int: [ContentCategory]] = [:]
   
   private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
   
@@ -284,7 +284,7 @@ extension DataCache {
     }
     
     // Out of options
-    return [CachedVideoPlaybackState]()
+    return []
   }
   
   private func videoPlaybackState(for content: Content) -> CachedVideoPlaybackState {
@@ -327,7 +327,7 @@ extension DataCache {
   
   private func siblingContents(for content: Content) throws -> [Content] {
     guard let parentContent = try parentContent(for: content) else {
-      return [Content]()
+      return []
     }
     return try childContents(for: parentContent)
   }

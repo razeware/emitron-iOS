@@ -40,7 +40,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   // This should be @Published, but it /sometimes/ crashes the app with EXC_BAD_ACCESS
   // when you try and reference it. Which is handy.
-  var contents: [ContentListDisplayable] = [ContentListDisplayable]() {
+  var contents: [ContentListDisplayable] = [] {
     willSet {
       objectWillChange.send()
     }
@@ -50,7 +50,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   // Let's see if we actually need it to be @Published...
   var state: DataState = .initial
   
-  private var contentIds: [Int] = [Int]()
+  private var contentIds: [Int] = []
   private var contentSubscription: AnyCancellable?
   // Provide a value for this in a subclass to subscribe to invalidation notifcations
   var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
