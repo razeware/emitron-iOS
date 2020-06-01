@@ -141,14 +141,14 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
             self.objectWillChange.send()
             Failure
               .login(from: "SessionController", reason: error.localizedDescription)
-              .log(additionalParams: nil)
+              .log()
           case .success(let user):
             self.user = user
             print(user)
             
             Event
               .login(from: "SessionController")
-              .log(additionalParams: nil)
+              .log()
             
             self.fetchPermissions()
           }
@@ -184,7 +184,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
         case .failure(let error):
           Failure
             .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
-            .log(additionalParams: nil)
+            .log()
           
           self.permissionState = .error
         case .success(let permissions):

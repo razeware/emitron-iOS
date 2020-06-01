@@ -31,7 +31,7 @@ protocol Log {
   var action: String { get }
   var reason: String { get }
 
-  func log(additionalParams: [String: String]?)
+  func log(additionalParams: [String: String])
   func log()
 }
 
@@ -42,7 +42,7 @@ extension Log {
   }
   
   func log() {
-    log(additionalParams: .none)
+    log(additionalParams: [:])
   }
 }
 

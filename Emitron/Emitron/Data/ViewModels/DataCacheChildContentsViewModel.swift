@@ -49,7 +49,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
         self.state = .failed
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (_, cacheUpdate)):
         self.repository.apply(update: cacheUpdate)
         self.reload()

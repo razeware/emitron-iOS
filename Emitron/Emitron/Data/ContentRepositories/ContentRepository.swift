@@ -105,7 +105,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (newContentIds, cacheUpdate, totalResultCount)):
         self.contentIds += newContentIds
         self.contentSubscription?.cancel()
@@ -140,7 +140,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (newContentIds, cacheUpdate, totalResultCount)):
         self.contentIds = newContentIds
         self.contentSubscription?.cancel()

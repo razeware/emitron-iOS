@@ -59,7 +59,7 @@ class CategoryRepository: Refreshable {
       self.state = .failed
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -69,7 +69,7 @@ class CategoryRepository: Refreshable {
     } catch {
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -88,7 +88,7 @@ class CategoryRepository: Refreshable {
         self.state = .failed
         Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
       case .success(let categories):
         self.categories = categories
         self.state = .hasData

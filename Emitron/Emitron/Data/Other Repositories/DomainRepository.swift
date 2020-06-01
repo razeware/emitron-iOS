@@ -59,7 +59,7 @@ class DomainRepository: ObservableObject, Refreshable {
       self.state = .failed
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -69,7 +69,7 @@ class DomainRepository: ObservableObject, Refreshable {
     } catch {
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -88,7 +88,7 @@ class DomainRepository: ObservableObject, Refreshable {
         self.state = .failed
         Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
       case .success(let domains):
         self.domains = domains
         self.state = .hasData

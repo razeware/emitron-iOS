@@ -35,7 +35,7 @@ struct ProgressionsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/progressions" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Internal
@@ -77,7 +77,7 @@ struct UpdateProgressionsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/progressions/bulk" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? {
     let dataJson = progressionUpdates.map { update in
       [
@@ -115,7 +115,7 @@ struct DeleteProgressionRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .DELETE }
   var path: String { "/progressions/\(id)" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   // MARK: - Parameters

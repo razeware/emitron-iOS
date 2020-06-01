@@ -35,7 +35,7 @@ struct StreamVideoRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/videos/\(id)/stream" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   // MARK: - Parameters
@@ -63,7 +63,7 @@ struct DownloadVideoRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/videos/\(id)/download" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Parameters

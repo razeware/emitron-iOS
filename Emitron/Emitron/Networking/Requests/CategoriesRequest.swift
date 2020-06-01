@@ -35,7 +35,7 @@ struct CategoriesRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/categories" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Internal

@@ -42,7 +42,7 @@ protocol Request {
 
   var method: HTTPMethod { get }
   var path: String { get }
-  var additionalHeaders: [String: String]? { get }
+  var additionalHeaders: [String: String] { get }
   var body: Data? { get }
 
   func handle(response: Data) throws -> Response
