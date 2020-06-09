@@ -3,8 +3,26 @@
 __emitron__ is the code name for the raywenderlich.com app. This repo contains the code
 for the iOS version of the app.
 
+## Contributing
+
+To contribute a __feature__ or __idea__ to emitron, create an issue explaining your idea.
+
+If you find a __bug__, please create an issue.
+
+If you find a __security vulnerability__, please contact engineering@razeware.com as soon as possible. See [SECURITY.md](SECURITY.md) for further details.
+
+There is more info about contributing in [CONTRIBUITNG.md](CONTRIBUTING.md).
+
 
 ## Development
+
+__emitron__ runs on iOS 13.3 and greater. It uses SwiftUI and Combine extensively.
+Since these concepts were very new at the time of creation, there are plenty of places
+that can benefit from some refactoring.
+
+Currently, only raywenderlich.com subscribers can use emitron. Non-subscribers will
+be shown a "no access" page on login. Subscribers have access to streaming videos,
+and a subset of subscribers is allowed to download videos for offline playback.
 
 ### Secrets Management
 
