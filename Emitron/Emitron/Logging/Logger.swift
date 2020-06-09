@@ -26,14 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 protocol Log {
   var object: String { get }
   var action: String { get }
   var reason: String { get }
 
-  func log(additionalParams: [String: String]?)
+  func log(additionalParams: [String: String])
   func log()
 }
 
@@ -44,7 +42,7 @@ extension Log {
   }
   
   func log() {
-    log(additionalParams: .none)
+    log(additionalParams: [:])
   }
 }
 
@@ -127,11 +125,11 @@ enum Failure: Log {
     }
   }
   
-  func log(additionalParams: [String: String]?) {
-    let params = ["object": self.object,
-                  "action": self.action,
-                  "reason": self.reason]
-    let allParams = params.merged(additionalParams) as [String: Any]
+  func log(additionalParams: [String: String]) {
+    let params = ["object": object,
+                  "action": action,
+                  "reason": reason]
+    let allParams = params.merging(additionalParams, uniquingKeysWith: { $1 })
     print(allParams)
   }
 }
@@ -161,9 +159,10 @@ enum Event: Log {
     }
   }
 
-  func log(additionalParams: [String: String]?) {
-    let params = ["object": self.object, "action": self.action]
-    let allParams = params.merged(additionalParams) as [String: Any]
+  func log(additionalParams: [String: String]) {
+    let allParams =
+      ["object": object, "action": action]
+      .merging(additionalParams, uniquingKeysWith: { $1 })
     print("EVENT:: \(allParams)")
   }
 }

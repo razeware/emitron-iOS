@@ -26,13 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 @testable import Emitron
 
 extension User {
   static var withDownloads: User {
-    let user = noPermissions
-    return user.with(permissions: [Permission.downloadVideos])
+    noPermissions.with(permissions: [.downloadVideos])
   }
   
   static var noPermissions: User {

@@ -33,13 +33,13 @@ struct CompletedIconView: View {
     ZStack(alignment: .center) {
       Rectangle()
         .frame(width: .childContentButtonSide, height: .childContentButtonSide)
-        .foregroundColor(Color.accent)
+        .foregroundColor(.accent)
         .cornerRadius(6)
       
       Image.checkmark
         .resizable()
         .frame(maxWidth: 15, maxHeight: 17)
-        .foregroundColor(Color.buttonText)
+        .foregroundColor(.buttonText)
     }
   }
 }

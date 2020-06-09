@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class Repository {
@@ -165,23 +164,23 @@ extension Repository {
   
   private func domains(from contentDomains: [ContentDomain]) -> [Domain] {
     do {
-      return try persistenceStore.domains(with: contentDomains.map { $0.domainId })
+      return try persistenceStore.domains( with: contentDomains.map(\.domainId) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
         .log()
-      return [Domain]()
+      return []
     }
   }
   
   private func categories(from contentCategories: [ContentCategory]) -> [Category] {
     do {
-      return try persistenceStore.categories(with: contentCategories.map { $0.categoryId })
+      return try persistenceStore.categories( with: contentCategories.map(\.categoryId) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")
         .log()
-      return [Category]()
+      return []
     }
   }
 }
@@ -192,7 +191,7 @@ extension Repository {
     dataCache
       .cacheWasInvalidated
       .filter { $0 == .bookmarks }
-      .map { _ in () }
+      .map { _ in }
       .eraseToAnyPublisher()
   }
   
@@ -200,7 +199,7 @@ extension Repository {
     dataCache
       .cacheWasInvalidated
       .filter { $0 == .progressions }
-      .map { _ in () }
+      .map { _ in }
       .eraseToAnyPublisher()
   }
 }

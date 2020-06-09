@@ -10,10 +10,10 @@ for the iOS version of the app.
 
 __emitron__ requires 2 secrets:
 
-- `SSO_SECRET`. This is used to ensure secure communication with `gaurdpost`, the raywenderlich.com authentication service. Although this is secret, a sample secret is provided inside this repo. This shouldn't be used to create a beta or production build.
+- `SSO_SECRET`. This is used to ensure secure communication with `guardpost`, the raywenderlich.com authentication service. Although this is secret, a sample secret is provided inside this repo. This shouldn't be used to create a beta or production build.
 - `APP_TOKEN`. Required in order to enable downloads. This is not provided in the repo, and is not generally available.
 
-The secrets are stored in __Emitron/Emitron/Configuration/secrets.*.xcconfig__ files, with one file for each deployment stage. These file are gitignored, so won't appear when you first download the repo.
+The secrets are stored in __Emitron/Emitron/Configuration/secrets.*.xcconfig__ files, with one file for each deployment stage. These files are gitignored, so won't appear when you first download the repo.
 
 To generate these files when you first clone:
 
@@ -55,7 +55,7 @@ Xcode will automatically run SwiftLint if it is installed.
 __emitron__ uses GitHub Actions to perform continuous integration and deployment. Every PR is built and tested before it can be merged.
 
 - Merges to `development` will create a new build of the emitron β app on TestFlight.
-- Merges to `master` will create a new build of of the emitron production app on TestFlight.
+- Merges to `master` will create a new build of the emitron production app on TestFlight.
 
 
 

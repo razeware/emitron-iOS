@@ -35,11 +35,11 @@ struct SnackbarState {
     var color: Color {
       switch self {
       case .success:
-        return Color.snackSuccess
+        return .snackSuccess
       case .warning:
-        return Color.snackWarning
+        return .snackWarning
       case .error:
-        return Color.snackError
+        return .snackError
       }
     }
     
@@ -60,7 +60,7 @@ struct SnackbarView: View {
     HStack {
       Text(state.message)
         .font(.uiBodyCustom)
-        .foregroundColor(Color.snackText)
+        .foregroundColor(.snackText)
         .animation(.none)
       
       Spacer()
@@ -73,7 +73,7 @@ struct SnackbarView: View {
         Image.closeWhite
           .resizable()
           .frame(width: 18, height: 18)
-      }.foregroundColor(Color.snackText)
+      }.foregroundColor(.snackText)
     }
     .padding()
     .background(state.status.color)

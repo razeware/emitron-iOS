@@ -104,10 +104,10 @@ class Service {
     // body *needs* to be the last property that we set, because of this bug: https://bugs.swift.org/browse/SR-6687
     urlRequest.httpBody = request.body
 
-    let authTokenHeader: HTTPHeaders = ["Authorization": "Token \(networkClient.authToken)"]
-    let headers = networkClient.contentTypeHeader.merged(networkClient.additionalHeaders,
-                                                         request.additionalHeaders,
-                                                         authTokenHeader)
+    let authTokenHeader: HTTPHeader = ("Authorization", "Token \(networkClient.authToken)")
+    let headers =
+      [authTokenHeader, networkClient.contentTypeHeader]
+      + [networkClient.additionalHeaders, request.additionalHeaders].joined()
     headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
 
     return urlRequest

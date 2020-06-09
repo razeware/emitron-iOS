@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 protocol SettingsSelectable: Hashable {
   static var selectableCases: [Self] { get }
   var display: String { get }

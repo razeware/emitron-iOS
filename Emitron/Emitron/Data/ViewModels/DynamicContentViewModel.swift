@@ -26,8 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
+import class Foundation.RunLoop
 
 final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable {
   private let contentId: Int

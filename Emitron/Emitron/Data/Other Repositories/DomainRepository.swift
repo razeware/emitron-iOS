@@ -26,18 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class DomainRepository: ObservableObject, Refreshable {
   let repository: Repository
   let service: DomainsService
   
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: DomainRepository.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var domains: [Domain] = [Domain]()
+  @Published private (set) var domains: [Domain] = []
   
   init(repository: Repository, service: DomainsService) {
     self.repository = repository
@@ -61,7 +59,7 @@ class DomainRepository: ObservableObject, Refreshable {
       self.state = .failed
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -71,7 +69,7 @@ class DomainRepository: ObservableObject, Refreshable {
     } catch {
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -90,7 +88,7 @@ class DomainRepository: ObservableObject, Refreshable {
         self.state = .failed
         Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
       case .success(let domains):
         self.domains = domains
         self.state = .hasData

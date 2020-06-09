@@ -26,8 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
+import Foundation
 import Network
 
 enum DownloadServiceError: Error {
@@ -192,7 +192,7 @@ extension DownloadService: DownloadAction {
     
     // 0. If there are some children, then let's find their content ids too
     if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map { $0.id }
+      contentIds = children.contents.map(\.id)
     }
     contentIds += [contentId]
     
@@ -219,7 +219,7 @@ extension DownloadService: DownloadAction {
       // Don't have it in the processor, so we just need to
       // delete the download model
       self.persistenceStore
-        .deleteDownloads(withIds: notYetDownloading.map { $0.id })
+        .deleteDownloads(withIds: notYetDownloading.map(\.id))
     }
     .mapError { error in
       Failure
@@ -235,7 +235,7 @@ extension DownloadService: DownloadAction {
     
     // 0. If there are some children, the let's find their content ids too
     if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map { $0.id }
+      contentIds = children.contents.map(\.id)
     }
     contentIds += [contentId]
     
@@ -258,7 +258,7 @@ extension DownloadService: DownloadAction {
     .flatMap {
       // 3. Delete the persisted record
       self.persistenceStore
-        .deleteDownloads(withIds: downloads.map { $0.id })
+        .deleteDownloads(withIds: downloads.map(\.id))
     }
     .mapError { error in
       Failure

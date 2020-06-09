@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2020 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,23 +26,22 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import XCTest
+@testable import Emitron
 
-extension Dictionary {
-  mutating func merge<K, V>(_ dicts: [K: V]?...) {
-    dicts.forEach { dict in
-      dict?.forEach { key, value in
-        if let key = key as? Key,
-          let value = value as? Value {
-            updateValue(value, forKey: key)
-        }
-      }
-    }
-  }
-
-  func merged<K, V>(_ dicts: [K: V]?...) -> Dictionary {
-    dicts.reduce(into: self) { result, dict in
-      result.merge(dict)
-    }
+final class RefreshableTestCase: XCTestCase {
+  func test_refreshableUserDefaultsKey() throws {
+    XCTAssertEqual(
+      DomainRepository(
+        repository: .init(
+          persistenceStore: .init( db: try EmitronDatabase.testDatabase() ),
+          dataCache: .init()
+        ),
+        service: .init(
+          client: .init( authToken: .init() )
+        )
+      ).refreshableUserDefaultsKey,
+      "UserDefaultsRefreshableDomainRepository"
+    )
   }
 }

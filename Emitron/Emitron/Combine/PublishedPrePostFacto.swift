@@ -35,7 +35,6 @@ protocol ObservablePrePostFactoObject: ObservableObject where ObjectWillChangePu
 
 @propertyWrapper
 struct PublishedPrePostFacto<Value: Equatable> {
-  
   init(initialValue: Value) {
     self.init(wrappedValue: initialValue)
   }
@@ -58,20 +57,21 @@ struct PublishedPrePostFacto<Value: Equatable> {
   }
   
   static subscript<EnclosingSelf: ObservablePrePostFactoObject>(
-  _enclosingInstance object: EnclosingSelf,
-  wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
-  storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
+    _enclosingInstance object: EnclosingSelf,
+    wrapped wrappedKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Value>,
+    storage storageKeyPath: ReferenceWritableKeyPath<EnclosingSelf, Self>
   ) -> Value {
     get {
       object[keyPath: storageKeyPath].value
     }
     set {
-      if object[keyPath: storageKeyPath].value != newValue {
-        object.objectWillChange.send()
-        object[keyPath: storageKeyPath].value = newValue
-        object[keyPath: storageKeyPath].publisher.send(newValue)
-        object.objectDidChange.send()
-      }
+      guard object[keyPath: storageKeyPath].value != newValue
+      else { return }
+      
+      object.objectWillChange.send()
+      object[keyPath: storageKeyPath].value = newValue
+      object[keyPath: storageKeyPath].publisher.send(newValue)
+      object.objectDidChange.send()
     }
   }
 }

@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 @testable import Emitron
 
 extension ContentPersistableState {
@@ -47,7 +46,7 @@ extension ContentPersistableState {
     }
     
     let groups = cacheUpdate.groups.filter { $0.contentId == content.id }
-    let groupIds = groups.map { $0.id }
+    let groupIds = groups.map(\.id)
     let childContent = cacheUpdate.contents.filter { groupIds.contains($0.groupId ?? -1) }
     
     return ContentPersistableState(

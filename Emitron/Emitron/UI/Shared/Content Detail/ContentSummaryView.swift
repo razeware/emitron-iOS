@@ -85,7 +85,7 @@ struct ContentSummaryView: View {
             .onTapGesture {
               self.download()
             }
-            .alert(item: $deletionConfirmation) { $0.alert }
+            .alert(item: $deletionConfirmation, content: \.alert)
             .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
         }
         

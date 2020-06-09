@@ -26,8 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
+import struct Foundation.UUID
 import GRDB
 import GRDBCombine
 
@@ -36,7 +36,7 @@ extension PersistenceStore {
   /// List of all downloads
   func downloadList() -> DatabasePublishers.Value<[ContentSummaryState]> {
     ValueObservation.tracking { db -> [ContentSummaryState] in
-      let contentTypes = [ContentType.collection, ContentType.screencast].map { $0.rawValue }
+      let contentTypes = [ContentType.collection, ContentType.screencast].map(\.rawValue)
       let request = Content
         .filter(contentTypes.contains(Content.Columns.contentType))
         .including(required: Content.download)
@@ -134,7 +134,7 @@ extension PersistenceStore {
   /// - Parameter state: The `Download.State` to filter the results by
   func downloads(in state: Download.State) -> DatabasePublishers.Value<DownloadQueueItem?> {
     ValueObservation.tracking { db -> DownloadQueueItem? in
-      let contentTypes = [ContentType.episode, ContentType.screencast].map { $0.rawValue }
+      let contentTypes = [ContentType.episode, ContentType.screencast].map(\.rawValue)
       let contentAlias = TableAlias()
       let request = Download
         .all()
@@ -152,8 +152,8 @@ extension PersistenceStore {
   /// - Parameter max: The maximum length of the queue
   func downloadQueue(withMaxLength max: Int) -> DatabasePublishers.Value<[DownloadQueueItem]> {
     ValueObservation.tracking { db -> [DownloadQueueItem] in
-      let states = [Download.State.inProgress, Download.State.enqueued].map { $0.rawValue }
-      let contentTypes = [ContentType.episode, ContentType.screencast].map { $0.rawValue }
+      let states = [Download.State.inProgress, Download.State.enqueued].map(\.rawValue)
+      let contentTypes = [ContentType.episode, ContentType.screencast].map(\.rawValue)
       let contentAlias = TableAlias()
       let request = Download
         .including(required: Download.content.aliased(contentAlias))

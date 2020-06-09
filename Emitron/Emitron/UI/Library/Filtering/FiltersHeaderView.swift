@@ -29,12 +29,11 @@
 import SwiftUI
 
 private enum Layout {
-  struct Padding {
-    let overall: CGFloat = 12
-    let textTrailing: CGFloat = 15
+  enum Padding {
+    static let overall: CGFloat = 12
+    static let textTrailing: CGFloat = 15
   }
   
-  static let padding = Padding()
   static let cornerRadius: CGFloat = 9
   static let imageSize: CGFloat = 15
 }
@@ -61,8 +60,8 @@ struct FiltersHeaderView: View {
             .foregroundColor(.contentText)
             .font(.uiLabelBold)
         }
-        .padding([.top, .bottom], Layout.padding.overall)
-        .padding([.trailing, .leading], Layout.padding.textTrailing)
+        .padding([.top, .bottom], Layout.Padding.overall)
+        .padding([.trailing, .leading], Layout.Padding.textTrailing)
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
       }
@@ -75,7 +74,7 @@ struct FiltersHeaderView: View {
   }
   
   private var numOfOnFilters: Int {
-    filterGroup.filters.filter { $0.isOn }.count
+    filterGroup.filters.filter(\.isOn).count
   }
   
   private var expandedView: some View {

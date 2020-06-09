@@ -50,18 +50,22 @@ class SettingsManagerTest: XCTestCase {
   }
   
   func testResetAllRemovesValuesInUserDefaults() {
-    XCTAssertNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    var persistentDomain: [String: Any]? {
+      UserDefaults().persistentDomain(forName: userDefaultsSuite)
+    }
+
+    XCTAssertNil(persistentDomain)
     
     settingsManager.playbackToken = "HELLO"
     settingsManager.playbackSpeed = .double
     settingsManager.wifiOnlyDownloads = true
     settingsManager.downloadQuality = .sdVideoFile
     
-    XCTAssertNotNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    XCTAssertNotNil(persistentDomain)
     
     settingsManager.resetAll()
     
-    XCTAssertNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    XCTAssertNil(persistentDomain)
   }
   
   func testFiltersPersistedSuccessfully() {
@@ -104,7 +108,7 @@ class SettingsManagerTest: XCTestCase {
     XCTAssertEqual(.standard, settingsManager.playbackSpeed)
   }
   
-  func testPlaybackSpeedPublusherSendsUpdates() throws {
+  func testPlaybackSpeedPublisherSendsUpdates() throws {
     let recorder = settingsManager.playbackSpeedPublisher.record()
     
     settingsManager.playbackSpeed = .double

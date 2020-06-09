@@ -34,7 +34,6 @@ import GRDB
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
-  
   private var persistenceStore: PersistenceStore!
   private var guardpost: Guardpost!
   fileprivate var dataManager: DataManager!
@@ -43,9 +42,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   fileprivate var messageBus = MessageBus()
   fileprivate var settingsManager: SettingsManager!
   fileprivate var iconManager = IconManager()
-  
-  func application(_ application: UIApplication,
-                   didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+
+  func applicationDidFinishLaunching(_ application: UIApplication) {
     // Override point for customization after application launch.
     
     let audioSession = AVAudioSession.sharedInstance()
@@ -66,7 +64,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     sessionController = SessionController(guardpost: guardpost)
     settingsManager = SettingsManager(
-      userDefaults: UserDefaults.standard,
+      userDefaults: .standard,
       userModelController: sessionController
     )
     downloadService = DownloadService(
@@ -78,9 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       persistenceStore: persistenceStore,
       downloadService: downloadService
     )
-    downloadService.startProcessing()
-    
-    return true
+    downloadService.startProcessing()    
   }
   
   // MARK: UISceneSession Lifecycle

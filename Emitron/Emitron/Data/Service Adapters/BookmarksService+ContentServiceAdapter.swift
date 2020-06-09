@@ -26,14 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 extension BookmarksService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
     bookmarks(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.bookmarks.map { $0.contentId },
+          contentIds: response.bookmarks.map(\.contentId),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

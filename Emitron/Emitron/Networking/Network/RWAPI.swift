@@ -26,9 +26,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import class Foundation.URLSession
 
 typealias HTTPHeaders = [String: String]
+typealias HTTPHeader = HTTPHeaders.Element
 
 enum RWAPIError: Error {
   case requestFailed(Error?, Int)
@@ -61,7 +62,7 @@ struct RWAPI {
   let authToken: String
 
   // MARK: - HTTP Headers
-  let contentTypeHeader: HTTPHeaders = ["Content-Type": "application/vnd.api+json; charset=utf-8"]
+  let contentTypeHeader: HTTPHeader = ("Content-Type", "application/vnd.api+json; charset=utf-8")
   var additionalHeaders: HTTPHeaders = ["RW-App-Token": Configuration.appToken]
 
   // MARK: - Initializers

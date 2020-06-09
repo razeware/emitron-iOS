@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct ContentPersistableState: Equatable {
   let content: Content
   let contentDomains: [ContentDomain]
@@ -39,4 +37,4 @@ struct ContentPersistableState: Equatable {
   let childContents: [Content]
 }
 
-typealias ContentLookup = ((_ contentId: Int) -> (ContentPersistableState?))
+typealias ContentLookup = (_ contentId: Int) -> ContentPersistableState?

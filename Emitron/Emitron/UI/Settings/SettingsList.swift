@@ -29,13 +29,15 @@
 import SwiftUI
 
 struct SettingsList: View {
-  @ObservedObject var settingsManager = SettingsManager.current
+  @ObservedObject private var settingsManager: SettingsManager
+
+  init(settingsManager: ObservedObject<SettingsManager>) {
+    _settingsManager = settingsManager
+  }
   
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(SettingsOption.allCases) { option in
-        self.row(for: option)
-      }
+      ForEach(SettingsOption.allCases, content: row)
     }
   }
   
@@ -84,7 +86,7 @@ struct SettingsList_Previews: PreviewProvider {
   }
   
   static var list: some View {
-    SettingsList()
+    SettingsList( settingsManager: .init(initialValue: .current) )
       .background(Color.backgroundColor)
   }
 }

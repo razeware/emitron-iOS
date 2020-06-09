@@ -27,7 +27,6 @@
 // THE SOFTWARE.
 
 import XCTest
-import CombineExpectations
 @testable import Emitron
 
 class DataCacheTest: XCTestCase {

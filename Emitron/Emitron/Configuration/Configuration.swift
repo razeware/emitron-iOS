@@ -28,7 +28,7 @@
 
 // See https://nshipster.com/xcconfig/ for details
 
-import Foundation
+import class Foundation.Bundle
 
 enum Configuration {
   enum Error: Swift.Error {

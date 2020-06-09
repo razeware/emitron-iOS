@@ -26,47 +26,48 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import AVKit
 import Combine
 
-enum VideoPlaybackViewModelError: Error {
-  case invalidOrMissingAttribute(String)
-  case cannotStreamWhenOffline
-  case invalidPermissions
-  case expiredPermissions
-  case unableToLoadArtwork
-  
-  var localizedDescription: String {
-    switch self {
-    case .invalidOrMissingAttribute(let attribute):
-      return "VideoPlaybackViewModelError::invalidOrMissingAttribute::\(attribute)"
-    case .cannotStreamWhenOffline:
-      return Constants.videoPlaybackCannotStreamWhenOffline
-    case .invalidPermissions:
-      return Constants.videoPlaybackInvalidPermissions
-    case .expiredPermissions:
-      return Constants.videoPlaybackExpiredPermissions
-    case .unableToLoadArtwork:
-      return "VideoPlaybackViewModelError::unableToLoadArtwork"
+extension VideoPlaybackViewModel {
+  enum Error: Swift.Error {
+    case invalidOrMissingAttribute(String)
+    case cannotStreamWhenOffline
+    case invalidPermissions
+    case expiredPermissions
+    case unableToLoadArtwork
+
+    var localizedDescription: String {
+      switch self {
+      case .invalidOrMissingAttribute(let attribute):
+        return "VideoPlaybackViewModelError::invalidOrMissingAttribute::\(attribute)"
+      case .cannotStreamWhenOffline:
+        return Constants.videoPlaybackCannotStreamWhenOffline
+      case .invalidPermissions:
+        return Constants.videoPlaybackInvalidPermissions
+      case .expiredPermissions:
+        return Constants.videoPlaybackExpiredPermissions
+      case .unableToLoadArtwork:
+        return "VideoPlaybackViewModelError::unableToLoadArtwork"
+      }
     }
-  }
-  
-  var messageLevel: Message.Level {
-    switch self {
-    case .expiredPermissions:
-      return .warning
-    default:
-      return .error
+
+    var messageLevel: Message.Level {
+      switch self {
+      case .expiredPermissions:
+        return .warning
+      default:
+        return .error
+      }
     }
-  }
-  
-  var messageAutoDismiss: Bool {
-    switch self {
-    case .expiredPermissions:
-      return true
-    default:
-      return false
+
+    var messageAutoDismiss: Bool {
+      switch self {
+      case .expiredPermissions:
+        return true
+      default:
+        return false
+      }
     }
   }
 }
@@ -134,22 +135,22 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  func canPlayOrDisplayError() throws -> Bool {
+  func verifyCanPlay() throws {
     // Do we have a user
     guard let user = sessionController.user else {
-      throw VideoPlaybackViewModelError.invalidPermissions
+      throw Error.invalidPermissions
     }
     // Do we have the first item of content?
     guard let contentItem = contentList.first else {
-      throw VideoPlaybackViewModelError.invalidPermissions
+      throw Error.invalidPermissions
     }
     // Can that user view this content?
     if contentItem.content.professional && !user.canStreamPro {
-      throw VideoPlaybackViewModelError.invalidPermissions
+      throw Error.invalidPermissions
     }
     // If we're online then, that's all good
     if sessionController.sessionState == .online {
-      return true
+      return
     }
     
     // If we've got a download, then we might be ok
@@ -157,14 +158,11 @@ final class VideoPlaybackViewModel {
       download.state == .complete,
       download.localUrl != nil {
       // We have a download, but are we still authenticated?
-      if sessionController.hasCurrentDownloadPermissions {
-        return true
-      } else {
-        throw VideoPlaybackViewModelError.expiredPermissions
-      }
+      guard sessionController.hasCurrentDownloadPermissions
+      else { throw Error.expiredPermissions }
     } else {
       // We can't stream cos we're offline, and we don't have a download
-      throw VideoPlaybackViewModelError.cannotStreamWhenOffline
+      throw Error.cannotStreamWhenOffline
     }
   }
   
@@ -201,8 +199,11 @@ final class VideoPlaybackViewModel {
     self.shouldBePlaying = false
     self.player.pause()
   }
-  
-  private func prepareSubscribers() {
+}
+
+// MARK: - private
+private extension VideoPlaybackViewModel {
+  func prepareSubscribers() {
     if let token = playerTimeObserverToken {
       player.removeTimeObserver(token)
     }
@@ -221,14 +222,14 @@ final class VideoPlaybackViewModel {
         self?.shouldBePlaying = rate == 0
         
         guard let self = self,
-          rate != 0,
-          rate != SettingsManager.current.playbackSpeed.rate else { return }
+          ![0, SettingsManager.current.playbackSpeed.rate].contains(rate)
+          else { return }
         
         self.player.rate = SettingsManager.current.playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
-     player.publisher(for: \.currentItem)
+    player.publisher(for: \.currentItem)
       .removeDuplicates()
       .sink { [weak self] item in
         guard let self = self,
@@ -259,9 +260,9 @@ final class VideoPlaybackViewModel {
       .closedCaptionOnPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
-        guard let playerItem = self?.player.currentItem else { return }
-        
-        self?.addClosedCaptions(for: playerItem)
+        guard let self = self else { return }
+
+        self.player.currentItem.map(self.addClosedCaptions)
       }
       .store(in: &subscriptions)
     
@@ -277,8 +278,8 @@ final class VideoPlaybackViewModel {
       }
       .store(in: &subscriptions)
   }
-  
-  private func handleTimeUpdate(time: CMTime) {
+
+  func handleTimeUpdate(time: CMTime) {
     guard let currentlyPlayingContentId = currentlyPlayingContentId else { return }
     // Update progress
     progressEngine.updateProgress(for: currentlyPlayingContentId, progress: Int(time.seconds))
@@ -315,13 +316,13 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  private func enqueueNext() {
+  func enqueueNext() {
     guard nextContentToEnqueueIndex < contentList.endIndex else { return }
 
     enqueue(index: nextContentToEnqueueIndex)
   }
   
-  private func enqueue(index: Int, startTime: Double? = nil) {
+  func enqueue(index: Int, startTime: Double? = nil) {
     state = .loadingAdditional
     let nextContent = contentList[index]
     guard sessionController.canPlay(content: nextContent.content) else {
@@ -359,7 +360,7 @@ final class VideoPlaybackViewModel {
       .store(in: &subscriptions)
   }
   
-  private func avItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Error> {
+  func avItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Swift.Error> {
     // Do we already have it it in cache?
     if let item = playerItems[state.content.id] {
       return Future { $0(.success(item)) }
@@ -368,8 +369,8 @@ final class VideoPlaybackViewModel {
     return createAvItem(for: state)
   }
   
-  private func createAvItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Error> {
-    Future<AVPlayerItem, Error> { promise in
+  func createAvItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Swift.Error> {
+    .init { promise in
       // Is there a completed download?
       if let download = state.download,
         download.state == .complete,
@@ -384,7 +385,7 @@ final class VideoPlaybackViewModel {
       
       // We're gonna need to stream it.
       guard let videoIdentifier = state.content.videoIdentifier else {
-        return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("videoIdentifier")))
+        return promise(.failure(Error.invalidOrMissingAttribute("videoIdentifier")))
       }
       
       self.videosService.getVideoStream(for: videoIdentifier) { result in
@@ -392,7 +393,7 @@ final class VideoPlaybackViewModel {
         case .failure(let error):
           return promise(.failure(error))
         case .success(let response):
-          guard response.kind == .stream else { return promise(.failure(VideoPlaybackViewModelError.invalidOrMissingAttribute("Not A Stream"))) }
+          guard response.kind == .stream else { return promise(.failure(Error.invalidOrMissingAttribute("Not A Stream"))) }
           let item = AVPlayerItem(url: response.url)
           self.addMetadata(from: state, to: item)
           self.addClosedCaptions(for: item)
@@ -404,8 +405,8 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  private func addClosedCaptions(for playerItem: AVPlayerItem) {
-    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: AVMediaCharacteristic.legible) {
+  func addClosedCaptions(for playerItem: AVPlayerItem) {
+    if let group = playerItem.asset.mediaSelectionGroup(forMediaCharacteristic: .legible) {
       let locale = Locale(identifier: "en")
       let options =
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
@@ -417,7 +418,7 @@ final class VideoPlaybackViewModel {
     }
   }
   
-  private func addMetadata(from state: VideoPlaybackState, to playerItem: AVPlayerItem) {
+  func addMetadata(from state: VideoPlaybackState, to playerItem: AVPlayerItem) {
     let title = AVMutableMetadataItem()
     title.identifier = .commonIdentifierTitle
     title.value = state.content.name as NSString
@@ -431,13 +432,13 @@ final class VideoPlaybackViewModel {
 
     let deferredArtwork = AVMetadataItem(propertiesOf: artwork) { request in
       guard let url = state.content.cardArtworkUrl else {
-        request.respond(error: VideoPlaybackViewModelError.unableToLoadArtwork)
+        request.respond(error: Error.unableToLoadArtwork)
         return
       }
       
       let task = URLSession.shared.dataTask(with: url) { data, _, _ in
         guard let data = data else {
-          request.respond(error: VideoPlaybackViewModelError.unableToLoadArtwork)
+          request.respond(error: Error.unableToLoadArtwork)
           return
         }
         request.respond(value: data as NSData)
@@ -448,7 +449,7 @@ final class VideoPlaybackViewModel {
     playerItem.externalMetadata = [title, description, deferredArtwork]
   }
 
-  private func update(progression: Progression) {
+  func update(progression: Progression) {
     // Find appropriate playback state
     guard let contentIndex = contentList.firstIndex(where: { $0.content.id == progression.id }) else { return }
     

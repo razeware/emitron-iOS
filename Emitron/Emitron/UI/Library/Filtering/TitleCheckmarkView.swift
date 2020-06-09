@@ -29,12 +29,11 @@
 import SwiftUI
 
 private enum Layout {
-  struct Padding {
-    let overall: CGFloat = 12
-    let textTrailing: CGFloat = 2
+  enum Padding {
+    static let overall: CGFloat = 12
+    static let textTrailing: CGFloat = 2
   }
 
-  static let padding = Padding()
   static let cornerRadius: CGFloat = 9
   static let imageSize: CGFloat = 15
 }
@@ -49,7 +48,7 @@ struct TitleCheckmarkView: View {
       Text(name)
         .foregroundColor(.titleText)
         .font(.uiLabel)
-        .padding([.trailing], Layout.padding.textTrailing)
+        .padding([.trailing], Layout.Padding.textTrailing)
       
       Spacer()
       

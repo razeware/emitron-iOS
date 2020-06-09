@@ -38,7 +38,7 @@ struct Icon: Identifiable, Equatable {
   }
   
   var uiImage: UIImage {
-    UIImage(named: imageName) ?? UIImage()
+    UIImage(named: imageName) ?? .init()
   }
 }
 

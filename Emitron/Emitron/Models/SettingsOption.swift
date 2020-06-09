@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 enum SettingsOption: Int, Identifiable, CaseIterable {
@@ -68,11 +67,11 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   var detail: [String] {
     switch self {
     case .playbackSpeed:
-      return PlaybackSpeed.allCases.map { $0.display }
+      return PlaybackSpeed.allCases.map(\.display)
     case .wifiOnlyDownloads:
       return ["Yes", "No"]
     case .downloadQuality:
-      return Attachment.Kind.downloads.map { $0.display }
+      return Attachment.Kind.downloads.map(\.display)
     case .closedCaptionOn:
       return ["Yes", "No"]
     }

@@ -26,18 +26,21 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class Filters: ObservableObject {
   @Published var searchStr: String = ""
   var all: Set<Filter> {
     didSet {
-      platforms.filters = all.filter { $0.groupType == .platforms }.sorted()
-      categories.filters = all.filter { $0.groupType == .categories }.sorted()
-      contentTypes.filters = all.filter { $0.groupType == .contentTypes }.sorted()
-      difficulties.filters = all.filter { $0.groupType == .difficulties }.sorted()
-      subscriptionPlans.filters = all.filter { $0.groupType == .subscriptionPlans }.sorted()
+      let sortedFilters =
+        Dictionary(grouping: all, by: \.groupType)
+        .mapValues { $0.sorted() }
+      
+      platforms.filters = sortedFilters[.platforms] ?? []
+      categories.filters = sortedFilters[.categories] ?? []
+      contentTypes.filters = sortedFilters[.contentTypes] ?? []
+      difficulties.filters = sortedFilters[.difficulties] ?? []
+      subscriptionPlans.filters = sortedFilters[.subscriptionPlans] ?? []
     }
   }
   
@@ -53,12 +56,12 @@ class Filters: ObservableObject {
   }
   
   var appliedParameters: [Parameter] {
-    var filterParameters = applied.map { $0.parameter }
-    let appliedContentFilters = contentTypes.filters.filter { $0.isOn }
+    var filterParameters = applied.map(\.parameter)
+    let appliedContentFilters = contentTypes.filters.filter(\.isOn)
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -71,7 +74,7 @@ class Filters: ObservableObject {
   }
   
   var applied: [Filter] {
-    all.filter { $0.isOn }
+    all.filter(\.isOn)
   }
   
   // The  default filters to always apply, unless the user selects them, are .collection and .screencast
@@ -115,7 +118,7 @@ class Filters: ObservableObject {
     var contentParams = FilterGroup(
       type: .contentTypes,
       filters: contentFilters
-    ).filters.map { $0.parameter }
+    ).filters.map(\.parameter)
     contentParams.append(sortParam)
     
     return contentParams
@@ -227,12 +230,12 @@ class Filters: ObservableObject {
   // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well
   // If there are no content filters, it adds the default ones.
   func appliedParamteresWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
-    var filterParameters = filters.map { $0.parameter }
+    var filterParameters = filters.map(\.parameter)
     let appliedContentFilters = filters.filter { $0.groupType == .contentTypes && $0.isOn }
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -245,12 +248,12 @@ class Filters: ObservableObject {
   }
   
   func appliedParams(from filters: Filters) -> [Parameter] {
-    var filterParameters = filters.applied.map { $0.parameter }
-    let appliedContentFilters = contentTypes.filters.filter { $0.isOn }
+    var filterParameters = filters.applied.map(\.parameter)
+    let appliedContentFilters = contentTypes.filters.filter(\.isOn)
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map { $0.parameter })
+      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]

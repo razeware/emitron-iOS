@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.Date
 import Combine
 import Network
 
@@ -71,7 +71,7 @@ extension SyncEngine {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
   }
   
-  private func completionHandler() -> ((Subscribers.Completion<Error>) -> Void) { { [weak self] completion in
+  private func completionHandler() -> (Subscribers.Completion<Error>) -> Void { { [weak self] completion in
     guard let self = self else { return }
     
     switch completion {
@@ -257,7 +257,7 @@ extension SyncEngine {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: "syncProgressionUpdates:: \(error.localizedDescription)")
           .log()
-      case .success(_, let cacheUpdate):
+      case .success( (_, let cacheUpdate) ):
         // Update the cache
         self.repository.apply(update: cacheUpdate)
         // Remove the sync request—we're done

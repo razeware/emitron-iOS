@@ -35,7 +35,7 @@ struct ProgressionsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/progressions" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Internal
@@ -55,12 +55,12 @@ enum ProgressionUpdateData {
   case finished
   case progress(Int)
   
-  var jsonAttribute: [String: Any] {
+  var jsonAttribute: Dictionary<String, Any>.Element {
     switch self {
     case .finished:
-      return ["finished": true]
+      return ("finished", true)
     case .progress(let progress):
-      return ["progress": progress]
+      return ("progress", progress)
     }
   }
 }
@@ -77,15 +77,16 @@ struct UpdateProgressionsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/progressions/bulk" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: HTTPHeaders = [:]
   var body: Data? {
     let dataJson = progressionUpdates.map { update in
       [
         "type": "progressions",
         "attributes": [
           "content_id": update.contentId,
-          "updated_at": update.updatedAt.iso8601
-        ].merged(update.data.jsonAttribute)
+          "updated_at": update.updatedAt.iso8601,
+          update.data.jsonAttribute.key: update.data.jsonAttribute.value
+        ]
       ]
     }
     let json = [
@@ -115,7 +116,7 @@ struct DeleteProgressionRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .DELETE }
   var path: String { "/progressions/\(id)" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   // MARK: - Parameters

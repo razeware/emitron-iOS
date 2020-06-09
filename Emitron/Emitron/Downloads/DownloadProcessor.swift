@@ -145,7 +145,7 @@ extension DownloadProcessor {
       semaphore.signal()
     }
     
-    _ = semaphore.wait(timeout: DispatchTime.distantFuture)
+    _ = semaphore.wait(timeout: .distantFuture)
     
     return tasks
   }
@@ -161,9 +161,7 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
     guard let backgroundSessionCompletionHandler = backgroundSessionCompletionHandler else { return }
     
     // Need to marshal back to the main queue
-    DispatchQueue.main.async {
-      backgroundSessionCompletionHandler()
-    }
+    DispatchQueue.main.async(execute: backgroundSessionCompletionHandler)
   }
   
   // Used to update the progress stats of a download task

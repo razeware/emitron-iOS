@@ -26,8 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import class Foundation.UserDefaults
 
+/// Strongly-typed `UserDefaults` settings keys.
+/// - Note: Use the `UserDefaults` extensions in `SettingsKey.swift`
+/// to avoid having to use `.rawValue` with these.
 enum SettingsKey: String, CaseIterable {
   // Filters
   case filters
@@ -46,11 +49,13 @@ extension UserDefaults {
     removeObject(forKey: settingsKey.rawValue)
   }
   
-  func object(forKey settingsKey: SettingsKey) -> Any? {
-    object(forKey: settingsKey.rawValue)
-  }
-  
-  func set<T>(_ value: T, forKey settingsKey: SettingsKey) {
-    set(value, forKey: settingsKey.rawValue)
+  /// Get or set a value for a `SettingsKey`.
+  ///
+  /// `get`: `nil` if a retrieved object cannot be cast to `Value`.
+  ///
+  /// `set`: Equivalent to calling `removeObject`  if `newValue` is `nil`.
+  subscript<Value>(key: SettingsKey) -> Value? {
+    get { object(forKey: key.rawValue) as? Value }
+    set { set(newValue, forKey: key.rawValue) }
   }
 }

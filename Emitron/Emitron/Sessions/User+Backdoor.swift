@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import class Foundation.UserDefaults
 
 extension User {
   static var backdoor: User? {
@@ -43,9 +43,7 @@ extension User {
     
     // Reset all the settings when logging in as a backdoor user.
     // I'd like to move this to the test target, but Xcode won't compile (missing module CSQLite).
-    SettingsKey.allCases.forEach { settingsKey in
-      UserDefaults.standard.removeObject(forKey: settingsKey)
-    }
+    SettingsKey.allCases.forEach(UserDefaults.standard.removeObject)
     
     return User(dictionary: userDict)
   }

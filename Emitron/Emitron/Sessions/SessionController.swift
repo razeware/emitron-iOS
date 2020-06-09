@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 import AuthenticationServices
-import Foundation
+
 import Combine
 import Network
 
@@ -44,7 +44,6 @@ protocol UserModelController {
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
 class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject, Refreshable {
   // MARK: Refreshable
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: SessionController.self))"
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
   
   private var subscriptions = Set<AnyCancellable>()
@@ -56,17 +55,17 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   
   @PublishedPrePostFacto var user: User? {
     didSet {
-      if user == nil {
-        userState = .notLoggedIn
-        permissionState = .notLoaded
-      } else {
+      if let user = user {
         userState = .loggedIn
-        if user?.permissions == nil {
+        if user.permissions == nil {
           permissionState = .notLoaded
           fetchPermissionsIfNeeded()
         } else {
           permissionState = .loaded(lastRefreshedDate)
         }
+      } else {
+        userState = .notLoggedIn
+        permissionState = .notLoaded
       }
     }
   }
@@ -93,7 +92,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
   }
   
   var hasCurrentDownloadPermissions: Bool {
-    guard user?.canDownload ?? false else { return false }
+    guard user?.canDownload == true else { return false }
     
     if case .loaded(let date) = permissionState,
       let permissionsLastConfirmedDate = date,
@@ -142,14 +141,14 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
             self.objectWillChange.send()
             Failure
               .login(from: "SessionController", reason: error.localizedDescription)
-              .log(additionalParams: nil)
+              .log()
           case .success(let user):
             self.user = user
             print(user)
             
             Event
               .login(from: "SessionController")
-              .log(additionalParams: nil)
+              .log()
             
             self.fetchPermissions()
           }
@@ -185,7 +184,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
         case .failure(let error):
           Failure
             .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
-            .log(additionalParams: nil)
+            .log()
           
           self.permissionState = .error
         case .success(let permissions):
@@ -253,17 +252,7 @@ extension SessionController {
     }
     // If the content isn't free then we must have a user
     guard let user = user else { return false }
-    
-    switch (content.professional, user.canStream, user.canStreamPro) {
-    case (false, true, _):
-      // If it's non-pro, then as long as you can stream, you're golden
-      return true
-    case (true, _, true):
-      // If it's pro, and you can stream pro, then great
-      return true
-    default:
-      // Other wise, it's a no—sorry.
-      return false
-    }
+
+    return content.professional ? user.canStreamPro : user.canStream
   }
 }

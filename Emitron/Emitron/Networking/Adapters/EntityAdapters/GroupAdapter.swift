@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct GroupAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource, relationships: [EntityRelationship]) throws -> Group {
     guard resource.entityType == .group else { throw EntityAdapterError.invalidResourceTypeForAdapter }
