@@ -28,8 +28,8 @@
 
 import class Foundation.URLSession
 
-typealias HTTPHeader = (String, String)
 typealias HTTPHeaders = [String: String]
+typealias HTTPHeader = HTTPHeaders.Element
 
 enum RWAPIError: Error {
   case requestFailed(Error?, Int)

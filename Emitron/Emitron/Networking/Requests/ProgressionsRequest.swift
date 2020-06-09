@@ -55,7 +55,7 @@ enum ProgressionUpdateData {
   case finished
   case progress(Int)
   
-  var jsonAttribute: (String, Any) {
+  var jsonAttribute: Dictionary<String, Any>.Element {
     switch self {
     case .finished:
       return ("finished", true)
@@ -77,7 +77,7 @@ struct UpdateProgressionsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/progressions/bulk" }
-  var additionalHeaders: [String: String] = [:]
+  var additionalHeaders: HTTPHeaders = [:]
   var body: Data? {
     let dataJson = progressionUpdates.map { update in
       [
@@ -85,7 +85,7 @@ struct UpdateProgressionsRequest: Request {
         "attributes": [
           "content_id": update.contentId,
           "updated_at": update.updatedAt.iso8601,
-          update.data.jsonAttribute.0: update.data.jsonAttribute.1
+          update.data.jsonAttribute.key: update.data.jsonAttribute.value
         ]
       ]
     }
