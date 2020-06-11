@@ -20,7 +20,7 @@
 
 ### Environment
 
-<!-- We must know your exact environment or it is very difficult to help. -->
+<!-- It's really helpful to know your exact environment otherwise it can be difficult to help. -->
 
 * iOS Version:
 * emitron Version:
