@@ -1,6 +1,5 @@
 # Security Policy
 
-
 ## Reporting a Vulnerability
 
 If you come across a security vulnerability in __emitron__, or any of the
@@ -12,6 +11,5 @@ to emitron@razeware.com.
 
 We take security very seriously, and will assess any reports before looking to
 get them fixed as soon as possible.
-
 
 Thank you.

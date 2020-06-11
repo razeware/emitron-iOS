@@ -23,5 +23,5 @@
 <!-- It's really helpful to know your exact environment otherwise it can be difficult to help. -->
 
 * iOS Version:
-* emitron Version:
+* raywenderlich.com App Version:
 * Device:

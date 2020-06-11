@@ -18,7 +18,6 @@ to contribute to the project, but are unable to run the app due to your lack of
 raywenderlich.com subscription, please contact emitron@razeware.com, and we should be
 able to set you up with appropriate access.
 
-
 ## Access Tokens
 
 As mentioned in the readme, __emitron__ requires two secret tokens. This repo contains
@@ -36,12 +35,10 @@ API documentation here:
 
 https://raywenderlich.docs.apiary.io
 
-
 ## New Features
 
 If you would like to suggest new features, please open an issue for discussion, and
 include a development proposal. Although the app is open source, Razeware reserves
 the right to direct new feature development.
-
 
 Thanks!
