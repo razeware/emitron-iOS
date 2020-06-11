@@ -73,7 +73,7 @@ Xcode will automatically run SwiftLint if it is installed.
 __emitron__ uses GitHub Actions to perform continuous integration and deployment. Every PR is built and tested before it can be merged.
 
 - Merges to `development` will create a new build of the emitron β app on TestFlight.
-- Merges to `master` will create a new build of the emitron production app on TestFlight.
+- Merges to `production` will create a new build of the emitron production app on TestFlight.
 
 
 
