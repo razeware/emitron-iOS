@@ -42,7 +42,7 @@ class EmitronScreenshots: XCTestCase {
     
     // Reset filters
     app.buttons.matching(identifier: "Filter Library").element.tap()
-    app.buttons.matching(identifier: "Clear All").element.tap()
+    app.buttons.matching(identifier: "Reset Filters").element.tap()
     
     // Now set some and screenshot
     app.buttons.matching(identifier: "Filter Library").element.tap()

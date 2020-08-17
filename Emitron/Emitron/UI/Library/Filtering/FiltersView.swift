@@ -70,7 +70,7 @@ struct FiltersView: View {
       
       HStack {
         
-        MainButtonView(title: "Clear All", type: .secondary(withArrow: false)) {
+        MainButtonView(title: "Reset Filters", type: .secondary(withArrow: false)) {
           self.filters.removeAll()
           self.libraryRepository.filters = self.filters
           self.presentationMode.wrappedValue.dismiss()
@@ -79,7 +79,7 @@ struct FiltersView: View {
         
         // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
         // Which ones are currently being applied to the content listing
-        applyOrCloseButton()
+        applyFiltersButton()
       }
       .padding([.leading, .trailing, .bottom], 18)
     }
@@ -105,9 +105,8 @@ struct FiltersView: View {
     )
   }
   
-  private func applyOrCloseButton() -> MainButtonView {
-    let equalSets = Set(libraryRepository.nonPaginationParameters) == Set(filters.appliedParameters)
-    let title = equalSets ? "Close" : "Apply"
+  private func applyFiltersButton() -> MainButtonView {
+    let title = "Apply Filters"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
       self.libraryRepository.filters = self.filters

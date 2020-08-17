@@ -121,7 +121,7 @@ struct LibraryView: View {
       HStack(alignment: .top, spacing: .filterSpacing) {
 
         if self.filters.applied.count > 1 {
-          AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
+          AppliedFilterTagButton(name: Constants.resetFilters, type: .destructive) {
             self.filters.removeAll()
             self.libraryRepository.filters = self.filters
           }
