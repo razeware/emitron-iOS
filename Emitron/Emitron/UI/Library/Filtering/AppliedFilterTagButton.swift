@@ -120,7 +120,7 @@ struct AppliedFilterView_Previews: PreviewProvider {
   
   static var tags: some View {
     HStack {
-      AppliedFilterTagButton(name: "Clear All", type: .destructive) { }
+      AppliedFilterTagButton(name: "Reset Filters", type: .destructive) { }
       AppliedFilterTagButton(name: "Test Filter", type: .default) { }
       AppliedFilterTagButton(name: "Another", type: .default) { }
     }
