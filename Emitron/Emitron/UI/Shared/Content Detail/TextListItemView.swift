@@ -79,35 +79,26 @@ struct TextListItemView: View {
       }
     }
   }
-  
-  private var progressBar: AnyView {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else {
-      return AnyView(Rectangle()
-        .frame(height: 1)
-        .foregroundColor(.borderColor))
-    }
-    return AnyView(
+
+  @ViewBuilder private var progressBar: some View {
+    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
       ProgressBarView(progress: progress, isRounded: true)
-    )
+    } else {
+      Rectangle()
+        .frame(height: 1)
+        .foregroundColor(.borderColor)
+    }
   }
   
-  private var doneCheckbox: AnyView {
+  @ViewBuilder var doneCheckbox: some View {
     if !canStreamPro && content.professional {
-      return AnyView(LockedIconView())
-    }
-    
-    if case .completed = dynamicContentViewModel.viewProgress {
-      return AnyView(
-        CompletedIconView()
-          .onTapGesture {
-            self.toggleCompleteness()
-          }
-      )
+      LockedIconView()
+    } else if case .completed = dynamicContentViewModel.viewProgress {
+      CompletedIconView()
+        .onTapGesture(perform: toggleCompleteness)
     } else {
-      return AnyView(
-        NumberIconView(number: content.ordinal ?? 0)
-          .onTapGesture(perform: toggleCompleteness)
-      )
+      NumberIconView(number: content.ordinal ?? 0)
+        .onTapGesture(perform: toggleCompleteness)
     }
   }
   
