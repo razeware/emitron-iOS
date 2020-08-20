@@ -160,7 +160,7 @@ struct LibraryView: View {
       contentRepository: libraryRepository,
       downloadAction: DownloadService.current,
       contentScreen: .library,
-      headerView: header
+      header: header
     )
   }
 }

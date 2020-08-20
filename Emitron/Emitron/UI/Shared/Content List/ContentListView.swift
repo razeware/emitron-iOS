@@ -29,12 +29,12 @@
 import SwiftUI
 import Combine
 
-struct ContentListView: View {
+struct ContentListView<Header: View>: View {
   @State private var deleteSubscriptions = Set<AnyCancellable>()
   @ObservedObject var contentRepository: ContentRepository
   var downloadAction: DownloadAction
   var contentScreen: ContentScreen
-  var headerView: AnyView?
+  let header: Header
 
   var body: some View {
     contentView
@@ -44,22 +44,23 @@ struct ContentListView: View {
       }
   }
 
-  private var contentView: AnyView {
+  private var contentView: some View {
     reloadIfRequired()
-    switch contentRepository.state {
-    case .initial:
-      return AnyView(loadingView)
-    case .loading:
-      return AnyView(loadingView)
-    case .loadingAdditional:
-      return AnyView(listView)
-    case .hasData where contentRepository.isEmpty:
-      return AnyView(noResultsView)
-    case .hasData:
-      return AnyView(listView)
-    case .failed:
-      return AnyView(reloadView)
+
+    @ViewBuilder var contentView: some View {
+      switch contentRepository.state {
+      case .initial, .loading:
+        loadingView
+      case .hasData where contentRepository.isEmpty:
+        noResultsView
+      case .hasData, .loadingAdditional:
+        listView
+      case .failed:
+        reloadView
+      }
     }
+
+    return contentView
   }
   
   private func reloadIfRequired() {
@@ -108,16 +109,9 @@ struct ContentListView: View {
   
   private var listView: some View {
     List {
-      if self.headerView != nil {
-        Section(header: self.headerView) {
-          self.cardsView
-          self.loadMoreView
-          // Hack to make sure there's some spacing at the bottom of the list
-          Color.clear.frame(height: 0)
-        }.listRowInsets(EdgeInsets())
-      } else {
-        self.cardsView
-        self.loadMoreView
+      makeList {
+        cardsView
+        loadMoreView
         // Hack to make sure there's some spacing at the bottom of the list
         Color.clear.frame(height: 0)
       }
@@ -131,13 +125,26 @@ struct ContentListView: View {
       }
       .accessibility(identifier: "contentListView")
   }
+
+  func makeList<Content: View>(
+    @ViewBuilder content: () -> Content
+  ) -> some View {
+    Section(header: header, content: content)
+      .listRowInsets(EdgeInsets())
+  }
+
+  func makeList<Content: View>(
+    @ViewBuilder content: () -> Content
+  ) -> some View where Header.Body == Never {
+    content()
+  }
   
   private var loadingView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
       VStack {
-        headerView
+        header
         Spacer()
         LoadingView()
         Spacer()
@@ -151,7 +158,7 @@ struct ContentListView: View {
       
       NoResultsView(
         contentScreen: contentScreen,
-        header: headerView
+        header: header
       )
     }
   }
@@ -159,26 +166,17 @@ struct ContentListView: View {
   private var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
-      
-      ReloadView(header: headerView) {
-        self.contentRepository.reload()
-      }
+      ReloadView(header: header, reloadHandler: contentRepository.reload)
     }
   }
-  
-  private var loadMoreView: AnyView? {
+
+  @ViewBuilder private var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
-      return AnyView(
-        // HACK: To put it in the middle we have to wrap it in Geometry Reader
-        GeometryReader { _ in
-          ActivityIndicator()
-            .onAppear {
-              self.contentRepository.loadMore()
-            }
-        }
-      )
-    } else {
-      return nil
+      // HACK: To put it in the middle we have to wrap it in Geometry Reader
+      GeometryReader { _ in
+        ActivityIndicator()
+          .onAppear(perform: contentRepository.loadMore)
+      }
     }
   }
 
@@ -204,5 +202,20 @@ struct ContentListView: View {
         }
         .store(in: &deleteSubscriptions)
     }
+  }
+}
+
+extension ContentListView where Header == Never? {
+  init(
+    contentRepository: ContentRepository,
+    downloadAction: DownloadAction,
+    contentScreen: ContentScreen
+  ) {
+    self.init(
+      contentRepository: contentRepository,
+      downloadAction: downloadAction,
+      contentScreen: contentScreen,
+      header: nil
+    )
   }
 }

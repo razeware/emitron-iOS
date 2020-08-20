@@ -149,20 +149,20 @@ struct MyTutorialView: View {
     AnyView(ContentListView(contentRepository: inProgressRepository,
                             downloadAction: DownloadService.current,
                             contentScreen: ContentScreen.inProgress,
-                            headerView: toggleControl))
+                            header: toggleControl))
   }
   
   private var completedContentsView: AnyView? {
     AnyView(ContentListView(contentRepository: completedRepository,
                             downloadAction: DownloadService.current,
                             contentScreen: .completed,
-                            headerView: toggleControl))
+                            header: toggleControl))
   }
   
   private var bookmarkedContentsView: AnyView? {
     AnyView(ContentListView(contentRepository: bookmarkRepository,
                             downloadAction: DownloadService.current,
                             contentScreen: .bookmarked,
-                            headerView: toggleControl))
+                            header: toggleControl))
   }
 }
