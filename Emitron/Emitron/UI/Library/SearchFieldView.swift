@@ -67,15 +67,15 @@ struct SearchFieldView: View {
         }
       }
     }
-      .padding([.vertical], 6)
-      .padding([.horizontal], 10)
+      .padding(.vertical, 6)
+      .padding(.horizontal, 10)
       .background(GeometryReader { proxy in
         Color.clear.preference(key: SizeKey.self, value: proxy.size)
       })
       .frame(height: height)
       .background(background)
       .padding(1)
-      .padding([.bottom], 2)
+      .padding(.bottom, 2)
       .onPreferenceChange(SizeKey.self) { size in
         height = size?.height
       }

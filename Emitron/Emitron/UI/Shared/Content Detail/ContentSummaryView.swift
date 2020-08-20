@@ -93,20 +93,20 @@ struct ContentSummaryView: View {
         
         completedTag
       })
-        .padding([.top], 15)
+      .padding(.top, 15)
       
       Text(content.descriptionPlainText)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        .padding([.top], 15)
+        .padding(.top, 15)
         .lineLimit(nil)
       
       Text("By \(content.contributorString)")
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .padding([.top], 10)
+        .padding(.top, 10)
         .lineSpacing(3)
     }
   }

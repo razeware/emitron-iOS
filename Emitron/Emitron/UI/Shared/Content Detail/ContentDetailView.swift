@@ -71,7 +71,7 @@ struct ContentDetailView: View {
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
-            .padding([.bottom], 37)
+            .padding(.bottom, 37)
         }
         .listRowInsets(EdgeInsets())
         .listRowBackground(Color.backgroundColor)
