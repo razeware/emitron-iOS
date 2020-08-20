@@ -118,22 +118,17 @@ struct ContentSummaryView: View {
     return nil
   }
   
-  private var bookmarkButton: AnyView {
-    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+  private var bookmarkButton: some View {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
-    let colour = dynamicContentViewModel.bookmarked ? Color.inactiveIcon : .activeIcon
-    
-    return AnyView(
-      Image.bookmark
-        .resizable()
-        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      .foregroundColor(colour)
-        .onTapGesture {
-          bookmark()
-        }
+    Image.bookmark
+      .resizable()
+      .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+      .foregroundColor(dynamicContentViewModel.bookmarked ? .inactiveIcon : .activeIcon)
+      .onTapGesture {
+        bookmark()
+      }
       .accessibility(label: Text("Bookmark course"))
-    )
   }
   
   private func download() {
