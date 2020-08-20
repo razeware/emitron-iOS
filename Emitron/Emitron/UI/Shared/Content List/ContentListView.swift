@@ -151,7 +151,7 @@ struct ContentListView: View {
       
       NoResultsView(
         contentScreen: contentScreen,
-        headerView: headerView
+        header: headerView
       )
     }
   }
