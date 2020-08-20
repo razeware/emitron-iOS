@@ -58,10 +58,8 @@ struct DownloadIcon: View {
 
 struct DownloadIcon_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      selectionList.colorScheme(.light)
-      selectionList.colorScheme(.dark)
-    }
+    selectionList.colorScheme(.light)
+    selectionList.colorScheme(.dark)
   }
   
   static var selectionList: some View {

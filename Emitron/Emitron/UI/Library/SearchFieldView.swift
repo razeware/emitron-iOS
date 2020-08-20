@@ -94,10 +94,8 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      searchFields.colorScheme(.light)
-      searchFields.colorScheme(.dark)
-    }
+    searchFields.colorScheme(.light)
+    searchFields.colorScheme(.dark)
   }
   
   static var searchFields: some View {
