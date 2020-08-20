@@ -37,42 +37,43 @@ struct SettingsList: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(SettingsOption.allCases, content: row)
+      ForEach(SettingsOption.allCases) { self[$0] }
     }
   }
-  
-  private func row(for option: SettingsOption) -> AnyView {
+}
+
+// MARK: - private
+private extension SettingsList {
+  @ViewBuilder subscript(option: SettingsOption) -> some View {
     switch option {
     case .closedCaptionOn:
-      return AnyView(SettingsToggleRow(
+      SettingsToggleRow(
         title: option.title,
         isOn: $settingsManager.closedCaptionOn
-      ))
+      )
     case .wifiOnlyDownloads:
-      return AnyView(SettingsToggleRow(
+      SettingsToggleRow(
         title: option.title,
         isOn: $settingsManager.wifiOnlyDownloads
-      ))
+      )
     case .downloadQuality:
-      return AnyView(
-        NavigationLink(
-          destination: SettingsSelectionView(
-            title: option.title,
-            settingsOption: $settingsManager.downloadQuality
-          )
-        ) {
-          SettingsDisclosureRow(title: option.title, value: settingsManager.downloadQuality.display)
-        })
+      NavigationLink(
+        destination: SettingsSelectionView(
+          title: option.title,
+          settingsOption: $settingsManager.downloadQuality
+        )
+      ) {
+        SettingsDisclosureRow(title: option.title, value: settingsManager.downloadQuality.display)
+      }
     case .playbackSpeed:
-      return AnyView(
-        NavigationLink(
-          destination: SettingsSelectionView(
-            title: option.title,
-            settingsOption: $settingsManager.playbackSpeed
-          )
-        ) {
-          SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
-        })
+      NavigationLink(
+        destination: SettingsSelectionView(
+          title: option.title,
+          settingsOption: $settingsManager.playbackSpeed
+        )
+      ) {
+        SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
+      }
     }
   }
 }
