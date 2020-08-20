@@ -47,7 +47,6 @@ extension Log {
 }
 
 enum Failure: Log {
-  
   case login(from: String, reason: String)
   case fetch(from: String, reason: String)
   case loadFromPersistentStore(from: String, reason: String)

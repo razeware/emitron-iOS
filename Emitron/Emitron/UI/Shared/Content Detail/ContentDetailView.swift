@@ -27,8 +27,6 @@
 // THE SOFTWARE.
 
 import SwiftUI
-import KingfisherSwiftUI
-import UIKit
 
 struct ContentDetailView: View {
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?

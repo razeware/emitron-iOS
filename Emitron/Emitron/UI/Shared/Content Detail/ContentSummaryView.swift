@@ -82,9 +82,7 @@ struct ContentSummaryView: View {
       HStack(spacing: 30, content: {
         if canDownload {
           DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-            .onTapGesture {
-              self.download()
-            }
+            .onTapGesture(perform: download)
             .alert(item: $deletionConfirmation, content: \.alert)
             .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
         }

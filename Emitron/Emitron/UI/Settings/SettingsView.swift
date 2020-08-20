@@ -45,7 +45,6 @@ struct SettingsView: View {
   var body: some View {
     NavigationView {
       VStack {
-        
         SettingsList(settingsManager: _settingsManager)
           .navigationBarTitle(String.settings)
           .navigationBarItems(trailing: dismissButton)

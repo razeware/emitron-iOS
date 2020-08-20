@@ -83,10 +83,10 @@ struct ContentListView<Header: View>: View {
           .padding(.trailing, -2 * .sidePadding)
       }
     }
-      .if(allowDelete) { $0.onDelete(perform: self.delete) }
-      .listRowInsets(EdgeInsets())
-      .padding([.horizontal, .top], .sidePadding)
-      .background(Color.backgroundColor)
+    .if(allowDelete) { $0.onDelete(perform: delete) }
+    .listRowInsets(EdgeInsets())
+    .padding([.horizontal, .top], .sidePadding)
+    .background(Color.backgroundColor)
   }
   
   private func navLink(for content: ContentListDisplayable) -> some View {

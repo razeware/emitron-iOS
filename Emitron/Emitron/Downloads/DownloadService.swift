@@ -249,7 +249,7 @@ extension DownloadService: DownloadAction {
         // 2. Delete the file from disk
         try downloads
           .filter { $0.isDownloaded }
-          .forEach { try self.deleteFile(for: $0) }
+          .forEach(self.deleteFile)
         promise(.success(()))
       } catch {
         promise(.failure(error))

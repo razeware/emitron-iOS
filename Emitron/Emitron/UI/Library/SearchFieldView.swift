@@ -104,7 +104,7 @@ struct SearchFieldView_Previews: PreviewProvider {
       SearchFieldView(searchString: "Hello")
       SearchFieldView(searchString: "Testing")
     }
-      .padding(20)
-      .background(Color.backgroundColor)
+    .padding(20)
+    .background(Color.backgroundColor)
   }
 }

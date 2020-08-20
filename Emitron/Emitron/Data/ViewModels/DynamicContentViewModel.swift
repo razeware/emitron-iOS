@@ -145,7 +145,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
           }) { _ in
             MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
           }
-        .store(in: &self.downloadActionSubscriptions)
+          .store(in: &self.downloadActionSubscriptions)
       }
       
     case .notDownloadable:

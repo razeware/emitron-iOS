@@ -100,10 +100,7 @@ struct LibraryView: View {
 
       Spacer()
 
-      Button(action: {
-        // Change sort
-        self.changeSort()
-      }) {
+      Button(action: changeSort) {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
