@@ -101,8 +101,11 @@ struct MyTutorialView: View {
     }
   }
 
-  private var toggleControl: AnyView {
-    AnyView(
+  private func makeContentListView(
+    contentRepository: ContentRepository,
+    contentScreen: ContentScreen
+  ) -> some View {
+    var toggleControl: some View {
       VStack {
         ToggleControlView(
           toggleState: state,
@@ -129,40 +132,35 @@ struct MyTutorialView: View {
           })
           .padding([.top], .sidePadding)
       }
-        .padding([.horizontal], .sidePadding)
-        .background(Color.backgroundColor)
+      .padding([.horizontal], .sidePadding)
+      .background(Color.backgroundColor)
+    }
+    
+    return ContentListView(
+      contentRepository: contentRepository,
+      downloadAction: DownloadService.current,
+      contentScreen: ContentScreen.inProgress,
+      header: toggleControl
     )
   }
 
-  private var contentView: AnyView? {
+  @ViewBuilder private var contentView: some View {
     switch state {
     case .inProgress:
-      return inProgressContentsView
+      makeContentListView(
+        contentRepository: inProgressRepository,
+        contentScreen: .inProgress
+      )
     case .completed:
-      return completedContentsView
+      makeContentListView(
+        contentRepository: completedRepository,
+        contentScreen: .completed
+      )
     case .bookmarked:
-      return bookmarkedContentsView
+      makeContentListView(
+        contentRepository: bookmarkRepository,
+        contentScreen: .bookmarked
+      )
     }
-  }
-
-  private var inProgressContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: inProgressRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: ContentScreen.inProgress,
-                            header: toggleControl))
-  }
-  
-  private var completedContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: completedRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: .completed,
-                            header: toggleControl))
-  }
-  
-  private var bookmarkedContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: bookmarkRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: .bookmarked,
-                            header: toggleControl))
   }
 }
