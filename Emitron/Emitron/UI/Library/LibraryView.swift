@@ -155,12 +155,11 @@ struct LibraryView: View {
   }
 
   private var contentView: some View {
-    let header = AnyView(contentControlsSection)
-    return ContentListView(
+    ContentListView(
       contentRepository: libraryRepository,
       downloadAction: DownloadService.current,
       contentScreen: .library,
-      header: header
+      header: contentControlsSection
     )
   }
 }
