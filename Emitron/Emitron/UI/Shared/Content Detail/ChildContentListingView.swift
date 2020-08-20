@@ -38,16 +38,14 @@ struct ChildContentListingView: View {
     return courseDetailsSection
   }
   
-  private var courseDetailsSection: AnyView {
+  @ViewBuilder private var courseDetailsSection: some View {
     switch childContentsViewModel.state {
     case .failed:
-      return AnyView(reloadView)
+      reloadView
     case .hasData:
-      return AnyView(coursesSection)
-    case .loading, .loadingAdditional:
-      return AnyView(loadingView)
-    case .initial:
-      return AnyView(loadingView)
+      coursesSection
+    case .loading, .loadingAdditional, .initial:
+      loadingView
     }
   }
   
@@ -89,34 +87,29 @@ struct ChildContentListingView: View {
         .listRowBackground(Color.backgroundColor)
     }
   }
-  
-  private func episodeRow(model: ChildContentListDisplayable) -> some View {
-    
+
+  @ViewBuilder private func episodeRow(model: ChildContentListDisplayable) -> some View {
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     
     if !sessionController.canPlay(content: model) {
-      return AnyView(
+      TextListItemView(
+        dynamicContentViewModel: childDynamicContentViewModel,
+        content: model
+      )
+      .padding([.horizontal, .bottom], 20)
+    } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
+      Button(action: {
+        MessageBus.current
+          .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
+      }) {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
         )
-          .padding([.horizontal, .bottom], 20)
-      )
-    } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
-      return AnyView(
-        Button(action: {
-          MessageBus.current
-            .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
-        }) {
-          TextListItemView(
-            dynamicContentViewModel: childDynamicContentViewModel,
-            content: model
-          )
-            .padding([.horizontal, .bottom], 20)
-        }
-      )
+        .padding([.horizontal, .bottom], 20)
+      }
     } else {
-      return AnyView(Button(action: {
+      Button(action: {
         currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
           apiClient: sessionController.client,
           dismissClosure: {
@@ -128,8 +121,8 @@ struct ChildContentListingView: View {
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
         )
-          .padding([.horizontal, .bottom], 20)
-      })
+        .padding([.horizontal, .bottom], 20)
+      }
     }
   }
   
@@ -139,15 +132,17 @@ struct ChildContentListingView: View {
       LoadingView()
       Spacer()
     }
-      .listRowInsets(EdgeInsets())
-      .listRowBackground(Color.backgroundColor)
-      .background(Color.backgroundColor)
+    .listRowInsets(EdgeInsets())
+    .listRowBackground(Color.backgroundColor)
+    .background(Color.backgroundColor)
   }
   
-  private var reloadView: AnyView? {
-    AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.childContentsViewModel.reload()
-    })
+  private var reloadView: MainButtonView {
+    .init(
+      title: "Reload",
+      type: .primary(withArrow: false),
+      callback: childContentsViewModel.reload
+    )
   }
 }
 
