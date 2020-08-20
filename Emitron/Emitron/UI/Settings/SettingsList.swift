@@ -53,7 +53,6 @@ struct SettingsList_Previews: PreviewProvider {
   }
 }
 
-
 // MARK: - internal
 extension SettingsList {
   init(settingsManager: ObservedObject<SettingsManager>) {
