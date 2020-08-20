@@ -47,7 +47,7 @@ struct FiltersHeaderView: View {
   var body: some View {
     VStack {
       Button(action: {
-        self.isExpanded.toggle()
+        isExpanded.toggle()
       }) {
         HStack {
           Text(filterGroup.type.name)
@@ -82,7 +82,7 @@ struct FiltersHeaderView: View {
       ForEach(Array(filterGroup.filters), id: \.self) { filter in
         TitleCheckmarkView(name: filter.filterName, isOn: filter.isOn, onChange: { _ in
           filter.isOn.toggle()
-          self.filters.update(with: filter)
+          filters.update(with: filter)
         })
           .padding([.leading, .trailing], 14)
       }

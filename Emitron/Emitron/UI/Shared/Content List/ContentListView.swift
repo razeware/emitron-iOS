@@ -40,7 +40,7 @@ struct ContentListView: View {
     contentView
       .onAppear {
         UIApplication.dismissKeyboard()
-        self.reloadIfRequired()
+        reloadIfRequired()
       }
   }
 
@@ -63,8 +63,8 @@ struct ContentListView: View {
   }
   
   private func reloadIfRequired() {
-    if self.contentRepository.state == .initial {
-      self.contentRepository.reload()
+    if contentRepository.state == .initial {
+      contentRepository.reload()
     }
   }
 
@@ -73,10 +73,10 @@ struct ContentListView: View {
       ZStack {
         CardViewContainer(
           model: partialContent,
-          dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: partialContent.id)
+          dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
         
-        self.navLink(for: partialContent)
+        navLink(for: partialContent)
           .buttonStyle(PlainButtonStyle())
           //HACK: to remove navigation chevrons
           .padding(.trailing, -2 * .sidePadding)
@@ -92,8 +92,8 @@ struct ContentListView: View {
     NavigationLink(
       destination: ContentDetailView(
         content: content,
-        childContentsViewModel: self.contentRepository.childContentsViewModel(for: content.id),
-        dynamicContentViewModel: self.contentRepository.dynamicContentViewModel(for: content.id)
+        childContentsViewModel: contentRepository.childContentsViewModel(for: content.id),
+        dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: content.id)
       )) {
       EmptyView()
     }
@@ -187,9 +187,9 @@ struct ContentListView: View {
       return
     }
     DispatchQueue.main.async {
-      let content = self.contentRepository.contents[index]
+      let content = contentRepository.contents[index]
       
-      self.downloadAction
+      downloadAction
         .deleteDownload(contentId: content.id)
         .receive(on: RunLoop.main)
         .sink(receiveCompletion: { completion in
@@ -202,7 +202,7 @@ struct ContentListView: View {
         }) { _ in
           MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
         }
-        .store(in: &self.deleteSubscriptions)
+        .store(in: &deleteSubscriptions)
     }
   }
 }

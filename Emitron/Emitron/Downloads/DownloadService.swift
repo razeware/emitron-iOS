@@ -89,14 +89,14 @@ final class DownloadService {
   init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
-    self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
+    queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
-    self.userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
+    userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       self?.stopProcessing()
       self?.checkPermissions()
       self?.startProcessing()
     }
-    self.downloadProcessor.delegate = self
+    downloadProcessor.delegate = self
     checkPermissions()
   }
   
@@ -339,7 +339,7 @@ extension DownloadService {
     }
     
     // Move it on through the state machine
-    self.transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
+    transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
   }
   
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {

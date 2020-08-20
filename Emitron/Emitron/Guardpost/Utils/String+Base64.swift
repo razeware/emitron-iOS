@@ -39,6 +39,6 @@ extension String {
   }
 
   func toBase64() -> String {
-    Data(self.utf8).base64EncodedString()
+    Data(utf8).base64EncodedString()
   }
 }

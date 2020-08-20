@@ -63,7 +63,7 @@ struct NoResultsView: View {
         MainButtonView(
           title: "Explore Tutorials",
           type: .primary(withArrow: true)) {
-            self.tabViewModel.selectedTab = .library
+            tabViewModel.selectedTab = .library
         }
         .padding([.horizontal, .bottom], 20)
       }

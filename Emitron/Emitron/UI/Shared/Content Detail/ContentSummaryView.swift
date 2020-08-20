@@ -130,7 +130,7 @@ struct ContentSummaryView: View {
         .frame(width: Layout.buttonSize, height: Layout.buttonSize)
       .foregroundColor(colour)
         .onTapGesture {
-          self.bookmark()
+          bookmark()
         }
       .accessibility(label: Text("Bookmark course"))
     )

@@ -71,7 +71,7 @@ struct SpinningCircleView: View {
             .linear(duration: 1)
             .repeatForever(autoreverses: false)
         ) {
-          self.animateRotation.toggle()
+          animateRotation.toggle()
         }
         
         withAnimation(
@@ -80,7 +80,7 @@ struct SpinningCircleView: View {
             .delay(0.5)
             .repeatForever(autoreverses: true)
         ) {
-          self.animateStrokeStart.toggle()
+          animateStrokeStart.toggle()
         }
         
         withAnimation(
@@ -89,7 +89,7 @@ struct SpinningCircleView: View {
             .delay(1)
             .repeatForever(autoreverses: true)
         ) {
-          self.animateStrokeEnd.toggle()
+          animateStrokeEnd.toggle()
         }
       }
   }

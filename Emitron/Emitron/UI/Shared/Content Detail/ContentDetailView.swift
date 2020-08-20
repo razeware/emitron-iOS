@@ -63,14 +63,13 @@ struct ContentDetailView: View {
     GeometryReader { geometry in
       List {
         Section {
-          
-          if self.content.professional && !self.canStreamPro {
-            self.headerImageLockedProContent(for: geometry.size.width)
+          if content.professional && !canStreamPro {
+            headerImageLockedProContent(for: geometry.size.width)
           } else {
-            self.headerImagePlayableContent(for: geometry.size.width)
+            headerImagePlayableContent(for: geometry.size.width)
           }
           
-          ContentSummaryView(content: self.content, dynamicContentViewModel: self.dynamicContentViewModel)
+          ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
             .padding([.bottom], 37)
         }
@@ -78,8 +77,8 @@ struct ContentDetailView: View {
         .listRowBackground(Color.backgroundColor)
         
         ChildContentListingView(
-          childContentsViewModel: self.childContentsViewModel,
-          currentlyDisplayedVideoPlaybackViewModel: self.$currentlyDisplayedVideoPlaybackViewModel
+          childContentsViewModel: childContentsViewModel,
+          currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
         )
           .background(Color.backgroundColor)
       }
@@ -98,10 +97,10 @@ struct ContentDetailView: View {
   
   private var continueOrPlayButton: Button<AnyView> {
     Button(action: {
-      self.currentlyDisplayedVideoPlaybackViewModel = self.dynamicContentViewModel.videoPlaybackViewModel(
-        apiClient: self.sessionController.client,
+      currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
+        apiClient: sessionController.client,
         dismissClosure: {
-          self.currentlyDisplayedVideoPlaybackViewModel = nil
+          currentlyDisplayedVideoPlaybackViewModel = nil
         }
       )
     }) {

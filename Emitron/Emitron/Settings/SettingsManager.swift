@@ -49,7 +49,7 @@ final class SettingsManager: ObservableObject {
     self.userDefaults = userDefaults
     self.userModelController = userModelController
     
-    self.configureSubscriptions()
+    configureSubscriptions()
   }
   
   // MARK: Methods

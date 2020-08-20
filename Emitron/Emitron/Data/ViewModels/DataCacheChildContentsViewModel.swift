@@ -42,7 +42,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   }
   
   override func loadContentDetailsIntoCache() {
-    self.state = .loading
+    state = .loading
     service.contentDetails(for: parentContentId) { result in
       switch result {
       case .failure(let error):

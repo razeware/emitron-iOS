@@ -45,7 +45,7 @@ extension Refreshable {
   
   var shouldRefresh: Bool {
     if let lastRefreshedDate = lastRefreshedDate {
-      if lastRefreshedDate > self.refreshableCheckTimeSpan.date {
+      if lastRefreshedDate > refreshableCheckTimeSpan.date {
         Event
           .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). No refresh required.")
           .log()
@@ -76,6 +76,6 @@ enum RefreshableTimeSpan: Int {
   case short = 1
   
   var date: Date {
-    Date().dateByAddingNumberOfDays(-self.rawValue)
+    Date().dateByAddingNumberOfDays(-rawValue)
   }
 }

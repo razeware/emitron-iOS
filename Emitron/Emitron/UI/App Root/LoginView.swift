@@ -84,7 +84,7 @@ struct LoginView: View {
       Spacer()
       
       MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
-        self.sessionController.login()
+        sessionController.login()
       }
       .padding([.leading, .trailing], 18)
       .padding([.bottom], 38)

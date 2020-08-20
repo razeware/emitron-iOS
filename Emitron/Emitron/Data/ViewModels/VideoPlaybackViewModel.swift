@@ -114,17 +114,17 @@ final class VideoPlaybackViewModel {
        syncAction: SyncAction?,
        sessionController: SessionController = .current,
        dismissClosure: @escaping () -> Void = { }) {
-    self.initialContentId = contentId
+    initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
     self.contentsService = contentsService
-    self.progressEngine = ProgressEngine(
+    progressEngine = ProgressEngine(
       contentsService: contentsService,
       repository: repository,
       syncAction: syncAction
     )
     self.sessionController = sessionController
-    self.dismiss = dismissClosure
+    dismiss = dismissClosure
     
     prepareSubscribers()
   }
@@ -191,13 +191,13 @@ final class VideoPlaybackViewModel {
   }
   
   func play() {
-    self.progressEngine.playbackStarted()
-    self.shouldBePlaying = true
+    progressEngine.playbackStarted()
+    shouldBePlaying = true
   }
   
   func pause() {
-    self.shouldBePlaying = false
-    self.player.pause()
+    shouldBePlaying = false
+    player.pause()
   }
 }
 
@@ -327,7 +327,7 @@ private extension VideoPlaybackViewModel {
     let nextContent = contentList[index]
     guard sessionController.canPlay(content: nextContent.content) else {
       // This user doesn't have permission to play this content. So skip to the next.
-      self.nextContentToEnqueueIndex += 1
+      nextContentToEnqueueIndex += 1
       return enqueueNext()
     }
     avItem(for: nextContent)
