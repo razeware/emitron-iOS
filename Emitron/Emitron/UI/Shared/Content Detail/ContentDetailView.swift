@@ -95,7 +95,7 @@ struct ContentDetailView: View {
     { UIApplication.shared.open(url) }
   }
   
-  private var continueOrPlayButton: Button<AnyView> {
+  private var continueOrPlayButton: some View {
     Button(action: {
       currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: sessionController.client,
@@ -106,18 +106,16 @@ struct ContentDetailView: View {
     }) {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
-          return AnyView(ContinueButtonView())
+          ContinueButtonView()
         } else {
-          return AnyView(PlayButtonView())
+          PlayButtonView()
         }
       } else {
-        return AnyView(
-          HStack {
-            Spacer()
-            ActivityIndicator()
-            Spacer()
-          }
-        )
+        HStack {
+          Spacer()
+          ActivityIndicator()
+          Spacer()
+        }
       }
     }
   }
@@ -152,10 +150,10 @@ struct ContentDetailView: View {
     }
   }
   
-  private var progressBar: AnyView? {
-    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
-      return AnyView(ProgressBarView(progress: progress, isRounded: false))
-    }
-    return nil
+  private var progressBar: ProgressBarView? {
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
+    else { return nil }
+
+    return .init(progress: progress, isRounded: false)
   }
 }
