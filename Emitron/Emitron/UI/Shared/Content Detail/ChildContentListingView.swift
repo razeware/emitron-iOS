@@ -106,7 +106,7 @@ struct ChildContentListingView: View {
       return AnyView(
         Button(action: {
           MessageBus.current
-            .post(message: Message(level: .warning, message: Constants.videoPlaybackExpiredPermissions))
+            .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
         }) {
           TextListItemView(
             dynamicContentViewModel: childDynamicContentViewModel,

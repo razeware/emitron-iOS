@@ -41,7 +41,7 @@ struct VerticalFadeImageView: View {
         .resizable()
         .aspectRatio(contentMode: .fill)
         .frame(width: width, height: height, alignment: .top)
-        .blur(radius: blurred ? Constants.blurRadius : 0)
+        .blur(radius: blurred ? .blurRadius : 0)
         .clipped()
       
       LinearGradient(gradient: Gradient(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),

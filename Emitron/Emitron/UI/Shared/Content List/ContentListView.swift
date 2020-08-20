@@ -200,7 +200,7 @@ struct ContentListView: View {
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
           }
         }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+          MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
         }
         .store(in: &deleteSubscriptions)
     }

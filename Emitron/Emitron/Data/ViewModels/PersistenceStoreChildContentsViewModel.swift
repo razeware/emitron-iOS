@@ -35,7 +35,7 @@ final class PersistenceStoreChildContentsViewModel: ChildContentsViewModel {
       DispatchQueue.main.async(execute: reload)
     } catch {
       state = .failed
-      MessageBus.current.post(message: Message(level: .error, message: Constants.downloadedContentNotFound))
+      MessageBus.current.post(message: Message(level: .error, message: .downloadedContentNotFound))
     }
   }
 }

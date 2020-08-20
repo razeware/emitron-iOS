@@ -82,7 +82,7 @@ final class MessageBus: ObservableObject {
   
   private func createAndStartAutoDismissTimer() -> AnyCancellable {
     Timer
-      .publish(every: Constants.autoDismissTime, on: .main, in: .common)
+      .publish(every: .autoDismissTime, on: .main, in: .common)
       .autoconnect()
       .sink { [weak self] _ in
         guard let self = self else { return }

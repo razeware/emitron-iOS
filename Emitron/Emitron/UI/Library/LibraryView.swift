@@ -43,7 +43,7 @@ struct LibraryView: View {
   var body: some View {
     contentView
       .navigationBarTitle(
-        Text(Constants.library)
+        Text(String.library)
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
@@ -94,7 +94,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryRepository.totalContentNum) \(Constants.tutorials)")
+      Text("\(libraryRepository.totalContentNum) " + .tutorials)
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
@@ -120,7 +120,7 @@ struct LibraryView: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
         if filters.applied.count > 1 {
-          AppliedFilterTagButton(name: Constants.resetFilters, type: .destructive) {
+          AppliedFilterTagButton(name: String.resetFilters, type: .destructive) {
             filters.removeAll()
             libraryRepository.filters = filters
           }

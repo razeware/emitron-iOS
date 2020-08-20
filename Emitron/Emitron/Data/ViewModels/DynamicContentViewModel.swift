@@ -109,9 +109,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       }) { result in
         switch result {
         case .downloadRequestedSuccessfully:
-          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadRequestedSuccessfully))
+          MessageBus.current.post(message: Message(level: .success, message: .downloadRequestedSuccessfully))
         case .downloadRequestedButQueueInactive:
-          MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadRequestedButQueueInactive))
+          MessageBus.current.post(message: Message(level: .warning, message: .downloadRequestedButQueueInactive))
         }
       }
       .store(in: &downloadActionSubscriptions)
@@ -124,7 +124,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
           }
         }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadCancelled))
+          MessageBus.current.post(message: Message(level: .success, message: .downloadCancelled))
         }
         .store(in: &downloadActionSubscriptions)
       
@@ -143,7 +143,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
               MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
             }
           }) { _ in
-            MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+            MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
           }
         .store(in: &self.downloadActionSubscriptions)
       }
@@ -156,7 +156,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
           }
         }) { _ in
-          MessageBus.current.post(message: Message(level: .warning, message: Constants.downloadReset))
+          MessageBus.current.post(message: Message(level: .warning, message: .downloadReset))
         }
         .store(in: &downloadActionSubscriptions)
     }
@@ -170,9 +170,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.bookmarkDeleted))
+        MessageBus.current.post(message: Message(level: .success, message: .bookmarkDeleted))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: Constants.bookmarkDeletedError))
+        MessageBus.current.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete bookmark: \(error)")
           .log()
@@ -180,9 +180,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.bookmarkCreated))
+        MessageBus.current.post(message: Message(level: .success, message: .bookmarkCreated))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: Constants.bookmarkCreatedError))
+        MessageBus.current.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to create bookmark: \(error)")
           .log()
@@ -197,9 +197,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if case .completed = viewProgress {
       do {
         try syncAction.removeProgress(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.progressRemoved))
+        MessageBus.current.post(message: Message(level: .success, message: .progressRemoved))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: Constants.progressRemovedError))
+        MessageBus.current.post(message: Message(level: .error, message: .progressRemovedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete progress: \(error)")
           .log()
@@ -207,9 +207,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.markContentAsComplete(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: Constants.progressMarkedAsComplete))
+        MessageBus.current.post(message: Message(level: .success, message: .progressMarkedAsComplete))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: Constants.progressMarkedAsCompleteError))
+        MessageBus.current.post(message: Message(level: .error, message: .progressMarkedAsCompleteError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to mark as complete: \(error)")
           .log()
