@@ -42,11 +42,11 @@ extension VideoPlaybackViewModel {
       case .invalidOrMissingAttribute(let attribute):
         return "VideoPlaybackViewModelError::invalidOrMissingAttribute::\(attribute)"
       case .cannotStreamWhenOffline:
-        return Constants.videoPlaybackCannotStreamWhenOffline
+        return .videoPlaybackCannotStreamWhenOffline
       case .invalidPermissions:
-        return Constants.videoPlaybackInvalidPermissions
+        return .videoPlaybackInvalidPermissions
       case .expiredPermissions:
-        return Constants.videoPlaybackExpiredPermissions
+        return .videoPlaybackExpiredPermissions
       case .unableToLoadArtwork:
         return "VideoPlaybackViewModelError::unableToLoadArtwork"
       }
@@ -208,7 +208,7 @@ private extension VideoPlaybackViewModel {
       player.removeTimeObserver(token)
     }
     let interval = CMTime(
-      seconds: Double(Constants.videoPlaybackProgressTrackingInterval),
+      seconds: .init(.videoPlaybackProgressTrackingInterval),
       preferredTimescale: 100
     )
     playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
@@ -288,7 +288,7 @@ private extension VideoPlaybackViewModel {
         
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
-            MessageBus.current.post(message: Message(level: .error, message: Constants.simultaneousStreamsError))
+            MessageBus.current.post(message: Message(level: .error, message: .simultaneousStreamsError))
             self.player.pause()
           }
           Failure

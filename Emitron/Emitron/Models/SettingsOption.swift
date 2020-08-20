@@ -41,13 +41,13 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   var title: String {
     switch self {
     case .playbackSpeed:
-      return Constants.settingsPlaybackSpeedLabel
+      return .settingsPlaybackSpeedLabel
     case .wifiOnlyDownloads:
-      return Constants.settingsWifiOnlyDownloadsLabel
+      return .settingsWifiOnlyDownloadsLabel
     case .downloadQuality:
-      return Constants.settingsDownloadQualityLabel
+      return .settingsDownloadQualityLabel
     case .closedCaptionOn:
-      return Constants.settingsClosedCaptionOnLabel
+      return .settingsClosedCaptionOnLabel
     }
   }
   

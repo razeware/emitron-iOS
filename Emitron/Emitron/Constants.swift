@@ -27,41 +27,36 @@
 // THE SOFTWARE.
 
 import typealias Foundation.TimeInterval
-import CoreGraphics.CGBase
+import struct CoreGraphics.CGFloat
 
-enum Constants {
-  static let filters = "Filters"
-  static let resetFilters = "Reset Filters"
-  static let search = "Search…"
-  static let loading = "Loading…"
-  static let library = "Library"
-  static let myTutorials = "My Tutorials"
+extension CGFloat {
+  // MARK: Appearance
+  static let blurRadius: CGFloat = 5
+}
+
+extension Int {
+  // MARK: Video playback
+  static let videoPlaybackProgressTrackingInterval = 5
+}
+
+extension String {
+  static let clearAll = "Clear All"
   static let downloads = "Downloads"
+  static let filters = "Filters"
+  static let library = "Library"
+  static let loading = "Loading…"
+  static let myTutorials = "My Tutorials"
   static let newest =  "Newest"
   static let popularity = "Popularity"
-  static let tutorials = "Tutorials"
+  static let resetFilters = "Reset Filters"
+  static let search = "Search…"
   static let settings = "Settings"
-  
-  // Onboarding
-  static let login = "Login"
-  
-  // Other
-  static let today = "Today"
-  static let by = "By"
-  static let yes = "Yes"
-  static let no = "No" // swiftlint:disable:this identifier_name
-  
-  // Video playback
-  static let videoPlaybackProgressTrackingInterval: Int = 5
-  static let videoPlaybackOfflinePermissionsCheckPeriod: TimeInterval = 7 * 24 * 60 * 60
-  
-  // Message Banner
-  static let autoDismissTime: TimeInterval = 3
-  
-  // Appearance
-  static let blurRadius: CGFloat = 5
-  
-  // Messaging
+  static let tutorials = "Tutorials"
+
+  // MARK: Detail View
+  static let detailContentLockedCosPro = "Upgrade your account to watch this and other Pro courses"
+
+  // MARK: Messaging
   static let bookmarkCreated = "Content bookmarked successfully."
   static let bookmarkDeleted = "Bookmark removed successfully."
   static let bookmarkCreatedError = "There was a problem creating the bookmark"
@@ -94,17 +89,31 @@ enum Constants {
   
   static let appIconUpdatedSuccessfully = "You app icon has been updated!"
   static let appIconUpdateProblem = "There was a problem updating the app icon."
-  
-  // Settings screens
+
+  // MARK: Onboarding
+  static let login = "Login"
+
+  // MARK: Other
+  static let today = "Today"
+  static let by = "By"
+  static let yes = "Yes"
+  static let no = "No" // swiftlint:disable:this identifier_name
+
+  // MARK: Pull-to-refresh
+  static let pullToRefreshPullMessage = "Pull to refresh"
+  static let pullToRefreshLoadingMessage = "Loading…"
+
+  // MARK: Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
   static let settingsDownloadQualityLabel = "Downloads Quality"
   static let settingsClosedCaptionOnLabel = "Subtitles"
-  
-  // Detail View
-  static let detailContentLockedCosPro = "Upgrade your account to watch this and other Pro courses"
-  
-  // Pull-to-refresh
-  static let pullToRefreshPullMessage = "Pull to refresh"
-  static let pullToRefreshLoadingMessage = "Loading…"
+}
+
+extension TimeInterval {
+  // MARK: Message Banner
+  static let autoDismissTime: Self = 3
+
+  // MARK: Video playback
+  static let videoPlaybackOfflinePermissionsCheckPeriod: Self = 7 * 24 * 60 * 60
 }

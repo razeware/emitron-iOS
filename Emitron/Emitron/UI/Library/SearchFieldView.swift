@@ -46,7 +46,7 @@ struct SearchFieldView: View {
         .frame(height: 25)
       
       TextField(
-        Constants.search,
+        String.search,
         text: $searchString,
         onCommit: { action(searchString) }
       )

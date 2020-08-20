@@ -40,34 +40,32 @@ struct TabNavView: View {
         libraryView
       }
         .tabItem {
-          Text(Constants.library)
+          Text(String.library)
           Image("library")
         }
         .tag(MainTab.library)
         .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(Constants.library))
+        .accessibility(label: Text(String.library))
 
       NavigationView {
         downloadsView
       }
         .tabItem {
-          Text(Constants.downloads)
+          Text(String.downloads)
           Image("downloadTabInactive")
         }
         .tag(MainTab.downloads)
         .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(Constants.downloads))
+        .accessibility(label: Text(String.downloads))
 
-      NavigationView {
-        myTutorialsView
-      }
+      NavigationView { myTutorialsView }
         .tabItem {
-          Text(Constants.myTutorials)
+          Text(String.myTutorials)
           Image("myTutorials")
         }
         .tag(MainTab.myTutorials)
         .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(Constants.myTutorials))
+        .accessibility(label: .init(String.myTutorials))
     }
     .accentColor(.accent)
   }
