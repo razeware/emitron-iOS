@@ -28,14 +28,13 @@
 
 import SwiftUI
 
-struct ReloadView: View {
-  var headerView: AnyView?
+struct ReloadView<Header: View>: View {
+  let header: Header
   var reloadHandler: () -> Void
   
   var body: some View {
     VStack {
-      
-      headerView
+      header
       
       Spacer()
       
@@ -68,6 +67,6 @@ struct ReloadView: View {
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    ReloadView(headerView: nil, reloadHandler: {})
+    ReloadView(header: EmptyView(), reloadHandler: {})
   }
 }

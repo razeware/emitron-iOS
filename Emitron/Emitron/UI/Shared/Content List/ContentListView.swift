@@ -160,7 +160,7 @@ struct ContentListView: View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
-      ReloadView(headerView: headerView) {
+      ReloadView(header: headerView) {
         self.contentRepository.reload()
       }
     }
