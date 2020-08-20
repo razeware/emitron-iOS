@@ -28,11 +28,15 @@
 
 import SwiftUI
 
-struct TabNavView: View {
+struct TabNavView<
+  LibraryView: View,
+  MyTutorialsView: View,
+  DownloadsView: View
+>: View {
   @EnvironmentObject var tabViewModel: TabViewModel
-  var libraryView: AnyView
-  var myTutorialsView: AnyView
-  var downloadsView: AnyView
+  let libraryView: LibraryView
+  let myTutorialsView: MyTutorialsView
+  let downloadsView: DownloadsView
 
   var body: some View {
     TabView(selection: $tabViewModel.selectedTab) {
@@ -74,9 +78,9 @@ struct TabNavView: View {
 struct TabNavView_Previews: PreviewProvider {
   static var previews: some View {
     TabNavView(
-      libraryView: AnyView(Text("LIBRARY")),
-      myTutorialsView: AnyView(Text("MY TUTORIALS")),
-      downloadsView: AnyView(Text("DOWNLOADS"))
+      libraryView: Text("LIBRARY"),
+      myTutorialsView: Text("MY TUTORIALS"),
+      downloadsView: Text("DOWNLOADS")
     ).environmentObject(TabViewModel())
   }
 }
