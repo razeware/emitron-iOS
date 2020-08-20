@@ -28,18 +28,65 @@
 
 import SwiftUI
 
-enum DownloadIconLayout {
-  static let size: CGFloat = 20
-  static let lineWidth: CGFloat = 2
+struct DownloadIcon {
+  private let downloadProgress: DownloadProgressDisplayable
+
+  init(downloadProgress: DownloadProgressDisplayable) {
+    self.downloadProgress = downloadProgress
+  }
 }
 
-struct DownloadIcon: View {
-  let downloadProgress: DownloadProgressDisplayable
-  
+// MARK: - View
+extension DownloadIcon: View {
   var body: some View {
-    icon.frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+    icon.frame(width: Layout.size, height: Layout.size)
+  }
+}
+
+struct DownloadIcon_Previews: PreviewProvider {
+  static var previews: some View {
+    selectionList.colorScheme(.light)
+    selectionList.colorScheme(.dark)
   }
   
+  private static var selectionList: some View {
+    func icon(for state: DownloadProgressDisplayable) -> some View {
+      HStack {
+        Text(state.description)
+        DownloadIcon(downloadProgress: state)
+      }
+    }
+
+    return VStack {
+      icon(for: .downloadable)
+      icon(for: .enqueued)
+      icon(for: .inProgress(progress: 0.3))
+      icon(for: .inProgress(progress: 0.7))
+      icon(for: .inProgress(progress: 0.8))
+      icon(for: .downloaded)
+      icon(for: .notDownloadable)
+    }
+    .padding(20)
+    .background(Color.backgroundColor)
+  }
+}
+
+// MARK: - Layout
+extension DownloadIcon {
+  enum Layout {
+    static let size: CGFloat = 20
+    static let lineWidth: CGFloat = 2
+  }
+}
+
+extension View {
+  var downloadIconFrame: some View {
+    frame(width: DownloadIcon.Layout.size, height: DownloadIcon.Layout.size)
+  }
+}
+
+// MARK: - private
+private extension DownloadIcon {
   @ViewBuilder var icon: some View {
     switch downloadProgress {
     case .downloadable:
@@ -52,34 +99,6 @@ struct DownloadIcon: View {
       ArrowInCircleView(fillColour: .downloadButtonDownloaded)
     case .notDownloadable:
       DownloadWarningView()
-    }
-  }
-}
-
-struct DownloadIcon_Previews: PreviewProvider {
-  static var previews: some View {
-    selectionList.colorScheme(.light)
-    selectionList.colorScheme(.dark)
-  }
-  
-  static var selectionList: some View {
-    VStack {
-      icon(for: .downloadable)
-      icon(for: .enqueued)
-      icon(for: .inProgress(progress: 0.3))
-      icon(for: .inProgress(progress: 0.7))
-      icon(for: .inProgress(progress: 0.8))
-      icon(for: .downloaded)
-      icon(for: .notDownloadable)
-    }
-      .padding(20)
-      .background(Color.backgroundColor)
-  }
-  
-  static func icon(for state: DownloadProgressDisplayable) -> some View {
-    HStack {
-      Text(state.description)
-      DownloadIcon(downloadProgress: state)
     }
   }
 }
