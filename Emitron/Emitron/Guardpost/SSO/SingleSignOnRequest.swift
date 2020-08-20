@@ -32,7 +32,7 @@ import Foundation
 struct SingleSignOnRequest {
 
   // MARK: - Properties
-  private let callbackUrl: String
+  private let callbackURL: String
   let secret: String
   let nonce: String
   private let endpoint: String
@@ -45,10 +45,10 @@ struct SingleSignOnRequest {
   // MARK: - Initializers
   init(endpoint: String,
        secret: String,
-       callbackUrl: String) {
+       callbackURL: String) {
     self.endpoint = endpoint
     self.secret = secret
-    self.callbackUrl = callbackUrl
+    self.callbackURL = callbackURL
     nonce = randomHexString(length: 40)
   }
 }
@@ -77,7 +77,7 @@ private extension SingleSignOnRequest {
   var unsignedPayload: String? {
     var components = URLComponents()
     components.queryItems = [
-      URLQueryItem(name: "callback_url", value: callbackUrl),
+      URLQueryItem(name: "callback_url", value: callbackURL),
       URLQueryItem(name: "nonce", value: nonce)
     ]
     return components.query

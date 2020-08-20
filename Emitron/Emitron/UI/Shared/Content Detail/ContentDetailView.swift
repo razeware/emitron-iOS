@@ -126,7 +126,7 @@ struct ContentDetailView: View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
-          imageUrl: content.cardArtworkUrl,
+          imageURL: content.cardArtworkURL,
           blurred: false,
           width: width,
           height: min(width * imageRatio, maxImageHeight)
@@ -142,7 +142,7 @@ struct ContentDetailView: View {
   private func headerImageLockedProContent(for width: CGFloat) -> some View {
     ZStack {
       VerticalFadeImageView(
-        imageUrl: content.cardArtworkUrl,
+        imageURL: content.cardArtworkURL,
         blurred: true,
         width: width,
         height: min(width * imageRatio, maxImageHeight)

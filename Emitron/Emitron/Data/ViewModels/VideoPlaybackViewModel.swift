@@ -156,7 +156,7 @@ final class VideoPlaybackViewModel {
     // If we've got a download, then we might be ok
     if let download = contentItem.download,
       download.state == .complete,
-      download.localUrl != nil {
+      download.localURL != nil {
       // We have a download, but are we still authenticated?
       guard sessionController.hasCurrentDownloadPermissions
       else { throw Error.expiredPermissions }
@@ -374,8 +374,8 @@ private extension VideoPlaybackViewModel {
       // Is there a completed download?
       if let download = state.download,
         download.state == .complete,
-        let localUrl = download.localUrl {
-        let item = AVPlayerItem(url: localUrl)
+        let localURL = download.localURL {
+        let item = AVPlayerItem(url: localURL)
         self.addMetadata(from: state, to: item)
         self.addClosedCaptions(for: item)
         // Add it to the cache
@@ -431,7 +431,7 @@ private extension VideoPlaybackViewModel {
     artwork.identifier = .commonIdentifierArtwork
 
     let deferredArtwork = AVMetadataItem(propertiesOf: artwork) { request in
-      guard let url = state.content.cardArtworkUrl else {
+      guard let url = state.content.cardArtworkURL else {
         request.respond(error: Error.unableToLoadArtwork)
         return
       }
