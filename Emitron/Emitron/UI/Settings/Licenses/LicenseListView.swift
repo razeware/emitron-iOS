@@ -46,7 +46,7 @@ struct LicenseListView: View {
               .foregroundColor(.contentText)
           }
             .navigationBarTitle("Software Licenses")
-            .navigationBarItems(trailing: self.dismissButton)
+            .navigationBarItems(trailing: dismissButton)
         }
       }
         .padding(10)
@@ -57,7 +57,7 @@ struct LicenseListView: View {
   
   var dismissButton: some View {
     Button(action: {
-      self.visible.toggle()
+      visible.toggle()
     }) {
       Image.close
         .foregroundColor(.iconButton)

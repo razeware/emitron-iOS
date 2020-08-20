@@ -36,6 +36,6 @@ final class UserMCMock: UserModelController {
   let objectDidChange = ObservableObjectPublisher()
   
   init(user: User? = nil) {
-    self.user = user
+    user = user
   }
 }

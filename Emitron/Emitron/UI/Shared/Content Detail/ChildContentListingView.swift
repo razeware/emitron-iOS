@@ -53,7 +53,7 @@ struct ChildContentListingView: View {
   
   var coursesSection: some View {
     Section {
-      if self.childContentsViewModel.contents.count > 1 {
+      if childContentsViewModel.contents.count > 1 {
         Text("Course Episodes")
           .font(.uiTitle2)
           .foregroundColor(.titleText)
@@ -63,13 +63,11 @@ struct ChildContentListingView: View {
           ForEach(childContentsViewModel.groups, id: \.id) { group in
             
             Section(header: CourseHeaderView(name: group.name)) {
-              self.episodeListing(data: self.childContentsViewModel.contents(for: group.id))
+              episodeListing(data: childContentsViewModel.contents(for: group.id))
             }
           }
-        } else {
-          if !childContentsViewModel.groups.isEmpty {
-            self.episodeListing(data: childContentsViewModel.contents)
-          }
+        } else if !childContentsViewModel.groups.isEmpty {
+          episodeListing(data: childContentsViewModel.contents)
         }
       }
     }
@@ -86,7 +84,7 @@ struct ChildContentListingView: View {
       })
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
-      self.episodeRow(model: model)
+      episodeRow(model: model)
         .listRowInsets(EdgeInsets())
         .listRowBackground(Color.backgroundColor)
     }
@@ -119,10 +117,10 @@ struct ChildContentListingView: View {
       )
     } else {
       return AnyView(Button(action: {
-        self.currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
-          apiClient: self.sessionController.client,
+        currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
+          apiClient: sessionController.client,
           dismissClosure: {
-            self.currentlyDisplayedVideoPlaybackViewModel = nil
+            currentlyDisplayedVideoPlaybackViewModel = nil
           }
         )
       }) {

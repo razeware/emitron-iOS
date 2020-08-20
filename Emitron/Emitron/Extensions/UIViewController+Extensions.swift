@@ -30,6 +30,6 @@ import UIKit
 
 extension UIViewController {
   var sceneDelegate: UISceneDelegate? {
-    self.view.window?.windowScene?.delegate
+    view.window?.windowScene?.delegate
   }
 }

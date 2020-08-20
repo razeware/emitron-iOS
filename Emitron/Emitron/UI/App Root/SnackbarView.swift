@@ -67,7 +67,7 @@ struct SnackbarView: View {
       
       Button(action: {
         withAnimation {
-          self.visible.toggle()
+          visible.toggle()
         }
       }) {
         Image.closeWhite

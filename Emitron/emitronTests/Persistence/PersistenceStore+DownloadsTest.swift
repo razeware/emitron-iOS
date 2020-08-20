@@ -103,7 +103,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collectionExpectation = XCTestExpectation()
     
     persistenceStore.workerQueue.async {
-      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+      let updatedCollectionDownload = try! database.read { db in // swiftlint:disable:this force_try
         try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
       }
       
@@ -136,7 +136,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collectionExpectation = XCTestExpectation()
     
     persistenceStore.workerQueue.async {
-      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+      let updatedCollectionDownload = try! database.read { db in // swiftlint:disable:this force_try
         try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
       }
       
@@ -174,7 +174,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collectionExpectation = XCTestExpectation()
     
     persistenceStore.workerQueue.async {
-      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+      let updatedCollectionDownload = try! database.read { db in // swiftlint:disable:this force_try
         try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
       }
       
@@ -207,7 +207,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collectionExpectation = XCTestExpectation()
     
     persistenceStore.workerQueue.async {
-      let updatedCollectionDownload = try! self.database.read { db in // swiftlint:disable:this force_try
+      let updatedCollectionDownload = try! database.read { db in // swiftlint:disable:this force_try
         try! Download.filter(key: collectionDownload.id).fetchOne(db) // swiftlint:disable:this force_try
       }
       

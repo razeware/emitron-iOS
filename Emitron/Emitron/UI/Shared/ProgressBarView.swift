@@ -41,25 +41,25 @@ struct ProgressBarView: View {
   var body: some View {
     GeometryReader { geometry in
       Rectangle()
-        .frame(width: geometry.size.width, height: self.height)
-        .foregroundColor(self.backgroundColor)
-        .cornerRadius(self.isRounded ? self.height / 2 : 0)
+        .frame(width: geometry.size.width, height: height)
+        .foregroundColor(backgroundColor)
+        .cornerRadius(isRounded ? height / 2 : 0)
         .overlay(
           ZStack(alignment: .leading) {
             Rectangle()
-              .frame(width: geometry.size.width * self.adjustedProgress, height: self.height)
+              .frame(width: geometry.size.width * adjustedProgress, height: height)
               .foregroundColor(.accent)
-              .cornerRadius(self.height / 2)
+              .cornerRadius(height / 2)
             
-            if !self.isRounded {
+            if !isRounded {
               Rectangle()
-                .frame(width: self.height, height: self.height)
+                .frame(width: height, height: height)
                 .foregroundColor(.accent)
             }
           },
           alignment: .leading
         )
-    }.frame(height: self.height)
+    }.frame(height: height)
   }
 }
 

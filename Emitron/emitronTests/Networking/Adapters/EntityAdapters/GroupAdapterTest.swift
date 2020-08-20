@@ -119,7 +119,7 @@ class GroupAdapterTest: XCTestCase {
   func testMissingRelationshipThrows() throws {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let relationships = Array(self.relationships.dropFirst())
+    let relationships = Array(relationships.dropFirst())
     
     XCTAssertThrowsError(try GroupAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingRelationships, error as! EntityAdapterError)
@@ -129,7 +129,7 @@ class GroupAdapterTest: XCTestCase {
   func testDuplicateRelationshipChoosesFirst() throws {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let relationships = [EntityRelationship(name: "", from: EntityIdentity(id: 15, type: .content), to: EntityIdentity(id: 1234, type: .group))] + self.relationships
+    let relationships = [EntityRelationship(name: "", from: EntityIdentity(id: 15, type: .content), to: EntityIdentity(id: 1234, type: .group))] + relationships
     
     let group = try GroupAdapter.process(resource: resource, relationships: relationships)
     

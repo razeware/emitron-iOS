@@ -98,8 +98,8 @@ struct DataCacheUpdate {
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     self.relationships = relationships
     
-    self.bookmarkDeletionContentIds = []
-    self.progressionDeletionContentIds = []
+    bookmarkDeletionContentIds = []
+    progressionDeletionContentIds = []
   }
   
   func merged(with other: DataCacheUpdate) -> DataCacheUpdate {

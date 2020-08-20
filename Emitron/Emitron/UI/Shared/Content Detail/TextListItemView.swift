@@ -70,7 +70,7 @@ struct TextListItemView: View {
           if canDownload {
             DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
               .onTapGesture {
-                self.download()
+                download()
               }
               .alert(item: $deletionConfirmation, content: \.alert)
           }
@@ -106,9 +106,7 @@ struct TextListItemView: View {
     } else {
       return AnyView(
         NumberIconView(number: content.ordinal ?? 0)
-          .onTapGesture {
-            self.toggleCompleteness()
-          }
+          .onTapGesture(perform: toggleCompleteness)
       )
     }
   }

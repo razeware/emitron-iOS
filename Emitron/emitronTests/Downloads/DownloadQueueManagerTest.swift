@@ -49,7 +49,7 @@ class DownloadQueueManagerTest: XCTestCase {
     let userModelController = UserMCMock(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in videoService })
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
     downloadService.stopProcessing()
   }
@@ -103,7 +103,7 @@ class DownloadQueueManagerTest: XCTestCase {
   func sampleDownload() throws -> Download {
     let screencast = ContentTest.Mocks.screencast
     let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
-      self.persistableState(for: screencast.0, with: screencast.1)
+      persistableState(for: screencast.0, with: screencast.1)
     }
     .record()
     

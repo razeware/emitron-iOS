@@ -62,8 +62,8 @@ enum ParameterKey {
   
   var param: Parameter {
     // TODO: This might need to be re-implemented
-    return Parameter(key: self.strKey,
-                     value: self.value,
+    return Parameter(key: strKey,
+                     value: value,
                      displayName: "",
                      sortOrdinal: 0)
   }

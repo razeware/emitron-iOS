@@ -59,7 +59,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   }
   
   func reload() {
-    self.state = .loading
+    state = .loading
     subscriptions.forEach({ $0.cancel() })
     subscriptions.removeAll()
     configureSubscriptions()

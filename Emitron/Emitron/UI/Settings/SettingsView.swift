@@ -68,12 +68,12 @@ struct SettingsView: View {
         Spacer()
         
         Button(action: {
-          self.licensesPresented.toggle()
+          licensesPresented.toggle()
         }) {
           Text("Software Licenses")
         }
           .sheet(isPresented: $licensesPresented) {
-            LicenseListView(visible: self.$licensesPresented)
+            LicenseListView(visible: $licensesPresented)
           }
           .padding([.bottom], 25)
         
@@ -85,11 +85,11 @@ struct SettingsView: View {
                 .foregroundColor(.contentText)
             }
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              self.presentationMode.wrappedValue.dismiss()
+              presentationMode.wrappedValue.dismiss()
               // This is hacky. But without it, the sheet doesn't actually dismiss.
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                self.sessionController.logout()
-                self.tabViewModel.selectedTab = .library
+                sessionController.logout()
+                tabViewModel.selectedTab = .library
               }
             }
           }
@@ -103,7 +103,7 @@ struct SettingsView: View {
   
   var dismissButton: some View {
     Button(action: {
-      self.presentationMode.wrappedValue.dismiss()
+      presentationMode.wrappedValue.dismiss()
     }) {
       Image.close
         .foregroundColor(.iconButton)

@@ -287,7 +287,7 @@ class ContentAdapterTest: XCTestCase {
   }
   
   func testMissingGroupIsAcceptable() throws {
-    let relationships = Array(self.relationships.dropLast())
+    let relationships = Array(relationships.dropLast())
     let resource = try makeJsonAPIResource(for: sampleResource)
     
     let content = try ContentAdapter.process(resource: resource, relationships: relationships)
@@ -295,7 +295,7 @@ class ContentAdapterTest: XCTestCase {
   }
   
   func testFirstRelationshipIsChosenToDetermineGroup() throws {
-    let relationships = [EntityRelationship(name: "", from: EntityIdentity(id: 4321, type: .group), to: EntityIdentity(id: 12, type: .content))] + self.relationships
+    let relationships = [EntityRelationship(name: "", from: EntityIdentity(id: 4321, type: .group), to: EntityIdentity(id: 12, type: .content))] + relationships
     
     let resource = try makeJsonAPIResource(for: sampleResource)
     

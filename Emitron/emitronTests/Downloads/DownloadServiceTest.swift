@@ -45,7 +45,7 @@ class DownloadServiceTest: XCTestCase {
     userModelController = .init(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in videoService })
     
     // Check it's all empty
     XCTAssertEqual(0, getAllContents().count)
@@ -463,7 +463,7 @@ class DownloadServiceTest: XCTestCase {
     userModelController.user = .none
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in videoService })
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -486,7 +486,7 @@ class DownloadServiceTest: XCTestCase {
     userModelController.user = .noPermissions
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in videoService })
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }

@@ -80,7 +80,7 @@ final class ProgressEngine {
   func playbackStarted() {
     // Don't especially care if we're in offline mode
     guard mode == .online else { return }
-    self.playbackToken = nil
+    playbackToken = nil
     // Need to refresh the plaback token
     contentsService.getBeginPlaybackToken { [weak self] result in
       guard let self = self else { return }
@@ -148,7 +148,7 @@ final class ProgressEngine {
   
   private func setupSubscriptions() {
     if networkMonitor.currentPath.status == .satisfied {
-      self.mode = .online
+      mode = .online
     }
     networkMonitor.pathUpdateHandler = { [weak self] path in
       guard let self = self else { return }

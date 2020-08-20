@@ -37,7 +37,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
       ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
         VStack(spacing: 0) {
           Button(action: {
-            self.settingsOption = option
+            settingsOption = option
           }) {
             HStack {
               Text(option.display)
@@ -47,7 +47,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
             
               Spacer()
               
-              if option == self.settingsOption {
+              if option == settingsOption {
                 Image.checkmark
                   .foregroundColor(.iconButton)
               }

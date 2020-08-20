@@ -53,10 +53,10 @@ class DomainRepository: ObservableObject, Refreshable {
   
   private func loadFromPersistentStore() {
     do {
-      self.domains = try repository.domainList()
+      domains = try repository.domainList()
       state = .hasData
     } catch {
-      self.state = .failed
+      state = .failed
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
         .log()
@@ -65,7 +65,7 @@ class DomainRepository: ObservableObject, Refreshable {
   
   private func saveToPersistentStore() {
     do {
-      try self.repository.syncDomainList(self.domains)
+      try repository.syncDomainList(domains)
     } catch {
       Failure
         .fetch(from: "DomainRepository", reason: error.localizedDescription)
