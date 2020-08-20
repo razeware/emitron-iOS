@@ -38,8 +38,11 @@ struct MainView: View {
       .background(Color.backgroundColor)
       .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
   }
-  
-  @ViewBuilder private var contentView: some View {
+}
+
+// MARK: - private
+private extension MainView {
+  @ViewBuilder var contentView: some View {
     if !sessionController.isLoggedIn {
       LoginView()
     } else if case .loaded = sessionController.permissionState {

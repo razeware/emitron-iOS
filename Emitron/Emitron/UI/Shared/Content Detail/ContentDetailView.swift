@@ -28,25 +28,28 @@
 
 import SwiftUI
 
-struct ContentDetailView: View {
-  @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
-  
-  var content: ContentListDisplayable
-  @ObservedObject var childContentsViewModel: ChildContentsViewModel
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+struct ContentDetailView {
+  init(
+    content: ContentListDisplayable,
+    childContentsViewModel: ChildContentsViewModel,
+    dynamicContentViewModel: DynamicContentViewModel
+  ) {
+    self.content = content
+    self.childContentsViewModel = childContentsViewModel
+    self.dynamicContentViewModel = dynamicContentViewModel
+  }
 
-  @EnvironmentObject var sessionController: SessionController
-  var user: User {
-    sessionController.user!
-  }
-  
-  private var canStreamPro: Bool {
-    user.canStreamPro
-  }
-  
-  var imageRatio: CGFloat = 283 / 375
-  var maxImageHeight: CGFloat = 384
-  
+  private let content: ContentListDisplayable
+  @ObservedObject private var childContentsViewModel: ChildContentsViewModel
+  @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
+
+  @EnvironmentObject private var sessionController: SessionController
+
+  @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+}
+
+// MARK: - View
+extension ContentDetailView: View {
   var body: some View {
     ZStack {
       contentView
@@ -56,7 +59,10 @@ struct ContentDetailView: View {
       }
     }
   }
-  
+}
+
+// MARK: - private
+private extension ContentDetailView {
   var contentView: some View {
     GeometryReader { geometry in
       List {
@@ -84,8 +90,14 @@ struct ContentDetailView: View {
       .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
-  
-  private func openSettings() {
+
+  var canStreamPro: Bool { user.canStreamPro }
+  var user: User { sessionController.user! }
+
+  var imageRatio: CGFloat { 283 / 375 }
+  var maxImageHeight: CGFloat { 384 }
+
+  func openSettings() {
     // open iPhone settings
     if
       let url = URL(string: UIApplication.openSettingsURLString),
@@ -93,7 +105,7 @@ struct ContentDetailView: View {
     { UIApplication.shared.open(url) }
   }
   
-  private var continueOrPlayButton: some View {
+  var continueOrPlayButton: some View {
     Button(action: {
       currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: sessionController.client,
@@ -118,7 +130,7 @@ struct ContentDetailView: View {
     }
   }
 
-  private func headerImagePlayableContent(for width: CGFloat) -> some View {
+  func headerImagePlayableContent(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
@@ -135,7 +147,7 @@ struct ContentDetailView: View {
     })
   }
   
-  private func headerImageLockedProContent(for width: CGFloat) -> some View {
+  func headerImageLockedProContent(for width: CGFloat) -> some View {
     ZStack {
       VerticalFadeImageView(
         imageURL: content.cardArtworkURL,
@@ -148,7 +160,7 @@ struct ContentDetailView: View {
     }
   }
   
-  private var progressBar: ProgressBarView? {
+  var progressBar: ProgressBarView? {
     guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
     else { return nil }
 

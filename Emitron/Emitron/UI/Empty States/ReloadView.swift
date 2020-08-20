@@ -28,10 +28,21 @@
 
 import SwiftUI
 
-struct ReloadView<Header: View>: View {
-  let header: Header
-  var reloadHandler: () -> Void
-  
+struct ReloadView<Header: View> {
+  init(
+    header: Header,
+    reloadHandler: @escaping () -> Void
+  ) {
+    self.header = header
+    self.reloadHandler = reloadHandler
+  }
+
+  private let header: Header
+  private let reloadHandler: () -> Void
+}
+
+// MARK: - View {
+extension ReloadView: View {
   var body: some View {
     VStack {
       header

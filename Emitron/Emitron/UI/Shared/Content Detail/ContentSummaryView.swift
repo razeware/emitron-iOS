@@ -32,27 +32,27 @@ private enum Layout {
   static let buttonSize: CGFloat = 20
 }
 
-struct ContentSummaryView: View {
-  var content: ContentListDisplayable
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
-  @EnvironmentObject var sessionController: SessionController
+struct ContentSummaryView {
+  @EnvironmentObject private var sessionController: SessionController
+  private let content: ContentListDisplayable
+  @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
-  
-  var courseLocked: Bool {
-    content.professional && !sessionController.user!.canStreamPro
+
+  init(
+    content: ContentListDisplayable,
+    dynamicContentViewModel: DynamicContentViewModel
+  ) {
+    self.content = content
+    self.dynamicContentViewModel = dynamicContentViewModel
   }
-  
-  var canDownload: Bool {
-    sessionController.user?.canDownload ?? false
-  }
-  
+}
+
+// MARK: - View
+extension ContentSummaryView: View {
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
-    return contentView
-  }
-  
-  private var contentView: some View {
-    VStack(alignment: .leading) {
+    
+    return VStack(alignment: .leading) {
       HStack {
         Text(content.technologyTripleString.uppercased())
           .font(.uiUppercase)
@@ -108,8 +108,19 @@ struct ContentSummaryView: View {
         .lineSpacing(3)
     }
   }
+}
+
+// MARK: - private
+private extension ContentSummaryView {
+  var courseLocked: Bool {
+    content.professional && !sessionController.user!.canStreamPro
+  }
   
-  private var completedTag: CompletedTag? {
+  var canDownload: Bool {
+    sessionController.user?.canDownload ?? false
+  }
+
+  var completedTag: CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
     }
@@ -129,11 +140,11 @@ struct ContentSummaryView: View {
       .accessibility(label: Text("Bookmark course"))
   }
   
-  private func download() {
+  func download() {
     deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
-  private func bookmark() {
+  func bookmark() {
     dynamicContentViewModel.bookmarkTapped()
   }
 }

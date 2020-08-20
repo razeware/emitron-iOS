@@ -29,13 +29,29 @@
 import SwiftUI
 import Combine
 
-struct ContentListView<Header: View>: View {
-  @State private var deleteSubscriptions = Set<AnyCancellable>()
-  @ObservedObject var contentRepository: ContentRepository
-  var downloadAction: DownloadAction
-  var contentScreen: ContentScreen
-  let header: Header
+struct ContentListView<Header: View> {
+  init(
+    contentRepository: ContentRepository,
+    downloadAction: DownloadAction,
+    contentScreen: ContentScreen,
+    header: Header
+  ) {
+    self.contentRepository = contentRepository
+    self.downloadAction = downloadAction
+    self.contentScreen = contentScreen
+    self.header = header
+  }
 
+  @ObservedObject private var contentRepository: ContentRepository
+  private let downloadAction: DownloadAction
+  private let contentScreen: ContentScreen
+  private let header: Header
+
+  @State private var deleteSubscriptions: Set<AnyCancellable> = []
+}
+
+// MARK: - View
+extension ContentListView: View {
   var body: some View {
     contentView
       .onAppear {
@@ -43,8 +59,11 @@ struct ContentListView<Header: View>: View {
         reloadIfRequired()
       }
   }
+}
 
-  private var contentView: some View {
+// MARK: - private
+private extension ContentListView {
+  var contentView: some View {
     reloadIfRequired()
 
     @ViewBuilder var contentView: some View {
@@ -62,14 +81,14 @@ struct ContentListView<Header: View>: View {
 
     return contentView
   }
-  
-  private func reloadIfRequired() {
+
+  func reloadIfRequired() {
     if contentRepository.state == .initial {
       contentRepository.reload()
     }
   }
 
-  private var cardsView: some View {
+  var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
         CardViewContainer(
@@ -89,7 +108,7 @@ struct ContentListView<Header: View>: View {
     .background(Color.backgroundColor)
   }
   
-  private func navLink(for content: ContentListDisplayable) -> some View {
+  func navLink(for content: ContentListDisplayable) -> some View {
     NavigationLink(
       destination: ContentDetailView(
         content: content,
@@ -100,14 +119,14 @@ struct ContentListView<Header: View>: View {
     }
   }
   
-  private var allowDelete: Bool {
+  var allowDelete: Bool {
     if case .downloads = contentScreen {
       return true
     }
     return false
   }
   
-  private var listView: some View {
+  var listView: some View {
     List {
       makeList {
         cardsView
@@ -139,7 +158,7 @@ struct ContentListView<Header: View>: View {
     content()
   }
   
-  private var loadingView: some View {
+  var loadingView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
@@ -152,7 +171,7 @@ struct ContentListView<Header: View>: View {
     }
   }
   
-  private var noResultsView: some View {
+  var noResultsView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
@@ -163,14 +182,14 @@ struct ContentListView<Header: View>: View {
     }
   }
   
-  private var reloadView: some View {
+  var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       ReloadView(header: header, reloadHandler: contentRepository.reload)
     }
   }
-
-  @ViewBuilder private var loadMoreView: some View {
+  
+  @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       // HACK: To put it in the middle we have to wrap it in Geometry Reader
       GeometryReader { _ in
@@ -180,7 +199,7 @@ struct ContentListView<Header: View>: View {
     }
   }
 
-  private func delete(at offsets: IndexSet) {
+  func delete(at offsets: IndexSet) {
     guard let index = offsets.first else {
       return
     }

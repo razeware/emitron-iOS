@@ -28,17 +28,36 @@
 
 import SwiftUI
 
-struct SettingsList: View {
+struct SettingsList {
   @ObservedObject private var settingsManager: SettingsManager
+}
 
-  init(settingsManager: ObservedObject<SettingsManager>) {
-    _settingsManager = settingsManager
-  }
-  
+// MARK: - View
+extension SettingsList: View {
   var body: some View {
     VStack(spacing: 0) {
       ForEach(SettingsOption.allCases) { self[$0] }
     }
+  }
+}
+
+struct SettingsList_Previews: PreviewProvider {
+  static var previews: some View {
+    list.colorScheme(.dark)
+    list.colorScheme(.light)
+  }
+
+  static var list: some View {
+    SettingsList( settingsManager: .init(initialValue: .current) )
+      .background(Color.backgroundColor)
+  }
+}
+
+
+// MARK: - internal
+extension SettingsList {
+  init(settingsManager: ObservedObject<SettingsManager>) {
+    _settingsManager = settingsManager
   }
 }
 
@@ -75,19 +94,5 @@ private extension SettingsList {
         SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
       }
     }
-  }
-}
-
-struct SettingsList_Previews: PreviewProvider {
-  static var previews: some View {
-    SwiftUI.Group {
-      list.colorScheme(.dark)
-      list.colorScheme(.light)
-    }
-  }
-  
-  static var list: some View {
-    SettingsList( settingsManager: .init(initialValue: .current) )
-      .background(Color.backgroundColor)
   }
 }
