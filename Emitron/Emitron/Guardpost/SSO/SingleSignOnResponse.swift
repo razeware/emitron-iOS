@@ -53,9 +53,9 @@ struct SingleSignOnResponse {
     components.query = urlString
 
     self.request = request
-    self.signature = sig
-    self.payload = sso
-    self.decodedPayload = components.queryItems
+    signature = sig
+    payload = sso
+    decodedPayload = components.queryItems
   }
 
   var isValid: Bool {

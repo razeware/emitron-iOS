@@ -153,8 +153,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   private func configureContentSubscription() {
-    self.contentSubscription = self.repository
-      .contentSummaryState(for: self.contentIds)
+    contentSubscription = repository
+      .contentSummaryState(for: contentIds)
       .removeDuplicates()
       .sink(receiveCompletion: { [weak self] error in
         guard let self = self else { return }
@@ -171,7 +171,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private func configureInvalidationSubscription() {
     if let invalidationPublisher = invalidationPublisher {
-      self.invalidationSubscription = invalidationPublisher
+      invalidationSubscription = invalidationPublisher
         .sink { [weak self] in
           guard let self = self else { return }
           

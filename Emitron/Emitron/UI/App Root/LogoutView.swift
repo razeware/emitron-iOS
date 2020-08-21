@@ -55,7 +55,7 @@ struct LogoutView: View {
       Spacer()
       
       MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-        self.sessionController.logout()
+        sessionController.logout()
       }
       .padding([.leading, .trailing], 18)
       .padding([.bottom], 38)

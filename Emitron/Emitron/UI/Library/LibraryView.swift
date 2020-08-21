@@ -46,7 +46,7 @@ struct LibraryView: View {
         Text(Constants.library)
       )
       .sheet(isPresented: $filtersPresented) {
-        FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
+        FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.backgroundColor)
       }
   }
@@ -69,8 +69,8 @@ struct LibraryView: View {
 
   private var searchField: some View {
     SearchFieldView(searchString: filters.searchStr) { searchString in
-      self.filters.searchStr = searchString
-      self.updateFilters()
+      filters.searchStr = searchString
+      updateFilters()
     }
   }
 
@@ -81,7 +81,7 @@ struct LibraryView: View {
       Spacer()
 
       Button(action: {
-        self.filtersPresented = true
+        filtersPresented = true
       }, label: {
         Image("filter")
           .foregroundColor(.iconButton)
@@ -119,24 +119,23 @@ struct LibraryView: View {
   private var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
-
-        if self.filters.applied.count > 1 {
+        if filters.applied.count > 1 {
           AppliedFilterTagButton(name: Constants.resetFilters, type: .destructive) {
-            self.filters.removeAll()
-            self.libraryRepository.filters = self.filters
+            filters.removeAll()
+            libraryRepository.filters = filters
           }
         }
         
-        ForEach(self.filters.applied, id: \.self) { filter in
+        ForEach(filters.applied, id: \.self) { filter in
           AppliedFilterTagButton(name: filter.filterName, type: .default) {
             if filter.isSearch {
-              self.filters.searchQuery = nil
+              filters.searchQuery = nil
             } else {
               filter.isOn.toggle()
-              self.filters.all.update(with: filter)
+              filters.all.update(with: filter)
             }
-            self.filters.commitUpdates()
-            self.libraryRepository.filters = self.filters
+            filters.commitUpdates()
+            libraryRepository.filters = filters
           }
         }
       }

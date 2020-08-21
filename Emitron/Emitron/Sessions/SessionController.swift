@@ -110,8 +110,8 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
 
     let user = User.backdoor ?? guardpost.currentUser
     self.user = user
-    self.client = RWAPI(authToken: user?.token ?? "")
-    self.permissionsService = PermissionsService(client: self.client)
+    client = RWAPI(authToken: user?.token ?? "")
+    permissionsService = PermissionsService(client: client)
     super.init()
     
     prepareSubscriptions()
@@ -149,7 +149,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
             Event
               .login(from: "SessionController")
               .log()
-            
             self.fetchPermissions()
           }
         }
@@ -197,7 +196,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
           // Update the user
           self.user = user.with(permissions: permissions)
           // Ensure guardpost is aware, and hence the keychain is updated
-          self.guardpost.updateUser(with: self.user)
+          self.guardpost.updateUser(with: user)
         }
       }
     }

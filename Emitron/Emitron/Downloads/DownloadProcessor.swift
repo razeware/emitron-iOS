@@ -151,7 +151,7 @@ extension DownloadProcessor {
   }
   
   private func populateDownloadListFromSession() {
-    currentDownloads = self.getDownloadTasksFromSession()
+    currentDownloads = getDownloadTasksFromSession()
   }
 }
 

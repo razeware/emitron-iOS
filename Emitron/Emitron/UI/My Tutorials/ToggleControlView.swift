@@ -48,10 +48,10 @@ struct ToggleControlView: View {
   
   private func toggleButton(for state: MyTutorialsState) -> some View {
     Button(action: {
-      guard state != self.toggleState else { return }
+      guard state != toggleState else { return }
       
-      self.toggleState = state
-      self.toggleUpdated?(state)
+      toggleState = state
+      toggleUpdated?(state)
       MessageBus.current.dismiss()
     }) {
       toggleButtonContent(for: state)

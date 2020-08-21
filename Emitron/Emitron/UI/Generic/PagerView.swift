@@ -46,16 +46,16 @@ struct PagerView<Content: View>: View {
     ZStack(alignment: .bottom) {
       GeometryReader { proxy in
         HStack(spacing: 0) {
-          self.content
+          content
             .frame(width: proxy.size.width)
         }
           .frame(width: proxy.size.width, alignment: .leading)
-          .offset(x: -CGFloat(self.currentIndex) * proxy.size.width)
-          .offset(x: self.translation)
+          .offset(x: -CGFloat(currentIndex) * proxy.size.width)
+          .offset(x: translation)
         .animation(.interactiveSpring())
           .gesture(
             DragGesture()
-              .updating(self.$translation) { value, state, _ in
+              .updating($translation) { value, state, _ in
                 state = value.translation.width
               }
               .onEnded { value in
@@ -63,8 +63,8 @@ struct PagerView<Content: View>: View {
                 if abs(offset) < 0.1 {
                   return
                 }
-                let newIndex = offset < 0 ? self.currentIndex + 1 : self.currentIndex - 1
-                self.currentIndex = Int(newIndex).clamped(to: 0...(self.pageCount - 1))
+                let newIndex = offset < 0 ? currentIndex + 1 : currentIndex - 1
+                currentIndex = Int(newIndex).clamped(to: 0...(pageCount - 1))
               }
           )
       }

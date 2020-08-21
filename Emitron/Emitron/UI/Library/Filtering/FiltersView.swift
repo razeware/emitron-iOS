@@ -52,10 +52,10 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
-          if Set(self.libraryRepository.nonPaginationParameters) != Set(self.filters.appliedParameters) {
-            self.revertBackToPreviousFilters()
+          if Set(libraryRepository.nonPaginationParameters) != Set(filters.appliedParameters) {
+            revertBackToPreviousFilters()
           }
-          self.presentationMode.wrappedValue.dismiss()
+          presentationMode.wrappedValue.dismiss()
         }) {
           Image.close
             .frame(width: 27, height: 27, alignment: .center)
@@ -71,9 +71,9 @@ struct FiltersView: View {
       HStack {
         
         MainButtonView(title: "Reset Filters", type: .secondary(withArrow: false)) {
-          self.filters.removeAll()
-          self.libraryRepository.filters = self.filters
-          self.presentationMode.wrappedValue.dismiss()
+          filters.removeAll()
+          libraryRepository.filters = filters
+          presentationMode.wrappedValue.dismiss()
         }
         .padding([.trailing], 10)
         
@@ -90,7 +90,7 @@ struct FiltersView: View {
     ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         ForEach(filters.filterGroups, id: \.self) { filterGroup in
-          self.constructFilterView(filterGroup: filterGroup)
+          constructFilterView(filterGroup: filterGroup)
         }
       }
         .padding([.bottom], 30)
@@ -100,7 +100,7 @@ struct FiltersView: View {
   private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
     FiltersHeaderView(
       filterGroup: filterGroup,
-      filters: self.filters,
+      filters: filters,
       isExpanded: filterGroup.numApplied > 0
     )
   }
@@ -109,8 +109,8 @@ struct FiltersView: View {
     let title = "Apply Filters"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
-      self.libraryRepository.filters = self.filters
-      self.presentationMode.wrappedValue.dismiss()
+      libraryRepository.filters = filters
+      presentationMode.wrappedValue.dismiss()
     }
     
     return buttonView
@@ -120,15 +120,15 @@ struct FiltersView: View {
     // Update filters with the currentFilters on contentsMC, to keep them in sync (aka, remove them)
     
     // First, turn all applied off
-    self.filters.applied.forEach { filter in
+    filters.applied.forEach { filter in
       filter.isOn = false
-      self.filters.all.update(with: filter)
+      filters.all.update(with: filter)
     }
     
     // Then, turn all the currentAppliedFilters things on
-    self.libraryRepository.currentAppliedFilters.forEach { filter in
+    libraryRepository.currentAppliedFilters.forEach { filter in
       filter.isOn = true
-      self.filters.all.update(with: filter)
+      filters.all.update(with: filter)
     }
   }
 }

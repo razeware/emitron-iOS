@@ -36,14 +36,12 @@ class Service {
 
   // MARK: - Initializers
   init(client: RWAPI) {
-    self.networkClient = client
-    self.session = URLSession(configuration: .default)
+    networkClient = client
+    session = URLSession(configuration: .default)
   }
   
   // MARK: - Utilities
-  var isAuthenticated: Bool {
-    !self.networkClient.authToken.isEmpty
-  }
+  var isAuthenticated: Bool { !networkClient.authToken.isEmpty }
 
   // MARK: - Internal
   func makeAndProcessRequest<R: Request>(

@@ -77,7 +77,7 @@ final class MessageBus: ObservableObject {
   
   func dismiss() {
     invalidateTimer()
-    self.messageVisible = false
+    messageVisible = false
   }
   
   private func createAndStartAutoDismissTimer() -> AnyCancellable {

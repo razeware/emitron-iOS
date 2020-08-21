@@ -80,16 +80,16 @@ public struct User: Equatable, Codable {
     self.avatarUrl = avatarUrl
     self.name = name
     self.token = token
-    self.permissions = .none
+    permissions = .none
   }
   
   private init(user: User, permissions: [Permission]) {
-    self.externalId = user.externalId
-    self.email = user.email
-    self.username = user.username
-    self.avatarUrl = user.avatarUrl
-    self.name = user.name
-    self.token = user.token
+    externalId = user.externalId
+    email = user.email
+    username = user.username
+    avatarUrl = user.avatarUrl
+    name = user.name
+    token = user.token
     self.permissions = permissions
   }
   
