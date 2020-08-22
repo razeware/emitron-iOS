@@ -125,7 +125,7 @@ class ContentAdapterTest: XCTestCase {
     XCTAssertEqual(.collection, content.contentType)
     XCTAssertEqual(342, content.duration)
     let url = URL(string: "https://example.com/card_artwork.png")!
-    XCTAssertEqual(url, content.cardArtworkUrl)
+    XCTAssertEqual(url, content.cardArtworkURL)
     XCTAssertEqual("Swift 5, iOS 13.0 Beta, Xcode 11.0 Beta", content.technologyTriple)
     XCTAssertEqual("Katie Collins & Jessy Catterwaul", content.contributors)
     XCTAssertEqual(13, content.ordinal)
@@ -276,14 +276,14 @@ class ContentAdapterTest: XCTestCase {
     }
   }
   
-  func testInvalidCardArtworkUrlIsAcceptable() throws {
+  func testInvalidCardArtworkURLIsAcceptable() throws {
     var sample = sampleResource
     sample["attributes"]["card_artwork_url"] = JSON(NSNull())
     
     let resource = try makeJsonAPIResource(for: sample)
     
     let content = try ContentAdapter.process(resource: resource, relationships: relationships)
-    XCTAssertNil(content.cardArtworkUrl)
+    XCTAssertNil(content.cardArtworkURL)
   }
   
   func testMissingGroupIsAcceptable() throws {

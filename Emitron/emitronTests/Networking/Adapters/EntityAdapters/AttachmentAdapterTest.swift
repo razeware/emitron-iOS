@@ -73,7 +73,7 @@ class AttachmentAdapterTest: XCTestCase {
     }
   }
   
-  func testInvalidUrlThrows() throws {
+  func testInvalidURLThrows() throws {
     var sample = sampleResource
     sample["attributes"]["url"] = "this is not a valid URL"
     

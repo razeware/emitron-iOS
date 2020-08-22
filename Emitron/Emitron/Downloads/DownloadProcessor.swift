@@ -31,8 +31,8 @@ import Combine
 
 protocol DownloadProcessorModel {
   var id: UUID { get }
-  var localUrl: URL? { get }
-  var remoteUrl: URL? { get }
+  var localURL: URL? { get }
+  var remoteURL: URL? { get }
 }
 
 protocol DownloadProcessorDelegate: AnyObject {
@@ -88,9 +88,9 @@ final class DownloadProcessor: NSObject {
 
 extension DownloadProcessor {
   func add(download: DownloadProcessorModel) throws {
-    guard let remoteUrl = download.remoteUrl else { throw DownloadProcessorError.invalidArguments }
+    guard let remoteURL = download.remoteURL else { throw DownloadProcessorError.invalidArguments }
     
-    let downloadTask = session.downloadTask(with: remoteUrl)
+    let downloadTask = session.downloadTask(with: remoteURL)
     downloadTask.downloadId = download.id
     downloadTask.resume()
     
@@ -187,11 +187,11 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
       let delegate = delegate else { return }
     
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
-    guard let localUrl = download?.localUrl else { return }
+    guard let localURL = download?.localURL else { return }
     
     let fileManager = FileManager.default
     do {
-      try fileManager.moveItem(at: location, to: localUrl)
+      try fileManager.moveItem(at: location, to: localURL)
     } catch {
       delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
     }
@@ -210,8 +210,8 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
           newTask = session.downloadTask(withResumeData: resumeData)
         } else {
           let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
-          if let remoteUrl = download?.remoteUrl {
-            newTask = session.downloadTask(with: remoteUrl)
+          if let remoteURL = download?.remoteURL {
+            newTask = session.downloadTask(with: remoteURL)
           }
         }
         if let newTask = newTask {

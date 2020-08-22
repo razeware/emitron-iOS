@@ -38,8 +38,8 @@ struct SingleSignOnResponse {
   private let decodedPayload: [URLQueryItem]?
 
   // MARK: - Initializers
-  init?(request: SingleSignOnRequest, responseUrl: URL) {
-    let responseComponents = URLComponents(url: responseUrl,
+  init?(request: SingleSignOnRequest, responseURL: URL) {
+    let responseComponents = URLComponents(url: responseURL,
                                            resolvingAgainstBaseURL: false)
     var components = URLComponents()
     guard
