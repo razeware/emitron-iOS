@@ -30,29 +30,57 @@ import SwiftUI
 
 extension Font {
   static var uiLargeTitle: Font {
-    Font.custom("Bitter-Bold", size: 34.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
+    } else {
+      return Font.custom("Bitter-Bold", size: UIFontMetrics.default.scaledValue(for: 34.0))
+    }
   }
   static var uiTitle1: Font {
-    Font.custom("Bitter-Bold", size: 28.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 28.0, relativeTo: .title)
+    } else {
+      return Font.custom("Bitter-Bold", size: 28.0)
+    }
   }
   static var uiTitle2: Font {
-    Font.custom("Bitter-Bold", size: 23.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
+    } else {
+      return Font.custom("Bitter-Bold", size: 23.0)
+    }
   }
   static var uiTitle3: Font {
-    Font.custom("Bitter-Bold", size: 20.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
+    } else {
+      return Font.custom("Bitter-Bold", size: 20.0)
+    }
   }
   static var uiTitle4: Font {
-    Font.custom("Bitter-Bold", size: 19.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
+    } else {
+      return Font.custom("Bitter-Bold", size: 19.0)
+    }
   }
   static var uiTitle5: Font {
-    Font.custom("Bitter-Regular", size: 17.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Regular", size: 17.0, relativeTo: .body)
+    } else {
+      return Font.custom("Bitter-Regular", size: 17.0)
+    }
   }
   static var uiHeadline: Font {
-    Font.system(size: 18.0).weight(.semibold)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 18.0)).weight(.semibold)
   }
   
   static var uiNumberBox: Font {
-    Font.custom("Bitter-Bold", size: 13.0)
+    if #available(iOS 14, *) {
+      return Font.custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
+    } else {
+      return Font.custom("Bitter-Bold", size: 13.0)
+    }
   }
 
   static var uiBodyAppleDefault: Font {
@@ -61,30 +89,30 @@ extension Font {
 
   // Can't have bold Font's
   static var uiButtonLabel: Font {
-    Font.system(size: 17.0).bold()
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 17.0)).bold()
   }
   static var uiBodyCustom: Font {
-    Font.system(size: 15.0)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 15.0))
   }
   static var uiLabelBold: Font {
-    Font.system(size: 16.0).weight(.semibold)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 16.0)).weight(.semibold)
   }
   static var uiLabel: Font {
-    Font.system(size: 16.0)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 16.0))
   }
   static var uiButtonLabelSmall: Font {
-    Font.system(size: 13.0).weight(.semibold)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 13.0)).weight(.semibold)
   }
   static var uiFootnote: Font {
     Font.footnote
   }
   static var uiCaption: Font {
-    Font.system(size: 14.0)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 14.0))
   }
   static var uiUppercase: Font {
-    Font.system(size: 12.0).weight(.semibold)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 12.0)).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    Font.system(size: 10.0).weight(.semibold)
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 10.0)).weight(.semibold)
   }
 }
