@@ -79,6 +79,7 @@ extension FullScreenVideoPlayerViewController {
   }
   
   private func disappear() {
+    self.viewModel?.stop()
     dismiss(animated: true) {
       self.viewModel = nil
     }
