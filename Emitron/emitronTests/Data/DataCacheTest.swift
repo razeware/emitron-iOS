@@ -61,7 +61,7 @@ class DataCacheTest: XCTestCase {
     
     let recorder = publisher.record()
     
-    let summary = try wait(for: recorder.next(), timeout: 2)
+    let summary = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertEqual(sampleContent, summary?.first?.content)
   }
@@ -70,7 +70,7 @@ class DataCacheTest: XCTestCase {
     let publisher = cache.contentSummaryState(for: [sampleContent.id])
     let recorder = publisher.record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     if case .finished = completion {
         XCTFail("Should not have finished")
     }
@@ -87,7 +87,7 @@ class DataCacheTest: XCTestCase {
     
     let recorder = publisher.record()
     
-    let dynamic = try wait(for: recorder.next(), timeout: 2)
+    let dynamic = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertEqual(sampleProgression, dynamic?.progression)
   }
@@ -96,7 +96,7 @@ class DataCacheTest: XCTestCase {
     let publisher = cache.contentDynamicState(for: sampleContent.id)
     let recorder = publisher.record()
     
-    let dynamic = try wait(for: recorder.next(), timeout: 2)
+    let dynamic = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertEqual(CachedDynamicContentState(progression: nil, bookmark: nil), dynamic)
   }
@@ -107,7 +107,7 @@ class DataCacheTest: XCTestCase {
     
     let recorder = publisher.record()
     
-    let childContents = try wait(for: recorder.next(), timeout: 2)
+    let childContents = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertEqual(collection.1.contents.count - 1, childContents?.contents.count)
     XCTAssert(childContents!.contents.count > 1)
@@ -117,7 +117,7 @@ class DataCacheTest: XCTestCase {
     let publisher = cache.childContentsState(for: collection.0.id)
     let recorder = publisher.record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     if case .finished = completion {
         XCTFail("Should not have finished")
     }
@@ -134,7 +134,7 @@ class DataCacheTest: XCTestCase {
     
     let recorder = publisher.record()
     
-    let childContents = try wait(for: recorder.next(), timeout: 2)
+    let childContents = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertEqual([], childContents?.contents)
   }
@@ -156,7 +156,7 @@ class DataCacheTest: XCTestCase {
     )
     cache.update(from: cacheUpdate)
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     if case .finished = completion {
         XCTFail("Should not have finished")
     }
@@ -201,7 +201,7 @@ class DataCacheTest: XCTestCase {
     let publisher = cache.contentSummaryState(for: [exampleChildId])
     let recorder = publisher.record()
     
-    let summary = try wait(for: recorder.next(), timeout: 2)
+    let summary = try wait(for: recorder.next(), timeout: 5)
     XCTAssertEqual(collection.0, summary?.first?.parentContent)
   }
 }
