@@ -44,7 +44,7 @@ struct CheckmarkView: View {
   var body: some View {
         
     Button(action: {
-      self.onChange(!self.isOn)
+      onChange(!isOn)
     }) {
       if isOn {
         ZStack(alignment: .center) {

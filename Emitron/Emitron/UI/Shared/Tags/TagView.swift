@@ -70,7 +70,7 @@ struct TagView: View {
       )
       .cornerRadius(6) // This is a bit hacky.
       .onPreferenceChange(SizeKey.self) { size in
-        self.height = size?.height
+        height = size?.height
       }
   }
 }

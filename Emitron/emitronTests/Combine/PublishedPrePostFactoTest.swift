@@ -51,7 +51,7 @@ class PublishedPostFactoTest: XCTestCase {
     let recorder = observedObject.objectWillChange.record()
     
     observedObject.notifiedBeforeChangeCommitted = 1
-    try wait(for: recorder.next(), timeout: 1)
+    try wait(for: recorder.next(), timeout: 5)
   }
   
   func testGetNotificationsOfValueChangesFromPublished() throws {
@@ -62,7 +62,7 @@ class PublishedPostFactoTest: XCTestCase {
     observedObject.notifiedBeforeChangeCommitted = 3
     observedObject.notifiedAfterChangeCommitted = 4
     
-    let values = try wait(for: recorder.next(3), timeout: 1)
+    let values = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([0, 1, 3], values)
   }
@@ -71,7 +71,7 @@ class PublishedPostFactoTest: XCTestCase {
     let recorder = observedObject.objectDidChange.record()
     
     observedObject.notifiedAfterChangeCommitted = 1
-    try wait(for: recorder.next(), timeout: 1)
+    try wait(for: recorder.next(), timeout: 5)
   }
   
   func testGetNotificationsOfValueChangesFromPublishedPostFacto() throws {
@@ -82,7 +82,7 @@ class PublishedPostFactoTest: XCTestCase {
     observedObject.notifiedBeforeChangeCommitted = 3
     observedObject.notifiedAfterChangeCommitted = 4
     
-    let values = try wait(for: recorder.next(3), timeout: 1)
+    let values = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([0, 2, 4], values)
   }

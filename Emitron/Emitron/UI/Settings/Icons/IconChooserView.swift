@@ -35,9 +35,9 @@ struct IconChooserView: View {
     HStack {
       ForEach(iconManager.icons) { icon in
         Button(action: {
-          self.iconManager.set(icon: icon)
+          iconManager.set(icon: icon)
         }) {
-          IconView(icon: icon, selected: self.iconManager.currentIcon == icon)
+          IconView(icon: icon, selected: iconManager.currentIcon == icon)
         }
       }
     }

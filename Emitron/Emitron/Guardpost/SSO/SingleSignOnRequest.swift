@@ -49,7 +49,7 @@ struct SingleSignOnRequest {
     self.endpoint = endpoint
     self.secret = secret
     self.callbackUrl = callbackUrl
-    self.nonce = randomHexString(length: 40)
+    nonce = randomHexString(length: 40)
   }
 }
 

@@ -87,7 +87,7 @@ extension Content {
             cardArtworkUrl: other.cardArtworkUrl,
             technologyTriple: other.technologyTriple,
             contributors: other.contributors,
-            groupId: other.groupId ?? self.groupId,
+            groupId: other.groupId ?? groupId,
             ordinal: other.ordinal)
   }
 }

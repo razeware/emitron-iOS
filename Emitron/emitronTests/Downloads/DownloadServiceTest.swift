@@ -86,7 +86,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     let download = getAllDownloads().first!
@@ -182,7 +182,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     // No change to the content count
@@ -206,7 +206,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     let allContentIds = fullState.childContents.map(\.id) + [collection.0.id]
@@ -226,7 +226,7 @@ class DownloadServiceTest: XCTestCase {
       })
       .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     if case .failure = completion {
       XCTFail("Failed")
     }
@@ -259,7 +259,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let anotherCompletion = try wait(for: anotherRecorder.completion, timeout: 2)
+    let anotherCompletion = try wait(for: anotherRecorder.completion, timeout: 5)
     XCTAssert(anotherCompletion == .finished)
     
     // Adds all episodes and the collection to the DB
@@ -282,7 +282,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
@@ -300,7 +300,7 @@ class DownloadServiceTest: XCTestCase {
     })
       .record()
     
-    _ = try wait(for: recorder.completion, timeout: 2)
+    _ = try wait(for: recorder.completion, timeout: 5)
     
     let originalDuration = episode.duration
     let originalDescription = episode.descriptionPlainText
@@ -330,7 +330,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder2.completion, timeout: 2)
+    let completion = try wait(for: recorder2.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     // Added the correct number of models
@@ -354,7 +354,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     XCTAssertEqual(2, getAllDownloads().count)
@@ -381,9 +381,9 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder1.completion, timeout: 2)
-    _ = try wait(for: recorder2.completion, timeout: 2)
-    _ = try wait(for: recorder3.completion, timeout: 2)
+    _ = try wait(for: recorder1.completion, timeout: 5)
+    _ = try wait(for: recorder2.completion, timeout: 5)
+    _ = try wait(for: recorder3.completion, timeout: 5)
     
     XCTAssertEqual(4, getAllDownloads().count)
   }
@@ -395,7 +395,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     XCTAssertEqual(1, getAllDownloads().count)
@@ -411,7 +411,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
 
     // Adds downloads to the collection and the individual episodes
@@ -429,7 +429,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     let download = getAllDownloads().first!
@@ -524,7 +524,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(completion == .finished)
     
     let downloadQueueItem = getAllDownloadQueueItems().first!
@@ -553,7 +553,7 @@ class DownloadServiceTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 2)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     XCTAssert(.finished == completion)
     
     let downloadQueueItem = getAllDownloadQueueItems().first { $0.content.contentType == .collection }

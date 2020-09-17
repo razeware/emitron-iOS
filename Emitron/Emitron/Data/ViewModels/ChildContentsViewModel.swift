@@ -57,7 +57,7 @@ class ChildContentsViewModel: ObservableObject {
   }
   
   func reload() {
-    self.state = .loading
+    state = .loading
     // Manually do this since can't have a @Published state property
     objectWillChange.send()
     

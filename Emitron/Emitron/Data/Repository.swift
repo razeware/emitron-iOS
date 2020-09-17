@@ -156,8 +156,8 @@ extension Repository {
   private func contentSummaryState(cached: CachedContentSummaryState) -> ContentSummaryState {
     ContentSummaryState(
       content: cached.content,
-      domains: self.domains(from: cached.contentDomains),
-      categories: self.categories(from: cached.contentCategories),
+      domains: domains(from: cached.contentDomains),
+      categories: categories(from: cached.contentCategories),
       parentContent: cached.parentContent
     )
   }

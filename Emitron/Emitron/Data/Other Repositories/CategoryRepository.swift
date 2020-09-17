@@ -53,10 +53,10 @@ class CategoryRepository: Refreshable {
   
   private func loadFromPersistentStore() {
     do {
-      self.categories = try repository.categoryList()
+      categories = try repository.categoryList()
       state = .hasData
     } catch {
-      self.state = .failed
+      state = .failed
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
         .log()
@@ -65,7 +65,7 @@ class CategoryRepository: Refreshable {
   
   private func saveToPersistentStore() {
     do {
-      try self.repository.syncCategoryList(self.categories)
+      try repository.syncCategoryList(categories)
     } catch {
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)

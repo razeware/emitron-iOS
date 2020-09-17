@@ -51,8 +51,8 @@ final class DownloadRepository: ContentRepository {
   }
   
   override func reload() {
-    self.state = .loading
-    self.contentSubscription?.cancel()
+    state = .loading
+    contentSubscription?.cancel()
     configureSubscription()
   }
   
@@ -67,19 +67,19 @@ final class DownloadRepository: ContentRepository {
   }
   
   private func configureSubscription() {
-    self.contentSubscription =
-      self.downloadService
-        .downloadList()
-        .sink(receiveCompletion: { [weak self] error in
-          guard let self = self else { return }
-          self.state = .failed
-          Failure
-            .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
-            .log()
-        }, receiveValue: { [weak self] contentSummaryStates in
-          guard let self = self else { return }
-          self.contents = contentSummaryStates
-          self.state = .hasData
-        })
+    contentSubscription =
+      downloadService
+      .downloadList()
+      .sink(receiveCompletion: { [weak self] error in
+        guard let self = self else { return }
+        self.state = .failed
+        Failure
+          .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
+          .log()
+      }, receiveValue: { [weak self] contentSummaryStates in
+        guard let self = self else { return }
+        self.contents = contentSummaryStates
+        self.state = .hasData
+      })
   }
 }

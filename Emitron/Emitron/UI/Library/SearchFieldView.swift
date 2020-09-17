@@ -45,18 +45,20 @@ struct SearchFieldView: View {
         .foregroundColor(.searchFieldIcon)
         .frame(height: 25)
       
-      TextField(Constants.search, text: $searchString) {
-        self.action(self.searchString)
-      }
-        .keyboardType(.webSearch)
-        .font(.uiBodyCustom)
-        .foregroundColor(.searchFieldText)
-        .contentShape(Rectangle())
+      TextField(
+        Constants.search,
+        text: $searchString,
+        onCommit: { action(searchString) }
+      )
+      .keyboardType(.webSearch)
+      .font(.uiBodyCustom)
+      .foregroundColor(.searchFieldText)
+      .contentShape(Rectangle())
       
       if !searchString.isEmpty {
         Button(action: {
-          self.searchString = ""
-          self.action(self.searchString)
+          searchString = ""
+          action(searchString)
         }) {
           Image(systemName: "multiply.circle.fill")
             // If we don't enforce a frame, the button doesn't register the tap action
@@ -75,7 +77,7 @@ struct SearchFieldView: View {
       .padding(1)
       .padding([.bottom], 2)
       .onPreferenceChange(SizeKey.self) { size in
-        self.height = size?.height
+        height = size?.height
       }
   }
   

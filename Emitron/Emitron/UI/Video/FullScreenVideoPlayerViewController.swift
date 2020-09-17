@@ -35,11 +35,11 @@ class FullScreenVideoPlayerViewController: UIViewController {
   private var isFullscreen: Bool = false
   
   init(viewModel: Binding<VideoPlaybackViewModel?>) {
-    self._viewModel = viewModel
+    _viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
     
     self.viewModel?.reloadIfRequired()
-    self.verifyVideoPlaybackAllowed()
+    verifyVideoPlaybackAllowed()
   }
 
   required init?(coder: NSCoder) {

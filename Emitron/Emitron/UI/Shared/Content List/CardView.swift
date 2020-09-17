@@ -94,7 +94,7 @@ struct CardView: View {
     .background(Color.cardBackground)
     .cornerRadius(6)
     .onAppear {
-      self.dynamicContentViewModel.initialiseIfRequired()
+      dynamicContentViewModel.initialiseIfRequired()
     }
   }
   

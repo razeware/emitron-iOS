@@ -61,7 +61,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
+      filterParameters.append(contentsOf: defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -125,34 +125,34 @@ class Filters: ObservableObject {
   }
   
   init() {
-    self.sortFilter = SortFilter.newest
-    self.platforms = FilterGroup(type: .platforms)
-    self.categories = FilterGroup(type: .categories)
+    sortFilter = SortFilter.newest
+    platforms = FilterGroup(type: .platforms)
+    categories = FilterGroup(type: .categories)
     
     let contentFilters = Param
       .filters(for: [.contentTypes(types: [.collection, .screencast])])
       .map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
-    self.contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
+    contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
     let difficultyFilters = Param
       .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
-    self.difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
+    difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     
     let subscriptionPlanFilters = Param
       .filters(for: [.subscriptionPlans(plans: [.beginner, .professional])])
       .map { Filter(groupType: .subscriptionPlans, param: $0, isOn: false) }
-    self.subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
+    subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
     
     // Check if there are filters in the settings manager
     let savedFilters = SettingsManager.current.filters
     if !savedFilters.isEmpty {
       // Validate loaded settings and put them in the right places
-      self.platforms.updateFilters(from: savedFilters)
-      self.categories.updateFilters(from: savedFilters)
-      self.contentTypes.updateFilters(from: savedFilters)
-      self.difficulties.updateFilters(from: savedFilters)
-      self.subscriptionPlans.updateFilters(from: savedFilters)
+      platforms.updateFilters(from: savedFilters)
+      categories.updateFilters(from: savedFilters)
+      contentTypes.updateFilters(from: savedFilters)
+      difficulties.updateFilters(from: savedFilters)
+      subscriptionPlans.updateFilters(from: savedFilters)
     }
     
     let freshFilters =
@@ -161,10 +161,10 @@ class Filters: ObservableObject {
         .union(difficulties.filters)
         .union(categories.filters)
         .union(subscriptionPlans.filters)
-    self.all = freshFilters
+    all = freshFilters
     
     // Load the sort from the settings manager
-    self.sortFilter = SettingsManager.current.sortFilter
+    sortFilter = SettingsManager.current.sortFilter
   }
   
   func update(with filter: Filter) {
@@ -235,7 +235,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
+      filterParameters.append(contentsOf: defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
@@ -253,7 +253,7 @@ class Filters: ObservableObject {
     
     if appliedContentFilters.isEmpty {
       // Add default filters
-      filterParameters.append(contentsOf: self.defaultFilters.map(\.parameter))
+      filterParameters.append(contentsOf: defaultFilters.map(\.parameter))
     }
     
     var appliedParameters = filterParameters + [sortFilter.parameter]

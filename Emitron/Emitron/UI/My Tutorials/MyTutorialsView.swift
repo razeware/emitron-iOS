@@ -82,22 +82,22 @@ struct MyTutorialView: View {
       .navigationBarItems(trailing:
         SwiftUI.Group {
           Button(action: {
-            self.settingsPresented = true
+            settingsPresented = true
           }) {
             Image("settings")
               .foregroundColor(.iconButton)
           }
         })
-      .sheet(isPresented: self.$settingsPresented) {
+      .sheet(isPresented: $settingsPresented) {
         SettingsView(showLogoutButton: true)
           // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
-          .environmentObject(self.sessionController)
-          .environmentObject(self.tabViewModel)
+          .environmentObject(sessionController)
+          .environmentObject(tabViewModel)
       }
     .onDisappear {
-      self.reloadProgression = true
-      self.reloadCompleted = true
-      self.reloadBookmarks = true
+      reloadProgression = true
+      reloadCompleted = true
+      reloadBookmarks = true
     }
   }
 
@@ -107,23 +107,23 @@ struct MyTutorialView: View {
         ToggleControlView(
           toggleState: state,
           toggleUpdated: { newState in
-            self.state = newState
+            state = newState
             switch newState {
             case .inProgress:
               // Should only call load contents if we have just switched to the My Tutorials tab
-              if self.reloadProgression {
-                self.inProgressRepository.reload()
-                self.reloadProgression = false
+              if reloadProgression {
+                inProgressRepository.reload()
+                reloadProgression = false
               }
             case .completed:
-              if self.reloadCompleted {
-                self.completedRepository.reload()
-                self.reloadCompleted = false
+              if reloadCompleted {
+                completedRepository.reload()
+                reloadCompleted = false
               }
             case .bookmarked:
-              if self.reloadBookmarks {
-                self.bookmarkRepository.reload()
-                self.reloadBookmarks = false
+              if reloadBookmarks {
+                bookmarkRepository.reload()
+                reloadBookmarks = false
               }
             }
           })
