@@ -67,7 +67,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 1)
+    _ = try wait(for: recorder.completion, timeout: 2)
     
     return screencast.0
   }
@@ -80,7 +80,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 1)
+    _ = try wait(for: recorder.completion, timeout: 2)
     
     return collection.0
   }
@@ -113,7 +113,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 2)
   }
   
   func testTransitionEpisodeToDownloadedUpdatesCollection() throws {
@@ -146,7 +146,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 2)
   }
   
   func testTransitionFinalEpisdeToDownloadedUpdatesCollection() throws {
@@ -217,7 +217,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 2)
   }
   
   // MARK: - Collection Download Utilities
@@ -350,7 +350,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   private func createDownloads(for content: Content) throws {
     let recorder = persistenceStore.createDownloads(for: content).record()
     
-    let completion = try wait(for: recorder.completion, timeout: 1)
+    let completion = try wait(for: recorder.completion, timeout: 2)
     if case .failure = completion {
       XCTFail("Failed to create downloads")
     }
@@ -425,7 +425,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     let recorder = persistenceStore.downloadList().record()
     
-    let list = try wait(for: recorder.next(), timeout: 1)
+    let list = try wait(for: recorder.next(), timeout: 2)
     
     XCTAssertNotNil(list)
     
