@@ -1,9 +1,6 @@
 name: Run tests
 
 on:
-  push:
-    branches-ignore:
-      - production
   pull_request:
     branches: [ development ]
 
