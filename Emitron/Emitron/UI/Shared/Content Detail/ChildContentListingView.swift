@@ -75,7 +75,7 @@ struct ChildContentListingView: View {
   private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
     let onlyContentWithVideoID = data
       .filter { $0.videoIdentifier != nil }
-      .sorted(by:) {
+      .sorted {
         guard let lhs = $0.ordinal, let rhs = $1.ordinal else { return true }
         return lhs < rhs
       }
