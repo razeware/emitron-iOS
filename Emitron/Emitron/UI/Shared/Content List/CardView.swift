@@ -106,34 +106,31 @@ struct CardView: View {
     return "\(parentName): \(model.name)"
   }
   
-  private var progressBar: AnyView? {
-    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
-      return AnyView(ProgressBarView(progress: progress, isRounded: true, backgroundColor: .clear))
-    } else {
-      return nil
-    }
+  private var progressBar: ProgressBarView? {
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
+    else { return nil }
+
+    return .init(progress: progress, isRounded: true, backgroundColor: .clear)
   }
   
-  private var completedTagOrReleasedAt: AnyView {
+  @ViewBuilder private var completedTagOrReleasedAt: some View {
     if case .completed = dynamicContentViewModel.viewProgress {
-      return AnyView(CompletedTag())
+      CompletedTag()
     } else {
-      return AnyView(Text(model.releasedAtDateTimeString)
+      Text(model.releasedAtDateTimeString)
         .font(.uiCaption)
         .lineLimit(1)
-        .foregroundColor(.contentText))
+        .foregroundColor(.contentText)
     }
   }
   
-  private var bookmarkButton: AnyView? {
-    guard dynamicContentViewModel.bookmarked else { return nil }
-    
-    return AnyView(
+  @ViewBuilder private var bookmarkButton: some View {
+    if dynamicContentViewModel.bookmarked {
       Image.bookmark
         .resizable()
         .frame(width: 21, height: 21)
         .foregroundColor(Color.inactiveIcon)
-    )
+    }
   }
 }
 

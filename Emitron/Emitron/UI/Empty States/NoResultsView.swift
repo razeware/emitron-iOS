@@ -28,14 +28,14 @@
 
 import SwiftUI
 
-struct NoResultsView: View {
+struct NoResultsView<Header: View>: View {
   @EnvironmentObject var tabViewModel: TabViewModel
   var contentScreen: ContentScreen
-  var headerView: AnyView?
-  
+  let header: Header
+
   var body: some View {
     VStack {
-      headerView
+      header
       
       Spacer()
 
@@ -81,5 +81,13 @@ struct NoResultsView_Previews: PreviewProvider {
       NoResultsView(contentScreen: .inProgress)
       NoResultsView(contentScreen: .library)
     }
+  }
+}
+
+// MARK: - private
+private extension NoResultsView where Header == EmptyView {
+  init(contentScreen: ContentScreen) {
+    self.contentScreen = contentScreen
+    header = .init()
   }
 }
