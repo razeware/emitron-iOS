@@ -57,7 +57,7 @@ struct CardView: View {
 
           Spacer()
 
-          KFImage(model.cardArtworkUrl)
+          KFImage(model.cardArtworkURL)
             .resizable()
             .aspectRatio(contentMode: .fill)
             .frame(width: 60, height: 60)
@@ -154,7 +154,7 @@ struct MockContentListDisplayable: ContentListDisplayable {
   var duration: Int = 10080
   var parentName: String?
   var contentType: ContentType = .collection
-  var cardArtworkUrl: URL? = URL(string: "https://files.betamax.raywenderlich.com/attachments/collections/216/9eb9899d-47d0-429d-96f0-e15ac9542ecc.png")
+  var cardArtworkURL: URL? = URL(string: "https://files.betamax.raywenderlich.com/attachments/collections/216/9eb9899d-47d0-429d-96f0-e15ac9542ecc.png")
   var ordinal: Int?
   var technologyTripleString: String = "Doesn't matter"
   var contentSummaryMetadataString: String = "Doesn't matter"

@@ -30,18 +30,18 @@ import SwiftUI
 import KingfisherSwiftUI
 
 struct VerticalFadeImageView: View {
-  var imageUrl: URL?
+  var imageURL: URL?
   var blurred: Bool = false
   var width: CGFloat?
   var height: CGFloat?
   
   var body: some View {
     ZStack {
-      KFImage(imageUrl)
+      KFImage(imageURL)
         .resizable()
         .aspectRatio(contentMode: .fill)
         .frame(width: width, height: height, alignment: .top)
-        .blur(radius: blurred ? Constants.blurRadius : 0)
+        .blur(radius: blurred ? .blurRadius : 0)
         .clipped()
       
       LinearGradient(gradient: Gradient(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
@@ -54,10 +54,10 @@ struct VerticalFadeImageView: View {
 struct VerticalFadeImageView_Previews: PreviewProvider {
   
   static var previews: some View {
-    VerticalFadeImageView(imageUrl: sampleImageUrl)
+    VerticalFadeImageView(imageURL: sampleImageURL)
   }
   
-  static var sampleImageUrl: URL? {
+  static var sampleImageURL: URL? {
     Bundle.main.url(forResource: "sampleCardImage", withExtension: "png")
   }
 }

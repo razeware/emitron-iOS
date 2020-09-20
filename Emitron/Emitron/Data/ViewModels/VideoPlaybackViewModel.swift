@@ -42,11 +42,11 @@ extension VideoPlaybackViewModel {
       case .invalidOrMissingAttribute(let attribute):
         return "VideoPlaybackViewModelError::invalidOrMissingAttribute::\(attribute)"
       case .cannotStreamWhenOffline:
-        return Constants.videoPlaybackCannotStreamWhenOffline
+        return .videoPlaybackCannotStreamWhenOffline
       case .invalidPermissions:
-        return Constants.videoPlaybackInvalidPermissions
+        return .videoPlaybackInvalidPermissions
       case .expiredPermissions:
-        return Constants.videoPlaybackExpiredPermissions
+        return .videoPlaybackExpiredPermissions
       case .unableToLoadArtwork:
         return "VideoPlaybackViewModelError::unableToLoadArtwork"
       }
@@ -156,7 +156,7 @@ final class VideoPlaybackViewModel {
     // If we've got a download, then we might be ok
     if let download = contentItem.download,
       download.state == .complete,
-      download.localUrl != nil {
+      download.localURL != nil {
       // We have a download, but are we still authenticated?
       guard sessionController.hasCurrentDownloadPermissions
       else { throw Error.expiredPermissions }
@@ -213,7 +213,7 @@ private extension VideoPlaybackViewModel {
       player.removeTimeObserver(token)
     }
     let interval = CMTime(
-      seconds: Double(Constants.videoPlaybackProgressTrackingInterval),
+      seconds: .init(.videoPlaybackProgressTrackingInterval),
       preferredTimescale: 100
     )
     playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
@@ -293,7 +293,7 @@ private extension VideoPlaybackViewModel {
         
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
-            MessageBus.current.post(message: Message(level: .error, message: Constants.simultaneousStreamsError))
+            MessageBus.current.post(message: Message(level: .error, message: .simultaneousStreamsError))
             self.player.pause()
           }
           Failure
@@ -379,8 +379,8 @@ private extension VideoPlaybackViewModel {
       // Is there a completed download?
       if let download = state.download,
         download.state == .complete,
-        let localUrl = download.localUrl {
-        let item = AVPlayerItem(url: localUrl)
+        let localURL = download.localURL {
+        let item = AVPlayerItem(url: localURL)
         self.addMetadata(from: state, to: item)
         self.addClosedCaptions(for: item)
         // Add it to the cache
@@ -436,7 +436,7 @@ private extension VideoPlaybackViewModel {
     artwork.identifier = .commonIdentifierArtwork
 
     let deferredArtwork = AVMetadataItem(propertiesOf: artwork) { request in
-      guard let url = state.content.cardArtworkUrl else {
+      guard let url = state.content.cardArtworkURL else {
         request.respond(error: Error.unableToLoadArtwork)
         return
       }

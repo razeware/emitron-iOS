@@ -41,7 +41,7 @@ struct Content: Codable {
   var contentType: ContentType
   var duration: Int
   var videoIdentifier: Int?
-  var cardArtworkUrl: URL?
+  var cardArtworkURL: URL?
   var technologyTriple: String
   var contributors: String
   var groupId: Int?
@@ -63,7 +63,7 @@ extension Content: Equatable {
       lhs.contentType == rhs.contentType &&
       lhs.duration == rhs.duration &&
       lhs.videoIdentifier == rhs.videoIdentifier &&
-      lhs.cardArtworkUrl == rhs.cardArtworkUrl &&
+      lhs.cardArtworkURL == rhs.cardArtworkURL &&
       lhs.technologyTriple == rhs.technologyTriple &&
       lhs.contributors == rhs.contributors &&
       lhs.groupId == rhs.groupId
@@ -84,7 +84,7 @@ extension Content {
             contentType: other.contentType,
             duration: other.duration,
             videoIdentifier: other.videoIdentifier,
-            cardArtworkUrl: other.cardArtworkUrl,
+            cardArtworkURL: other.cardArtworkURL,
             technologyTriple: other.technologyTriple,
             contributors: other.contributors,
             groupId: other.groupId ?? groupId,

@@ -224,10 +224,10 @@ open class Snapshot: NSObject {
     guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
       throw SnapshotError.cannotFindSimulatorHomeDirectory
     }
-    guard let homeDirUrl = URL(string: simulatorHostHome) else {
+    guard let homeDirURL = URL(string: simulatorHostHome) else {
       throw SnapshotError.cannotAccessSimulatorHomeDirectory(simulatorHostHome)
     }
-    homeDir = URL(fileURLWithPath: homeDirUrl.path)
+    homeDir = URL(fileURLWithPath: homeDirURL.path)
     #else
     throw SnapshotError.cannotRunOnPhysicalDevice
     #endif

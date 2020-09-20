@@ -29,7 +29,7 @@
 import AuthenticationServices
 
 public enum LoginError: Error {
-  case unableToCreateLoginUrl
+  case unableToCreateLoginURL
   case errorResponseFromGuardpost(Error?)
   case unableToDecodeGuardpostResponse
   case invalidSignature
@@ -38,8 +38,8 @@ public enum LoginError: Error {
   public var localizedDescription: String {
     let prefix = "GuardpostLoginError::"
     switch self {
-    case .unableToCreateLoginUrl:
-      return "\(prefix)UnableToCreateLoginUrl"
+    case .unableToCreateLoginURL:
+      return "\(prefix)UnableToCreateLoginURL"
     case .errorResponseFromGuardpost(let error):
       return "\(prefix)GuardpostLoginError:: [Error: \(error?.localizedDescription ?? "UNKNOWN")]"
     case .unableToDecodeGuardpostResponse:
@@ -54,7 +54,7 @@ public enum LoginError: Error {
 
 public class Guardpost {
   // MARK: - Properties
-  private let baseUrl: String
+  private let baseURL: String
   private let urlScheme: String
   private let ssoSecret: String
   private var _currentUser: User?
@@ -70,29 +70,29 @@ public class Guardpost {
   }
 
   // MARK: - Initializers
-  init(baseUrl: String,
+  init(baseURL: String,
        urlScheme: String,
        ssoSecret: String,
        persistenceStore: PersistenceStore) {
-    self.baseUrl = baseUrl
+    self.baseURL = baseURL
     self.urlScheme = urlScheme
     self.ssoSecret = ssoSecret
     self.persistenceStore = persistenceStore
   }
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
-    let guardpostLogin = "\(baseUrl)/v2/sso/login"
-    let returnUrl = "\(urlScheme)sessions/create"
+    let guardpostLogin = "\(baseURL)/v2/sso/login"
+    let returnURL = "\(urlScheme)sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
                                          secret: ssoSecret,
-                                         callbackUrl: returnUrl)
+                                         callbackURL: returnURL)
 
-    guard let loginUrl = ssoRequest.url else {
-      let result: Result<User, LoginError> = .failure(.unableToCreateLoginUrl)
+    guard let loginURL = ssoRequest.url else {
+      let result: Result<User, LoginError> = .failure(.unableToCreateLoginURL)
       return asyncResponse(callback: callback, result: result)
     }
 
-    authSession = ASWebAuthenticationSession(url: loginUrl,
+    authSession = ASWebAuthenticationSession(url: loginURL,
                                              callbackURLScheme: urlScheme) { url, error in
 
       var result: Result<User, LoginError>
@@ -102,7 +102,7 @@ public class Guardpost {
         return self.asyncResponse(callback: callback, result: result)
       }
 
-      guard let response = SingleSignOnResponse(request: ssoRequest, responseUrl: url) else {
+      guard let response = SingleSignOnResponse(request: ssoRequest, responseURL: url) else {
         result = .failure(LoginError.unableToDecodeGuardpostResponse)
         return self.asyncResponse(callback: callback, result: result)
       }

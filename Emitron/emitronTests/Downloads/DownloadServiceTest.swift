@@ -513,8 +513,8 @@ class DownloadServiceTest: XCTestCase {
     XCTAssert(fileManager.fileExists(atPath: sampleFile.path))
   }
   
-  //: requestDownloadUrl() Tests
-  func testRequestDownloadUrlRequestsDownloadURLForEpisode() throws {
+  //: requestDownloadURL() Tests
+  func testRequestDownloadURLRequestsDownloadURLForEpisode() throws {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episode = fullState.childContents.first!
@@ -531,22 +531,22 @@ class DownloadServiceTest: XCTestCase {
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     XCTAssertEqual(1, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlRequestsDownloadsURLForScreencast() throws {
+  func testRequestDownloadURLRequestsDownloadsURLForScreencast() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     XCTAssertEqual(1, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlDoesNothingForCollection() throws {
+  func testRequestDownloadURLDoesNothingForCollection() throws {
     let collection = ContentTest.Mocks.collection
     let recorder = downloadService.requestDownload(contentId: collection.0.id) { _ in
       ContentPersistableState.persistableState(for: collection.0, with: collection.1)
@@ -566,7 +566,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlDoesNothingForDownloadInWrongState() throws {
+  func testRequestDownloadURLDoesNothingForDownloadInWrongState() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     var download = downloadQueueItem.download
     
@@ -584,34 +584,34 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadUrlUpdatesDownloadInCallback() throws {
+  func testRequestDownloadURLUpdatesDownloadInCallback() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     
-    XCTAssertNil(downloadQueueItem.download.remoteUrl)
+    XCTAssertNil(downloadQueueItem.download.remoteURL)
     XCTAssertNil(downloadQueueItem.download.lastValidatedAt)
     XCTAssertEqual(Download.State.pending, downloadQueueItem.download.state)
     
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     try database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
-      XCTAssertNotNil(download.remoteUrl)
+      XCTAssertNotNil(download.remoteURL)
       XCTAssertNotNil(download.lastValidatedAt)
     }
   }
   
-  func testRequestDownloadUrlRespectsTheUserPreferencesOnQuality() throws {
+  func testRequestDownloadURLRespectsTheUserPreferencesOnQuality() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .sdVideoFile }!
     
     SettingsManager.current.downloadQuality = .sdVideoFile
     
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     try database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
-      XCTAssertNotNil(download.remoteUrl)
-      XCTAssertEqual(attachment.url, download.remoteUrl)
+      XCTAssertNotNil(download.remoteURL)
+      XCTAssertEqual(attachment.url, download.remoteURL)
     }
   }
   
@@ -619,19 +619,19 @@ class DownloadServiceTest: XCTestCase {
     let downloadQueueItem = try sampleDownloadQueueItem()
     let attachment = AttachmentTest.Mocks.downloads.0.first { $0.kind == .hdVideoFile }!
     
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     try database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
-      XCTAssertNotNil(download.remoteUrl)
-      XCTAssertEqual(attachment.url, download.remoteUrl)
+      XCTAssertNotNil(download.remoteURL)
+      XCTAssertEqual(attachment.url, download.remoteURL)
     }
   }
   
   func testRequestDownloadUpdatesTheStateCorrectly() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
 
-    downloadService.requestDownloadUrl(downloadQueueItem)
+    downloadService.requestDownloadURL(downloadQueueItem)
     
     try database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
@@ -643,7 +643,7 @@ class DownloadServiceTest: XCTestCase {
     let downloadQueueItem = try sampleDownloadQueueItem()
     var download = downloadQueueItem.download
     // Update to include the URL
-    download.remoteUrl = URL(string: "https://example.com/video.mp4")
+    download.remoteURL = URL(string: "https://example.com/video.mp4")
     download.state = .readyForDownload
     try database.write { db in
       try download.save(db)
@@ -654,7 +654,7 @@ class DownloadServiceTest: XCTestCase {
     
     try database.read { db in
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
-      XCTAssertNotNil(refreshedDownload.localUrl)
+      XCTAssertNotNil(refreshedDownload.localURL)
       XCTAssertNotNil(refreshedDownload.fileName)
       XCTAssertEqual(Download.State.enqueued, refreshedDownload.state)
     }
@@ -663,7 +663,7 @@ class DownloadServiceTest: XCTestCase {
   func testEnqueueUpdatesStateToCompletedIfItFindsDownload() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     var download = downloadQueueItem.download
-    download.remoteUrl = URL(string: "https://example.com/amazing.mp4")
+    download.remoteURL = URL(string: "https://example.com/amazing.mp4")
     download.fileName = "\(downloadQueueItem.content.videoIdentifier!).mp4"
     download.state = .readyForDownload
     try database.write { db in
@@ -689,13 +689,13 @@ class DownloadServiceTest: XCTestCase {
     try database.read { db in
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertEqual(Download.State.complete, refreshedDownload.state)
-      XCTAssertEqual(sampleFile, refreshedDownload.localUrl)
+      XCTAssertEqual(sampleFile, refreshedDownload.localURL)
     }
     
     try fileManager.removeItem(at: sampleFile)
   }
   
-  func testEnqueueDoesNothingForADownloadWithoutARemoteUrl() throws {
+  func testEnqueueDoesNothingForADownloadWithoutARemoteURL() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     var download = downloadQueueItem.download
     download.state = .urlRequested
@@ -710,7 +710,7 @@ class DownloadServiceTest: XCTestCase {
     try database.read { db in
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
-      XCTAssertNil(refreshedDownload.localUrl)
+      XCTAssertNil(refreshedDownload.localURL)
       XCTAssertEqual(Download.State.urlRequested, refreshedDownload.state)
     }
   }
@@ -718,7 +718,7 @@ class DownloadServiceTest: XCTestCase {
   func testEnqueueDoesNothingForDownloadInTheWrongState() throws {
     let downloadQueueItem = try sampleDownloadQueueItem()
     var download = downloadQueueItem.download
-    download.remoteUrl = URL(string: "https://example.com/amazing.mp4")
+    download.remoteURL = URL(string: "https://example.com/amazing.mp4")
     download.state = .pending
     try database.write { db in
       try download.save(db)
@@ -731,7 +731,7 @@ class DownloadServiceTest: XCTestCase {
     try database.read { db in
       let refreshedDownload = try Download.fetchOne(db, key: download.id)!
       XCTAssertNil(refreshedDownload.fileName)
-      XCTAssertNil(refreshedDownload.localUrl)
+      XCTAssertNil(refreshedDownload.localURL)
       XCTAssertEqual(Download.State.pending, refreshedDownload.state)
     }
   }

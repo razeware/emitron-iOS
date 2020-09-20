@@ -34,7 +34,7 @@ struct DownloadsView: View {
 
   var body: some View {
     contentView
-      .navigationBarTitle(Text(Constants.downloads))
+      .navigationBarTitle(String.downloads)
   }
 
   private var contentView: some View {

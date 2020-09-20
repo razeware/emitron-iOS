@@ -47,7 +47,7 @@ struct SettingsView: View {
       VStack {
         
         SettingsList(settingsManager: _settingsManager)
-          .navigationBarTitle(Constants.settings)
+          .navigationBarTitle(String.settings)
           .navigationBarItems(trailing: dismissButton)
           .padding([.horizontal], 20)
         

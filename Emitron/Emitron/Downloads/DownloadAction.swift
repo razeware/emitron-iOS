@@ -43,15 +43,15 @@ enum DownloadActionError: Error {
   var localizedDescription: String {
     switch self {
     case .downloadNotPermitted:
-      return Constants.downloadNotPermitted
+      return .downloadNotPermitted
     case .downloadContentNotFound:
-      return Constants.downloadContentNotFound
+      return .downloadContentNotFound
     case .problemRequestingDownload:
-      return Constants.downloadRequestProblem
+      return .downloadRequestProblem
     case .unableToCancelDownload:
-      return Constants.downloadUnableToCancel
+      return .downloadUnableToCancel
     case .unableToDeleteDownload:
-      return Constants.downloadUnableToDelete
+      return .downloadUnableToDelete
     }
   }
 }

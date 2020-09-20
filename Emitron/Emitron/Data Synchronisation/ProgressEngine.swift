@@ -102,7 +102,7 @@ final class ProgressEngine {
     case .offline:
       do {
         try syncAction?.updateProgress(for: contentId, progress: progress)
-        try syncAction?.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
+        try syncAction?.recordWatchStats(for: contentId, secondsWatched: .videoPlaybackProgressTrackingInterval)
         
         return Future { promise in
           promise(.success(progression))

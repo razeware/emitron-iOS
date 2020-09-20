@@ -47,10 +47,10 @@ class IconManager: ObservableObject {
           Failure
             .appIcon(from: String(describing: type(of: self)), reason: error.localizedDescription)
             .log()
-          MessageBus.current.post(message: Message(level: .error, message: Constants.appIconUpdateProblem))
+          MessageBus.current.post(message: Message(level: .error, message: .appIconUpdateProblem))
         } else {
           self.currentIcon = icon
-          MessageBus.current.post(message: Message(level: .success, message: Constants.appIconUpdatedSuccessfully))
+          MessageBus.current.post(message: Message(level: .success, message: .appIconUpdatedSuccessfully))
         }
       }
     }

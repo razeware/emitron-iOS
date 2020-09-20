@@ -111,7 +111,7 @@ final class DownloadService {
           .log()
       }, receiveValue: { [weak self] downloadQueueItem in
         guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
-        self.requestDownloadUrl(downloadQueueItem)
+        self.requestDownloadURL(downloadQueueItem)
       })
       .store(in: &processingSubscriptions)
     
@@ -272,21 +272,21 @@ extension DownloadService: DownloadAction {
 
 // MARK: - Internal methods
 extension DownloadService {
-  func requestDownloadUrl(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
+  func requestDownloadURL(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard let videosService = videosService else {
       Failure
         .downloadService(
-          from: "requestDownloadUrl",
+          from: "requestDownloadURL",
           reason: "User not allowed to request downloads."
         )
         .log()
       return
     }
-    guard downloadQueueItem.download.remoteUrl == nil,
+    guard downloadQueueItem.download.remoteURL == nil,
       downloadQueueItem.download.state == .pending,
       downloadQueueItem.content.contentType != .collection else {
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Cannot request download URL for: \(downloadQueueItem.download)")
           .log()
       return
@@ -296,7 +296,7 @@ extension DownloadService {
       videoId != 0 else {
         Failure
           .downloadService(
-            from: "requestDownloadUrl",
+            from: "requestDownloadURL",
             reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
           )
           .log()
@@ -312,17 +312,17 @@ extension DownloadService {
       switch result {
       case .failure(let error):
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Unable to obtain download URLs: \(error)")
           .log()
       case .success(let attachments):
-        download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
+        download.remoteURL = attachments.first { $0.kind == self.downloadQuality }?.url
         download.lastValidatedAt = Date()
         download.state = .readyForDownload
       }
       
       // Update the state if required
-      if download.remoteUrl == nil {
+      if download.remoteURL == nil {
         download.state = .error
       }
       
@@ -331,7 +331,7 @@ extension DownloadService {
         try self.persistenceStore.update(download: download)
       } catch {
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Unable to save download URL: \(error)")
           .log()
         self.transitionDownload(withID: download.id, to: .failed)
@@ -343,7 +343,7 @@ extension DownloadService {
   }
   
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
-    guard downloadQueueItem.download.remoteUrl != nil,
+    guard downloadQueueItem.download.remoteURL != nil,
       downloadQueueItem.download.state == .readyForDownload else {
         Failure
           .downloadService(from: "enqueue",
@@ -370,7 +370,7 @@ extension DownloadService {
     // Transition download to correct status
     // If file exists, update the download
     let fileManager = FileManager.default
-    if let localUrl = download.localUrl, fileManager.fileExists(atPath: localUrl.path) {
+    if let localURL = download.localURL, fileManager.fileExists(atPath: localURL.path) {
       download.state = .complete
     } else {
       download.state = .enqueued
@@ -423,10 +423,10 @@ extension DownloadService {
   }
   
   private func deleteFile(for download: Download) throws {
-    guard let localUrl = download.localUrl else { return }
+    guard let localURL = download.localURL else { return }
     let filemanager = FileManager.default
-    if filemanager.fileExists(atPath: localUrl.path) {
-      try filemanager.removeItem(at: localUrl)
+    if filemanager.fileExists(atPath: localURL.path) {
+      try filemanager.removeItem(at: localURL)
     }
   }
   

@@ -78,7 +78,7 @@ struct MyTutorialView: View {
 
   var body: some View {
     contentView
-      .navigationBarTitle(Text(Constants.myTutorials))
+      .navigationBarTitle(String.myTutorials)
       .navigationBarItems(trailing:
         SwiftUI.Group {
           Button(action: {
