@@ -199,6 +199,11 @@ final class VideoPlaybackViewModel {
     shouldBePlaying = false
     player.pause()
   }
+
+  func stop() {
+    self.shouldBePlaying = false
+    self.player.pause()
+  }
 }
 
 // MARK: - private
