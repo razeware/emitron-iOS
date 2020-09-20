@@ -204,7 +204,6 @@ final class VideoPlaybackViewModel {
     self.shouldBePlaying = false
     self.player.pause()
   }
-
 }
 
 // MARK: - private
