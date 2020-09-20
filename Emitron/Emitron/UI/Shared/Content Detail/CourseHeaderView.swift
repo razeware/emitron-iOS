@@ -34,10 +34,15 @@ struct CourseHeaderView: View {
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      Text(name)
-        .font(.uiTitle3)
-        .foregroundColor(.titleText)
+      HStack {
+        Text(name)
+          .font(.uiTitle3)
+          .foregroundColor(.titleText)
+          .padding(.leading, 20)
+        Spacer()
+      }
     }
+
     .frame(minWidth: UIScreen.main.bounds.width)
     .padding([.bottom], 16)
   }
