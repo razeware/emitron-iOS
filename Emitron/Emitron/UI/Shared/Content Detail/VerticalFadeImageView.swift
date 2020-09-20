@@ -44,9 +44,11 @@ struct VerticalFadeImageView: View {
         .blur(radius: blurred ? .blurRadius : 0)
         .clipped()
       
-      LinearGradient(gradient: Gradient(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
-                     startPoint: .top,
-                     endPoint: .bottom)
+      LinearGradient(
+        gradient: .init(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
+        startPoint: .top,
+        endPoint: .bottom
+      )
     }
   }
 }

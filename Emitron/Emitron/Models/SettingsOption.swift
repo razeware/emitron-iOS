@@ -34,9 +34,7 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   case downloadQuality
   case closedCaptionOn
   
-  var id: Int {
-    rawValue
-  }
+  var id: Int { rawValue }
   
   var title: String {
     switch self {

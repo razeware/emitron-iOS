@@ -54,16 +54,16 @@ struct LibraryView: View {
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
-        .padding([.top], 15)
+        .padding(.top, 15)
       
       if !libraryRepository.currentAppliedFilters.isEmpty {
         filtersView
-          .padding([.top], 10)
+          .padding(.top, 10)
       }
       numberAndSortView
-        .padding([.vertical], 10)
+        .padding(.vertical, 10)
     }
-      .padding([.horizontal], .sidePadding)
+      .padding(.horizontal, .sidePadding)
       .background(Color.backgroundColor)
   }
 
@@ -100,10 +100,7 @@ struct LibraryView: View {
 
       Spacer()
 
-      Button(action: {
-        // Change sort
-        self.changeSort()
-      }) {
+      Button(action: changeSort) {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)

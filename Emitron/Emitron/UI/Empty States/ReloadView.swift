@@ -39,7 +39,7 @@ struct ReloadView<Header: View>: View {
       Spacer()
       
       Image("emojiCrying")
-        .padding([.bottom], 30)
+        .padding(.bottom, 30)
       
       Text("Something went wrong.")
         .font(.uiTitle2)

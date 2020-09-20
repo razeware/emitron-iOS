@@ -82,9 +82,7 @@ struct ContentSummaryView: View {
       HStack(spacing: 30, content: {
         if canDownload {
           DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-            .onTapGesture {
-              self.download()
-            }
+            .onTapGesture(perform: download)
             .alert(item: $deletionConfirmation, content: \.alert)
             .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
         }
@@ -93,20 +91,20 @@ struct ContentSummaryView: View {
         
         completedTag
       })
-        .padding([.top], 15)
+      .padding(.top, 15)
       
       Text(content.descriptionPlainText)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        .padding([.top], 15)
+        .padding(.top, 15)
         .lineLimit(nil)
       
       Text("By \(content.contributorString)")
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .padding([.top], 10)
+        .padding(.top, 10)
         .lineSpacing(3)
     }
   }
