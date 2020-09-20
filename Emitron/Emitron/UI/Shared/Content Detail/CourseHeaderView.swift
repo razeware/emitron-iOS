@@ -27,6 +27,7 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import UIKit
 
 struct CourseHeaderView: View {
   let name: String
@@ -36,11 +37,8 @@ struct CourseHeaderView: View {
       Text(name)
         .font(.uiTitle3)
         .foregroundColor(.titleText)
-      
-      Rectangle()
-        .fill(Color.borderColor)
-        .frame(height: 1)
     }
+    .frame(minWidth: UIScreen.main.bounds.width)
     .padding([.bottom], 16)
   }
 }

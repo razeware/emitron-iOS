@@ -55,21 +55,22 @@ struct ChildContentListingView: View {
         Text("Course Episodes")
           .font(.uiTitle2)
           .foregroundColor(.titleText)
-          .padding([.top], -5)
-        
-        if childContentsViewModel.groups.count > 1 {
-          ForEach(childContentsViewModel.groups, id: \.id) { group in
-            Section(header: CourseHeaderView(name: group.name)) {
-              episodeListing(data: childContentsViewModel.contents(for: group.id))
-            }
+          .padding([.top, .bottom])
+      }
+      .listRowBackground(Color.backgroundColor)
+      .accessibility(identifier: "childContentList")
+      
+      if childContentsViewModel.groups.count > 1 {
+        ForEach(childContentsViewModel.groups, id: \.id) { group in
+          Section(header: CourseHeaderView(name: group.name)) {
+            episodeListing(data: childContentsViewModel.contents(for: group.id))
           }
-        } else if !childContentsViewModel.groups.isEmpty {
-          episodeListing(data: childContentsViewModel.contents)
         }
+      } else if !childContentsViewModel.groups.isEmpty {
+        episodeListing(data: childContentsViewModel.contents)
       }
     }
-    .listRowBackground(Color.backgroundColor)
-    .accessibility(identifier: "childContentList")
+    .padding(0)
   }
   
   private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
