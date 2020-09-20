@@ -44,7 +44,7 @@ struct SearchFieldView: View {
       Image(systemName: "magnifyingglass")
         .foregroundColor(.searchFieldIcon)
         .frame(height: 25)
-      
+
       TextField(
         String.search,
         text: $searchString,
