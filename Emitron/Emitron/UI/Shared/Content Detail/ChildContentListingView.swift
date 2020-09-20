@@ -50,26 +50,40 @@ struct ChildContentListingView: View {
   }
   
   var coursesSection: some View {
-    Section {
-      if childContentsViewModel.contents.count > 1 {
-        Text("Course Episodes")
-          .font(.uiTitle2)
-          .foregroundColor(.titleText)
-          .padding([.top], -5)
+    SwiftUI.Group {
+      Section {
+        if childContentsViewModel.contents.count > 1 {
+          Text("Course Episodes")
+            .font(.uiTitle2)
+            .foregroundColor(.titleText)
+            .padding([.top, .bottom])
+        }
+      }
+        .listRowBackground(Color.backgroundColor)
+        .accessibility(identifier: "childContentList")
         
-        if childContentsViewModel.groups.count > 1 {
-          ForEach(childContentsViewModel.groups, id: \.id) { group in
+      if childContentsViewModel.groups.count > 1 {
+        ForEach(childContentsViewModel.groups, id: \.id) { group in
+          // By default, iOS 14 shows headers in upper case. Text casing is changed by the textCase modifier which is not available on previous versions.
+          if #available(iOS 14, *) {
             Section(header: CourseHeaderView(name: group.name)) {
               episodeListing(data: childContentsViewModel.contents(for: group.id))
             }
+            .background(Color.backgroundColor)
+            .textCase(nil)
+          } else {
+            // Default behavior for iOS 13 and lower.
+            Section(header: CourseHeaderView(name: group.name)) {
+              episodeListing(data: childContentsViewModel.contents(for: group.id))
+            }
+            .background(Color.backgroundColor)
           }
-        } else if !childContentsViewModel.groups.isEmpty {
-          episodeListing(data: childContentsViewModel.contents)
         }
+      } else if !childContentsViewModel.groups.isEmpty {
+        episodeListing(data: childContentsViewModel.contents)
       }
     }
-    .listRowBackground(Color.backgroundColor)
-    .accessibility(identifier: "childContentList")
+    .padding(0)
   }
   
   private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
