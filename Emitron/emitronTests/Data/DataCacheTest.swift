@@ -63,7 +63,7 @@ class DataCacheTest: XCTestCase {
     
     let summary = try wait(for: recorder.next(), timeout: 5)
     
-    XCTAssertEqual(sampleContent, summary?.first?.content)
+    XCTAssertEqual(sampleContent, summary.first?.content)
   }
   
   func testContentSummaryStateWhenCacheMiss() throws {
@@ -89,7 +89,7 @@ class DataCacheTest: XCTestCase {
     
     let dynamic = try wait(for: recorder.next(), timeout: 5)
     
-    XCTAssertEqual(sampleProgression, dynamic?.progression)
+    XCTAssertEqual(sampleProgression, dynamic.progression)
   }
   
   func testContentDynamicStateNotPossibleToCacheMiss() throws {
@@ -109,8 +109,8 @@ class DataCacheTest: XCTestCase {
     
     let childContents = try wait(for: recorder.next(), timeout: 5)
     
-    XCTAssertEqual(collection.1.contents.count - 1, childContents?.contents.count)
-    XCTAssert(childContents!.contents.count > 1)
+    XCTAssertEqual(collection.1.contents.count - 1, childContents.contents.count)
+    XCTAssert(childContents.contents.count > 1)
   }
   
   func testChildContentStateWhenCacheMiss() throws {
@@ -136,7 +136,7 @@ class DataCacheTest: XCTestCase {
     
     let childContents = try wait(for: recorder.next(), timeout: 5)
     
-    XCTAssertEqual([], childContents?.contents)
+    XCTAssertEqual([], childContents.contents)
   }
   
   func testChildContentStateCacheMissWhenNoChildContentForCollection() throws {
@@ -202,6 +202,6 @@ class DataCacheTest: XCTestCase {
     let recorder = publisher.record()
     
     let summary = try wait(for: recorder.next(), timeout: 5)
-    XCTAssertEqual(collection.0, summary?.first?.parentContent)
+    XCTAssertEqual(collection.0, summary.first?.parentContent)
   }
 }
