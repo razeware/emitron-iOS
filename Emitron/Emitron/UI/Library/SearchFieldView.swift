@@ -50,10 +50,10 @@ struct SearchFieldView: View {
         text: $searchString,
         onCommit: { action(searchString) }
       )
-      .keyboardType(.webSearch)
-      .font(.uiBodyCustom)
-      .foregroundColor(.searchFieldText)
-      .contentShape(Rectangle())
+        .keyboardType(.webSearch)
+        .font(.uiBodyCustom)
+        .foregroundColor(.searchFieldText)
+        .contentShape(Rectangle())
       
       if !searchString.isEmpty {
         Button(action: {
