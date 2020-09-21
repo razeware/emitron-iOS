@@ -29,12 +29,27 @@
 import SwiftUI
 import KingfisherSwiftUI
 
-struct VerticalFadeImageView: View {
-  var imageURL: URL?
-  var blurred: Bool = false
-  var width: CGFloat?
-  var height: CGFloat?
-  
+struct VerticalFadeImageView {
+  private let imageURL: URL?
+  private let blurred: Bool
+  private let width: CGFloat?
+  private let height: CGFloat?
+
+  init(
+    imageURL: URL?,
+    blurred: Bool,
+    width: CGFloat?,
+    height: CGFloat?
+  ) {
+    self.imageURL = imageURL
+    self.blurred = blurred
+    self.width = width
+    self.height = height
+  }
+}
+
+// MARK: - View
+extension VerticalFadeImageView: View {
   var body: some View {
     ZStack {
       KFImage(imageURL)
@@ -54,12 +69,9 @@ struct VerticalFadeImageView: View {
 }
 
 struct VerticalFadeImageView_Previews: PreviewProvider {
-  
   static var previews: some View {
-    VerticalFadeImageView(imageURL: sampleImageURL)
-  }
-  
-  static var sampleImageURL: URL? {
-    Bundle.main.url(forResource: "sampleCardImage", withExtension: "png")
+    Bundle.main.url(forResource: "sampleCardImage", withExtension: "png").map {
+      VerticalFadeImageView(imageURL: $0, blurred: false, width: nil, height: nil)
+    }
   }
 }

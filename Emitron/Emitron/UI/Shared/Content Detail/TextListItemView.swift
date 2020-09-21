@@ -79,8 +79,11 @@ struct TextListItemView: View {
       }
     }
   }
+}
 
-  @ViewBuilder private var progressBar: some View {
+// MARK: - private
+private extension TextListItemView {
+  @ViewBuilder var progressBar: some View {
     if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
       ProgressBarView(progress: progress, isRounded: true)
     } else {
@@ -102,11 +105,11 @@ struct TextListItemView: View {
     }
   }
   
-  private func download() {
+  func download() {
     deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
-  private func toggleCompleteness() {
+  func toggleCompleteness() {
     dynamicContentViewModel.completedTapped()
   }
 }

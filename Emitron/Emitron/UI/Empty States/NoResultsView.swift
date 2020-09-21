@@ -28,11 +28,23 @@
 
 import SwiftUI
 
-struct NoResultsView<Header: View>: View {
-  @EnvironmentObject var tabViewModel: TabViewModel
-  var contentScreen: ContentScreen
-  let header: Header
+struct NoResultsView<Header: View> {
+  init(
+    contentScreen: ContentScreen,
+    header: Header
+  ) {
+    self.contentScreen = contentScreen
+    self.header = header
+  }
 
+  @EnvironmentObject private var tabViewModel: TabViewModel
+
+  private let contentScreen: ContentScreen
+  private let header: Header
+}
+
+// MARK: - View
+extension NoResultsView: View {
   var body: some View {
     VStack {
       header

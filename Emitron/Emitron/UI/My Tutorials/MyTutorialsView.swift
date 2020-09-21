@@ -56,26 +56,42 @@ enum MyTutorialsState: String {
   }
 }
 
-struct MyTutorialView: View {
-  
+struct MyTutorialView {
+  init(
+    state: MyTutorialsState,
+    inProgressRepository: InProgressRepository,
+    completedRepository: CompletedRepository,
+    bookmarkRepository: BookmarkRepository,
+    domainRepository: DomainRepository
+  ) {
+    _state = .init(wrappedValue: state)
+    self.inProgressRepository = inProgressRepository
+    self.completedRepository = completedRepository
+    self.bookmarkRepository = bookmarkRepository
+    self.domainRepository = domainRepository
+  }
+
   // Initialization
-  @State var state: MyTutorialsState
+  @State private var state: MyTutorialsState
 
   // We need to pull these in to pass them to the settings view. We don't actually use them here.
   // I think this is a bug.
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var tabViewModel: TabViewModel
   
-  var inProgressRepository: InProgressRepository
-  var completedRepository: CompletedRepository
-  var bookmarkRepository: BookmarkRepository
-  @ObservedObject var domainRepository: DomainRepository
+  private let inProgressRepository: InProgressRepository
+  private let completedRepository: CompletedRepository
+  private let bookmarkRepository: BookmarkRepository
+  @ObservedObject private var domainRepository: DomainRepository
 
-  @State private var settingsPresented: Bool = false
-  @State private var reloadProgression: Bool = true
-  @State private var reloadCompleted: Bool = true
-  @State private var reloadBookmarks: Bool = true
+  @State private var settingsPresented = false
+  @State private var reloadProgression = true
+  @State private var reloadCompleted = true
+  @State private var reloadBookmarks = true
+}
 
+// MARK: - View
+extension MyTutorialView: View {
   var body: some View {
     contentView
       .navigationBarTitle(String.myTutorials)
@@ -100,8 +116,31 @@ struct MyTutorialView: View {
       reloadBookmarks = true
     }
   }
+}
 
-  private func makeContentListView(
+// MARK: - private
+private extension MyTutorialView {
+  @ViewBuilder var contentView: some View {
+    switch state {
+    case .inProgress:
+      makeContentListView(
+        contentRepository: inProgressRepository,
+        contentScreen: .inProgress
+      )
+    case .completed:
+      makeContentListView(
+        contentRepository: completedRepository,
+        contentScreen: .completed
+      )
+    case .bookmarked:
+      makeContentListView(
+        contentRepository: bookmarkRepository,
+        contentScreen: .bookmarked
+      )
+    }
+  }
+
+  func makeContentListView(
     contentRepository: ContentRepository,
     contentScreen: ContentScreen
   ) -> some View {
@@ -142,25 +181,5 @@ struct MyTutorialView: View {
       contentScreen: ContentScreen.inProgress,
       header: toggleControl
     )
-  }
-
-  @ViewBuilder private var contentView: some View {
-    switch state {
-    case .inProgress:
-      makeContentListView(
-        contentRepository: inProgressRepository,
-        contentScreen: .inProgress
-      )
-    case .completed:
-      makeContentListView(
-        contentRepository: completedRepository,
-        contentScreen: .completed
-      )
-    case .bookmarked:
-      makeContentListView(
-        contentRepository: bookmarkRepository,
-        contentScreen: .bookmarked
-      )
-    }
   }
 }

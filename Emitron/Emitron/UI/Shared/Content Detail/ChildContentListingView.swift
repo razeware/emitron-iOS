@@ -37,7 +37,10 @@ struct ChildContentListingView: View {
     childContentsViewModel.initialiseIfRequired()
     return courseDetailsSection
   }
-  
+}
+
+// MARK: - private
+private extension ChildContentListingView {
   @ViewBuilder private var courseDetailsSection: some View {
     switch childContentsViewModel.state {
     case .failed:
@@ -85,8 +88,27 @@ struct ChildContentListingView: View {
     }
     .padding(0)
   }
+
+  var loadingView: some View {
+    HStack {
+      Spacer()
+      LoadingView()
+      Spacer()
+    }
+      .listRowInsets(EdgeInsets())
+      .listRowBackground(Color.backgroundColor)
+      .background(Color.backgroundColor)
+  }
+
+  var reloadView: MainButtonView {
+    .init(
+      title: "Reload",
+      type: .primary(withArrow: false),
+      callback: childContentsViewModel.reload
+    )
+  }
   
-  private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
+  func episodeListing(data: [ChildContentListDisplayable]) -> some View {
     let onlyContentWithVideoID = data
       .filter { $0.videoIdentifier != nil }
       .sorted {
@@ -100,8 +122,8 @@ struct ChildContentListingView: View {
         .listRowBackground(Color.backgroundColor)
     }
   }
-
-  @ViewBuilder private func episodeRow(model: ChildContentListDisplayable) -> some View {
+  
+  @ViewBuilder func episodeRow(model: ChildContentListDisplayable) -> some View {
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     
     if !sessionController.canPlay(content: model) {
@@ -137,25 +159,6 @@ struct ChildContentListingView: View {
         .padding([.horizontal, .bottom], 20)
       }
     }
-  }
-  
-  private var loadingView: some View {
-    HStack {
-      Spacer()
-      LoadingView()
-      Spacer()
-    }
-    .listRowInsets(EdgeInsets())
-    .listRowBackground(Color.backgroundColor)
-    .background(Color.backgroundColor)
-  }
-  
-  private var reloadView: MainButtonView {
-    .init(
-      title: "Reload",
-      type: .primary(withArrow: false),
-      callback: childContentsViewModel.reload
-    )
   }
 }
 
