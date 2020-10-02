@@ -94,7 +94,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryRepository.totalContentNum) \(String.tutorials.uppercased())")
+      Text("\(libraryRepository.totalContentNum) \(String.tutorials.capitalized)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
@@ -105,7 +105,7 @@ struct LibraryView: View {
           Image("sort")
             .foregroundColor(.textButtonText)
 
-          Text(filters.sortFilter.name.uppercased())
+          Text(filters.sortFilter.name)
             .font(.uiLabelBold)
             .foregroundColor(.textButtonText)
         }

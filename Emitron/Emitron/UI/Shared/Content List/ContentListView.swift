@@ -88,6 +88,15 @@ private extension ContentListView {
     }
   }
 
+  var listContentView: some View {
+    SwiftUI.Group {
+      cardsView
+      loadMoreView
+      // Hack to make sure there's some spacing at the bottom of the list
+      Color.clear.frame(height: 0)
+    }
+  }
+
   var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
@@ -128,11 +137,14 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      makeList {
-        cardsView
-        loadMoreView
-        // Hack to make sure there's some spacing at the bottom of the list
-        Color.clear.frame(height: 0)
+      if #available(iOS 14, *) {
+        makeSectionList {
+          listContentView
+        }
+      } else {
+        makeList {
+          listContentView
+        }
       }
     }
       .if(!allowDelete) {
@@ -150,6 +162,15 @@ private extension ContentListView {
   ) -> some View {
     Section(header: header, content: content)
       .listRowInsets(EdgeInsets())
+  }
+
+  @available(iOS 14, *)
+  func makeSectionList<Content: View>(
+    @ViewBuilder content: () -> Content
+  ) -> some View {
+    Section(header: header, content: content)
+      .listRowInsets(EdgeInsets())
+      .textCase(nil)
   }
 
   func makeList<Content: View>(
