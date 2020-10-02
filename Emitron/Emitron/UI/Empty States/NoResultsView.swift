@@ -28,14 +28,26 @@
 
 import SwiftUI
 
-struct NoResultsView: View {
-  @EnvironmentObject var tabViewModel: TabViewModel
-  var contentScreen: ContentScreen
-  var headerView: AnyView?
-  
+struct NoResultsView<Header: View> {
+  init(
+    contentScreen: ContentScreen,
+    header: Header
+  ) {
+    self.contentScreen = contentScreen
+    self.header = header
+  }
+
+  @EnvironmentObject private var tabViewModel: TabViewModel
+
+  private let contentScreen: ContentScreen
+  private let header: Header
+}
+
+// MARK: - View
+extension NoResultsView: View {
   var body: some View {
     VStack {
-      headerView
+      header
       
       Spacer()
 
@@ -73,13 +85,19 @@ struct NoResultsView: View {
 
 struct NoResultsView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      NoResultsView(contentScreen: .bookmarked)
-      NoResultsView(contentScreen: .completed)
-      NoResultsView(contentScreen: .downloads(permitted: true))
-      NoResultsView(contentScreen: .downloads(permitted: false))
-      NoResultsView(contentScreen: .inProgress)
-      NoResultsView(contentScreen: .library)
-    }
+    NoResultsView(contentScreen: .bookmarked)
+    NoResultsView(contentScreen: .completed)
+    NoResultsView(contentScreen: .downloads(permitted: true))
+    NoResultsView(contentScreen: .downloads(permitted: false))
+    NoResultsView(contentScreen: .inProgress)
+    NoResultsView(contentScreen: .library)
+  }
+}
+
+// MARK: - private
+private extension NoResultsView where Header == EmptyView {
+  init(contentScreen: ContentScreen) {
+    self.contentScreen = contentScreen
+    header = .init()
   }
 }

@@ -28,65 +28,70 @@
 
 import SwiftUI
 
-struct SettingsList: View {
+struct SettingsList {
   @ObservedObject private var settingsManager: SettingsManager
+}
 
-  init(settingsManager: ObservedObject<SettingsManager>) {
-    _settingsManager = settingsManager
-  }
-  
+// MARK: - View
+extension SettingsList: View {
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(SettingsOption.allCases, content: row)
-    }
-  }
-  
-  private func row(for option: SettingsOption) -> AnyView {
-    switch option {
-    case .closedCaptionOn:
-      return AnyView(SettingsToggleRow(
-        title: option.title,
-        isOn: $settingsManager.closedCaptionOn
-      ))
-    case .wifiOnlyDownloads:
-      return AnyView(SettingsToggleRow(
-        title: option.title,
-        isOn: $settingsManager.wifiOnlyDownloads
-      ))
-    case .downloadQuality:
-      return AnyView(
-        NavigationLink(
-          destination: SettingsSelectionView(
-            title: option.title,
-            settingsOption: $settingsManager.downloadQuality
-          )
-        ) {
-          SettingsDisclosureRow(title: option.title, value: settingsManager.downloadQuality.display)
-        })
-    case .playbackSpeed:
-      return AnyView(
-        NavigationLink(
-          destination: SettingsSelectionView(
-            title: option.title,
-            settingsOption: $settingsManager.playbackSpeed
-          )
-        ) {
-          SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
-        })
+      ForEach(SettingsOption.allCases) { self[$0] }
     }
   }
 }
 
 struct SettingsList_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      list.colorScheme(.dark)
-      list.colorScheme(.light)
-    }
+    list.colorScheme(.dark)
+    list.colorScheme(.light)
   }
-  
+
   static var list: some View {
     SettingsList( settingsManager: .init(initialValue: .current) )
       .background(Color.backgroundColor)
+  }
+}
+
+// MARK: - internal
+extension SettingsList {
+  init(settingsManager: ObservedObject<SettingsManager>) {
+    _settingsManager = settingsManager
+  }
+}
+
+// MARK: - private
+private extension SettingsList {
+  @ViewBuilder subscript(option: SettingsOption) -> some View {
+    switch option {
+    case .closedCaptionOn:
+      SettingsToggleRow(
+        title: option.title,
+        isOn: $settingsManager.closedCaptionOn
+      )
+    case .wifiOnlyDownloads:
+      SettingsToggleRow(
+        title: option.title,
+        isOn: $settingsManager.wifiOnlyDownloads
+      )
+    case .downloadQuality:
+      NavigationLink(
+        destination: SettingsSelectionView(
+          title: option.title,
+          settingsOption: $settingsManager.downloadQuality
+        )
+      ) {
+        SettingsDisclosureRow(title: option.title, value: settingsManager.downloadQuality.display)
+      }
+    case .playbackSpeed:
+      NavigationLink(
+        destination: SettingsSelectionView(
+          title: option.title,
+          settingsOption: $settingsManager.playbackSpeed
+        )
+      ) {
+        SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
+      }
+    }
   }
 }

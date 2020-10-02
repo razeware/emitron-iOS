@@ -68,9 +68,7 @@ struct VideoOverlayButtonView: View {
               .stroke(Color.white, lineWidth: 5)
           )
         )
-        .onPreferenceChange(SizeKey.self) { size in
-          self.size = size
-        }
+        .onPreferenceChange(SizeKey.self) { self.size = $0 }
       Spacer()
     }
   }

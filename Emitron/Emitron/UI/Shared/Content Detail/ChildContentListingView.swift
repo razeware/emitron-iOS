@@ -37,51 +37,84 @@ struct ChildContentListingView: View {
     childContentsViewModel.initialiseIfRequired()
     return courseDetailsSection
   }
-  
-  private var courseDetailsSection: AnyView {
+}
+
+// MARK: - private
+private extension ChildContentListingView {
+  @ViewBuilder private var courseDetailsSection: some View {
     switch childContentsViewModel.state {
     case .failed:
-      return AnyView(reloadView)
+      reloadView
     case .hasData:
-      return AnyView(coursesSection)
-    case .loading, .loadingAdditional:
-      return AnyView(loadingView)
-    case .initial:
-      return AnyView(loadingView)
+      coursesSection
+    case .loading, .loadingAdditional, .initial:
+      loadingView
     }
   }
   
   var coursesSection: some View {
-    Section {
-      if childContentsViewModel.contents.count > 1 {
-        Text("Course Episodes")
-          .font(.uiTitle2)
-          .foregroundColor(.titleText)
-          .padding([.top], -5)
+    SwiftUI.Group {
+      Section {
+        if childContentsViewModel.contents.count > 1 {
+          Text("Course Episodes")
+            .font(.uiTitle2)
+            .foregroundColor(.titleText)
+            .padding([.top, .bottom])
+        }
+      }
+        .listRowBackground(Color.backgroundColor)
+        .accessibility(identifier: "childContentList")
         
-        if childContentsViewModel.groups.count > 1 {
-          ForEach(childContentsViewModel.groups, id: \.id) { group in
-            
+      if childContentsViewModel.groups.count > 1 {
+        ForEach(childContentsViewModel.groups, id: \.id) { group in
+          // By default, iOS 14 shows headers in upper case. Text casing is changed by the textCase modifier which is not available on previous versions.
+          if #available(iOS 14, *) {
             Section(header: CourseHeaderView(name: group.name)) {
               episodeListing(data: childContentsViewModel.contents(for: group.id))
             }
+            .background(Color.backgroundColor)
+            .textCase(nil)
+          } else {
+            // Default behavior for iOS 13 and lower.
+            Section(header: CourseHeaderView(name: group.name)) {
+              episodeListing(data: childContentsViewModel.contents(for: group.id))
+            }
+            .background(Color.backgroundColor)
           }
-        } else if !childContentsViewModel.groups.isEmpty {
-          episodeListing(data: childContentsViewModel.contents)
         }
+      } else if !childContentsViewModel.groups.isEmpty {
+        episodeListing(data: childContentsViewModel.contents)
       }
     }
-    .listRowBackground(Color.backgroundColor)
-    .accessibility(identifier: "childContentList")
+    .padding(0)
+  }
+
+  var loadingView: some View {
+    HStack {
+      Spacer()
+      LoadingView()
+      Spacer()
+    }
+      .listRowInsets(EdgeInsets())
+      .listRowBackground(Color.backgroundColor)
+      .background(Color.backgroundColor)
+  }
+
+  var reloadView: MainButtonView {
+    .init(
+      title: "Reload",
+      type: .primary(withArrow: false),
+      callback: childContentsViewModel.reload
+    )
   }
   
-  private func episodeListing(data: [ChildContentListDisplayable]) -> some View {
+  func episodeListing(data: [ChildContentListDisplayable]) -> some View {
     let onlyContentWithVideoID = data
       .filter { $0.videoIdentifier != nil }
-      .sorted(by: {
+      .sorted {
         guard let lhs = $0.ordinal, let rhs = $1.ordinal else { return true }
         return lhs < rhs
-      })
+      }
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       episodeRow(model: model)
@@ -90,33 +123,28 @@ struct ChildContentListingView: View {
     }
   }
   
-  private func episodeRow(model: ChildContentListDisplayable) -> some View {
-    
+  @ViewBuilder func episodeRow(model: ChildContentListDisplayable) -> some View {
     let childDynamicContentViewModel = childContentsViewModel.dynamicContentViewModel(for: model.id)
     
     if !sessionController.canPlay(content: model) {
-      return AnyView(
+      TextListItemView(
+        dynamicContentViewModel: childDynamicContentViewModel,
+        content: model
+      )
+      .padding([.horizontal, .bottom], 20)
+    } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
+      Button(action: {
+        MessageBus.current
+          .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
+      }) {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
         )
-          .padding([.horizontal, .bottom], 20)
-      )
-    } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
-      return AnyView(
-        Button(action: {
-          MessageBus.current
-            .post(message: Message(level: .warning, message: Constants.videoPlaybackExpiredPermissions))
-        }) {
-          TextListItemView(
-            dynamicContentViewModel: childDynamicContentViewModel,
-            content: model
-          )
-            .padding([.horizontal, .bottom], 20)
-        }
-      )
+        .padding([.horizontal, .bottom], 20)
+      }
     } else {
-      return AnyView(Button(action: {
+      Button(action: {
         currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
           apiClient: sessionController.client,
           dismissClosure: {
@@ -128,26 +156,9 @@ struct ChildContentListingView: View {
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
         )
-          .padding([.horizontal, .bottom], 20)
-      })
+        .padding([.horizontal, .bottom], 20)
+      }
     }
-  }
-  
-  private var loadingView: some View {
-    HStack {
-      Spacer()
-      LoadingView()
-      Spacer()
-    }
-      .listRowInsets(EdgeInsets())
-      .listRowBackground(Color.backgroundColor)
-      .background(Color.backgroundColor)
-  }
-  
-  private var reloadView: AnyView? {
-    AnyView(MainButtonView(title: "Reload", type: .primary(withArrow: false)) {
-      self.childContentsViewModel.reload()
-    })
   }
 }
 

@@ -42,9 +42,9 @@ enum SortFilter: Int, Codable {
   var name: String {
     switch self {
     case .newest:
-      return Constants.newest
+      return .newest
     case .popularity:
-      return Constants.popularity
+      return .popularity
     }
   }
   

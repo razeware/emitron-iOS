@@ -96,7 +96,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     
     if case .loaded(let date) = permissionState,
       let permissionsLastConfirmedDate = date,
-      Date().timeIntervalSince(permissionsLastConfirmedDate) < Constants.videoPlaybackOfflinePermissionsCheckPeriod {
+      Date().timeIntervalSince(permissionsLastConfirmedDate) < .videoPlaybackOfflinePermissionsCheckPeriod {
       return true
     }
     return false

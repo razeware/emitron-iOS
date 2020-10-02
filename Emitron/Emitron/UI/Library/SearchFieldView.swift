@@ -44,9 +44,9 @@ struct SearchFieldView: View {
       Image(systemName: "magnifyingglass")
         .foregroundColor(.searchFieldIcon)
         .frame(height: 25)
-      
+
       TextField(
-        Constants.search,
+        String.search,
         text: $searchString,
         onCommit: { action(searchString) }
       )
@@ -67,15 +67,15 @@ struct SearchFieldView: View {
         }
       }
     }
-      .padding([.vertical], 6)
-      .padding([.horizontal], 10)
+      .padding(.vertical, 6)
+      .padding(.horizontal, 10)
       .background(GeometryReader { proxy in
         Color.clear.preference(key: SizeKey.self, value: proxy.size)
       })
       .frame(height: height)
       .background(background)
       .padding(1)
-      .padding([.bottom], 2)
+      .padding(.bottom, 2)
       .onPreferenceChange(SizeKey.self) { size in
         height = size?.height
       }
@@ -94,19 +94,17 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      searchFields.colorScheme(.light)
-      searchFields.colorScheme(.dark)
-    }
+    searchFields.colorScheme(.light)
+    searchFields.colorScheme(.dark)
   }
   
-  static var searchFields: some View {
+  private static var searchFields: some View {
     VStack(spacing: 20) {
       SearchFieldView(searchString: "")
       SearchFieldView(searchString: "Hello")
       SearchFieldView(searchString: "Testing")
     }
-      .padding(20)
-      .background(Color.backgroundColor)
+    .padding(20)
+    .background(Color.backgroundColor)
   }
 }

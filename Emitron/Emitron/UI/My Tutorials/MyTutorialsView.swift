@@ -56,29 +56,45 @@ enum MyTutorialsState: String {
   }
 }
 
-struct MyTutorialView: View {
-  
+struct MyTutorialView {
+  init(
+    state: MyTutorialsState,
+    inProgressRepository: InProgressRepository,
+    completedRepository: CompletedRepository,
+    bookmarkRepository: BookmarkRepository,
+    domainRepository: DomainRepository
+  ) {
+    _state = .init(wrappedValue: state)
+    self.inProgressRepository = inProgressRepository
+    self.completedRepository = completedRepository
+    self.bookmarkRepository = bookmarkRepository
+    self.domainRepository = domainRepository
+  }
+
   // Initialization
-  @State var state: MyTutorialsState
+  @State private var state: MyTutorialsState
 
   // We need to pull these in to pass them to the settings view. We don't actually use them here.
   // I think this is a bug.
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var tabViewModel: TabViewModel
   
-  var inProgressRepository: InProgressRepository
-  var completedRepository: CompletedRepository
-  var bookmarkRepository: BookmarkRepository
-  @ObservedObject var domainRepository: DomainRepository
+  private let inProgressRepository: InProgressRepository
+  private let completedRepository: CompletedRepository
+  private let bookmarkRepository: BookmarkRepository
+  @ObservedObject private var domainRepository: DomainRepository
 
-  @State private var settingsPresented: Bool = false
-  @State private var reloadProgression: Bool = true
-  @State private var reloadCompleted: Bool = true
-  @State private var reloadBookmarks: Bool = true
+  @State private var settingsPresented = false
+  @State private var reloadProgression = true
+  @State private var reloadCompleted = true
+  @State private var reloadBookmarks = true
+}
 
+// MARK: - View
+extension MyTutorialView: View {
   var body: some View {
     contentView
-      .navigationBarTitle(Text(Constants.myTutorials))
+      .navigationBarTitle(String.myTutorials)
       .navigationBarItems(trailing:
         SwiftUI.Group {
           Button(action: {
@@ -100,9 +116,35 @@ struct MyTutorialView: View {
       reloadBookmarks = true
     }
   }
+}
 
-  private var toggleControl: AnyView {
-    AnyView(
+// MARK: - private
+private extension MyTutorialView {
+  @ViewBuilder var contentView: some View {
+    switch state {
+    case .inProgress:
+      makeContentListView(
+        contentRepository: inProgressRepository,
+        contentScreen: .inProgress
+      )
+    case .completed:
+      makeContentListView(
+        contentRepository: completedRepository,
+        contentScreen: .completed
+      )
+    case .bookmarked:
+      makeContentListView(
+        contentRepository: bookmarkRepository,
+        contentScreen: .bookmarked
+      )
+    }
+  }
+
+  func makeContentListView(
+    contentRepository: ContentRepository,
+    contentScreen: ContentScreen
+  ) -> some View {
+    var toggleControl: some View {
       VStack {
         ToggleControlView(
           toggleState: state,
@@ -127,42 +169,17 @@ struct MyTutorialView: View {
               }
             }
           })
-          .padding([.top], .sidePadding)
+          .padding(.top, .sidePadding)
       }
-        .padding([.horizontal], .sidePadding)
-        .background(Color.backgroundColor)
-    )
-  }
-
-  private var contentView: AnyView? {
-    switch state {
-    case .inProgress:
-      return inProgressContentsView
-    case .completed:
-      return completedContentsView
-    case .bookmarked:
-      return bookmarkedContentsView
+      .padding(.horizontal, .sidePadding)
+      .background(Color.backgroundColor)
     }
-  }
-
-  private var inProgressContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: inProgressRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: ContentScreen.inProgress,
-                            headerView: toggleControl))
-  }
-  
-  private var completedContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: completedRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: .completed,
-                            headerView: toggleControl))
-  }
-  
-  private var bookmarkedContentsView: AnyView? {
-    AnyView(ContentListView(contentRepository: bookmarkRepository,
-                            downloadAction: DownloadService.current,
-                            contentScreen: .bookmarked,
-                            headerView: toggleControl))
+    
+    return ContentListView(
+      contentRepository: contentRepository,
+      downloadAction: DownloadService.current,
+      contentScreen: ContentScreen.inProgress,
+      header: toggleControl
+    )
   }
 }

@@ -27,28 +27,29 @@
 // THE SOFTWARE.
 
 import SwiftUI
-import KingfisherSwiftUI
-import UIKit
 
-struct ContentDetailView: View {
+struct ContentDetailView {
+  init(
+    content: ContentListDisplayable,
+    childContentsViewModel: ChildContentsViewModel,
+    dynamicContentViewModel: DynamicContentViewModel
+  ) {
+    self.content = content
+    self.childContentsViewModel = childContentsViewModel
+    self.dynamicContentViewModel = dynamicContentViewModel
+  }
+
+  private let content: ContentListDisplayable
+  @ObservedObject private var childContentsViewModel: ChildContentsViewModel
+  @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
+
+  @EnvironmentObject private var sessionController: SessionController
+
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
-  
-  var content: ContentListDisplayable
-  @ObservedObject var childContentsViewModel: ChildContentsViewModel
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
+}
 
-  @EnvironmentObject var sessionController: SessionController
-  var user: User {
-    sessionController.user!
-  }
-  
-  private var canStreamPro: Bool {
-    user.canStreamPro
-  }
-  
-  var imageRatio: CGFloat = 283 / 375
-  var maxImageHeight: CGFloat = 384
-  
+// MARK: - View
+extension ContentDetailView: View {
   var body: some View {
     ZStack {
       contentView
@@ -58,7 +59,10 @@ struct ContentDetailView: View {
       }
     }
   }
-  
+}
+
+// MARK: - private
+private extension ContentDetailView {
   var contentView: some View {
     GeometryReader { geometry in
       List {
@@ -71,7 +75,7 @@ struct ContentDetailView: View {
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
-            .padding([.bottom], 37)
+            .padding(.bottom, 37)
         }
         .listRowInsets(EdgeInsets())
         .listRowBackground(Color.backgroundColor)
@@ -86,8 +90,14 @@ struct ContentDetailView: View {
       .navigationBarTitle(Text(""), displayMode: .inline)
       .background(Color.backgroundColor)
   }
-  
-  private func openSettings() {
+
+  var canStreamPro: Bool { user.canStreamPro }
+  var user: User { sessionController.user! }
+
+  var imageRatio: CGFloat { 283 / 375 }
+  var maxImageHeight: CGFloat { 384 }
+
+  func openSettings() {
     // open iPhone settings
     if
       let url = URL(string: UIApplication.openSettingsURLString),
@@ -95,7 +105,7 @@ struct ContentDetailView: View {
     { UIApplication.shared.open(url) }
   }
   
-  private var continueOrPlayButton: Button<AnyView> {
+  var continueOrPlayButton: some View {
     Button(action: {
       currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: sessionController.client,
@@ -106,27 +116,25 @@ struct ContentDetailView: View {
     }) {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
-          return AnyView(ContinueButtonView())
+          ContinueButtonView()
         } else {
-          return AnyView(PlayButtonView())
+          PlayButtonView()
         }
       } else {
-        return AnyView(
-          HStack {
-            Spacer()
-            ActivityIndicator()
-            Spacer()
-          }
-        )
+        HStack {
+          Spacer()
+          ActivityIndicator()
+          Spacer()
+        }
       }
     }
   }
 
-  private func headerImagePlayableContent(for width: CGFloat) -> some View {
+  func headerImagePlayableContent(for width: CGFloat) -> some View {
     VStack(spacing: 0, content: {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
-          imageUrl: content.cardArtworkUrl,
+          imageURL: content.cardArtworkURL,
           blurred: false,
           width: width,
           height: min(width * imageRatio, maxImageHeight)
@@ -139,10 +147,10 @@ struct ContentDetailView: View {
     })
   }
   
-  private func headerImageLockedProContent(for width: CGFloat) -> some View {
+  func headerImageLockedProContent(for width: CGFloat) -> some View {
     ZStack {
       VerticalFadeImageView(
-        imageUrl: content.cardArtworkUrl,
+        imageURL: content.cardArtworkURL,
         blurred: true,
         width: width,
         height: min(width * imageRatio, maxImageHeight)
@@ -152,10 +160,10 @@ struct ContentDetailView: View {
     }
   }
   
-  private var progressBar: AnyView? {
-    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
-      return AnyView(ProgressBarView(progress: progress, isRounded: false))
-    }
-    return nil
+  var progressBar: ProgressBarView? {
+    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
+    else { return nil }
+
+    return .init(progress: progress, isRounded: false)
   }
 }

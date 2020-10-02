@@ -57,7 +57,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // swiftlint:disable:next force_try
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
-    guardpost = Guardpost(baseUrl: "https://accounts.raywenderlich.com",
+    guardpost = Guardpost(baseURL: "https://accounts.raywenderlich.com",
                           urlScheme: "com.razeware.emitron://",
                           ssoSecret: Configuration.ssoSecret,
                           persistenceStore: persistenceStore)
@@ -107,13 +107,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let databaseURL = try FileManager.default
       .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
       .appendingPathComponent("emitron.sqlite")
-    let dbPool = try EmitronDatabase.openDatabase(atPath: databaseURL.path)
-    
-    // Be a nice iOS citizen, and don't consume too much memory
-    // See https://github.com/groue/GRDB.swift/blob/master/README.md#memory-management
-    dbPool.setupMemoryManagement(in: application)
-    
-    return dbPool
+    return try EmitronDatabase.openDatabase(atPath: databaseURL.path)
   }
 }
 

@@ -429,8 +429,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     XCTAssertNotNil(list)
     
-    XCTAssertEqual(1, list!.count)
-    XCTAssertEqual([], list!.filter { $0.contentType == .episode })
+    XCTAssertEqual(1, list.count)
+    XCTAssertEqual([], list.filter { $0.contentType == .episode })
   }
   
   func testDownloadsInStateDoesNotContainCollections() throws {

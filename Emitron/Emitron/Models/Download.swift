@@ -46,13 +46,13 @@ struct Download: Codable {
   var requestedAt: Date
   var lastValidatedAt: Date?
   var fileName: String?
-  var remoteUrl: URL?
+  var remoteURL: URL?
   var progress: Double = 0
   var state: State
   var contentId: Int
   var ordinal: Int = 0 // We copy this from the Content, and it is used to sort the queue
   
-  var localUrl: URL? {
+  var localURL: URL? {
     guard let fileName = fileName,
       let downloadDirectory = Download.downloadDirectory else {
         return nil
@@ -79,7 +79,7 @@ extension Download: Equatable {
   static func == (lhs: Download, rhs: Download) -> Bool {
     lhs.id == rhs.id &&
       lhs.fileName == rhs.fileName &&
-      lhs.remoteUrl == rhs.remoteUrl &&
+      lhs.remoteURL == rhs.remoteURL &&
       lhs.progress == rhs.progress &&
       lhs.state == rhs.state &&
       lhs.contentId == rhs.contentId &&
@@ -96,7 +96,7 @@ extension Download {
       requestedAt: Date(),
       lastValidatedAt: nil,
       fileName: nil,
-      remoteUrl: nil,
+      remoteURL: nil,
       progress: 0,
       state: .pending,
       contentId: content.id,
@@ -106,11 +106,11 @@ extension Download {
 
 extension Download {
   var isDownloading: Bool {
-    [.inProgress, .paused].contains(state) && remoteUrl != nil
+    [.inProgress, .paused].contains(state) && remoteURL != nil
   }
   
   var isDownloaded: Bool {
-    [.complete].contains(state) && remoteUrl != nil
+    [.complete].contains(state) && remoteURL != nil
   }
 }
 

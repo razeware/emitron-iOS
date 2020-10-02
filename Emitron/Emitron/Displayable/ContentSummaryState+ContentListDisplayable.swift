@@ -58,8 +58,8 @@ extension ContentSummaryState: ContentListDisplayable {
     content.free
   }
   
-  var cardArtworkUrl: URL? {
-    content.cardArtworkUrl
+  var cardArtworkURL: URL? {
+    content.cardArtworkURL
   }
   
   var contentType: ContentType {

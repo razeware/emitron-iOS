@@ -66,9 +66,11 @@ struct RWAPI {
   var additionalHeaders: HTTPHeaders = ["RW-App-Token": Configuration.appToken]
 
   // MARK: - Initializers
-  init(session: URLSession = URLSession(configuration: .default),
-       environment: RWEnvironment = .prod,
-       authToken: String) {
+  init(
+    session: URLSession = .init(configuration: .default),
+    environment: RWEnvironment = .prod,
+    authToken: String
+  ) {
     self.session = session
     self.environment = environment
     self.authToken = authToken

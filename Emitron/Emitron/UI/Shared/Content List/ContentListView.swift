@@ -29,13 +29,29 @@
 import SwiftUI
 import Combine
 
-struct ContentListView: View {
-  @State private var deleteSubscriptions = Set<AnyCancellable>()
-  @ObservedObject var contentRepository: ContentRepository
-  var downloadAction: DownloadAction
-  var contentScreen: ContentScreen
-  var headerView: AnyView?
+struct ContentListView<Header: View> {
+  init(
+    contentRepository: ContentRepository,
+    downloadAction: DownloadAction,
+    contentScreen: ContentScreen,
+    header: Header
+  ) {
+    self.contentRepository = contentRepository
+    self.downloadAction = downloadAction
+    self.contentScreen = contentScreen
+    self.header = header
+  }
 
+  @ObservedObject private var contentRepository: ContentRepository
+  private let downloadAction: DownloadAction
+  private let contentScreen: ContentScreen
+  private let header: Header
+
+  @State private var deleteSubscriptions: Set<AnyCancellable> = []
+}
+
+// MARK: - View
+extension ContentListView: View {
   var body: some View {
     contentView
       .onAppear {
@@ -43,32 +59,36 @@ struct ContentListView: View {
         reloadIfRequired()
       }
   }
+}
 
-  private var contentView: AnyView {
+// MARK: - private
+private extension ContentListView {
+  var contentView: some View {
     reloadIfRequired()
-    switch contentRepository.state {
-    case .initial:
-      return AnyView(loadingView)
-    case .loading:
-      return AnyView(loadingView)
-    case .loadingAdditional:
-      return AnyView(listView)
-    case .hasData where contentRepository.isEmpty:
-      return AnyView(noResultsView)
-    case .hasData:
-      return AnyView(listView)
-    case .failed:
-      return AnyView(reloadView)
+
+    @ViewBuilder var contentView: some View {
+      switch contentRepository.state {
+      case .initial, .loading:
+        loadingView
+      case .hasData where contentRepository.isEmpty:
+        noResultsView
+      case .hasData, .loadingAdditional:
+        listView
+      case .failed:
+        reloadView
+      }
     }
+
+    return contentView
   }
-  
-  private func reloadIfRequired() {
+
+  func reloadIfRequired() {
     if contentRepository.state == .initial {
       contentRepository.reload()
     }
   }
 
-  private var cardsView: some View {
+  var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
         CardViewContainer(
@@ -82,13 +102,13 @@ struct ContentListView: View {
           .padding(.trailing, -2 * .sidePadding)
       }
     }
-      .if(allowDelete) { $0.onDelete(perform: self.delete) }
-      .listRowInsets(EdgeInsets())
-      .padding([.horizontal, .top], .sidePadding)
-      .background(Color.backgroundColor)
+    .if(allowDelete) { $0.onDelete(perform: delete) }
+    .listRowInsets(EdgeInsets())
+    .padding([.horizontal, .top], .sidePadding)
+    .background(Color.backgroundColor)
   }
   
-  private func navLink(for content: ContentListDisplayable) -> some View {
+  func navLink(for content: ContentListDisplayable) -> some View {
     NavigationLink(
       destination: ContentDetailView(
         content: content,
@@ -99,25 +119,18 @@ struct ContentListView: View {
     }
   }
   
-  private var allowDelete: Bool {
+  var allowDelete: Bool {
     if case .downloads = contentScreen {
       return true
     }
     return false
   }
   
-  private var listView: some View {
+  var listView: some View {
     List {
-      if self.headerView != nil {
-        Section(header: self.headerView) {
-          self.cardsView
-          self.loadMoreView
-          // Hack to make sure there's some spacing at the bottom of the list
-          Color.clear.frame(height: 0)
-        }.listRowInsets(EdgeInsets())
-      } else {
-        self.cardsView
-        self.loadMoreView
+      makeList {
+        cardsView
+        loadMoreView
         // Hack to make sure there's some spacing at the bottom of the list
         Color.clear.frame(height: 0)
       }
@@ -131,13 +144,26 @@ struct ContentListView: View {
       }
       .accessibility(identifier: "contentListView")
   }
+
+  func makeList<Content: View>(
+    @ViewBuilder content: () -> Content
+  ) -> some View {
+    Section(header: header, content: content)
+      .listRowInsets(EdgeInsets())
+  }
+
+  func makeList<Content: View>(
+    @ViewBuilder content: () -> Content
+  ) -> some View where Header.Body == Never {
+    content()
+  }
   
-  private var loadingView: some View {
+  var loadingView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
       VStack {
-        headerView
+        header
         Spacer()
         LoadingView()
         Spacer()
@@ -145,44 +171,35 @@ struct ContentListView: View {
     }
   }
   
-  private var noResultsView: some View {
+  var noResultsView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
       
       NoResultsView(
         contentScreen: contentScreen,
-        headerView: headerView
+        header: header
       )
     }
   }
   
-  private var reloadView: some View {
+  var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
-      
-      ReloadView(headerView: headerView) {
-        self.contentRepository.reload()
+      ReloadView(header: header, reloadHandler: contentRepository.reload)
+    }
+  }
+  
+  @ViewBuilder var loadMoreView: some View {
+    if contentRepository.totalContentNum > contentRepository.contents.count {
+      // HACK: To put it in the middle we have to wrap it in Geometry Reader
+      GeometryReader { _ in
+        ActivityIndicator()
+          .onAppear(perform: contentRepository.loadMore)
       }
     }
   }
-  
-  private var loadMoreView: AnyView? {
-    if contentRepository.totalContentNum > contentRepository.contents.count {
-      return AnyView(
-        // HACK: To put it in the middle we have to wrap it in Geometry Reader
-        GeometryReader { _ in
-          ActivityIndicator()
-            .onAppear {
-              self.contentRepository.loadMore()
-            }
-        }
-      )
-    } else {
-      return nil
-    }
-  }
 
-  private func delete(at offsets: IndexSet) {
+  func delete(at offsets: IndexSet) {
     guard let index = offsets.first else {
       return
     }
@@ -200,9 +217,24 @@ struct ContentListView: View {
             MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
           }
         }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: Constants.downloadDeleted))
+          MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
         }
         .store(in: &deleteSubscriptions)
     }
+  }
+}
+
+extension ContentListView where Header == Never? {
+  init(
+    contentRepository: ContentRepository,
+    downloadAction: DownloadAction,
+    contentScreen: ContentScreen
+  ) {
+    self.init(
+      contentRepository: contentRepository,
+      downloadAction: downloadAction,
+      contentScreen: contentScreen,
+      header: nil
+    )
   }
 }

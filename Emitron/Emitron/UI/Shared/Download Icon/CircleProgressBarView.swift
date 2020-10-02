@@ -41,8 +41,8 @@ struct CircularProgressBar: View {
   var background: some View {
     ZStack(alignment: .center) {
       Circle()
-        .stroke(Color.downloadButtonDownloadingBackground, lineWidth: DownloadIconLayout.lineWidth)
-        .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+        .stroke(Color.downloadButtonDownloadingBackground, lineWidth: DownloadIcon.Layout.lineWidth)
+        .downloadIconFrame
       
       RoundedRectangle(cornerRadius: 1)
         .fill(Color.downloadButtonDownloadingForeground)
@@ -53,8 +53,8 @@ struct CircularProgressBar: View {
   var circleOverlay: some View {
     Circle()
       .trim(from: 0.0, to: CGFloat(progress))
-      .stroke(Color.downloadButtonDownloadingForeground, lineWidth: DownloadIconLayout.lineWidth)
-      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+      .stroke(Color.downloadButtonDownloadingForeground, lineWidth: DownloadIcon.Layout.lineWidth)
+      .downloadIconFrame
       .rotationEffect(.degrees(-90), anchor: .center)
   }
 }

@@ -28,19 +28,29 @@
 
 import SwiftUI
 
-struct ReloadView: View {
-  var headerView: AnyView?
-  var reloadHandler: () -> Void
-  
+struct ReloadView<Header: View> {
+  init(
+    header: Header,
+    reloadHandler: @escaping () -> Void
+  ) {
+    self.header = header
+    self.reloadHandler = reloadHandler
+  }
+
+  private let header: Header
+  private let reloadHandler: () -> Void
+}
+
+// MARK: - View {
+extension ReloadView: View {
   var body: some View {
     VStack {
-      
-      headerView
+      header
       
       Spacer()
       
       Image("emojiCrying")
-        .padding([.bottom], 30)
+        .padding(.bottom, 30)
       
       Text("Something went wrong.")
         .font(.uiTitle2)
@@ -68,6 +78,6 @@ struct ReloadView: View {
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    ReloadView(headerView: nil, reloadHandler: {})
+    ReloadView(header: EmptyView(), reloadHandler: {})
   }
 }

@@ -43,7 +43,7 @@ enum PersistenceMocks {
             contentType: .screencast,
             duration: 1234,
             videoIdentifier: nil,
-            cardArtworkUrl: URL(string: "https://example.com/card_artwork.png")!,
+            cardArtworkURL: URL(string: "https://example.com/card_artwork.png")!,
             technologyTriple: "Some Tech",
             contributors: "HELLO",
             groupId: nil,

@@ -102,7 +102,7 @@ final class ProgressEngine {
     case .offline:
       do {
         try syncAction?.updateProgress(for: contentId, progress: progress)
-        try syncAction?.recordWatchStats(for: contentId, secondsWatched: Constants.videoPlaybackProgressTrackingInterval)
+        try syncAction?.recordWatchStats(for: contentId, secondsWatched: .videoPlaybackProgressTrackingInterval)
         
         return Future { promise in
           promise(.success(progression))
@@ -132,8 +132,8 @@ final class ProgressEngine {
             self.repository.apply(update: cacheUpdate)
             // Do we need to update the parent?
             if let parentContent = self.repository.parentContent(for: contentId),
-              let childProgressUpdate = self.repository.childProgress(for: parentContent.id),
-              var existingProgression = self.repository.progression(for: parentContent.id) {
+               let childProgressUpdate = self.repository.childProgress(for: parentContent.id),
+               var existingProgression = self.repository.progression(for: parentContent.id) {
               existingProgression.progress = childProgressUpdate.completed
               let parentCacheUpdate = DataCacheUpdate(progressions: [existingProgression])
               self.repository.apply(update: parentCacheUpdate)
@@ -151,12 +151,7 @@ final class ProgressEngine {
       mode = .online
     }
     networkMonitor.pathUpdateHandler = { [weak self] path in
-      guard let self = self else { return }
-      if path.status == .satisfied {
-        self.mode = .online
-      } else {
-        self.mode = .offline
-      }
+      self?.mode = path.status == .satisfied ? .online : .offline
     }
   }
   

@@ -43,7 +43,7 @@ struct LibraryView: View {
   var body: some View {
     contentView
       .navigationBarTitle(
-        Text(Constants.library)
+        Text(String.library)
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
@@ -54,16 +54,16 @@ struct LibraryView: View {
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
-        .padding([.top], 15)
+        .padding(.top, 15)
       
       if !libraryRepository.currentAppliedFilters.isEmpty {
         filtersView
-          .padding([.top], 10)
+          .padding(.top, 10)
       }
       numberAndSortView
-        .padding([.vertical], 10)
+        .padding(.vertical, 10)
     }
-      .padding([.horizontal], .sidePadding)
+      .padding(.horizontal, .sidePadding)
       .background(Color.backgroundColor)
   }
 
@@ -94,16 +94,13 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryRepository.totalContentNum) \(Constants.tutorials.uppercased())")
+      Text("\(libraryRepository.totalContentNum) \(String.tutorials.uppercased())")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
       Spacer()
 
-      Button(action: {
-        // Change sort
-        self.changeSort()
-      }) {
+      Button(action: changeSort) {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
@@ -120,7 +117,7 @@ struct LibraryView: View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
         if filters.applied.count > 1 {
-          AppliedFilterTagButton(name: Constants.resetFilters, type: .destructive) {
+          AppliedFilterTagButton(name: String.resetFilters, type: .destructive) {
             filters.removeAll()
             libraryRepository.filters = filters
           }
@@ -155,12 +152,11 @@ struct LibraryView: View {
   }
 
   private var contentView: some View {
-    let header = AnyView(contentControlsSection)
-    return ContentListView(
+    ContentListView(
       contentRepository: libraryRepository,
       downloadAction: DownloadService.current,
       contentScreen: .library,
-      headerView: header
+      header: contentControlsSection
     )
   }
 }

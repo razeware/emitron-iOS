@@ -34,7 +34,7 @@ struct DownloadWarningView: View {
       .resizable()
       .font(Font.title.weight(.bold))
       .foregroundColor(.downloadButtonWarning)
-      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+      .downloadIconFrame
   }
 }
 
