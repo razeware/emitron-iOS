@@ -94,7 +94,7 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryRepository.totalContentNum) " + .tutorials)
+      Text("\(libraryRepository.totalContentNum) \(String.tutorials.capitalized)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
