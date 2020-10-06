@@ -47,7 +47,7 @@ struct LibraryView: View {
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
-          .background(Color.backgroundColor)
+          .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
       }
   }
   
