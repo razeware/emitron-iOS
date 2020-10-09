@@ -109,11 +109,11 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     self.guardpost = guardpost
 
     let user = User.backdoor ?? guardpost.currentUser
-    self.user = user
     client = RWAPI(authToken: user?.token ?? "")
     permissionsService = PermissionsService(client: client)
     super.init()
-    
+
+    self.user = user
     prepareSubscriptions()
   }
   
@@ -209,7 +209,7 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
 
     user = nil
   }
-  
+
   private func prepareSubscriptions() {
     $user.sink { [weak self] user in
       guard let self = self else { return }
