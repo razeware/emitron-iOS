@@ -30,13 +30,14 @@ import SwiftUI
 
 struct SettingsList {
   @ObservedObject private var settingsManager: SettingsManager
+  private var canDownload: Bool
 }
 
 // MARK: - View
 extension SettingsList: View {
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(SettingsOption.allCases) { self[$0] }
+      ForEach(SettingsOption.getOptions(for: canDownload)) { self[$0] }
     }
   }
 }
@@ -48,15 +49,16 @@ struct SettingsList_Previews: PreviewProvider {
   }
 
   static var list: some View {
-    SettingsList( settingsManager: .init(initialValue: .current) )
+    SettingsList(settingsManager: .init(initialValue: .current), canDownload: true)
       .background(Color.backgroundColor)
   }
 }
 
 // MARK: - internal
 extension SettingsList {
-  init(settingsManager: ObservedObject<SettingsManager>) {
+  init(settingsManager: ObservedObject<SettingsManager>, canDownload: Bool) {
     _settingsManager = settingsManager
+    self.canDownload = canDownload
   }
 }
 
