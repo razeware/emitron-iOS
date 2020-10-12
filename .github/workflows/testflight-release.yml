@@ -3,7 +3,7 @@ name: Push to Testflight
 on:
   push:
     branches:
-      - master
+      - production
 
 jobs:
   build:
