@@ -35,7 +35,7 @@ struct GetBookmarksRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/bookmarks" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   var parameters: [Parameter]? { nil }
   
@@ -59,7 +59,7 @@ struct DestroyBookmarkRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .DELETE }
   var path: String { "/bookmarks/\(id)" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   // MARK: - Parameters
@@ -75,7 +75,7 @@ struct MakeBookmark: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/bookmarks" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? {
     let json: [String: Any] =
       ["data":

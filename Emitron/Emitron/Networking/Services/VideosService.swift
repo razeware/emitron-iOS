@@ -26,10 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 class VideosService: Service {
-  typealias Provider = ((RWAPI) -> VideosService)
+  typealias Provider = (RWAPI) -> VideosService
 
   // MARK: - Internal
   func getVideoStream(for id: Int,

@@ -68,7 +68,7 @@ struct MainButtonView: View {
   
   var body: some View {
     Button(action: {
-      self.callback()
+      callback()
     }) {
       HStack {
         ZStack(alignment: .center) {
@@ -108,7 +108,7 @@ struct MainButtonView: View {
               .fill(type.color)
           )
           .onPreferenceChange(SizeKey.self) { size in
-            self.height = size?.height
+            height = size?.height
           }
       }
     }

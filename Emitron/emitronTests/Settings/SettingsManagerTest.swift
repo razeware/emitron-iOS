@@ -50,18 +50,22 @@ class SettingsManagerTest: XCTestCase {
   }
   
   func testResetAllRemovesValuesInUserDefaults() {
-    XCTAssertNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    var persistentDomain: [String: Any]? {
+      UserDefaults().persistentDomain(forName: userDefaultsSuite)
+    }
+
+    XCTAssertNil(persistentDomain)
     
     settingsManager.playbackToken = "HELLO"
     settingsManager.playbackSpeed = .double
     settingsManager.wifiOnlyDownloads = true
     settingsManager.downloadQuality = .sdVideoFile
     
-    XCTAssertNotNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    XCTAssertNotNil(persistentDomain)
     
     settingsManager.resetAll()
     
-    XCTAssertNil(UserDefaults().persistentDomain(forName: userDefaultsSuite))
+    XCTAssertNil(persistentDomain)
   }
   
   func testFiltersPersistedSuccessfully() {
@@ -104,14 +108,14 @@ class SettingsManagerTest: XCTestCase {
     XCTAssertEqual(.standard, settingsManager.playbackSpeed)
   }
   
-  func testPlaybackSpeedPublusherSendsUpdates() throws {
+  func testPlaybackSpeedPublisherSendsUpdates() throws {
     let recorder = settingsManager.playbackSpeedPublisher.record()
     
     settingsManager.playbackSpeed = .double
     settingsManager.playbackSpeed = .standard
     settingsManager.playbackSpeed = .onePointFive
     
-    let stream = try wait(for: recorder.next(3), timeout: 2)
+    let stream = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([.double, .standard, .onePointFive], stream)
   }
@@ -133,7 +137,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.closedCaptionOn = true
     settingsManager.closedCaptionOn = true
     
-    let stream = try wait(for: recorder.next(3), timeout: 2)
+    let stream = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([false, true, true], stream)
   }
@@ -155,7 +159,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.downloadQuality = .sdVideoFile
     settingsManager.downloadQuality = .sdVideoFile
     
-    let stream = try wait(for: recorder.next(3), timeout: 2)
+    let stream = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([.hdVideoFile, .sdVideoFile, .sdVideoFile], stream)
   }
@@ -177,7 +181,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.wifiOnlyDownloads = false
     settingsManager.wifiOnlyDownloads = false
     
-    let stream = try wait(for: recorder.next(3), timeout: 2)
+    let stream = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual([true, false, false], stream)
   }

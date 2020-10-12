@@ -44,19 +44,19 @@ struct CheckmarkView: View {
   var body: some View {
         
     Button(action: {
-      self.onChange(!self.isOn)
+      onChange(!isOn)
     }) {
       if isOn {
         ZStack(alignment: .center) {
           Rectangle()
 
             .frame(maxWidth: outerSide, maxHeight: outerSide)
-            .foregroundColor(Color.checkmarkBackground)
+            .foregroundColor(.checkmarkBackground)
           
           Image.checkmark
             .resizable()
             .frame(maxWidth: innerSide - 1, maxHeight: innerSide + 1)
-            .foregroundColor(Color.checkmarkColor)
+            .foregroundColor(.checkmarkColor)
         }
         .cornerRadius(outerRadius)
       } else {

@@ -36,14 +36,12 @@ class Service {
 
   // MARK: - Initializers
   init(client: RWAPI) {
-    self.networkClient = client
-    self.session = URLSession(configuration: .default)
+    networkClient = client
+    session = URLSession(configuration: .default)
   }
   
   // MARK: - Utilities
-  var isAuthenticated: Bool {
-    !self.networkClient.authToken.isEmpty
-  }
+  var isAuthenticated: Bool { !networkClient.authToken.isEmpty }
 
   // MARK: - Internal
   func makeAndProcessRequest<R: Request>(
@@ -86,7 +84,7 @@ class Service {
 
   func prepare<R: Request>(request: R,
                            parameters: [Parameter]?) -> URLRequest? {
-    let pathURL = networkClient.environment.baseUrl.appendingPathComponent(request.path)
+    let pathURL = networkClient.environment.baseURL.appendingPathComponent(request.path)
 
     var components = URLComponents(url: pathURL,
                                    resolvingAgainstBaseURL: false)
@@ -104,10 +102,10 @@ class Service {
     // body *needs* to be the last property that we set, because of this bug: https://bugs.swift.org/browse/SR-6687
     urlRequest.httpBody = request.body
 
-    let authTokenHeader: HTTPHeaders = ["Authorization": "Token \(networkClient.authToken)"]
-    let headers = networkClient.contentTypeHeader.merged(networkClient.additionalHeaders,
-                                                         request.additionalHeaders,
-                                                         authTokenHeader)
+    let authTokenHeader: HTTPHeader = ("Authorization", "Token \(networkClient.authToken)")
+    let headers =
+      [authTokenHeader, networkClient.contentTypeHeader]
+      + [networkClient.additionalHeaders, request.additionalHeaders].joined()
     headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
 
     return urlRequest

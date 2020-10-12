@@ -26,8 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
+import Foundation
 import Network
 
 enum DownloadServiceError: Error {
@@ -89,14 +89,14 @@ final class DownloadService {
   init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
-    self.queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
+    queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
-    self.userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
+    userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       self?.stopProcessing()
       self?.checkPermissions()
       self?.startProcessing()
     }
-    self.downloadProcessor.delegate = self
+    downloadProcessor.delegate = self
     checkPermissions()
   }
   
@@ -111,7 +111,7 @@ final class DownloadService {
           .log()
       }, receiveValue: { [weak self] downloadQueueItem in
         guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
-        self.requestDownloadUrl(downloadQueueItem)
+        self.requestDownloadURL(downloadQueueItem)
       })
       .store(in: &processingSubscriptions)
     
@@ -192,7 +192,7 @@ extension DownloadService: DownloadAction {
     
     // 0. If there are some children, then let's find their content ids too
     if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map { $0.id }
+      contentIds = children.contents.map(\.id)
     }
     contentIds += [contentId]
     
@@ -219,7 +219,7 @@ extension DownloadService: DownloadAction {
       // Don't have it in the processor, so we just need to
       // delete the download model
       self.persistenceStore
-        .deleteDownloads(withIds: notYetDownloading.map { $0.id })
+        .deleteDownloads(withIds: notYetDownloading.map(\.id))
     }
     .mapError { error in
       Failure
@@ -235,7 +235,7 @@ extension DownloadService: DownloadAction {
     
     // 0. If there are some children, the let's find their content ids too
     if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map { $0.id }
+      contentIds = children.contents.map(\.id)
     }
     contentIds += [contentId]
     
@@ -249,7 +249,7 @@ extension DownloadService: DownloadAction {
         // 2. Delete the file from disk
         try downloads
           .filter { $0.isDownloaded }
-          .forEach { try self.deleteFile(for: $0) }
+          .forEach(self.deleteFile)
         promise(.success(()))
       } catch {
         promise(.failure(error))
@@ -258,7 +258,7 @@ extension DownloadService: DownloadAction {
     .flatMap {
       // 3. Delete the persisted record
       self.persistenceStore
-        .deleteDownloads(withIds: downloads.map { $0.id })
+        .deleteDownloads(withIds: downloads.map(\.id))
     }
     .mapError { error in
       Failure
@@ -272,21 +272,21 @@ extension DownloadService: DownloadAction {
 
 // MARK: - Internal methods
 extension DownloadService {
-  func requestDownloadUrl(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
+  func requestDownloadURL(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) {
     guard let videosService = videosService else {
       Failure
         .downloadService(
-          from: "requestDownloadUrl",
+          from: "requestDownloadURL",
           reason: "User not allowed to request downloads."
         )
         .log()
       return
     }
-    guard downloadQueueItem.download.remoteUrl == nil,
+    guard downloadQueueItem.download.remoteURL == nil,
       downloadQueueItem.download.state == .pending,
       downloadQueueItem.content.contentType != .collection else {
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Cannot request download URL for: \(downloadQueueItem.download)")
           .log()
       return
@@ -296,7 +296,7 @@ extension DownloadService {
       videoId != 0 else {
         Failure
           .downloadService(
-            from: "requestDownloadUrl",
+            from: "requestDownloadURL",
             reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
           )
           .log()
@@ -312,17 +312,17 @@ extension DownloadService {
       switch result {
       case .failure(let error):
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Unable to obtain download URLs: \(error)")
           .log()
       case .success(let attachments):
-        download.remoteUrl = attachments.first { $0.kind == self.downloadQuality }?.url
+        download.remoteURL = attachments.first { $0.kind == self.downloadQuality }?.url
         download.lastValidatedAt = Date()
         download.state = .readyForDownload
       }
       
       // Update the state if required
-      if download.remoteUrl == nil {
+      if download.remoteURL == nil {
         download.state = .error
       }
       
@@ -331,7 +331,7 @@ extension DownloadService {
         try self.persistenceStore.update(download: download)
       } catch {
         Failure
-          .downloadService(from: "requestDownloadUrl",
+          .downloadService(from: "requestDownloadURL",
                            reason: "Unable to save download URL: \(error)")
           .log()
         self.transitionDownload(withID: download.id, to: .failed)
@@ -339,11 +339,11 @@ extension DownloadService {
     }
     
     // Move it on through the state machine
-    self.transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
+    transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
   }
   
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
-    guard downloadQueueItem.download.remoteUrl != nil,
+    guard downloadQueueItem.download.remoteURL != nil,
       downloadQueueItem.download.state == .readyForDownload else {
         Failure
           .downloadService(from: "enqueue",
@@ -370,7 +370,7 @@ extension DownloadService {
     // Transition download to correct status
     // If file exists, update the download
     let fileManager = FileManager.default
-    if let localUrl = download.localUrl, fileManager.fileExists(atPath: localUrl.path) {
+    if let localURL = download.localURL, fileManager.fileExists(atPath: localURL.path) {
       download.state = .complete
     } else {
       download.state = .enqueued
@@ -423,10 +423,10 @@ extension DownloadService {
   }
   
   private func deleteFile(for download: Download) throws {
-    guard let localUrl = download.localUrl else { return }
+    guard let localURL = download.localURL else { return }
     let filemanager = FileManager.default
-    if filemanager.fileExists(atPath: localUrl.path) {
-      try filemanager.removeItem(at: localUrl)
+    if filemanager.fileExists(atPath: localURL.path) {
+      try filemanager.removeItem(at: localURL)
     }
   }
   

@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 enum SettingsOption: Int, Identifiable, CaseIterable {
@@ -35,20 +34,18 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   case downloadQuality
   case closedCaptionOn
   
-  var id: Int {
-    rawValue
-  }
+  var id: Int { rawValue }
   
   var title: String {
     switch self {
     case .playbackSpeed:
-      return Constants.settingsPlaybackSpeedLabel
+      return .settingsPlaybackSpeedLabel
     case .wifiOnlyDownloads:
-      return Constants.settingsWifiOnlyDownloadsLabel
+      return .settingsWifiOnlyDownloadsLabel
     case .downloadQuality:
-      return Constants.settingsDownloadQualityLabel
+      return .settingsDownloadQualityLabel
     case .closedCaptionOn:
-      return Constants.settingsClosedCaptionOnLabel
+      return .settingsClosedCaptionOnLabel
     }
   }
   
@@ -68,11 +65,11 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   var detail: [String] {
     switch self {
     case .playbackSpeed:
-      return PlaybackSpeed.allCases.map { $0.display }
+      return PlaybackSpeed.allCases.map(\.display)
     case .wifiOnlyDownloads:
       return ["Yes", "No"]
     case .downloadQuality:
-      return Attachment.Kind.downloads.map { $0.display }
+      return Attachment.Kind.downloads.map(\.display)
     case .closedCaptionOn:
       return ["Yes", "No"]
     }

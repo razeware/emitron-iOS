@@ -43,34 +43,34 @@ struct LibraryView: View {
   var body: some View {
     contentView
       .navigationBarTitle(
-        Text(Constants.library)
+        Text(String.library)
       )
       .sheet(isPresented: $filtersPresented) {
-        FiltersView(libraryRepository: self.libraryRepository, filters: self.filters)
-          .background(Color.backgroundColor)
+        FiltersView(libraryRepository: libraryRepository, filters: filters)
+          .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
       }
   }
   
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
-        .padding([.top], 15)
+        .padding(.top, 15)
       
       if !libraryRepository.currentAppliedFilters.isEmpty {
         filtersView
-          .padding([.top], 10)
+          .padding(.top, 10)
       }
       numberAndSortView
-        .padding([.vertical], 10)
+        .padding(.vertical, 10)
     }
-      .padding([.horizontal], .sidePadding)
+      .padding(.horizontal, .sidePadding)
       .background(Color.backgroundColor)
   }
 
   private var searchField: some View {
     SearchFieldView(searchString: filters.searchStr) { searchString in
-      self.filters.searchStr = searchString
-      self.updateFilters()
+      filters.searchStr = searchString
+      updateFilters()
     }
   }
 
@@ -81,7 +81,7 @@ struct LibraryView: View {
       Spacer()
 
       Button(action: {
-        self.filtersPresented = true
+        filtersPresented = true
       }, label: {
         Image("filter")
           .foregroundColor(.iconButton)
@@ -94,16 +94,13 @@ struct LibraryView: View {
 
   private var numberAndSortView: some View {
     HStack {
-      Text("\(libraryRepository.totalContentNum) \(Constants.tutorials)")
+      Text("\(libraryRepository.totalContentNum) \(String.tutorials.capitalized)")
         .font(.uiLabelBold)
         .foregroundColor(.contentText)
 
       Spacer()
 
-      Button(action: {
-        // Change sort
-        self.changeSort()
-      }) {
+      Button(action: changeSort) {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
@@ -119,24 +116,23 @@ struct LibraryView: View {
   private var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
-
-        if self.filters.applied.count > 1 {
-          AppliedFilterTagButton(name: Constants.clearAll, type: .destructive) {
-            self.filters.removeAll()
-            self.libraryRepository.filters = self.filters
+        if filters.applied.count > 1 {
+          AppliedFilterTagButton(name: String.resetFilters, type: .destructive) {
+            filters.removeAll()
+            libraryRepository.filters = filters
           }
         }
         
-        ForEach(self.filters.applied, id: \.self) { filter in
+        ForEach(filters.applied, id: \.self) { filter in
           AppliedFilterTagButton(name: filter.filterName, type: .default) {
             if filter.isSearch {
-              self.filters.searchQuery = nil
+              filters.searchQuery = nil
             } else {
               filter.isOn.toggle()
-              self.filters.all.update(with: filter)
+              filters.all.update(with: filter)
             }
-            self.filters.commitUpdates()
-            self.libraryRepository.filters = self.filters
+            filters.commitUpdates()
+            libraryRepository.filters = filters
           }
         }
       }
@@ -156,12 +152,11 @@ struct LibraryView: View {
   }
 
   private var contentView: some View {
-    let header = AnyView(contentControlsSection)
-    return ContentListView(
+    ContentListView(
       contentRepository: libraryRepository,
       downloadAction: DownloadService.current,
       contentScreen: .library,
-      headerView: header
+      header: contentControlsSection
     )
   }
 }

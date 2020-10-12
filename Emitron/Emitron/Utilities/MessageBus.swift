@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import class Foundation.Timer
 import Combine
 
 struct Message {
@@ -77,12 +77,12 @@ final class MessageBus: ObservableObject {
   
   func dismiss() {
     invalidateTimer()
-    self.messageVisible = false
+    messageVisible = false
   }
   
   private func createAndStartAutoDismissTimer() -> AnyCancellable {
     Timer
-      .publish(every: Constants.autoDismissTime, on: .main, in: .common)
+      .publish(every: .autoDismissTime, on: .main, in: .common)
       .autoconnect()
       .sink { [weak self] _ in
         guard let self = self else { return }

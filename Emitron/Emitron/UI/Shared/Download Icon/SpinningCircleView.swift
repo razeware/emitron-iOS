@@ -48,7 +48,7 @@ struct SpinningCircleView: View {
     ZStack(alignment: .center) {
       Circle()
         .stroke(Color.downloadButtonDownloadingBackground, lineWidth: Layout.lineWidth)
-        .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+        .downloadIconFrame
       
       RoundedRectangle(cornerRadius: 1)
         .fill(Color.downloadButtonDownloadingBackground)
@@ -63,7 +63,7 @@ struct SpinningCircleView: View {
         to: animateStrokeEnd ? 0.2 : 0.5
       )
       .stroke(Color.downloadButtonDownloadingForeground, lineWidth: Layout.lineWidth)
-      .frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
+      .downloadIconFrame
       .rotationEffect(.degrees(animateRotation ? 360 : 0))
       .onAppear {
         withAnimation(
@@ -71,7 +71,7 @@ struct SpinningCircleView: View {
             .linear(duration: 1)
             .repeatForever(autoreverses: false)
         ) {
-          self.animateRotation.toggle()
+          animateRotation.toggle()
         }
         
         withAnimation(
@@ -80,7 +80,7 @@ struct SpinningCircleView: View {
             .delay(0.5)
             .repeatForever(autoreverses: true)
         ) {
-          self.animateStrokeStart.toggle()
+          animateStrokeStart.toggle()
         }
         
         withAnimation(
@@ -89,7 +89,7 @@ struct SpinningCircleView: View {
             .delay(1)
             .repeatForever(autoreverses: true)
         ) {
-          self.animateStrokeEnd.toggle()
+          animateStrokeEnd.toggle()
         }
       }
   }

@@ -26,18 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class CategoryRepository: Refreshable {
   let repository: Repository
   let service: CategoriesService
-  
-  var refreshableUserDefaultsKey: String = "UserDefaultsRefreshable\(String(describing: CategoryRepository.self))"
+
   var refreshableCheckTimeSpan: RefreshableTimeSpan = .long
   
   @Published private (set) var state: DataState = .initial
-  @Published private (set) var categories: [Category] = [Category]()
+  @Published private (set) var categories: [Category] = []
   
   init(repository: Repository, service: CategoriesService) {
     self.repository = repository
@@ -55,23 +53,23 @@ class CategoryRepository: Refreshable {
   
   private func loadFromPersistentStore() {
     do {
-      self.categories = try repository.categoryList()
+      categories = try repository.categoryList()
       state = .hasData
     } catch {
-      self.state = .failed
+      state = .failed
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
   private func saveToPersistentStore() {
     do {
-      try self.repository.syncCategoryList(self.categories)
+      try repository.syncCategoryList(categories)
     } catch {
       Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
     }
   }
   
@@ -90,7 +88,7 @@ class CategoryRepository: Refreshable {
         self.state = .failed
         Failure
         .fetch(from: "CategoryRepository", reason: error.localizedDescription)
-        .log(additionalParams: nil)
+        .log()
       case .success(let categories):
         self.categories = categories
         self.state = .hasData

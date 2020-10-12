@@ -28,7 +28,6 @@
 
 import XCTest
 import GRDB
-import CombineExpectations
 @testable import Emitron
 
 class PersistenceStore_DownloadsTest: XCTestCase {
@@ -68,7 +67,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 1)
+    _ = try wait(for: recorder.completion, timeout: 5)
     
     return screencast.0
   }
@@ -81,7 +80,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 1)
+    _ = try wait(for: recorder.completion, timeout: 5)
     
     return collection.0
   }
@@ -114,7 +113,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 5)
   }
   
   func testTransitionEpisodeToDownloadedUpdatesCollection() throws {
@@ -147,7 +146,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 5)
   }
   
   func testTransitionFinalEpisdeToDownloadedUpdatesCollection() throws {
@@ -155,9 +154,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     var collectionDownload = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try collectionDownload.save(db)
@@ -187,7 +184,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 2)
+    wait(for: [collectionExpectation], timeout: 5)
   }
   
   func testTransitionNonFinalEpisodeToDownloadedUpdatesCollection() throws {
@@ -220,7 +217,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 1)
+    wait(for: [collectionExpectation], timeout: 5)
   }
   
   // MARK: - Collection Download Utilities
@@ -229,9 +226,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -259,9 +254,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes[0..<10].map { episode in
-      PersistenceMocks.download(for: episode)
-    }
+    let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -289,9 +282,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes[0..<10].map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -319,9 +310,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let episodes = getAllContents().filter { $0.id != collection.id }
     
     _ = PersistenceMocks.download(for: collection)
-    let episodeDownloads = episodes.map {
-      PersistenceMocks.download(for: $0)
-    }
+    let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
       try episodeDownloads.forEach { download in
@@ -361,7 +350,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   private func createDownloads(for content: Content) throws {
     let recorder = persistenceStore.createDownloads(for: content).record()
     
-    let completion = try wait(for: recorder.completion, timeout: 1)
+    let completion = try wait(for: recorder.completion, timeout: 5)
     if case .failure = completion {
       XCTFail("Failed to create downloads")
     }
@@ -436,12 +425,12 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     let recorder = persistenceStore.downloadList().record()
     
-    let list = try wait(for: recorder.next(), timeout: 1)
+    let list = try wait(for: recorder.next(), timeout: 5)
     
     XCTAssertNotNil(list)
     
-    XCTAssertEqual(1, list!.count)
-    XCTAssertEqual([], list!.filter { $0.contentType == .episode })
+    XCTAssertEqual(1, list.count)
+    XCTAssertEqual([], list.filter { $0.contentType == .episode })
   }
   
   func testDownloadsInStateDoesNotContainCollections() throws {
@@ -461,10 +450,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     // Will start with a nil
-    let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 2)
+    let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 5)
     
     XCTAssertEqual(0, inProgressQueue.filter { $0?.content.contentType == .collection }.count)
-    XCTAssertEqual(episodes.map { $0.id }.sorted(), inProgressQueue.compactMap { $0?.content.id }.sorted())
+    XCTAssertEqual(episodes.map(\.id).sorted(), inProgressQueue.compactMap { $0?.content.id }.sorted())
   }
   
   func testDownloadQueueDoesNotContainCollections() throws {
@@ -474,7 +463,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     
     let episodes = getAllContents().filter({ $0.contentType == .episode })
-    let episodeIds = episodes.map { $0.id }
+    let episodeIds = episodes.map(\.id)
     let collectionDownload = getAllDownloads().first { !episodeIds.contains($0.contentId) }
     let episodeDownloads = getAllDownloads().filter { episodeIds.contains($0.contentId) }
     
@@ -482,12 +471,12 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: collectionDownload!.id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownloads[0].id, to: .inProgress)
     
-    let downloadQueue = try wait(for: recorder.next(3), timeout: 2)
+    let downloadQueue = try wait(for: recorder.next(3), timeout: 5)
     
     XCTAssertEqual(3, downloadQueue.count)
     XCTAssertEqual([], downloadQueue[0])
-    XCTAssertEqual([episodeDownloads[1].id], downloadQueue[1].map { $0.download.id })
-    XCTAssertEqual([episodeDownloads[0].id, episodeDownloads[1].id], downloadQueue[2].map { $0.download.id })
+    XCTAssertEqual([episodeDownloads[1].id], downloadQueue[1].map(\.download.id))
+    XCTAssertEqual([episodeDownloads[0].id, episodeDownloads[1].id], downloadQueue[2].map(\.download.id))
   }
   
   func testDownloadQueueReturnsCorrectNumberOfItems() throws {
@@ -497,7 +486,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     
     let episodes = getAllContents().filter({ $0.contentType == .episode })
-    let episodeIds = episodes.map { $0.id }
+    let episodeIds = episodes.map(\.id)
     let collectionDownload = getAllDownloads().first { !episodeIds.contains($0.contentId) }
     let episodeDownloads = getAllDownloads().filter { episodeIds.contains($0.contentId) }
     
@@ -509,16 +498,16 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownloads[3].id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownloads[2].id, to: .inProgress)
     
-    let downloadQueue = try wait(for: recorder.next(7), timeout: 2)
+    let downloadQueue = try wait(for: recorder.next(7), timeout: 5)
     
     XCTAssertEqual(7, downloadQueue.count)
     XCTAssertEqual([], downloadQueue[0])
-    XCTAssertEqual([1].map { episodeDownloads[$0].id }, downloadQueue[1].map { $0.download.id })
-    XCTAssertEqual([0, 1].map { episodeDownloads[$0].id }, downloadQueue[2].map { $0.download.id })
-    XCTAssertEqual([0, 1, 5].map { episodeDownloads[$0].id }, downloadQueue[3].map { $0.download.id })
-    XCTAssertEqual([0, 1, 4, 5].map { episodeDownloads[$0].id }, downloadQueue[4].map { $0.download.id })
-    XCTAssertEqual([0, 1, 3, 4].map { episodeDownloads[$0].id }, downloadQueue[5].map { $0.download.id })
-    XCTAssertEqual([0, 1, 2, 3].map { episodeDownloads[$0].id }, downloadQueue[6].map { $0.download.id })
+    XCTAssertEqual([1].map { episodeDownloads[$0].id }, downloadQueue[1].map(\.download.id))
+    XCTAssertEqual([0, 1].map { episodeDownloads[$0].id }, downloadQueue[2].map(\.download.id))
+    XCTAssertEqual([0, 1, 5].map { episodeDownloads[$0].id }, downloadQueue[3].map(\.download.id))
+    XCTAssertEqual([0, 1, 4, 5].map { episodeDownloads[$0].id }, downloadQueue[4].map(\.download.id))
+    XCTAssertEqual([0, 1, 3, 4].map { episodeDownloads[$0].id }, downloadQueue[5].map(\.download.id))
+    XCTAssertEqual([0, 1, 2, 3].map { episodeDownloads[$0].id }, downloadQueue[6].map(\.download.id))
   }
   
   func testDownloadWithIdReturnsCorrectDownload() throws {

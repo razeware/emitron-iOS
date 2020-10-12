@@ -70,54 +70,46 @@ struct TextListItemView: View {
           if canDownload {
             DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
               .onTapGesture {
-                self.download()
+                download()
               }
-              .alert(item: $deletionConfirmation) { $0.alert }
+              .alert(item: $deletionConfirmation, content: \.alert)
           }
         }
         progressBar
       }
     }
   }
-  
-  private var progressBar: AnyView {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress else {
-      return AnyView(Rectangle()
-        .frame(height: 1)
-        .foregroundColor(.borderColor))
-    }
-    return AnyView(
+}
+
+// MARK: - private
+private extension TextListItemView {
+  @ViewBuilder var progressBar: some View {
+    if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
       ProgressBarView(progress: progress, isRounded: true)
-    )
-  }
-  
-  private var doneCheckbox: AnyView {
-    if !canStreamPro && content.professional {
-      return AnyView(LockedIconView())
-    }
-    
-    if case .completed = dynamicContentViewModel.viewProgress {
-      return AnyView(
-        CompletedIconView()
-          .onTapGesture {
-            self.toggleCompleteness()
-          }
-      )
     } else {
-      return AnyView(
-        NumberIconView(number: content.ordinal ?? 0)
-          .onTapGesture {
-            self.toggleCompleteness()
-          }
-      )
+      Rectangle()
+        .frame(height: 1)
+        .foregroundColor(.borderColor)
     }
   }
   
-  private func download() {
+  @ViewBuilder var doneCheckbox: some View {
+    if !canStreamPro && content.professional {
+      LockedIconView()
+    } else if case .completed = dynamicContentViewModel.viewProgress {
+      CompletedIconView()
+        .onTapGesture(perform: toggleCompleteness)
+    } else {
+      NumberIconView(number: content.ordinal ?? 0)
+        .onTapGesture(perform: toggleCompleteness)
+    }
+  }
+  
+  func download() {
     deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
-  private func toggleCompleteness() {
+  func toggleCompleteness() {
     dynamicContentViewModel.completedTapped()
   }
 }

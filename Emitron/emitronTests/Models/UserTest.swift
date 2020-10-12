@@ -53,7 +53,7 @@ class UserTest: XCTestCase {
     XCTAssertEqual(userDictionary["external_id"], user.externalId)
     XCTAssertEqual(userDictionary["email"], user.email)
     XCTAssertEqual(userDictionary["username"], user.username)
-    XCTAssertEqual(userDictionary["avatar_url"], user.avatarUrl.absoluteString)
+    XCTAssertEqual(userDictionary["avatar_url"], user.avatarURL.absoluteString)
     XCTAssertEqual(userDictionary["name"], user.name)
     XCTAssertEqual(userDictionary["token"], user.token)
   }

@@ -44,10 +44,12 @@ struct SearchFieldView: View {
       Image(systemName: "magnifyingglass")
         .foregroundColor(.searchFieldIcon)
         .frame(height: 25)
-      
-      TextField(Constants.search, text: $searchString) {
-        self.action(self.searchString)
-      }
+
+      TextField(
+        String.search,
+        text: $searchString,
+        onCommit: { action(searchString) }
+      )
         .keyboardType(.webSearch)
         .font(.uiBodyCustom)
         .foregroundColor(.searchFieldText)
@@ -55,8 +57,8 @@ struct SearchFieldView: View {
       
       if !searchString.isEmpty {
         Button(action: {
-          self.searchString = ""
-          self.action(self.searchString)
+          searchString = ""
+          action(searchString)
         }) {
           Image(systemName: "multiply.circle.fill")
             // If we don't enforce a frame, the button doesn't register the tap action
@@ -65,24 +67,24 @@ struct SearchFieldView: View {
         }
       }
     }
-      .padding([.vertical], 6)
-      .padding([.horizontal], 10)
+      .padding(.vertical, 6)
+      .padding(.horizontal, 10)
       .background(GeometryReader { proxy in
         Color.clear.preference(key: SizeKey.self, value: proxy.size)
       })
       .frame(height: height)
       .background(background)
       .padding(1)
-      .padding([.bottom], 2)
+      .padding(.bottom, 2)
       .onPreferenceChange(SizeKey.self) { size in
-        self.height = size?.height
+        height = size?.height
       }
   }
   
   var background: some View {
     RoundedRectangle(cornerRadius: 9)
       .fill(Color.searchFieldBackground)
-      .shadow(color: Color.searchFieldShadow, radius: 1, x: 0, y: 2)
+      .shadow(color: .searchFieldShadow, radius: 1, x: 0, y: 2)
       .overlay(
         RoundedRectangle(cornerRadius: 9)
           .stroke(Color.searchFieldBorder, lineWidth: 2)
@@ -92,19 +94,17 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      searchFields.colorScheme(.light)
-      searchFields.colorScheme(.dark)
-    }
+    searchFields.colorScheme(.light)
+    searchFields.colorScheme(.dark)
   }
   
-  static var searchFields: some View {
+  private static var searchFields: some View {
     VStack(spacing: 20) {
       SearchFieldView(searchString: "")
       SearchFieldView(searchString: "Hello")
       SearchFieldView(searchString: "Testing")
     }
-      .padding(20)
-      .background(Color.backgroundColor)
+    .padding(20)
+    .background(Color.backgroundColor)
   }
 }

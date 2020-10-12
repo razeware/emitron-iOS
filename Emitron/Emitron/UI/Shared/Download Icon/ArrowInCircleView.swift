@@ -35,7 +35,7 @@ struct ArrowInCircleView: View {
     Image.download
       .resizable()
       .aspectRatio(contentMode: .fit)
-      .frame(width: DownloadIconLayout.size)
+      .frame(width: DownloadIcon.Layout.size)
       .foregroundColor(fillColour)
   }
 }

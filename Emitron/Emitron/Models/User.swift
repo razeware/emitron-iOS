@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.URL
 
 public struct User: Equatable, Codable {
 
@@ -34,7 +34,7 @@ public struct User: Equatable, Codable {
   public let externalId: String
   public let email: String
   public let username: String
-  public let avatarUrl: URL
+  public let avatarURL: URL
   public let name: String
   public let token: String
   let permissions: [Permission]?
@@ -67,8 +67,8 @@ public struct User: Equatable, Codable {
       let externalId = dictionary["external_id"],
       let email = dictionary["email"],
       let username = dictionary["username"],
-      let avatarUrlString = dictionary["avatar_url"],
-      let avatarUrl = URL(string: avatarUrlString),
+      let avatarURLString = dictionary["avatar_url"],
+      let avatarURL = URL(string: avatarURLString),
       let name = dictionary["name"]?.replacingOccurrences(of: "+", with: " "),
       let token = dictionary["token"]
       else
@@ -77,19 +77,19 @@ public struct User: Equatable, Codable {
     self.externalId = externalId
     self.email = email
     self.username = username
-    self.avatarUrl = avatarUrl
+    self.avatarURL = avatarURL
     self.name = name
     self.token = token
-    self.permissions = .none
+    permissions = .none
   }
   
   private init(user: User, permissions: [Permission]) {
-    self.externalId = user.externalId
-    self.email = user.email
-    self.username = user.username
-    self.avatarUrl = user.avatarUrl
-    self.name = user.name
-    self.token = user.token
+    externalId = user.externalId
+    email = user.email
+    username = user.username
+    avatarURL = user.avatarURL
+    name = user.name
+    token = user.token
     self.permissions = permissions
   }
   

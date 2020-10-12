@@ -26,23 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 @testable import Emitron
 
-class UserMCMock: UserModelController {
+final class UserMCMock: UserModelController {
   var user: User?
-  var client: RWAPI
   let objectWillChange = ObservableObjectPublisher()
+  let client = RWAPI(authToken: "FAKE_TOKEN")
   let objectDidChange = ObservableObjectPublisher()
   
-  init() {
-    self.client = RWAPI(authToken: "FAKE_TOKEN")
-  }
-  
-  static var withDownloads: UserMCMock {
-    let userModelController = UserMCMock()
-    userModelController.user = User.withDownloads
-    return userModelController
+  init(user: User? = nil) {
+    self.user = user
   }
 }

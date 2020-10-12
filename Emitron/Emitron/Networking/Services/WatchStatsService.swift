@@ -26,10 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 class WatchStatsService: Service {
-  typealias Provider = ((RWAPI) -> WatchStatsService)
+  typealias Provider = (RWAPI) -> WatchStatsService
   
   func update(watchStats: [WatchStat],
               completion: @escaping (_ response: Result<WatchStatsUpdateRequest.Response, RWAPIError>) -> Void) {

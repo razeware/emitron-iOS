@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import GRDB
 
 extension Content: FetchableRecord, TableRecord, PersistableRecord {
@@ -43,7 +42,7 @@ extension Content: FetchableRecord, TableRecord, PersistableRecord {
     static let contentType = Column("contentType")
     static let duration = Column("duration")
     static let videoIdentifier = Column("videoIdentifier")
-    static let cardArtworkUrl = Column("cardArtworkUrl")
+    static let cardArtworkURL = Column("cardArtworkURL")
     static let technologyTriple = Column("technologyTriple")
     static let contributors = Column("contributors")
     static let groupId = Column("groupId")

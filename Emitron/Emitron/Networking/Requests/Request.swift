@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.Data
 import SwiftyJSON
 
 enum HTTPMethod: String {
@@ -42,7 +42,7 @@ protocol Request {
 
   var method: HTTPMethod { get }
   var path: String { get }
-  var additionalHeaders: [String: String]? { get }
+  var additionalHeaders: [String: String] { get }
   var body: Data? { get }
 
   func handle(response: Data) throws -> Response

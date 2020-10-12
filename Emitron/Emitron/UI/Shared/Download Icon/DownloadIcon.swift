@@ -28,44 +28,36 @@
 
 import SwiftUI
 
-enum DownloadIconLayout {
-  static let size: CGFloat = 20
-  static let lineWidth: CGFloat = 2
+struct DownloadIcon {
+  private let downloadProgress: DownloadProgressDisplayable
+
+  init(downloadProgress: DownloadProgressDisplayable) {
+    self.downloadProgress = downloadProgress
+  }
 }
 
-struct DownloadIcon: View {
-  let downloadProgress: DownloadProgressDisplayable
-  
+// MARK: - View
+extension DownloadIcon: View {
   var body: some View {
-    icon.frame(width: DownloadIconLayout.size, height: DownloadIconLayout.size)
-  }
-  
-  var icon: some View {
-    switch downloadProgress {
-    case .downloadable:
-      return AnyView(ArrowInCircleView(fillColour: .downloadButtonNotDownloaded))
-    case .enqueued:
-      return AnyView(SpinningCircleView())
-    case .inProgress(progress: let progress):
-      return AnyView(CircularProgressBar(progress: progress))
-    case .downloaded:
-      return AnyView(ArrowInCircleView(fillColour: .downloadButtonDownloaded))
-    case .notDownloadable:
-      return AnyView(DownloadWarningView())
-    }
+    icon.frame(width: Layout.size, height: Layout.size)
   }
 }
 
 struct DownloadIcon_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      selectionList.colorScheme(.light)
-      selectionList.colorScheme(.dark)
-    }
+    selectionList.colorScheme(.light)
+    selectionList.colorScheme(.dark)
   }
   
-  static var selectionList: some View {
-    VStack {
+  private static var selectionList: some View {
+    func icon(for state: DownloadProgressDisplayable) -> some View {
+      HStack {
+        Text(state.description)
+        DownloadIcon(downloadProgress: state)
+      }
+    }
+
+    return VStack {
       icon(for: .downloadable)
       icon(for: .enqueued)
       icon(for: .inProgress(progress: 0.3))
@@ -74,14 +66,39 @@ struct DownloadIcon_Previews: PreviewProvider {
       icon(for: .downloaded)
       icon(for: .notDownloadable)
     }
-      .padding(20)
-      .background(Color.backgroundColor)
+    .padding(20)
+    .background(Color.backgroundColor)
   }
-  
-  static func icon(for state: DownloadProgressDisplayable) -> some View {
-    HStack {
-      Text(state.description)
-      DownloadIcon(downloadProgress: state)
+}
+
+// MARK: - Layout
+extension DownloadIcon {
+  enum Layout {
+    static let size: CGFloat = 20
+    static let lineWidth: CGFloat = 2
+  }
+}
+
+extension View {
+  var downloadIconFrame: some View {
+    frame(width: DownloadIcon.Layout.size, height: DownloadIcon.Layout.size)
+  }
+}
+
+// MARK: - private
+private extension DownloadIcon {
+  @ViewBuilder var icon: some View {
+    switch downloadProgress {
+    case .downloadable:
+      ArrowInCircleView(fillColour: .downloadButtonNotDownloaded)
+    case .enqueued:
+      SpinningCircleView()
+    case .inProgress(progress: let progress):
+      CircularProgressBar(progress: progress)
+    case .downloaded:
+      ArrowInCircleView(fillColour: .downloadButtonDownloaded)
+    case .notDownloadable:
+      DownloadWarningView()
     }
   }
 }

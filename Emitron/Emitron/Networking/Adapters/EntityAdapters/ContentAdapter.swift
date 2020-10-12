@@ -26,10 +26,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.URL
 
 struct ContentAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = [EntityRelationship]()) throws -> Content {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Content {
     guard resource.entityType == .content else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
     guard let uri = resource.attributes["uri"] as? String,
@@ -57,9 +57,9 @@ struct ContentAdapter: EntityAdapter {
       }
     }
     
-    var cardArtworkUrl: URL?
-    if let cardArtworkUrlString = resource.attributes["card_artwork_url"] as? String {
-      cardArtworkUrl = URL(string: cardArtworkUrlString)
+    var cardArtworkURL: URL?
+    if let cardArtworkURLString = resource.attributes["card_artwork_url"] as? String {
+      cardArtworkURL = URL(string: cardArtworkURLString)
     }
     
     let group = relationships.first { relationship in
@@ -81,7 +81,7 @@ struct ContentAdapter: EntityAdapter {
                    contentType: contentType,
                    duration: duration,
                    videoIdentifier: resource.attributes["video_identifier"] as? Int,
-                   cardArtworkUrl: cardArtworkUrl,
+                   cardArtworkURL: cardArtworkURL,
                    technologyTriple: technologyTriple,
                    contributors: contributors,
                    groupId: groupId,

@@ -48,10 +48,10 @@ struct ToggleControlView: View {
   
   private func toggleButton(for state: MyTutorialsState) -> some View {
     Button(action: {
-      guard state != self.toggleState else { return }
+      guard state != toggleState else { return }
       
-      self.toggleState = state
-      self.toggleUpdated?(state)
+      toggleState = state
+      toggleUpdated?(state)
       MessageBus.current.dismiss()
     }) {
       toggleButtonContent(for: state)
@@ -62,10 +62,10 @@ struct ToggleControlView: View {
     VStack {
       Text(state.displayString)
         .font(.uiButtonLabelSmall)
-        .foregroundColor(toggleState == state ? Color.toggleTextSelected : Color.toggleTextDeselected)
+        .foregroundColor(toggleState == state ? Color.toggleTextSelected : .toggleTextDeselected)
       
       RoundedRectangle(cornerRadius: 1)
-        .fill(toggleState == state ? Color.toggleLineSelected : Color.toggleLineDeselected)
+        .fill(toggleState == state ? Color.toggleLineSelected : .toggleLineDeselected)
         .frame(height: 2)
     }
   }

@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 enum SortFilter: Int, Codable {
   case newest
   case popularity
@@ -44,9 +42,9 @@ enum SortFilter: Int, Codable {
   var name: String {
     switch self {
     case .newest:
-      return Constants.newest
+      return .newest
     case .popularity:
-      return Constants.popularity
+      return .popularity
     }
   }
   

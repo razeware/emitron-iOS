@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class ContentRepository: ObservableObject, ContentPaginatable {
@@ -41,7 +40,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   // This should be @Published, but it /sometimes/ crashes the app with EXC_BAD_ACCESS
   // when you try and reference it. Which is handy.
-  var contents: [ContentListDisplayable] = [ContentListDisplayable]() {
+  var contents: [ContentListDisplayable] = [] {
     willSet {
       objectWillChange.send()
     }
@@ -51,7 +50,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   // Let's see if we actually need it to be @Published...
   var state: DataState = .initial
   
-  private var contentIds: [Int] = [Int]()
+  private var contentIds: [Int] = []
   private var contentSubscription: AnyCancellable?
   // Provide a value for this in a subclass to subscribe to invalidation notifcations
   var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
@@ -106,7 +105,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (newContentIds, cacheUpdate, totalResultCount)):
         self.contentIds += newContentIds
         self.contentSubscription?.cancel()
@@ -141,7 +140,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         self.objectWillChange.send()
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (newContentIds, cacheUpdate, totalResultCount)):
         self.contentIds = newContentIds
         self.contentSubscription?.cancel()
@@ -154,8 +153,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   private func configureContentSubscription() {
-    self.contentSubscription = self.repository
-      .contentSummaryState(for: self.contentIds)
+    contentSubscription = repository
+      .contentSummaryState(for: contentIds)
       .removeDuplicates()
       .sink(receiveCompletion: { [weak self] error in
         guard let self = self else { return }
@@ -172,7 +171,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private func configureInvalidationSubscription() {
     if let invalidationPublisher = invalidationPublisher {
-      self.invalidationSubscription = invalidationPublisher
+      invalidationSubscription = invalidationPublisher
         .sink { [weak self] in
           guard let self = self else { return }
           

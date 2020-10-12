@@ -29,35 +29,49 @@
 import SwiftUI
 import KingfisherSwiftUI
 
-struct VerticalFadeImageView: View {
-  var imageUrl: URL?
-  var blurred: Bool = false
-  var width: CGFloat?
-  var height: CGFloat?
-  
+struct VerticalFadeImageView {
+  private let imageURL: URL?
+  private let blurred: Bool
+  private let width: CGFloat?
+  private let height: CGFloat?
+
+  init(
+    imageURL: URL?,
+    blurred: Bool,
+    width: CGFloat?,
+    height: CGFloat?
+  ) {
+    self.imageURL = imageURL
+    self.blurred = blurred
+    self.width = width
+    self.height = height
+  }
+}
+
+// MARK: - View
+extension VerticalFadeImageView: View {
   var body: some View {
     ZStack {
-      KFImage(imageUrl)
+      KFImage(imageURL)
         .resizable()
         .aspectRatio(contentMode: .fill)
         .frame(width: width, height: height, alignment: .top)
-        .blur(radius: blurred ? Constants.blurRadius : 0)
+        .blur(radius: blurred ? .blurRadius : 0)
         .clipped()
       
-      LinearGradient(gradient: Gradient(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
-                     startPoint: .top,
-                     endPoint: .bottom)
+      LinearGradient(
+        gradient: .init(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
+        startPoint: .top,
+        endPoint: .bottom
+      )
     }
   }
 }
 
 struct VerticalFadeImageView_Previews: PreviewProvider {
-  
   static var previews: some View {
-    VerticalFadeImageView(imageUrl: sampleImageUrl)
-  }
-  
-  static var sampleImageUrl: URL? {
-    Bundle.main.url(forResource: "sampleCardImage", withExtension: "png")
+    Bundle.main.url(forResource: "sampleCardImage", withExtension: "png").map {
+      VerticalFadeImageView(imageURL: $0, blurred: false, width: nil, height: nil)
+    }
   }
 }

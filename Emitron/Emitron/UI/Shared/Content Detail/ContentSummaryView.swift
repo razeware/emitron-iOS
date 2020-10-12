@@ -32,27 +32,27 @@ private enum Layout {
   static let buttonSize: CGFloat = 20
 }
 
-struct ContentSummaryView: View {
-  var content: ContentListDisplayable
-  @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
-  @EnvironmentObject var sessionController: SessionController
+struct ContentSummaryView {
+  @EnvironmentObject private var sessionController: SessionController
+  private let content: ContentListDisplayable
+  @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
-  
-  var courseLocked: Bool {
-    content.professional && !sessionController.user!.canStreamPro
+
+  init(
+    content: ContentListDisplayable,
+    dynamicContentViewModel: DynamicContentViewModel
+  ) {
+    self.content = content
+    self.dynamicContentViewModel = dynamicContentViewModel
   }
-  
-  var canDownload: Bool {
-    sessionController.user?.canDownload ?? false
-  }
-  
+}
+
+// MARK: - View
+extension ContentSummaryView: View {
   var body: some View {
     dynamicContentViewModel.initialiseIfRequired()
-    return contentView
-  }
-  
-  private var contentView: some View {
-    VStack(alignment: .leading) {
+    
+    return VStack(alignment: .leading) {
       HStack {
         Text(content.technologyTripleString.uppercased())
           .font(.uiUppercase)
@@ -82,10 +82,8 @@ struct ContentSummaryView: View {
       HStack(spacing: 30, content: {
         if canDownload {
           DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-            .onTapGesture {
-              self.download()
-            }
-            .alert(item: $deletionConfirmation) { $0.alert }
+            .onTapGesture(perform: download)
+            .alert(item: $deletionConfirmation, content: \.alert)
             .accessibility(label: Text("\(dynamicContentViewModel.downloadProgress.accessibilityDescription) course"))
         }
         
@@ -93,54 +91,60 @@ struct ContentSummaryView: View {
         
         completedTag
       })
-        .padding([.top], 15)
+      .padding(.top, 15)
       
       Text(content.descriptionPlainText)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        .padding([.top], 15)
+        .padding(.top, 15)
         .lineLimit(nil)
       
       Text("By \(content.contributorString)")
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .padding([.top], 10)
+        .padding(.top, 10)
         .lineSpacing(3)
     }
   }
+}
+
+// MARK: - private
+private extension ContentSummaryView {
+  var courseLocked: Bool {
+    content.professional && !sessionController.user!.canStreamPro
+  }
   
-  private var completedTag: CompletedTag? {
+  var canDownload: Bool {
+    sessionController.user?.canDownload ?? false
+  }
+
+  var completedTag: CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
     }
     return nil
   }
   
-  private var bookmarkButton: AnyView {
-    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and thee
+  private var bookmarkButton: some View {
+    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
     //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
-    
-    let colour = dynamicContentViewModel.bookmarked ? Color.inactiveIcon : .activeIcon
-    
-    return AnyView(
-      Image.bookmark
-        .resizable()
-        .frame(width: Layout.buttonSize, height: Layout.buttonSize)
-      .foregroundColor(colour)
-        .onTapGesture {
-          self.bookmark()
-        }
+    Image.bookmark
+      .resizable()
+      .frame(width: Layout.buttonSize, height: Layout.buttonSize)
+      .foregroundColor(dynamicContentViewModel.bookmarked ? .inactiveIcon : .activeIcon)
+      .onTapGesture {
+        bookmark()
+      }
       .accessibility(label: Text("Bookmark course"))
-    )
   }
   
-  private func download() {
+  func download() {
     deletionConfirmation = dynamicContentViewModel.downloadTapped()
   }
   
-  private func bookmark() {
+  func bookmark() {
     dynamicContentViewModel.bookmarkTapped()
   }
 }

@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct Domain: Codable, Equatable {
   enum Level: Int, Codable {
     case production, beta, blog, retired, archive

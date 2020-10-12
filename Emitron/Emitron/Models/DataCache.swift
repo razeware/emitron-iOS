@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 enum DataCacheError: Error {
@@ -50,37 +49,44 @@ final class DataCache: ObservableObject {
     case bookmarks
   }
   
-  private var contents: [Int: Content] = [Int: Content]()
-  private var bookmarks: [Int: Bookmark] = [Int: Bookmark]()
-  private var progressions: [Int: Progression] = [Int: Progression]()
-  private var contentIndexedGroups: [Int: [Group]] = [Int: [Group]]()
-  private var groupIndexedGroups: [Int: Group] = [Int: Group]()
-  private var contentDomains: [Int: [ContentDomain]] = [Int: [ContentDomain]]()
-  private var contentCategories: [Int: [ContentCategory]] = [Int: [ContentCategory]]()
+  private var contents: [Int: Content] = [:]
+  private var bookmarks: [Int: Bookmark] = [:]
+  private var progressions: [Int: Progression] = [:]
+  private var contentIndexedGroups: [Int: [Group]] = [:]
+  private var groupIndexedGroups: [Int: Group] = [:]
+  private var contentDomains: [Int: [ContentDomain]] = [:]
+  private var contentCategories: [Int: [ContentCategory]] = [:]
   
-  private let objectDidChange: CurrentValueSubject<CacheChange, Never> = CurrentValueSubject<CacheChange, Never>(.updated)
+  private let objectDidChange = CurrentValueSubject<CacheChange, Never>(.updated)
   
   let cacheWasInvalidated = PassthroughSubject<CacheInvalidation, Never>()
 }
 
 extension DataCache {
   func update(from cacheUpdate: DataCacheUpdate) {
-    cacheUpdate.bookmarks.forEach { self.bookmarks[$0.contentId] = $0 }
+    cacheUpdate.bookmarks.forEach { bookmarks[$0.contentId] = $0 }
     // Have to do a special update for content—since some API endpoints won't include group info
-    cacheUpdate.contents.forEach { self.contents[$0.id] = self.contents[$0.id]?.update(from: $0) ?? $0 }
-    cacheUpdate.progressions.forEach { self.progressions[$0.contentId] = $0 }
-    cacheUpdate.groups.forEach { self.groupIndexedGroups[$0.id] = $0 }
-    
-    let newContentCategories = Dictionary(grouping: cacheUpdate.contentCategories) { $0.contentId }
-    let newContentDomains = Dictionary(grouping: cacheUpdate.contentDomains) { $0.contentId }
-    let newContentIndexedGroups = Dictionary(grouping: cacheUpdate.groups) { $0.contentId }
-    
-    self.contentCategories.merge(newContentCategories)
-    self.contentDomains.merge(newContentDomains)
-    self.contentIndexedGroups.merge(newContentIndexedGroups)
-    
-    cacheUpdate.bookmarkDeletionContentIds.forEach { self.bookmarks.removeValue(forKey: $0) }
-    cacheUpdate.progressionDeletionContentIds.forEach { self.progressions.removeValue(forKey: $0) }
+    cacheUpdate.contents.forEach { contents[$0.id] = contents[$0.id]?.update(from: $0) ?? $0 }
+    cacheUpdate.progressions.forEach { progressions[$0.contentId] = $0 }
+    cacheUpdate.groups.forEach { groupIndexedGroups[$0.id] = $0 }
+
+    // swiftlint:disable generic_type_name
+    func mergeWithCacheUpdate<contentId: Emitron.contentId>(
+      _ dictionary: inout [ Int: [contentId] ],
+      _ getContentId: (DataCacheUpdate) -> [contentId]
+    ) {
+      dictionary.merge(
+        .init(grouping: getContentId(cacheUpdate), by: \.contentId),
+        uniquingKeysWith: { $1 }
+      )
+    }
+
+    mergeWithCacheUpdate(&contentCategories, \.contentCategories)
+    mergeWithCacheUpdate(&contentDomains, \.contentDomains)
+    mergeWithCacheUpdate(&contentIndexedGroups, \.groups)
+
+    cacheUpdate.bookmarkDeletionContentIds.forEach { bookmarks.removeValue(forKey: $0) }
+    cacheUpdate.progressionDeletionContentIds.forEach { progressions.removeValue(forKey: $0) }
     
     // Send cach invalidations
     if !cacheUpdate.bookmarks.isEmpty || !cacheUpdate.bookmarkDeletionContentIds.isEmpty {
@@ -95,9 +101,18 @@ extension DataCache {
   }
 }
 
+/// A type with a `contentId` property.
+private protocol contentId {
+  var contentId: Int { get }
+}
+
+extension ContentCategory: contentId { }
+extension ContentDomain: contentId { }
+extension Group: contentId { }
+
 extension DataCache {
   func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[CachedContentSummaryState], Error> {
-    self.objectDidChange
+    objectDidChange
       .tryMap { _ in
         try contentIds.map { contentId in
           try self.cachedContentSummaryState(for: contentId)
@@ -108,7 +123,7 @@ extension DataCache {
   }
   
   func contentSummaryState(for contentId: Int) -> AnyPublisher<CachedContentSummaryState, Error> {
-    self.objectDidChange
+    objectDidChange
       .tryMap { _ in
         try self.cachedContentSummaryState(for: contentId)
       }
@@ -117,7 +132,7 @@ extension DataCache {
   }
   
   func childContentsState(for contentId: Int) -> AnyPublisher<CachedChildContentsState, Error> {
-    self.objectDidChange.tryMap { _ in
+    objectDidChange.tryMap { _ in
       try self.cachedChildContentsState(for: contentId)
     }
     .removeDuplicates()
@@ -125,7 +140,7 @@ extension DataCache {
   }
   
   func contentDynamicState(for contentId: Int) -> AnyPublisher<CachedDynamicContentState, Error> {
-    self.objectDidChange.tryMap { _ in
+    objectDidChange.tryMap { _ in
       self.cachedDynamicContentState(for: contentId)
     }
     .removeDuplicates()
@@ -156,8 +171,8 @@ extension DataCache {
     guard let childContents = try? childContents(for: content) else { return nil }
     
     let completedCount = childContents
-      .compactMap { self.progression(for: $0.id) }
-      .filter { $0.finished }
+      .compactMap { progression(for: $0.id) }
+      .filter(\.finished)
       .count
     return (total: childContents.count, completed: completedCount )
   }
@@ -165,10 +180,10 @@ extension DataCache {
 
 extension DataCache {
   private func cachedContentSummaryState(for contentId: Int) throws -> CachedContentSummaryState {
-    guard let content = self.contents[contentId],
-      let contentDomains = self.contentDomains[contentId]
-      else {
-        throw DataCacheError.cacheMiss
+    guard let content = contents[contentId],
+          let contentDomains = contentDomains[contentId]
+    else {
+      throw DataCacheError.cacheMiss
     }
     
     let contentCategories = self.contentCategories[contentId] ?? []
@@ -182,7 +197,7 @@ extension DataCache {
   }
   
   private func cachedChildContentsState(for contentId: Int) throws -> CachedChildContentsState {
-    guard let content = self.contents[contentId] else {
+    guard let content = contents[contentId] else {
       throw DataCacheError.cacheMiss
     }
     
@@ -190,9 +205,9 @@ extension DataCache {
       return CachedChildContentsState(contents: [], groups: [])
     }
     
-    let groups = self.contentIndexedGroups[contentId] ?? []
-    let groupIds = groups.map { $0.id }
-    let childContents = self.contents.values.filter { content in
+    let groups = contentIndexedGroups[contentId] ?? []
+    let groupIds = groups.map(\.id)
+    let childContents = contents.values.filter { content in
       guard let groupId = content.groupId else { return false }
       return groupIds.contains(groupId)
     }
@@ -208,9 +223,9 @@ extension DataCache {
   }
   
   func cachedContentPersistableState(for contentId: Int) throws -> ContentPersistableState {
-    guard let content = self.contents[contentId] else {
-        throw DataCacheError.cacheMiss
-      }
+    guard let content = contents[contentId] else {
+      throw DataCacheError.cacheMiss
+    }
     
       let contentDomains = self.contentDomains[contentId] ?? []
       let contentCategories = self.contentCategories[contentId] ?? []
@@ -224,7 +239,7 @@ extension DataCache {
       let bookmark = self.bookmarks[contentId]
       let progression = self.progressions[contentId]
       let groups = self.contentIndexedGroups[contentId] ?? []
-      let groupIds = groups.map { $0.id }
+      let groupIds = groups.map(\.id)
       let childContents = self.contents.values.filter { content in
         guard let groupId = content.groupId else { return false }
         return groupIds.contains(groupId)
@@ -243,7 +258,7 @@ extension DataCache {
   }
   
   func videoPlaylist(for contentId: Int) throws -> [CachedVideoPlaybackState] {
-    guard let content = self.contents[contentId] else {
+    guard let content = contents[contentId] else {
       throw DataCacheError.cacheMiss
     }
     
@@ -269,7 +284,7 @@ extension DataCache {
     }
     
     // Out of options
-    return [CachedVideoPlaybackState]()
+    return []
   }
   
   private func videoPlaybackState(for content: Content) -> CachedVideoPlaybackState {
@@ -281,17 +296,17 @@ extension DataCache {
   
   private func cachedDynamicContentState(for contentId: Int) -> CachedDynamicContentState {
     CachedDynamicContentState(
-      progression: self.progressions[contentId],
-      bookmark: self.bookmarks[contentId]
+      progression: progressions[contentId],
+      bookmark: bookmarks[contentId]
     )
   }
   
   private func parentContent(for content: Content) throws -> Content? {
     guard let groupId = content.groupId else { return nil }
-    guard let group = self.groupIndexedGroups[groupId]
+    guard let group = groupIndexedGroups[groupId]
       else { throw DataCacheError.cacheMiss }
     
-    return self.contents[group.contentId]
+    return contents[group.contentId]
   }
   
   private func childContents(for content: Content) throws -> [Content] {
@@ -299,7 +314,7 @@ extension DataCache {
       throw DataCacheError.cacheMiss
     }
     
-    let groupIds = groups.map { $0.id }
+    let groupIds = groups.map(\.id)
     return contents.values.filter {
       guard let groupId = $0.groupId else { return false }
       return groupIds.contains(groupId)
@@ -312,7 +327,7 @@ extension DataCache {
   
   private func siblingContents(for content: Content) throws -> [Content] {
     guard let parentContent = try parentContent(for: content) else {
-      return [Content]()
+      return []
     }
     return try childContents(for: parentContent)
   }

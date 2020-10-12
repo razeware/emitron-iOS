@@ -26,14 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 extension ProgressionsService: ContentServiceAdapter {
   func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
     progressions(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.progressions.map { $0.contentId },
+          contentIds: response.progressions.map(\.contentId),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

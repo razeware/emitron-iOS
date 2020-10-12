@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 struct ContentDomain: Equatable, Codable {
   var id: Int64?
   var contentId: Int

@@ -26,7 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import Combine
 
 class ChildContentsViewModel: ObservableObject {
@@ -36,8 +35,8 @@ class ChildContentsViewModel: ObservableObject {
   let repository: Repository
   
   var state: DataState = .initial
-  @Published var groups: [GroupDisplayable] = [GroupDisplayable]()
-  @Published var contents: [ChildContentListDisplayable] = [ChildContentListDisplayable]()
+  @Published var groups: [GroupDisplayable] = []
+  @Published var contents: [ChildContentListDisplayable] = []
   
   var subscriptions = Set<AnyCancellable>()
   
@@ -58,7 +57,7 @@ class ChildContentsViewModel: ObservableObject {
   }
   
   func reload() {
-    self.state = .loading
+    state = .loading
     // Manually do this since can't have a @Published state property
     objectWillChange.send()
     

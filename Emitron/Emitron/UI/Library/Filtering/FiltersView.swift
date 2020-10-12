@@ -29,7 +29,6 @@
 import SwiftUI
 
 struct FiltersView: View {
-  
   @ObservedObject var libraryRepository: LibraryRepository
   @ObservedObject var filters: Filters
   @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
@@ -53,10 +52,10 @@ struct FiltersView: View {
         Spacer()
         
         Button(action: {
-          if Set(self.libraryRepository.nonPaginationParameters) != Set(self.filters.appliedParameters) {
-            self.revertBackToPreviousFilters()
+          if Set(libraryRepository.nonPaginationParameters) != Set(filters.appliedParameters) {
+            revertBackToPreviousFilters()
           }
-          self.presentationMode.wrappedValue.dismiss()
+          presentationMode.wrappedValue.dismiss()
         }) {
           Image.close
             .frame(width: 27, height: 27, alignment: .center)
@@ -71,16 +70,16 @@ struct FiltersView: View {
       
       HStack {
         
-        MainButtonView(title: "Clear All", type: .secondary(withArrow: false)) {
-          self.filters.removeAll()
-          self.libraryRepository.filters = self.filters
-          self.presentationMode.wrappedValue.dismiss()
+        MainButtonView(title: "Reset Filters", type: .secondary(withArrow: false)) {
+          filters.removeAll()
+          libraryRepository.filters = filters
+          presentationMode.wrappedValue.dismiss()
         }
         .padding([.trailing], 10)
         
         // TODO: Figure out how best to handle NOT updating filters, but seeing which ones SHOULD get updated to compare to
         // Which ones are currently being applied to the content listing
-        applyOrCloseButton()
+        applyFiltersButton()
       }
       .padding([.leading, .trailing, .bottom], 18)
     }
@@ -91,7 +90,7 @@ struct FiltersView: View {
     ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         ForEach(filters.filterGroups, id: \.self) { filterGroup in
-          self.constructFilterView(filterGroup: filterGroup)
+          constructFilterView(filterGroup: filterGroup)
         }
       }
         .padding([.bottom], 30)
@@ -101,18 +100,17 @@ struct FiltersView: View {
   private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
     FiltersHeaderView(
       filterGroup: filterGroup,
-      filters: self.filters,
+      filters: filters,
       isExpanded: filterGroup.numApplied > 0
     )
   }
   
-  private func applyOrCloseButton() -> MainButtonView {
-    let equalSets = Set(libraryRepository.nonPaginationParameters) == Set(filters.appliedParameters)
-    let title = equalSets ? "Close" : "Apply"
+  private func applyFiltersButton() -> MainButtonView {
+    let title = "Apply Filters"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
-      self.libraryRepository.filters = self.filters
-      self.presentationMode.wrappedValue.dismiss()
+      libraryRepository.filters = filters
+      presentationMode.wrappedValue.dismiss()
     }
     
     return buttonView
@@ -122,15 +120,15 @@ struct FiltersView: View {
     // Update filters with the currentFilters on contentsMC, to keep them in sync (aka, remove them)
     
     // First, turn all applied off
-    self.filters.applied.forEach { filter in
+    filters.applied.forEach { filter in
       filter.isOn = false
-      self.filters.all.update(with: filter)
+      filters.all.update(with: filter)
     }
     
     // Then, turn all the currentAppliedFilters things on
-    self.libraryRepository.currentAppliedFilters.forEach { filter in
+    libraryRepository.currentAppliedFilters.forEach { filter in
       filter.isOn = true
-      self.filters.all.update(with: filter)
+      filters.all.update(with: filter)
     }
   }
 }

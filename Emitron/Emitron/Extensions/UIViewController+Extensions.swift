@@ -26,11 +26,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
 import UIKit
 
 extension UIViewController {
   var sceneDelegate: UISceneDelegate? {
-    self.view.window?.windowScene?.delegate
+    view.window?.windowScene?.delegate
   }
 }

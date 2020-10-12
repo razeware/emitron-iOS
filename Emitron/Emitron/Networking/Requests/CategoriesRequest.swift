@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.Data
 import SwiftyJSON
 
 struct CategoriesRequest: Request {
@@ -35,7 +35,7 @@ struct CategoriesRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/categories" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Internal

@@ -27,20 +27,23 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import UIKit
 
 struct CourseHeaderView: View {
   let name: String
   
   var body: some View {
     VStack(alignment: .leading, spacing: 12) {
-      Text(name)
-        .font(.uiTitle3)
-        .foregroundColor(.titleText)
-      
-      Rectangle()
-        .fill(Color.borderColor)
-        .frame(height: 1)
+      HStack {
+        Text(name)
+          .font(.uiTitle3)
+          .foregroundColor(.titleText)
+          .padding(.leading, 20)
+        Spacer()
+      }
     }
+
+    .frame(minWidth: UIScreen.main.bounds.width)
     .padding([.bottom], 16)
   }
 }

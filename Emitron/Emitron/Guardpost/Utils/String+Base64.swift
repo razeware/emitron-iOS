@@ -26,7 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.Data
 
 // MARK: - Base64
 extension String {
@@ -39,6 +39,6 @@ extension String {
   }
 
   func toBase64() -> String {
-    Data(self.utf8).base64EncodedString()
+    Data(utf8).base64EncodedString()
   }
 }

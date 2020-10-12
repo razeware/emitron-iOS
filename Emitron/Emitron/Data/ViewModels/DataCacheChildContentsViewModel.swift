@@ -26,8 +26,6 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
-
 final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   private let service: ContentsService
 
@@ -44,14 +42,14 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   }
   
   override func loadContentDetailsIntoCache() {
-    self.state = .loading
+    state = .loading
     service.contentDetails(for: parentContentId) { result in
       switch result {
       case .failure(let error):
         self.state = .failed
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
-          .log(additionalParams: nil)
+          .log()
       case .success(let (_, cacheUpdate)):
         self.repository.apply(update: cacheUpdate)
         self.reload()

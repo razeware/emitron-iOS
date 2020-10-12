@@ -6,8 +6,8 @@
         "repositoryURL": "https://github.com/groue/CombineExpectations.git",
         "state": {
           "branch": null,
-          "revision": "3250715d3f1b12754c84e7952c7bbb716f4a4dc4",
-          "version": "0.4.0"
+          "revision": "96d5604151c94b21fbca6877b237e80af9e821dd",
+          "version": "0.5.0"
         }
       },
       {
@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/groue/GRDB.swift.git",
         "state": {
           "branch": null,
-          "revision": "4c8574aa4c08ff715ce0e63b38502ac1e8529069",
-          "version": "4.10.0"
+          "revision": "5ee47c3c2765bdfde0f44c2ea9a263f6aa252d63",
+          "version": "4.14.0"
         }
       },
       {
@@ -24,8 +24,8 @@
         "repositoryURL": "https://github.com/groue/GRDBCombine",
         "state": {
           "branch": null,
-          "revision": "3cab1d74e6ed0a5c5cca5b13dfeaa2ec5158f983",
-          "version": "0.8.0"
+          "revision": "cbae47a79921fb8df318f31b9c51f9a1245373e6",
+          "version": "0.8.1"
         }
       },
       {
@@ -42,8 +42,8 @@
         "repositoryURL": "https://github.com/onevcat/Kingfisher",
         "state": {
           "branch": null,
-          "revision": "56075f629bc3915e1bfa876d175df67e1a7cbe3c",
-          "version": "5.13.2"
+          "revision": "0efb20f022501327f4028aa9bf7cd4a0d390bea0",
+          "version": "5.15.2"
         }
       },
       {

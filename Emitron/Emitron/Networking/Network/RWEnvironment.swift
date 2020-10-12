@@ -26,14 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.URL
 
 struct RWEnvironment {
 
   // MARK: - Properties
-  var baseUrl: URL
+  var baseURL: URL
 }
 
 extension RWEnvironment {
-  static let prod = RWEnvironment(baseUrl: URL(string: "https://api.raywenderlich.com/api")!)
+  static let prod = RWEnvironment(baseURL: URL(string: "https://api.raywenderlich.com/api")!)
 }

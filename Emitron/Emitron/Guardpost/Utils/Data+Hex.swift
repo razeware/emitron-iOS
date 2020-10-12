@@ -26,11 +26,10 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Foundation
+import struct Foundation.Data
 
 // MARK: - Hex
 extension Data {
-
   func hexEncodedString() -> String {
     map { String(format: "%02hhx", $0) }
       .joined()

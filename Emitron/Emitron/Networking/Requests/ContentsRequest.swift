@@ -35,7 +35,7 @@ struct ContentsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/contents" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
 
   // MARK: - Internal
@@ -58,7 +58,7 @@ struct ContentDetailsRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .GET }
   var path: String { "/contents/\(id)" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   // MARK: - Parameters
@@ -86,7 +86,7 @@ struct BeginPlaybackTokenRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/contents/begin_playback" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { nil }
   
   func handle(response: Data) throws -> String {
@@ -111,12 +111,12 @@ struct PlaybackUsageRequest: Request {
   // MARK: - Properties
   var method: HTTPMethod { .POST }
   var path: String { "/contents/\(id)/playback" }
-  var additionalHeaders: [String: String]?
+  var additionalHeaders: [String: String] = [:]
   var body: Data? { 
     let json: [String: Any] = [
       "video_playback_token": token,
       "progress": progress,
-      "seconds": Constants.videoPlaybackProgressTrackingInterval
+      "seconds": Int.videoPlaybackProgressTrackingInterval
     ]
     
     return try? JSONSerialization.data(withJSONObject: json)

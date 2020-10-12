@@ -35,14 +35,14 @@ class FullScreenVideoPlayerViewController: UIViewController {
   private var isFullscreen: Bool = false
   
   init(viewModel: Binding<VideoPlaybackViewModel?>) {
-    self._viewModel = viewModel
+    _viewModel = viewModel
     super.init(nibName: nil, bundle: nil)
     
     self.viewModel?.reloadIfRequired()
-    self.verifyVideoPlaybackAllowed()
+    verifyVideoPlaybackAllowed()
   }
 
-  required init?(coder: NSCoder) {
+  @available(*, unavailable) required init?(coder: NSCoder) {
     preconditionFailure("init(coder:) has not been implemented")
   }
 }
@@ -62,11 +62,10 @@ extension FullScreenVideoPlayerViewController {
 
 extension FullScreenVideoPlayerViewController {
   private func verifyVideoPlaybackAllowed() {
-    guard let viewModel = viewModel else { return }
     do {
-      try _ = viewModel.canPlayOrDisplayError()
+      try viewModel?.verifyCanPlay()
     } catch {
-      if let viewModelError = error as? VideoPlaybackViewModelError {
+      if let viewModelError = error as? VideoPlaybackViewModel.Error {
         MessageBus.current.post(
           message: Message(
             level: viewModelError.messageLevel,
@@ -80,6 +79,7 @@ extension FullScreenVideoPlayerViewController {
   }
   
   private func disappear() {
+    self.viewModel?.stop()
     dismiss(animated: true) {
       self.viewModel = nil
     }

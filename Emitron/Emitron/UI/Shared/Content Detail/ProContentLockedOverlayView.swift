@@ -39,7 +39,7 @@ struct ProContentLockedOverlayView: View {
           .foregroundColor(.titleText)
       }
       
-      Text(Constants.detailContentLockedCosPro)
+      Text(String.detailContentLockedCosPro)
         .multilineTextAlignment(.center)
         .font(.uiLabel)
         .foregroundColor(.titleText)
