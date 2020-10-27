@@ -27,6 +27,7 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import Combine
 
 private extension CGFloat {
   static let filterButtonSide: CGFloat = 27
@@ -39,6 +40,7 @@ struct LibraryView: View {
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented: Bool = false
+  @State var isSorting: Bool = true
 
   var body: some View {
     contentView
@@ -49,8 +51,16 @@ struct LibraryView: View {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
       }
+      .onReceive(Just(contentView)) {_ in
+        switch libraryRepository.state {
+        case .loading, .loadingAdditional:
+          isSorting = true
+        default:
+          isSorting = false
+        }
+      }
   }
-  
+
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
@@ -104,12 +114,17 @@ struct LibraryView: View {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
-
-          Text(filters.sortFilter.name)
-            .font(.uiLabelBold)
-            .foregroundColor(.textButtonText)
+          if isSorting {
+            Text(filters.sortFilter.name)
+              .font(.uiLabel)
+              .foregroundColor(Color.gray)
+          } else {
+            Text(filters.sortFilter.name)
+              .font(.uiLabelBold)
+              .foregroundColor(.textButtonText)
+          }
         }
-      }
+      }.disabled(isSorting)
     }
   }
 
@@ -147,6 +162,7 @@ struct LibraryView: View {
   }
 
   private func changeSort() {
+    isSorting = true
     filters.changeSortFilter()
     libraryRepository.filters = filters
   }
