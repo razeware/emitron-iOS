@@ -40,7 +40,6 @@ struct LibraryView: View {
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented: Bool = false
-  @State var isSorting: Bool = true
 
   var body: some View {
     contentView
@@ -50,14 +49,6 @@ struct LibraryView: View {
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
-      }
-      .onReceive(Just(contentView)) {_ in
-        switch libraryRepository.state {
-        case .loading, .loadingAdditional:
-          isSorting = true
-        default:
-          isSorting = false
-        }
       }
   }
 
@@ -114,7 +105,7 @@ struct LibraryView: View {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
-          if isSorting {
+          if [.loading, .loadingAdditional].contains(libraryRepository.state) {
             Text(filters.sortFilter.name)
               .font(.uiLabel)
               .foregroundColor(Color.gray)
@@ -124,7 +115,7 @@ struct LibraryView: View {
               .foregroundColor(.textButtonText)
           }
         }
-      }.disabled(isSorting)
+      }.disabled(libraryRepository.state == .loading || libraryRepository.state == .loadingAdditional)
     }
   }
 
@@ -162,7 +153,6 @@ struct LibraryView: View {
   }
 
   private func changeSort() {
-    isSorting = true
     filters.changeSortFilter()
     libraryRepository.filters = filters
   }
