@@ -27,7 +27,6 @@
 // THE SOFTWARE.
 
 import SwiftUI
-import Combine
 
 private extension CGFloat {
   static let filterButtonSide: CGFloat = 27
@@ -115,7 +114,7 @@ struct LibraryView: View {
               .foregroundColor(.textButtonText)
           }
         }
-      }.disabled(libraryRepository.state == .loading || libraryRepository.state == .loadingAdditional)
+      }.disabled([.loading, .loadingAdditional].contains(libraryRepository.state))
     }
   }
 
