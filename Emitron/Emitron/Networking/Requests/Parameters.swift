@@ -206,7 +206,7 @@ enum Param {
   
   static func sort(for value: ParameterSortValue,
                    descending: Bool) -> Parameter {
-    let key =  "sort"
+    let key = "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
     
     return Parameter(key: key, value: value, displayName: "Sort", sortOrdinal: 0)

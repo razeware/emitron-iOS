@@ -32,7 +32,7 @@ import SwiftyJSON
 public class JSONAPIRelationship {
   // MARK: - Properties
   var meta: [String: Any] = [:]
-  var data: [JSONAPIResource] =  []
+  var data: [JSONAPIResource] = []
   var links: [String: URL] = [:]
   var type: String = ""
 

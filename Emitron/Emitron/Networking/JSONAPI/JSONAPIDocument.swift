@@ -33,7 +33,7 @@ class JSONAPIDocument {
   // MARK: - Properties
   var meta: [String: Any] = [:]
   var included: [JSONAPIResource] = []
-  var data: [JSONAPIResource] =  []
+  var data: [JSONAPIResource] = []
   var errors: [JSONAPIError] = []
   var links: [String: URL] = [:]
 
