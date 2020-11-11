@@ -45,7 +45,10 @@ struct SettingsView: View {
   var body: some View {
     NavigationView {
       VStack {
-        SettingsList(settingsManager: _settingsManager)
+        SettingsList(
+          settingsManager: _settingsManager,
+          canDownload: sessionController.user?.canDownload ?? false
+        )
           .navigationBarTitle(String.settings)
           .navigationBarItems(trailing: dismissButton)
           .padding([.horizontal], 20)

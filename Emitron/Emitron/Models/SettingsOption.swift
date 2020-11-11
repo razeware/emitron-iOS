@@ -84,3 +84,14 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     }
   }
 }
+
+// MARK: - Option Selection
+extension SettingsOption {
+  static func getOptions(for canDownload: Bool) -> [SettingsOption] {
+    if canDownload {
+      return SettingsOption.allCases
+    } else {
+      return [.playbackSpeed, .closedCaptionOn]
+    }
+  }
+}
