@@ -555,7 +555,7 @@ extension DownloadService {
 extension DownloadService {
   private func configureWifiObservation() {
     // Track the network status
-    networkMonitor.pathUpdateHandler = { [weak self] path in
+    networkMonitor.pathUpdateHandler = { [weak self] _ in
       self?.checkQueueStatus()
     }
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
