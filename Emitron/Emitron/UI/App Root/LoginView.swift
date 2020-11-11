@@ -41,6 +41,7 @@ struct LoginView: View {
       
       PagerView(pageCount: 2, showIndicator: true) {
         VStack {
+          Spacer()
           Image("welcomeArtwork1")
             .resizable()
             .aspectRatio(contentMode: .fit)
@@ -57,6 +58,7 @@ struct LoginView: View {
             .font(.uiLabel)
             .foregroundColor(.contentText)
             .multilineTextAlignment(.center)
+          Spacer()
         }
         .background(Color.backgroundColor)
         
