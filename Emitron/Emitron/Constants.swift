@@ -46,7 +46,7 @@ extension String {
   static let library = "Library"
   static let loading = "Loading…"
   static let myTutorials = "My Tutorials"
-  static let newest =  "Newest"
+  static let newest = "Newest"
   static let popularity = "Popularity"
   static let resetFilters = "Reset Filters"
   static let search = "Search…"

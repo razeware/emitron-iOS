@@ -50,13 +50,13 @@ struct FiltersHeaderView: View {
         isExpanded.toggle()
       }) {
         HStack {
-          Text(filterGroup.type.name)
+          Text("\(filterGroup.type.name)\(filterCount)")
             .foregroundColor(.titleText)
             .font(.uiLabelBold)
           
           Spacer()
-          
-          Text(isExpanded ? "Hide (\(numOfOnFilters))" : "Show (\(numOfOnFilters))")
+
+          Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
             .foregroundColor(.contentText)
             .font(.uiLabelBold)
         }
@@ -72,11 +72,18 @@ struct FiltersHeaderView: View {
       }
     }
   }
-  
+
+  private var filterCount: String {
+    if numOfOnFilters > 0 {
+      return "・\(numOfOnFilters)"
+    }
+    return ""
+  }
+
   private var numOfOnFilters: Int {
     filterGroup.filters.filter(\.isOn).count
   }
-  
+
   private var expandedView: some View {
     VStack(alignment: .leading, spacing: 8) {
       ForEach(Array(filterGroup.filters), id: \.self) { filter in

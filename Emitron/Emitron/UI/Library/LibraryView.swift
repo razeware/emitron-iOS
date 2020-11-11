@@ -50,7 +50,7 @@ struct LibraryView: View {
           .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
       }
   }
-  
+
   private var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
@@ -104,12 +104,17 @@ struct LibraryView: View {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
-
-          Text(filters.sortFilter.name)
-            .font(.uiLabelBold)
-            .foregroundColor(.textButtonText)
+          if [.loading, .loadingAdditional].contains(libraryRepository.state) {
+            Text(filters.sortFilter.name)
+              .font(.uiLabel)
+              .foregroundColor(Color.gray)
+          } else {
+            Text(filters.sortFilter.name)
+              .font(.uiLabelBold)
+              .foregroundColor(.textButtonText)
+          }
         }
-      }
+      }.disabled([.loading, .loadingAdditional].contains(libraryRepository.state))
     }
   }
 

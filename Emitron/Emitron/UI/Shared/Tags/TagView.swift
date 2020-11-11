@@ -29,6 +29,8 @@
 import SwiftUI
 
 struct TagView: View {
+  private static let defaultIconHeight: CGFloat = 12.0
+  
   private struct SizeKey: PreferenceKey {
     static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
       value = value ?? nextValue()
@@ -49,7 +51,7 @@ struct TagView: View {
         .resizable()
         .aspectRatio(contentMode: .fit)
         .foregroundColor(textColor)
-        .frame(height: height)
+        .frame(height: Self.defaultIconHeight)
       
       Text(text.uppercased())
         .foregroundColor(textColor)

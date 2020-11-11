@@ -93,7 +93,7 @@ private extension ContentListView {
       cardsView
       loadMoreView
       // Hack to make sure there's some spacing at the bottom of the list
-      Color.clear.frame(height: 0)
+      Color.backgroundColor
     }
   }
 
