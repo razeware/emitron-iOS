@@ -80,6 +80,10 @@ struct Attachment: Codable {
     static var selectableCases: [Attachment.Kind] {
       [.sdVideoFile, .hdVideoFile]
     }
+    
+    func hash(into hasher: inout Hasher) {
+      hasher.combine(display)
+    }
   }
   
   var id: Int

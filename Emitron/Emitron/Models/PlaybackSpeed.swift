@@ -66,3 +66,9 @@ enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
     allCases
   }
 }
+
+extension PlaybackSpeed {
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(rate)
+  }
+}
