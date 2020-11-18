@@ -66,3 +66,10 @@ enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
     allCases
   }
 }
+
+extension PlaybackSpeed {
+  // Added hash(into: ) funciton because of this bug: https://bugs.swift.org/browse/SR-13851
+  func hash(into hasher: inout Hasher) {
+    hasher.combine(display)
+  }
+}
