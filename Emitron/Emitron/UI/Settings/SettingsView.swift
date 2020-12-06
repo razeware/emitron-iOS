@@ -87,8 +87,8 @@ struct SettingsView: View {
             }
           }
           .padding([.bottom, .horizontal], 18)
-      }
-        .background(Color.backgroundColor)
+      }.navigationBarTitle(String.settings)
+      .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
   }
 }
 
@@ -102,7 +102,7 @@ struct SettingsView: View {
 //  }
 //
 //  static var settingsView: some View {
-//    SettingsView(showLogoutButton: true)
+//    SettingsView()
 //      .background(Color.backgroundColor)
 //  }
 //}

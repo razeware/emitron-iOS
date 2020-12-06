@@ -69,7 +69,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
         displayMode: .inline
       )
         .padding(20)
-        .background(Color.backgroundColor)
+    .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
   }
 }
 
