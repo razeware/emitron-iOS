@@ -43,15 +43,11 @@ struct SettingsView: View {
   var showLogoutButton: Bool
   
   var body: some View {
-    NavigationView {
       VStack {
         SettingsList(
           settingsManager: _settingsManager,
           canDownload: sessionController.user?.canDownload ?? false
-        )
-          .navigationBarTitle(String.settings)
-          .navigationBarItems(trailing: dismissButton)
-          .padding([.horizontal], 20)
+        ).padding([.horizontal], 20)
         
         Section(header:
           HStack {
@@ -99,17 +95,6 @@ struct SettingsView: View {
         }
       }
         .background(Color.backgroundColor)
-    }
-      .navigationViewStyle(StackNavigationViewStyle())
-  }
-  
-  var dismissButton: some View {
-    Button(action: {
-      presentationMode.wrappedValue.dismiss()
-    }) {
-      Image.close
-        .foregroundColor(.iconButton)
-    }
   }
 }
 
