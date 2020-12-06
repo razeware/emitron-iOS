@@ -92,8 +92,6 @@ private extension ContentListView {
     SwiftUI.Group {
       cardsView
       loadMoreView
-      // Hack to make sure there's some spacing at the bottom of the list
-      Color.backgroundColor
     }
   }
 
@@ -216,7 +214,9 @@ private extension ContentListView {
           Spacer()
           ActivityIndicator()
           Spacer()
-        }.onAppear(perform: contentRepository.loadMore)
+        }.padding()
+        .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+        .onAppear(perform: contentRepository.loadMore)
     }
   }
 
