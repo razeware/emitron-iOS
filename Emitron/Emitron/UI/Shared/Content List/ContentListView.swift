@@ -214,8 +214,11 @@ private extension ContentListView {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       // HACK: To put it in the middle we have to wrap it in Geometry Reader
       GeometryReader { _ in
-        ActivityIndicator()
-          .onAppear(perform: contentRepository.loadMore)
+        HStack {
+          Spacer()
+          ActivityIndicator()
+          Spacer()
+        }.onAppear(perform: contentRepository.loadMore)
       }
     }
   }
