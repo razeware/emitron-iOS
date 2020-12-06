@@ -104,7 +104,6 @@ extension ContentSummaryView: View {
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .padding(.top, 10)
         .lineSpacing(3)
     }
   }
