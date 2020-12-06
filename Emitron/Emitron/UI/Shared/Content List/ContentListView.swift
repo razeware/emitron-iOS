@@ -212,14 +212,11 @@ private extension ContentListView {
   
   @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
-      // HACK: To put it in the middle we have to wrap it in Geometry Reader
-      GeometryReader { _ in
         HStack {
           Spacer()
           ActivityIndicator()
           Spacer()
         }.onAppear(perform: contentRepository.loadMore)
-      }
     }
   }
 
