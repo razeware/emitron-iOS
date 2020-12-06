@@ -35,12 +35,10 @@ enum SettingsLayout {
 }
 
 struct SettingsView: View {
-  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager = SettingsManager.current
   @State private var licensesPresented: Bool = false
-  var showLogoutButton: Bool
   
   var body: some View {
       VStack {
@@ -75,7 +73,6 @@ struct SettingsView: View {
           }
           .padding([.bottom], 25)
         
-        if showLogoutButton {
           VStack {
             if sessionController.user != nil {
               Text("Logged in as \(sessionController.user?.username ?? "")")
@@ -83,8 +80,6 @@ struct SettingsView: View {
                 .foregroundColor(.contentText)
             }
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              presentationMode.wrappedValue.dismiss()
-              // This is hacky. But without it, the sheet doesn't actually dismiss.
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 sessionController.logout()
                 tabViewModel.selectedTab = .library
@@ -92,7 +87,6 @@ struct SettingsView: View {
             }
           }
           .padding([.bottom, .horizontal], 18)
-        }
       }
         .background(Color.backgroundColor)
   }

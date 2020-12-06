@@ -62,7 +62,7 @@ private extension MainView {
       downloadRepository: dataManager.downloadRepository
     )
     
-    let settingsView = SettingsView(showLogoutButton: true)
+    let settingsView = SettingsView()
 
     switch sessionController.sessionState {
     case .online :
