@@ -32,6 +32,7 @@ enum MainTab: Hashable {
   case library
   case downloads
   case myTutorials
+  case settings
 }
 
 final class TabViewModel: ObservableObject {
