@@ -88,8 +88,14 @@ extension Font {
   }
 
   // Can't have bold Font's
-  static var uiButtonLabel: Font {
+  static var uiButtonLabelLarge: Font {
     Font.system(size: UIFontMetrics.default.scaledValue(for: 17.0)).bold()
+  }
+  static var uiButtonLabelMedium: Font {
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 15)).weight(.bold)
+  }
+  static var uiButtonLabelSmall: Font {
+    Font.system(size: UIFontMetrics.default.scaledValue(for: 13.0)).weight(.semibold)
   }
   static var uiBodyCustom: Font {
     Font.system(size: UIFontMetrics.default.scaledValue(for: 15.0))
@@ -99,9 +105,6 @@ extension Font {
   }
   static var uiLabel: Font {
     Font.system(size: UIFontMetrics.default.scaledValue(for: 16.0))
-  }
-  static var uiButtonLabelSmall: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 13.0)).weight(.semibold)
   }
   static var uiFootnote: Font {
     Font.footnote

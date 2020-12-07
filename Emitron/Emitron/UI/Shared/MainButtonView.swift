@@ -76,7 +76,7 @@ struct MainButtonView: View {
             Spacer()
             
             Text(title)
-              .font(.uiButtonLabel)
+              .font(.uiButtonLabelLarge)
               .foregroundColor(.buttonText)
               .padding(15)
               .background(GeometryReader { proxy in
