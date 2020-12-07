@@ -70,14 +70,12 @@ extension ContentSummaryView: View {
       Text(content.name)
         .font(.uiTitle1)
         .lineLimit(nil)
-        .padding([.top], 10)
         .foregroundColor(.titleText)
       
       Text(content.contentSummaryMetadataString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        .padding([.top], 10)
       
       HStack(spacing: 30, content: {
         if canDownload {
