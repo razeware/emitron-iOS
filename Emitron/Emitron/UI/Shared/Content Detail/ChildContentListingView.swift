@@ -58,6 +58,7 @@ private extension ChildContentListingView {
         if childContentsViewModel.contents.count > 1 {
           Text("Course Episodes")
             .font(.uiTitle2)
+            .kerning(-0.5)
             .foregroundColor(.titleText)
             .padding([.top, .bottom])
         }
