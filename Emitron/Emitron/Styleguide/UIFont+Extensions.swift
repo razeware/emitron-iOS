@@ -32,48 +32,7 @@ extension UIFont {
   static var uiLargeTitle: UIFont {
     UIFont(name: "Bitter-Bold", size: 34.0)!
   }
-  static var uiTitle1: UIFont {
-    UIFont(name: "Bitter-Bold", size: 28.0)!
-  }
-  static var uiTitle2: UIFont {
-    UIFont(name: "Bitter-Bold", size: 22.0)!
-  }
-  static var uiTitle3: UIFont {
-    UIFont(name: "Bitter-Bold", size: 20.0)!
-  }
-  static var uiTitle4: UIFont {
-    UIFont(name: "Bitter-Bold", size: 17.0)!
-  }
   static var uiHeadline: UIFont {
     UIFont(name: "Bitter-Regular", size: 17.0)!
-  }
-  
-  static var uiNumberBox: UIFont {
-    UIFont(name: "Bitter-Bold", size: 13.0)!
-  }
-  
-  static var uiBodyAppleDefault: UIFont {
-    UIFont.systemFont(ofSize: 17.0, weight: .regular)
-  }
-  static var uiButtonLabel: UIFont {
-    UIFont.systemFont(ofSize: 15.0, weight: .bold)
-  }
-  static var uiBodyCustom: UIFont {
-    UIFont.systemFont(ofSize: 15.0, weight: .regular)
-  }
-  static var uiLabel: UIFont {
-    UIFont.systemFont(ofSize: 14.0, weight: .semibold)
-  }
-  static var uiButtonLabelSmall: UIFont {
-    UIFont.systemFont(ofSize: 13.0, weight: .semibold)
-  }
-  static var uiFootnote: UIFont {
-    UIFont.systemFont(ofSize: 13.0, weight: .regular)
-  }
-  static var uiCaption: UIFont {
-    UIFont.systemFont(ofSize: 12.0, weight: .regular)
-  }
-  static var uiUppercase: UIFont {
-    UIFont.systemFont(ofSize: 11.0, weight: .medium)
   }
 }
