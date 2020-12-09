@@ -100,7 +100,7 @@ extension ContentSummaryView: View {
         .padding(.top, 15)
         .lineLimit(nil)
       
-      Text("By \(content.contributorString)")
+      Text("\(String.by) \(content.contributorString)")
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)

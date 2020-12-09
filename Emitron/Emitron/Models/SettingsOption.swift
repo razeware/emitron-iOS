@@ -67,11 +67,11 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     case .playbackSpeed:
       return PlaybackSpeed.allCases.map(\.display)
     case .wifiOnlyDownloads:
-      return ["Yes", "No"]
+      return [String.yes, String.no]
     case .downloadQuality:
       return Attachment.Kind.downloads.map(\.display)
     case .closedCaptionOn:
-      return ["Yes", "No"]
+      return [String.yes, String.no]
     }
   }
   
