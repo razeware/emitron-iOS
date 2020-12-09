@@ -30,11 +30,6 @@ import Combine
 import Foundation
 import Network
 
-enum DownloadServiceError: Error {
-  case unableToCancelDownload
-  case unableToDeleteDownload
-}
-
 final class DownloadService {
   enum Status {
     case active
