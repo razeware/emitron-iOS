@@ -499,14 +499,6 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .paused)
-  }
-  
-  func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .inProgress)
-  }
-  
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
     transitionDownload(withID: downloadId, to: .error)
     Failure
