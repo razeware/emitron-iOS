@@ -524,18 +524,6 @@ extension DownloadService {
       .downloadList()
       .eraseToAnyPublisher()
   }
-  
-  func downloadedContentSummary(for contentId: Int) -> AnyPublisher<ContentSummaryState?, Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentId)
-      .eraseToAnyPublisher()
-  }
-  
-  func contentSummaries(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentIds)
-      .eraseToAnyPublisher()
-  }
 }
 
 // MARK: - Wifi Status Handling
