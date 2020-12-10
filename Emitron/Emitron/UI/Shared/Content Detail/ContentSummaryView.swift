@@ -70,12 +70,14 @@ extension ContentSummaryView: View {
       Text(content.name)
         .font(.uiTitle1)
         .lineLimit(nil)
+        .fixedSize(horizontal: false, vertical: true)
         .foregroundColor(.titleText)
       
       Text(content.contentSummaryMetadataString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
+        .fixedSize(horizontal: false, vertical: true)
       
       HStack(spacing: 30, content: {
         if canDownload {
@@ -97,6 +99,7 @@ extension ContentSummaryView: View {
         .lineSpacing(3)
         .padding(.top, 15)
         .lineLimit(nil)
+        .fixedSize(horizontal: false, vertical: true)
       
       Text("By \(content.contributorString)")
         .font(.uiCaption)
@@ -104,6 +107,7 @@ extension ContentSummaryView: View {
         .lineLimit(2)
         .padding(.top, 10)
         .lineSpacing(3)
+        .fixedSize(horizontal: false, vertical: true)
     }
   }
 }
