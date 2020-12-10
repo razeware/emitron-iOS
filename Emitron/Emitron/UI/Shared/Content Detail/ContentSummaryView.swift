@@ -69,6 +69,7 @@ extension ContentSummaryView: View {
       
       Text(content.name)
         .font(.uiTitle1)
+        .kerning(-0.5)
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
         .foregroundColor(.titleText)

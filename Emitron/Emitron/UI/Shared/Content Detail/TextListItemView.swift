@@ -57,6 +57,7 @@ struct TextListItemView: View {
           VStack(alignment: .leading, spacing: 5) {
             Text(content.name)
               .font(.uiTitle5)
+              .kerning(-0.5)
               .lineSpacing(3)
               .foregroundColor(.titleText)
             

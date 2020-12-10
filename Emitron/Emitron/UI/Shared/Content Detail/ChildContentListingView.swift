@@ -59,6 +59,7 @@ private extension ChildContentListingView {
           HStack {
             Text("Course Episodes")
               .font(.uiTitle2)
+            .kerning(-0.5)
               .foregroundColor(.titleText)
               .padding([.top, .bottom])
             Spacer()
