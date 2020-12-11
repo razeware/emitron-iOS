@@ -96,14 +96,6 @@ private extension ContentDetailView {
 
   var imageRatio: CGFloat { 283 / 375 }
   var maxImageHeight: CGFloat { 384 }
-
-  func openSettings() {
-    // open iPhone settings
-    if
-      let url = URL(string: UIApplication.openSettingsURLString),
-      UIApplication.shared.canOpenURL(url)
-    { UIApplication.shared.open(url) }
-  }
   
   var continueOrPlayButton: some View {
     Button(action: {

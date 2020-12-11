@@ -53,15 +53,3 @@ extension Request {
   var method: HTTPMethod { .GET }
   var body: Data? { nil }
 }
-
-enum RequestError: Error {
-  case responseMissingRequiredMeta(field: String?)
-  
-  var localizedDescription: String {
-    let prefix = "RequestError::"
-    switch self {
-    case .responseMissingRequiredMeta(field: let field):
-      return "\(prefix)ResponseMissingRequiredMeta: [Field: \(field ?? "UNKNOWN")]"
-    }
-  }
-}

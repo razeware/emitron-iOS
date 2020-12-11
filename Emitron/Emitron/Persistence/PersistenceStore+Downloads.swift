@@ -51,43 +51,6 @@ extension PersistenceStore {
 }
 
 extension PersistenceStore {
-  func downloadContentSummary(for contentId: Int) -> DatabasePublishers.Value<ContentSummaryState?> {
-    ValueObservation.tracking { db -> ContentSummaryState? in
-      let request = Content
-        .filter(key: contentId)
-        .including(all: Content.domains)
-        .including(all: Content.categories)
-        .including(optional: Content.parentContent)
-      
-      return try ContentSummaryState.fetchOne(db, request)
-    }
-    .publisher(in: db)
-  }
-  
-  func downloadContentSummary(for contentIds: [Int]) -> DatabasePublishers.Value<[ContentSummaryState]> {
-    ValueObservation.tracking { db -> [ContentSummaryState] in
-      let request = Content
-        .filter(keys: contentIds)
-        .including(all: Content.domains)
-        .including(all: Content.categories)
-        .including(optional: Content.parentContent)
-      
-      return try ContentSummaryState.fetchAll(db, request)
-    }
-    .publisher(in: db)
-  }
-}
-
-extension PersistenceStore {
-  func downloads(for contentIds: [Int]) -> DatabasePublishers.Value<[Download]> {
-    ValueObservation.tracking { db -> [Download] in
-      let request = Download
-        .filter(contentIds.contains(Download.Columns.contentId))
-      return try Download.fetchAll(db, request)
-    }
-    .publisher(in: db)
-  }
-  
   func download(for contentId: Int) -> DatabasePublishers.Value<Download?> {
     ValueObservation.tracking { db -> Download? in
       let request = Download
@@ -374,13 +337,7 @@ extension PersistenceStore {
       }
     }
   }
-  
-  /// Delete all the downloads in the database
-  func deleteDownloads() throws {
-    _ = try db.write { db in
-      try Download.deleteAll(db)
-    }
-  }
+
   
   /// Save the entire graph of models to supprt this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.

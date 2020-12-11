@@ -41,8 +41,6 @@ protocol DownloadProcessorDelegate: AnyObject {
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double)
   func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID)
   func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID)
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error)
 }
 
@@ -97,22 +95,6 @@ extension DownloadProcessor {
     currentDownloads.append(downloadTask)
     
     delegate.downloadProcessor(self, didStartDownloadWithId: download.id)
-  }
-  
-  func pauseDownload(_ download: DownloadProcessorModel) throws {
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
-    
-    downloadTask.suspend()
-    
-    delegate.downloadProcessor(self, didPauseDownloadWithId: download.id)
-  }
-  
-  func resumeDownload(_ download: DownloadProcessorModel) throws {
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
-    
-    downloadTask.resume()
-    
-    delegate.downloadProcessor(self, didResumeDownloadWithId: download.id)
   }
   
   func cancelDownload(_ download: DownloadProcessorModel) throws {

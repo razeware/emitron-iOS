@@ -30,11 +30,6 @@ import Combine
 import Foundation
 import Network
 
-enum DownloadServiceError: Error {
-  case unableToCancelDownload
-  case unableToDeleteDownload
-}
-
 final class DownloadService {
   enum Status {
     case active
@@ -504,14 +499,6 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .paused)
-  }
-  
-  func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .inProgress)
-  }
-  
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
     transitionDownload(withID: downloadId, to: .error)
     Failure
@@ -535,18 +522,6 @@ extension DownloadService {
   func downloadList() -> AnyPublisher<[ContentSummaryState], Error> {
     persistenceStore
       .downloadList()
-      .eraseToAnyPublisher()
-  }
-  
-  func downloadedContentSummary(for contentId: Int) -> AnyPublisher<ContentSummaryState?, Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentId)
-      .eraseToAnyPublisher()
-  }
-  
-  func contentSummaries(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentIds)
       .eraseToAnyPublisher()
   }
 }

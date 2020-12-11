@@ -33,7 +33,7 @@ struct LoadingView: View {
     VStack {
       ActivityIndicator()
         .padding([.bottom], 10)
-      Text("Loading...")
+      Text(String.loading)
         .font(.uiHeadline)
     }
   }
