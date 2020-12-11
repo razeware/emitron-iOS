@@ -95,26 +95,6 @@ extension MyTutorialView: View {
   var body: some View {
     contentView
       .navigationBarTitle(String.myTutorials)
-      .navigationBarItems(trailing:
-        SwiftUI.Group {
-          Button(action: {
-            settingsPresented = true
-          }) {
-            Image("settings")
-              .foregroundColor(.iconButton)
-          }
-        })
-      .sheet(isPresented: $settingsPresented) {
-        SettingsView(showLogoutButton: true)
-          // We have to pass this cos the sheet is in a different view hierarchy, so doesn't 'inherit' it.
-          .environmentObject(sessionController)
-          .environmentObject(tabViewModel)
-      }
-    .onDisappear {
-      reloadProgression = true
-      reloadCompleted = true
-      reloadBookmarks = true
-    }
   }
 }
 

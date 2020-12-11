@@ -61,6 +61,8 @@ private extension MainView {
       contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
       downloadRepository: dataManager.downloadRepository
     )
+    
+    let settingsView = SettingsView()
 
     switch sessionController.sessionState {
     case .online :
@@ -80,13 +82,15 @@ private extension MainView {
       TabNavView(
         libraryView: libraryView,
         myTutorialsView: myTutorialsView,
-        downloadsView: downloadsView
+        downloadsView: downloadsView,
+        settingsView: settingsView
       )
       .environmentObject(tabViewModel)
     case .offline:
       TabNavView(libraryView: OfflineView(),
                  myTutorialsView: OfflineView(),
-                 downloadsView: downloadsView)
+                 downloadsView: downloadsView,
+                 settingsView: settingsView)
         .environmentObject(tabViewModel)
     case .unknown:
       LoadingView()
