@@ -50,12 +50,12 @@ struct VideoOverlayButtonView: View {
         if text != nil {
           Text(text!)
             .foregroundColor(.white)
-            .font(.uiButtonLabel)
+            .font(.uiButtonLabelMedium)
             .fixedSize()
             .padding([.trailing], 8)
         }
       }
-        .padding(10)
+      .padding(12.5)
         .background(GeometryReader { proxy in
           Color.clear.preference(key: SizeKey.self, value: proxy.size)
         })
