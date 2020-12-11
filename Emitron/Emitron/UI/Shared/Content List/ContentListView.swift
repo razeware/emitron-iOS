@@ -92,8 +92,6 @@ private extension ContentListView {
     SwiftUI.Group {
       cardsView
       loadMoreView
-      // Hack to make sure there's some spacing at the bottom of the list
-      Color.backgroundColor
     }
   }
 
@@ -212,11 +210,13 @@ private extension ContentListView {
   
   @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
-      // HACK: To put it in the middle we have to wrap it in Geometry Reader
-      GeometryReader { _ in
-        ActivityIndicator()
-          .onAppear(perform: contentRepository.loadMore)
-      }
+        HStack {
+          Spacer()
+          ActivityIndicator()
+          Spacer()
+        }.padding()
+        .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+        .onAppear(perform: contentRepository.loadMore)
     }
   }
 
