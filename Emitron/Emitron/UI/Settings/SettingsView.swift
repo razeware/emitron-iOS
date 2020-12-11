@@ -92,18 +92,19 @@ struct SettingsView: View {
   }
 }
 
-//#if DEBUG
-//struct SettingsView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    SwiftUI.Group {
-//      settingsView.colorScheme(.dark)
-//      settingsView.colorScheme(.light)
-//    }
-//  }
-//
-//  static var settingsView: some View {
-//    SettingsView()
-//      .background(Color.backgroundColor)
-//  }
-//}
-//#endif
+#if DEBUG
+struct SettingsView_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      settingsView.colorScheme(.dark)
+      settingsView.colorScheme(.light)
+    }
+  }
+
+  static var settingsView: some View {
+    SettingsView()
+      .background(Color.backgroundColor)
+      .environmentObject(SessionController.current)
+  }
+}
+#endif
