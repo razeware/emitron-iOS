@@ -56,14 +56,18 @@ private extension ChildContentListingView {
     SwiftUI.Group {
       Section {
         if childContentsViewModel.contents.count > 1 {
-          Text("Course Episodes")
-            .font(.uiTitle2)
-            .foregroundColor(.titleText)
-            .padding([.top, .bottom])
+          HStack {
+            Text("Course Episodes")
+              .font(.uiTitle2)
+              .kerning(-0.5)
+              .foregroundColor(.titleText)
+              .padding([.top, .bottom])
+            Spacer()
+          }.padding([.leading, .trailing], 20)
         }
       }
-        .listRowBackground(Color.backgroundColor)
-        .accessibility(identifier: "childContentList")
+      .listRowBackground(Color.backgroundColor)
+      .accessibility(identifier: "childContentList")
         
       if childContentsViewModel.groups.count > 1 {
         ForEach(childContentsViewModel.groups, id: \.id) { group in

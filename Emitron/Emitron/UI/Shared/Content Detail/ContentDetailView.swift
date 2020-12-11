@@ -65,8 +65,8 @@ extension ContentDetailView: View {
 private extension ContentDetailView {
   var contentView: some View {
     GeometryReader { geometry in
-      List {
-        Section {
+      ScrollView {
+        VStack {
           if content.professional && !canStreamPro {
             headerImageLockedProContent(for: geometry.size.width)
           } else {
@@ -75,20 +75,18 @@ private extension ContentDetailView {
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
-            .padding(.bottom, 37)
-        }
-        .listRowInsets(EdgeInsets())
-        .listRowBackground(Color.backgroundColor)
-        
-        ChildContentListingView(
-          childContentsViewModel: childContentsViewModel,
-          currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
-        )
+            .background(Color.backgroundColor)
+          
+          ChildContentListingView(
+            childContentsViewModel: childContentsViewModel,
+            currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
+          )
           .background(Color.backgroundColor)
+        }
       }
     }
-      .navigationBarTitle(Text(""), displayMode: .inline)
-      .background(Color.backgroundColor)
+    .navigationBarTitle(Text(""), displayMode: .inline)
+    .background(Color.backgroundColor)
   }
 
   var canStreamPro: Bool { user.canStreamPro }
