@@ -85,7 +85,7 @@ class Service {
   func prepare<R: Request>(request: R,
                            parameters: [Parameter]?) -> URLRequest? {
     let pathURL = networkClient.environment.baseURL.appendingPathComponent(request.path)
-
+    print("pathURL: \(pathURL)")
     var components = URLComponents(url: pathURL,
                                    resolvingAgainstBaseURL: false)
 

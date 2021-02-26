@@ -47,8 +47,8 @@ class VideosServiceMock: VideosService {
     getVideoStreamCount += 1
   }
   
-  override func getVideoDownload(for id: Int, completion: @escaping (Result<DownloadVideoRequest.Response, RWAPIError>) -> Void) {
+  override func getVideoStreamDownload(for id: Int, completion: @escaping (Result<DownloadStreamVideoRequest.Response, RWAPIError>) -> Void) {
     getVideoDownloadCount += 1
-    completion(Result.success(AttachmentTest.Mocks.downloads.0))
+    completion(Result.success(AttachmentTest.Mocks.download.0))
   }
 }
