@@ -10,7 +10,7 @@ If you find a __bug__, please create an issue.
 
 If you find a __security vulnerability__, please contact emitron@razeware.com as soon as possible. See [SECURITY.md](SECURITY.md) for further details.
 
-There is more info about contributing in [CONTRIBUITNG.md](CONTRIBUTING.md).
+There is more info about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## Development
