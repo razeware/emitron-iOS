@@ -44,6 +44,7 @@ If you are working on the download functionality and are having problems without
 
 The two `xcconfig` files are used to configure the project. To access the values specified, these files must be added to the __Info.plist__ file.
 
+Use the `Configuration` struct to access these values from code.
 
 For more details on this approach, check out https://nshipster.com/xcconfig/
 
