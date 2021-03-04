@@ -10,7 +10,7 @@ If you find a __bug__, please create an issue.
 
 If you find a __security vulnerability__, please contact emitron@razeware.com as soon as possible. See [SECURITY.md](SECURITY.md) for further details.
 
-There is more info about contributing in [CONTRIBUITNG.md](CONTRIBUTING.md).
+There is more info about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 
 ## Development
@@ -44,7 +44,6 @@ If you are working on the download functionality and are having problems without
 
 The two `xcconfig` files are used to configure the project. To access the values specified, these files must be added to the __Info.plist__ file.
 
-Use the `Configuration` struct to access these values from code.
 
 For more details on this approach, check out https://nshipster.com/xcconfig/
 
