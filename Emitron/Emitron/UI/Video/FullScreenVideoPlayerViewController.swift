@@ -32,7 +32,7 @@ import SwiftUI
 
 class FullScreenVideoPlayerViewController: UIViewController {
   @Binding var viewModel: VideoPlaybackViewModel?
-  private var isFullscreen: Bool = false
+  private var isFullscreen = false
   
   init(viewModel: Binding<VideoPlaybackViewModel?>) {
     _viewModel = viewModel

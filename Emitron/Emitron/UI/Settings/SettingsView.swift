@@ -38,7 +38,7 @@ struct SettingsView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager = SettingsManager.current
-  @State private var licensesPresented: Bool = false
+  @State private var licensesPresented = false
   
   var body: some View {
       VStack {
