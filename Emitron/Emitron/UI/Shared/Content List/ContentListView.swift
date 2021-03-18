@@ -105,7 +105,7 @@ private extension ContentListView {
         
         navLink(for: partialContent)
           .buttonStyle(PlainButtonStyle())
-          //HACK: to remove navigation chevrons
+          // HACK: to remove navigation chevrons
           .padding(.trailing, -2 * .sidePadding)
       }
     }
