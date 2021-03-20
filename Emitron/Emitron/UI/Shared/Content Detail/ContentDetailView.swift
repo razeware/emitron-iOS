@@ -52,7 +52,7 @@ struct ContentDetailView {
 extension ContentDetailView: View {
   var body: some View {
     ZStack {
-      contentView
+      contentView.edgesIgnoringSafeArea(.top)
       
       if currentlyDisplayedVideoPlaybackViewModel != nil {
         FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel)

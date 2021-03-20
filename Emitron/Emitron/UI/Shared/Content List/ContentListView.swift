@@ -52,8 +52,10 @@ struct ContentListView<Header: View> {
 
 // MARK: - View
 extension ContentListView: View {
+    
   var body: some View {
     contentView
+      .modifier(NavbarStyle())
       .onAppear {
         UIApplication.dismissKeyboard()
         reloadIfRequired()
@@ -105,7 +107,7 @@ private extension ContentListView {
         
         navLink(for: partialContent)
           .buttonStyle(PlainButtonStyle())
-          //HACK: to remove navigation chevrons
+          // HACK: to remove navigation chevrons
           .padding(.trailing, -2 * .sidePadding)
       }
     }
@@ -121,7 +123,7 @@ private extension ContentListView {
         content: content,
         childContentsViewModel: contentRepository.childContentsViewModel(for: content.id),
         dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: content.id)
-      )) {
+      ).modifier(NavbarStyle(backgroundColor: .clear, textColor: .titleText))) {
       EmptyView()
     }
   }

@@ -41,28 +41,12 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // This delegate does not imply the connecting scene or session are new (see `application:configurationForConnectingSceneSession` instead).
 
     // TODO: When a modifier is available these should be refactored
-    UITableView.appearance().separatorColor = .clear
-    UITableViewCell.appearance().backgroundColor = .backgroundColor
-    UITableViewCell.appearance().selectionStyle = .none
-
-    UITableView.appearance().backgroundColor = .backgroundColor
-    UINavigationBar.appearance().backgroundColor = .backgroundColor
-        
-    UINavigationBar.appearance().largeTitleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
-      NSAttributedString.Key.font: UIFont.uiLargeTitle
-    ]
-
-    UINavigationBar.appearance().titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
-      NSAttributedString.Key.font: UIFont.uiHeadline
-    ]
-    
-    UISwitch.appearance().onTintColor = .accent
     
     // Use a UIHostingController as window root view controller
     if let windowScene = scene as? UIWindowScene {
       let window = UIWindow(windowScene: windowScene)
+      
+      configureAppearance()
       
       // We grab this from the App Delegate, since it's needed there too
       let sessionController = SessionController.current
@@ -107,5 +91,23 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     // Called as the scene transitions from the foreground to the background.
     // Use this method to save data, release shared resources, and store enough scene-specific state information
     // to restore the scene back to its current state.
+  }
+  
+  // MARK: - Appearance
+  private func configureAppearance() {
+    
+    // TableView
+    UITableView.appearance().separatorColor = .clear
+    UITableViewCell.appearance().backgroundColor = .backgroundColor
+    UITableViewCell.appearance().selectionStyle = .none
+    UITableView.appearance().backgroundColor = .backgroundColor
+    
+    // NavBar
+    let navAppearance = Appearance.standardNavbarAppearance
+    UINavigationBar.appearance().scrollEdgeAppearance = navAppearance
+    UINavigationBar.appearance().standardAppearance = navAppearance
+    
+    // Switch
+    UISwitch.appearance().onTintColor = .accent
   }
 }

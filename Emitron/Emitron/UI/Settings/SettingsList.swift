@@ -90,7 +90,7 @@ private extension SettingsList {
         destination: SettingsSelectionView(
           title: option.title,
           settingsOption: $settingsManager.playbackSpeed
-        )
+        ).modifier(NavbarStyle())
       ) {
         SettingsDisclosureRow(title: option.title, value: settingsManager.playbackSpeed.display)
       }

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,18 +27,37 @@
 // THE SOFTWARE.
 
 import UIKit
+import SwiftUI
 
-extension UIColor {
+struct NavbarStyle: ViewModifier {
   
-  static var accent: UIColor {
-    UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1.0)
+  var backgroundColor: UIColor
+  var textColor: UIColor
+
+  init(backgroundColor: UIColor = .backgroundColor, textColor: UIColor = .titleText) {
+
+    self.backgroundColor = backgroundColor
+    self.textColor = textColor
+    let appearance = Appearance.transparentNavbarAppearance
+    appearance.backgroundColor = .clear
+    
+    UINavigationBar.appearance().standardAppearance = appearance
+    UINavigationBar.appearance().compactAppearance = appearance
+    UINavigationBar.appearance().scrollEdgeAppearance = appearance
+    UINavigationBar.appearance().tintColor = textColor
   }
 
-  static var backgroundColor: UIColor {
-    UIColor(named: "backgroundColor")!
-  }
-    
-  static var titleText: UIColor {
-    UIColor(named: "titleText")!
+  func body(content: Self.Content) -> some View {
+    ZStack {
+      content
+      VStack {
+        GeometryReader { geometry in
+          Color(self.backgroundColor)
+            .frame(height: geometry.safeAreaInsets.top)
+            .edgesIgnoringSafeArea(.top)
+          Spacer()
+        }
+      }
+    }
   }
 }

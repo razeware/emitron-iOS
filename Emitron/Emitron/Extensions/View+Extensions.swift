@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2020 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,19 +26,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import UIKit
+import SwiftUI
 
-extension UIColor {
+extension View {
+  @ViewBuilder func `if`<T: View>(_ conditional: Bool, transform: (Self) -> T) -> some View {
+    if conditional {
+      transform(self)
+    } else {
+      self
+    }
+  }
   
-  static var accent: UIColor {
-    UIColor(red: 21.0 / 255.0, green: 132.0 / 255.0, blue: 67.0 / 255.0, alpha: 1.0)
-  }
-
-  static var backgroundColor: UIColor {
-    UIColor(named: "backgroundColor")!
-  }
-    
-  static var titleText: UIColor {
-    UIColor(named: "titleText")!
+  func navBarStyle(backgroundColor: UIColor = .backgroundColor, textColor: UIColor = .accent) -> some View {
+    self.modifier(NavbarStyle(backgroundColor: backgroundColor, textColor: textColor))
   }
 }
