@@ -76,7 +76,7 @@ struct TabNavView<
       NavigationView { settingsView }
         .tabItem {
           Text(String.settings)
-          Image(systemName: "gearshape.fill")
+          Image("settings")
         }
         .tag(MainTab.settings)
         .navigationViewStyle(StackNavigationViewStyle())
