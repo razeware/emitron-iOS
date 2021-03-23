@@ -12,8 +12,6 @@ jobs:
     runs-on: macos-latest
     steps:
       - uses: actions/checkout@v1
-      - name: Install Swiftlint
-        run: brew install swiftlint
 
       - name: Run Swiftlint
         run: swiftlint --config Emitron/.swiftlint.yml
