@@ -107,7 +107,7 @@ class DownloadQueueManagerTest: XCTestCase {
     }
     .record()
     
-    let completion = try wait(for: recorder.completion, timeout: 5)
+    let completion = try wait(for: recorder.completion, timeout: 10)
     
     XCTAssert(completion == .finished)
     
