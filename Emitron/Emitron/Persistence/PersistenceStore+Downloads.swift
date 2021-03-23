@@ -337,7 +337,6 @@ extension PersistenceStore {
       }
     }
   }
-
   
   /// Save the entire graph of models to supprt this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.

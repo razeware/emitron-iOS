@@ -130,8 +130,8 @@ private extension ContentSummaryView {
   }
   
   private var bookmarkButton: some View {
-    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
-    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
+    // ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
+    // bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     Image.bookmark
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)

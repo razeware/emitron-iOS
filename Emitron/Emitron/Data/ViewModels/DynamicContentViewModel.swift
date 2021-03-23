@@ -40,7 +40,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   var state: DataState = .initial
   @Published var viewProgress: ContentViewProgressDisplayable = .notStarted
   @Published var downloadProgress: DownloadProgressDisplayable = .notDownloadable
-  @Published var bookmarked: Bool = false
+  @Published var bookmarked = false
   
   private var subscriptions = Set<AnyCancellable>()
   private var downloadActionSubscriptions = Set<AnyCancellable>()

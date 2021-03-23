@@ -167,8 +167,8 @@ class DownloadQueueManagerTest: XCTestCase {
     }
     
     // This shouldn't fire cos it doesn't affect the stream
-    //readyForDownload = try wait(for: recorder.next(), timeout: 5)
-    //XCTAssertEqual(download1, readyForDownload!!.download)
+    // readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    // XCTAssertEqual(download1, readyForDownload!!.download)
     
     try database.write { db in
       download1.state = .enqueued

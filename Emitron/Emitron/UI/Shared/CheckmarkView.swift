@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-//TODO: Refactor layout properties here
+// TODO: Refactor layout properties here
 struct CheckmarkView: View {
   var isOn: Bool
   
