@@ -28,7 +28,9 @@
 
 enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
   case half
+  case threeQuarters
   case standard
+  case onePointTwoFive
   case onePointFive
   case double
   
@@ -40,8 +42,12 @@ enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
     switch self {
     case .half:
       return 0.5
+    case .threeQuarters:
+      return 0.75
     case .standard:
       return 1.0
+    case .onePointTwoFive:
+      return 1.25
     case .onePointFive:
       return 1.5
     case .double:
@@ -53,8 +59,12 @@ enum PlaybackSpeed: Int, CaseIterable, SettingsSelectable {
     switch self {
     case .half:
       return "0.5x"
+    case .threeQuarters:
+      return "0.75x"
     case .standard:
       return "1.0x"
+    case .onePointTwoFive:
+      return "1.25x"
     case .onePointFive:
       return "1.5x"
     case .double:
