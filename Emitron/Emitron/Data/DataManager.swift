@@ -83,7 +83,6 @@ final class DataManager: ObservableObject {
     
     // Empty the caches
     dataCache = DataCache()
-    filters = Filters()
     
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
@@ -108,7 +107,7 @@ final class DataManager: ObservableObject {
     completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
     inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
     
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService)
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, filters: filters)
     
     downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine)
     

@@ -40,13 +40,21 @@ struct FilterGroup: Hashable {
   
   /// Update the filters in this group from a set of filters loaded from the data store
   /// - Parameter savedFilters: A Set of filters, often stored in UserSettings
-  func updateFilters(from savedFilters: Set<Filter>) {
+  mutating func updateFilters(from savedFilters: Set<Filter>) {
     // We only care about filters that are from the same group
     let relevantFilters = savedFilters.filter { $0.groupType == type }
     // Let's go through those saved filters and load the relevant data
     relevantFilters.forEach { filter in
       // If we don't have a stored filter that matched the update, ignore it
-      guard let storedFilter = filters.first(where: { $0 == filter }) else { return }
+      guard let storedFilter = filters.first(where: { $0 == filter }) else {
+        // Add saved filters that were previously turned on even if they are
+        // not loaded from domain/content repository.
+        if filter.groupType == type && filter.isOn {
+          filters.append(filter)
+        }
+        
+        return
+      }
       // The only attribute we care about is whether or not the filter is currently applied
       storedFilter.isOn = filter.isOn
     }

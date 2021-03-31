@@ -29,12 +29,13 @@
 import Combine
 
 final class LibraryRepository: ContentRepository {
-  override init(repository: Repository,
-                contentsService: ContentsService,
-                downloadAction: DownloadAction,
-                syncAction: SyncAction,
-                serviceAdapter: ContentServiceAdapter?) {
-    filters = Filters()
+   init(repository: Repository,
+        contentsService: ContentsService,
+        downloadAction: DownloadAction,
+        syncAction: SyncAction,
+        serviceAdapter: ContentServiceAdapter?,
+        filters: Filters) {
+    self.filters = filters
     
     super.init(repository: repository,
                contentsService: contentsService,
