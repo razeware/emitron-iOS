@@ -38,7 +38,7 @@ private extension CGFloat {
 struct LibraryView: View {
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
-  @State var filtersPresented: Bool = false
+  @State var filtersPresented = false
 
   var body: some View {
     contentView
