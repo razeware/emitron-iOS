@@ -60,6 +60,7 @@ struct TextListItemView: View {
               .kerning(-0.5)
               .lineSpacing(3)
               .foregroundColor(.titleText)
+              .fixedSize(horizontal: false, vertical: true)
             
             Text(content.duration.minuteSecondTimeFromSeconds)
               .font(.uiFootnote)
@@ -69,11 +70,16 @@ struct TextListItemView: View {
           Spacer()
             
           if canDownload {
+            VStack {
+              Spacer()
             DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
               .onTapGesture {
                 download()
               }
               .alert(item: $deletionConfirmation, content: \.alert)
+              .padding(.bottom, 5)
+              Spacer()
+            }
           }
         }
         progressBar
