@@ -66,18 +66,18 @@ struct TextListItemView: View {
               .font(.uiFootnote)
               .foregroundColor(.contentText)
           }
-            
+          
           Spacer()
-            
+          
           if canDownload {
             VStack {
               Spacer()
-            DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-              .onTapGesture {
-                download()
-              }
-              .alert(item: $deletionConfirmation, content: \.alert)
-              .padding(.bottom, 5)
+              DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+                .onTapGesture {
+                  download()
+                }
+                .alert(item: $deletionConfirmation, content: \.alert)
+                .padding(.bottom, 5)
               Spacer()
             }
           }
