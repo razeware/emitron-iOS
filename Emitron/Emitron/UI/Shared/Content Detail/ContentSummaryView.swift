@@ -37,7 +37,7 @@ struct ContentSummaryView {
   private let content: ContentListDisplayable
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
-
+  
   init(
     content: ContentListDisplayable,
     dynamicContentViewModel: DynamicContentViewModel
@@ -73,6 +73,8 @@ extension ContentSummaryView: View {
         .lineLimit(nil)
         .fixedSize(horizontal: false, vertical: true)
         .foregroundColor(.titleText)
+      
+      Spacer()
       
       Text(content.contentSummaryMetadataString)
         .font(.uiCaption)
@@ -121,7 +123,7 @@ private extension ContentSummaryView {
   var canDownload: Bool {
     sessionController.user?.canDownload ?? false
   }
-
+  
   var completedTag: CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
