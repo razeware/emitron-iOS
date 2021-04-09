@@ -311,7 +311,6 @@ extension DownloadService {
                            reason: "Unable to obtain download URLs: \(error)")
           .log()
       case .success(let attachment):
-        print("remote url: \(attachment.url)")
         download.remoteURL = attachment.url
         download.lastValidatedAt = Date()
         download.state = .readyForDownload
