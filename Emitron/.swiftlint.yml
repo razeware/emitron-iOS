@@ -79,10 +79,6 @@ large_tuple:
   - 3 # warning
   - 4 # error
 
-line_length:
-  - 150 # warning
-  - 200 # error
-
 file_length:
   - 1200 # warning
   - 1500 # error
