@@ -51,7 +51,6 @@ opt_in_rules:
   - unowned_variable_capture
   - untyped_error_in_catch
   - unused_import
-  - unused_private_declaration
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_closing_braces
   - xct_specific_matcher
@@ -79,10 +78,6 @@ cyclomatic_complexity:
 large_tuple:
   - 3 # warning
   - 4 # error
-
-line_length:
-  - 150 # warning
-  - 200 # error
 
 file_length:
   - 1200 # warning
