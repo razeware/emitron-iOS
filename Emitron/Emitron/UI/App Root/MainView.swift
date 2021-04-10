@@ -34,11 +34,82 @@ struct MainView: View {
   private let tabViewModel = TabViewModel()
   
   var body: some View {
-    contentView
-      .background(Color.backgroundColor)
-      .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+    ZStack {
+      contentView
+        .background(Color.backgroundColor)
+        .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+      // swiftlint:disable all
+      Color.black
+        .edgesIgnoringSafeArea(.all)
+        .opacity(0.6)
+      VStack {
+        HStack {
+          Image("razefaceAnnoyed")
+          ZStack {
+            Rectangle()
+              .foregroundColor(.black)
+              .frame(height: 5)
+            HStack {
+              Spacer()
+                .frame(width: 50)
+              Circle()
+                .foregroundColor(.black)
+                .frame(height: 10)
+            }
+          }
+          Image("razefaceHappy")
+        }
+        Text("Congratulations on completing this course!")
+          .foregroundColor(.black)
+          .font(.headline)
+          .multilineTextAlignment(.center)
+          .padding(.bottom)
+
+        Text("Next, take a moment and rate your experience with the app.")
+          .foregroundColor(.black)
+          .fontWeight(.light)
+          .multilineTextAlignment(.center)
+        Button {
+          // Action Goes Here
+        } label: {
+          HStack {
+            Spacer()
+            Text("Leave a review")
+              .foregroundColor(.white)
+              .padding(.top, 5.0)
+              .padding(.bottom, 7.0)
+            Spacer()
+          }
+          .background(Color(.accent))
+          .cornerRadius(10.0)
+          .shadow(radius: 10, x: 5, y: 5)
+        }
+        Button {
+          // Action Goes Here
+        } label: {
+          HStack {
+            Spacer()
+            Text("Not now")
+              .foregroundColor(.black)
+              .padding(.top, 5.0)
+              .padding(.bottom, 7.0)
+            Spacer()
+          }
+          .background(Color(.white))
+          .cornerRadius(10.0)
+          .shadow(radius: 10, x: 5, y: 5)
+        }
+      }
+      .padding()
+      .frame(maxWidth: 250)
+      .background(Color.white)
+      .cornerRadius(21.0)
+      .shadow(radius: 10, x: 5, y: 5)
+
+    }
   }
 }
+// swiftlint:disable all
 
 // MARK: - private
 private extension MainView {
