@@ -150,7 +150,7 @@ final class VideoPlaybackViewModel {
     }
     // If we're online then, that's all good
     if sessionController.sessionState == .online {
-      //return
+      return
     }
     
     // If we've got a download, then we might be ok
