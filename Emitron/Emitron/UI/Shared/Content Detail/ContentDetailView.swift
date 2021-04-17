@@ -40,12 +40,14 @@ struct ContentDetailView {
   }
 
   private let content: ContentListDisplayable
+  @State private var checkReviewRequest = false
   @ObservedObject private var childContentsViewModel: ChildContentsViewModel
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject private var sessionController: SessionController
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+  private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
 }
 
 // MARK: - View
@@ -87,6 +89,15 @@ private extension ContentDetailView {
     }
     .navigationBarTitle(Text(""), displayMode: .inline)
     .background(Color.backgroundColor)
+    .onReceive(videoCompletedNotification) { _ in
+      checkReviewRequest = true
+    }
+    .onAppear {
+      if checkReviewRequest {
+        print("course progress: \(dynamicContentViewModel.viewProgress)")
+        NotificationCenter.default.post(name: .requestReview, object: nil)
+      }
+    }
   }
 
   var canStreamPro: Bool { user.canStreamPro }

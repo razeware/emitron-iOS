@@ -333,6 +333,7 @@
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
+		D341C8DA2629EFB9001E2AFD /* RequestReviewView.swift in Sources */ = {isa = PBXBuildFile; fileRef = D341C8D92629EFB9001E2AFD /* RequestReviewView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -682,6 +683,7 @@
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
+		D341C8D92629EFB9001E2AFD /* RequestReviewView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RequestReviewView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1392,6 +1394,7 @@
 				22BFE75423D9905500495BA9 /* SnackbarView.swift */,
 				22BFE75B23D9AF4100495BA9 /* MessageBarView.swift */,
 				22BE655223F2D0CB00717369 /* PermissionsLoadingView.swift */,
+				D341C8D92629EFB9001E2AFD /* RequestReviewView.swift */,
 			);
 			path = "App Root";
 			sourceTree = "<group>";
@@ -2041,6 +2044,7 @@
 				B6D8EB2922CBA93D00DE29AF /* VideosService.swift in Sources */,
 				222EEF7023CAD65200B025A4 /* ChildContentsState+Fetchable.swift in Sources */,
 				B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */,
+				D341C8DA2629EFB9001E2AFD /* RequestReviewView.swift in Sources */,
 				223DECF0240926B90017F7CA /* DownloadDeletionConfirmation+Alert.swift in Sources */,
 				B6C0F0DB22D5E65900012839 /* UIViewController+Extensions.swift in Sources */,
 				2278AE48240A4BBC00855221 /* IconView.swift in Sources */,

@@ -72,6 +72,10 @@ extension VideoPlaybackViewModel {
   }
 }
 
+extension Notification.Name {
+  static let requestReview = Notification.Name("requestReview")
+}
+
 final class VideoPlaybackViewModel {
   // Allow control of appearance and dismissal of the video view
   var shouldShow: Bool = false
@@ -316,13 +320,16 @@ private extension VideoPlaybackViewModel {
     // Don't load the next one if we've already got another one ready to play
     guard player.items().last == currentItem else { return }
     // Preload the next video 10s from the end
+
     if (currentItem.duration - time).seconds < 10 {
       enqueueNext()
     }
   }
   
   func enqueueNext() {
-    guard nextContentToEnqueueIndex < contentList.endIndex else { return }
+    guard nextContentToEnqueueIndex < contentList.endIndex else {
+      return
+    }
 
     enqueue(index: nextContentToEnqueueIndex)
   }
