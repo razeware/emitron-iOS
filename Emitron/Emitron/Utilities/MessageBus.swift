@@ -36,7 +36,7 @@ struct Message {
   
   let level: Level
   let message: String
-  var autoDismiss: Bool = true
+  var autoDismiss = true
 }
 
 extension Message {
@@ -60,7 +60,7 @@ extension Message.Level {
 
 final class MessageBus: ObservableObject {
   @Published private(set) var currentMessage: Message?
-  @Published var messageVisible: Bool = false
+  @Published var messageVisible = false
   
   private var currentTimer: AnyCancellable?
   

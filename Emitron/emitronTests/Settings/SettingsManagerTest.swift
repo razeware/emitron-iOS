@@ -114,10 +114,13 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.playbackSpeed = .double
     settingsManager.playbackSpeed = .standard
     settingsManager.playbackSpeed = .onePointFive
+    settingsManager.playbackSpeed = .half
+    settingsManager.playbackSpeed = .threeQuarters
+    settingsManager.playbackSpeed = .onePointTwoFive
     
-    let stream = try wait(for: recorder.next(3), timeout: 5)
+    let stream = try wait(for: recorder.next(6), timeout: 5)
     
-    XCTAssertEqual([.double, .standard, .onePointFive], stream)
+    XCTAssertEqual([.double, .standard, .onePointFive, .half, .threeQuarters, .onePointTwoFive], stream)
   }
   
   func testClosedCaptionOnSuccessfullyPersisted() {

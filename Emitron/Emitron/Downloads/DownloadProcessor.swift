@@ -86,7 +86,7 @@ final class DownloadProcessor: NSObject {
     let config = URLSessionConfiguration.background(withIdentifier: DownloadProcessor.sessionIdentifier)
     // Uncommenting this causes the download task to fail with POSIX 22. But seemingly only with
     // Vimeo URLs. So that's handy.
-    //config.isDiscretionary = true
+    // config.isDiscretionary = true
     config.sessionSendsLaunchEvents = true
     return AVAssetDownloadURLSession(configuration: config, assetDownloadDelegate: self, delegateQueue: .none)
   }()

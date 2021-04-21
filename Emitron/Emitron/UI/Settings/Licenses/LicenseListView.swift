@@ -66,7 +66,7 @@ struct LicenseListView: View {
 }
 
 struct LicenseListView_Previews: PreviewProvider {
-  @State static var visible: Bool = true
+  @State static var visible = true
   
   static var previews: some View {
     SwiftUI.Group {

@@ -74,7 +74,7 @@ extension VideoPlaybackViewModel {
 
 final class VideoPlaybackViewModel {
   // Allow control of appearance and dismissal of the video view
-  var shouldShow: Bool = false
+  var shouldShow = false
   
   private let initialContentId: Int
   private let repository: Repository
