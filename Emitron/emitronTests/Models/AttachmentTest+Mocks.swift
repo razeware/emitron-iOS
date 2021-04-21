@@ -32,16 +32,16 @@ import SwiftyJSON
 
 extension AttachmentTest {
   enum Mocks {
-    static var downloads: ([Attachment], DataCacheUpdate) {
+    static var download: (Attachment, DataCacheUpdate) {
       loadMockFrom(filename: "Attachment_Downloads")
     }
     
     static var stream: (Attachment, DataCacheUpdate) {
-      let (attachments, cacheUpdate) = loadMockFrom(filename: "Attachment_Stream")
-      return (attachments.first!, cacheUpdate)
+      let (attachment, cacheUpdate) = loadMockFrom(filename: "Attachment_Stream")
+      return (attachment, cacheUpdate)
     }
     
-    private static func loadMockFrom(filename: String) -> ([Attachment], DataCacheUpdate) {
+    private static func loadMockFrom(filename: String) -> (Attachment, DataCacheUpdate) {
       do {
         let bundle = Bundle(for: AttachmentTest.self)
         let fileURL = bundle.url(forResource: filename, withExtension: "json")
@@ -53,7 +53,7 @@ extension AttachmentTest {
           try AttachmentAdapter.process(resource: resource)
         }
         let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
-        return (attachments, cacheUpdate)
+        return (attachments[0], cacheUpdate)
       } catch {
         preconditionFailure("Unable to load Attachment mock: \(error)")
       }

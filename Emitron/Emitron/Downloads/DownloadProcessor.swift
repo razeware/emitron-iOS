@@ -28,6 +28,7 @@
 
 import Foundation
 import Combine
+import AVFoundation
 
 protocol DownloadProcessorModel {
   var id: UUID { get }
@@ -56,6 +57,18 @@ private extension URLSessionDownloadTask {
   }
 }
 
+private extension AVAssetDownloadTask {
+  var downloadId: UUID? {
+    get {
+      guard let taskDescription = taskDescription else { return .none }
+      return UUID(uuidString: taskDescription)
+    }
+    set {
+      taskDescription = newValue?.uuidString ?? ""
+    }
+  }
+}
+
 enum DownloadProcessorError: Error {
   case invalidArguments
   case unknownDownload
@@ -64,17 +77,21 @@ enum DownloadProcessorError: Error {
 // Manage a list of files to download—either queued, in progresss, paused or failed.
 final class DownloadProcessor: NSObject {
   static let sessionIdentifier = "com.razeware.emitron.DownloadProcessor"
+  static let sdBitrate = 250_000
+  private var downloadQuality: Attachment.Kind {
+    SettingsManager.current.downloadQuality
+  }
   
-  private lazy var session: URLSession = {
+  private lazy var session: AVAssetDownloadURLSession = {
     let config = URLSessionConfiguration.background(withIdentifier: DownloadProcessor.sessionIdentifier)
     // Uncommenting this causes the download task to fail with POSIX 22. But seemingly only with
     // Vimeo URLs. So that's handy.
     // config.isDiscretionary = true
     config.sessionSendsLaunchEvents = true
-    return URLSession(configuration: config, delegate: self, delegateQueue: .none)
+    return AVAssetDownloadURLSession(configuration: config, assetDownloadDelegate: self, delegateQueue: .none)
   }()
   var backgroundSessionCompletionHandler: (() -> Void)?
-  private var currentDownloads = [URLSessionDownloadTask]()
+  private var currentDownloads = [AVAssetDownloadTask]()
   private var throttleList = [UUID: Double]()
   weak var delegate: DownloadProcessorDelegate!
   
@@ -87,8 +104,13 @@ final class DownloadProcessor: NSObject {
 extension DownloadProcessor {
   func add(download: DownloadProcessorModel) throws {
     guard let remoteURL = download.remoteURL else { throw DownloadProcessorError.invalidArguments }
-    
-    let downloadTask = session.downloadTask(with: remoteURL)
+    let hlsAsset = AVURLAsset(url: remoteURL)
+    var options: [String: Any]?
+    if downloadQuality == .sdVideoFile {
+      options = [AVAssetDownloadTaskMinimumRequiredMediaBitrateKey: DownloadProcessor.sdBitrate]
+    }
+    guard let downloadTask = session.makeAssetDownloadTask(asset: hlsAsset, assetTitle: "\(download.id))", assetArtworkData: nil, options: options) else { return }
+
     downloadTask.downloadId = download.id
     downloadTask.resume()
     
@@ -117,13 +139,15 @@ extension DownloadProcessor {
 }
 
 extension DownloadProcessor {
-  private func getDownloadTasksFromSession() -> [URLSessionDownloadTask] {
-    var tasks = [URLSessionDownloadTask]()
+  private func getDownloadTasksFromSession() -> [AVAssetDownloadTask] {
+    var tasks = [AVAssetDownloadTask]()
     // Use a semaphore to make an async call synchronous
     // --There's no point in trying to complete instantiating this class without this list.
     let semaphore = DispatchSemaphore(value: 0)
-    session.getTasksWithCompletionHandler { _, _, downloadTasks in
-      tasks = downloadTasks
+    session.getAllTasks { downloadTasks in
+
+      let myTasks = downloadTasks as! [AVAssetDownloadTask]
+      tasks = myTasks
       semaphore.signal()
     }
     
@@ -134,6 +158,47 @@ extension DownloadProcessor {
   
   private func populateDownloadListFromSession() {
     currentDownloads = getDownloadTasksFromSession()
+  }
+}
+
+extension DownloadProcessor: AVAssetDownloadDelegate {
+
+  func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange) {
+
+    guard let downloadId = assetDownloadTask.downloadId else { return }
+
+    var percentComplete = 0.0
+    for value in loadedTimeRanges {
+      let loadedTimeRange: CMTimeRange = value.timeRangeValue
+      percentComplete += CMTimeGetSeconds(loadedTimeRange.duration) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration)
+    }
+    
+    if let lastReportedProgress = throttleList[downloadId],
+      abs(percentComplete - lastReportedProgress) < 0.02 {
+      // Less than a 2% change—it's a no-op
+      return
+    }
+    throttleList[downloadId] = percentComplete
+    delegate.downloadProcessor(self, downloadWithId: downloadId, didUpdateProgress: percentComplete)
+  }
+
+  func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
+
+    guard let downloadId = assetDownloadTask.downloadId,
+      let delegate = delegate else { return }
+
+    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
+    guard let localURL = download?.localURL else { return }
+
+    let fileManager = FileManager.default
+    do {
+      if fileManager.fileExists(atPath: localURL.path) {
+        try fileManager.removeItem(at: localURL)
+      }
+      try fileManager.moveItem(at: location, to: localURL)
+    } catch {
+      delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
+    }
   }
 }
 
@@ -181,44 +246,30 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   
   // Use this to handle and client-side download errors
   func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-    guard let downloadTask = task as? URLSessionDownloadTask, let downloadId = downloadTask.downloadId else { return }
-    
+
+    guard let downloadTask = task as? AVAssetDownloadTask, let downloadId = downloadTask.downloadId else { return }
+
     if let error = error as NSError? {
       let cancellationReason = (error.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey] as? NSNumber)?.intValue
       if cancellationReason == NSURLErrorCancelledReasonUserForceQuitApplication || cancellationReason == NSURLErrorCancelledReasonBackgroundUpdatesDisabled {
         // The download was cancelled for technical reasons, but we might be able to restart it...
-        var newTask: URLSessionDownloadTask?
-        if let resumeData = error.userInfo[NSURLSessionDownloadTaskResumeData] as? Data {
-          newTask = session.downloadTask(withResumeData: resumeData)
-        } else {
-          let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
-          if let remoteURL = download?.remoteURL {
-            newTask = session.downloadTask(with: remoteURL)
-          }
-        }
-        if let newTask = newTask {
-          newTask.downloadId = downloadId
-          newTask.resume()
-          currentDownloads.append(newTask)
-          delegate.downloadProcessor(self, didStartDownloadWithId: downloadId)
-        }
-        
+
         currentDownloads.removeAll { $0 == downloadTask }
       } else if error.code == NSURLErrorCancelled {
         // User-requested cancellation
         currentDownloads.removeAll { $0 == downloadTask }
-        
+
         delegate.downloadProcessor(self, didCancelDownloadWithId: downloadId)
       } else {
         // Unknown error
         currentDownloads.removeAll { $0 == downloadTask }
-        
+
         delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
       }
     } else {
       // Success!
       currentDownloads.removeAll { $0 == downloadTask }
-      
+
       delegate.downloadProcessor(self, didFinishDownloadWithId: downloadId)
     }
   }

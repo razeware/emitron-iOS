@@ -380,7 +380,8 @@ private extension VideoPlaybackViewModel {
       if let download = state.download,
         download.state == .complete,
         let localURL = download.localURL {
-        let item = AVPlayerItem(url: localURL)
+        let asset = AVURLAsset(url: localURL)
+        let item = AVPlayerItem(asset: asset)
         self.addMetadata(from: state, to: item)
         self.addClosedCaptions(for: item)
         // Add it to the cache
