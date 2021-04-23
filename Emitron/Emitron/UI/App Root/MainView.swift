@@ -32,10 +32,9 @@ import StoreKit
 struct MainView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var dataManager: DataManager
-  @State private var requestReview = false
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
-  
+
   var body: some View {
     ZStack {
       contentView
@@ -43,13 +42,19 @@ struct MainView: View {
         .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
         .onReceive(notification) { _ in
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
-            //requestReview.toggle()
-            SKStoreReviewController.requestReview()
+            makeReviewRequest()
           }
         }
-      if requestReview {
-        RequestReviewView()
+    }
+  }
+
+  private func makeReviewRequest() {
+    if #available(iOS 14.0, *) {
+      if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+        SKStoreReviewController.requestReview(in: scene)
       }
+    } else {
+      SKStoreReviewController.requestReview()
     }
   }
 }

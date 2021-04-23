@@ -94,8 +94,15 @@ private extension ContentDetailView {
     }
     .onAppear {
       if checkReviewRequest {
-        print("course progress: \(dynamicContentViewModel.viewProgress)")
-        NotificationCenter.default.post(name: .requestReview, object: nil)
+        guard let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval else { return }
+        let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
+        let currentDate = Date()
+        if case .completed = dynamicContentViewModel.viewProgress {
+          if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
+            NotificationCenter.default.post(name: .requestReview, object: nil)
+            NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+          }
+        }
       }
     }
   }
@@ -129,6 +136,11 @@ private extension ContentDetailView {
         }
       }
     }
+  }
+
+  private func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+    return components.weekOfYear ?? 0 >= 2
   }
 
   func headerImagePlayableContent(for width: CGFloat) -> some View {

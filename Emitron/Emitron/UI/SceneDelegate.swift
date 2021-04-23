@@ -70,6 +70,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       let mainView = MainView()
         .environmentObject(sessionController)
         .environmentObject(dataManager)
+      let date = Calendar.current.date(byAdding: .day, value: -20, to: Date())
       if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
         NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
       }
