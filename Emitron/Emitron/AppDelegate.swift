@@ -76,7 +76,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
       persistenceStore: persistenceStore,
       downloadService: downloadService
     )
-    downloadService.startProcessing()    
+    downloadService.startProcessing()
   }
   
   // MARK: UISceneSession Lifecycle
