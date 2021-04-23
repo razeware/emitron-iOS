@@ -45,7 +45,8 @@ struct FilterGroup: Hashable {
     let relevantFilters = savedFilters.filter { $0.groupType == type }
     // Let's go through those saved filters and load the relevant data
     relevantFilters.forEach { filter in
-      // If we don't have a stored filter that matched the update, ignore it
+      // If we don't have a stored filter that matched the update, do not ignore it 
+      // since we may not have loaded the complete filter list from domain/content repository  
       guard let storedFilter = filters.first(where: { $0 == filter }) else {
         // Add saved filters that were previously turned on even if they are
         // not loaded from domain/content repository.
