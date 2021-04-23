@@ -327,10 +327,7 @@ private extension VideoPlaybackViewModel {
   }
   
   func enqueueNext() {
-    guard nextContentToEnqueueIndex < contentList.endIndex else {
-      return
-    }
-
+    guard nextContentToEnqueueIndex < contentList.endIndex else { return }
     enqueue(index: nextContentToEnqueueIndex)
   }
   
