@@ -62,6 +62,11 @@ private extension ChildContentListingView {
               .kerning(-0.5)
               .foregroundColor(.titleText)
               .padding([.top, .bottom])
+            Button {
+              exit(0)
+            } label: {
+              Text("Close App0")
+            }
             Spacer()
           }.padding([.leading, .trailing], 20)
         }
@@ -166,8 +171,8 @@ private extension ChildContentListingView {
   }
 }
 
-//struct ChildContentListingView_Previews: PreviewProvider {
+// struct ChildContentListingView_Previews: PreviewProvider {
 //  static var previews: some View {
 //    ChildContentListingView()
 //  }
-//}
+// }

@@ -67,7 +67,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 5)
+    _ = try wait(for: recorder.completion, timeout: 10)
     
     return screencast.0
   }
@@ -80,7 +80,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     .record()
     
-    _ = try wait(for: recorder.completion, timeout: 5)
+    _ = try wait(for: recorder.completion, timeout: 10)
     
     return collection.0
   }
