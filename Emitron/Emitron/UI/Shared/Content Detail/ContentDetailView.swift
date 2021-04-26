@@ -40,12 +40,14 @@ struct ContentDetailView {
   }
 
   private let content: ContentListDisplayable
+  @State private var checkReviewRequest = false
   @ObservedObject private var childContentsViewModel: ChildContentsViewModel
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject private var sessionController: SessionController
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+  private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
 }
 
 // MARK: - View
@@ -87,6 +89,22 @@ private extension ContentDetailView {
     }
     .navigationBarTitle(Text(""), displayMode: .inline)
     .background(Color.backgroundColor)
+    .onReceive(videoCompletedNotification) { _ in
+      checkReviewRequest = true
+    }
+    .onAppear {
+      if checkReviewRequest {
+        guard let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval else { return }
+        let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
+        let currentDate = Date()
+        if case .completed = dynamicContentViewModel.viewProgress {
+          if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
+            NotificationCenter.default.post(name: .requestReview, object: nil)
+            NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+          }
+        }
+      }
+    }
   }
 
   var canStreamPro: Bool { user.canStreamPro }
@@ -118,6 +136,11 @@ private extension ContentDetailView {
         }
       }
     }
+  }
+
+  private func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+    return components.weekOfYear ?? 0 >= 2
   }
 
   func headerImagePlayableContent(for width: CGFloat) -> some View {
