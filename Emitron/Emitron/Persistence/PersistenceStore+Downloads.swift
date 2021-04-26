@@ -337,7 +337,7 @@ extension PersistenceStore {
       }
     }
   }
-  
+
   /// Save the entire graph of models to supprt this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.
   func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) -> Future<Void, Error> {

@@ -27,16 +27,35 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import StoreKit
 
 struct MainView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var dataManager: DataManager
   private let tabViewModel = TabViewModel()
-  
+  private let notification = NotificationCenter.default.publisher(for: .requestReview)
+
   var body: some View {
-    contentView
-      .background(Color.backgroundColor)
-      .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+    ZStack {
+      contentView
+        .background(Color.backgroundColor)
+        .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+        .onReceive(notification) { _ in
+          DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+            makeReviewRequest()
+          }
+        }
+    }
+  }
+
+  private func makeReviewRequest() {
+    if #available(iOS 14.0, *) {
+      if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+        SKStoreReviewController.requestReview(in: scene)
+      }
+    } else {
+      SKStoreReviewController.requestReview()
+    }
   }
 }
 
