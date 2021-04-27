@@ -29,9 +29,6 @@ jobs:
         scripts/download_s3.sh production > Emitron/Emitron/Configuration/secrets.production.xcconfig
     - name: Execute fastlane
       env:
-        FASTLANE_USER: engineering@razeware.com
-        FASTLANE_PASSWORD: ${{ secrets.FASTLANE_PASSWORD }}
-        FASTLANE_SESSION: ${{ secrets.FASTLANE_SESSION }}
         MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
         MATCH_PASSWORD: ${{ secrets.MATCH_PASSWORD }}
         SLACK_URL: ${{ secrets.SLACK_URL }}
