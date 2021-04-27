@@ -12,8 +12,8 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
-    - name: Switch to Xcode 12
-      run: sudo xcode-select --switch /Applications/Xcode_12.app
+    - name: Switch to Xcode 12.5
+      run: sudo xcode-select --switch /Applications/Xcode_12.5.app
     - name: Update fastlane
       run: |
         cd Emitron
