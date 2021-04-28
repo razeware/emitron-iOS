@@ -2706,7 +2706,7 @@
 			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 5.0.1;
 			};
 		};
 		22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */ = {
