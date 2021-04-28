@@ -112,3 +112,7 @@ extension TimeInterval {
   // MARK: Video playback
   static let videoPlaybackOfflinePermissionsCheckPeriod: Self = 7 * 24 * 60 * 60
 }
+
+enum LookupKey {
+  static let requestReview = "request"
+}
