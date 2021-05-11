@@ -40,12 +40,14 @@ struct ContentDetailView {
   }
 
   private let content: ContentListDisplayable
+  @State private var checkReviewRequest = false
   @ObservedObject private var childContentsViewModel: ChildContentsViewModel
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject private var sessionController: SessionController
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+  private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
 }
 
 // MARK: - View
@@ -65,8 +67,8 @@ extension ContentDetailView: View {
 private extension ContentDetailView {
   var contentView: some View {
     GeometryReader { geometry in
-      List {
-        Section {
+      ScrollView {
+        VStack {
           if content.professional && !canStreamPro {
             headerImageLockedProContent(for: geometry.size.width)
           } else {
@@ -75,20 +77,34 @@ private extension ContentDetailView {
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
-            .padding(.bottom, 37)
-        }
-        .listRowInsets(EdgeInsets())
-        .listRowBackground(Color.backgroundColor)
-        
-        ChildContentListingView(
-          childContentsViewModel: childContentsViewModel,
-          currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
-        )
+            .background(Color.backgroundColor)
+          
+          ChildContentListingView(
+            childContentsViewModel: childContentsViewModel,
+            currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
+          )
           .background(Color.backgroundColor)
+        }
       }
     }
-      .navigationBarTitle(Text(""), displayMode: .inline)
-      .background(Color.backgroundColor)
+    .navigationBarTitle(Text(""), displayMode: .inline)
+    .background(Color.backgroundColor)
+    .onReceive(videoCompletedNotification) { _ in
+      checkReviewRequest = true
+    }
+    .onAppear {
+      if checkReviewRequest {
+        guard let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval else { return }
+        let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
+        let currentDate = Date()
+        if case .completed = dynamicContentViewModel.viewProgress {
+          if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
+            NotificationCenter.default.post(name: .requestReview, object: nil)
+            NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+          }
+        }
+      }
+    }
   }
 
   var canStreamPro: Bool { user.canStreamPro }
@@ -96,14 +112,6 @@ private extension ContentDetailView {
 
   var imageRatio: CGFloat { 283 / 375 }
   var maxImageHeight: CGFloat { 384 }
-
-  func openSettings() {
-    // open iPhone settings
-    if
-      let url = URL(string: UIApplication.openSettingsURLString),
-      UIApplication.shared.canOpenURL(url)
-    { UIApplication.shared.open(url) }
-  }
   
   var continueOrPlayButton: some View {
     Button(action: {
@@ -128,6 +136,11 @@ private extension ContentDetailView {
         }
       }
     }
+  }
+
+  private func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+    return components.weekOfYear ?? 0 >= 2
   }
 
   func headerImagePlayableContent(for width: CGFloat) -> some View {

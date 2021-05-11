@@ -30,10 +30,6 @@ enum ContentSubscriptionPlan: Int, Codable {
   case beginner
   case professional
   
-  init(_ pro: Bool) {
-    self = pro ? .professional : .beginner
-  }
-  
   var displayString: String {
     switch self {
     case .beginner:

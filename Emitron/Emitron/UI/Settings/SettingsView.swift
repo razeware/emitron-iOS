@@ -35,23 +35,17 @@ enum SettingsLayout {
 }
 
 struct SettingsView: View {
-  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager = SettingsManager.current
-  @State private var licensesPresented: Bool = false
-  var showLogoutButton: Bool
+  @State private var licensesPresented = false
   
   var body: some View {
-    NavigationView {
       VStack {
         SettingsList(
           settingsManager: _settingsManager,
           canDownload: sessionController.user?.canDownload ?? false
-        )
-          .navigationBarTitle(String.settings)
-          .navigationBarItems(trailing: dismissButton)
-          .padding([.horizontal], 20)
+        ).padding([.horizontal], 20)
         
         Section(header:
           HStack {
@@ -79,7 +73,6 @@ struct SettingsView: View {
           }
           .padding([.bottom], 25)
         
-        if showLogoutButton {
           VStack {
             if sessionController.user != nil {
               Text("Logged in as \(sessionController.user?.username ?? "")")
@@ -87,8 +80,6 @@ struct SettingsView: View {
                 .foregroundColor(.contentText)
             }
             MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              presentationMode.wrappedValue.dismiss()
-              // This is hacky. But without it, the sheet doesn't actually dismiss.
               DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                 sessionController.logout()
                 tabViewModel.selectedTab = .library
@@ -96,35 +87,24 @@ struct SettingsView: View {
             }
           }
           .padding([.bottom, .horizontal], 18)
-        }
-      }
-        .background(Color.backgroundColor)
-    }
-      .navigationViewStyle(StackNavigationViewStyle())
-  }
-  
-  var dismissButton: some View {
-    Button(action: {
-      presentationMode.wrappedValue.dismiss()
-    }) {
-      Image.close
-        .foregroundColor(.iconButton)
-    }
+      }.navigationBarTitle(String.settings)
+      .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
   }
 }
 
-//#if DEBUG
-//struct SettingsView_Previews: PreviewProvider {
-//  static var previews: some View {
-//    SwiftUI.Group {
-//      settingsView.colorScheme(.dark)
-//      settingsView.colorScheme(.light)
-//    }
-//  }
-//
-//  static var settingsView: some View {
-//    SettingsView(showLogoutButton: true)
-//      .background(Color.backgroundColor)
-//  }
-//}
-//#endif
+#if DEBUG
+struct SettingsView_Previews: PreviewProvider {
+  static var previews: some View {
+    SwiftUI.Group {
+      settingsView.colorScheme(.dark)
+      settingsView.colorScheme(.light)
+    }
+  }
+
+  static var settingsView: some View {
+    SettingsView()
+      .background(Color.backgroundColor)
+      .environmentObject(SessionController.current)
+  }
+}
+#endif

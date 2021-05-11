@@ -31,12 +31,14 @@ import SwiftUI
 struct TabNavView<
   LibraryView: View,
   MyTutorialsView: View,
-  DownloadsView: View
+  DownloadsView: View,
+  SettingsView: View
 >: View {
   @EnvironmentObject var tabViewModel: TabViewModel
   let libraryView: LibraryView
   let myTutorialsView: MyTutorialsView
   let downloadsView: DownloadsView
+  let settingsView: SettingsView
 
   var body: some View {
     TabView(selection: $tabViewModel.selectedTab) {
@@ -70,6 +72,15 @@ struct TabNavView<
         .tag(MainTab.myTutorials)
         .navigationViewStyle(StackNavigationViewStyle())
         .accessibility(label: .init(String.myTutorials))
+      
+      NavigationView { settingsView }
+        .tabItem {
+          Text(String.settings)
+          Image("settings")
+        }
+        .tag(MainTab.settings)
+        .navigationViewStyle(StackNavigationViewStyle())
+        .accessibility(label: .init(String.settings))
     }
     .accentColor(.accent)
   }
@@ -80,7 +91,8 @@ struct TabNavView_Previews: PreviewProvider {
     TabNavView(
       libraryView: Text("LIBRARY"),
       myTutorialsView: Text("MY TUTORIALS"),
-      downloadsView: Text("DOWNLOADS")
+      downloadsView: Text("DOWNLOADS"),
+      settingsView: Text("SETTINGS")
     ).environmentObject(TabViewModel())
   }
 }

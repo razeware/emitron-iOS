@@ -42,7 +42,7 @@ struct FiltersHeaderView: View {
   var filterGroup: FilterGroup
   @ObservedObject var filters: Filters
   
-  @State var isExpanded: Bool = false
+  @State var isExpanded = false
   
   var body: some View {
     VStack {

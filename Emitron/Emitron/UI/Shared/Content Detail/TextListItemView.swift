@@ -57,22 +57,29 @@ struct TextListItemView: View {
           VStack(alignment: .leading, spacing: 5) {
             Text(content.name)
               .font(.uiTitle5)
+              .kerning(-0.5)
               .lineSpacing(3)
               .foregroundColor(.titleText)
+              .fixedSize(horizontal: false, vertical: true)
             
             Text(content.duration.minuteSecondTimeFromSeconds)
               .font(.uiFootnote)
               .foregroundColor(.contentText)
           }
-            
+          
           Spacer()
-            
+          
           if canDownload {
-            DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
-              .onTapGesture {
-                download()
-              }
-              .alert(item: $deletionConfirmation, content: \.alert)
+            VStack {
+              Spacer()
+              DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
+                .onTapGesture {
+                  download()
+                }
+                .alert(item: $deletionConfirmation, content: \.alert)
+                .padding(.bottom, 5)
+              Spacer()
+            }
           }
         }
         progressBar

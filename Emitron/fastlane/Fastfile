@@ -18,6 +18,7 @@ default_platform(:ios)
 platform :ios do
   desc 'Push a new beta build to TestFlight'
   lane :ci_upload_beta_testflight do
+    app_store_connect_api_key
     prepare_ci_build('Beta')
     changelog_from_git_commits
     upload_to_testflight(app_identifier: 'com.razeware.emitron.ios.beta',
@@ -27,6 +28,7 @@ platform :ios do
 
   desc 'Push a new production build to TestFlight'
   lane :ci_upload_release_testflight do
+    app_store_connect_api_key
     prepare_ci_build('Release')
     changelog_from_git_commits
     upload_to_testflight(app_identifier: 'com.razeware.emitron.ios',
@@ -36,6 +38,7 @@ platform :ios do
 
   desc 'Push a new release version to App Store Connect ready for release'
   lane :ci_upload_release_appstore do
+    app_store_connect_api_key
     prepare_ci_build('Release')
     upload_to_app_store(app_identifier: 'com.razeware.emitron.ios')
     slack(message: 'emitron successfully uploaded to App Store Connect!')

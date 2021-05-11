@@ -258,7 +258,6 @@
 		8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */; };
 		95A4513522E224B500D24E56 /* SessionController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 95A4513322E224B500D24E56 /* SessionController.swift */; };
 		B5678C62233668B100BCB8A1 /* CircleProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */; };
-		B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B595654323130E4C00A3FF44 /* CustomToggleView.swift */; };
 		B60612B922CCE352007FC852 /* Parameters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60612B822CCE352007FC852 /* Parameters.swift */; };
 		B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B60FF7BD23000ABD00F36B32 /* CardView.swift */; };
 		B621DD5122F5EEC500A1F27A /* DataManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = B621DD5022F5EEC500A1F27A /* DataManager.swift */; };
@@ -598,7 +597,6 @@
 		8BFCEF1E2341184A003FF72F /* PermissionsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PermissionsRequest.swift; sourceTree = "<group>"; };
 		95A4513322E224B500D24E56 /* SessionController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SessionController.swift; sourceTree = "<group>"; };
 		B5678C61233668B100BCB8A1 /* CircleProgressBarView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CircleProgressBarView.swift; sourceTree = "<group>"; };
-		B595654323130E4C00A3FF44 /* CustomToggleView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CustomToggleView.swift; sourceTree = "<group>"; };
 		B60612B822CCE352007FC852 /* Parameters.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Parameters.swift; sourceTree = "<group>"; };
 		B60FF7BD23000ABD00F36B32 /* CardView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CardView.swift; sourceTree = "<group>"; };
 		B621DD3622F5CB9A00A1F27A /* Attachment_Downloads.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = Attachment_Downloads.json; sourceTree = "<group>"; };
@@ -1675,7 +1673,6 @@
 			isa = PBXGroup;
 			children = (
 				B6C4F3D122E6ECA40087ED10 /* CheckmarkView.swift */,
-				B595654323130E4C00A3FF44 /* CustomToggleView.swift */,
 				B66778AB2305D2D4003EEBAB /* MainButtonView.swift */,
 				8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */,
 				229F0AC223BB27820004DD4F /* Content Detail */,
@@ -2104,7 +2101,6 @@
 				B6D8EB2322CBA81200DE29AF /* DomainsService.swift in Sources */,
 				229935D023FE8C6F00D3D16A /* SettingsSelectable.swift in Sources */,
 				B6D7DC4622C7AF60006DD325 /* UIFont+Extensions.swift in Sources */,
-				B595654423130E4C00A3FF44 /* CustomToggleView.swift in Sources */,
 				22D39FC823EC0AEA0058599D /* LoadingView.swift in Sources */,
 				B6DF2FB622CA62E50081A3A3 /* JSONAPIDocument.swift in Sources */,
 				229F4A1623FE7ECB006E2DE6 /* SettingsToggleRow.swift in Sources */,
@@ -2394,7 +2390,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2599,7 +2595,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2625,7 +2621,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.6;
+				MARKETING_VERSION = 1.0.7;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2710,7 +2706,7 @@
 			repositoryURL = "https://github.com/SwiftyJSON/SwiftyJSON";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 5.0.1;
 			};
 		};
 		22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */ = {

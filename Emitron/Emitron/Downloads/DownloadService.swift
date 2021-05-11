@@ -30,11 +30,6 @@ import Combine
 import Foundation
 import Network
 
-enum DownloadServiceError: Error {
-  case unableToCancelDownload
-  case unableToDeleteDownload
-}
-
 final class DownloadService {
   enum Status {
     case active
@@ -304,28 +299,28 @@ extension DownloadService {
     }
     
     // Use the video service to request the URLs
-    videosService.getVideoDownload(for: videoId) { [weak self] result in
+    videosService.getVideoStreamDownload(for: videoId) { [weak self] result in
       // Ensure we're still around
       guard let self = self else { return }
       var download = downloadQueueItem.download
-      
+
       switch result {
       case .failure(let error):
         Failure
           .downloadService(from: "requestDownloadURL",
                            reason: "Unable to obtain download URLs: \(error)")
           .log()
-      case .success(let attachments):
-        download.remoteURL = attachments.first { $0.kind == self.downloadQuality }?.url
+      case .success(let attachment):
+        download.remoteURL = attachment.url
         download.lastValidatedAt = Date()
         download.state = .readyForDownload
       }
-      
+
       // Update the state if required
       if download.remoteURL == nil {
         download.state = .error
       }
-      
+
       // Commit the changes
       do {
         try self.persistenceStore.update(download: download)
@@ -337,7 +332,6 @@ extension DownloadService {
         self.transitionDownload(withID: download.id, to: .failed)
       }
     }
-    
     // Move it on through the state machine
     transitionDownload(withID: downloadQueueItem.download.id, to: .urlRequested)
   }
@@ -361,7 +355,7 @@ extension DownloadService {
     }
     
     // Generate filename
-    let filename = "\(videoId).mp4"
+    let filename = "\(videoId).m3u8"
     
     // Save local URL and filename
     var download = downloadQueueItem.download
@@ -504,14 +498,6 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didPauseDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .paused)
-  }
-  
-  func downloadProcessor(_ processor: DownloadProcessor, didResumeDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .inProgress)
-  }
-  
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
     transitionDownload(withID: downloadId, to: .error)
     Failure
@@ -535,18 +521,6 @@ extension DownloadService {
   func downloadList() -> AnyPublisher<[ContentSummaryState], Error> {
     persistenceStore
       .downloadList()
-      .eraseToAnyPublisher()
-  }
-  
-  func downloadedContentSummary(for contentId: Int) -> AnyPublisher<ContentSummaryState?, Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentId)
-      .eraseToAnyPublisher()
-  }
-  
-  func contentSummaries(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
-    persistenceStore
-      .downloadContentSummary(for: contentIds)
       .eraseToAnyPublisher()
   }
 }

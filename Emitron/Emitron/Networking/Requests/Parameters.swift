@@ -162,7 +162,7 @@ enum ParameterFilterValue {
   }
 }
 
-//sort=-released_at; reversechronological order
+// sort=-released_at; reversechronological order
 enum ParameterSortValue: String, Codable {
   case popularity = "popularity"
   case releasedAt = "released_at"

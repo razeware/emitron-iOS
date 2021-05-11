@@ -37,7 +37,7 @@ struct ContentSummaryView {
   private let content: ContentListDisplayable
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
-
+  
   init(
     content: ContentListDisplayable,
     dynamicContentViewModel: DynamicContentViewModel
@@ -69,15 +69,18 @@ extension ContentSummaryView: View {
       
       Text(content.name)
         .font(.uiTitle1)
+        .kerning(-0.5)
         .lineLimit(nil)
-        .padding([.top], 10)
+        .fixedSize(horizontal: false, vertical: true)
         .foregroundColor(.titleText)
+      
+      Spacer()
       
       Text(content.contentSummaryMetadataString)
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineSpacing(3)
-        .padding([.top], 10)
+        .fixedSize(horizontal: false, vertical: true)
       
       HStack(spacing: 30, content: {
         if canDownload {
@@ -99,13 +102,14 @@ extension ContentSummaryView: View {
         .lineSpacing(3)
         .padding(.top, 15)
         .lineLimit(nil)
+        .fixedSize(horizontal: false, vertical: true)
       
-      Text("By \(content.contributorString)")
+      Text("\(String.by) \(content.contributorString)")
         .font(.uiCaption)
         .foregroundColor(.contentText)
         .lineLimit(2)
-        .padding(.top, 10)
         .lineSpacing(3)
+        .fixedSize(horizontal: false, vertical: true)
     }
   }
 }
@@ -119,7 +123,7 @@ private extension ContentSummaryView {
   var canDownload: Bool {
     sessionController.user?.canDownload ?? false
   }
-
+  
   var completedTag: CompletedTag? {
     if case .completed = dynamicContentViewModel.viewProgress {
       return CompletedTag()
@@ -128,8 +132,8 @@ private extension ContentSummaryView {
   }
   
   private var bookmarkButton: some View {
-    //ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
-    //bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
+    // ISSUE: Changing this from button to "onTapGesture" because the tap target between the download button and the
+    // bookmark button somehow wasn't... clearly defined, so they'd both get pressed when the bookmark button got pressed
     Image.bookmark
       .resizable()
       .frame(width: Layout.buttonSize, height: Layout.buttonSize)

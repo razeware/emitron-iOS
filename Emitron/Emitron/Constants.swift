@@ -40,11 +40,10 @@ extension Int {
 }
 
 extension String {
-  static let clearAll = "Clear All"
   static let downloads = "Downloads"
   static let filters = "Filters"
   static let library = "Library"
-  static let loading = "Loading…"
+  static let loading = "Loading..."
   static let myTutorials = "My Tutorials"
   static let newest = "Newest"
   static let popularity = "Popularity"
@@ -99,10 +98,6 @@ extension String {
   static let yes = "Yes"
   static let no = "No" // swiftlint:disable:this identifier_name
 
-  // MARK: Pull-to-refresh
-  static let pullToRefreshPullMessage = "Pull to refresh"
-  static let pullToRefreshLoadingMessage = "Loading…"
-
   // MARK: Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
   static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
@@ -116,4 +111,8 @@ extension TimeInterval {
 
   // MARK: Video playback
   static let videoPlaybackOfflinePermissionsCheckPeriod: Self = 7 * 24 * 60 * 60
+}
+
+enum LookupKey {
+  static let requestReview = "request"
 }

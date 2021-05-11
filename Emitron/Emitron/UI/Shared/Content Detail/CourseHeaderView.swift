@@ -37,6 +37,7 @@ struct CourseHeaderView: View {
       HStack {
         Text(name)
           .font(.uiTitle3)
+          .kerning(-0.5)
           .foregroundColor(.titleText)
           .padding(.leading, 20)
         Spacer()

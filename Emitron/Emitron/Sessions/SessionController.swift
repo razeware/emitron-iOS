@@ -144,8 +144,6 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
               .log()
           case .success(let user):
             self.user = user
-            print(user)
-            
             Event
               .login(from: "SessionController")
               .log()

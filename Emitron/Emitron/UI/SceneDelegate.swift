@@ -70,7 +70,10 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
       let mainView = MainView()
         .environmentObject(sessionController)
         .environmentObject(dataManager)
-      
+      if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
+        NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+      }
+
       window.rootViewController = PortraitHostingController(rootView: mainView)
       self.window = window
       window.rootViewController?.view.backgroundColor = .backgroundColor
