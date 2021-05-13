@@ -82,7 +82,7 @@ public class Guardpost {
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
-    let returnURL = "\(urlScheme)sessions/create"
+    let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
                                          secret: ssoSecret,
                                          callbackURL: returnURL)
@@ -93,7 +93,7 @@ public class Guardpost {
     }
 
     authSession = ASWebAuthenticationSession(url: loginURL,
-                                             callbackURLScheme: String(urlScheme.dropLast(3))) { url, error in
+                                             callbackURLScheme: urlScheme) { url, error in
 
       var result: Result<User, LoginError>
 
