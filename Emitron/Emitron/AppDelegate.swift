@@ -58,7 +58,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     let dbPool = try! setupDatabase(application)
     persistenceStore = PersistenceStore(db: dbPool)
     guardpost = Guardpost(baseURL: "https://accounts.raywenderlich.com",
-                          urlScheme: "com.razeware.emitron://",
+                          urlScheme: "com.razeware.emitron",
                           ssoSecret: Configuration.ssoSecret,
                           persistenceStore: persistenceStore)
     
