@@ -93,7 +93,7 @@ public class Guardpost {
     }
 
     authSession = ASWebAuthenticationSession(url: loginURL,
-                                             callbackURLScheme: urlScheme) { url, error in
+                                             callbackURLScheme: String(urlScheme.dropLast(3))) { url, error in
 
       var result: Result<User, LoginError>
 
