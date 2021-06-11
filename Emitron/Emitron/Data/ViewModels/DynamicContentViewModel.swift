@@ -37,6 +37,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private weak var syncAction: SyncAction?
   private let messageBus: MessageBus
   private let settingsManager: SettingsManager
+  private let sessionController: SessionController
   
   private var dynamicContentState: DynamicContentState?
   
@@ -44,18 +45,18 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   @Published var viewProgress: ContentViewProgressDisplayable = .notStarted
   @Published var downloadProgress: DownloadProgressDisplayable = .notDownloadable
   @Published var bookmarked = false
-  @EnvironmentObject private var sessionController: SessionController
 
   private var subscriptions = Set<AnyCancellable>()
   private var downloadActionSubscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager) {
+  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager, sessionController: SessionController) {
     self.contentId = contentId
     self.repository = repository
     self.downloadAction = downloadAction
     self.syncAction = syncAction
     self.messageBus = messageBus
     self.settingsManager = settingsManager
+    self.sessionController = sessionController
   }
   
   func initialiseIfRequired() {

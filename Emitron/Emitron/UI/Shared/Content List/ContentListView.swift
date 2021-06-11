@@ -136,14 +136,8 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      if #available(iOS 14, *) {
-        makeSectionList {
-          listContentView
-        }
-      } else {
-        makeList {
-          listContentView
-        }
+      makeSectionList {
+        listContentView
       }
     }
       .if(!allowDelete) {

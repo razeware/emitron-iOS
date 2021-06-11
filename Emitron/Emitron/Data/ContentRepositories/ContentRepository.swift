@@ -36,6 +36,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   let serviceAdapter: ContentServiceAdapter!
   let messageBus: MessageBus
   let settingsManager: SettingsManager
+  let sessionController: SessionController
 
   private (set) var currentPage: Int = 1
   private (set) var totalContentNum: Int = 0
@@ -75,7 +76,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
        syncAction: SyncAction,
        serviceAdapter: ContentServiceAdapter?,
        messageBus: MessageBus,
-       settingsManager: SettingsManager) {
+       settingsManager: SettingsManager,
+       sessionController: SessionController) {
     self.repository = repository
     self.contentsService = contentsService
     self.downloadAction = downloadAction
@@ -83,6 +85,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     self.serviceAdapter = serviceAdapter
     self.messageBus = messageBus
     self.settingsManager = settingsManager
+    self.sessionController = sessionController
     configureInvalidationSubscription()
   }
 
@@ -198,7 +201,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       downloadAction: downloadAction,
       syncAction: syncAction,
       messageBus: messageBus,
-      settingsManager: settingsManager
+      settingsManager: settingsManager,
+      sessionController: sessionController
     )
   }
   
@@ -211,7 +215,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       repository: repository,
       service: contentsService,
       messageBus: messageBus,
-      settingsManager: settingsManager
+      settingsManager: settingsManager,
+      sessionController: sessionController
     )
   }
 }

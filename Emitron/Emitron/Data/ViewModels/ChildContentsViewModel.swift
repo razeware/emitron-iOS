@@ -35,6 +35,7 @@ class ChildContentsViewModel: ObservableObject {
   let repository: Repository
   let messageBus: MessageBus
   let settingsManager: SettingsManager
+  let sessionController: SessionController
   
   var state: DataState = .initial
   @Published var groups: [GroupDisplayable] = []
@@ -47,13 +48,15 @@ class ChildContentsViewModel: ObservableObject {
        syncAction: SyncAction?,
        repository: Repository,
        messageBus: MessageBus,
-       settingsManager: SettingsManager) {
+       settingsManager: SettingsManager,
+       sessionController: SessionController) {
     self.parentContentId = parentContentId
     self.downloadAction = downloadAction
     self.syncAction = syncAction
     self.repository = repository
     self.messageBus = messageBus
     self.settingsManager = settingsManager
+    self.sessionController = sessionController
   }
   
   func initialiseIfRequired() {
@@ -110,7 +113,8 @@ class ChildContentsViewModel: ObservableObject {
       downloadAction: downloadAction,
       syncAction: syncAction,
       messageBus: messageBus,
-      settingsManager: settingsManager
+      settingsManager: settingsManager,
+      sessionController: sessionController
     )
   }
 }

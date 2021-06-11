@@ -73,19 +73,11 @@ private extension ChildContentListingView {
       if childContentsViewModel.groups.count > 1 {
         ForEach(childContentsViewModel.groups, id: \.id) { group in
           // By default, iOS 14 shows headers in upper case. Text casing is changed by the textCase modifier which is not available on previous versions.
-          if #available(iOS 14, *) {
-            Section(header: CourseHeaderView(name: group.name)) {
-              episodeListing(data: childContentsViewModel.contents(for: group.id))
-            }
-            .background(Color.backgroundColor)
-            .textCase(nil)
-          } else {
-            // Default behavior for iOS 13 and lower.
-            Section(header: CourseHeaderView(name: group.name)) {
-              episodeListing(data: childContentsViewModel.contents(for: group.id))
-            }
-            .background(Color.backgroundColor)
+          Section(header: CourseHeaderView(name: group.name)) {
+            episodeListing(data: childContentsViewModel.contents(for: group.id))
           }
+          .background(Color.backgroundColor)
+          .textCase(nil)
         }
       } else if !childContentsViewModel.groups.isEmpty {
         episodeListing(data: childContentsViewModel.contents)

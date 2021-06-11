@@ -43,7 +43,6 @@ class DownloadQueueManagerTest: XCTestCase {
   override func setUp() {
     super.setUp()
 
-
     // There's one already running—let's stop that
     if downloadService != nil {
       downloadService.stopProcessing()

@@ -35,7 +35,8 @@ final class LibraryRepository: ContentRepository {
                 syncAction: SyncAction,
                 serviceAdapter: ContentServiceAdapter?,
                 messageBus: MessageBus,
-                settingsManager: SettingsManager) {
+                settingsManager: SettingsManager,
+                sessionController: SessionController) {
     filters = Filters(settingsManager: settingsManager)
     
     super.init(repository: repository,
@@ -44,7 +45,8 @@ final class LibraryRepository: ContentRepository {
                syncAction: syncAction,
                serviceAdapter: serviceAdapter,
                messageBus: messageBus,
-               settingsManager: settingsManager)
+               settingsManager: settingsManager,
+               sessionController: sessionController)
     
     nonPaginationParameters = filters.appliedParameters
   }
