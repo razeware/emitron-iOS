@@ -66,16 +66,16 @@ struct SettingsView: View {
         .padding([.horizontal], 20)
         
         Spacer()
-        
-        Button(action: {
+
+        Button {
           licensesPresented.toggle()
-        }) {
+        } label: {
           Text("Software Licenses")
         }
-          .sheet(isPresented: $licensesPresented) {
+        .sheet(isPresented: $licensesPresented) {
             LicenseListView(visible: $licensesPresented)
-          }
-          .padding([.bottom], 25)
+        }
+        .padding([.bottom], 25)
         
           VStack {
             if sessionController.user != nil {

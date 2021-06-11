@@ -115,14 +115,14 @@ private extension ContentDetailView {
   var maxImageHeight: CGFloat { 384 }
   
   var continueOrPlayButton: some View {
-    Button(action: {
+    Button {
       currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: sessionController.client,
         dismissClosure: {
           currentlyDisplayedVideoPlaybackViewModel = nil
         }
       )
-    }) {
+    } label: {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
           ContinueButtonView()

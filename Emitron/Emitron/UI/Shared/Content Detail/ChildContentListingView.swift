@@ -130,9 +130,9 @@ private extension ChildContentListingView {
       )
       .padding([.horizontal, .bottom], 20)
     } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
-      Button(action: {
+      Button {
         messageBus.post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
-      }) {
+      } label: {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
@@ -140,14 +140,14 @@ private extension ChildContentListingView {
         .padding([.horizontal, .bottom], 20)
       }
     } else {
-      Button(action: {
+      Button {
         currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
           apiClient: sessionController.client,
           dismissClosure: {
             currentlyDisplayedVideoPlaybackViewModel = nil
           }
         )
-      }) {
+      } label: {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model

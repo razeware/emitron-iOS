@@ -49,13 +49,12 @@ struct ToggleControlView: View {
   }
   
   private func toggleButton(for state: MyTutorialsState) -> some View {
-    Button(action: {
+    Button {
       guard state != toggleState else { return }
-      
       toggleState = state
       toggleUpdated?(state)
       messageBus.dismiss()
-    }) {
+    } label: {
       toggleButtonContent(for: state)
     }
   }

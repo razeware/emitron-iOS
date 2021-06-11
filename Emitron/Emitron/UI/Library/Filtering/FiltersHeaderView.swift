@@ -46,14 +46,14 @@ struct FiltersHeaderView: View {
   
   var body: some View {
     VStack {
-      Button(action: {
+      Button {
         isExpanded.toggle()
-      }) {
+      } label: {
         HStack {
           Text("\(filterGroup.type.name)\(filterCount)")
             .foregroundColor(.titleText)
             .font(.uiLabelBold)
-          
+
           Spacer()
 
           Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -65,7 +65,7 @@ struct FiltersHeaderView: View {
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
       }
-        .accessibility(label: Text(filterGroup.type.name))
+      .accessibility(label: Text(filterGroup.type.name))
         
       if isExpanded {
         expandedView

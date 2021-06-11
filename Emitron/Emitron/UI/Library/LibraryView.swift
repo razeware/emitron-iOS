@@ -81,15 +81,15 @@ struct LibraryView: View {
       
       Spacer()
 
-      Button(action: {
+      Button {
         filtersPresented = true
-      }, label: {
+      } label: {
         Image("filter")
           .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
-      })
-        .accessibility(label: Text("Filter Library"))
-        .padding([.horizontal], .searchFilterPadding)
+      }
+      .accessibility(label: Text("Filter Library"))
+      .padding([.horizontal], .searchFilterPadding)
     }
   }
 
@@ -101,7 +101,9 @@ struct LibraryView: View {
 
       Spacer()
 
-      Button(action: changeSort) {
+      Button {
+        changeSort()
+      } label: {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
