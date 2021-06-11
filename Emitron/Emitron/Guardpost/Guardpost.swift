@@ -27,6 +27,7 @@
 // THE SOFTWARE.
 
 import AuthenticationServices
+import Combine
 
 public enum LoginError: Error {
   case unableToCreateLoginURL
@@ -52,7 +53,7 @@ public enum LoginError: Error {
   }
 }
 
-public class Guardpost {
+public class Guardpost: ObservableObject {
   // MARK: - Properties
   private let baseURL: String
   private let urlScheme: String

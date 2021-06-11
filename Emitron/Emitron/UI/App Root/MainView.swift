@@ -32,6 +32,9 @@ import StoreKit
 struct MainView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var dataManager: DataManager
+  @EnvironmentObject var messageBus: MessageBus
+  @EnvironmentObject var settingsManager: SettingsManager
+
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
 
@@ -39,7 +42,7 @@ struct MainView: View {
     ZStack {
       contentView
         .background(Color.backgroundColor)
-        .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+        .overlay(MessageBarView(messageBus: messageBus), alignment: .bottom)
         .onReceive(notification) { _ in
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             makeReviewRequest()
@@ -80,8 +83,7 @@ private extension MainView {
       contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
       downloadRepository: dataManager.downloadRepository
     )
-    
-    let settingsView = SettingsView()
+    let settingsView = SettingsView(settingsManager: settingsManager)
 
     switch sessionController.sessionState {
     case .online :

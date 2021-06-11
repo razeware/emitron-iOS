@@ -32,6 +32,7 @@ struct ChildContentListingView: View {
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
   @Binding var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var messageBus: MessageBus
   
   var body: some View {
     childContentsViewModel.initialiseIfRequired()
@@ -138,8 +139,7 @@ private extension ChildContentListingView {
       .padding([.horizontal, .bottom], 20)
     } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
       Button(action: {
-        MessageBus.current
-          .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
+        messageBus.post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
       }) {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,

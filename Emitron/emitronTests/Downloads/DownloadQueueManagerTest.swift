@@ -38,18 +38,27 @@ class DownloadQueueManagerTest: XCTestCase {
   private var downloadService: DownloadService!
   private var queueManager: DownloadQueueManager!
   private var subscriptions = Set<AnyCancellable>()
+  private var settingsManager: SettingsManager!
 
   override func setUp() {
     super.setUp()
+
+
     // There's one already running—let's stop that
-    DownloadService.current.stopProcessing()
-    // swiftlint:disable:next force_try
-    database = try! EmitronDatabase.testDatabase()
+    if downloadService != nil {
+      downloadService.stopProcessing()
+    }
+    // swiftlint:disable:next
+    do {
+      database = try EmitronDatabase.testDatabase()
+    } catch {
+      fatalError("Failed trying to test database")
+    }
     persistenceStore = PersistenceStore(db: database)
+    settingsManager = EmitronApp.emitronObjects().settingsManager
     let userModelController = UserMCMock(user: .withDownloads)
-    downloadService = DownloadService(persistenceStore: persistenceStore,
-                                      userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+    downloadService = DownloadService(persistenceStore: persistenceStore, userModelController: userModelController, videosServiceProvider: { _ in self.videoService }, settingsManager: settingsManager)
+
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
     downloadService.stopProcessing()
   }
@@ -199,7 +208,7 @@ class DownloadQueueManagerTest: XCTestCase {
     let download2 = try samplePersistedDownload(state: .enqueued)
     _ = try samplePersistedDownload(state: .enqueued)
     
-    let queue = try wait(for: recorder.next(4), timeout: 5)
+    let queue = try wait(for: recorder.next(4), timeout: 15)
     XCTAssertEqual([
       [],                     // Empty to start
       [download1],            // d1 Enqueued

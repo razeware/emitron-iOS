@@ -29,7 +29,7 @@
 import SwiftUI
 
 struct IconChooserView: View {
-  @ObservedObject var iconManager = IconManager.current
+  @EnvironmentObject var iconManager: IconManager
   
   var body: some View {
     HStack {

@@ -36,6 +36,7 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
+  @EnvironmentObject private var downloadService: DownloadService
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented = false
@@ -159,7 +160,7 @@ struct LibraryView: View {
   private var contentView: some View {
     ContentListView(
       contentRepository: libraryRepository,
-      downloadAction: DownloadService.current,
+      downloadAction: downloadService,
       contentScreen: .library,
       header: contentControlsSection
     )

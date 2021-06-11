@@ -33,14 +33,18 @@ final class LibraryRepository: ContentRepository {
                 contentsService: ContentsService,
                 downloadAction: DownloadAction,
                 syncAction: SyncAction,
-                serviceAdapter: ContentServiceAdapter?) {
-    filters = Filters()
+                serviceAdapter: ContentServiceAdapter?,
+                messageBus: MessageBus,
+                settingsManager: SettingsManager) {
+    filters = Filters(settingsManager: settingsManager)
     
     super.init(repository: repository,
                contentsService: contentsService,
                downloadAction: downloadAction,
                syncAction: syncAction,
-               serviceAdapter: serviceAdapter)
+               serviceAdapter: serviceAdapter,
+               messageBus: messageBus,
+               settingsManager: settingsManager)
     
     nonPaginationParameters = filters.appliedParameters
   }

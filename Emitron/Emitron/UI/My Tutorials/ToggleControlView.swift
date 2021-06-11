@@ -30,6 +30,8 @@ import SwiftUI
 
 struct ToggleControlView: View {
   @State var toggleState: MyTutorialsState
+  @EnvironmentObject var messageBus: MessageBus
+
   var toggleUpdated: ((MyTutorialsState) -> Void)?
   
   var body: some View {
@@ -52,7 +54,7 @@ struct ToggleControlView: View {
       
       toggleState = state
       toggleUpdated?(state)
-      MessageBus.current.dismiss()
+      messageBus.dismiss()
     }) {
       toggleButtonContent(for: state)
     }

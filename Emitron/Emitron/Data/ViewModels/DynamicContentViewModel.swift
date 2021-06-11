@@ -26,6 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import SwiftUI
 import Combine
 import class Foundation.RunLoop
 
@@ -34,6 +35,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private let repository: Repository
   private let downloadAction: DownloadAction
   private weak var syncAction: SyncAction?
+  private let messageBus: MessageBus
+  private let settingsManager: SettingsManager
   
   private var dynamicContentState: DynamicContentState?
   
@@ -41,15 +44,18 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   @Published var viewProgress: ContentViewProgressDisplayable = .notStarted
   @Published var downloadProgress: DownloadProgressDisplayable = .notDownloadable
   @Published var bookmarked = false
-  
+  @EnvironmentObject private var sessionController: SessionController
+
   private var subscriptions = Set<AnyCancellable>()
   private var downloadActionSubscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?) {
+  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager) {
     self.contentId = contentId
     self.repository = repository
     self.downloadAction = downloadAction
     self.syncAction = syncAction
+    self.messageBus = messageBus
+    self.settingsManager = settingsManager
   }
   
   func initialiseIfRequired() {
@@ -102,16 +108,16 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         }
       }
       .receive(on: RunLoop.main)
-      .sink(receiveCompletion: { completion in
+      .sink(receiveCompletion: { [weak self] completion in
         if case .failure(let error) = completion {
-          MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+          self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
         }
-      }) { result in
+      }) { [weak self] result in
         switch result {
         case .downloadRequestedSuccessfully:
-          MessageBus.current.post(message: Message(level: .success, message: .downloadRequestedSuccessfully))
+          self?.messageBus.post(message: Message(level: .success, message: .downloadRequestedSuccessfully))
         case .downloadRequestedButQueueInactive:
-          MessageBus.current.post(message: Message(level: .warning, message: .downloadRequestedButQueueInactive))
+          self?.messageBus.post(message: Message(level: .warning, message: .downloadRequestedButQueueInactive))
         }
       }
       .store(in: &downloadActionSubscriptions)
@@ -119,12 +125,12 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     case .enqueued, .inProgress:
       downloadAction.cancelDownload(contentId: contentId)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { completion in
+        .sink(receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
-            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
           }
-        }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: .downloadCancelled))
+        }) { [weak self] _ in
+          self?.messageBus.post(message: Message(level: .success, message: .downloadCancelled))
         }
         .store(in: &downloadActionSubscriptions)
       
@@ -138,12 +144,12 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         
         self.downloadAction.deleteDownload(contentId: self.contentId)
           .receive(on: RunLoop.main)
-          .sink(receiveCompletion: { completion in
+          .sink(receiveCompletion: { [weak self] completion in
             if case .failure(let error) = completion {
-              MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+              self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
             }
-          }) { _ in
-            MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
+          }) { [weak self] _ in
+            self?.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
           }
           .store(in: &self.downloadActionSubscriptions)
       }
@@ -151,12 +157,12 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     case .notDownloadable:
       downloadAction.cancelDownload(contentId: contentId)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { completion in
+        .sink(receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
-            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
           }
-        }) { _ in
-          MessageBus.current.post(message: Message(level: .warning, message: .downloadReset))
+        }) { [weak self] _ in
+          self?.messageBus.post(message: Message(level: .warning, message: .downloadReset))
         }
         .store(in: &downloadActionSubscriptions)
     }
@@ -170,9 +176,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: .bookmarkDeleted))
+        messageBus.post(message: Message(level: .success, message: .bookmarkDeleted))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: .bookmarkDeletedError))
+        messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete bookmark: \(error)")
           .log()
@@ -180,9 +186,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: .bookmarkCreated))
+        messageBus.post(message: Message(level: .success, message: .bookmarkCreated))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: .bookmarkCreatedError))
+        messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to create bookmark: \(error)")
           .log()
@@ -197,9 +203,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if case .completed = viewProgress {
       do {
         try syncAction.removeProgress(for: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: .progressRemoved))
+        messageBus.post(message: Message(level: .success, message: .progressRemoved))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: .progressRemovedError))
+        messageBus.post(message: Message(level: .error, message: .progressRemovedError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete progress: \(error)")
           .log()
@@ -207,9 +213,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.markContentAsComplete(contentId: contentId)
-        MessageBus.current.post(message: Message(level: .success, message: .progressMarkedAsComplete))
+        messageBus.post(message: Message(level: .success, message: .progressMarkedAsComplete))
       } catch {
-        MessageBus.current.post(message: Message(level: .error, message: .progressMarkedAsCompleteError))
+        messageBus.post(message: Message(level: .error, message: .progressMarkedAsCompleteError))
         Failure
           .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to mark as complete: \(error)")
           .log()
@@ -226,6 +232,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       videosService: videosService,
       contentsService: contentsService,
       syncAction: syncAction,
+      sessionController: sessionController,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
       dismissClosure: dismissClosure
     )
   }

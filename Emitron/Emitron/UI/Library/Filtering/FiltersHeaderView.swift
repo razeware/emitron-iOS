@@ -114,12 +114,12 @@ struct FilterGroupView_Previews: PreviewProvider {
     return VStack {
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .difficulties, filters: filters),
-        filters: Filters(),
+        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager),
         isExpanded: true
       )
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .categories, filters: filters),
-        filters: Filters()
+        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager)
       )
     }
       .padding()

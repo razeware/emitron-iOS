@@ -333,6 +333,7 @@
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
+		D3D9C5C72645DA9A002FD479 /* EmitronApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -682,6 +683,7 @@
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
+		D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1474,6 +1476,7 @@
 				22B8265E23AF5B3400D4BA23 /* Data */,
 				22BFE75D23DACEC000495BA9 /* Data Synchronisation */,
 				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
+				D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */,
 				B6D7DC3422C79745006DD325 /* Assets.xcassets */,
 				223DECF1240989430017F7CA /* App Icons */,
 				22D177032350748E0038333D /* Configuration */,
@@ -2046,6 +2049,7 @@
 				2278AE48240A4BBC00855221 /* IconView.swift in Sources */,
 				B6419BB322EF5622003AC14E /* Logger.swift in Sources */,
 				223D77A523B06FFA005BE95D /* AttachmentAdapter.swift in Sources */,
+				D3D9C5C72645DA9A002FD479 /* EmitronApp.swift in Sources */,
 				223D77B523B0C0CA005BE95D /* Domain.swift in Sources */,
 				223D77B723B0C0D1005BE95D /* Group.swift in Sources */,
 				B6D8EB2722CBA86000DE29AF /* ProgressionsRequest.swift in Sources */,
@@ -2364,7 +2368,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -2512,7 +2516,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2568,7 +2572,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 13.4;
+				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;

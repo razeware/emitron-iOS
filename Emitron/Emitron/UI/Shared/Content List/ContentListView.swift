@@ -48,6 +48,7 @@ struct ContentListView<Header: View> {
   private let header: Header
 
   @State private var deleteSubscriptions: Set<AnyCancellable> = []
+  @EnvironmentObject private var messageBus: MessageBus
 }
 
 // MARK: - View
@@ -235,10 +236,10 @@ private extension ContentListView {
             Failure
               .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
               .log()
-            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
           }
-        }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
+        }) {  _ in
+          self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
         }
         .store(in: &deleteSubscriptions)
     }

@@ -61,27 +61,26 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
     UISwitch.appearance().onTintColor = .accent
     
     // Use a UIHostingController as window root view controller
-    if let windowScene = scene as? UIWindowScene {
-      let window = UIWindow(windowScene: windowScene)
-      
+//    if let windowScene = scene as? UIWindowScene {
+//      let window = UIWindow(windowScene: windowScene)
       // We grab this from the App Delegate, since it's needed there too
-      let sessionController = SessionController.current
-      let dataManager = DataManager.current
-      let mainView = MainView()
-        .environmentObject(sessionController)
-        .environmentObject(dataManager)
-      if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
-        NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
-      }
-
-      window.rootViewController = PortraitHostingController(rootView: mainView)
-      self.window = window
-      window.rootViewController?.view.backgroundColor = .backgroundColor
-      // TODO: When a modifier is available this should be refactored
-      window.tintColor = .accent
-      
-      window.makeKeyAndVisible()
-    }
+//      let sessionController = SessionController.current
+//      let dataManager = DataManager.current
+//      let mainView = MainView()
+//        .environmentObject(sessionController)
+//        .environmentObject(dataManager)
+//      if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
+//        NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+//      }
+//
+//      window.rootViewController = PortraitHostingController(rootView: mainView)
+//      self.window = window
+//      window.rootViewController?.view.backgroundColor = .backgroundColor
+//      // TODO: When a modifier is available this should be refactored
+//      window.tintColor = .accent
+//      
+//      window.makeKeyAndVisible()
+//
   }
 
   func sceneDidDisconnect(_ scene: UIScene) {
@@ -103,7 +102,7 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
 
   func sceneWillEnterForeground(_ scene: UIScene) {
     // Request Permissions if necessary
-    SessionController.current.fetchPermissionsIfNeeded()
+    // SessionController.current.fetchPermissionsIfNeeded()
   }
 
   func sceneDidEnterBackground(_ scene: UIScene) {
