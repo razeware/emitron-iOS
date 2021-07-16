@@ -207,7 +207,7 @@ class DownloadQueueManagerTest: XCTestCase {
     let download2 = try samplePersistedDownload(state: .enqueued)
     _ = try samplePersistedDownload(state: .enqueued)
     
-    let queue = try wait(for: recorder.next(4), timeout: 15)
+    let queue = try wait(for: recorder.next(4), timeout: 30)
     XCTAssertEqual([
       [],                     // Empty to start
       [download1],            // d1 Enqueued
