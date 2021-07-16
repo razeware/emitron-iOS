@@ -212,7 +212,7 @@ private extension ContentListView {
     if contentRepository.totalContentNum > contentRepository.contents.count {
         HStack {
           Spacer()
-          ActivityIndicator()
+          ProgressView().scaleEffect(1.0, anchor: .center)
           Spacer()
         }.padding()
         .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))

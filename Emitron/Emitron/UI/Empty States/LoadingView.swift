@@ -31,7 +31,7 @@ import SwiftUI
 struct LoadingView: View {
   var body: some View {
     VStack {
-      ActivityIndicator()
+      ProgressView().scaleEffect(1.0, anchor: .center)
         .padding([.bottom], 10)
       Text(String.loading)
         .font(.uiHeadline)
