@@ -83,7 +83,7 @@ public class Guardpost: ObservableObject {
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
-    let returnURL = "\(urlScheme)sessions/create"
+    let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
                                          secret: ssoSecret,
                                          callbackURL: returnURL)
