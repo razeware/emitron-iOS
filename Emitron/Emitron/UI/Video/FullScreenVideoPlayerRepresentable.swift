@@ -30,9 +30,10 @@ import SwiftUI
 
 struct FullScreenVideoPlayerRepresentable: UIViewControllerRepresentable {
   @Binding var viewModel: VideoPlaybackViewModel?
-  
+  let messageBus: MessageBus
+
   func makeUIViewController(context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) -> FullScreenVideoPlayerViewController {
-    .init(viewModel: $viewModel)
+    .init(viewModel: $viewModel, messageBus: messageBus)
   }
   
   func updateUIViewController(_ uiViewController: FullScreenVideoPlayerViewController, context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) {

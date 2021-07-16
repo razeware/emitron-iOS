@@ -30,57 +30,29 @@ import SwiftUI
 
 extension Font {
   static var uiLargeTitle: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
-    } else {
-      return Font.custom("Bitter-Bold", size: UIFontMetrics.default.scaledValue(for: 34.0))
-    }
+    Font.custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
   }
   static var uiTitle1: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 28.0, relativeTo: .title)
-    } else {
-      return Font.custom("Bitter-Bold", size: 28.0)
-    }
+    Font.custom("Bitter-Bold", size: 28.0, relativeTo: .title)
   }
   static var uiTitle2: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
-    } else {
-      return Font.custom("Bitter-Bold", size: 23.0)
-    }
+    Font.custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
   }
   static var uiTitle3: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
-    } else {
-      return Font.custom("Bitter-Bold", size: 20.0)
-    }
+    Font.custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
   }
   static var uiTitle4: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
-    } else {
-      return Font.custom("Bitter-Bold", size: 19.0)
-    }
+    Font.custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
   }
   static var uiTitle5: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Regular", size: 17.0, relativeTo: .body)
-    } else {
-      return Font.custom("Bitter-Regular", size: 17.0)
-    }
+    Font.custom("Bitter-Regular", size: 17.0, relativeTo: .body)
   }
   static var uiHeadline: Font {
     Font.system(size: UIFontMetrics.default.scaledValue(for: 18.0)).weight(.semibold)
   }
   
   static var uiNumberBox: Font {
-    if #available(iOS 14, *) {
-      return Font.custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
-    } else {
-      return Font.custom("Bitter-Bold", size: 13.0)
-    }
+    Font.custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
   }
 
   static var uiBodyAppleDefault: Font {

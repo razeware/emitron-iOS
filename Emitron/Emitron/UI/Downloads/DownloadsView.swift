@@ -29,6 +29,7 @@
 import SwiftUI
 
 struct DownloadsView: View {
+  @EnvironmentObject var downloadService: DownloadService
   @State var contentScreen: ContentScreen
   @ObservedObject var downloadRepository: DownloadRepository
 
@@ -39,7 +40,7 @@ struct DownloadsView: View {
 
   private var contentView: some View {
     ContentListView(contentRepository: downloadRepository,
-                    downloadAction: DownloadService.current,
+                    downloadAction: downloadService,
                     contentScreen: contentScreen)
   }
 }

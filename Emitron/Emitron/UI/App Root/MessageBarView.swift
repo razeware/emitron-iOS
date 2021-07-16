@@ -58,18 +58,17 @@ struct MessageBarView_Previews: PreviewProvider {
     messageBus.post(message: Message(level: .warning, message: "This is a warning"))
     
     return VStack {
-      Button(action: {
+      Button {
         messageBus.messageVisible.toggle()
-      }) {
+      } label: {
         Text("Show/Hide")
       }
-      
-      Button(action: {
+
+      Button {
         messageBus.post(message: Message(level: .success, message: "Button clicked!"))
-      }) {
+      } label: {
         Text("Post new message")
       }
-      
       MessageBarView(messageBus: messageBus)
     }
   }

@@ -36,24 +36,23 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
     VStack(spacing: 0) {
       ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
         VStack(spacing: 0) {
-          Button(action: {
+          Button {
             settingsOption = option
-          }) {
+          } label: {
             HStack {
               Text(option.display)
                 .font(.uiBodyAppleDefault)
                 .foregroundColor(.titleText)
                 .padding([.vertical], SettingsLayout.rowSpacing)
-            
+
               Spacer()
-              
+
               if option == settingsOption {
                 Image.checkmark
                   .foregroundColor(.iconButton)
               }
             }
           }
-          
           Rectangle()
             .fill(Color.separator)
             .frame(height: 1)

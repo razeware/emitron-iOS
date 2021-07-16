@@ -36,14 +36,20 @@ final class DownloadRepository: ContentRepository {
   init(repository: Repository,
        contentsService: ContentsService,
        downloadService: DownloadService,
-       syncAction: SyncAction) {
+       syncAction: SyncAction,
+       messageBus: MessageBus,
+       settingsManager: SettingsManager,
+       sessionController: SessionController) {
     self.downloadService = downloadService
     // Don't need the repository or the service adapter
     super.init(repository: repository,
                contentsService: contentsService,
                downloadAction: downloadService,
                syncAction: syncAction,
-               serviceAdapter: nil)
+               serviceAdapter: nil,
+               messageBus: messageBus,
+               settingsManager: settingsManager,
+               sessionController: sessionController)
   }
   
   override func loadMore() {
@@ -62,7 +68,10 @@ final class DownloadRepository: ContentRepository {
       parentContentId: contentId,
       downloadAction: downloadService,
       syncAction: syncAction,
-      repository: repository
+      repository: repository,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
     )
   }
   

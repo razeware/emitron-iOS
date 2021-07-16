@@ -50,13 +50,13 @@ struct FiltersView: View {
           .foregroundColor(.titleText)
         
         Spacer()
-        
-        Button(action: {
+
+        Button {
           if Set(libraryRepository.nonPaginationParameters) != Set(filters.appliedParameters) {
             revertBackToPreviousFilters()
           }
           presentationMode.wrappedValue.dismiss()
-        }) {
+        } label: {
           Image.close
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)

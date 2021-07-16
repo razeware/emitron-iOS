@@ -33,9 +33,11 @@ import SwiftUI
 class FullScreenVideoPlayerViewController: UIViewController {
   @Binding var viewModel: VideoPlaybackViewModel?
   private var isFullscreen = false
+  private let messageBus: MessageBus
   
-  init(viewModel: Binding<VideoPlaybackViewModel?>) {
+  init(viewModel: Binding<VideoPlaybackViewModel?>, messageBus: MessageBus) {
     _viewModel = viewModel
+    self.messageBus = messageBus
     super.init(nibName: nil, bundle: nil)
     
     self.viewModel?.reloadIfRequired()
@@ -66,7 +68,7 @@ extension FullScreenVideoPlayerViewController {
       try viewModel?.verifyCanPlay()
     } catch {
       if let viewModelError = error as? VideoPlaybackViewModel.Error {
-        MessageBus.current.post(
+        messageBus.post(
           message: Message(
             level: viewModelError.messageLevel,
             message: viewModelError.localizedDescription,

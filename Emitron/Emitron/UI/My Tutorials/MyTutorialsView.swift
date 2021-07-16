@@ -78,6 +78,7 @@ struct MyTutorialView {
   // I think this is a bug.
   @EnvironmentObject private var sessionController: SessionController
   @EnvironmentObject private var tabViewModel: TabViewModel
+  @EnvironmentObject private var downloadService: DownloadService
   
   private let inProgressRepository: InProgressRepository
   private let completedRepository: CompletedRepository
@@ -157,7 +158,7 @@ private extension MyTutorialView {
     
     return ContentListView(
       contentRepository: contentRepository,
-      downloadAction: DownloadService.current,
+      downloadAction: downloadService,
       contentScreen: ContentScreen.inProgress,
       header: toggleControl
     )

@@ -29,14 +29,14 @@
 import SwiftUI
 
 struct IconChooserView: View {
-  @ObservedObject var iconManager = IconManager.current
+  @EnvironmentObject var iconManager: IconManager
   
   var body: some View {
     HStack {
       ForEach(iconManager.icons) { icon in
-        Button(action: {
+        Button {
           iconManager.set(icon: icon)
-        }) {
+        } label: {
           IconView(icon: icon, selected: iconManager.currentIcon == icon)
         }
       }

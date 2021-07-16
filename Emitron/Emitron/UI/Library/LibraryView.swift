@@ -36,6 +36,7 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
+  @EnvironmentObject private var downloadService: DownloadService
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented = false
@@ -80,15 +81,15 @@ struct LibraryView: View {
       
       Spacer()
 
-      Button(action: {
+      Button {
         filtersPresented = true
-      }, label: {
+      } label: {
         Image("filter")
           .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
-      })
-        .accessibility(label: Text("Filter Library"))
-        .padding([.horizontal], .searchFilterPadding)
+      }
+      .accessibility(label: Text("Filter Library"))
+      .padding([.horizontal], .searchFilterPadding)
     }
   }
 
@@ -100,7 +101,9 @@ struct LibraryView: View {
 
       Spacer()
 
-      Button(action: changeSort) {
+      Button {
+        changeSort()
+      } label: {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
@@ -159,7 +162,7 @@ struct LibraryView: View {
   private var contentView: some View {
     ContentListView(
       contentRepository: libraryRepository,
-      downloadAction: DownloadService.current,
+      downloadAction: downloadService,
       contentScreen: .library,
       header: contentControlsSection
     )

@@ -45,6 +45,7 @@ struct ContentDetailView {
   @ObservedObject private var dynamicContentViewModel: DynamicContentViewModel
 
   @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var messageBus: MessageBus
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
@@ -57,7 +58,7 @@ extension ContentDetailView: View {
       contentView
       
       if currentlyDisplayedVideoPlaybackViewModel != nil {
-        FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel)
+        FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel, messageBus: messageBus)
       }
     }
   }
@@ -114,14 +115,14 @@ private extension ContentDetailView {
   var maxImageHeight: CGFloat { 384 }
   
   var continueOrPlayButton: some View {
-    Button(action: {
+    Button {
       currentlyDisplayedVideoPlaybackViewModel = dynamicContentViewModel.videoPlaybackViewModel(
         apiClient: sessionController.client,
         dismissClosure: {
           currentlyDisplayedVideoPlaybackViewModel = nil
         }
       )
-    }) {
+    } label: {
       if case .hasData = childContentsViewModel.state {
         if case .inProgress = dynamicContentViewModel.viewProgress {
           ContinueButtonView()
