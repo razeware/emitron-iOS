@@ -155,7 +155,7 @@ final class ProgressEngine {
     }
   }
   
-  private func updateCacheWithProgress(for contentId: Int, progress: Int, target: Int? = nil) -> Progression {
+  @discardableResult private func updateCacheWithProgress(for contentId: Int, progress: Int, target: Int? = nil) -> Progression {
     let content = repository.content(for: contentId)
     let progression: Progression
     
@@ -180,10 +180,7 @@ final class ProgressEngine {
     if progression.finished,
       let parentContent = repository.parentContent(for: contentId),
       let childProgress = repository.childProgress(for: parentContent.id) {
-      
-      _ = updateCacheWithProgress(for: parentContent.id,
-                                  progress: childProgress.completed,
-                                  target: childProgress.total)
+      updateCacheWithProgress(for: parentContent.id, progress: childProgress.completed, target: childProgress.total)
     }
     
     return progression
