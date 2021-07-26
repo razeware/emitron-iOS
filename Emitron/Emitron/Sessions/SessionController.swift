@@ -32,7 +32,7 @@ import Combine
 import Network
 
 // This protocol is added to aid testing (of DownloadService). It is not
-// currently necesarily complete. It should probably be revisited,
+// currently necessarily complete. It should probably be revisited,
 // and rethought at a later stage. I'll put // TODO: here so that we might
 // find it again.
 protocol UserModelController {

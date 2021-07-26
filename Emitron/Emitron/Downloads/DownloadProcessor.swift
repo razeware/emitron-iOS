@@ -74,7 +74,7 @@ enum DownloadProcessorError: Error {
   case unknownDownload
 }
 
-// Manage a list of files to download—either queued, in progresss, paused or failed.
+// Manage a list of files to download—either queued, in progress, paused or failed.
 final class DownloadProcessor: NSObject {
   static let sessionIdentifier = "com.razeware.emitron.DownloadProcessor"
   static let sdBitrate = 250_000

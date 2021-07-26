@@ -375,7 +375,7 @@ extension DownloadService {
       try persistenceStore.update(download: download)
     } catch {
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue donwload: \(error)")
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue download: \(error)")
         .log()
     }
   }
