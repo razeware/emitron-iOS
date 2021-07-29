@@ -47,8 +47,8 @@ struct IconChooserView: View {
 struct IconChooserView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      iconChooser.colorScheme(.dark)
-      iconChooser.colorScheme(.light)
+      iconChooser.preferredColorScheme(.dark)
+      iconChooser.preferredColorScheme(.light)
     }
   }
     

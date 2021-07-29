@@ -42,8 +42,8 @@ struct ProTag: View {
 struct ProTag_Previews: PreviewProvider {
   static var previews: some View {
     VStack(spacing: 10) {
-      proTag.colorScheme(.light)
-      proTag.colorScheme(.dark)
+      proTag.preferredColorScheme(.light)
+      proTag.preferredColorScheme(.dark)
     }
   }
   

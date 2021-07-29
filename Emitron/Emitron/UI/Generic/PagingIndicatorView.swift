@@ -47,8 +47,8 @@ struct PagingIndicatorView: View {
 struct PagingIndicatorView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      pagers.colorScheme(.dark)
-      pagers.colorScheme(.light)
+      pagers.preferredColorScheme(.dark)
+      pagers.preferredColorScheme(.light)
     }
   }
   

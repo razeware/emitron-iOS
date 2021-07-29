@@ -62,8 +62,8 @@ struct CircularProgressBar: View {
 struct CircularProgressIndicator_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      progressViews.colorScheme(.dark)
-      progressViews.colorScheme(.light)
+      progressViews.preferredColorScheme(.dark)
+      progressViews.preferredColorScheme(.light)
     }
   }
   

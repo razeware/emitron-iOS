@@ -42,8 +42,8 @@ struct LockedIconView: View {
 struct LockedIconView_Previews: PreviewProvider {
   static var previews: some View {
     HStack {
-      padlock.colorScheme(.dark)
-      padlock.colorScheme(.light)
+      padlock.preferredColorScheme(.dark)
+      padlock.preferredColorScheme(.light)
     }
   }
   

@@ -75,8 +75,8 @@ struct ToggleControlView: View {
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      tabs.colorScheme(.light)
-      tabs.colorScheme(.dark)
+      tabs.preferredColorScheme(.light)
+      tabs.preferredColorScheme(.dark)
     }
   }
   

@@ -52,8 +52,8 @@ struct SettingsToggleRow: View {
 struct SettingsToggleRow_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      rows.colorScheme(.dark)
-      rows.colorScheme(.light)
+      rows.preferredColorScheme(.dark)
+      rows.preferredColorScheme(.light)
     }
   }
   

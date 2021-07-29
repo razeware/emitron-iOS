@@ -76,8 +76,8 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
 struct SettingsSelectionView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      view.colorScheme(.dark)
-      view.colorScheme(.light)
+      view.preferredColorScheme(.dark)
+      view.preferredColorScheme(.light)
     }
   }
   

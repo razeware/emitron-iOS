@@ -37,8 +37,8 @@ struct PlayButtonView: View {
 struct PlayButtonView_Previews: PreviewProvider {
   static var previews: some View {
     HStack {
-      button.colorScheme(.dark)
-      button.colorScheme(.light)
+      button.preferredColorScheme(.dark)
+      button.preferredColorScheme(.light)
     }
   }
   

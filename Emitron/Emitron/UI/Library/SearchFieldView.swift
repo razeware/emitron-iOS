@@ -94,8 +94,8 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    searchFields.colorScheme(.light)
-    searchFields.colorScheme(.dark)
+    searchFields.preferredColorScheme(.light)
+    searchFields.preferredColorScheme(.dark)
   }
   
   private static var searchFields: some View {

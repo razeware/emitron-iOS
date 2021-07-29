@@ -168,9 +168,9 @@ struct MockDynamicContentDisplayable: DynamicContentDisplayable {
 struct CardView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      list.colorScheme(.dark)
+      list.preferredColorScheme(.dark)
       
-      list.colorScheme(.light)
+      list.preferredColorScheme(.light)
     }
   }
   

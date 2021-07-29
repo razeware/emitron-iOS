@@ -119,8 +119,8 @@ struct MainButtonView: View {
 struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      buttons.colorScheme(.light)
-      buttons.colorScheme(.dark)
+      buttons.preferredColorScheme(.light)
+      buttons.preferredColorScheme(.dark)
     }
   }
   

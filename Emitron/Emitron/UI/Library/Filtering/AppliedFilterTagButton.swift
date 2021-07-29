@@ -113,8 +113,8 @@ struct AppliedFilterTagButton: View {
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      tags.colorScheme(.dark)
-      tags.colorScheme(.light)
+      tags.preferredColorScheme(.dark)
+      tags.preferredColorScheme(.light)
     }
   }
   

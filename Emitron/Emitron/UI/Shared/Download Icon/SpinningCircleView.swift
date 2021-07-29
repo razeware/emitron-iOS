@@ -98,8 +98,8 @@ struct SpinningCircleView: View {
 struct SpinningCircleView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      spinners.colorScheme(.dark)
-      spinners.colorScheme(.light)
+      spinners.preferredColorScheme(.dark)
+      spinners.preferredColorScheme(.light)
     }
   }
   

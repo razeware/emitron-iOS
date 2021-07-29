@@ -42,8 +42,8 @@ struct DownloadWarningView: View {
 struct DownloadWarningView_Previews: PreviewProvider {
   static var previews: some View {
     HStack {
-      icon.colorScheme(.dark)
-      icon.colorScheme(.light)
+      icon.preferredColorScheme(.dark)
+      icon.preferredColorScheme(.light)
     }
   }
   

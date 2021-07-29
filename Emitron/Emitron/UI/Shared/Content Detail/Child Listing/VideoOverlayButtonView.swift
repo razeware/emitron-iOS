@@ -77,8 +77,8 @@ struct VideoOverlayButtonView: View {
 struct VideoOverlayButtonView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      buttons.colorScheme(.dark)
-      buttons.colorScheme(.light)
+      buttons.preferredColorScheme(.dark)
+      buttons.preferredColorScheme(.light)
     }
   }
   

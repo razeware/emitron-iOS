@@ -57,8 +57,8 @@ struct LicenseDetailView_Previews: PreviewProvider {
   
   static var previews: some View {
     SwiftUI.Group {
-      LicenseDetailView(license: license).colorScheme(.light)
-      LicenseDetailView(license: license).colorScheme(.dark)
+      LicenseDetailView(license: license).preferredColorScheme(.light)
+      LicenseDetailView(license: license).preferredColorScheme(.dark)
     }
   }
 }

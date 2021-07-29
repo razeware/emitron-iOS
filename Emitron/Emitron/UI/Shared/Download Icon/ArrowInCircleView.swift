@@ -43,8 +43,8 @@ struct ArrowInCircleView: View {
 struct ArrowInCircleView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      circles.colorScheme(.dark)
-      circles.colorScheme(.light)
+      circles.preferredColorScheme(.dark)
+      circles.preferredColorScheme(.light)
     }
   }
   

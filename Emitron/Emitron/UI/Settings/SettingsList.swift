@@ -44,8 +44,8 @@ extension SettingsList: View {
 
 struct SettingsList_Previews: PreviewProvider {
   static var previews: some View {
-    list.colorScheme(.dark)
-    list.colorScheme(.light)
+    list.preferredColorScheme(.dark)
+    list.preferredColorScheme(.light)
   }
 
   static var list: some View {

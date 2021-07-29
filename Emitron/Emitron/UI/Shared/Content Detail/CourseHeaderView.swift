@@ -53,8 +53,8 @@ struct CourseHeaderView: View {
 struct CourseHeaderView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      headers.colorScheme(.light)
-      headers.colorScheme(.dark)
+      headers.preferredColorScheme(.light)
+      headers.preferredColorScheme(.dark)
     }
   }
   

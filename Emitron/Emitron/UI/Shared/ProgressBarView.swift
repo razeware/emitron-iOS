@@ -67,8 +67,8 @@ struct ProgressBarView: View {
 struct ProgressBarView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      bars.colorScheme(.light)
-      bars.colorScheme(.dark)
+      bars.preferredColorScheme(.light)
+      bars.preferredColorScheme(.dark)
     }
   }
   

@@ -101,8 +101,8 @@ struct FiltersHeaderView: View {
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
-      filters.colorScheme(.dark)
-      filters.colorScheme(.light)
+      filters.preferredColorScheme(.dark)
+      filters.preferredColorScheme(.light)
     }
   }
   

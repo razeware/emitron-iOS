@@ -45,8 +45,8 @@ extension DownloadIcon: View {
 
 struct DownloadIcon_Previews: PreviewProvider {
   static var previews: some View {
-    selectionList.colorScheme(.light)
-    selectionList.colorScheme(.dark)
+    selectionList.preferredColorScheme(.light)
+    selectionList.preferredColorScheme(.dark)
   }
   
   private static var selectionList: some View {
