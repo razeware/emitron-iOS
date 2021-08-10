@@ -44,40 +44,47 @@ struct ReloadView<Header: View> {
 // MARK: - View {
 extension ReloadView: View {
   var body: some View {
-    VStack {
-      header
-      
-      Spacer()
-      
-      Image("emojiCrying")
-        .padding(.bottom, 30)
-      
-      Text("Something went wrong.")
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], 20)
-      
-      Text("Please try again.")
-        .lineSpacing(8)
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 20)
-      
-      Spacer()
-      
-      MainButtonView(
-        title: "Reload",
-        type: .primary(withArrow: false),
-        callback: reloadHandler)
-        .padding([.horizontal, .bottom], 20)
+    ZStack {
+      Rectangle()
+        .fill(Color.backgroundColor)
+        .edgesIgnoringSafeArea(.all)
+      VStack {
+        header
+        Spacer()
+
+        Image("emojiCrying")
+          .padding(.bottom, 30)
+
+        Text("Something went wrong.")
+          .font(.uiTitle2)
+          .foregroundColor(.titleText)
+          .multilineTextAlignment(.center)
+          .padding([.leading, .trailing, .bottom], 20)
+
+        Text("Please try again.")
+          .lineSpacing(8)
+          .font(.uiLabel)
+          .foregroundColor(.contentText)
+          .multilineTextAlignment(.center)
+          .padding([.leading, .trailing], 20)
+
+        Spacer()
+
+        MainButtonView(
+          title: "Reload",
+          type: .primary(withArrow: false),
+          callback: reloadHandler)
+          .padding([.horizontal, .bottom], 20)
+      }
     }
   }
 }
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    ReloadView(header: EmptyView(), reloadHandler: {})
+    SwiftUI.Group {
+      ReloadView(header: EmptyView(), reloadHandler: {}).colorScheme(.light)
+      ReloadView(header: EmptyView(), reloadHandler: {}).colorScheme(.dark)
+    }
   }
 }

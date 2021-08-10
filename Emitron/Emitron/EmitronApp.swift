@@ -74,15 +74,20 @@ struct EmitronApp: App {
 
   var body: some Scene {
     WindowGroup {
-      MainView()
-        .environmentObject(sessionController)
-        .environmentObject(dataManager)
-        .environmentObject(downloadService)
-        .environmentObject(iconManager)
-        .environmentObject(messageBus)
-        .environmentObject(persistenceStore)
-        .environmentObject(guardpost)
-        .environmentObject(settingsManager)
+      ZStack {
+        Rectangle()
+          .fill(Color.backgroundColor)
+          .edgesIgnoringSafeArea(.all)
+        MainView()
+          .environmentObject(sessionController)
+          .environmentObject(dataManager)
+          .environmentObject(downloadService)
+          .environmentObject(iconManager)
+          .environmentObject(messageBus)
+          .environmentObject(persistenceStore)
+          .environmentObject(guardpost)
+          .environmentObject(settingsManager)
+      }
     }
   }
 
