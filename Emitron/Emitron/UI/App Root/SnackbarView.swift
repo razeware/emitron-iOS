@@ -64,16 +64,17 @@ struct SnackbarView: View {
         .animation(.none)
       
       Spacer()
-      
-      Button(action: {
+
+      Button {
         withAnimation {
           visible.toggle()
         }
-      }) {
+      } label: {
         Image.closeWhite
           .resizable()
           .frame(width: 18, height: 18)
-      }.foregroundColor(.snackText)
+      }
+      .foregroundColor(.snackText)
     }
     .padding()
     .background(state.status.color)

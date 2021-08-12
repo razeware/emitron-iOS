@@ -56,9 +56,9 @@ struct LicenseListView: View {
   }
   
   var dismissButton: some View {
-    Button(action: {
+    Button {
       visible.toggle()
-    }) {
+    } label: {
       Image.close
         .foregroundColor(.iconButton)
     }
