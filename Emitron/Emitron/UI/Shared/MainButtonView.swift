@@ -67,9 +67,9 @@ struct MainButtonView: View {
   var callback: () -> Void
   
   var body: some View {
-    Button(action: {
+    Button {
       callback()
-    }) {
+    } label: {
       HStack {
         ZStack(alignment: .center) {
           HStack {

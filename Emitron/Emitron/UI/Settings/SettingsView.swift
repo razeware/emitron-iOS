@@ -37,8 +37,12 @@ enum SettingsLayout {
 struct SettingsView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
-  @ObservedObject private var settingsManager = SettingsManager.current
+  @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
+
+  init(settingsManager: SettingsManager) {
+    self.settingsManager = settingsManager
+  }
   
   var body: some View {
       VStack {
@@ -62,16 +66,16 @@ struct SettingsView: View {
         .padding([.horizontal], 20)
         
         Spacer()
-        
-        Button(action: {
+
+        Button {
           licensesPresented.toggle()
-        }) {
+        } label: {
           Text("Software Licenses")
         }
-          .sheet(isPresented: $licensesPresented) {
+        .sheet(isPresented: $licensesPresented) {
             LicenseListView(visible: $licensesPresented)
-          }
-          .padding([.bottom], 25)
+        }
+        .padding([.bottom], 25)
         
           VStack {
             if sessionController.user != nil {
@@ -94,6 +98,7 @@ struct SettingsView: View {
 
 #if DEBUG
 struct SettingsView_Previews: PreviewProvider {
+
   static var previews: some View {
     SwiftUI.Group {
       settingsView.preferredColorScheme(.dark)
@@ -102,9 +107,9 @@ struct SettingsView_Previews: PreviewProvider {
   }
 
   static var settingsView: some View {
-    SettingsView()
+    SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
       .background(Color.backgroundColor)
-      .environmentObject(SessionController.current)
+      .environmentObject(EmitronApp.emitronObjects().sessionController)
   }
 }
 #endif
