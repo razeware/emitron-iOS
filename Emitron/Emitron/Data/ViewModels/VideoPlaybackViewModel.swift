@@ -107,27 +107,33 @@ final class VideoPlaybackViewModel {
   private var currentItemStateSubscription: AnyCancellable?
 
   let player = AVQueuePlayer()
+  let messageBus: MessageBus
   private var playerTimeObserverToken: Any?
   var state: DataState = .initial
   private var shouldBePlaying = false
+  let settingsManager: SettingsManager
   
   init(contentId: Int,
        repository: Repository,
        videosService: VideosService,
        contentsService: ContentsService,
        syncAction: SyncAction?,
-       sessionController: SessionController = .current,
+       sessionController: SessionController,
+       messageBus: MessageBus,
+       settingsManager: SettingsManager,
        dismissClosure: @escaping () -> Void = { }) {
     initialContentId = contentId
     self.repository = repository
     self.videosService = videosService
     self.contentsService = contentsService
+    self.settingsManager = settingsManager
     progressEngine = ProgressEngine(
       contentsService: contentsService,
       repository: repository,
       syncAction: syncAction
     )
     self.sessionController = sessionController
+    self.messageBus = messageBus
     dismiss = dismissClosure
     
     prepareSubscribers()
@@ -231,10 +237,10 @@ private extension VideoPlaybackViewModel {
         self?.shouldBePlaying = rate == 0
         
         guard let self = self,
-          ![0, SettingsManager.current.playbackSpeed.rate].contains(rate)
+              ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
           else { return }
         
-        self.player.rate = SettingsManager.current.playbackSpeed.rate
+        self.player.rate = self.settingsManager.playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
@@ -257,7 +263,7 @@ private extension VideoPlaybackViewModel {
       }
       .store(in: &subscriptions)
     
-    SettingsManager.current
+    settingsManager
       .playbackSpeedPublisher
       .removeDuplicates()
       .sink { [weak self] playbackSpeed in
@@ -265,7 +271,7 @@ private extension VideoPlaybackViewModel {
       }
       .store(in: &subscriptions)
     
-    SettingsManager.current
+    settingsManager
       .closedCaptionOnPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
@@ -297,7 +303,7 @@ private extension VideoPlaybackViewModel {
         
         if case .failure(let error) = completion {
           if case .simultaneousStreamsNotAllowed = error {
-            MessageBus.current.post(message: Message(level: .error, message: .simultaneousStreamsError))
+            self.messageBus.post(message: Message(level: .error, message: .simultaneousStreamsError))
             self.player.pause()
           }
           Failure
@@ -420,7 +426,7 @@ private extension VideoPlaybackViewModel {
       let locale = Locale(identifier: "en")
       let options =
         AVMediaSelectionGroup.mediaSelectionOptions(from: group.options, with: locale)
-      if let option = options.first, SettingsManager.current.closedCaptionOn {
+      if let option = options.first, settingsManager.closedCaptionOn {
         playerItem.select(option, in: group)
       } else {
         playerItem.select(nil, in: group)

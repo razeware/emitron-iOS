@@ -46,38 +46,43 @@ struct NoResultsView<Header: View> {
 // MARK: - View
 extension NoResultsView: View {
   var body: some View {
-    VStack {
-      header
-      
-      Spacer()
+    ZStack {
+      Rectangle()
+        .fill(Color.backgroundColor)
+        .edgesIgnoringSafeArea(.all)
+      VStack {
+        header
 
-      Image(contentScreen.emptyImageName)
-        .padding([.bottom], 30)
+        Spacer()
 
-      Text(contentScreen.titleMessage)
-        .font(.uiTitle2)
-        .foregroundColor(.titleText)
-        .multilineTextAlignment(.center)
-        .padding([.bottom], 20)
-        .padding([.leading, .trailing], 20)
+        Image(contentScreen.emptyImageName)
+          .padding([.bottom], 30)
 
-      Text(contentScreen.detailMesage)
-        .lineSpacing(5)
-        .font(.uiLabel)
-        .foregroundColor(.contentText)
-        .multilineTextAlignment(.center)
-        .padding([.bottom], 20)
-        .padding([.leading, .trailing], 20)
-      
-      Spacer()
-      
-      if contentScreen.showExploreButton {
-        MainButtonView(
-          title: "Explore Tutorials",
-          type: .primary(withArrow: true)) {
-            tabViewModel.selectedTab = .library
+        Text(contentScreen.titleMessage)
+          .font(.uiTitle2)
+          .foregroundColor(.titleText)
+          .multilineTextAlignment(.center)
+          .padding([.bottom], 20)
+          .padding([.leading, .trailing], 20)
+
+        Text(contentScreen.detailMesage)
+          .lineSpacing(5)
+          .font(.uiLabel)
+          .foregroundColor(.contentText)
+          .multilineTextAlignment(.center)
+          .padding([.bottom], 20)
+          .padding([.leading, .trailing], 20)
+
+        Spacer()
+
+        if contentScreen.showExploreButton {
+          MainButtonView(
+            title: "Explore Tutorials",
+            type: .primary(withArrow: true)) {
+              tabViewModel.selectedTab = .library
+          }
+          .padding([.horizontal, .bottom], 20)
         }
-        .padding([.horizontal, .bottom], 20)
       }
     }
   }
@@ -85,12 +90,20 @@ extension NoResultsView: View {
 
 struct NoResultsView_Previews: PreviewProvider {
   static var previews: some View {
-    NoResultsView(contentScreen: .bookmarked)
-    NoResultsView(contentScreen: .completed)
-    NoResultsView(contentScreen: .downloads(permitted: true))
-    NoResultsView(contentScreen: .downloads(permitted: false))
-    NoResultsView(contentScreen: .inProgress)
-    NoResultsView(contentScreen: .library)
+    SwiftUI.Group {
+      NoResultsView(contentScreen: .bookmarked).colorScheme(.light)
+      NoResultsView(contentScreen: .bookmarked).colorScheme(.dark)
+      NoResultsView(contentScreen: .completed).colorScheme(.light)
+      NoResultsView(contentScreen: .completed).colorScheme(.dark)
+      NoResultsView(contentScreen: .downloads(permitted: true)).colorScheme(.light)
+      NoResultsView(contentScreen: .downloads(permitted: true)).colorScheme(.dark)
+      NoResultsView(contentScreen: .downloads(permitted: false)).colorScheme(.light)
+      NoResultsView(contentScreen: .downloads(permitted: false)).colorScheme(.dark)
+      NoResultsView(contentScreen: .inProgress).colorScheme(.light)
+      NoResultsView(contentScreen: .inProgress).colorScheme(.dark)
+    }
+    NoResultsView(contentScreen: .library).colorScheme(.light)
+    NoResultsView(contentScreen: .library).colorScheme(.dark)
   }
 }
 
