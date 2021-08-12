@@ -31,26 +31,28 @@ import Combine
 
 class IconManager: ObservableObject {
   private(set) var icons = [Icon]()
+  let messageBus: MessageBus
   @Published private(set) var currentIcon: Icon?
   
-  init() {
-    populateIcons()
+  init(messageBus: MessageBus) {
       
     let currentIconName = UIApplication.shared.alternateIconName
-    currentIcon = icons.first { $0.name == currentIconName }!
+    currentIcon = icons.first { $0.name == currentIconName }
+    self.messageBus = messageBus
+    populateIcons()
   }
   
   func set(icon: Icon) {
     UIApplication.shared.setAlternateIconName(icon.name) { error in
-      DispatchQueue.main.async {
+      DispatchQueue.main.async { 
         if let error = error {
           Failure
             .appIcon(from: String(describing: type(of: self)), reason: error.localizedDescription)
             .log()
-          MessageBus.current.post(message: Message(level: .error, message: .appIconUpdateProblem))
+          self.messageBus.post(message: Message(level: .error, message: .appIconUpdateProblem))
         } else {
           self.currentIcon = icon
-          MessageBus.current.post(message: Message(level: .success, message: .appIconUpdatedSuccessfully))
+          self.messageBus.post(message: Message(level: .success, message: .appIconUpdatedSuccessfully))
         }
       }
     }

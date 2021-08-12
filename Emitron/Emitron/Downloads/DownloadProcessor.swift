@@ -79,7 +79,14 @@ final class DownloadProcessor: NSObject {
   static let sessionIdentifier = "com.razeware.emitron.DownloadProcessor"
   static let sdBitrate = 250_000
   private var downloadQuality: Attachment.Kind {
-    SettingsManager.current.downloadQuality
+    settingsManager.downloadQuality
+  }
+  private let settingsManager: SettingsManager
+
+  init(settingsManager: SettingsManager) {
+    self.settingsManager = settingsManager
+    super.init()
+    populateDownloadListFromSession()
   }
   
   private lazy var session: AVAssetDownloadURLSession = {
@@ -94,11 +101,6 @@ final class DownloadProcessor: NSObject {
   private var currentDownloads = [AVAssetDownloadTask]()
   private var throttleList = [UUID: Double]()
   weak var delegate: DownloadProcessorDelegate!
-  
-  override init() {
-    super.init()
-    populateDownloadListFromSession()
-  }
 }
 
 extension DownloadProcessor {
