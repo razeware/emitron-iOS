@@ -50,7 +50,7 @@ enum PersistenceMocks {
             ordinal: 0)
   }
   
-  static func download(for content: Content) -> Download {
+  @discardableResult static func download(for content: Content) -> Download {
     Download(id: UUID(),
              requestedAt: Date(),
              state: .pending,
