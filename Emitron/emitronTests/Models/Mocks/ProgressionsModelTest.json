@@ -1298,7 +1298,7 @@
       "attributes":{
         "uri":"rw://betamax/videos/1294",
         "name":"Performance Testing",
-        "description":"Sometimes you'll want to test how well a method preforms and for that, you use a special unit test: a performance test.",
+        "description":"Sometimes you'll want to test how well a method performs and for that, you use a special unit test: a performance test.",
         "released_at":"2018-01-02T16:00:00.000Z",
         "free":false,
         "difficulty":"intermediate",

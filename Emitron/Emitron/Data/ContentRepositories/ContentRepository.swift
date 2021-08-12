@@ -55,7 +55,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private var contentIds: [Int] = []
   private var contentSubscription: AnyCancellable?
-  // Provide a value for this in a subclass to subscribe to invalidation notifcations
+  // Provide a value for this in a subclass to subscribe to invalidation notifications
   var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
   private var invalidationSubscription: AnyCancellable?
   
