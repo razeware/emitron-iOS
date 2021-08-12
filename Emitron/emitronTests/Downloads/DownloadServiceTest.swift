@@ -249,7 +249,7 @@ class DownloadServiceTest: XCTestCase {
       try collection.save(db)
     }
     
-    // Confirm the chnage was persisted
+    // Confirm the change was persisted
     try database.read { db in
       let updatedCollection = try Content.fetchOne(db, key: collection.id)
       XCTAssertEqual(newDuration, updatedCollection!.duration)

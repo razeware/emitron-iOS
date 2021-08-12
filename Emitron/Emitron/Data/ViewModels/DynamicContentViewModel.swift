@@ -103,7 +103,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
           return try self.repository.contentPersistableState(for: contentId)
         } catch {
           Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate presistable state in cache:  \(error)")
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate persistable state in cache:  \(error)")
             .log()
           return nil
         }

@@ -369,7 +369,7 @@ private extension VideoPlaybackViewModel {
           // Append it to the end of the player queue
           self.player.insert(playerItem, after: nil)
         }
-        // Move the curent content item pointer
+        // Move the current content item pointer
         self.nextContentToEnqueueIndex += 1
       }
       .store(in: &subscriptions)

@@ -111,7 +111,7 @@ extension PersistenceStore {
     .publisher(in: db)
   }
   
-  /// Returns a pubisher representing the download queue over time
+  /// Returns a publisher representing the download queue over time
   /// - Parameter max: The maximum length of the queue
   func downloadQueue(withMaxLength max: Int) -> DatabasePublishers.Value<[DownloadQueueItem]> {
     ValueObservation.tracking { db -> [DownloadQueueItem] in
@@ -338,7 +338,7 @@ extension PersistenceStore {
     }
   }
 
-  /// Save the entire graph of models to supprt this ContentDeailsModel
+  /// Save the entire graph of models to support this ContentDeailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.
   func persistContentGraph(for contentPersistableState: ContentPersistableState, contentLookup: ContentLookup? = nil) -> Future<Void, Error> {
     Future { promise in
@@ -404,7 +404,7 @@ extension PersistenceStore {
   private func persistContentItem(for contentPersistableState: ContentPersistableState, inDatabase db: Database, withChildren: Bool = false, withParent: Bool = false, contentLookup: ContentLookup? = nil) throws {
     
     // 1. Need to do parent first—we need foreign key
-    //    contraints on the groupId for child content
+    //    constraints on the groupId for child content
     if withParent,
       let parentContent = contentPersistableState.parentContent,
       let contentLookup = contentLookup,

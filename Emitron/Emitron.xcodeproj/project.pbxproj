@@ -943,13 +943,6 @@
 			path = Displayable;
 			sourceTree = "<group>";
 		};
-		2256709E240AF3FD00BD05AE /* Frameworks */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Frameworks;
-			sourceTree = "<group>";
-		};
 		225670A8240AFD3100BD05AE /* emitronScreenshots */ = {
 			isa = PBXGroup;
 			children = (
@@ -1450,7 +1443,6 @@
 				22D176BE23460A060038333D /* emitronTests */,
 				225670A8240AFD3100BD05AE /* emitronScreenshots */,
 				B6D7DC2C22C79743006DD325 /* Products */,
-				2256709E240AF3FD00BD05AE /* Frameworks */,
 			);
 			indentWidth = 2;
 			sourceTree = "<group>";
