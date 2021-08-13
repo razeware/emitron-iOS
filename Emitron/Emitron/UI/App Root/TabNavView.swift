@@ -35,6 +35,7 @@ struct TabNavView<
   SettingsView: View
 >: View {
   @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject var settingsManager: SettingsManager
   let libraryView: LibraryView
   let myTutorialsView: MyTutorialsView
   let downloadsView: DownloadsView

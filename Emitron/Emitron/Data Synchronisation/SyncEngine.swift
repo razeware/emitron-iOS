@@ -335,7 +335,7 @@ extension SyncEngine: SyncAction {
     // 1. Create / update sync request
     try persistenceStore.markContentAsCompleteSyncRequest(for: contentId)
     
-    // 2. Create cache update and pass to respository
+    // 2. Create cache update and pass to repository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
     if var existingProgression = repository.progression(for: contentId) {
@@ -365,7 +365,7 @@ extension SyncEngine: SyncAction {
     // 1. Create / update sync request
     try persistenceStore.updateProgressSyncRequest(for: contentId, progress: progress)
     
-    // 2. Create cache update and pass to respository
+    // 2. Create cache update and pass to repository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
     if var existingProgression = repository.progression(for: contentId) {
@@ -397,7 +397,7 @@ extension SyncEngine: SyncAction {
     // 1. Create / update sync request
     try persistenceStore.removeProgressSyncRequest(for: contentId, progressionId: progression.id)
     
-    // 2. Create cache update and pass to respository
+    // 2. Create cache update and pass to repository
     let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [contentId])
     repository.apply(update: cacheUpdate)
     

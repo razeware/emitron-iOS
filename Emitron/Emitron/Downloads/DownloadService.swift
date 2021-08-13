@@ -30,7 +30,7 @@ import Combine
 import Foundation
 import Network
 
-final class DownloadService {
+final class DownloadService: ObservableObject {
   enum Status {
     case active
     case inactive
@@ -50,7 +50,7 @@ final class DownloadService {
   private let videosServiceProvider: VideosService.Provider
   private var videosService: VideosService?
   private let queueManager: DownloadQueueManager
-  private let downloadProcessor = DownloadProcessor()
+  private let downloadProcessor: DownloadProcessor
   private var processingSubscriptions = Set<AnyCancellable>()
   
   private let networkMonitor = NWPathMonitor()
@@ -59,7 +59,7 @@ final class DownloadService {
   private var downloadQueueSubscription: AnyCancellable?
   
   private var downloadQuality: Attachment.Kind {
-    SettingsManager.current.downloadQuality
+   settingsManager.downloadQuality
   }
   private lazy var downloadsDirectory: URL = {
     let fileManager = FileManager.default
@@ -79,13 +79,17 @@ final class DownloadService {
       downloadProcessor.backgroundSessionCompletionHandler = newValue
     }
   }
+
+  let settingsManager: SettingsManager
   
   // MARK: Initialisers
-  init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none) {
+  init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none, settingsManager: SettingsManager) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
+    downloadProcessor = DownloadProcessor(settingsManager: settingsManager)
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
+    self.settingsManager = settingsManager
     userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       self?.stopProcessing()
       self?.checkPermissions()
@@ -199,7 +203,7 @@ extension DownloadService: DownloadAction {
     let currentlyDownloading = downloads.filter { $0.isDownloading }
     let notYetDownloading = downloads.filter { !$0.isDownloading }
     
-    return Future { promise in
+    return Future<Void, Error> { promise in
       do {
         // It's in the download process, so let's ask it to cancel it.
         // The delegate callback will handle deleting the value in
@@ -210,7 +214,7 @@ extension DownloadService: DownloadAction {
         promise(.failure(error))
       }
     }
-    .flatMap {
+    .flatMap { _ in
       // Don't have it in the processor, so we just need to
       // delete the download model
       self.persistenceStore
@@ -239,7 +243,7 @@ extension DownloadService: DownloadAction {
       try? persistenceStore.download(forContentId: $0)
     }
     
-    return Future { promise in
+    return Future<Void, Error> { promise in
       do {
         // 2. Delete the file from disk
         try downloads
@@ -375,7 +379,7 @@ extension DownloadService {
       try persistenceStore.update(download: download)
     } catch {
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue donwload: \(error)")
+        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue download: \(error)")
         .log()
     }
   }
@@ -535,7 +539,7 @@ extension DownloadService {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
     
     // Track the status of the wifi downloads setting
-    settingsSubscription = SettingsManager.current
+    settingsSubscription = settingsManager
       .wifiOnlyDownloadsPublisher
       .removeDuplicates()
       .sink(receiveValue: { [weak self] _ in
@@ -548,7 +552,7 @@ extension DownloadService {
       guard let self = self else { return }
       
       let expensive = self.networkMonitor.currentPath.isExpensive
-      let allowedExpensive = !SettingsManager.current.wifiOnlyDownloads
+      let allowedExpensive = self.settingsManager.wifiOnlyDownloads
       self.status = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
       
       switch self.status {
