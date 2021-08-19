@@ -42,17 +42,18 @@ protocol UserModelController {
 }
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject, Refreshable {
-  // MARK: Refreshable
-  var refreshableCheckTimeSpan: RefreshableTimeSpan = .short
-  
+final class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject {
   private var subscriptions = Set<AnyCancellable>()
 
   // Managing the state of the current session
-  private(set) var sessionState: SessionState = .unknown
+  @Published private(set) var sessionState: SessionState = .unknown
   @Published private(set) var userState: UserState = .notLoggedIn
   @Published private(set) var permissionState: PermissionState = .notLoaded
   
+  // MARK: - ObservablePrePostFactoObject, UserModelController
+  let objectDidChange = ObservableObjectPublisher()
+
+  // MARK: - ObservablePrePostFactoObject
   @PublishedPrePostFacto var user: User? {
     didSet {
       if let user = user {
@@ -69,11 +70,13 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
       }
     }
   }
-  let objectDidChange = ObservableObjectPublisher()
-  
+
+  private(set) var client: RWAPI
+
+  // MARK: -
+
   private let guardpost: Guardpost
   private let connectionMonitor = NWPathMonitor()
-  private(set) var client: RWAPI
   private(set) var permissionsService: PermissionsService
   
   var isLoggedIn: Bool {
@@ -231,6 +234,11 @@ class SessionController: NSObject, UserModelController, ObservablePrePostFactoOb
     }
     connectionMonitor.start(queue: .main)
   }
+}
+
+// MARK: - Refreshable
+extension SessionController: Refreshable {
+  var refreshableCheckTimeSpan: RefreshableTimeSpan { .short }
 }
 
 // MARK: - ASWebAuthenticationPresentationContextProviding
