@@ -140,8 +140,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
           case .failure(let error):
             self.userState = .notLoggedIn
             self.permissionState = .notLoaded
-            // Have to manually do this since we're not allowed @Published with enums
-            self.objectWillChange.send()
+
             Failure
               .login(from: "SessionController", reason: error.localizedDescription)
               .log()
