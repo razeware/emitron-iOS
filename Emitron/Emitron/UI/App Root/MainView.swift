@@ -63,14 +63,27 @@ private extension MainView {
   @ViewBuilder var contentView: some View {
     if !sessionController.isLoggedIn {
       LoginView()
-    } else if case .loaded = sessionController.permissionState {
-      if sessionController.hasPermissionToUseApp {
-        tabBarView
-      } else {
-        LogoutView()
-      }
     } else {
-      PermissionsLoadingView()
+      switch sessionController.permissionState {
+      case .loaded:
+        if sessionController.hasPermissionToUseApp {
+          tabBarView
+        } else {
+          LogoutView()
+        }
+      case .notLoaded, .loading:
+        PermissionsLoadingView()
+      case .error:
+        ErrorView(
+          titleText: "An error occurred",
+          bodyText: """
+            We’re sorry! We failed to fetch the correct permissions and now you’re seeing this screen. \
+            To fix this problem, click the button below.
+            """,
+          buttonTitle: "Back to login screen",
+          buttonAction: sessionController.logout
+        )
+      }
     }
   }
   
