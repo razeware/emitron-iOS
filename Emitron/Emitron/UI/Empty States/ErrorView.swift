@@ -28,21 +28,49 @@
 
 import SwiftUI
 
-struct ReloadView<Header: View> {
+struct ErrorView<Header: View> {
+  private let header: Header
+  private let titleText: String
+  private let bodyText: String
+  private let buttonTitle: String
+  private let buttonAction: () -> Void
+}
+
+// MARK: - internal
+extension ErrorView {
   init(
     header: Header,
-    reloadHandler: @escaping () -> Void
+    buttonAction: @escaping () -> Void
   ) {
-    self.header = header
-    self.reloadHandler = reloadHandler
+    self.init(
+      header: header,
+      titleText: "Something went wrong.",
+      bodyText: "Please try again.",
+      buttonTitle: "Reload",
+      buttonAction: buttonAction
+    )
   }
+}
 
-  private let header: Header
-  private let reloadHandler: () -> Void
+extension ErrorView where Header == EmptyView {
+  init(
+    titleText: String,
+    bodyText: String,
+    buttonTitle: String,
+    buttonAction: @escaping () -> Void
+  ) {
+    self.init(
+      header: .init(),
+      titleText: titleText,
+      bodyText: bodyText,
+      buttonTitle: buttonTitle,
+      buttonAction: buttonAction
+    )
+  }
 }
 
 // MARK: - View {
-extension ReloadView: View {
+extension ErrorView: View {
   var body: some View {
     ZStack {
       Rectangle()
@@ -55,13 +83,13 @@ extension ReloadView: View {
         Image("emojiCrying")
           .padding(.bottom, 30)
 
-        Text("Something went wrong.")
+        Text(titleText)
           .font(.uiTitle2)
           .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
           .padding([.leading, .trailing, .bottom], 20)
 
-        Text("Please try again.")
+        Text(bodyText)
           .lineSpacing(8)
           .font(.uiLabel)
           .foregroundColor(.contentText)
@@ -71,9 +99,9 @@ extension ReloadView: View {
         Spacer()
 
         MainButtonView(
-          title: "Reload",
+          title: buttonTitle,
           type: .primary(withArrow: false),
-          callback: reloadHandler)
+          callback: buttonAction)
           .padding([.horizontal, .bottom], 20)
       }
     }
@@ -82,9 +110,13 @@ extension ReloadView: View {
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      ReloadView(header: EmptyView(), reloadHandler: {}).colorScheme(.light)
-      ReloadView(header: EmptyView(), reloadHandler: {}).colorScheme(.dark)
-    }
+    ErrorView().colorScheme(.light)
+    ErrorView().colorScheme(.dark)
+  }
+}
+
+private extension ErrorView where Header == EmptyView {
+  init() {
+    self.init(header: .init()) { }
   }
 }
