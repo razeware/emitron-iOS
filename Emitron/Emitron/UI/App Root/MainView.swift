@@ -30,10 +30,10 @@ import SwiftUI
 import StoreKit
 
 struct MainView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var dataManager: DataManager
-  @EnvironmentObject var messageBus: MessageBus
-  @EnvironmentObject var settingsManager: SettingsManager
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var dataManager: DataManager
+  @EnvironmentObject private var messageBus: MessageBus
+  @EnvironmentObject private var settingsManager: SettingsManager
 
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
