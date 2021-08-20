@@ -36,12 +36,15 @@ final class DataManager: ObservableObject {
   let persistenceStore: PersistenceStore
   let downloadService: DownloadService
   let sessionController: SessionController
+  let messageBus: MessageBus
+  let settingsManager: SettingsManager
+
   private (set) var sessionControllerSubscription: AnyCancellable!
 
   // Persisted information
   private (set) var domainRepository: DomainRepository!
   private (set) var categoryRepository: CategoryRepository!
-  var filters = Filters()
+  var filters: Filters
   
   // Cached data
   var dataCache = DataCache()
@@ -63,11 +66,16 @@ final class DataManager: ObservableObject {
   // MARK: - Initializers
   init(sessionController: SessionController,
        persistenceStore: PersistenceStore,
-       downloadService: DownloadService) {
+       downloadService: DownloadService,
+       messageBus: MessageBus,
+       settingsManager: SettingsManager) {
     
     self.downloadService = downloadService
     self.persistenceStore = persistenceStore
     self.sessionController = sessionController
+    self.messageBus = messageBus
+    self.settingsManager = settingsManager
+    self.filters = Filters(settingsManager: settingsManager)
     
     sessionControllerSubscription = sessionController.objectWillChange.sink { [weak self] in
       guard let self = self else { return }
@@ -83,7 +91,7 @@ final class DataManager: ObservableObject {
     
     // Empty the caches
     dataCache = DataCache()
-    filters = Filters()
+    filters = Filters(settingsManager: settingsManager)
     
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
@@ -103,14 +111,14 @@ final class DataManager: ObservableObject {
       watchStatsService: watchStatsService
     )
     
-    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService)
+    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
   
-    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
-    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService)
+    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService)
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     
-    downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine)
+    downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     
     domainRepository = DomainRepository(repository: repository, service: domainsService)
     domainsSubscriber = domainRepository.$domains.sink { domains in
