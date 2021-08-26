@@ -225,7 +225,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    _ = PersistenceMocks.download(for: collection)
+    PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in
@@ -253,7 +253,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    _ = PersistenceMocks.download(for: collection)
+    PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
@@ -281,7 +281,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    _ = PersistenceMocks.download(for: collection)
+    PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes[0..<10].map(PersistenceMocks.download)
     
     try database.write { db in
@@ -309,7 +309,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let collection = try populateSampleCollection()
     let episodes = getAllContents().filter { $0.id != collection.id }
     
-    _ = PersistenceMocks.download(for: collection)
+    PersistenceMocks.download(for: collection)
     let episodeDownloads = episodes.map(PersistenceMocks.download)
     
     try database.write { db in

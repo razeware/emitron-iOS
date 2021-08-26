@@ -33,12 +33,18 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
        downloadAction: DownloadAction,
        syncAction: SyncAction?,
        repository: Repository,
-       service: ContentsService) {
+       service: ContentsService,
+       messageBus: MessageBus,
+       settingsManager: SettingsManager,
+       sessionController: SessionController) {
     self.service = service
     super.init(parentContentId: parentContentId,
                downloadAction: downloadAction,
                syncAction: syncAction,
-               repository: repository)
+               repository: repository,
+               messageBus: messageBus,
+               settingsManager: settingsManager,
+               sessionController: sessionController)
   }
   
   override func loadContentDetailsIntoCache() {

@@ -88,7 +88,7 @@ extension DataCache {
     cacheUpdate.bookmarkDeletionContentIds.forEach { bookmarks.removeValue(forKey: $0) }
     cacheUpdate.progressionDeletionContentIds.forEach { progressions.removeValue(forKey: $0) }
     
-    // Send cach invalidations
+    // Send cache invalidations
     if !cacheUpdate.bookmarks.isEmpty || !cacheUpdate.bookmarkDeletionContentIds.isEmpty {
       cacheWasInvalidated.send(.bookmarks)
     }
