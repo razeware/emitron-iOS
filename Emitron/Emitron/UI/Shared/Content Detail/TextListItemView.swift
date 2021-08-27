@@ -108,7 +108,6 @@ struct TextListItemView: View {
     }
     return false
   }
-
 }
 
 // MARK: - private
