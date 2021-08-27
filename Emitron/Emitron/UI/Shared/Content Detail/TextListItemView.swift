@@ -38,8 +38,8 @@ extension CGFloat {
 struct TextListItemView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var settingsManager: SettingsManager
+  @EnvironmentObject var messageBus: MessageBus
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
-  @State private var isPresented = false
   
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   var content: ChildContentListDisplayable
@@ -79,7 +79,7 @@ struct TextListItemView: View {
               DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
                 .onTapGesture {
                   if wifiOnlyOnCellular() {
-                    isPresented = true
+                    messageBus.post(message: Message(level: .error, message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."))
                   } else {
                     download()
                   }
@@ -91,9 +91,6 @@ struct TextListItemView: View {
           }
         }
         progressBar
-      }
-      .alert(isPresented: $isPresented) {
-        Alert(title: Text("Wifi Only Downloads Enabled"), message: Text("To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."))
       }
     }
   }
