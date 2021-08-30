@@ -75,11 +75,6 @@ private extension MainView {
         PermissionsLoadingView()
       case .error:
         ErrorView(
-          titleText: "An error occurred",
-          bodyText: """
-            We’re sorry! We failed to fetch the correct permissions and now you’re seeing this screen. \
-            To fix this problem, click the button below.
-            """,
           buttonTitle: "Back to login screen",
           buttonAction: sessionController.logout
         )

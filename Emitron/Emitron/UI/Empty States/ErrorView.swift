@@ -30,8 +30,8 @@ import SwiftUI
 
 struct ErrorView<Header: View> {
   private let header: Header
-  private let titleText: String
-  private let bodyText: String
+  private let titleText = "Something went wrong."
+  private let bodyText = "Please try again."
   private let buttonTitle: String
   private let buttonAction: () -> Void
 }
@@ -44,8 +44,6 @@ extension ErrorView {
   ) {
     self.init(
       header: header,
-      titleText: "Something went wrong.",
-      bodyText: "Please try again.",
       buttonTitle: "Reload",
       buttonAction: buttonAction
     )
@@ -54,15 +52,11 @@ extension ErrorView {
 
 extension ErrorView where Header == EmptyView {
   init(
-    titleText: String,
-    bodyText: String,
     buttonTitle: String,
     buttonAction: @escaping () -> Void
   ) {
     self.init(
       header: .init(),
-      titleText: titleText,
-      bodyText: bodyText,
       buttonTitle: buttonTitle,
       buttonAction: buttonAction
     )
