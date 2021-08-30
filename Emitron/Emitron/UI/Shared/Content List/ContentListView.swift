@@ -89,11 +89,9 @@ private extension ContentListView {
     }
   }
 
-  var listContentView: some View {
-    SwiftUI.Group {
-      cardsView
-      loadMoreView
-    }
+  @ViewBuilder var listContentView: some View {
+    cardsView
+    loadMoreView
   }
 
   var cardsView: some View {
