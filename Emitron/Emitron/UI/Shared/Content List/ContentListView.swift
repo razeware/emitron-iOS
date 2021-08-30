@@ -103,8 +103,15 @@ private extension ContentListView {
           model: partialContent,
           dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
-        
-        navLink(for: partialContent)
+
+        NavigationLink(
+          destination: ContentDetailView(
+            content: partialContent,
+            childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
+            dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
+          ),
+          label: EmptyView.init
+        )
           .opacity(0)
       }
     }
@@ -112,17 +119,6 @@ private extension ContentListView {
     .listRowInsets(EdgeInsets())
     .padding([.horizontal, .top], .sidePadding)
     .background(Color.backgroundColor)
-  }
-  
-  func navLink(for content: ContentListDisplayable) -> some View {
-    NavigationLink(
-      destination: ContentDetailView(
-        content: content,
-        childContentsViewModel: contentRepository.childContentsViewModel(for: content.id),
-        dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: content.id)
-      )) {
-      EmptyView()
-    }
   }
   
   var allowDelete: Bool {
