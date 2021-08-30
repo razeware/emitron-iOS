@@ -151,7 +151,6 @@ private extension ContentListView {
       .listRowInsets(EdgeInsets())
   }
 
-  @available(iOS 14, *)
   func makeSectionList<Content: View>(
     @ViewBuilder content: () -> Content
   ) -> some View {
