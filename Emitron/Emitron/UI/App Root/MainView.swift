@@ -30,10 +30,10 @@ import SwiftUI
 import StoreKit
 
 struct MainView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var dataManager: DataManager
-  @EnvironmentObject var messageBus: MessageBus
-  @EnvironmentObject var settingsManager: SettingsManager
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var dataManager: DataManager
+  @EnvironmentObject private var messageBus: MessageBus
+  @EnvironmentObject private var settingsManager: SettingsManager
 
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
@@ -63,14 +63,22 @@ private extension MainView {
   @ViewBuilder var contentView: some View {
     if !sessionController.isLoggedIn {
       LoginView()
-    } else if case .loaded = sessionController.permissionState {
-      if sessionController.hasPermissionToUseApp {
-        tabBarView
-      } else {
-        LogoutView()
-      }
     } else {
-      PermissionsLoadingView()
+      switch sessionController.permissionState {
+      case .loaded:
+        if sessionController.hasPermissionToUseApp {
+          tabBarView
+        } else {
+          LogoutView()
+        }
+      case .notLoaded, .loading:
+        PermissionsLoadingView()
+      case .error:
+        ErrorView(
+          buttonTitle: "Back to login screen",
+          buttonAction: sessionController.logout
+        )
+      }
     }
   }
   

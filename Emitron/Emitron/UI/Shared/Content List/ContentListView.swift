@@ -199,7 +199,7 @@ private extension ContentListView {
   var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
-      ReloadView(header: header, reloadHandler: contentRepository.reload)
+      ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
   
