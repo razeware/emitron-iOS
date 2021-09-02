@@ -12,7 +12,7 @@
 		2213193C23E47B6A00F15816 /* SessionController+States.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213193B23E47B6A00F15816 /* SessionController+States.swift */; };
 		2213193F23E4E85500F15816 /* NoResultsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213193E23E4E85500F15816 /* NoResultsView.swift */; };
 		2213194123E4E85F00F15816 /* OfflineView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194023E4E85F00F15816 /* OfflineView.swift */; };
-		2213194323E4E86900F15816 /* ReloadView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194223E4E86900F15816 /* ReloadView.swift */; };
+		2213194323E4E86900F15816 /* ErrorView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194223E4E86900F15816 /* ErrorView.swift */; };
 		2213194523E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194423E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift */; };
 		2213194723EAFBD700F15816 /* VerticalFadeImageView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2213194623EAFBD700F15816 /* VerticalFadeImageView.swift */; };
 		2213194923EB04D300F15816 /* sampleCardImage.png in Resources */ = {isa = PBXBuildFile; fileRef = 2213194823EB04D300F15816 /* sampleCardImage.png */; };
@@ -359,7 +359,7 @@
 		2213193B23E47B6A00F15816 /* SessionController+States.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SessionController+States.swift"; sourceTree = "<group>"; };
 		2213193E23E4E85500F15816 /* NoResultsView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NoResultsView.swift; sourceTree = "<group>"; };
 		2213194023E4E85F00F15816 /* OfflineView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = OfflineView.swift; sourceTree = "<group>"; };
-		2213194223E4E86900F15816 /* ReloadView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReloadView.swift; sourceTree = "<group>"; };
+		2213194223E4E86900F15816 /* ErrorView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ErrorView.swift; sourceTree = "<group>"; };
 		2213194423E864D800F15816 /* PersistenceStoreChildContentsViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PersistenceStoreChildContentsViewModel.swift; sourceTree = "<group>"; };
 		2213194623EAFBD700F15816 /* VerticalFadeImageView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VerticalFadeImageView.swift; sourceTree = "<group>"; };
 		2213194823EB04D300F15816 /* sampleCardImage.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = sampleCardImage.png; sourceTree = "<group>"; };
@@ -738,7 +738,7 @@
 			children = (
 				2213193E23E4E85500F15816 /* NoResultsView.swift */,
 				2213194023E4E85F00F15816 /* OfflineView.swift */,
-				2213194223E4E86900F15816 /* ReloadView.swift */,
+				2213194223E4E86900F15816 /* ErrorView.swift */,
 				22D39FC723EC0AEA0058599D /* LoadingView.swift */,
 			);
 			path = "Empty States";
@@ -2193,7 +2193,7 @@
 				B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */,
 				B6C4F3BD22E668FC0087ED10 /* FiltersView.swift in Sources */,
 				8BFCEF1F2341184A003FF72F /* PermissionsRequest.swift in Sources */,
-				2213194323E4E86900F15816 /* ReloadView.swift in Sources */,
+				2213194323E4E86900F15816 /* ErrorView.swift in Sources */,
 				B6FC15C322CB55CC0078CEDB /* JSONAPIRelationship.swift in Sources */,
 				229F0AB723BACC320004DD4F /* ContentSummaryState+Fetchable.swift in Sources */,
 				B6C4F3D722E6EE5B0087ED10 /* Filter.swift in Sources */,
