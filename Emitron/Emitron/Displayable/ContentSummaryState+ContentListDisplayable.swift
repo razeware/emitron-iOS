@@ -47,7 +47,7 @@ extension ContentSummaryState: ContentListDisplayable {
   }
   
   var descriptionPlainText: String {
-    content.descriptionPlainText
+    content.descriptionPlainText.replacingOccurrences(of: "\n", with: "")
   }
   
   var professional: Bool {
