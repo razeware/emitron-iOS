@@ -89,11 +89,9 @@ private extension ContentListView {
     }
   }
 
-  var listContentView: some View {
-    SwiftUI.Group {
-      cardsView
-      loadMoreView
-    }
+  @ViewBuilder var listContentView: some View {
+    cardsView
+    loadMoreView
   }
 
   var cardsView: some View {
@@ -103,28 +101,22 @@ private extension ContentListView {
           model: partialContent,
           dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
-        
-        navLink(for: partialContent)
-          .buttonStyle(PlainButtonStyle())
-          // HACK: to remove navigation chevrons
-          .padding(.trailing, -2 * .sidePadding)
+
+        NavigationLink(
+          destination: ContentDetailView(
+            content: partialContent,
+            childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
+            dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
+          ),
+          label: EmptyView.init
+        )
+          .opacity(0)
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
     .listRowInsets(EdgeInsets())
     .padding([.horizontal, .top], .sidePadding)
     .background(Color.backgroundColor)
-  }
-  
-  func navLink(for content: ContentListDisplayable) -> some View {
-    NavigationLink(
-      destination: ContentDetailView(
-        content: content,
-        childContentsViewModel: contentRepository.childContentsViewModel(for: content.id),
-        dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: content.id)
-      )) {
-      EmptyView()
-    }
   }
   
   var allowDelete: Bool {
@@ -157,7 +149,6 @@ private extension ContentListView {
       .listRowInsets(EdgeInsets())
   }
 
-  @available(iOS 14, *)
   func makeSectionList<Content: View>(
     @ViewBuilder content: () -> Content
   ) -> some View {
@@ -199,7 +190,7 @@ private extension ContentListView {
   var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
-      ReloadView(header: header, reloadHandler: contentRepository.reload)
+      ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
   

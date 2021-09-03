@@ -29,8 +29,8 @@
 import SwiftUI
 
 struct PermissionsLoadingView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @State var showLogoutAlert = false
+  @EnvironmentObject private var sessionController: SessionController
+  @State private var showLogoutAlert = false
   
   var body: some View {
     LoadingView()
@@ -40,9 +40,7 @@ struct PermissionsLoadingView: View {
     .alert(isPresented: $showLogoutAlert) {
       Alert(
         title: Text("Force Logout?"),
-        primaryButton: .destructive(Text("Logout"), action: {
-          sessionController.logout()
-        }),
+        primaryButton: .destructive(Text("Logout"), action: sessionController.logout),
         secondaryButton: .cancel()
       )
     }
