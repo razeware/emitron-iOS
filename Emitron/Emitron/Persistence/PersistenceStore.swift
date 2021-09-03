@@ -26,6 +26,7 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Combine
 import class Foundation.DispatchQueue
 import GRDB
 
@@ -35,7 +36,7 @@ enum PersistenceStoreError: Error {
 }
 
 // The object responsible for managing and accessing cached content
-final class PersistenceStore {
+final class PersistenceStore: ObservableObject {
   let db: DatabaseWriter
   let workerQueue = DispatchQueue(label: "com.razeware.emitron.persistence", qos: .background)
   

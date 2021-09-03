@@ -27,6 +27,7 @@
 // THE SOFTWARE.
 
 import AuthenticationServices
+import Combine
 
 public enum LoginError: Error {
   case unableToCreateLoginURL
@@ -52,7 +53,7 @@ public enum LoginError: Error {
   }
 }
 
-public class Guardpost {
+public class Guardpost: ObservableObject {
   // MARK: - Properties
   private let baseURL: String
   private let urlScheme: String
@@ -82,7 +83,7 @@ public class Guardpost {
 
   public func login(callback: @escaping (Result<User, LoginError>) -> Void) {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
-    let returnURL = "\(urlScheme)sessions/create"
+    let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(endpoint: guardpostLogin,
                                          secret: ssoSecret,
                                          callbackURL: returnURL)

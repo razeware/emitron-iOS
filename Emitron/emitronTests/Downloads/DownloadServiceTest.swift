@@ -36,6 +36,7 @@ class DownloadServiceTest: XCTestCase {
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
   private var userModelController: UserMCMock!
+  private var settingsManager: SettingsManager!
   
   override func setUp() {
     super.setUp()
@@ -43,9 +44,11 @@ class DownloadServiceTest: XCTestCase {
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     userModelController = .init(user: .withDownloads)
+    settingsManager = EmitronApp.emitronObjects().settingsManager
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in self.videoService },
+                                      settingsManager: settingsManager)
     
     // Check it's all empty
     XCTAssertEqual(0, getAllContents().count)
@@ -56,7 +59,7 @@ class DownloadServiceTest: XCTestCase {
     super.tearDown()
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
-    SettingsManager.current.resetAll()
+    EmitronApp.emitronObjects().settingsManager.resetAll()
   }
   
   func getAllContents() -> [Content] {
@@ -246,7 +249,7 @@ class DownloadServiceTest: XCTestCase {
       try collection.save(db)
     }
     
-    // Confirm the chnage was persisted
+    // Confirm the change was persisted
     try database.read { db in
       let updatedCollection = try Content.fetchOne(db, key: collection.id)
       XCTAssertEqual(newDuration, updatedCollection!.duration)
@@ -463,7 +466,8 @@ class DownloadServiceTest: XCTestCase {
     userModelController.user = .none
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in self.videoService },
+                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -484,9 +488,11 @@ class DownloadServiceTest: XCTestCase {
     let sampleFile = createSampleFile(fileManager: fileManager)
     
     userModelController.user = .noPermissions
+
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
-                                      videosServiceProvider: { _ in self.videoService })
+                                      videosServiceProvider: { _ in self.videoService },
+                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }

@@ -30,8 +30,11 @@ import SwiftUI
 import StoreKit
 
 struct MainView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var dataManager: DataManager
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var dataManager: DataManager
+  @EnvironmentObject private var messageBus: MessageBus
+  @EnvironmentObject private var settingsManager: SettingsManager
+
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
 
@@ -39,7 +42,7 @@ struct MainView: View {
     ZStack {
       contentView
         .background(Color.backgroundColor)
-        .overlay(MessageBarView(messageBus: MessageBus.current), alignment: .bottom)
+        .overlay(MessageBarView(messageBus: messageBus), alignment: .bottom)
         .onReceive(notification) { _ in
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             makeReviewRequest()
@@ -49,12 +52,8 @@ struct MainView: View {
   }
 
   private func makeReviewRequest() {
-    if #available(iOS 14.0, *) {
-      if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-        SKStoreReviewController.requestReview(in: scene)
-      }
-    } else {
-      SKStoreReviewController.requestReview()
+    if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+      SKStoreReviewController.requestReview(in: scene)
     }
   }
 }
@@ -64,14 +63,22 @@ private extension MainView {
   @ViewBuilder var contentView: some View {
     if !sessionController.isLoggedIn {
       LoginView()
-    } else if case .loaded = sessionController.permissionState {
-      if sessionController.hasPermissionToUseApp {
-        tabBarView
-      } else {
-        LogoutView()
-      }
     } else {
-      PermissionsLoadingView()
+      switch sessionController.permissionState {
+      case .loaded:
+        if sessionController.hasPermissionToUseApp {
+          tabBarView
+        } else {
+          LogoutView()
+        }
+      case .notLoaded, .loading:
+        PermissionsLoadingView()
+      case .error:
+        ErrorView(
+          buttonTitle: "Back to login screen",
+          buttonAction: sessionController.logout
+        )
+      }
     }
   }
   
@@ -80,8 +87,7 @@ private extension MainView {
       contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
       downloadRepository: dataManager.downloadRepository
     )
-    
-    let settingsView = SettingsView()
+    let settingsView = SettingsView(settingsManager: settingsManager)
 
     switch sessionController.sessionState {
     case .online :

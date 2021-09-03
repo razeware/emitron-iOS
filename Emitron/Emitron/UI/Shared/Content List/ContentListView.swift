@@ -48,6 +48,7 @@ struct ContentListView<Header: View> {
   private let header: Header
 
   @State private var deleteSubscriptions: Set<AnyCancellable> = []
+  @EnvironmentObject private var messageBus: MessageBus
 }
 
 // MARK: - View
@@ -88,11 +89,9 @@ private extension ContentListView {
     }
   }
 
-  var listContentView: some View {
-    SwiftUI.Group {
-      cardsView
-      loadMoreView
-    }
+  @ViewBuilder var listContentView: some View {
+    cardsView
+    loadMoreView
   }
 
   var cardsView: some View {
@@ -102,28 +101,22 @@ private extension ContentListView {
           model: partialContent,
           dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
-        
-        navLink(for: partialContent)
-          .buttonStyle(PlainButtonStyle())
-          // HACK: to remove navigation chevrons
-          .padding(.trailing, -2 * .sidePadding)
+
+        NavigationLink(
+          destination: ContentDetailView(
+            content: partialContent,
+            childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
+            dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
+          ),
+          label: EmptyView.init
+        )
+          .opacity(0)
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
     .listRowInsets(EdgeInsets())
     .padding([.horizontal, .top], .sidePadding)
     .background(Color.backgroundColor)
-  }
-  
-  func navLink(for content: ContentListDisplayable) -> some View {
-    NavigationLink(
-      destination: ContentDetailView(
-        content: content,
-        childContentsViewModel: contentRepository.childContentsViewModel(for: content.id),
-        dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: content.id)
-      )) {
-      EmptyView()
-    }
   }
   
   var allowDelete: Bool {
@@ -135,14 +128,8 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      if #available(iOS 14, *) {
-        makeSectionList {
-          listContentView
-        }
-      } else {
-        makeList {
-          listContentView
-        }
+      makeSectionList {
+        listContentView
       }
     }
       .if(!allowDelete) {
@@ -162,7 +149,6 @@ private extension ContentListView {
       .listRowInsets(EdgeInsets())
   }
 
-  @available(iOS 14, *)
   func makeSectionList<Content: View>(
     @ViewBuilder content: () -> Content
   ) -> some View {
@@ -204,7 +190,7 @@ private extension ContentListView {
   var reloadView: some View {
     ZStack {
       Color.backgroundColor.edgesIgnoringSafeArea(.all)
-      ReloadView(header: header, reloadHandler: contentRepository.reload)
+      ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
   
@@ -235,10 +221,10 @@ private extension ContentListView {
             Failure
               .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
               .log()
-            MessageBus.current.post(message: Message(level: .error, message: error.localizedDescription))
+            self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
           }
-        }) { _ in
-          MessageBus.current.post(message: Message(level: .success, message: .downloadDeleted))
+        }) {  _ in
+          self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
         }
         .store(in: &deleteSubscriptions)
     }
