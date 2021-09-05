@@ -110,10 +110,10 @@ private func tab<Content: View>(
 struct TabNavView_Previews: PreviewProvider {
   static var previews: some View {
     TabNavView(
-      libraryView: Text("LIBRARY"),
-      myTutorialsView: Text("MY TUTORIALS"),
-      downloadsView: Text("DOWNLOADS"),
-      settingsView: Text("SETTINGS")
+      libraryView: { Text("LIBRARY") },
+      myTutorialsView: { Text("MY TUTORIALS") },
+      downloadsView: { Text("DOWNLOADS") },
+      settingsView: { Text("SETTINGS") }
     ).environmentObject(TabViewModel())
   }
 }
