@@ -73,7 +73,7 @@ enum ParameterFilterValue {
   case contentTypes(types: [ContentType]) // An array containing ContentType strings
   case domainTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the domains you are interested in.
   case categoryTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numberical IDs of the categories you are interested in.
-  case difficulties(difficulties: [ContentDifficulty]) // An array populated with ContentDifficulty options
+  case difficulties([ContentDifficulty]) // An array populated with ContentDifficulty options
   case contentIds(ids: [Int])
   case queryString(string: String)
   case completionStatus(status: CompletionStatus)
