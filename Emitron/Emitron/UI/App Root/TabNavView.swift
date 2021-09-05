@@ -30,8 +30,8 @@ import SwiftUI
 
 struct TabNavView<
   LibraryView: View,
-  MyTutorialsView: View,
   DownloadsView: View,
+  MyTutorialsView: View,
   SettingsView: View
 > {
   init(
