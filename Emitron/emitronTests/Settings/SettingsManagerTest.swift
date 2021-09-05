@@ -118,7 +118,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.playbackSpeed = .threeQuarters
     settingsManager.playbackSpeed = .onePointTwoFive
     
-    let stream = try wait(for: recorder.next(6), timeout: 5)
+    let stream = try wait(for: recorder.next(6), timeout: 10)
     
     XCTAssertEqual([.double, .standard, .onePointFive, .half, .threeQuarters, .onePointTwoFive], stream)
   }
@@ -140,7 +140,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.closedCaptionOn = true
     settingsManager.closedCaptionOn = true
     
-    let stream = try wait(for: recorder.next(3), timeout: 5)
+    let stream = try wait(for: recorder.next(3), timeout: 10)
     
     XCTAssertEqual([false, true, true], stream)
   }
@@ -162,7 +162,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.downloadQuality = .sdVideoFile
     settingsManager.downloadQuality = .sdVideoFile
     
-    let stream = try wait(for: recorder.next(3), timeout: 5)
+    let stream = try wait(for: recorder.next(3), timeout: 10)
     
     XCTAssertEqual([.hdVideoFile, .sdVideoFile, .sdVideoFile], stream)
   }
@@ -184,7 +184,7 @@ class SettingsManagerTest: XCTestCase {
     settingsManager.wifiOnlyDownloads = false
     settingsManager.wifiOnlyDownloads = false
     
-    let stream = try wait(for: recorder.next(3), timeout: 5)
+    let stream = try wait(for: recorder.next(3), timeout: 10)
     
     XCTAssertEqual([true, false, false], stream)
   }

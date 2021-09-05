@@ -113,7 +113,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 5)
+    wait(for: [collectionExpectation], timeout: 10)
   }
   
   func testTransitionEpisodeToDownloadedUpdatesCollection() throws {
@@ -146,7 +146,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 5)
+    wait(for: [collectionExpectation], timeout: 10)
   }
   
   func testTransitionFinalEpisdeToDownloadedUpdatesCollection() throws {
@@ -184,7 +184,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 5)
+    wait(for: [collectionExpectation], timeout: 10)
   }
   
   func testTransitionNonFinalEpisodeToDownloadedUpdatesCollection() throws {
@@ -217,7 +217,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       collectionExpectation.fulfill()
     }
     
-    wait(for: [collectionExpectation], timeout: 5)
+    wait(for: [collectionExpectation], timeout: 10)
   }
   
   // MARK: - Collection Download Utilities
@@ -350,7 +350,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   private func createDownloads(for content: Content) throws {
     let recorder = persistenceStore.createDownloads(for: content).record()
     
-    let completion = try wait(for: recorder.completion, timeout: 5)
+    let completion = try wait(for: recorder.completion, timeout: 10)
     if case .failure = completion {
       XCTFail("Failed to create downloads")
     }
@@ -425,7 +425,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     
     let recorder = persistenceStore.downloadList().record()
     
-    let list = try wait(for: recorder.next(), timeout: 5)
+    let list = try wait(for: recorder.next(), timeout: 10)
     
     XCTAssertNotNil(list)
     
@@ -450,7 +450,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     // Will start with a nil
-    let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 5)
+    let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 10)
     
     XCTAssertEqual(0, inProgressQueue.filter { $0?.content.contentType == .collection }.count)
     XCTAssertEqual(episodes.map(\.id).sorted(), inProgressQueue.compactMap { $0?.content.id }.sorted())
@@ -471,7 +471,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: collectionDownload!.id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownloads[0].id, to: .inProgress)
     
-    let downloadQueue = try wait(for: recorder.next(3), timeout: 5)
+    let downloadQueue = try wait(for: recorder.next(3), timeout: 10)
     
     XCTAssertEqual(3, downloadQueue.count)
     XCTAssertEqual([], downloadQueue[0])
@@ -498,7 +498,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     try persistenceStore.transitionDownload(withId: episodeDownloads[3].id, to: .inProgress)
     try persistenceStore.transitionDownload(withId: episodeDownloads[2].id, to: .inProgress)
     
-    let downloadQueue = try wait(for: recorder.next(7), timeout: 5)
+    let downloadQueue = try wait(for: recorder.next(7), timeout: 10)
     
     XCTAssertEqual(7, downloadQueue.count)
     XCTAssertEqual([], downloadQueue[0])
