@@ -78,8 +78,9 @@ extension NoResultsView: View {
         if contentScreen.showExploreButton {
           MainButtonView(
             title: "Explore Tutorials",
-            type: .primary(withArrow: true)) {
-              tabViewModel.selectedTab = .library
+            type: .primary(withArrow: true)
+          ) {
+            tabViewModel.selectedTab = .library
           }
           .padding([.horizontal, .bottom], 20)
         }
