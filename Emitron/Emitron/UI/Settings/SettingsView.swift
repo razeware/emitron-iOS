@@ -39,61 +39,61 @@ struct SettingsView: View {
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
-
+  
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
   }
   
   var body: some View {
-      VStack {
-        SettingsList(
-          settingsManager: _settingsManager,
-          canDownload: sessionController.user?.canDownload ?? false
+    VStack {
+      SettingsList(
+        settingsManager: _settingsManager,
+        canDownload: sessionController.user?.canDownload ?? false
         
-        ).padding(.horizontal, 20)
-        Section(
-          header: HStack {
-            Text("App Icon")
-              .font(.uiTitle4)
-              .foregroundColor(.titleText)
-            
-            Spacer()
-          }
-            .padding(.top, 20)
-        ) {
-          IconChooserView()
+      ).padding(.horizontal, 20)
+      Section(
+        header: HStack {
+          Text("App Icon")
+            .font(.uiTitle4)
+            .foregroundColor(.titleText)
+          
+          Spacer()
         }
-        .padding(.horizontal, 20)
-        
-        Spacer()
-
-        Button {
-          licensesPresented.toggle()
-        } label: {
-          Text("Software Licenses")
-        }
-        .sheet(isPresented: $licensesPresented) {
-          LicenseListView(visible: $licensesPresented)
-        }
-        .padding([.bottom], 25)
-        
-        VStack {
-          if sessionController.user != nil {
-            Text("Logged in as \(sessionController.user?.username ?? "")")
-              .font(.uiCaption)
-              .foregroundColor(.contentText)
-          }
-          MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-              sessionController.logout()
-              tabViewModel.selectedTab = .library
-            }
-          }
-        }
-        .padding([.bottom, .horizontal], 18)
+          .padding(.top, 20)
+      ) {
+        IconChooserView()
       }
-      .navigationBarTitle(String.settings)
-      .background(Color.background.edgesIgnoringSafeArea(.all))
+      .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      Button {
+        licensesPresented.toggle()
+      } label: {
+        Text("Software Licenses")
+      }
+      .sheet(isPresented: $licensesPresented) {
+        LicenseListView(visible: $licensesPresented)
+      }
+      .padding([.bottom], 25)
+      
+      VStack {
+        if sessionController.user != nil {
+          Text("Logged in as \(sessionController.user?.username ?? "")")
+            .font(.uiCaption)
+            .foregroundColor(.contentText)
+        }
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            sessionController.logout()
+            tabViewModel.selectedTab = .library
+          }
+        }
+      }
+      .padding([.bottom, .horizontal], 18)
+    }
+    .navigationBarTitle(String.settings)
+    .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
