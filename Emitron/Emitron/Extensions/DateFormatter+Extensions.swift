@@ -44,9 +44,9 @@ extension Formatter {
 }
 
 extension Date {
-    var iso8601: String {
-        Formatter.iso8601.string(from: self)
-    }
+  var iso8601: String {
+    Formatter.iso8601.string(from: self)
+  }
 }
 
 extension String {
