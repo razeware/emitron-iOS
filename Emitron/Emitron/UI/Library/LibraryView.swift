@@ -110,7 +110,7 @@ struct LibraryView: View {
           if [.loading, .loadingAdditional].contains(libraryRepository.state) {
             Text(filters.sortFilter.name)
               .font(.uiLabel)
-              .foregroundColor(Color.gray)
+              .foregroundColor(.gray)
           } else {
             Text(filters.sortFilter.name)
               .font(.uiLabelBold)
