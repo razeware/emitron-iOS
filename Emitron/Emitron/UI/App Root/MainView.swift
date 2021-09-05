@@ -100,10 +100,12 @@ private extension MainView {
       )
       .environmentObject(tabViewModel)
     case .offline:
-      TabNavView(libraryView: OfflineView(),
-                 myTutorialsView: OfflineView(),
-                 downloadsView: downloadsView,
-                 settingsView: settingsView)
+      TabNavView(
+        libraryView: OfflineView.init,
+        myTutorialsView: OfflineView.init,
+        downloadsView: downloadsView,
+        settingsView: settingsView
+      )
         .environmentObject(tabViewModel)
     case .unknown:
       LoadingView()
