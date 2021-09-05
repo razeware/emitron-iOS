@@ -42,15 +42,9 @@ struct CompletedTag: View {
 
 struct CompletedTag_Previews: PreviewProvider {
   static var previews: some View {
-    VStack(spacing: 10) {
-      completedTag.colorScheme(.light)
-      completedTag.colorScheme(.dark)
-    }
-  }
-  
-  static var completedTag: some View {
     CompletedTag()
       .padding()
       .background(Color.background)
+      .inAllColorSchemes
   }
 }
