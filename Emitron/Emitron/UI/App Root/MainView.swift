@@ -79,22 +79,22 @@ private extension MainView {
   @ViewBuilder var tabBarView: some View {
     switch sessionController.sessionState {
     case .online :
-      let libraryView = LibraryView(
-        filters: dataManager.filters,
-        libraryRepository: dataManager.libraryRepository
-      )
-      
-      let myTutorialsView = MyTutorialView(
-        state: .inProgress,
-        inProgressRepository: dataManager.inProgressRepository,
-        completedRepository: dataManager.completedRepository,
-        bookmarkRepository: dataManager.bookmarkRepository,
-        domainRepository: dataManager.domainRepository
-      )
-
       TabNavView(
-        libraryView: libraryView,
-        myTutorialsView: myTutorialsView,
+        libraryView: {
+          LibraryView(
+            filters: dataManager.filters,
+            libraryRepository: dataManager.libraryRepository
+          )
+        },
+        myTutorialsView: {
+          MyTutorialsView(
+            state: .inProgress,
+            inProgressRepository: dataManager.inProgressRepository,
+            completedRepository: dataManager.completedRepository,
+            bookmarkRepository: dataManager.bookmarkRepository,
+            domainRepository: dataManager.domainRepository
+          )
+        },
         downloadsView: downloadsView,
         settingsView: settingsView
       )
