@@ -195,16 +195,19 @@ private extension ContentListView {
       downloadAction
         .deleteDownload(contentId: content.id)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { completion in
-          if case .failure(let error) = completion {
-            Failure
-              .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
-              .log()
-            self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+        .sink(
+          receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+              Failure
+                .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
+                .log()
+              self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+            }
+          },
+          receiveValue: {  _ in
+            self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
           }
-        }) {  _ in
-          self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
-        }
+        )
         .store(in: &deleteSubscriptions)
     }
   }
