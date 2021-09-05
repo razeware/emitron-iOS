@@ -132,7 +132,7 @@ private extension ContentDetailView {
       } else {
         HStack {
           Spacer()
-          ActivityIndicator()
+          ProgressView().scaleEffect(1.0, anchor: .center)
           Spacer()
         }
       }
