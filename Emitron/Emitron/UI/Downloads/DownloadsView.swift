@@ -43,13 +43,11 @@ struct DownloadsView: View {
   @EnvironmentObject private var downloadService: DownloadService
   
   var body: some View {
-    contentView
+    ContentListView(
+      contentRepository: downloadRepository,
+      downloadAction: downloadService,
+      contentScreen: contentScreen
+    )
       .navigationBarTitle(String.downloads)
-  }
-
-  private var contentView: some View {
-    ContentListView(contentRepository: downloadRepository,
-                    downloadAction: downloadService,
-                    contentScreen: contentScreen)
   }
 }
