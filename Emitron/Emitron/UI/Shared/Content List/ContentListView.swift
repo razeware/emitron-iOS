@@ -128,22 +128,18 @@ private extension ContentListView {
         loadMoreView
       }
     }
-      .if(!allowDelete) {
-        $0.gesture(
-          DragGesture().onChanged { _ in
-            UIApplication.dismissKeyboard()
-          }
-        )
-      }
-      .accessibility(identifier: "contentListView")
+    .if(!allowDelete) {
+      $0.gesture(
+        DragGesture().onChanged { _ in
+          UIApplication.dismissKeyboard()
+        }
+      )
+    }
+    .accessibility(identifier: "contentListView")
+    .listRowInsets(EdgeInsets())
+    .textCase(nil)
   }
 
-
-      .listRowInsets(EdgeInsets())
-      .textCase(nil)
-  }
-
-  
   var loadingView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
