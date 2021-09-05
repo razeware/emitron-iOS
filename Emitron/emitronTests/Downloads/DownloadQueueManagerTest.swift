@@ -143,7 +143,7 @@ class DownloadQueueManagerTest: XCTestCase {
       try download.save(db)
     }
     
-    let downloads = try wait(for: recorder.next(2), timeout: 5, description: "PendingDownloads")
+    let downloads = try wait(for: recorder.next(2), timeout: 10, description: "PendingDownloads")
     
     XCTAssertEqual([nil, download], downloads.map { $0?.download })
   }
@@ -155,7 +155,7 @@ class DownloadQueueManagerTest: XCTestCase {
     }
     
     let recorder = queueManager.pendingStream.record()
-    let pending = try wait(for: recorder.next(), timeout: 5)
+    let pending = try wait(for: recorder.next(), timeout: 10)
     
     XCTAssertEqual(download, pending!.download)
   }
@@ -166,7 +166,7 @@ class DownloadQueueManagerTest: XCTestCase {
     var download3 = try samplePersistedDownload(state: .urlRequested)
     
     let recorder = queueManager.readyForDownloadStream.record()
-    var readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    var readyForDownload = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual(download1, readyForDownload!.download)
     
     try database.write { db in
@@ -175,28 +175,28 @@ class DownloadQueueManagerTest: XCTestCase {
     }
     
     // This shouldn't fire cos it doesn't affect the stream
-    // readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    // readyForDownload = try wait(for: recorder.next(), timeout: 10)
     // XCTAssertEqual(download1, readyForDownload!!.download)
     
     try database.write { db in
       download1.state = .enqueued
       try download1.save(db)
     }
-    readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    readyForDownload = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual(download2, readyForDownload!.download)
     
     try database.write { db in
       download2.state = .enqueued
       try download2.save(db)
     }
-    readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    readyForDownload = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual(download3, readyForDownload!.download)
     
     try database.write { db in
       download3.state = .enqueued
       try download3.save(db)
     }
-    readyForDownload = try wait(for: recorder.next(), timeout: 5)
+    readyForDownload = try wait(for: recorder.next(), timeout: 10)
     XCTAssertNil(readyForDownload)
   }
   
@@ -223,7 +223,7 @@ class DownloadQueueManagerTest: XCTestCase {
     try samplePersistedDownload(state: .enqueued)
     
     let recorder = queueManager.downloadQueue.record()
-    let queue = try wait(for: recorder.next(), timeout: 5)
+    let queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download1, download2], queue.map(\.download))
   }
   
@@ -234,7 +234,7 @@ class DownloadQueueManagerTest: XCTestCase {
     let download4 = try samplePersistedDownload(state: .inProgress)
     
     let recorder = queueManager.downloadQueue.record()
-    let queue = try wait(for: recorder.next(), timeout: 5)
+    let queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download2, download4], queue.map(\.download))
   }
   
@@ -245,7 +245,7 @@ class DownloadQueueManagerTest: XCTestCase {
     let download4 = try samplePersistedDownload(state: .inProgress)
     
     let recorder = queueManager.downloadQueue.record()
-    var queue = try wait(for: recorder.next(), timeout: 5)
+    var queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download2, download4], queue.map(\.download))
     
     try database.write { db in
@@ -253,7 +253,7 @@ class DownloadQueueManagerTest: XCTestCase {
       try download2.save(db)
     }
     
-    queue = try wait(for: recorder.next(), timeout: 5)
+    queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download4, download1], queue.map(\.download))
   }
   
@@ -262,11 +262,11 @@ class DownloadQueueManagerTest: XCTestCase {
     let download2 = try samplePersistedDownload(state: .enqueued)
     
     let recorder = queueManager.downloadQueue.record()
-    var queue = try wait(for: recorder.next(), timeout: 5)
+    var queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download1, download2], queue.map(\.download))
     
     try samplePersistedDownload(state: .enqueued)
-    queue = try wait(for: recorder.next(), timeout: 5)
+    queue = try wait(for: recorder.next(), timeout: 10)
     XCTAssertEqual([download1, download2], queue.map(\.download))
   }
 }
