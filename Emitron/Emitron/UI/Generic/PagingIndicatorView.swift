@@ -45,21 +45,13 @@ struct PagingIndicatorView: View {
 
 struct PagingIndicatorView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      pagers.colorScheme(.dark)
-      pagers.colorScheme(.light)
-    }
-  }
-  
-  static var pagers: some View {
     VStack(spacing: 20) {
-      PagingIndicatorView(pageCount: 5, currentIndex: .constant(0))
-      PagingIndicatorView(pageCount: 5, currentIndex: .constant(1))
-      PagingIndicatorView(pageCount: 5, currentIndex: .constant(2))
-      PagingIndicatorView(pageCount: 5, currentIndex: .constant(3))
-      PagingIndicatorView(pageCount: 5, currentIndex: .constant(4))
+      ForEach(0..<5) {
+        PagingIndicatorView(pageCount: 5, currentIndex: .constant($0))
+      }
     }
     .padding()
     .background(Color.background)
+    .inAllColorSchemes
   }
 }

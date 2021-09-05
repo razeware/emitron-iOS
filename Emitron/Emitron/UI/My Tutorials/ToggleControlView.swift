@@ -74,20 +74,14 @@ struct ToggleControlView: View {
 
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      tabs.colorScheme(.light)
-      tabs.colorScheme(.dark)
-    }
-  }
-  
-  static var tabs: some View {
     VStack(spacing: 40) {
       ToggleControlView(toggleState: .inProgress)
       ToggleControlView(toggleState: .completed)
       ToggleControlView(toggleState: .bookmarked)
     }
-      .padding([.vertical], 40)
-      .padding([.horizontal], 10)
-      .background(Color.background)
+    .padding([.vertical], 40)
+    .padding([.horizontal], 10)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

@@ -50,18 +50,12 @@ struct SettingsToggleRow: View {
 
 struct SettingsToggleRow_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      rows.colorScheme(.dark)
-      rows.colorScheme(.light)
-    }
-  }
-  
-  static var rows: some View {
     VStack(spacing: 0) {
       SettingsToggleRow(title: "Boolean Row [Off]", isOn: .constant(false))
       SettingsToggleRow(title: "Boolean Row [On]", isOn: .constant(true))
     }
     .padding()
     .background(Color.background)
+    .inAllColorSchemes
   }
 }

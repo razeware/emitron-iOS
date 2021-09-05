@@ -76,18 +76,12 @@ struct VideoOverlayButtonView: View {
 
 struct VideoOverlayButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      buttons.colorScheme(.dark)
-      buttons.colorScheme(.light)
-    }
-  }
-  
-  static var buttons: some View {
     HStack {
       VideoOverlayButtonView()
       VideoOverlayButtonView(text: "Continue")
     }
       .padding()
       .background(Color.background)
+      .inAllColorSchemes
   }
 }

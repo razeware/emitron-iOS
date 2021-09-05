@@ -45,11 +45,6 @@ extension DownloadIcon: View {
 
 struct DownloadIcon_Previews: PreviewProvider {
   static var previews: some View {
-    selectionList.colorScheme(.light)
-    selectionList.colorScheme(.dark)
-  }
-  
-  private static var selectionList: some View {
     func icon(for state: DownloadProgressDisplayable) -> some View {
       HStack {
         Text(state.description)
@@ -68,6 +63,7 @@ struct DownloadIcon_Previews: PreviewProvider {
     }
     .padding(20)
     .background(Color.background)
+    .inAllColorSchemes
   }
 }
 

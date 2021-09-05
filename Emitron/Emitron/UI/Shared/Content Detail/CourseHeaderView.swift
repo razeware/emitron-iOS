@@ -51,13 +51,6 @@ struct CourseHeaderView: View {
 
 struct CourseHeaderView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      headers.colorScheme(.light)
-      headers.colorScheme(.dark)
-    }
-  }
-  
-  static var headers: some View {
     VStack(spacing: 20) {
       CourseHeaderView(name: "Intro")
       CourseHeaderView(name: "Middle Part")
@@ -65,5 +58,6 @@ struct CourseHeaderView_Previews: PreviewProvider {
     }
       .padding()
       .background(Color.background)
+      .inAllColorSchemes
   }
 }

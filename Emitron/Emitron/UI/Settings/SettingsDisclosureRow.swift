@@ -59,15 +59,9 @@ struct SettingsDisclosureRow: View {
 
 struct SettingsDisclosureRow_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      rows.colorScheme(.dark)
-      rows.colorScheme(.light)
-    }
-  }
-  
-  static var rows: some View {
     SettingsDisclosureRow(title: "Disclosure", value: "HELLO")
       .padding()
       .background(Color.background)
+      .inAllColorSchemes
   }
 }

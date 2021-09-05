@@ -69,9 +69,7 @@ struct LicenseListView_Previews: PreviewProvider {
   @State static var visible = true
   
   static var previews: some View {
-    SwiftUI.Group {
-      LicenseListView(licenses: FossLicense.load(), visible: $visible).colorScheme(.light)
-      LicenseListView(licenses: FossLicense.load(), visible: $visible).colorScheme(.dark)
-    }
+    LicenseListView(licenses: FossLicense.load(), visible: $visible)
+      .inAllColorSchemes
   }
 }

@@ -74,18 +74,12 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
 
 struct SettingsSelectionView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      view.colorScheme(.dark)
-      view.colorScheme(.light)
-    }
-  }
-  
-  static var view: some View {
     VStack {
       SettingsSelectionView(title: "Download", settingsOption: .constant(Attachment.Kind.sdVideoFile))
       SettingsSelectionView(title: "Playback Speed", settingsOption: .constant(PlaybackSpeed.standard))
     }
-      .padding()
-      .background(Color.background)
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

@@ -44,13 +44,12 @@ extension SettingsList: View {
 
 struct SettingsList_Previews: PreviewProvider {
   static var previews: some View {
-    list.colorScheme(.dark)
-    list.colorScheme(.light)
-  }
-
-  static var list: some View {
-    SettingsList(settingsManager: .init(initialValue: EmitronApp.emitronObjects().settingsManager), canDownload: true)
+    SettingsList(
+      settingsManager: .init(initialValue: EmitronApp.emitronObjects().settingsManager),
+      canDownload: true
+    )
       .background(Color.background)
+      .inAllColorSchemes
   }
 }
 
