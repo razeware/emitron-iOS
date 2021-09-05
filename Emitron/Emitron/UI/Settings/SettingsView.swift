@@ -49,21 +49,21 @@ struct SettingsView: View {
         SettingsList(
           settingsManager: _settingsManager,
           canDownload: sessionController.user?.canDownload ?? false
-        ).padding([.horizontal], 20)
         
-        Section(header:
-          HStack {
+        ).padding(.horizontal, 20)
+        Section(
+          header: HStack {
             Text("App Icon")
               .font(.uiTitle4)
               .foregroundColor(.titleText)
             
             Spacer()
           }
-            .padding([.top], 20)
+            .padding(.top, 20)
         ) {
           IconChooserView()
         }
-        .padding([.horizontal], 20)
+        .padding(.horizontal, 20)
         
         Spacer()
 
@@ -73,7 +73,7 @@ struct SettingsView: View {
           Text("Software Licenses")
         }
         .sheet(isPresented: $licensesPresented) {
-            LicenseListView(visible: $licensesPresented)
+          LicenseListView(visible: $licensesPresented)
         }
         .padding([.bottom], 25)
         
