@@ -58,49 +58,53 @@ struct TabNavView<
 // MARK: - View
 extension TabNavView: View {
   var body: some View {
-    TabView(selection: $tabViewModel.selectedTab) {
-      NavigationView {
-        libraryView
-      }
-        .tabItem {
-          Text(String.library)
-          Image("library")
-        }
-        .tag(MainTab.library)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(String.library))
+    TabView(selection: $model.selectedTab) {
+      tab(
+        content: libraryView,
+        text: .library,
+        imageName: "library",
+        tag: .library
+      )
 
-      NavigationView {
-        downloadsView
-      }
-        .tabItem {
-          Text(String.downloads)
-          Image("downloadTabInactive")
-        }
-        .tag(MainTab.downloads)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(String.downloads))
+      tab(
+        content: downloadsView,
+        text: .downloads,
+        imageName: "downloadTabInactive",
+        tag: .downloads
+      )
 
-      NavigationView { myTutorialsView }
-        .tabItem {
-          Text(String.myTutorials)
-          Image("myTutorials")
-        }
-        .tag(MainTab.myTutorials)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: .init(String.myTutorials))
-      
-      NavigationView { settingsView }
-        .tabItem {
-          Text(String.settings)
-          Image("settings")
-        }
-        .tag(MainTab.settings)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: .init(String.settings))
+      tab(
+        content: myTutorialsView,
+        text: .myTutorials,
+        imageName: "myTutorials",
+        tag: .myTutorials
+      )
+
+      tab(
+        content: settingsView,
+        text: .settings,
+        imageName: "settings",
+        tag: .settings
+      )
     }
     .accentColor(.accent)
   }
+}
+
+private func tab<Content: View>(
+  content: () -> Content,
+  text: String,
+  imageName: String,
+  tag: MainTab
+) -> some View {
+  NavigationView(content: content)
+    .tabItem {
+      Text(text)
+      Image(imageName)
+    }
+    .tag(tag)
+    .navigationViewStyle(StackNavigationViewStyle())
+    .accessibility(label: .init(text))
 }
 
 struct TabNavView_Previews: PreviewProvider {
