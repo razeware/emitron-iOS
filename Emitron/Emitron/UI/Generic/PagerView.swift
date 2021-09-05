@@ -79,20 +79,18 @@ struct PagerView<Content: View>: View {
 
 struct PagerView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      PagerView(pageCount: 3) {
-        Color.red
-        Color.blue
-        Color.green
-      }
-      
-      PagerView(pageCount: 5, showIndicator: true) {
-        Color.red
-        Color.blue
-        Color.green
-        Color.yellow
-        Color.purple
-      }
+    PagerView(pageCount: 3) {
+      Color.red
+      Color.blue
+      Color.green
+    }
+    
+    PagerView(pageCount: 5, showIndicator: true) {
+      Color.red
+      Color.blue
+      Color.green
+      Color.yellow
+      Color.purple
     }
   }
 }
