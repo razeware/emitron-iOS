@@ -142,12 +142,6 @@ private extension ContentListView {
       .accessibility(identifier: "contentListView")
   }
 
-  func makeList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View {
-    Section(header: header, content: content)
-      .listRowInsets(EdgeInsets())
-  }
 
   func makeSectionList<Content: View>(
     @ViewBuilder content: () -> Content
@@ -157,11 +151,6 @@ private extension ContentListView {
       .textCase(nil)
   }
 
-  func makeList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View where Header.Body == Never {
-    content()
-  }
   
   var loadingView: some View {
     ZStack {
