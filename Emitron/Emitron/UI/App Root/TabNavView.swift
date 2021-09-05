@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,14 +33,30 @@ struct TabNavView<
   MyTutorialsView: View,
   DownloadsView: View,
   SettingsView: View
->: View {
-  @EnvironmentObject var tabViewModel: TabViewModel
-  @EnvironmentObject var settingsManager: SettingsManager
-  let libraryView: LibraryView
-  let myTutorialsView: MyTutorialsView
-  let downloadsView: DownloadsView
-  let settingsView: SettingsView
+> {
+  init(
+    libraryView: @escaping () -> LibraryView,
+    myTutorialsView: @escaping () -> MyTutorialsView,
+    downloadsView: @escaping () -> DownloadsView,
+    settingsView: @escaping () -> SettingsView
+  ) {
+    self.libraryView = libraryView
+    self.myTutorialsView = myTutorialsView
+    self.downloadsView = downloadsView
+    self.settingsView = settingsView
+  }
 
+  @EnvironmentObject private var model: TabViewModel
+  @EnvironmentObject private var settingsManager: SettingsManager
+
+  private let libraryView: () -> LibraryView
+  private let myTutorialsView: () -> MyTutorialsView
+  private let downloadsView: () -> DownloadsView
+  private let settingsView: () -> SettingsView
+}
+
+// MARK: - View
+extension TabNavView: View {
   var body: some View {
     TabView(selection: $tabViewModel.selectedTab) {
       NavigationView {
