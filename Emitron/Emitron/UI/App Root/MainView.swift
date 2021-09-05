@@ -50,12 +50,6 @@ struct MainView: View {
         }
     }
   }
-
-  private func makeReviewRequest() {
-    if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-      SKStoreReviewController.requestReview(in: scene)
-    }
-  }
 }
 
 // MARK: - private
@@ -121,4 +115,10 @@ private extension MainView {
       LoadingView()
     }
   }
+
+  func makeReviewRequest() {
+   if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+     SKStoreReviewController.requestReview(in: scene)
+   }
+ }
 }
