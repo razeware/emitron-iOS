@@ -32,7 +32,7 @@ struct DownloadWarningView: View {
   var body: some View {
     Image(systemName: "exclamationmark.triangle.fill")
       .resizable()
-      .font(Font.title.weight(.bold))
+      .font(.title.weight(.bold))
       .foregroundColor(.downloadButtonWarning)
       .downloadIconFrame
   }
