@@ -77,21 +77,22 @@ struct SettingsView: View {
         }
         .padding([.bottom], 25)
         
-          VStack {
-            if sessionController.user != nil {
-              Text("Logged in as \(sessionController.user?.username ?? "")")
-                .font(.uiCaption)
-                .foregroundColor(.contentText)
-            }
-            MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                sessionController.logout()
-                tabViewModel.selectedTab = .library
-              }
+        VStack {
+          if sessionController.user != nil {
+            Text("Logged in as \(sessionController.user?.username ?? "")")
+              .font(.uiCaption)
+              .foregroundColor(.contentText)
+          }
+          MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+              sessionController.logout()
+              tabViewModel.selectedTab = .library
             }
           }
-          .padding([.bottom, .horizontal], 18)
-      }.navigationBarTitle(String.settings)
+        }
+        .padding([.bottom, .horizontal], 18)
+      }
+      .navigationBarTitle(String.settings)
       .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
