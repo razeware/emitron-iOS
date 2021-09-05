@@ -67,7 +67,7 @@ struct DownloadIcon_Previews: PreviewProvider {
       icon(for: .notDownloadable)
     }
     .padding(20)
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
 }
 

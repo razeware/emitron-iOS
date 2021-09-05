@@ -50,7 +50,7 @@ struct SettingsList_Previews: PreviewProvider {
 
   static var list: some View {
     SettingsList(settingsManager: .init(initialValue: EmitronApp.emitronObjects().settingsManager), canDownload: true)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 

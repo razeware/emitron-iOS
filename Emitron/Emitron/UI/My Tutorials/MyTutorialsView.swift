@@ -168,7 +168,7 @@ private extension MyTutorialView {
           .padding(.top, .sidePadding)
       }
       .padding(.horizontal, .sidePadding)
-      .background(Color.backgroundColor)
+      .background(Color.background)
     }
     
     return ContentListView(

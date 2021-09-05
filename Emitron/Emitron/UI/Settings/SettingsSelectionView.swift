@@ -68,7 +68,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
         displayMode: .inline
       )
         .padding(20)
-    .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+    .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
@@ -86,6 +86,6 @@ struct SettingsSelectionView_Previews: PreviewProvider {
       SettingsSelectionView(title: "Playback Speed", settingsOption: .constant(PlaybackSpeed.standard))
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

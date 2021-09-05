@@ -92,7 +92,7 @@ struct SettingsView: View {
           }
           .padding([.bottom, .horizontal], 18)
       }.navigationBarTitle(String.settings)
-      .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+      .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
@@ -108,7 +108,7 @@ struct SettingsView_Previews: PreviewProvider {
 
   static var settingsView: some View {
     SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
-      .background(Color.backgroundColor)
+      .background(Color.background)
       .environmentObject(EmitronApp.emitronObjects().sessionController)
   }
 }

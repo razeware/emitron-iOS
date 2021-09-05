@@ -89,7 +89,7 @@ struct ToggleControlView_Previews: PreviewProvider {
     }
       .padding([.vertical], 40)
       .padding([.horizontal], 10)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 #endif

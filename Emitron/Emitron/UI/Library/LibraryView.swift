@@ -48,7 +48,7 @@ struct LibraryView: View {
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
-          .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+          .background(Color.background.edgesIgnoringSafeArea(.all))
       }
   }
 
@@ -65,7 +65,7 @@ struct LibraryView: View {
         .padding(.vertical, 10)
     }
       .padding(.horizontal, .sidePadding)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 
   private var searchField: some View {

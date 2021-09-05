@@ -54,6 +54,6 @@ struct ArrowInCircleView_Previews: PreviewProvider {
       ArrowInCircleView(fillColour: .activeIcon)
     }
       .padding(20)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

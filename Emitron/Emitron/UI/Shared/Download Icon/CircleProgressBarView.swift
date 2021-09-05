@@ -77,6 +77,6 @@ struct CircularProgressIndicator_Previews: PreviewProvider {
       CircularProgressBar(progress: 1)
     }
       .padding(20)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

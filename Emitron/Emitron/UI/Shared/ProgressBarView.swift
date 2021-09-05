@@ -85,7 +85,7 @@ struct ProgressBarView_Previews: PreviewProvider {
       ProgressBarView(progress: 1.0, isRounded: true, backgroundColor: .clear)
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 #endif

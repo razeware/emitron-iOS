@@ -55,6 +55,6 @@ struct IconChooserView_Previews: PreviewProvider {
   static var iconChooser: some View {
     IconChooserView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

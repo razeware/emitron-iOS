@@ -127,7 +127,7 @@ struct AppliedFilterView_Previews: PreviewProvider {
       AppliedFilterTagButton(name: "Another", type: .default) { }
     }
     .padding()
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
 }
 #endif

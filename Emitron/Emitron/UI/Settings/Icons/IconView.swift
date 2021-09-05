@@ -71,6 +71,6 @@ struct IconView_Previews: PreviewProvider {
       IconView(icon: lightIcon, selected: true)
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

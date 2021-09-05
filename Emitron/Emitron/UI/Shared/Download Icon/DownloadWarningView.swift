@@ -50,7 +50,7 @@ struct DownloadWarningView_Previews: PreviewProvider {
   static var icon: some View {
     DownloadWarningView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 #endif

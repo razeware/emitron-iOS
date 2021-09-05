@@ -123,7 +123,7 @@ struct FilterGroupView_Previews: PreviewProvider {
       )
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 #endif

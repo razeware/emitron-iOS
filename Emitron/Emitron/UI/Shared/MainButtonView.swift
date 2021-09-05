@@ -134,7 +134,7 @@ struct PrimaryButtonView_Previews: PreviewProvider {
       MainButtonView(title: "Got It!", type: .destructive(withArrow: true), callback: {})
     }
       .padding(20)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
 #endif
