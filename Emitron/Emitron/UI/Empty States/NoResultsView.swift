@@ -90,20 +90,9 @@ extension NoResultsView: View {
 
 struct NoResultsView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      NoResultsView(contentScreen: .bookmarked).colorScheme(.light)
-      NoResultsView(contentScreen: .bookmarked).colorScheme(.dark)
-      NoResultsView(contentScreen: .completed).colorScheme(.light)
-      NoResultsView(contentScreen: .completed).colorScheme(.dark)
-      NoResultsView(contentScreen: .downloads(permitted: true)).colorScheme(.light)
-      NoResultsView(contentScreen: .downloads(permitted: true)).colorScheme(.dark)
-      NoResultsView(contentScreen: .downloads(permitted: false)).colorScheme(.light)
-      NoResultsView(contentScreen: .downloads(permitted: false)).colorScheme(.dark)
-      NoResultsView(contentScreen: .inProgress).colorScheme(.light)
-      NoResultsView(contentScreen: .inProgress).colorScheme(.dark)
+    ForEach(ContentScreen.allCases, id: \.self) {
+      NoResultsView(contentScreen: $0).inAllColorSchemes
     }
-    NoResultsView(contentScreen: .library).colorScheme(.light)
-    NoResultsView(contentScreen: .library).colorScheme(.dark)
   }
 }
 
