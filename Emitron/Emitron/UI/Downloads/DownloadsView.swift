@@ -29,10 +29,19 @@
 import SwiftUI
 
 struct DownloadsView: View {
-  @EnvironmentObject var downloadService: DownloadService
-  @State var contentScreen: ContentScreen
-  @ObservedObject var downloadRepository: DownloadRepository
+  init(
+    contentScreen: ContentScreen,
+    downloadRepository: DownloadRepository
+  ) {
+    self.contentScreen = contentScreen
+    self.downloadRepository = downloadRepository
+  }
 
+  private let contentScreen: ContentScreen
+  @ObservedObject private var downloadRepository: DownloadRepository
+
+  @EnvironmentObject private var downloadService: DownloadService
+  
   var body: some View {
     contentView
       .navigationBarTitle(String.downloads)
