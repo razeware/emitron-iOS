@@ -46,9 +46,10 @@ enum MainButtonType {
   
   var hasArrow: Bool {
     switch self {
-    case .primary(let hasArrow),
-         .destructive(let hasArrow),
-         .secondary(let hasArrow):
+    case
+        .primary(let hasArrow),
+        .destructive(let hasArrow),
+        .secondary(let hasArrow):
       return hasArrow
     }
   }
