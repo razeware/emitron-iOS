@@ -89,11 +89,6 @@ private extension ContentListView {
     }
   }
 
-  @ViewBuilder var listContentView: some View {
-    cardsView
-    loadMoreView
-  }
-
   var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
@@ -128,8 +123,9 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      makeSectionList {
-        listContentView
+      Section(header: header) {
+        cardsView
+        loadMoreView
       }
     }
       .if(!allowDelete) {
@@ -143,10 +139,6 @@ private extension ContentListView {
   }
 
 
-  func makeSectionList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View {
-    Section(header: header, content: content)
       .listRowInsets(EdgeInsets())
       .textCase(nil)
   }
