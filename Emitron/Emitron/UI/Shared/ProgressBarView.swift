@@ -63,7 +63,6 @@ struct ProgressBarView: View {
   }
 }
 
-#if DEBUG
 struct ProgressBarView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -88,4 +87,3 @@ struct ProgressBarView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

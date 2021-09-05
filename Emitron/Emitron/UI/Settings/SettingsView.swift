@@ -96,9 +96,7 @@ struct SettingsView: View {
   }
 }
 
-#if DEBUG
 struct SettingsView_Previews: PreviewProvider {
-
   static var previews: some View {
     SwiftUI.Group {
       settingsView.colorScheme(.dark)
@@ -112,4 +110,3 @@ struct SettingsView_Previews: PreviewProvider {
       .environmentObject(EmitronApp.emitronObjects().sessionController)
   }
 }
-#endif

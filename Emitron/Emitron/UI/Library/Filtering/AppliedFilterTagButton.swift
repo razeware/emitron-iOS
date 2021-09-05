@@ -111,7 +111,6 @@ struct AppliedFilterTagButton: View {
   }
 }
 
-#if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -130,4 +129,3 @@ struct AppliedFilterView_Previews: PreviewProvider {
     .background(Color.background)
   }
 }
-#endif

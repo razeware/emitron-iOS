@@ -49,7 +49,6 @@ struct CourseHeaderView: View {
   }
 }
 
-#if DEBUG
 struct CourseHeaderView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -68,4 +67,3 @@ struct CourseHeaderView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

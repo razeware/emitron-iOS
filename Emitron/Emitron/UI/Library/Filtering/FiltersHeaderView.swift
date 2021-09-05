@@ -97,7 +97,6 @@ struct FiltersHeaderView: View {
   }
 }
 
-#if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -126,4 +125,3 @@ struct FilterGroupView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

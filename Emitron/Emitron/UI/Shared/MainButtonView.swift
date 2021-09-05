@@ -115,7 +115,6 @@ struct MainButtonView: View {
   }
 }
 
-#if DEBUG
 struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -137,4 +136,3 @@ struct PrimaryButtonView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

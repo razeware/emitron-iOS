@@ -43,7 +43,6 @@ struct PagingIndicatorView: View {
   }
 }
 
-#if DEBUG
 struct PagingIndicatorView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -64,4 +63,3 @@ struct PagingIndicatorView_Previews: PreviewProvider {
     .background(Color.background)
   }
 }
-#endif

@@ -38,7 +38,6 @@ struct DownloadWarningView: View {
   }
 }
 
-#if DEBUG
 struct DownloadWarningView_Previews: PreviewProvider {
   static var previews: some View {
     HStack {
@@ -53,4 +52,3 @@ struct DownloadWarningView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

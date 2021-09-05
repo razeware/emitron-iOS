@@ -72,7 +72,6 @@ struct ToggleControlView: View {
   }
 }
 
-#if DEBUG
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -92,4 +91,3 @@ struct ToggleControlView_Previews: PreviewProvider {
       .background(Color.background)
   }
 }
-#endif

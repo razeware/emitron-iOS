@@ -48,7 +48,6 @@ struct SettingsToggleRow: View {
   }
 }
 
-#if DEBUG
 struct SettingsToggleRow_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -66,4 +65,3 @@ struct SettingsToggleRow_Previews: PreviewProvider {
     .background(Color.background)
   }
 }
-#endif

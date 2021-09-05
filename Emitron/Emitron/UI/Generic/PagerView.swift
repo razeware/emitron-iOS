@@ -77,7 +77,6 @@ struct PagerView<Content: View>: View {
   }
 }
 
-#if DEBUG
 struct PagerView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -97,4 +96,3 @@ struct PagerView_Previews: PreviewProvider {
     }
   }
 }
-#endif
