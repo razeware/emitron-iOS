@@ -59,7 +59,6 @@ extension CheckmarkView: View {
       if isOn {
         ZStack(alignment: .center) {
           Rectangle()
-
             .frame(maxWidth: outerSide, maxHeight: outerSide)
             .foregroundColor(.checkmarkBackground)
 
@@ -82,8 +81,8 @@ extension CheckmarkView: View {
 
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
-    CheckmarkView(isOn: true, onChange: { change in
+    CheckmarkView(isOn: true) { change in
       print("Changed to: \(change)")
-    })
+    }
   }
 }
