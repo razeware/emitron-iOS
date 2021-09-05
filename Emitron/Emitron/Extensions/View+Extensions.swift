@@ -29,6 +29,14 @@
 import SwiftUI
 
 extension View {
+  var inAllColorSchemes: some View {
+    ForEach(
+      ColorScheme.allCases,
+      id: \.self,
+      content: preferredColorScheme
+    )
+  }
+
   @ViewBuilder func `if`<T: View>(_ conditional: Bool, transform: (Self) -> T) -> some View {
     if conditional {
       transform(self)
