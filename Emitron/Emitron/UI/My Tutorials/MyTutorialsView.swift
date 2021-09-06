@@ -32,7 +32,7 @@ enum MyTutorialsState: String {
   case inProgress
   case completed
   case bookmarked
-  
+
   var contentScreen: ContentScreen {
     switch self {
     case .inProgress:
@@ -53,6 +53,21 @@ enum MyTutorialsState: String {
     case .bookmarked:
       return "Bookmarks"
     }
+  }
+}
+
+extension MyTutorialsState: CaseIterable {
+  var index: Self.AllCases.Index {
+    get {
+      Self.allCases.firstIndex(of: self)!
+    }
+    set {
+      self = Self.allCases[newValue]
+    }
+  }
+
+  var count: Int {
+    Self.allCases.count
   }
 }
 
@@ -162,5 +177,14 @@ private extension MyTutorialView {
       contentScreen: ContentScreen.inProgress,
       header: toggleControl
     )
+    .highPriorityGesture(DragGesture().onEnded({ handleSwipe(translation: $0.translation.width) }))
+  }
+
+  private func handleSwipe(translation: CGFloat) {
+    if translation > .minDragTranslationForSwipe && state.index > 0 {
+      state.index -= 1
+    } else  if translation < -.minDragTranslationForSwipe && state.index < state.count - 1 {
+      state.index += 1
+    }
   }
 }
