@@ -44,7 +44,7 @@ struct IconView: View {
       .if(selected) {
         $0.overlay(
           Image(systemName: "checkmark.circle.fill")
-            .font(Font.system(size: 20, weight: .bold))
+            .font(.system(size: 20, weight: .bold))
             .foregroundColor(.accent),
           alignment: .bottomTrailing
         )
@@ -71,6 +71,6 @@ struct IconView_Previews: PreviewProvider {
       IconView(icon: lightIcon, selected: true)
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

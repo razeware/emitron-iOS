@@ -50,6 +50,6 @@ struct ProTag_Previews: PreviewProvider {
   static var proTag: some View {
     ProTag()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

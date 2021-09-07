@@ -88,6 +88,6 @@ struct VideoOverlayButtonView_Previews: PreviewProvider {
       VideoOverlayButtonView(text: "Continue")
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

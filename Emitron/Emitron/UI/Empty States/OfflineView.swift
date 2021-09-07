@@ -48,7 +48,7 @@ struct OfflineView: View {
         .padding([.leading, .trailing], 20)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(Color.backgroundColor)
+    .background(Color.background)
     .edgesIgnoringSafeArea(.all)
   }
 }

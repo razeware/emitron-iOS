@@ -45,6 +45,6 @@ struct PlayButtonView_Previews: PreviewProvider {
   static var button: some View {
     PlayButtonView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

@@ -129,7 +129,7 @@ struct CardView: View {
       Image.bookmark
         .resizable()
         .frame(width: 21, height: 21)
-        .foregroundColor(Color.inactiveIcon)
+        .foregroundColor(.inactiveIcon)
     }
   }
 }

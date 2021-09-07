@@ -69,7 +69,6 @@ struct CheckmarkView: View {
   }
 }
 
-#if DEBUG
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
     CheckmarkView(isOn: true, onChange: { change in
@@ -77,4 +76,3 @@ struct CheckmarkView_Previews: PreviewProvider {
     })
   }
 }
-#endif

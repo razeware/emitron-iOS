@@ -6,11 +6,11 @@ on:
 
 jobs:
   build:
-    runs-on: macos-latest
+    runs-on: macos-11
     steps:
     - uses: actions/checkout@v1
-    - name: Switch to Xcode 12.4
-      run: sudo xcode-select -s /Applications/Xcode_12.4.app
+    - name: Switch to Xcode 12.5.1
+      run: sudo xcode-select -s /Applications/Xcode_12.5.1.app
     - name: Update fastlane
       run: |
         cd Emitron

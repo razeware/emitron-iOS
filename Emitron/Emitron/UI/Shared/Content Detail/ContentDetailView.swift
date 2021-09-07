@@ -78,18 +78,18 @@ private extension ContentDetailView {
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
-            .background(Color.backgroundColor)
+            .background(Color.background)
           
           ChildContentListingView(
             childContentsViewModel: childContentsViewModel,
             currentlyDisplayedVideoPlaybackViewModel: $currentlyDisplayedVideoPlaybackViewModel
           )
-          .background(Color.backgroundColor)
+          .background(Color.background)
         }
       }
     }
     .navigationBarTitle(Text(""), displayMode: .inline)
-    .background(Color.backgroundColor)
+    .background(Color.background)
     .onReceive(videoCompletedNotification) { _ in
       checkReviewRequest = true
     }

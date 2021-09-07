@@ -68,7 +68,7 @@ extension ErrorView: View {
   var body: some View {
     ZStack {
       Rectangle()
-        .fill(Color.backgroundColor)
+        .fill(Color.background)
         .edgesIgnoringSafeArea(.all)
       VStack {
         header

@@ -48,7 +48,6 @@ struct SettingsToggleRow: View {
   }
 }
 
-#if DEBUG
 struct SettingsToggleRow_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -63,7 +62,6 @@ struct SettingsToggleRow_Previews: PreviewProvider {
       SettingsToggleRow(title: "Boolean Row [On]", isOn: .constant(true))
     }
     .padding()
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
 }
-#endif

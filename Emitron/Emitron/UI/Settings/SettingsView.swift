@@ -92,13 +92,11 @@ struct SettingsView: View {
           }
           .padding([.bottom, .horizontal], 18)
       }.navigationBarTitle(String.settings)
-      .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+      .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
-#if DEBUG
 struct SettingsView_Previews: PreviewProvider {
-
   static var previews: some View {
     SwiftUI.Group {
       settingsView.colorScheme(.dark)
@@ -108,8 +106,7 @@ struct SettingsView_Previews: PreviewProvider {
 
   static var settingsView: some View {
     SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
-      .background(Color.backgroundColor)
+      .background(Color.background)
       .environmentObject(EmitronApp.emitronObjects().sessionController)
   }
 }
-#endif

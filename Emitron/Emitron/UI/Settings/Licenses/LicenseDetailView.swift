@@ -48,7 +48,7 @@ struct LicenseDetailView: View {
       Spacer()
     }
     .padding(10)
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
 }
 

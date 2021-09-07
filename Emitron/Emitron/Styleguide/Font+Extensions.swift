@@ -30,64 +30,60 @@ import SwiftUI
 
 extension Font {
   static var uiLargeTitle: Font {
-    Font.custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
+    .custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
   }
   static var uiTitle1: Font {
-    Font.custom("Bitter-Bold", size: 28.0, relativeTo: .title)
+    .custom("Bitter-Bold", size: 28.0, relativeTo: .title)
   }
   static var uiTitle2: Font {
-    Font.custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
+    .custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
   }
   static var uiTitle3: Font {
-    Font.custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
+    .custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
   }
   static var uiTitle4: Font {
-    Font.custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
+    .custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
   }
   static var uiTitle5: Font {
-    Font.custom("Bitter-Regular", size: 17.0, relativeTo: .body)
+    .custom("Bitter-Regular", size: 17.0, relativeTo: .body)
   }
   static var uiHeadline: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 18.0)).weight(.semibold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 18.0)).weight(.semibold)
   }
   
   static var uiNumberBox: Font {
-    Font.custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
+    .custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
   }
 
-  static var uiBodyAppleDefault: Font {
-    Font.body
-  }
+  static var uiBodyAppleDefault: Font { .body }
 
   // Can't have bold Font's
   static var uiButtonLabelLarge: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 17.0)).bold()
+    .system(size: UIFontMetrics.default.scaledValue(for: 17.0)).bold()
   }
   static var uiButtonLabelMedium: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 15)).weight(.bold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 15)).weight(.bold)
   }
   static var uiButtonLabelSmall: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 13.0)).weight(.semibold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 13.0)).weight(.semibold)
   }
   static var uiBodyCustom: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 15.0))
+    .system(size: UIFontMetrics.default.scaledValue(for: 15.0))
   }
   static var uiLabelBold: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 16.0)).weight(.semibold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 16.0)).weight(.semibold)
   }
   static var uiLabel: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 16.0))
+    .system(size: UIFontMetrics.default.scaledValue(for: 16.0))
   }
-  static var uiFootnote: Font {
-    Font.footnote
-  }
+  static var uiFootnote: Font { .footnote }
   static var uiCaption: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 14.0))
+    .system(size: UIFontMetrics.default.scaledValue(for: 14.0))
   }
   static var uiUppercase: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 12.0)).weight(.semibold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 12.0)).weight(.semibold)
   }
   static var uiUppercaseTag: Font {
-    Font.system(size: UIFontMetrics.default.scaledValue(for: 10.0)).weight(.semibold)
+    .system(size: UIFontMetrics.default.scaledValue(for: 10.0)).weight(.semibold)
   }
 }

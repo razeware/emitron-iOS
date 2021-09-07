@@ -34,7 +34,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
+      ForEach(Setting.selectableCases, id: \.self) { option in
         VStack(spacing: 0) {
           Button {
             settingsOption = option
@@ -68,7 +68,7 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
         displayMode: .inline
       )
         .padding(20)
-    .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+    .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
@@ -86,6 +86,6 @@ struct SettingsSelectionView_Previews: PreviewProvider {
       SettingsSelectionView(title: "Playback Speed", settingsOption: .constant(PlaybackSpeed.standard))
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

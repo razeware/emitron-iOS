@@ -68,6 +68,6 @@ struct SettingsDisclosureRow_Previews: PreviewProvider {
   static var rows: some View {
     SettingsDisclosureRow(title: "Disclosure", value: "HELLO")
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
