@@ -50,7 +50,7 @@ struct LicenseListView: View {
         }
       }
         .padding(10)
-        .background(Color.backgroundColor)
+        .background(Color.background)
     }
       .navigationViewStyle(StackNavigationViewStyle())
   }

@@ -51,6 +51,6 @@ struct CompletedTag_Previews: PreviewProvider {
   static var completedTag: some View {
     CompletedTag()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

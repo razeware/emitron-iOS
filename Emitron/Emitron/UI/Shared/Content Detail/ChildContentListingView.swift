@@ -67,7 +67,7 @@ private extension ChildContentListingView {
           }.padding([.leading, .trailing], 20)
         }
       }
-      .listRowBackground(Color.backgroundColor)
+      .listRowBackground(Color.background)
       .accessibility(identifier: "childContentList")
         
       if childContentsViewModel.groups.count > 1 {
@@ -76,7 +76,7 @@ private extension ChildContentListingView {
           Section(header: CourseHeaderView(name: group.name)) {
             episodeListing(data: childContentsViewModel.contents(for: group.id))
           }
-          .background(Color.backgroundColor)
+          .background(Color.background)
           .textCase(nil)
         }
       } else if !childContentsViewModel.groups.isEmpty {
@@ -93,8 +93,8 @@ private extension ChildContentListingView {
       Spacer()
     }
       .listRowInsets(EdgeInsets())
-      .listRowBackground(Color.backgroundColor)
-      .background(Color.backgroundColor)
+      .listRowBackground(Color.background)
+      .background(Color.background)
   }
 
   var reloadView: MainButtonView {
@@ -116,7 +116,7 @@ private extension ChildContentListingView {
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       episodeRow(model: model)
         .listRowInsets(EdgeInsets())
-        .listRowBackground(Color.backgroundColor)
+        .listRowBackground(Color.background)
     }
   }
   

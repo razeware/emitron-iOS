@@ -72,7 +72,6 @@ struct ToggleControlView: View {
   }
 }
 
-#if DEBUG
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -89,7 +88,6 @@ struct ToggleControlView_Previews: PreviewProvider {
     }
       .padding([.vertical], 40)
       .padding([.horizontal], 10)
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }
-#endif

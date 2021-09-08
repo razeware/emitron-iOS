@@ -41,7 +41,7 @@ struct MainView: View {
   var body: some View {
     ZStack {
       contentView
-        .background(Color.backgroundColor)
+        .background(Color.background)
         .overlay(MessageBarView(messageBus: messageBus), alignment: .bottom)
         .onReceive(notification) { _ in
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {

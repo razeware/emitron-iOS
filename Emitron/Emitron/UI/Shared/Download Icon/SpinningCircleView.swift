@@ -106,6 +106,6 @@ struct SpinningCircleView_Previews: PreviewProvider {
   static var spinners: some View {
     SpinningCircleView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
   }
 }

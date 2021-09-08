@@ -34,7 +34,7 @@ struct PagingIndicatorView: View {
   
   var body: some View {
     HStack(spacing: 9) {
-      ForEach(0...pageCount - 1, id: \.self) { index in
+      ForEach(0..<pageCount - 1) { index in
         Circle()
           .fill(index == currentIndex ? Color.accent : .borderColor)
           .frame(width: 9, height: 9)
@@ -43,7 +43,6 @@ struct PagingIndicatorView: View {
   }
 }
 
-#if DEBUG
 struct PagingIndicatorView_Previews: PreviewProvider {
   static var previews: some View {
     SwiftUI.Group {
@@ -60,8 +59,7 @@ struct PagingIndicatorView_Previews: PreviewProvider {
       PagingIndicatorView(pageCount: 5, currentIndex: .constant(3))
       PagingIndicatorView(pageCount: 5, currentIndex: .constant(4))
     }
-      .padding()
-      .background(Color.backgroundColor)
+    .padding()
+    .background(Color.background)
   }
 }
-#endif

@@ -76,7 +76,7 @@ struct EmitronApp: App {
     WindowGroup {
       ZStack {
         Rectangle()
-          .fill(Color.backgroundColor)
+          .fill(Color.background)
           .edgesIgnoringSafeArea(.all)
         MainView()
           .environmentObject(sessionController)

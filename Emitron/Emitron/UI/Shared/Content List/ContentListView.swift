@@ -116,7 +116,7 @@ private extension ContentListView {
     .if(allowDelete) { $0.onDelete(perform: delete) }
     .listRowInsets(EdgeInsets())
     .padding([.horizontal, .top], .sidePadding)
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
   
   var allowDelete: Bool {
@@ -165,7 +165,7 @@ private extension ContentListView {
   
   var loadingView: some View {
     ZStack {
-      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      Color.background.edgesIgnoringSafeArea(.all)
       
       VStack {
         header
@@ -178,7 +178,7 @@ private extension ContentListView {
   
   var noResultsView: some View {
     ZStack {
-      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      Color.background.edgesIgnoringSafeArea(.all)
       
       NoResultsView(
         contentScreen: contentScreen,
@@ -189,7 +189,7 @@ private extension ContentListView {
   
   var reloadView: some View {
     ZStack {
-      Color.backgroundColor.edgesIgnoringSafeArea(.all)
+      Color.background.edgesIgnoringSafeArea(.all)
       ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
@@ -201,7 +201,7 @@ private extension ContentListView {
           ProgressView().scaleEffect(1.0, anchor: .center)
           Spacer()
         }.padding()
-        .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+        .background(Color.background.edgesIgnoringSafeArea(.all))
         .onAppear(perform: contentRepository.loadMore)
     }
   }
