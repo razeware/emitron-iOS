@@ -36,10 +36,7 @@ struct ContinueButtonView: View {
 
 struct ContinueButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    VStack(spacing: 20) {
-      ContinueButtonView().colorScheme(.dark)
-      ContinueButtonView().colorScheme(.light)
-    }
+    VStack(spacing: 20, content: ContinueButtonView.init)
     .padding(20)
     .background(Color.blue)
   }

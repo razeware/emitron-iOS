@@ -104,8 +104,7 @@ extension ErrorView: View {
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    ErrorView().colorScheme(.light)
-    ErrorView().colorScheme(.dark)
+    ErrorView().inAllColorSchemes
   }
 }
 

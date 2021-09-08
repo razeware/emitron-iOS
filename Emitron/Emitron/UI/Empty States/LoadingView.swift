@@ -41,9 +41,6 @@ struct LoadingView: View {
 
 struct LoadingView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      LoadingView().colorScheme(.dark)
-      LoadingView().colorScheme(.light)
-    }
+    LoadingView().inAllColorSchemes
   }
 }

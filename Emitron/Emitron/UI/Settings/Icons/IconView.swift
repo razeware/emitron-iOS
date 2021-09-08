@@ -57,13 +57,6 @@ struct IconView_Previews: PreviewProvider {
   static let lightIcon = Icon(name: "black-white", imageName: "app-icon--black-white", ordinal: 0)
   
   static var previews: some View {
-    SwiftUI.Group {
-      icons.colorScheme(.light)
-      icons.colorScheme(.dark)
-    }
-  }
-  
-  static var icons: some View {
     HStack {
       IconView(icon: darkIcon, selected: false)
       IconView(icon: darkIcon, selected: true)
@@ -72,5 +65,6 @@ struct IconView_Previews: PreviewProvider {
     }
       .padding()
       .background(Color.background)
+      .inAllColorSchemes
   }
 }

@@ -118,13 +118,6 @@ struct MainButtonView: View {
 
 struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      buttons.colorScheme(.light)
-      buttons.colorScheme(.dark)
-    }
-  }
-  
-  static var buttons: some View {
     VStack(spacing: 20) {
       MainButtonView(title: "Got It!", type: .primary(withArrow: false), callback: {})
       MainButtonView(title: "Got It!", type: .primary(withArrow: true), callback: {})
@@ -135,5 +128,6 @@ struct PrimaryButtonView_Previews: PreviewProvider {
     }
       .padding(20)
       .background(Color.background)
+      .inAllColorSchemes
   }
 }

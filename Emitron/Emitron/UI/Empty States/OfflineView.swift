@@ -55,7 +55,6 @@ struct OfflineView: View {
 
 struct OfflineView_Previews: PreviewProvider {
   static var previews: some View {
-    OfflineView()
-    OfflineView().colorScheme(.dark)
+    OfflineView().inAllColorSchemes
   }
 }

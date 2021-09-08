@@ -61,13 +61,6 @@ struct CircularProgressBar: View {
 
 struct CircularProgressIndicator_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      progressViews.colorScheme(.dark)
-      progressViews.colorScheme(.light)
-    }
-  }
-  
-  static var progressViews: some View {
     HStack(spacing: 20) {
       CircularProgressBar(progress: 0)
       CircularProgressBar(progress: 0.2)
@@ -78,5 +71,6 @@ struct CircularProgressIndicator_Previews: PreviewProvider {
     }
       .padding(20)
       .background(Color.background)
+      .inAllColorSchemes
   }
 }
