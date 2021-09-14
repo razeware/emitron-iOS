@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -70,8 +70,7 @@ extension MyTutorialsState: CaseIterable {
     Self.allCases.count
   }
 }
-
-struct MyTutorialView {
+struct MyTutorialsView {
   init(
     state: MyTutorialsState,
     inProgressRepository: InProgressRepository,
@@ -107,7 +106,7 @@ struct MyTutorialView {
 }
 
 // MARK: - View
-extension MyTutorialView: View {
+extension MyTutorialsView: View {
   var body: some View {
     contentView
       .navigationBarTitle(String.myTutorials)
@@ -115,7 +114,7 @@ extension MyTutorialView: View {
 }
 
 // MARK: - private
-private extension MyTutorialView {
+private extension MyTutorialsView {
   @ViewBuilder var contentView: some View {
     switch state {
     case .inProgress:
