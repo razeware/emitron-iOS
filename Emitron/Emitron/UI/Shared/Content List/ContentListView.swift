@@ -89,11 +89,6 @@ private extension ContentListView {
     }
   }
 
-  @ViewBuilder var listContentView: some View {
-    cardsView
-    loadMoreView
-  }
-
   var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
@@ -108,6 +103,8 @@ private extension ContentListView {
             childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
             dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
           ),
+          // This EmptyView and the 0 opacity below are used for `label`
+          // instead of CardViewContainer, in order to hide navigation chevrons on the right.
           label: EmptyView.init
         )
           .opacity(0)
@@ -128,41 +125,23 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      makeSectionList {
-        listContentView
+      Section(header: header) {
+        cardsView
+        loadMoreView
       }
     }
-      .if(!allowDelete) {
-        $0.gesture(
-          DragGesture().onChanged { _ in
-            UIApplication.dismissKeyboard()
-          }
-        )
-      }
-      .accessibility(identifier: "contentListView")
+    .if(!allowDelete) {
+      $0.gesture(
+        DragGesture().onChanged { _ in
+          UIApplication.dismissKeyboard()
+        }
+      )
+    }
+    .accessibility(identifier: "contentListView")
+    .listRowInsets(EdgeInsets())
+    .textCase(nil)
   }
 
-  func makeList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View {
-    Section(header: header, content: content)
-      .listRowInsets(EdgeInsets())
-  }
-
-  func makeSectionList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View {
-    Section(header: header, content: content)
-      .listRowInsets(EdgeInsets())
-      .textCase(nil)
-  }
-
-  func makeList<Content: View>(
-    @ViewBuilder content: () -> Content
-  ) -> some View where Header.Body == Never {
-    content()
-  }
-  
   var loadingView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
@@ -216,16 +195,19 @@ private extension ContentListView {
       downloadAction
         .deleteDownload(contentId: content.id)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { completion in
-          if case .failure(let error) = completion {
-            Failure
-              .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
-              .log()
-            self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+        .sink(
+          receiveCompletion: { completion in
+            if case .failure(let error) = completion {
+              Failure
+                .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
+                .log()
+              self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+            }
+          },
+          receiveValue: {  _ in
+            self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
           }
-        }) {  _ in
-          self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
-        }
+        )
         .store(in: &deleteSubscriptions)
     }
   }
