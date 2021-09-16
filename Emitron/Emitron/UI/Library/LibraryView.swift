@@ -61,11 +61,12 @@ struct LibraryView: View {
         filtersView
           .padding(.top, 10)
       }
+      
       numberAndSortView
         .padding(.vertical, 10)
     }
-      .padding(.horizontal, .sidePadding)
-      .background(Color.background)
+    .padding(.horizontal, .sidePadding)
+    .background(Color.background)
   }
 
   private var searchField: some View {
@@ -144,9 +145,9 @@ struct LibraryView: View {
           }
         }
       }
-        .padding([.horizontal], .sidePadding)
+      .padding([.horizontal], .sidePadding)
     }
-      .padding([.horizontal], -.sidePadding)
+    .padding([.horizontal], -.sidePadding)
   }
 
   private func updateFilters() {

@@ -29,18 +29,25 @@
 import SwiftUI
 
 struct DownloadsView: View {
-  @EnvironmentObject var downloadService: DownloadService
-  @State var contentScreen: ContentScreen
-  @ObservedObject var downloadRepository: DownloadRepository
-
-  var body: some View {
-    contentView
-      .navigationBarTitle(String.downloads)
+  init(
+    contentScreen: ContentScreen,
+    downloadRepository: DownloadRepository
+  ) {
+    self.contentScreen = contentScreen
+    self.downloadRepository = downloadRepository
   }
 
-  private var contentView: some View {
-    ContentListView(contentRepository: downloadRepository,
-                    downloadAction: downloadService,
-                    contentScreen: contentScreen)
+  private let contentScreen: ContentScreen
+  @ObservedObject private var downloadRepository: DownloadRepository
+
+  @EnvironmentObject private var downloadService: DownloadService
+  
+  var body: some View {
+    ContentListView(
+      contentRepository: downloadRepository,
+      downloadAction: downloadService,
+      contentScreen: contentScreen
+    )
+      .navigationBarTitle(String.downloads)
   }
 }
