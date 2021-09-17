@@ -97,21 +97,13 @@ struct FiltersHeaderView: View {
   }
 }
 
-#if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      filters.colorScheme(.dark)
-      filters.colorScheme(.light)
-    }
-  }
-  
-  static var filters: some View {
     let filters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .filters(for: [.difficulties([.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
-    
-    return VStack {
+
+    VStack {
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .difficulties, filters: filters),
         filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager),
@@ -122,8 +114,8 @@ struct FilterGroupView_Previews: PreviewProvider {
         filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager)
       )
     }
-      .padding()
-      .background(Color.backgroundColor)
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

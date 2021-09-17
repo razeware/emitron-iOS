@@ -49,24 +49,24 @@ struct PagerView<Content: View>: View {
           content
             .frame(width: proxy.size.width)
         }
-          .frame(width: proxy.size.width, alignment: .leading)
-          .offset(x: -CGFloat(currentIndex) * proxy.size.width)
-          .offset(x: translation)
+        .frame(width: proxy.size.width, alignment: .leading)
+        .offset(x: -CGFloat(currentIndex) * proxy.size.width)
+        .offset(x: translation)
         .animation(.interactiveSpring())
-          .gesture(
-            DragGesture()
-              .updating($translation) { value, state, _ in
-                state = value.translation.width
+        .gesture(
+          DragGesture()
+            .updating($translation) { value, state, _ in
+              state = value.translation.width
+            }
+            .onEnded { value in
+              let offset = value.translation.width / proxy.size.width
+              if abs(offset) < 0.1 {
+                return
               }
-              .onEnded { value in
-                let offset = value.translation.width / proxy.size.width
-                if abs(offset) < 0.1 {
-                  return
-                }
-                let newIndex = offset < 0 ? currentIndex + 1 : currentIndex - 1
-                currentIndex = Int(newIndex).clamped(to: 0...(pageCount - 1))
-              }
-          )
+              let newIndex = offset < 0 ? currentIndex + 1 : currentIndex - 1
+              currentIndex = Int(newIndex).clamped(to: 0...(pageCount - 1))
+            }
+        )
       }
       
       if showIndicator {
@@ -77,24 +77,20 @@ struct PagerView<Content: View>: View {
   }
 }
 
-#if DEBUG
 struct PagerView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      PagerView(pageCount: 3) {
-        Color.red
-        Color.blue
-        Color.green
-      }
-      
-      PagerView(pageCount: 5, showIndicator: true) {
-        Color.red
-        Color.blue
-        Color.green
-        Color.yellow
-        Color.purple
-      }
+    PagerView(pageCount: 3) {
+      Color.red
+      Color.blue
+      Color.green
+    }
+    
+    PagerView(pageCount: 5, showIndicator: true) {
+      Color.red
+      Color.blue
+      Color.green
+      Color.yellow
+      Color.purple
     }
   }
 }
-#endif

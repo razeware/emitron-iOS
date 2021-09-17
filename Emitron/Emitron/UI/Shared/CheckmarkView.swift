@@ -29,18 +29,29 @@
 import SwiftUI
 
 // TODO: Refactor layout properties here
-struct CheckmarkView: View {
-  var isOn: Bool
-  
-  var outerSide: CGFloat = 24
-  var innerSide: CGFloat = 20
-  var outerRadius: CGFloat = 9
+struct CheckmarkView {
+  init(isOn: Bool, onChange: @escaping (Bool) -> Void) {
+    self.isOn = isOn
+    self.onChange = onChange
+  }
+
+  private let isOn: Bool
+  private let onChange: (Bool) -> Void
+
+  private let outerSide: CGFloat = 24
+  private let innerSide: CGFloat = 20
+  private let outerRadius: CGFloat = 9
+}
+
+// MARK: - private
+private extension CheckmarkView {
   var radiusRatio: CGFloat {
     outerRadius / outerSide
   }
-  
-  var onChange: (Bool) -> Void
-  
+}
+
+// MARK: - View
+extension CheckmarkView: View {
   var body: some View {
     Button {
       onChange(!isOn)
@@ -48,7 +59,6 @@ struct CheckmarkView: View {
       if isOn {
         ZStack(alignment: .center) {
           Rectangle()
-
             .frame(maxWidth: outerSide, maxHeight: outerSide)
             .foregroundColor(.checkmarkBackground)
 
@@ -69,12 +79,10 @@ struct CheckmarkView: View {
   }
 }
 
-#if DEBUG
 struct CheckmarkView_Previews: PreviewProvider {
   static var previews: some View {
-    CheckmarkView(isOn: true, onChange: { change in
+    CheckmarkView(isOn: true) { change in
       print("Changed to: \(change)")
-    })
+    }
   }
 }
-#endif

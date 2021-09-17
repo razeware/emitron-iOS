@@ -44,7 +44,7 @@ struct IconView: View {
       .if(selected) {
         $0.overlay(
           Image(systemName: "checkmark.circle.fill")
-            .font(Font.system(size: 20, weight: .bold))
+            .font(.system(size: 20, weight: .bold))
             .foregroundColor(.accent),
           alignment: .bottomTrailing
         )
@@ -57,13 +57,6 @@ struct IconView_Previews: PreviewProvider {
   static let lightIcon = Icon(name: "black-white", imageName: "app-icon--black-white", ordinal: 0)
   
   static var previews: some View {
-    SwiftUI.Group {
-      icons.colorScheme(.light)
-      icons.colorScheme(.dark)
-    }
-  }
-  
-  static var icons: some View {
     HStack {
       IconView(icon: darkIcon, selected: false)
       IconView(icon: darkIcon, selected: true)
@@ -71,6 +64,7 @@ struct IconView_Previews: PreviewProvider {
       IconView(icon: lightIcon, selected: true)
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }

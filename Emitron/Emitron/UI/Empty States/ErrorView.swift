@@ -68,7 +68,7 @@ extension ErrorView: View {
   var body: some View {
     ZStack {
       Rectangle()
-        .fill(Color.backgroundColor)
+        .fill(Color.background)
         .edgesIgnoringSafeArea(.all)
       VStack {
         header
@@ -104,8 +104,7 @@ extension ErrorView: View {
 
 struct ErrorView_Previews: PreviewProvider {
   static var previews: some View {
-    ErrorView().colorScheme(.light)
-    ErrorView().colorScheme(.dark)
+    ErrorView().inAllColorSchemes
   }
 }
 

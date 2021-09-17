@@ -137,7 +137,7 @@ class Filters: ObservableObject {
     contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
     let difficultyFilters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .filters(for: [.difficulties([.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     

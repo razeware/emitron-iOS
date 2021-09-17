@@ -94,17 +94,13 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    searchFields.colorScheme(.light)
-    searchFields.colorScheme(.dark)
-  }
-  
-  private static var searchFields: some View {
     VStack(spacing: 20) {
       SearchFieldView(searchString: "")
       SearchFieldView(searchString: "Hello")
       SearchFieldView(searchString: "Testing")
     }
     .padding(20)
-    .background(Color.backgroundColor)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

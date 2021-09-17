@@ -63,7 +63,7 @@ struct LoginView: View {
               .multilineTextAlignment(.center)
             Spacer()
           }
-          .background(Color.backgroundColor)
+          .background(Color.background)
           
           VStack {
             Spacer()
@@ -85,7 +85,7 @@ struct LoginView: View {
               .multilineTextAlignment(.center)
             Spacer()
           }
-          .background(Color.backgroundColor)
+          .background(Color.background)
         }
         
         Spacer()
@@ -96,7 +96,7 @@ struct LoginView: View {
         .padding([.leading, .trailing], 18)
         .padding([.bottom], 38)
       }
-      .background(Color.backgroundColor)
+      .background(Color.background)
       .edgesIgnoringSafeArea([.all])
     }
   }

@@ -102,3 +102,15 @@ enum ContentScreen {
     }
   }
 }
+
+// MARK: CaseIterable
+extension ContentScreen: CaseIterable {
+  static var allCases: [Self] {
+    [.library]
+    + [true, false].map(Self.downloads(permitted:))
+    + [.inProgress, .completed, .bookmarked]
+  }
+}
+
+// MARK: Hashable
+extension ContentScreen: Hashable { }

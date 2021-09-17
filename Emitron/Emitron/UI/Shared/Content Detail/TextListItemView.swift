@@ -27,6 +27,8 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import CoreTelephony
+import SystemConfiguration
 
 extension CGFloat {
   static let childContentHorizontalSpacing: CGFloat = 15
@@ -35,6 +37,8 @@ extension CGFloat {
 
 struct TextListItemView: View {
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var settingsManager: SettingsManager
+  @EnvironmentObject var messageBus: MessageBus
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
   
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
@@ -74,7 +78,11 @@ struct TextListItemView: View {
               Spacer()
               DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
                 .onTapGesture {
-                  download()
+                  if wifiOnlyOnCellular() {
+                    messageBus.post(message: Message(level: .error, message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."))
+                  } else {
+                    download()
+                  }
                 }
                 .alert(item: $deletionConfirmation, content: \.alert)
                 .padding(.bottom, 5)
@@ -85,6 +93,20 @@ struct TextListItemView: View {
         progressBar
       }
     }
+  }
+
+  private func wifiOnlyOnCellular() -> Bool {
+    guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.raywenderlich.com") else {
+      return false
+    }
+    var flags = SCNetworkReachabilityFlags()
+    SCNetworkReachabilityGetFlags(reachability, &flags)
+    let isReachable = flags.contains(.reachable)
+    let isCellular = flags.contains(.isWWAN)
+    if isReachable && isCellular && settingsManager.wifiOnlyDownloads {
+      return true
+    }
+    return false
   }
 }
 
