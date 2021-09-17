@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,19 +41,13 @@ struct MainView: View {
   var body: some View {
     ZStack {
       contentView
-        .background(Color.backgroundColor)
+        .background(Color.background)
         .overlay(MessageBarView(messageBus: messageBus), alignment: .bottom)
         .onReceive(notification) { _ in
           DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
             makeReviewRequest()
           }
         }
-    }
-  }
-
-  private func makeReviewRequest() {
-    if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
-      SKStoreReviewController.requestReview(in: scene)
     }
   }
 }
@@ -83,42 +77,55 @@ private extension MainView {
   }
   
   @ViewBuilder var tabBarView: some View {
-    let downloadsView = DownloadsView(
-      contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
-      downloadRepository: dataManager.downloadRepository
-    )
-    let settingsView = SettingsView(settingsManager: settingsManager)
-
     switch sessionController.sessionState {
     case .online :
-      let libraryView = LibraryView(
-        filters: dataManager.filters,
-        libraryRepository: dataManager.libraryRepository
-      )
-      
-      let myTutorialsView = MyTutorialView(
-        state: .inProgress,
-        inProgressRepository: dataManager.inProgressRepository,
-        completedRepository: dataManager.completedRepository,
-        bookmarkRepository: dataManager.bookmarkRepository,
-        domainRepository: dataManager.domainRepository
-      )
-
       TabNavView(
-        libraryView: libraryView,
-        myTutorialsView: myTutorialsView,
+        libraryView: {
+          LibraryView(
+            filters: dataManager.filters,
+            libraryRepository: dataManager.libraryRepository
+          )
+        },
+        myTutorialsView: {
+          MyTutorialsView(
+            state: .inProgress,
+            inProgressRepository: dataManager.inProgressRepository,
+            completedRepository: dataManager.completedRepository,
+            bookmarkRepository: dataManager.bookmarkRepository,
+            domainRepository: dataManager.domainRepository
+          )
+        },
         downloadsView: downloadsView,
         settingsView: settingsView
       )
       .environmentObject(tabViewModel)
     case .offline:
-      TabNavView(libraryView: OfflineView(),
-                 myTutorialsView: OfflineView(),
-                 downloadsView: downloadsView,
-                 settingsView: settingsView)
+      TabNavView(
+        libraryView: OfflineView.init,
+        myTutorialsView: OfflineView.init,
+        downloadsView: downloadsView,
+        settingsView: settingsView
+      )
         .environmentObject(tabViewModel)
     case .unknown:
       LoadingView()
     }
   }
+
+  func downloadsView() -> DownloadsView {
+    .init(
+      contentScreen: .downloads(permitted: sessionController.user?.canDownload ?? false),
+      downloadRepository: dataManager.downloadRepository
+    )
+  }
+
+  func settingsView() -> SettingsView {
+    .init(settingsManager: settingsManager)
+  }
+
+  func makeReviewRequest() {
+   if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+     SKStoreReviewController.requestReview(in: scene)
+   }
+ }
 }

@@ -46,9 +46,10 @@ enum MainButtonType {
   
   var hasArrow: Bool {
     switch self {
-    case .primary(let hasArrow),
-         .destructive(let hasArrow),
-         .secondary(let hasArrow):
+    case
+        .primary(let hasArrow),
+        .destructive(let hasArrow),
+        .secondary(let hasArrow):
       return hasArrow
     }
   }
@@ -91,7 +92,7 @@ struct MainButtonView: View {
               Spacer()
               
               Image(systemName: "arrow.right")
-                .font(Font.system(size: 14, weight: .bold))
+                .font(.system(size: 14, weight: .bold))
                 .frame(width: height, height: height)
                 .foregroundColor(type.color)
                 .background(
@@ -115,16 +116,8 @@ struct MainButtonView: View {
   }
 }
 
-#if DEBUG
 struct PrimaryButtonView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      buttons.colorScheme(.light)
-      buttons.colorScheme(.dark)
-    }
-  }
-  
-  static var buttons: some View {
     VStack(spacing: 20) {
       MainButtonView(title: "Got It!", type: .primary(withArrow: false), callback: {})
       MainButtonView(title: "Got It!", type: .primary(withArrow: true), callback: {})
@@ -134,7 +127,7 @@ struct PrimaryButtonView_Previews: PreviewProvider {
       MainButtonView(title: "Got It!", type: .destructive(withArrow: true), callback: {})
     }
       .padding(20)
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }
-#endif

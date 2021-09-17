@@ -42,18 +42,12 @@ struct ArrowInCircleView: View {
 
 struct ArrowInCircleView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      circles.colorScheme(.dark)
-      circles.colorScheme(.light)
-    }
-  }
-  
-  static var circles: some View {
     HStack(spacing: 20) {
       ArrowInCircleView(fillColour: .accent)
       ArrowInCircleView(fillColour: .activeIcon)
     }
       .padding(20)
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }

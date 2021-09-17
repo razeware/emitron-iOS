@@ -111,23 +111,15 @@ struct AppliedFilterTagButton: View {
   }
 }
 
-#if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      tags.colorScheme(.dark)
-      tags.colorScheme(.light)
-    }
-  }
-  
-  static var tags: some View {
     HStack {
       AppliedFilterTagButton(name: "Reset Filters", type: .destructive) { }
       AppliedFilterTagButton(name: "Test Filter", type: .default) { }
       AppliedFilterTagButton(name: "Another", type: .default) { }
     }
     .padding()
-    .background(Color.backgroundColor)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

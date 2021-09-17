@@ -48,7 +48,7 @@ struct LibraryView: View {
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
-          .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+          .background(Color.background.edgesIgnoringSafeArea(.all))
       }
   }
 
@@ -61,11 +61,12 @@ struct LibraryView: View {
         filtersView
           .padding(.top, 10)
       }
+      
       numberAndSortView
         .padding(.vertical, 10)
     }
-      .padding(.horizontal, .sidePadding)
-      .background(Color.backgroundColor)
+    .padding(.horizontal, .sidePadding)
+    .background(Color.background)
   }
 
   private var searchField: some View {
@@ -110,7 +111,7 @@ struct LibraryView: View {
           if [.loading, .loadingAdditional].contains(libraryRepository.state) {
             Text(filters.sortFilter.name)
               .font(.uiLabel)
-              .foregroundColor(Color.gray)
+              .foregroundColor(.gray)
           } else {
             Text(filters.sortFilter.name)
               .font(.uiLabelBold)
@@ -144,9 +145,9 @@ struct LibraryView: View {
           }
         }
       }
-        .padding([.horizontal], .sidePadding)
+      .padding([.horizontal], .sidePadding)
     }
-      .padding([.horizontal], -.sidePadding)
+    .padding([.horizontal], -.sidePadding)
   }
 
   private func updateFilters() {

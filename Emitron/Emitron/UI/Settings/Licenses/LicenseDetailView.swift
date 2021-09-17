@@ -48,7 +48,7 @@ struct LicenseDetailView: View {
       Spacer()
     }
     .padding(10)
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
 }
 
@@ -56,9 +56,6 @@ struct LicenseDetailView_Previews: PreviewProvider {
   static let license = FossLicense.load().first!
   
   static var previews: some View {
-    SwiftUI.Group {
-      LicenseDetailView(license: license).colorScheme(.light)
-      LicenseDetailView(license: license).colorScheme(.dark)
-    }
+    LicenseDetailView(license: license).inAllColorSchemes
   }
 }

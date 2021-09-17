@@ -63,16 +63,8 @@ struct ProgressBarView: View {
   }
 }
 
-#if DEBUG
 struct ProgressBarView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      bars.colorScheme(.light)
-      bars.colorScheme(.dark)
-    }
-  }
-  
-  static var bars: some View {
     VStack(spacing: 20) {
       ProgressBarView(progress: 0.3, isRounded: true)
       ProgressBarView(progress: 0.6, isRounded: true)
@@ -85,7 +77,7 @@ struct ProgressBarView_Previews: PreviewProvider {
       ProgressBarView(progress: 1.0, isRounded: true, backgroundColor: .clear)
     }
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }
-#endif

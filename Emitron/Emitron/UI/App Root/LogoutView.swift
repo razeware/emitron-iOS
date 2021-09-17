@@ -60,7 +60,7 @@ struct LogoutView: View {
       .padding([.leading, .trailing], 18)
       .padding([.bottom], 38)
     }
-    .background(Color.backgroundColor)
+    .background(Color.background)
     .edgesIgnoringSafeArea([.all])
   }
 }

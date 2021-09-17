@@ -41,15 +41,9 @@ struct LockedIconView: View {
 
 struct LockedIconView_Previews: PreviewProvider {
   static var previews: some View {
-    HStack {
-      padlock.colorScheme(.dark)
-      padlock.colorScheme(.light)
-    }
-  }
-  
-  static var padlock: some View {
     LockedIconView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }

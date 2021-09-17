@@ -32,6 +32,7 @@ import struct CoreGraphics.CGFloat
 extension CGFloat {
   // MARK: Appearance
   static let blurRadius: CGFloat = 5
+  static let minDragTranslationForSwipe: CGFloat = 50
 }
 
 extension Int {

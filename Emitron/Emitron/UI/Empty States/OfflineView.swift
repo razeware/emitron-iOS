@@ -48,14 +48,13 @@ struct OfflineView: View {
         .padding([.leading, .trailing], 20)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
-    .background(Color.backgroundColor)
+    .background(Color.background)
     .edgesIgnoringSafeArea(.all)
   }
 }
 
 struct OfflineView_Previews: PreviewProvider {
   static var previews: some View {
-    OfflineView()
-    OfflineView().colorScheme(.dark)
+    OfflineView().inAllColorSchemes
   }
 }
