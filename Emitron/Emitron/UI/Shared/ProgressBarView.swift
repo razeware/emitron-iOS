@@ -48,10 +48,6 @@ struct ProgressBarView {
 
 // MARK: - View
 extension ProgressBarView: View {
-  var adjustedProgress: CGFloat {
-    progress < 0.05 ? 0.05 : CGFloat(progress)
-  }
-  
   var body: some View {
     GeometryReader { geometry in
       Rectangle()
@@ -60,6 +56,7 @@ extension ProgressBarView: View {
         .cornerRadius(isRounded ? height / 2 : 0)
         .overlay(
           ZStack(alignment: .leading) {
+            let adjustedProgress = max(progress, 0.05)
             Rectangle()
               .frame(width: geometry.size.width * adjustedProgress, height: height)
               .foregroundColor(.accent)

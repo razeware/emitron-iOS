@@ -52,7 +52,7 @@ struct LicenseListView: View {
         .padding(10)
         .background(Color.background)
     }
-      .navigationViewStyle(StackNavigationViewStyle())
+    .navigationViewStyle(.stack)
   }
   
   var dismissButton: some View {
