@@ -76,8 +76,8 @@ struct ProgressBarView_Previews: PreviewProvider {
       ProgressBarView(progress: 0.6, isRounded: true, backgroundColor: .clear)
       ProgressBarView(progress: 1.0, isRounded: true, backgroundColor: .clear)
     }
-      .padding()
-      .background(Color.background)
-      .inAllColorSchemes
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

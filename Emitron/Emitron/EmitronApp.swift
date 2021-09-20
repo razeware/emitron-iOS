@@ -32,10 +32,17 @@ import GRDB
 
 @main
 struct EmitronApp: App {
-
   @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
 
-  typealias EmitronObjects = (persistenceStore: PersistenceStore, guardpost: Guardpost, sessionController: SessionController, settingsManager: SettingsManager, downloadService: DownloadService, dataManager: DataManager, messageBus: MessageBus)
+  typealias EmitronObjects = (
+    persistenceStore: PersistenceStore,
+    guardpost: Guardpost,
+    sessionController: SessionController,
+    settingsManager: SettingsManager,
+    downloadService: DownloadService,
+    dataManager: DataManager,
+    messageBus: MessageBus
+  )
 
   private var persistenceStore: PersistenceStore
   private var guardpost: Guardpost
@@ -110,7 +117,15 @@ struct EmitronApp: App {
     let messageBus = MessageBus()
     let dataManager = DataManager(sessionController: sessionController, persistenceStore: persistenceStore, downloadService: downloadService, messageBus: messageBus, settingsManager: settingsManager)
 
-    return EmitronObjects(persistenceStore: persistenceStore, guardpost: guardpost, sessionController: sessionController, settingsManager: settingsManager, downloadService: downloadService, dataManager: dataManager, messageBus: messageBus)
+    return EmitronObjects(
+      persistenceStore: persistenceStore,
+      guardpost: guardpost,
+      sessionController: sessionController,
+      settingsManager: settingsManager,
+      downloadService: downloadService,
+      dataManager: dataManager,
+      messageBus: messageBus
+    )
   }
 
   private mutating func startServices() {

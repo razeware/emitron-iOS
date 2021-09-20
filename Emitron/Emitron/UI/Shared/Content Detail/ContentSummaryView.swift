@@ -82,7 +82,7 @@ extension ContentSummaryView: View {
         .lineSpacing(3)
         .fixedSize(horizontal: false, vertical: true)
       
-      HStack(spacing: 30, content: {
+      HStack(spacing: 30) {
         if canDownload {
           DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
             .onTapGesture(perform: download)
@@ -93,7 +93,7 @@ extension ContentSummaryView: View {
         bookmarkButton
         
         completedTag
-      })
+      }
       .padding(.top, 15)
       
       Text(content.descriptionPlainText)
