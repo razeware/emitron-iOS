@@ -167,12 +167,12 @@ struct EmitronApp: App {
     UINavigationBar.appearance().backgroundColor = .backgroundColor
 
     UINavigationBar.appearance().largeTitleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
-      NSAttributedString.Key.font: UIFont.uiLargeTitle
+      .foregroundColor: UIColor(named: "titleText")!,
+      .font: UIFont.uiLargeTitle
     ]
     UINavigationBar.appearance().titleTextAttributes = [
-      NSAttributedString.Key.foregroundColor: UIColor(named: "titleText")!,
-      NSAttributedString.Key.font: UIFont.uiHeadline
+      .foregroundColor: UIColor(named: "titleText")!,
+      .font: UIFont.uiHeadline
     ]
   }
 
