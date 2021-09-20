@@ -28,12 +28,26 @@
 
 import SwiftUI
 
-struct ProgressBarView: View {
-  let progress: Double // Between 0.0 and 1.0
-  let isRounded: Bool
-  var backgroundColor: Color = .borderColor
-  var height: CGFloat = 4
+struct ProgressBarView {
+  /// - Parameter progress: Between 0.0 and 1.0
+  init(
+    progress: Double,
+    isRounded: Bool,
+    backgroundColor: Color = .borderColor
+  ) {
+    self.progress = progress
+    self.isRounded = isRounded
+    self.backgroundColor = backgroundColor
+  }
+  
+  private let progress: Double // Between 0.0 and 1.0
+  private let isRounded: Bool
+  private let backgroundColor: Color
+  private let height: CGFloat = 4
+}
 
+// MARK: - View
+extension ProgressBarView: View {
   var adjustedProgress: CGFloat {
     progress < 0.05 ? 0.05 : CGFloat(progress)
   }
