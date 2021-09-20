@@ -44,6 +44,19 @@ struct TabNavView<
     self.myTutorialsView = myTutorialsView
     self.downloadsView = downloadsView
     self.settingsView = settingsView
+
+    // Without the following, in iOS 15, this ugliness occurs:
+    //
+    // The nav bar renders as a rectangle that does not extend vertically past the safe area.
+    // Scrolling content is visible above it.
+    //
+    // The tab bar renders transparently, on top of other views.
+    if #available(iOS 15.0, *) {
+      let barAppearance = UIBarAppearance()
+      barAppearance.configureWithOpaqueBackground()
+      UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
+      UITabBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
+    }
   }
 
   @EnvironmentObject private var model: TabViewModel
