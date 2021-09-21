@@ -35,7 +35,6 @@ class IconManager: ObservableObject {
   @Published private(set) var currentIcon: Icon?
   
   init(messageBus: MessageBus) {
-      
     let currentIconName = UIApplication.shared.alternateIconName
     currentIcon = icons.first { $0.name == currentIconName }
     self.messageBus = messageBus

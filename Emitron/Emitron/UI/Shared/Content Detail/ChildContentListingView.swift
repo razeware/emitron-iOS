@@ -92,9 +92,9 @@ private extension ChildContentListingView {
       LoadingView()
       Spacer()
     }
-      .listRowInsets(EdgeInsets())
-      .listRowBackground(Color.background)
-      .background(Color.background)
+    .listRowInsets(EdgeInsets())
+    .listRowBackground(Color.background)
+    .background(Color.background)
   }
 
   var reloadView: MainButtonView {

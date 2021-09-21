@@ -139,13 +139,13 @@ private extension ContentDetailView {
     }
   }
 
-  private func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+  func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
     let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
     return components.weekOfYear ?? 0 >= 2
   }
 
   func headerImagePlayableContent(for width: CGFloat) -> some View {
-    VStack(spacing: 0, content: {
+    VStack(spacing: 0) {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
           imageURL: content.cardArtworkURL,
@@ -158,7 +158,7 @@ private extension ContentDetailView {
       }
       
       progressBar
-    })
+    }
   }
   
   func headerImageLockedProContent(for width: CGFloat) -> some View {
