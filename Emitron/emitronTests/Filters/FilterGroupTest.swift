@@ -33,13 +33,13 @@ class FilterGroupTest: XCTestCase {
 
   func testUpdateFilterWithExistingFilter() {
     let difficultyFilters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .filters(for: [.difficulties([.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
 
     var difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
 
     let filter = Param
-      .filters(for: [.difficulties(difficulties: [.advanced])])
+      .filters(for: [.difficulties([.advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: true) }
       .first!
 
@@ -49,13 +49,13 @@ class FilterGroupTest: XCTestCase {
 
   func testUpdateFilterWithMissingFilter() {
     let difficultyFilters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate])])
+      .filters(for: [.difficulties([.beginner, .intermediate])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
 
     var difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
 
     let filter = Param
-      .filters(for: [.difficulties(difficulties: [.advanced])])
+      .filters(for: [.difficulties([.advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
       .first!
 
@@ -65,13 +65,13 @@ class FilterGroupTest: XCTestCase {
 
   func testUpdateFilterWithDifferentFilter() {
     let difficultyFilters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner])])
+      .filters(for: [.difficulties([.beginner])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
 
     var difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
 
     let filter = Param
-      .filters(for: [.difficulties(difficulties: [.advanced])])
+      .filters(for: [.difficulties([.advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: true) }
       .first!
 
