@@ -92,7 +92,7 @@ private extension ContentListView {
   var cardsView: some View {
     ForEach(contentRepository.contents, id: \.id) { partialContent in
       ZStack {
-        CardViewContainer(
+        CardView(
           model: partialContent,
           dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
         )
@@ -104,7 +104,7 @@ private extension ContentListView {
             dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
           ),
           // This EmptyView and the 0 opacity below are used for `label`
-          // instead of CardViewContainer, in order to hide navigation chevrons on the right.
+          // instead of the CardView, in order to hide navigation chevrons on the right.
           label: EmptyView.init
         )
           .opacity(0)
@@ -175,11 +175,11 @@ private extension ContentListView {
   
   @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
-        HStack {
-          Spacer()
-          ProgressView().scaleEffect(1.0, anchor: .center)
-          Spacer()
-        }.padding()
+      HStack {
+        Spacer()
+        ProgressView().scaleEffect(1.0, anchor: .center)
+        Spacer()
+      }.padding()
         .background(Color.background.edgesIgnoringSafeArea(.all))
         .onAppear(perform: contentRepository.loadMore)
     }
