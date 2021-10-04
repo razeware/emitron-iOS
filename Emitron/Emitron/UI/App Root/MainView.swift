@@ -60,11 +60,7 @@ private extension MainView {
     } else {
       switch sessionController.permissionState {
       case .loaded:
-        if sessionController.hasPermissionToUseApp {
-          tabBarView
-        } else {
-          LogoutView()
-        }
+        tabBarView
       case .notLoaded, .loading:
         PermissionsLoadingView()
       case .error:
