@@ -173,7 +173,7 @@ private extension MyTutorialsView {
     return ContentListView(
       contentRepository: contentRepository,
       downloadAction: downloadService,
-      contentScreen: state == .bookmarked ? ContentScreen.bookmarked : ContentScreen.inProgress,
+      contentScreen: state == .bookmarked ? ContentScreen.bookmarked : state == .completed ? ContentScreen.completed : ContentScreen.inProgress,
       header: toggleControl
     )
     .highPriorityGesture(DragGesture().onEnded({ handleSwipe(translation: $0.translation.width) }))

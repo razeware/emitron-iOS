@@ -74,7 +74,7 @@ extension ErrorView: View {
         header
         Spacer()
 
-        Image("emojiCrying")
+        Image("Error")
           .padding(.bottom, 30)
 
         Text(titleText)
