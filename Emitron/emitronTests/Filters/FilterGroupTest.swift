@@ -44,7 +44,7 @@ class FilterGroupTest: XCTestCase {
       .first!
 
     difficulties.updateFilters(from: [filter])
-    XCTAssertTrue(difficulties.filters[2].isOn == true)
+    XCTAssert(difficulties.filters[2].isOn)
   }
 
   func testUpdateFilterWithMissingFilter() {
@@ -60,7 +60,7 @@ class FilterGroupTest: XCTestCase {
       .first!
 
     difficulties.updateFilters(from: [filter])
-    XCTAssertTrue(difficulties.filters.count == 2)
+    XCTAssertEqual(difficulties.filters.count, 2)
   }
 
   func testUpdateFilterWithDifferentFilter() {
@@ -76,6 +76,6 @@ class FilterGroupTest: XCTestCase {
       .first!
 
     difficulties.updateFilters(from: [filter])
-    XCTAssertTrue(difficulties.filters[0].isOn == false)
+    XCTAssertFalse(difficulties.filters[0].isOn)
   }
 }
