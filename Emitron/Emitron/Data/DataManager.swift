@@ -91,8 +91,6 @@ final class DataManager: ObservableObject {
     
     // Empty the caches
     dataCache = DataCache()
-    filters = Filters(settingsManager: settingsManager)
-    
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
     let contentsService = ContentsService(client: sessionController.client)
@@ -115,8 +113,8 @@ final class DataManager: ObservableObject {
   
     completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
-    
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController, filters: filters)
     
     downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     

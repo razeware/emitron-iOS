@@ -49,7 +49,6 @@ struct SettingsView: View {
       SettingsList(
         settingsManager: _settingsManager,
         canDownload: sessionController.user?.canDownload ?? false
-        
       ).padding(.horizontal, 20)
       Section(
         header: HStack {

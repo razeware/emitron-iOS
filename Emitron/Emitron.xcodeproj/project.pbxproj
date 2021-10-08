@@ -331,6 +331,7 @@
 		B6FC15C722CB55DB0078CEDB /* JSONAPIErrorSource.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */; };
 		B6FC15D522CB68E20078CEDB /* Service.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D422CB68E20078CEDB /* Service.swift */; };
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
+		D31CEF2C26E2C421008083D0 /* FilterGroupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */; };
 		D3D9C5C72645DA9A002FD479 /* EmitronApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */; };
 /* End PBXBuildFile section */
 
@@ -679,6 +680,7 @@
 		B6FC15C622CB55DB0078CEDB /* JSONAPIErrorSource.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = JSONAPIErrorSource.swift; sourceTree = "<group>"; };
 		B6FC15D422CB68E20078CEDB /* Service.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Service.swift; sourceTree = "<group>"; };
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
+		D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterGroupTest.swift; sourceTree = "<group>"; };
 		D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronApp.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -1203,6 +1205,7 @@
 				2237AAB523C426B5008E9976 /* Data */,
 				22BFE76223DAD00800495BA9 /* Data Synchronisation */,
 				22A36F51236F7C750064A406 /* Downloads */,
+				D31CEF2A26E2C3C2008083D0 /* Filters */,
 				22D176C123460A060038333D /* Info.plist */,
 				22A265AA23967ADE000DD276 /* Model Controllers */,
 				22D176CC234751FB0038333D /* Models */,
@@ -1690,6 +1693,14 @@
 			path = Services;
 			sourceTree = "<group>";
 		};
+		D31CEF2A26E2C3C2008083D0 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1969,6 +1980,7 @@
 				2237AAB723C426C7008E9976 /* DataCacheTest.swift in Sources */,
 				2237AAAA23C336C0008E9976 /* ContentCategoryAdapterTest.swift in Sources */,
 				221E56662379767C00333607 /* ContentTest+Mocks.swift in Sources */,
+				D31CEF2C26E2C421008083D0 /* FilterGroupTest.swift in Sources */,
 				2237AAA823C336B2008E9976 /* ContentAdapterTest.swift in Sources */,
 				222EEF7623CB2A0F00B025A4 /* PersistenceStore+DownloadsTest.swift in Sources */,
 				22D382BC2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift in Sources */,
