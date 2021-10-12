@@ -32,17 +32,6 @@ enum MyTutorialsState: String {
   case inProgress
   case completed
   case bookmarked
-
-  var contentScreen: ContentScreen {
-    switch self {
-    case .inProgress:
-      return .inProgress
-    case .completed:
-      return .completed
-    case .bookmarked:
-      return .bookmarked
-    }
-  }
   
   var displayString: String {
     switch self {
@@ -56,6 +45,7 @@ enum MyTutorialsState: String {
   }
 }
 
+// MARK: - CaseIterable
 extension MyTutorialsState: CaseIterable {
   var index: Self.AllCases.Index {
     get {
@@ -70,6 +60,8 @@ extension MyTutorialsState: CaseIterable {
     Self.allCases.count
   }
 }
+
+// MARK: -
 struct MyTutorialsView {
   init(
     state: MyTutorialsState,
@@ -85,7 +77,6 @@ struct MyTutorialsView {
     self.domainRepository = domainRepository
   }
 
-  // Initialization
   @State private var state: MyTutorialsState
 
   // We need to pull these in to pass them to the settings view. We don't actually use them here.
@@ -173,7 +164,7 @@ private extension MyTutorialsView {
     return ContentListView(
       contentRepository: contentRepository,
       downloadAction: downloadService,
-      contentScreen: state == .bookmarked ? ContentScreen.bookmarked : state == .completed ? ContentScreen.completed : ContentScreen.inProgress,
+      contentScreen: contentScreen,
       header: toggleControl
     )
     .highPriorityGesture(DragGesture().onEnded({ handleSwipe(translation: $0.translation.width) }))
