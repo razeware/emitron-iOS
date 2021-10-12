@@ -88,17 +88,17 @@ enum ContentScreen {
   var emptyImageName: String {
     switch self {
     case .downloads(permitted: true):
-      return "artworkEmptySuitcase"
+      return "DownloadsEmptyState"
     case .downloads(permitted: false):
-      return "artworkDownloadSwitch"
+      return "DownloadsUpgrade"
     case .bookmarked:
-      return "artworkBookmarks"
+      return "BookmarksEmptyState"
     case .inProgress:
-      return "artworkInProgress"
+      return "InProgressEmptyState"
     case .completed:
-      return "artworkCompleted"
+      return "CompletedEmptyState"
     case .library:
-      return "emojiCrying"
+      return "Error"
     }
   }
 }
