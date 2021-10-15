@@ -129,6 +129,8 @@ private extension ContentListView {
         cardsView
         loadMoreView
       }
+      .listRowInsets(EdgeInsets())
+      .textCase(nil)
     }
     .if(!allowDelete) {
       $0.gesture(
@@ -138,8 +140,6 @@ private extension ContentListView {
       )
     }
     .accessibility(identifier: "contentListView")
-    .listRowInsets(EdgeInsets())
-    .textCase(nil)
   }
 
   var loadingView: some View {
