@@ -161,7 +161,6 @@
 		22BFE76C23DAF80200495BA9 /* SyncEngineTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22BFE76B23DAF80200495BA9 /* SyncEngineTest.swift */; };
 		22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512123A4C923004D1223 /* KeychainSwift */; };
 		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
-		22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512623A4C99E004D1223 /* KingfisherSwiftUI */; };
 		22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512923A4C9BE004D1223 /* SwiftyJSON */; };
 		22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512C23A4CBB9004D1223 /* GRDBCombine */; };
 		22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */; };
@@ -705,7 +704,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22C0512723A4C99E004D1223 /* KingfisherSwiftUI in Frameworks */,
 				22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */,
 				22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */,
 				22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */,
@@ -1764,7 +1762,6 @@
 			packageProductDependencies = (
 				22C0512123A4C923004D1223 /* KeychainSwift */,
 				22C0512423A4C99E004D1223 /* Kingfisher */,
-				22C0512623A4C99E004D1223 /* KingfisherSwiftUI */,
 				22C0512923A4C9BE004D1223 /* SwiftyJSON */,
 				22C0512C23A4CBB9004D1223 /* GRDBCombine */,
 			);
@@ -2689,8 +2686,8 @@
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
-				kind = upToNextMajorVersion;
-				minimumVersion = 5.12.0;
+				branch = master;
+				kind = branch;
 			};
 		};
 		22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
@@ -2731,11 +2728,6 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */;
 			productName = Kingfisher;
-		};
-		22C0512623A4C99E004D1223 /* KingfisherSwiftUI */ = {
-			isa = XCSwiftPackageProductDependency;
-			package = 22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */;
-			productName = KingfisherSwiftUI;
 		};
 		22C0512923A4C9BE004D1223 /* SwiftyJSON */ = {
 			isa = XCSwiftPackageProductDependency;
