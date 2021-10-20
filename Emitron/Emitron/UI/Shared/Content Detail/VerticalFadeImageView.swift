@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 import SwiftUI
-import KingfisherSwiftUI
+import Kingfisher
 
 struct VerticalFadeImageView {
   private let imageURL: URL?
