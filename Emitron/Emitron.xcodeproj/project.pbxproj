@@ -2671,7 +2671,7 @@
 			repositoryURL = "https://github.com/groue/CombineExpectations.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.10.0;
 			};
 		};
 		22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
@@ -2679,15 +2679,15 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 18.0.0;
+				minimumVersion = 19.0.0;
 			};
 		};
 		22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
 			};
 		};
 		22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
