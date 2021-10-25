@@ -162,7 +162,6 @@
 		22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512123A4C923004D1223 /* KeychainSwift */; };
 		22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512423A4C99E004D1223 /* Kingfisher */; };
 		22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512923A4C9BE004D1223 /* SwiftyJSON */; };
-		22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */ = {isa = PBXBuildFile; productRef = 22C0512C23A4CBB9004D1223 /* GRDBCombine */; };
 		22C0512F23A4E7A7004D1223 /* EmitronDatabase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0512E23A4E7A7004D1223 /* EmitronDatabase.swift */; };
 		22C0513223A4FB84004D1223 /* Content+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513123A4FB84004D1223 /* Content+Persistence.swift */; };
 		22C0513423A4FB8E004D1223 /* Bookmark+Persistence.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C0513323A4FB8E004D1223 /* Bookmark+Persistence.swift */; };
@@ -245,6 +244,7 @@
 		22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */; };
 		22F2C46123EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */; };
 		22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */; };
+		493DA0A127266049006ED195 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 493DA0A027266049006ED195 /* GRDB */; };
 		494A79A82465C8C90097E8F4 /* RefreshableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
@@ -704,10 +704,10 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				22C0512D23A4CBB9004D1223 /* GRDBCombine in Frameworks */,
 				22C0512523A4C99E004D1223 /* Kingfisher in Frameworks */,
 				22C0512A23A4C9BE004D1223 /* SwiftyJSON in Frameworks */,
 				22C0512223A4C923004D1223 /* KeychainSwift in Frameworks */,
+				493DA0A127266049006ED195 /* GRDB in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1763,7 +1763,7 @@
 				22C0512123A4C923004D1223 /* KeychainSwift */,
 				22C0512423A4C99E004D1223 /* Kingfisher */,
 				22C0512923A4C9BE004D1223 /* SwiftyJSON */,
-				22C0512C23A4CBB9004D1223 /* GRDBCombine */,
+				493DA0A027266049006ED195 /* GRDB */,
 			);
 			productName = Emitron;
 			productReference = B6D7DC2B22C79743006DD325 /* raywenderlich.app */;
@@ -1805,8 +1805,8 @@
 				22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */,
 				22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */,
 				22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */,
-				22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */,
 				2253632423A9EC8C0013F333 /* XCRemoteSwiftPackageReference "CombineExpectations" */,
+				493DA09F27266049006ED195 /* XCRemoteSwiftPackageReference "GRDB.swift" */,
 			);
 			productRefGroup = B6D7DC2C22C79743006DD325 /* Products */;
 			projectDirPath = "";
@@ -2671,7 +2671,7 @@
 			repositoryURL = "https://github.com/groue/CombineExpectations.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.3.0;
+				minimumVersion = 0.10.0;
 			};
 		};
 		22C0512023A4C923004D1223 /* XCRemoteSwiftPackageReference "keychain-swift" */ = {
@@ -2679,15 +2679,15 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 18.0.0;
+				minimumVersion = 19.0.0;
 			};
 		};
 		22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/onevcat/Kingfisher";
 			requirement = {
-				branch = master;
-				kind = branch;
+				kind = upToNextMajorVersion;
+				minimumVersion = 7.1.1;
 			};
 		};
 		22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */ = {
@@ -2698,12 +2698,12 @@
 				minimumVersion = 5.0.1;
 			};
 		};
-		22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */ = {
+		493DA09F27266049006ED195 /* XCRemoteSwiftPackageReference "GRDB.swift" */ = {
 			isa = XCRemoteSwiftPackageReference;
-			repositoryURL = "https://github.com/groue/GRDBCombine";
+			repositoryURL = "https://github.com/groue/GRDB.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 0.7.1;
+				minimumVersion = 5.0.0;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
@@ -2734,10 +2734,10 @@
 			package = 22C0512823A4C9BE004D1223 /* XCRemoteSwiftPackageReference "SwiftyJSON" */;
 			productName = SwiftyJSON;
 		};
-		22C0512C23A4CBB9004D1223 /* GRDBCombine */ = {
+		493DA0A027266049006ED195 /* GRDB */ = {
 			isa = XCSwiftPackageProductDependency;
-			package = 22C0512B23A4CBB9004D1223 /* XCRemoteSwiftPackageReference "GRDBCombine" */;
-			productName = GRDBCombine;
+			package = 493DA09F27266049006ED195 /* XCRemoteSwiftPackageReference "GRDB.swift" */;
+			productName = GRDB;
 		};
 /* End XCSwiftPackageProductDependency section */
 	};

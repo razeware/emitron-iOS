@@ -29,7 +29,6 @@
 import Combine
 import struct Foundation.UUID
 import GRDB
-import GRDBCombine
 
 // MARK: - Data reading methods for display
 extension PersistenceStore {

@@ -49,11 +49,4 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     downloadService?.backgroundSessionCompletionHandler = completionHandler
   }
-  
-  private func setupDatabase(_ application: UIApplication) throws -> DatabasePool {
-    let databaseURL = try FileManager.default
-      .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
-      .appendingPathComponent("emitron.sqlite")
-    return try EmitronDatabase.openDatabase(atPath: databaseURL.path)
-  }
 }
