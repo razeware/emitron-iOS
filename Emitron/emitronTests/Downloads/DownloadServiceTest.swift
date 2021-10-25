@@ -51,8 +51,8 @@ class DownloadServiceTest: XCTestCase {
                                       settingsManager: settingsManager)
     
     // Check it's all empty
-    XCTAssertEqual(0, getAllContents().count)
-    XCTAssertEqual(0, getAllDownloads().count)
+    XCTAssert(getAllContents().isEmpty)
+    XCTAssert(getAllDownloads().isEmpty)
   }
   
   override func tearDown() {
@@ -64,9 +64,7 @@ class DownloadServiceTest: XCTestCase {
   
   func getAllContents() -> [Content] {
     // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Content.fetchAll(db)
-    }
+    try! database.read(Content.fetchAll)
   }
   
   func getAllDownloads() -> [Download] {
@@ -150,9 +148,7 @@ class DownloadServiceTest: XCTestCase {
   func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() throws {
     let screencastModel = ContentTest.Mocks.screencast
     var screencast = screencastModel.0
-    try database.write { db in
-      try screencast.save(db)
-    }
+    try database.write(screencast.save)
     
     let originalDuration = screencast.duration
     let originalDescription = screencast.descriptionPlainText
@@ -165,9 +161,7 @@ class DownloadServiceTest: XCTestCase {
     // Update the persisted model
     screencast.duration = newDuration
     screencast.descriptionPlainText = newDescription
-    try database.write { db in
-      try screencast.save(db)
-    }
+    try database.write(screencast.save)
     
     // Verify the changes persisted
     try database.read { db in
@@ -226,7 +220,7 @@ class DownloadServiceTest: XCTestCase {
     let episode = fullState.childContents.first!
     let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
       ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
-      })
+    })
       .record()
     
     let completion = try wait(for: recorder.completion, timeout: 10)
@@ -245,9 +239,7 @@ class DownloadServiceTest: XCTestCase {
     // Update the CD model
     collection.duration = newDuration
     collection.descriptionPlainText = newDescription
-    try database.write { db in
-      try collection.save(db)
-    }
+    try database.write(collection.save)
     
     // Confirm the change was persisted
     try database.read { db in
@@ -289,7 +281,10 @@ class DownloadServiceTest: XCTestCase {
     XCTAssert(completion == .finished)
     
     XCTAssertEqual(fullState.childContents.count + 1, getAllContents().count)
-    XCTAssertEqual((fullState.childContents.map(\.id) + [collection.0.id]) .sorted(), getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual(
+      (fullState.childContents.map(\.id) + [collection.0.id]) .sorted(),
+      getAllContents().map { Int($0.id) }.sorted()
+    )
   }
   
   func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
@@ -494,7 +489,7 @@ class DownloadServiceTest: XCTestCase {
                                       videosServiceProvider: { _ in self.videoService },
                                       settingsManager: EmitronApp.emitronObjects().settingsManager)
     
-    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+    XCTAssertFalse(fileManager.fileExists(atPath: sampleFile.path))
   }
   
   func testEmptiesDownloadsDirectoryWhenPermissionsChange() {
@@ -505,7 +500,7 @@ class DownloadServiceTest: XCTestCase {
     userModelController.user = .noPermissions
     userModelController.objectDidChange.send()
     
-    XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
+    XCTAssertFalse(fileManager.fileExists(atPath: sampleFile.path))
   }
   
   func testDoesNotEmptyDownloadDirectoryIfUserHasDownloadPermission() {

@@ -42,7 +42,6 @@ extension ContentTest {
     
     private static func loadMockFrom(filename: String) -> (Content, DataCacheUpdate) {
       do {
-        
         let bundle = Bundle(for: ContentTest.self)
         let fileURL = bundle.url(forResource: filename, withExtension: "json")
         let data = try Data(contentsOf: fileURL!)

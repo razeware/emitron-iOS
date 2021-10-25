@@ -52,6 +52,7 @@ extension AttachmentTest {
         let attachments = try document.data.map { resource in
           try AttachmentAdapter.process(resource: resource)
         }
+
         let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
         return (attachments[0], cacheUpdate)
       } catch {

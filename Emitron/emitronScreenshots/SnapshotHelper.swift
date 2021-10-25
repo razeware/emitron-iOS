@@ -210,28 +210,27 @@ open class Snapshot: NSObject {
     // on OSX config is stored in /Users/<username>/Library
     // and on iOS/tvOS/WatchOS it's in simulator's home dir
     #if os(OSX)
-    guard let user = ProcessInfo().environment["USER"] else {
-      throw SnapshotError.cannotDetectUser
-    }
-    
-    guard let usersDir = FileManager.default.urls(for: .userDirectory, in: .localDomainMask).first else {
-      throw SnapshotError.cannotFindHomeDirectory
-    }
-    
-    homeDir = usersDir.appendingPathComponent(user)
+      guard let user = ProcessInfo().environment["USER"] else {
+        throw SnapshotError.cannotDetectUser
+      }
+
+      guard let usersDir = FileManager.default.urls(for: .userDirectory, in: .localDomainMask).first else {
+        throw SnapshotError.cannotFindHomeDirectory
+      }
+
+      homeDir = usersDir.appendingPathComponent(user)
+    #elseif arch(i386) || arch(x86_64)
+      guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
+        throw SnapshotError.cannotFindSimulatorHomeDirectory
+      }
+      guard let homeDirURL = URL(string: simulatorHostHome) else {
+        throw SnapshotError.cannotAccessSimulatorHomeDirectory(simulatorHostHome)
+      }
+      homeDir = URL(fileURLWithPath: homeDirURL.path)
     #else
-    #if arch(i386) || arch(x86_64)
-    guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
-      throw SnapshotError.cannotFindSimulatorHomeDirectory
-    }
-    guard let homeDirURL = URL(string: simulatorHostHome) else {
-      throw SnapshotError.cannotAccessSimulatorHomeDirectory(simulatorHostHome)
-    }
-    homeDir = URL(fileURLWithPath: homeDirURL.path)
-    #else
-    throw SnapshotError.cannotRunOnPhysicalDevice
+      throw SnapshotError.cannotRunOnPhysicalDevice
     #endif
-    #endif
+    
     return homeDir.appendingPathComponent("Library/Caches/tools.fastlane")
   }
 }
