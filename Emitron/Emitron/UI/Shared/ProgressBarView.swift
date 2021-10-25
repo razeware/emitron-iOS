@@ -28,16 +28,26 @@
 
 import SwiftUI
 
-struct ProgressBarView: View {
-  let progress: Double // Between 0.0 and 1.0
-  let isRounded: Bool
-  var backgroundColor: Color = .borderColor
-  var height: CGFloat = 4
-
-  var adjustedProgress: CGFloat {
-    progress < 0.05 ? 0.05 : CGFloat(progress)
+struct ProgressBarView {
+  /// - Parameter progress: Between 0.0 and 1.0
+  init(
+    progress: Double,
+    isRounded: Bool,
+    backgroundColor: Color = .borderColor
+  ) {
+    self.progress = progress
+    self.isRounded = isRounded
+    self.backgroundColor = backgroundColor
   }
   
+  private let progress: Double // Between 0.0 and 1.0
+  private let isRounded: Bool
+  private let backgroundColor: Color
+  private let height: CGFloat = 4
+}
+
+// MARK: - View
+extension ProgressBarView: View {
   var body: some View {
     GeometryReader { geometry in
       Rectangle()
@@ -46,6 +56,7 @@ struct ProgressBarView: View {
         .cornerRadius(isRounded ? height / 2 : 0)
         .overlay(
           ZStack(alignment: .leading) {
+            let adjustedProgress = max(progress, 0.05)
             Rectangle()
               .frame(width: geometry.size.width * adjustedProgress, height: height)
               .foregroundColor(.accent)
@@ -63,16 +74,8 @@ struct ProgressBarView: View {
   }
 }
 
-#if DEBUG
 struct ProgressBarView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      bars.colorScheme(.light)
-      bars.colorScheme(.dark)
-    }
-  }
-  
-  static var bars: some View {
     VStack(spacing: 20) {
       ProgressBarView(progress: 0.3, isRounded: true)
       ProgressBarView(progress: 0.6, isRounded: true)
@@ -84,8 +87,8 @@ struct ProgressBarView_Previews: PreviewProvider {
       ProgressBarView(progress: 0.6, isRounded: true, backgroundColor: .clear)
       ProgressBarView(progress: 1.0, isRounded: true, backgroundColor: .clear)
     }
-      .padding()
-      .background(Color.backgroundColor)
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

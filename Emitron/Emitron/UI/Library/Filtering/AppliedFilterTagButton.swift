@@ -85,7 +85,9 @@ struct AppliedFilterTagButton: View {
   let removeFilterAction: () -> Void
   
   var body: some View {
-    Button(action: removeFilterAction) {
+    Button {
+      removeFilterAction()
+    } label: {
       HStack(spacing: 7) {
         Text(name)
           .foregroundColor(type.textColor)
@@ -95,12 +97,12 @@ struct AppliedFilterTagButton: View {
           .frame(width: Layout.imageSize, height: Layout.imageSize)
           .foregroundColor(type.iconColor)
       }
-        .padding(.all, Layout.Padding.overall)
-    .background(
-      RoundedRectangle(cornerRadius: Layout.cornerRadius)
-        .fill(type.backgroundColor)
-        .overlay(
-          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+      .padding(.all, Layout.Padding.overall)
+      .background(
+        RoundedRectangle(cornerRadius: Layout.cornerRadius)
+          .fill(type.backgroundColor)
+          .overlay(
+            RoundedRectangle(cornerRadius: Layout.cornerRadius)
             .stroke(type.borderColor, lineWidth: 2)
         )
       )
@@ -109,23 +111,15 @@ struct AppliedFilterTagButton: View {
   }
 }
 
-#if DEBUG
 struct AppliedFilterView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      tags.colorScheme(.dark)
-      tags.colorScheme(.light)
-    }
-  }
-  
-  static var tags: some View {
     HStack {
       AppliedFilterTagButton(name: "Reset Filters", type: .destructive) { }
       AppliedFilterTagButton(name: "Test Filter", type: .default) { }
       AppliedFilterTagButton(name: "Another", type: .default) { }
     }
     .padding()
-    .background(Color.backgroundColor)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

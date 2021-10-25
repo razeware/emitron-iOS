@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 import SwiftUI
-import KingfisherSwiftUI
+import Kingfisher
 
 struct VerticalFadeImageView {
   private let imageURL: URL?
@@ -60,7 +60,7 @@ extension VerticalFadeImageView: View {
         .clipped()
       
       LinearGradient(
-        gradient: .init(colors: [Color.backgroundColor.opacity(0), .backgroundColor]),
+        gradient: .init(colors: [Color.background.opacity(0), .background]),
         startPoint: .top,
         endPoint: .bottom
       )

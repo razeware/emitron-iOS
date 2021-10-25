@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,17 +33,6 @@ enum MyTutorialsState: String {
   case completed
   case bookmarked
   
-  var contentScreen: ContentScreen {
-    switch self {
-    case .inProgress:
-      return .inProgress
-    case .completed:
-      return .completed
-    case .bookmarked:
-      return .bookmarked
-    }
-  }
-  
   var displayString: String {
     switch self {
     case .inProgress:
@@ -56,7 +45,24 @@ enum MyTutorialsState: String {
   }
 }
 
-struct MyTutorialView {
+// MARK: - CaseIterable
+extension MyTutorialsState: CaseIterable {
+  var index: Self.AllCases.Index {
+    get {
+      Self.allCases.firstIndex(of: self)!
+    }
+    set {
+      self = Self.allCases[newValue]
+    }
+  }
+
+  var count: Int {
+    Self.allCases.count
+  }
+}
+
+// MARK: -
+struct MyTutorialsView {
   init(
     state: MyTutorialsState,
     inProgressRepository: InProgressRepository,
@@ -71,13 +77,13 @@ struct MyTutorialView {
     self.domainRepository = domainRepository
   }
 
-  // Initialization
   @State private var state: MyTutorialsState
 
   // We need to pull these in to pass them to the settings view. We don't actually use them here.
   // I think this is a bug.
   @EnvironmentObject private var sessionController: SessionController
   @EnvironmentObject private var tabViewModel: TabViewModel
+  @EnvironmentObject private var downloadService: DownloadService
   
   private let inProgressRepository: InProgressRepository
   private let completedRepository: CompletedRepository
@@ -91,7 +97,7 @@ struct MyTutorialView {
 }
 
 // MARK: - View
-extension MyTutorialView: View {
+extension MyTutorialsView: View {
   var body: some View {
     contentView
       .navigationBarTitle(String.myTutorials)
@@ -99,7 +105,7 @@ extension MyTutorialView: View {
 }
 
 // MARK: - private
-private extension MyTutorialView {
+private extension MyTutorialsView {
   @ViewBuilder var contentView: some View {
     switch state {
     case .inProgress:
@@ -152,14 +158,23 @@ private extension MyTutorialView {
           .padding(.top, .sidePadding)
       }
       .padding(.horizontal, .sidePadding)
-      .background(Color.backgroundColor)
+      .background(Color.background)
     }
     
     return ContentListView(
       contentRepository: contentRepository,
-      downloadAction: DownloadService.current,
-      contentScreen: ContentScreen.inProgress,
+      downloadAction: downloadService,
+      contentScreen: contentScreen,
       header: toggleControl
     )
+    .highPriorityGesture(DragGesture().onEnded({ handleSwipe(translation: $0.translation.width) }))
+  }
+
+  private func handleSwipe(translation: CGFloat) {
+    if translation > .minDragTranslationForSwipe && state.index > 0 {
+      state.index -= 1
+    } else  if translation < -.minDragTranslationForSwipe && state.index < state.count - 1 {
+      state.index += 1
+    }
   }
 }

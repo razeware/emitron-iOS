@@ -32,72 +32,79 @@ struct LoginView: View {
   @EnvironmentObject var sessionController: SessionController
   
   var body: some View {
-    VStack {
-      
-      Image("logo")
-        .padding([.top], 88)
-      
-      Spacer()
-      
-      PagerView(pageCount: 2, showIndicator: true) {
-        VStack {
-          Spacer()
-          Image("welcomeArtwork1")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 265)
-            .padding([.bottom], 40)
-          
-          Text("Watch anytime,\nanywhere")
-            .font(.uiTitle1)
-            .foregroundColor(.titleText)
-            .multilineTextAlignment(.center)
-            .padding([.bottom], 15)
-          
-          Text("Watch over 3,000+ video tutorials\non iPhone and iPad.")
-            .font(.uiLabel)
-            .foregroundColor(.contentText)
-            .multilineTextAlignment(.center)
-          Spacer()
-        }
-        .background(Color.backgroundColor)
+    GeometryReader { proxy in
+      VStack {
         
-        VStack {
-          Image("welcomeArtwork2")
-            .resizable()
-            .aspectRatio(contentMode: .fit)
-            .frame(width: 265)
-            .padding([.bottom], 40)
+        Spacer()
+        
+        Image("logo")
+          .padding([.top], proxy.safeAreaInsets.top)
+        
+        Spacer()
+        
+        PagerView(pageCount: 2, showIndicator: true) {
+          VStack {
+            Spacer()
+            Image("SignUpPageIllustration1")
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 265)
+              .padding([.bottom], proxy.size.height / 50)
+            
+            Text("Take your videos on\n the go")
+              .font(.uiTitle1)
+              .foregroundColor(.titleText)
+              .multilineTextAlignment(.center)
+              .padding([.bottom], 15)
+            
+            Text("Download and watch videos -  even when you're\n offline")
+              .font(.uiLabel)
+              .foregroundColor(.contentText)
+              .multilineTextAlignment(.center)
+            Spacer()
+          }
+          .background(Color.background)
           
-          Text("Take your videos on\nthe go")
-            .font(.uiTitle1)
-            .foregroundColor(.titleText)
-            .multilineTextAlignment(.center)
-            .padding([.bottom], 15)
-          
-          Text("Download and watch videos — even\nwhen you’re offline.")
-            .font(.uiLabel)
-            .foregroundColor(.contentText)
-            .multilineTextAlignment(.center)
+          VStack {
+            Spacer()
+            Image("SignUpPageIllustration2")
+              .resizable()
+              .aspectRatio(contentMode: .fit)
+              .frame(width: 265)
+              .padding([.bottom], proxy.size.height / 50)
+            
+            Text("Watch anytime,\nanywhere")
+              .font(.uiTitle1)
+              .foregroundColor(.titleText)
+              .multilineTextAlignment(.center)
+              .padding([.bottom], 15)
+            
+            Text("Watch over 3,000+ video tutorials on iPhone\n and iPad")
+              .font(.uiLabel)
+              .foregroundColor(.contentText)
+              .multilineTextAlignment(.center)
+            Spacer()
+          }
+          .background(Color.background)
         }
-          .background(Color.backgroundColor)
+        
+        Spacer()
+        
+        MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
+          sessionController.login()
+        }
+        .padding([.leading, .trailing], 18)
+        .padding([.bottom], 38)
       }
-      
-      Spacer()
-      
-      MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
-        sessionController.login()
-      }
-      .padding([.leading, .trailing], 18)
-      .padding([.bottom], 38)
+      .background(Color.background)
+      .edgesIgnoringSafeArea([.all])
     }
-    .background(Color.backgroundColor)
-    .edgesIgnoringSafeArea([.all])
   }
 }
 
 struct LoginView_Previews: PreviewProvider {
   static var previews: some View {
     LoginView()
+      .inAllColorSchemes
   }
 }

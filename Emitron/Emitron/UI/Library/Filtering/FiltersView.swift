@@ -50,13 +50,13 @@ struct FiltersView: View {
           .foregroundColor(.titleText)
         
         Spacer()
-        
-        Button(action: {
+
+        Button {
           if Set(libraryRepository.nonPaginationParameters) != Set(filters.appliedParameters) {
             revertBackToPreviousFilters()
           }
           presentationMode.wrappedValue.dismiss()
-        }) {
+        } label: {
           Image.close
             .frame(width: 27, height: 27, alignment: .center)
             .padding(.trailing, 18)
@@ -83,7 +83,7 @@ struct FiltersView: View {
       }
       .padding([.leading, .trailing, .bottom], 18)
     }
-    .background(Color.backgroundColor)
+    .background(Color.background)
   }
   
   private func constructScrollView() -> some View {

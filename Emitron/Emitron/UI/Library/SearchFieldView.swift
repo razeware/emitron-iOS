@@ -56,10 +56,10 @@ struct SearchFieldView: View {
         .contentShape(Rectangle())
       
       if !searchString.isEmpty {
-        Button(action: {
+        Button {
           searchString = ""
           action(searchString)
-        }) {
+        } label: {
           Image(systemName: "multiply.circle.fill")
             // If we don't enforce a frame, the button doesn't register the tap action
             .frame(width: 25, height: 25, alignment: .center)
@@ -94,17 +94,13 @@ struct SearchFieldView: View {
 
 struct SearchFieldView_Previews: PreviewProvider {
   static var previews: some View {
-    searchFields.colorScheme(.light)
-    searchFields.colorScheme(.dark)
-  }
-  
-  private static var searchFields: some View {
     VStack(spacing: 20) {
       SearchFieldView(searchString: "")
       SearchFieldView(searchString: "Hello")
       SearchFieldView(searchString: "Testing")
     }
     .padding(20)
-    .background(Color.backgroundColor)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

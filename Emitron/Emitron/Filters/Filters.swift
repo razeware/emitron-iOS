@@ -110,6 +110,7 @@ class Filters: ObservableObject {
   private(set) var difficulties: FilterGroup
   private(set) var subscriptionPlans: FilterGroup
   private(set) var searchFilter: Filter?
+  private var settingsManager: SettingsManager
   
   private var defaultParameters: [Parameter] {
     let sortParam = Param.sort(for: .releasedAt, descending: true)
@@ -124,10 +125,11 @@ class Filters: ObservableObject {
     return contentParams
   }
   
-  init() {
+  init(settingsManager: SettingsManager) {
     sortFilter = SortFilter.newest
     platforms = FilterGroup(type: .platforms)
     categories = FilterGroup(type: .categories)
+    self.settingsManager = settingsManager
     
     let contentFilters = Param
       .filters(for: [.contentTypes(types: [.collection, .screencast])])
@@ -135,7 +137,7 @@ class Filters: ObservableObject {
     contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
     let difficultyFilters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .filters(for: [.difficulties([.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     
@@ -145,7 +147,7 @@ class Filters: ObservableObject {
     subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
     
     // Check if there are filters in the settings manager
-    let savedFilters = SettingsManager.current.filters
+    let savedFilters = settingsManager.filters
     if !savedFilters.isEmpty {
       // Validate loaded settings and put them in the right places
       platforms.updateFilters(from: savedFilters)
@@ -164,7 +166,7 @@ class Filters: ObservableObject {
     all = freshFilters
     
     // Load the sort from the settings manager
-    sortFilter = SettingsManager.current.sortFilter
+    sortFilter = settingsManager.sortFilter
   }
   
   func update(with filter: Filter) {
@@ -218,12 +220,12 @@ class Filters: ObservableObject {
   
   func changeSortFilter() {
     sortFilter = sortFilter.next
-    SettingsManager.current.sortFilter = sortFilter
+    settingsManager.sortFilter = sortFilter
     objectWillChange.send()
   }
   
   func commitUpdates() {
-    SettingsManager.current.filters = all
+    settingsManager.filters = all
     objectWillChange.send()
   }
   

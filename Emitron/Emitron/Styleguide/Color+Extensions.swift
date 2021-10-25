@@ -29,7 +29,6 @@
 import SwiftUI
 
 extension Color {
-  
   static var contentText: Color {
     Color("contentText")
   }
@@ -38,7 +37,7 @@ extension Color {
     Color("titleText")
   }
   
-  static var backgroundColor: Color {
+  static var background: Color {
     Color("backgroundColor")
   }
   

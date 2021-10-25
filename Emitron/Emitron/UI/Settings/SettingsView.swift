@@ -37,74 +37,70 @@ enum SettingsLayout {
 struct SettingsView: View {
   @EnvironmentObject var sessionController: SessionController
   @EnvironmentObject var tabViewModel: TabViewModel
-  @ObservedObject private var settingsManager = SettingsManager.current
+  @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
   
+  init(settingsManager: SettingsManager) {
+    self.settingsManager = settingsManager
+  }
+  
   var body: some View {
+    VStack {
+      SettingsList(
+        settingsManager: _settingsManager,
+        canDownload: sessionController.user?.canDownload ?? false
+      ).padding(.horizontal, 20)
+      Section(
+        header: HStack {
+          Text("App Icon")
+            .font(.uiTitle4)
+            .foregroundColor(.titleText)
+          
+          Spacer()
+        }
+          .padding(.top, 20)
+      ) {
+        IconChooserView()
+      }
+      .padding(.horizontal, 20)
+      
+      Spacer()
+      
+      Button {
+        licensesPresented.toggle()
+      } label: {
+        Text("Software Licenses")
+      }
+      .sheet(isPresented: $licensesPresented) {
+        LicenseListView(visible: $licensesPresented)
+      }
+      .padding([.bottom], 25)
+      
       VStack {
-        SettingsList(
-          settingsManager: _settingsManager,
-          canDownload: sessionController.user?.canDownload ?? false
-        ).padding([.horizontal], 20)
-        
-        Section(header:
-          HStack {
-            Text("App Icon")
-              .font(.uiTitle4)
-              .foregroundColor(.titleText)
-            
-            Spacer()
-          }
-            .padding([.top], 20)
-        ) {
-          IconChooserView()
+        if sessionController.user != nil {
+          Text("Logged in as \(sessionController.user?.username ?? "")")
+            .font(.uiCaption)
+            .foregroundColor(.contentText)
         }
-        .padding([.horizontal], 20)
-        
-        Spacer()
-        
-        Button(action: {
-          licensesPresented.toggle()
-        }) {
-          Text("Software Licenses")
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            sessionController.logout()
+            tabViewModel.selectedTab = .library
+          }
         }
-          .sheet(isPresented: $licensesPresented) {
-            LicenseListView(visible: $licensesPresented)
-          }
-          .padding([.bottom], 25)
-        
-          VStack {
-            if sessionController.user != nil {
-              Text("Logged in as \(sessionController.user?.username ?? "")")
-                .font(.uiCaption)
-                .foregroundColor(.contentText)
-            }
-            MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-              DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                sessionController.logout()
-                tabViewModel.selectedTab = .library
-              }
-            }
-          }
-          .padding([.bottom, .horizontal], 18)
-      }.navigationBarTitle(String.settings)
-      .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+      }
+      .padding([.bottom, .horizontal], 18)
+    }
+    .navigationBarTitle(String.settings)
+    .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
-#if DEBUG
 struct SettingsView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      settingsView.colorScheme(.dark)
-      settingsView.colorScheme(.light)
-    }
-  }
-
-  static var settingsView: some View {
-    SettingsView()
-      .background(Color.backgroundColor)
-      .environmentObject(SessionController.current)
+    SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
+      .background(Color.background)
+      .environmentObject(EmitronApp.emitronObjects().sessionController)
+      .inAllColorSchemes
   }
 }
-#endif

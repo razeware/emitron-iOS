@@ -46,14 +46,14 @@ struct FiltersHeaderView: View {
   
   var body: some View {
     VStack {
-      Button(action: {
+      Button {
         isExpanded.toggle()
-      }) {
+      } label: {
         HStack {
           Text("\(filterGroup.type.name)\(filterCount)")
             .foregroundColor(.titleText)
             .font(.uiLabelBold)
-          
+
           Spacer()
 
           Image(systemName: isExpanded ? "chevron.up" : "chevron.down")
@@ -65,7 +65,7 @@ struct FiltersHeaderView: View {
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
       }
-        .accessibility(label: Text(filterGroup.type.name))
+      .accessibility(label: Text(filterGroup.type.name))
         
       if isExpanded {
         expandedView
@@ -97,33 +97,25 @@ struct FiltersHeaderView: View {
   }
 }
 
-#if DEBUG
 struct FilterGroupView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      filters.colorScheme(.dark)
-      filters.colorScheme(.light)
-    }
-  }
-  
-  static var filters: some View {
     let filters = Param
-      .filters(for: [.difficulties(difficulties: [.beginner, .intermediate, .advanced])])
+      .filters(for: [.difficulties([.beginner, .intermediate, .advanced])])
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
-    
-    return VStack {
+
+    VStack {
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .difficulties, filters: filters),
-        filters: Filters(),
+        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager),
         isExpanded: true
       )
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .categories, filters: filters),
-        filters: Filters()
+        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager)
       )
     }
-      .padding()
-      .background(Color.backgroundColor)
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

@@ -29,14 +29,14 @@
 import SwiftUI
 
 struct IconChooserView: View {
-  @ObservedObject var iconManager = IconManager.current
+  @EnvironmentObject var iconManager: IconManager
   
   var body: some View {
     HStack {
       ForEach(iconManager.icons) { icon in
-        Button(action: {
+        Button {
           iconManager.set(icon: icon)
-        }) {
+        } label: {
           IconView(icon: icon, selected: iconManager.currentIcon == icon)
         }
       }
@@ -46,15 +46,9 @@ struct IconChooserView: View {
 
 struct IconChooserView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      iconChooser.colorScheme(.dark)
-      iconChooser.colorScheme(.light)
-    }
-  }
-    
-  static var iconChooser: some View {
     IconChooserView()
       .padding()
-      .background(Color.backgroundColor)
+      .background(Color.background)
+      .inAllColorSchemes
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,69 +30,103 @@ import SwiftUI
 
 struct TabNavView<
   LibraryView: View,
-  MyTutorialsView: View,
   DownloadsView: View,
+  MyTutorialsView: View,
   SettingsView: View
->: View {
-  @EnvironmentObject var tabViewModel: TabViewModel
-  let libraryView: LibraryView
-  let myTutorialsView: MyTutorialsView
-  let downloadsView: DownloadsView
-  let settingsView: SettingsView
+> {
+  init(
+    libraryView: @escaping () -> LibraryView,
+    myTutorialsView: @escaping () -> MyTutorialsView,
+    downloadsView: @escaping () -> DownloadsView,
+    settingsView: @escaping () -> SettingsView
+  ) {
+    self.libraryView = libraryView
+    self.myTutorialsView = myTutorialsView
+    self.downloadsView = downloadsView
+    self.settingsView = settingsView
 
+    // Without the following, in iOS 15, this ugliness occurs:
+    //
+    // The nav bar renders as a rectangle that does not extend vertically past the safe area.
+    // Scrolling content is visible above it.
+    //
+    // The tab bar renders transparently, on top of other views.
+    if #available(iOS 15.0, *) {
+      let barAppearance = UIBarAppearance()
+      barAppearance.configureWithOpaqueBackground()
+      UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
+      UITabBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
+    }
+  }
+
+  @EnvironmentObject private var model: TabViewModel
+  @EnvironmentObject private var settingsManager: SettingsManager
+
+  private let libraryView: () -> LibraryView
+  private let myTutorialsView: () -> MyTutorialsView
+  private let downloadsView: () -> DownloadsView
+  private let settingsView: () -> SettingsView
+}
+
+// MARK: - View
+extension TabNavView: View {
   var body: some View {
-    TabView(selection: $tabViewModel.selectedTab) {
-      NavigationView {
-        libraryView
-      }
-        .tabItem {
-          Text(String.library)
-          Image("library")
-        }
-        .tag(MainTab.library)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(String.library))
+    TabView(selection: $model.selectedTab) {
+      tab(
+        content: libraryView,
+        text: .library,
+        imageName: "library",
+        tag: .library
+      )
 
-      NavigationView {
-        downloadsView
-      }
-        .tabItem {
-          Text(String.downloads)
-          Image("downloadTabInactive")
-        }
-        .tag(MainTab.downloads)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: Text(String.downloads))
+      tab(
+        content: downloadsView,
+        text: .downloads,
+        imageName: "downloadTabInactive",
+        tag: .downloads
+      )
 
-      NavigationView { myTutorialsView }
-        .tabItem {
-          Text(String.myTutorials)
-          Image("myTutorials")
-        }
-        .tag(MainTab.myTutorials)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: .init(String.myTutorials))
-      
-      NavigationView { settingsView }
-        .tabItem {
-          Text(String.settings)
-          Image("settings")
-        }
-        .tag(MainTab.settings)
-        .navigationViewStyle(StackNavigationViewStyle())
-        .accessibility(label: .init(String.settings))
+      tab(
+        content: myTutorialsView,
+        text: .myTutorials,
+        imageName: "myTutorials",
+        tag: .myTutorials
+      )
+
+      tab(
+        content: settingsView,
+        text: .settings,
+        imageName: "settings",
+        tag: .settings
+      )
     }
     .accentColor(.accent)
   }
 }
 
+private func tab<Content: View>(
+  content: () -> Content,
+  text: String,
+  imageName: String,
+  tag: MainTab
+) -> some View {
+  NavigationView(content: content)
+    .tabItem {
+      Text(text)
+      Image(imageName)
+    }
+    .tag(tag)
+    .navigationViewStyle(StackNavigationViewStyle())
+    .accessibility(label: .init(text))
+}
+
 struct TabNavView_Previews: PreviewProvider {
   static var previews: some View {
     TabNavView(
-      libraryView: Text("LIBRARY"),
-      myTutorialsView: Text("MY TUTORIALS"),
-      downloadsView: Text("DOWNLOADS"),
-      settingsView: Text("SETTINGS")
+      libraryView: { Text("LIBRARY") },
+      myTutorialsView: { Text("MY TUTORIALS") },
+      downloadsView: { Text("DOWNLOADS") },
+      settingsView: { Text("SETTINGS") }
     ).environmentObject(TabViewModel())
   }
 }

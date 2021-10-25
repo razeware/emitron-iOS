@@ -34,26 +34,25 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      ForEach(type(of: settingsOption).selectableCases, id: \.self) { option in
+      ForEach(Setting.selectableCases, id: \.self) { option in
         VStack(spacing: 0) {
-          Button(action: {
+          Button {
             settingsOption = option
-          }) {
+          } label: {
             HStack {
               Text(option.display)
                 .font(.uiBodyAppleDefault)
                 .foregroundColor(.titleText)
                 .padding([.vertical], SettingsLayout.rowSpacing)
-            
+
               Spacer()
-              
+
               if option == settingsOption {
                 Image.checkmark
                   .foregroundColor(.iconButton)
               }
             }
           }
-          
           Rectangle()
             .fill(Color.separator)
             .frame(height: 1)
@@ -69,24 +68,18 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
         displayMode: .inline
       )
         .padding(20)
-    .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+    .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
 struct SettingsSelectionView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      view.colorScheme(.dark)
-      view.colorScheme(.light)
-    }
-  }
-  
-  static var view: some View {
     VStack {
       SettingsSelectionView(title: "Download", settingsOption: .constant(Attachment.Kind.sdVideoFile))
       SettingsSelectionView(title: "Playback Speed", settingsOption: .constant(PlaybackSpeed.standard))
     }
-      .padding()
-      .background(Color.backgroundColor)
+    .padding()
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }

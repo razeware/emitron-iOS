@@ -30,6 +30,8 @@ import SwiftUI
 
 struct ToggleControlView: View {
   @State var toggleState: MyTutorialsState
+  @EnvironmentObject var messageBus: MessageBus
+
   var toggleUpdated: ((MyTutorialsState) -> Void)?
   
   var body: some View {
@@ -47,13 +49,12 @@ struct ToggleControlView: View {
   }
   
   private func toggleButton(for state: MyTutorialsState) -> some View {
-    Button(action: {
+    Button {
       guard state != toggleState else { return }
-      
       toggleState = state
       toggleUpdated?(state)
-      MessageBus.current.dismiss()
-    }) {
+      messageBus.dismiss()
+    } label: {
       toggleButtonContent(for: state)
     }
   }
@@ -71,24 +72,16 @@ struct ToggleControlView: View {
   }
 }
 
-#if DEBUG
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
-    SwiftUI.Group {
-      tabs.colorScheme(.light)
-      tabs.colorScheme(.dark)
-    }
-  }
-  
-  static var tabs: some View {
     VStack(spacing: 40) {
       ToggleControlView(toggleState: .inProgress)
       ToggleControlView(toggleState: .completed)
       ToggleControlView(toggleState: .bookmarked)
     }
-      .padding([.vertical], 40)
-      .padding([.horizontal], 10)
-      .background(Color.backgroundColor)
+    .padding([.vertical], 40)
+    .padding([.horizontal], 10)
+    .background(Color.background)
+    .inAllColorSchemes
   }
 }
-#endif

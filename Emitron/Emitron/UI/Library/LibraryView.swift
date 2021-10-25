@@ -36,6 +36,7 @@ private extension CGFloat {
 }
 
 struct LibraryView: View {
+  @EnvironmentObject private var downloadService: DownloadService
   @ObservedObject var filters: Filters
   @ObservedObject var libraryRepository: LibraryRepository
   @State var filtersPresented = false
@@ -47,7 +48,7 @@ struct LibraryView: View {
       )
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
-          .background(Color.backgroundColor.edgesIgnoringSafeArea(.all))
+          .background(Color.background.edgesIgnoringSafeArea(.all))
       }
   }
 
@@ -60,11 +61,12 @@ struct LibraryView: View {
         filtersView
           .padding(.top, 10)
       }
+      
       numberAndSortView
         .padding(.vertical, 10)
     }
-      .padding(.horizontal, .sidePadding)
-      .background(Color.backgroundColor)
+    .padding(.horizontal, .sidePadding)
+    .background(Color.background)
   }
 
   private var searchField: some View {
@@ -80,15 +82,15 @@ struct LibraryView: View {
       
       Spacer()
 
-      Button(action: {
+      Button {
         filtersPresented = true
-      }, label: {
+      } label: {
         Image("filter")
           .foregroundColor(.iconButton)
           .frame(width: .filterButtonSide, height: .filterButtonSide)
-      })
-        .accessibility(label: Text("Filter Library"))
-        .padding([.horizontal], .searchFilterPadding)
+      }
+      .accessibility(label: Text("Filter Library"))
+      .padding([.horizontal], .searchFilterPadding)
     }
   }
 
@@ -100,14 +102,16 @@ struct LibraryView: View {
 
       Spacer()
 
-      Button(action: changeSort) {
+      Button {
+        changeSort()
+      } label: {
         HStack {
           Image("sort")
             .foregroundColor(.textButtonText)
           if [.loading, .loadingAdditional].contains(libraryRepository.state) {
             Text(filters.sortFilter.name)
               .font(.uiLabel)
-              .foregroundColor(Color.gray)
+              .foregroundColor(.gray)
           } else {
             Text(filters.sortFilter.name)
               .font(.uiLabelBold)
@@ -141,9 +145,9 @@ struct LibraryView: View {
           }
         }
       }
-        .padding([.horizontal], .sidePadding)
+      .padding([.horizontal], .sidePadding)
     }
-      .padding([.horizontal], -.sidePadding)
+    .padding([.horizontal], -.sidePadding)
   }
 
   private func updateFilters() {
@@ -159,7 +163,7 @@ struct LibraryView: View {
   private var contentView: some View {
     ContentListView(
       contentRepository: libraryRepository,
-      downloadAction: DownloadService.current,
+      downloadAction: downloadService,
       contentScreen: .library,
       header: contentControlsSection
     )

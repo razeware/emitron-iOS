@@ -28,11 +28,20 @@
 
 import SwiftUI
 
-struct CardViewContainer: View {
-  @State var model: ContentListDisplayable
-  @State var dynamicContentViewModel: DynamicContentViewModel
-  
-  var body: some View {
-    CardView(model: model, dynamicContentViewModel: dynamicContentViewModel)
+extension View {
+  var inAllColorSchemes: some View {
+    ForEach(
+      ColorScheme.allCases,
+      id: \.self,
+      content: preferredColorScheme
+    )
+  }
+
+  @ViewBuilder func `if`<T: View>(_ conditional: Bool, transform: (Self) -> T) -> some View {
+    if conditional {
+      transform(self)
+    } else {
+      self
+    }
   }
 }

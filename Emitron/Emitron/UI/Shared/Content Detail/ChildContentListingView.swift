@@ -32,6 +32,7 @@ struct ChildContentListingView: View {
   @ObservedObject var childContentsViewModel: ChildContentsViewModel
   @Binding var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   @EnvironmentObject var sessionController: SessionController
+  @EnvironmentObject var messageBus: MessageBus
   
   var body: some View {
     childContentsViewModel.initialiseIfRequired()
@@ -66,25 +67,17 @@ private extension ChildContentListingView {
           }.padding([.leading, .trailing], 20)
         }
       }
-      .listRowBackground(Color.backgroundColor)
+      .listRowBackground(Color.background)
       .accessibility(identifier: "childContentList")
         
       if childContentsViewModel.groups.count > 1 {
         ForEach(childContentsViewModel.groups, id: \.id) { group in
           // By default, iOS 14 shows headers in upper case. Text casing is changed by the textCase modifier which is not available on previous versions.
-          if #available(iOS 14, *) {
-            Section(header: CourseHeaderView(name: group.name)) {
-              episodeListing(data: childContentsViewModel.contents(for: group.id))
-            }
-            .background(Color.backgroundColor)
-            .textCase(nil)
-          } else {
-            // Default behavior for iOS 13 and lower.
-            Section(header: CourseHeaderView(name: group.name)) {
-              episodeListing(data: childContentsViewModel.contents(for: group.id))
-            }
-            .background(Color.backgroundColor)
+          Section(header: CourseHeaderView(name: group.name)) {
+            episodeListing(data: childContentsViewModel.contents(for: group.id))
           }
+          .background(Color.background)
+          .textCase(nil)
         }
       } else if !childContentsViewModel.groups.isEmpty {
         episodeListing(data: childContentsViewModel.contents)
@@ -99,9 +92,9 @@ private extension ChildContentListingView {
       LoadingView()
       Spacer()
     }
-      .listRowInsets(EdgeInsets())
-      .listRowBackground(Color.backgroundColor)
-      .background(Color.backgroundColor)
+    .listRowInsets(EdgeInsets())
+    .listRowBackground(Color.background)
+    .background(Color.background)
   }
 
   var reloadView: MainButtonView {
@@ -123,7 +116,7 @@ private extension ChildContentListingView {
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       episodeRow(model: model)
         .listRowInsets(EdgeInsets())
-        .listRowBackground(Color.backgroundColor)
+        .listRowBackground(Color.background)
     }
   }
   
@@ -137,10 +130,9 @@ private extension ChildContentListingView {
       )
       .padding([.horizontal, .bottom], 20)
     } else if sessionController.sessionState == .offline && !sessionController.hasCurrentDownloadPermissions {
-      Button(action: {
-        MessageBus.current
-          .post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
-      }) {
+      Button {
+        messageBus.post(message: Message(level: .warning, message: .videoPlaybackExpiredPermissions))
+      } label: {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
@@ -148,14 +140,14 @@ private extension ChildContentListingView {
         .padding([.horizontal, .bottom], 20)
       }
     } else {
-      Button(action: {
+      Button {
         currentlyDisplayedVideoPlaybackViewModel = childDynamicContentViewModel.videoPlaybackViewModel(
           apiClient: sessionController.client,
           dismissClosure: {
             currentlyDisplayedVideoPlaybackViewModel = nil
           }
         )
-      }) {
+      } label: {
         TextListItemView(
           dynamicContentViewModel: childDynamicContentViewModel,
           content: model
