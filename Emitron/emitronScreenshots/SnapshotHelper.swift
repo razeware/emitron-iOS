@@ -205,8 +205,11 @@ open class Snapshot: NSObject {
     _ = XCTWaiter.wait(for: [networkLoadingIndicatorDisappeared], timeout: timeout)
   }
   
-  class func pathPrefix() throws -> URL? {
-    let homeDir: URL
+  class func pathPrefix() throws -> URL {
+    func url(homeDirectory: URL) -> URL {
+      homeDirectory.appendingPathComponent("Library/Caches/tools.fastlane")
+    }
+
     // on OSX config is stored in /Users/<username>/Library
     // and on iOS/tvOS/WatchOS it's in simulator's home dir
     #if os(OSX)
@@ -218,7 +221,7 @@ open class Snapshot: NSObject {
         throw SnapshotError.cannotFindHomeDirectory
       }
 
-      homeDir = usersDir.appendingPathComponent(user)
+      return url(homeDirectory: usersDir.appendingPathComponent(user))
     #elseif arch(i386) || arch(x86_64)
       guard let simulatorHostHome = ProcessInfo().environment["SIMULATOR_HOST_HOME"] else {
         throw SnapshotError.cannotFindSimulatorHomeDirectory
@@ -226,12 +229,11 @@ open class Snapshot: NSObject {
       guard let homeDirURL = URL(string: simulatorHostHome) else {
         throw SnapshotError.cannotAccessSimulatorHomeDirectory(simulatorHostHome)
       }
-      homeDir = URL(fileURLWithPath: homeDirURL.path)
+
+      return url(homeDirectory: .init(fileURLWithPath: homeDirURL.path))
     #else
       throw SnapshotError.cannotRunOnPhysicalDevice
     #endif
-    
-    return homeDir.appendingPathComponent("Library/Caches/tools.fastlane")
   }
 }
 
