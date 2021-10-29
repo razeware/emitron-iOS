@@ -43,13 +43,6 @@ struct CheckmarkView {
   private let outerRadius: CGFloat = 9
 }
 
-// MARK: - private
-private extension CheckmarkView {
-  var radiusRatio: CGFloat {
-    outerRadius / outerSide
-  }
-}
-
 // MARK: - View
 extension CheckmarkView: View {
   var body: some View {

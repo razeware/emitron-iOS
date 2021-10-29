@@ -208,13 +208,14 @@ class DownloadQueueManagerTest: XCTestCase {
     _ = try samplePersistedDownload(state: .enqueued)
     
     let queue = try wait(for: recorder.next(4), timeout: 30)
-    XCTAssertEqual([
-      [],                     // Empty to start
-      [download1],            // d1 Enqueued
-      [download1, download2], // d2 Enqueued
-      [download1, download2]  // Final download makes no difference
-    ],
-                   queue.map { $0.map(\.download) })
+    XCTAssertEqual(
+      [ [],                     // Empty to start
+        [download1],            // d1 Enqueued
+        [download1, download2], // d2 Enqueued
+        [download1, download2]  // Final download makes no difference
+      ],
+      queue.map { $0.map(\.download) }
+    )
   }
   
   func testDownloadQueueStreamSendsFromThePast() throws {
