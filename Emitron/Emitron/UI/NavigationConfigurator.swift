@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2021 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,70 +26,18 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
+import Foundation
 import SwiftUI
 
-struct TagView: View {
-  private static let defaultIconHeight: CGFloat = 12.0
-  
-  private struct SizeKey: PreferenceKey {
-    static func reduce(value: inout CGSize?, nextValue: () -> CGSize?) {
-      value = value ?? nextValue()
-    }
-  }
-  
-  @State private var height: CGFloat?
-  
-  let text: String
-  let textColor: Color
-  let backgroundColor: Color
-  let borderColor: Color
-  var image: Image?
-  
-  var body: some View {
-    HStack(spacing: 3) {
-      image?
-        .resizable()
-        .aspectRatio(contentMode: .fit)
-        .foregroundColor(textColor)
-        .frame(height: Self.defaultIconHeight)
-      
-      Text(text.uppercased())
-        .foregroundColor(textColor)
-        .font(.uiUppercaseTag)
-        .kerning(0.5)
-        .background(
-          GeometryReader { proxy in
-            Color.clear.preference(key: SizeKey.self, value: proxy.size)
-          }
-        )
-    }
-      .padding([.vertical], 5)
-      .padding([.horizontal], 7)
-      .background(backgroundColor)
-      .cornerRadius(6) // This is a bit hacky.
-      .onPreferenceChange(SizeKey.self) { size in
-        height = size?.height
-      }
-  }
-}
+struct NavigationConfigurator: UIViewControllerRepresentable {
+    var configure: (UINavigationController) -> Void = { _ in }
 
-struct TagView_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack(spacing: 20) {
-      TagView(
-        text: "this is a tag",
-        textColor: .white,
-        backgroundColor: .red,
-        borderColor: .yellow
-      )
-      
-      TagView(
-        text: "with an image",
-        textColor: .white,
-        backgroundColor: .red,
-        borderColor: .yellow,
-        image: .checkmark
-      )
+    func makeUIViewController(context: UIViewControllerRepresentableContext<NavigationConfigurator>) -> UIViewController {
+        UIViewController()
     }
-  }
+    func updateUIViewController(_ uiViewController: UIViewController, context: UIViewControllerRepresentableContext<NavigationConfigurator>) {
+        if let navConfigurator = uiViewController.navigationController {
+          self.configure(navConfigurator)
+        }
+    }
 }

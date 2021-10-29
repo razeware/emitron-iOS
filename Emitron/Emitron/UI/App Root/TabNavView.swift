@@ -54,8 +54,6 @@ struct TabNavView<
     if #available(iOS 15.0, *) {
       let barAppearance = UIBarAppearance()
       barAppearance.configureWithOpaqueBackground()
-      UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
-      UITabBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
     }
   }
 
