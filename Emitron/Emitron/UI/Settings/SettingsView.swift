@@ -39,6 +39,7 @@ struct SettingsView: View {
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
+  @State private var showLogoutConfirmation = false
   
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
@@ -84,9 +85,19 @@ struct SettingsView: View {
         }
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            sessionController.logout()
-            tabViewModel.selectedTab = .library
+            showLogoutConfirmation = true
           }
+        }
+        .actionSheet(isPresented: $showLogoutConfirmation) {
+          ActionSheet(title: Text("Are you sure you want to sign out?"),
+                      buttons: [
+                        .cancel(),
+                        .destructive(Text("Sign Out")) {
+                          sessionController.logout()
+                          tabViewModel.selectedTab = .library
+                        }
+                      ]
+          )
         }
       }
       .padding([.bottom, .horizontal], 18)
