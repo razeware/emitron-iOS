@@ -30,8 +30,8 @@ import SwiftUI
 
 enum MyTutorialsState: String {
   case inProgress
-  case completed
   case bookmarked
+  case completed
   
   var displayString: String {
     switch self {

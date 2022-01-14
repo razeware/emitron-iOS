@@ -41,9 +41,9 @@ struct ToggleControlView: View {
         .frame(height: 2)
       
       HStack {
-        toggleButton(for: .inProgress)
-        toggleButton(for: .completed)
-        toggleButton(for: .bookmarked)
+        ForEach(MyTutorialsState.allCases, id: \.self) { state in
+          toggleButton(for: state)
+        }
       }
     }
   }
