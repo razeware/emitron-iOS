@@ -46,6 +46,11 @@ struct SettingsView: View {
   
   var body: some View {
     VStack {
+      Link(destination: URL(string: "https://accounts.raywenderlich.com")!) {
+        SettingsDisclosureRow(title: "My Account", value: "")
+      }
+      .padding(.horizontal, 20)
+      
       SettingsList(
         settingsManager: _settingsManager,
         canDownload: sessionController.user?.canDownload ?? false
