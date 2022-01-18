@@ -89,14 +89,15 @@ struct SettingsView: View {
           }
         }
         .actionSheet(isPresented: $showLogoutConfirmation) {
-          ActionSheet(title: Text("Are you sure you want to sign out?"),
-                      buttons: [
-                        .cancel(),
-                        .destructive(Text("Sign Out")) {
-                          sessionController.logout()
-                          tabViewModel.selectedTab = .library
-                        }
-                      ]
+          ActionSheet(
+            title: Text("Are you sure you want to sign out?"),
+            buttons: [
+              .cancel(),
+              .destructive(Text("Sign Out")) {
+                sessionController.logout()
+                tabViewModel.selectedTab = .library
+              }
+            ]
           )
         }
       }
