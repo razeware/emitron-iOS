@@ -84,9 +84,7 @@ struct SettingsView: View {
             .foregroundColor(.contentText)
         }
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            showingSignOutConfirmation = true
-          }
+          showingSignOutConfirmation = true
         }
         .actionSheet(isPresented: $showingSignOutConfirmation) {
           ActionSheet(
@@ -94,8 +92,10 @@ struct SettingsView: View {
             buttons: [
               .cancel(),
               .destructive(Text("Sign Out")) {
-                sessionController.logout()
-                tabViewModel.selectedTab = .library
+                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+                  sessionController.logout()
+                  tabViewModel.selectedTab = .library
+                }
               }
             ]
           )
