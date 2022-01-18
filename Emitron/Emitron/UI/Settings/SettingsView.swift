@@ -39,7 +39,7 @@ struct SettingsView: View {
   @EnvironmentObject var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
-  @State private var showLogoutConfirmation = false
+  @State private var showingSignOutConfirmation = false
   
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
@@ -85,10 +85,10 @@ struct SettingsView: View {
         }
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
           DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            showLogoutConfirmation = true
+            showingSignOutConfirmation = true
           }
         }
-        .actionSheet(isPresented: $showLogoutConfirmation) {
+        .actionSheet(isPresented: $showingSignOutConfirmation) {
           ActionSheet(
             title: Text("Are you sure you want to sign out?"),
             buttons: [
