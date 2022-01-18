@@ -86,7 +86,7 @@ struct SettingsView: View {
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
           showingSignOutConfirmation = true
         }
-        .actionSheet(isPresented: $showingSignOutConfirmation) {
+        .modifier {
           let dialogTitle = "Are you sure you want to sign out?"
           let buttonTitle = "Sign Out"
           let action = {
@@ -96,13 +96,15 @@ struct SettingsView: View {
             }
           }
           
-          return .init(
-            title: .init(dialogTitle),
-            buttons: [
-              .destructive(.init(buttonTitle), action: action),
-              .cancel()
-            ]
-          )
+          $0.actionSheet(isPresented: $showingSignOutConfirmation) {
+            .init(
+              title: .init(dialogTitle),
+              buttons: [
+                .destructive(.init(buttonTitle), action: action),
+                .cancel()
+              ]
+            )
+          }
         }
       }
       .padding([.bottom, .horizontal], 18)
