@@ -35,11 +35,11 @@ enum SettingsLayout {
 }
 
 struct SettingsView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
-  @State private var showLogoutConfirmation = false
+  @State private var showingSignOutConfirmation = false
   
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
@@ -84,20 +84,37 @@ struct SettingsView: View {
             .foregroundColor(.contentText)
         }
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            showLogoutConfirmation = true
-          }
+          showingSignOutConfirmation = true
         }
-        .actionSheet(isPresented: $showLogoutConfirmation) {
-          ActionSheet(title: Text("Are you sure you want to sign out?"),
-                      buttons: [
-                        .cancel(),
-                        .destructive(Text("Sign Out")) {
-                          sessionController.logout()
-                          tabViewModel.selectedTab = .library
-                        }
-                      ]
-          )
+        .modifier {
+          let dialogTitle = "Are you sure you want to sign out?"
+          let buttonTitle = "Sign Out"
+          let action = {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+              sessionController.logout()
+              tabViewModel.selectedTab = .library
+            }
+          }
+          
+          if #available(iOS 15, *) {
+            $0.confirmationDialog(
+              dialogTitle,
+              isPresented: $showingSignOutConfirmation,
+              titleVisibility: .visible
+            ) {
+              Button(buttonTitle, role: .destructive, action: action)
+            }
+          } else {
+            $0.actionSheet(isPresented: $showingSignOutConfirmation) {
+              .init(
+                title: .init(dialogTitle),
+                buttons: [
+                  .destructive(.init(buttonTitle), action: action),
+                  .cancel()
+                ]
+              )
+            }
+          }
         }
       }
       .padding([.bottom, .horizontal], 18)
