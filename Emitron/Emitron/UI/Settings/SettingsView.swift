@@ -90,13 +90,13 @@ struct SettingsView: View {
           .init(
             title: .init("Are you sure you want to sign out?"),
             buttons: [
-              .cancel(),
               .destructive(.init("Sign Out")) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                   sessionController.logout()
                   tabViewModel.selectedTab = .library
                 }
-              }
+              },
+              .cancel()
             ]
           )
         }
