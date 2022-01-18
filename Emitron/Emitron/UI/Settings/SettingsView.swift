@@ -96,14 +96,24 @@ struct SettingsView: View {
             }
           }
           
-          $0.actionSheet(isPresented: $showingSignOutConfirmation) {
-            .init(
-              title: .init(dialogTitle),
-              buttons: [
-                .destructive(.init(buttonTitle), action: action),
-                .cancel()
-              ]
-            )
+          if #available(iOS 15, *) {
+            $0.confirmationDialog(
+              dialogTitle,
+              isPresented: $showingSignOutConfirmation,
+              titleVisibility: .visible
+            ) {
+              Button(buttonTitle, role: .destructive, action: action)
+            }
+          } else {
+            $0.actionSheet(isPresented: $showingSignOutConfirmation) {
+              .init(
+                title: .init(dialogTitle),
+                buttons: [
+                  .destructive(.init(buttonTitle), action: action),
+                  .cancel()
+                ]
+              )
+            }
           }
         }
       }
