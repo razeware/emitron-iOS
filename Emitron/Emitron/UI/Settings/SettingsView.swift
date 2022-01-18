@@ -87,11 +87,11 @@ struct SettingsView: View {
           showingSignOutConfirmation = true
         }
         .actionSheet(isPresented: $showingSignOutConfirmation) {
-          ActionSheet(
-            title: Text("Are you sure you want to sign out?"),
+          .init(
+            title: .init("Are you sure you want to sign out?"),
             buttons: [
               .cancel(),
-              .destructive(Text("Sign Out")) {
+              .destructive(.init("Sign Out")) {
                 DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
                   sessionController.logout()
                   tabViewModel.selectedTab = .library
