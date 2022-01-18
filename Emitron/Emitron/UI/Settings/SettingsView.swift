@@ -35,8 +35,8 @@ enum SettingsLayout {
 }
 
 struct SettingsView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
   @State private var showingSignOutConfirmation = false
