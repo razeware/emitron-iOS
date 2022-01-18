@@ -87,15 +87,19 @@ struct SettingsView: View {
           showingSignOutConfirmation = true
         }
         .actionSheet(isPresented: $showingSignOutConfirmation) {
-          .init(
-            title: .init("Are you sure you want to sign out?"),
+          let dialogTitle = "Are you sure you want to sign out?"
+          let buttonTitle = "Sign Out"
+          let action = {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+              sessionController.logout()
+              tabViewModel.selectedTab = .library
+            }
+          }
+          
+          return .init(
+            title: .init(dialogTitle),
             buttons: [
-              .destructive(.init("Sign Out")) {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-                  sessionController.logout()
-                  tabViewModel.selectedTab = .library
-                }
-              },
+              .destructive(.init(buttonTitle), action: action),
               .cancel()
             ]
           )
