@@ -177,7 +177,6 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentId)
-        messageBus.post(message: Message(level: .success, message: .bookmarkDeleted))
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
@@ -187,7 +186,6 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentId)
-        messageBus.post(message: Message(level: .success, message: .bookmarkCreated))
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
