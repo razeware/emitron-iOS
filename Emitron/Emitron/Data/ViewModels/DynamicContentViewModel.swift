@@ -186,6 +186,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentId)
+        let generator = UINotificationFeedbackGenerator()
+        generator.notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
