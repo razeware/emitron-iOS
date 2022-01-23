@@ -40,6 +40,7 @@ struct TextListItemView: View {
   @EnvironmentObject var settingsManager: SettingsManager
   @EnvironmentObject var messageBus: MessageBus
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
+  @State private var descriptionHasLineLimit = true
   
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   var content: ChildContentListDisplayable
@@ -59,13 +60,35 @@ struct TextListItemView: View {
       VStack(spacing: 15) {
         HStack {
           VStack(alignment: .leading, spacing: 5) {
-            Text(content.name)
-              .font(.uiTitle5)
-              .kerning(-0.5)
-              .lineSpacing(3)
-              .foregroundColor(.titleText)
-              .fixedSize(horizontal: false, vertical: true)
+            HStack {
+              Text(content.name)
+                .font(.uiTitle5)
+                .kerning(-0.5)
+                .lineSpacing(3)
+                .foregroundColor(.titleText)
+                .fixedSize(horizontal: false, vertical: true)
+              
+              Spacer()
+              
+              Image(systemName: descriptionHasLineLimit ? "chevron.up" : "chevron.down")
+                .foregroundColor(.contentText)
+                .font(.uiLabelBold)
+                .onTapGesture {
+                  withAnimation {
+                    descriptionHasLineLimit.toggle()
+                  }
+                }
+            }
             
+            Text(content.descriptionPlainText)
+              .multilineTextAlignment(.leading)
+              .font(.uiCaption)
+              .fixedSize(horizontal: false, vertical: true)
+              .lineLimit(descriptionHasLineLimit ? 1 : nil)
+              .lineSpacing(3)
+              .foregroundColor(.contentText)
+              .padding(.bottom, 5)
+              
             Text(content.duration.minuteSecondTimeFromSeconds)
               .font(.uiFootnote)
               .foregroundColor(.contentText)
