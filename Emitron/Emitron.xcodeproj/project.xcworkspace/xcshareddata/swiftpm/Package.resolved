@@ -15,8 +15,8 @@
         "repositoryURL": "https://github.com/groue/GRDB.swift.git",
         "state": {
           "branch": null,
-          "revision": "32b2923e890df320906e64cbd0faca22a8bfda14",
-          "version": "5.12.0"
+          "revision": "dfca044433050bb3e297761bf827e01ef376f5d9",
+          "version": "5.18.0"
         }
       },
       {
@@ -32,15 +32,9 @@
         "package": "Kingfisher",
         "repositoryURL": "https://github.com/onevcat/Kingfisher",
         "state": {
-<<<<<<< HEAD
-          "branch": "master",
-          "revision": "131c2c2737602dd8227fdf7ef68252662dc2752f",
-          "version": null
-=======
           "branch": null,
-          "revision": "318e319998bf555c3e914d5c3adb6da05af86a32",
-          "version": "7.1.1"
->>>>>>> dc6a7db3c605753e4cd73bc76ae44be1626ce20f
+          "revision": "0c02c46cfdc0656ce74fd0963a75e5000a0b7f23",
+          "version": "7.1.2"
         }
       },
       {
