@@ -2679,7 +2679,7 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 19.0.0;
+				minimumVersion = 20.0.0;
 			};
 		};
 		22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
