@@ -42,8 +42,8 @@ struct ToggleControlView: View {
       
       HStack {
         toggleButton(for: .inProgress)
-        toggleButton(for: .completed)
         toggleButton(for: .bookmarked)
+        toggleButton(for: .completed)
       }
     }
   }
@@ -76,8 +76,8 @@ struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
     VStack(spacing: 40) {
       ToggleControlView(toggleState: .inProgress)
-      ToggleControlView(toggleState: .completed)
       ToggleControlView(toggleState: .bookmarked)
+      ToggleControlView(toggleState: .completed)
     }
     .padding([.vertical], 40)
     .padding([.horizontal], 10)
