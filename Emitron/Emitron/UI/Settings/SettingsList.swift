@@ -73,7 +73,7 @@ private extension SettingsList {
     case .allowDownloadsOverCellular:
       SettingsToggleRow(
         title: option.title,
-        isOn: $settingsManager.wifiOnlyDownloads
+        isOn: !$settingsManager.wifiOnlyDownloads
       )
     case .downloadQuality:
       NavigationLink(
