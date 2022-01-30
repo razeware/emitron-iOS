@@ -66,10 +66,6 @@ struct TagView: View {
       .padding([.vertical], 5)
       .padding([.horizontal], 7)
       .background(backgroundColor)
-      .overlay(
-        RoundedRectangle(cornerRadius: 6)
-          .stroke(borderColor, lineWidth: 4)
-      )
       .cornerRadius(6) // This is a bit hacky.
       .onPreferenceChange(SizeKey.self) { size in
         height = size?.height
