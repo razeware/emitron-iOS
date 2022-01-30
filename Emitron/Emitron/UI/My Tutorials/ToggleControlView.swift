@@ -28,12 +28,23 @@
 
 import SwiftUI
 
-struct ToggleControlView: View {
-  @State var toggleState: MyTutorialsState
-  @EnvironmentObject var messageBus: MessageBus
+struct ToggleControlView {
+  @State private var toggleState: MyTutorialsState
+  @EnvironmentObject private var messageBus: MessageBus
 
-  var toggleUpdated: ((MyTutorialsState) -> Void)?
-  
+  private let toggleUpdated: ((MyTutorialsState) -> Void)?
+
+  init(
+    toggleState: MyTutorialsState,
+    toggleUpdated: ((MyTutorialsState) -> Void)? = nil
+  ) {
+    self.toggleState = toggleState
+    self.toggleUpdated = toggleUpdated
+  }
+}
+
+// MARK: - View
+extension ToggleControlView: View {
   var body: some View {
     ZStack(alignment: .bottom) {
       RoundedRectangle(cornerRadius: 1)
@@ -45,7 +56,24 @@ struct ToggleControlView: View {
       }
     }
   }
-  
+}
+
+struct ToggleControlView_Previews: PreviewProvider {
+  static var previews: some View {
+    VStack(spacing: 40) {
+      ForEach(MyTutorialsState.allCases, id: \.self) {
+        ToggleControlView(toggleState: $0)
+      }
+    }
+    .padding([.vertical], 40)
+    .padding([.horizontal], 10)
+    .background(Color.background)
+    .inAllColorSchemes
+  }
+}
+
+// MARK: - private
+private extension ToggleControlView {
   private func toggleButton(for state: MyTutorialsState) -> some View {
     Button {
       guard state != toggleState else { return }
@@ -67,19 +95,5 @@ struct ToggleControlView: View {
         .fill(toggleState == state ? Color.toggleLineSelected : .toggleLineDeselected)
         .frame(height: 2)
     }
-  }
-}
-
-struct ToggleControlView_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack(spacing: 40) {
-      ForEach(MyTutorialsState.allCases, id: \.self) {
-        ToggleControlView(toggleState: $0)
-      }
-    }
-    .padding([.vertical], 40)
-    .padding([.horizontal], 10)
-    .background(Color.background)
-    .inAllColorSchemes
   }
 }
