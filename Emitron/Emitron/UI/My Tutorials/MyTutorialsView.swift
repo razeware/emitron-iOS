@@ -37,10 +37,10 @@ enum MyTutorialsState: String {
     switch self {
     case .inProgress:
       return "In Progress"
-    case .completed:
-      return "Completed"
     case .bookmarked:
       return "Bookmarks"
+    case .completed:
+      return "Completed"
     }
   }
 }
@@ -113,15 +113,15 @@ private extension MyTutorialsView {
         contentRepository: inProgressRepository,
         contentScreen: .inProgress
       )
-    case .completed:
-      makeContentListView(
-        contentRepository: completedRepository,
-        contentScreen: .completed
-      )
     case .bookmarked:
       makeContentListView(
         contentRepository: bookmarkRepository,
         contentScreen: .bookmarked
+      )
+    case .completed:
+      makeContentListView(
+        contentRepository: completedRepository,
+        contentScreen: .completed
       )
     }
   }
@@ -143,15 +143,15 @@ private extension MyTutorialsView {
                 inProgressRepository.reload()
                 reloadProgression = false
               }
-            case .completed:
-              if reloadCompleted {
-                completedRepository.reload()
-                reloadCompleted = false
-              }
             case .bookmarked:
               if reloadBookmarks {
                 bookmarkRepository.reload()
                 reloadBookmarks = false
+              }
+            case .completed:
+              if reloadCompleted {
+                completedRepository.reload()
+                reloadCompleted = false
               }
             }
           })
