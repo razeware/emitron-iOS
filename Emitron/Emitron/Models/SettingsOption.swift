@@ -30,7 +30,7 @@ import Combine
 
 enum SettingsOption: Int, Identifiable, CaseIterable {
   case playbackSpeed
-  case wifiOnlyDownloads
+  case allowDownloadsOverCellular
   case downloadQuality
   case closedCaptionOn
   
@@ -40,8 +40,8 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     switch self {
     case .playbackSpeed:
       return .settingsPlaybackSpeedLabel
-    case .wifiOnlyDownloads:
-      return .settingsWifiOnlyDownloadsLabel
+    case .allowDownloadsOverCellular:
+      return .settingsAllowDownloadsOverCellularLabel
     case .downloadQuality:
       return .settingsDownloadQualityLabel
     case .closedCaptionOn:
@@ -77,7 +77,7 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
   
   var isToggle: Bool {
     switch self {
-    case .wifiOnlyDownloads, .closedCaptionOn:
+    case .allowDownloadsOverCellular, .closedCaptionOn:
       return true
     default:
       return false

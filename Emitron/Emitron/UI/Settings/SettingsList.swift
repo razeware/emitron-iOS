@@ -70,7 +70,7 @@ private extension SettingsList {
         title: option.title,
         isOn: $settingsManager.closedCaptionOn
       )
-    case .wifiOnlyDownloads:
+    case .allowDownloadsOverCellular:
       SettingsToggleRow(
         title: option.title,
         isOn: $settingsManager.wifiOnlyDownloads
