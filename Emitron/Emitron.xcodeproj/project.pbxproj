@@ -332,7 +332,6 @@
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
 		D31CEF2C26E2C421008083D0 /* FilterGroupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */; };
 		D3D9C5C72645DA9A002FD479 /* EmitronApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */; };
-		D3DE936027234CDF0071CB8D /* NavigationConfigurator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3DE935F27234CDF0071CB8D /* NavigationConfigurator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -682,7 +681,6 @@
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
 		D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterGroupTest.swift; sourceTree = "<group>"; };
 		D3D9C5C62645DA9A002FD479 /* EmitronApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronApp.swift; sourceTree = "<group>"; };
-		D3DE935F27234CDF0071CB8D /* NavigationConfigurator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationConfigurator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1522,7 +1520,6 @@
 			children = (
 				22C3F154242795A1002812CB /* PortraitHostingController.swift */,
 				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
-				D3DE935F27234CDF0071CB8D /* NavigationConfigurator.swift */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
 				2213193D23E4E83300F15816 /* Empty States */,
@@ -2052,7 +2049,6 @@
 				223D77D523B1AA02005BE95D /* ContentSummaryState.swift in Sources */,
 				22BFE76823DAF5B000495BA9 /* PersistenceStore+Synchronisation.swift in Sources */,
 				22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */,
-				D3DE936027234CDF0071CB8D /* NavigationConfigurator.swift in Sources */,
 				B6FC15C522CB55D30078CEDB /* JSONAPIError.swift in Sources */,
 				22BFE75823D9910600495BA9 /* MessageBus.swift in Sources */,
 				22B8266423AF5CF900D4BA23 /* BookmarkAdapter.swift in Sources */,
