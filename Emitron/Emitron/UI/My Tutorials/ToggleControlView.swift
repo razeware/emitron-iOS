@@ -75,9 +75,9 @@ struct ToggleControlView: View {
 struct ToggleControlView_Previews: PreviewProvider {
   static var previews: some View {
     VStack(spacing: 40) {
-      ToggleControlView(toggleState: .inProgress)
-      ToggleControlView(toggleState: .completed)
-      ToggleControlView(toggleState: .bookmarked)
+      ForEach(MyTutorialsState.allCases, id: \.self) {
+        ToggleControlView(toggleState: $0)
+      }
     }
     .padding([.vertical], 40)
     .padding([.horizontal], 10)
