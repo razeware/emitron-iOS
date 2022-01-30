@@ -244,6 +244,7 @@
 		22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */; };
 		22F2C46123EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */; };
 		22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */; };
+		492E632627A6B96900CD1F19 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E632527A6B96900CD1F19 /* Binding+Extensions.swift */; };
 		493DA0A127266049006ED195 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 493DA0A027266049006ED195 /* GRDB */; };
 		494A79A82465C8C90097E8F4 /* RefreshableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
@@ -584,6 +585,7 @@
 		22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSubscriptionPlan.swift; sourceTree = "<group>"; };
 		22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSubscriptionPlan+Request.swift"; sourceTree = "<group>"; };
 		22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentListingView.swift; sourceTree = "<group>"; };
+		492E632527A6B96900CD1F19 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableTestCase.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
@@ -1412,6 +1414,7 @@
 		B6D4529622CAB3E700BFB812 /* Extensions */ = {
 			isa = PBXGroup;
 			children = (
+				492E632527A6B96900CD1F19 /* Binding+Extensions.swift */,
 				B6C0F0DC22D5FA1C00012839 /* ContentDetailModel+Extensions.swift */,
 				B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */,
 				B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */,
@@ -2136,6 +2139,7 @@
 				22C4EAED23DEF910001A3FDA /* SettingsManager.swift in Sources */,
 				229F0ABC23BADDB00004DD4F /* ContentPersistableState.swift in Sources */,
 				B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */,
+				492E632627A6B96900CD1F19 /* Binding+Extensions.swift in Sources */,
 				22C0513823A4FBA5004D1223 /* Category+Persistence.swift in Sources */,
 				B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */,
 				8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */,
@@ -2679,7 +2683,7 @@
 			repositoryURL = "https://github.com/evgenyneu/keychain-swift";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 19.0.0;
+				minimumVersion = 20.0.0;
 			};
 		};
 		22C0512323A4C99E004D1223 /* XCRemoteSwiftPackageReference "Kingfisher" */ = {
