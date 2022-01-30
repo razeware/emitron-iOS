@@ -41,7 +41,7 @@ struct ToggleControlView: View {
         .frame(height: 2)
       
       HStack {
-        ForEach(MyTutorialsState.allCases, id: \.self, content: toggleButton)
+        ForEach(MyTutorialsState.allCases, content: toggleButton)
       }
     }
   }

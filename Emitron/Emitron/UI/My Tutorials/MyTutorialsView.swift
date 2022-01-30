@@ -61,6 +61,11 @@ extension MyTutorialsState: CaseIterable {
   }
 }
 
+// MARK: - Identifiable
+extension MyTutorialsState: Identifiable {
+  var id: Self { self }
+}
+
 // MARK: -
 struct MyTutorialsView {
   init(
