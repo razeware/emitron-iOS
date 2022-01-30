@@ -103,10 +103,7 @@ struct TextListItemView: View {
     SCNetworkReachabilityGetFlags(reachability, &flags)
     let isReachable = flags.contains(.reachable)
     let isCellular = flags.contains(.isWWAN)
-    if isReachable && isCellular && settingsManager.wifiOnlyDownloads {
-      return true
-    }
-    return false
+    return [isReachable, isCellular, settingsManager.wifiOnlyDownloads].allSatisfy { $0 }
   }
 }
 

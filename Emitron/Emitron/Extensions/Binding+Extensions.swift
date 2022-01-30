@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -26,46 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Combine
+import struct SwiftUI.Binding
 
-enum SettingsOption: Int, Identifiable, CaseIterable {
-  case playbackSpeed
-  case allowDownloadsOverCellular
-  case downloadQuality
-  case closedCaptionOn
-  
-  var id: Int { rawValue }
-  
-  var title: String {
-    switch self {
-    case .playbackSpeed:
-      return .settingsPlaybackSpeedLabel
-    case .allowDownloadsOverCellular:
-      return .settingsAllowDownloadsOverCellularLabel
-    case .downloadQuality:
-      return .settingsDownloadQualityLabel
-    case .closedCaptionOn:
-      return .settingsClosedCaptionOnLabel
-    }
-  }
-  
-  var isToggle: Bool {
-    switch self {
-    case .allowDownloadsOverCellular, .closedCaptionOn:
-      return true
-    default:
-      return false
-    }
+public extension Binding where Value == Bool {
+  prefix static func !(binding: Self) -> Self {
+    .init(
+      get: { !binding.wrappedValue },
+      set: { binding.wrappedValue = !$0 }
+    )
   }
 }
 
-// MARK: - Option Selection
-extension SettingsOption {
-  static func getOptions(for canDownload: Bool) -> [SettingsOption] {
-    if canDownload {
-      return SettingsOption.allCases
-    } else {
-      return [.playbackSpeed, .closedCaptionOn]
-    }
-  }
-}

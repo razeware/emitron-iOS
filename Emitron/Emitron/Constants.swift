@@ -101,7 +101,7 @@ extension String {
 
   // MARK: Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
-  static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
+  static let settingsAllowDownloadsOverCellularLabel = "Allow Downloads Over Cellular"
   static let settingsDownloadQualityLabel = "Downloads Quality"
   static let settingsClosedCaptionOnLabel = "Subtitles"
 }
