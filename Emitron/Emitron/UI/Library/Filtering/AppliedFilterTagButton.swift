@@ -101,10 +101,6 @@ struct AppliedFilterTagButton: View {
       .background(
         RoundedRectangle(cornerRadius: Layout.cornerRadius)
           .fill(type.backgroundColor)
-          .overlay(
-            RoundedRectangle(cornerRadius: Layout.cornerRadius)
-            .stroke(type.borderColor, lineWidth: 2)
-        )
       )
     }
     .padding(1)
