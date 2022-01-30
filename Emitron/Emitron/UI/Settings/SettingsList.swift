@@ -30,7 +30,15 @@ import SwiftUI
 
 struct SettingsList {
   @ObservedObject private var settingsManager: SettingsManager
-  private var canDownload: Bool
+  private let canDownload: Bool
+}
+
+// MARK: - internal
+extension SettingsList {
+  init(settingsManager: ObservedObject<SettingsManager>, canDownload: Bool) {
+    _settingsManager = settingsManager
+    self.canDownload = canDownload
+  }
 }
 
 // MARK: - View
@@ -50,14 +58,6 @@ struct SettingsList_Previews: PreviewProvider {
     )
       .background(Color.background)
       .inAllColorSchemes
-  }
-}
-
-// MARK: - internal
-extension SettingsList {
-  init(settingsManager: ObservedObject<SettingsManager>, canDownload: Bool) {
-    _settingsManager = settingsManager
-    self.canDownload = canDownload
   }
 }
 

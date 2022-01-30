@@ -49,32 +49,6 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     }
   }
   
-  var key: SettingsKey {
-    switch self {
-    case .playbackSpeed:
-      return .playbackSpeed
-    case .wifiOnlyDownloads:
-      return .wifiOnlyDownloads
-    case .downloadQuality:
-      return .downloadQuality
-    case .closedCaptionOn:
-      return .closedCaptionOn
-    }
-  }
-  
-  var detail: [String] {
-    switch self {
-    case .playbackSpeed:
-      return PlaybackSpeed.allCases.map(\.display)
-    case .wifiOnlyDownloads:
-      return [String.yes, String.no]
-    case .downloadQuality:
-      return Attachment.Kind.downloads.map(\.display)
-    case .closedCaptionOn:
-      return [String.yes, String.no]
-    }
-  }
-  
   var isToggle: Bool {
     switch self {
     case .allowDownloadsOverCellular, .closedCaptionOn:
