@@ -72,27 +72,6 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     configureSubscriptions()
   }
   
-  private func configureSubscriptions() {
-    repository
-      .contentDynamicState(for: contentId)
-      .removeDuplicates()
-      .sink(receiveCompletion: { [weak self] completion in
-        self?.state = .failed
-        Failure
-          .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
-          .log()
-      }) { [weak self] contentState in
-        guard let self = self else { return }
-
-        self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
-        self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
-        self.bookmarked = contentState.bookmark != nil
-        self.dynamicContentState = contentState
-        self.state = .hasData
-      }
-      .store(in: &subscriptions)
-  }
-  
   func downloadTapped() -> DownloadDeletionConfirmation? {
     guard state == .hasData else { return nil }
     
@@ -171,13 +150,14 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   }
   
   func bookmarkTapped() {
-    guard state == .hasData,
-      let syncAction = syncAction else { return }
+    guard
+      state == .hasData,
+      let syncAction = syncAction
+    else { return }
     
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentId)
-        messageBus.post(message: Message(level: .success, message: .bookmarkDeleted))
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
@@ -187,7 +167,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentId)
-        messageBus.post(message: Message(level: .success, message: .bookmarkCreated))
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
@@ -238,5 +218,29 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       settingsManager: settingsManager,
       dismissClosure: dismissClosure
     )
+  }
+}
+
+// MARK: - private
+private extension DynamicContentViewModel {
+  func configureSubscriptions() {
+    repository
+      .contentDynamicState(for: contentId)
+      .removeDuplicates()
+      .sink(receiveCompletion: { [weak self] completion in
+        self?.state = .failed
+        Failure
+          .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
+          .log()
+      }) { [weak self] contentState in
+        guard let self = self else { return }
+        
+        self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
+        self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)
+        self.bookmarked = contentState.bookmark != nil
+        self.dynamicContentState = contentState
+        self.state = .hasData
+      }
+      .store(in: &subscriptions)
   }
 }
