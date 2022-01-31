@@ -107,8 +107,13 @@ struct TextListItemView: View {
               Spacer()
               DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
                 .onTapGesture {
-                  if wifiOnlyOnCellular() {
-                    messageBus.post(message: Message(level: .error, message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."))
+                  if wifiOnlyOnCellular {
+                    messageBus.post(
+                      message: .init(
+                        level: .error,
+                        message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."
+                      )
+                    )
                   } else {
                     download()
                   }
@@ -124,7 +129,7 @@ struct TextListItemView: View {
     }
   }
 
-  private func wifiOnlyOnCellular() -> Bool {
+  private var wifiOnlyOnCellular: Bool {
     guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.raywenderlich.com") else {
       return false
     }
