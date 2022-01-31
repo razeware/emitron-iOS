@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import Combine
 import class Foundation.RunLoop
 
 final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable {
-  private let contentId: Int
+  private let contentID: Int
   private let repository: Repository
   private let downloadAction: DownloadAction
   private weak var syncAction: SyncAction?
@@ -49,8 +49,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   private var subscriptions = Set<AnyCancellable>()
   private var downloadActionSubscriptions = Set<AnyCancellable>()
   
-  init(contentId: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager, sessionController: SessionController) {
-    self.contentId = contentId
+  init(contentID: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager, sessionController: SessionController) {
+    self.contentID = contentID
     self.repository = repository
     self.downloadAction = downloadAction
     self.syncAction = syncAction
@@ -77,9 +77,9 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     
     switch downloadProgress {
     case .downloadable:
-      downloadAction.requestDownload(contentId: contentId) { contentId -> (ContentPersistableState?) in
+      downloadAction.requestDownload(contentID: contentID) { contentID -> (ContentPersistableState?) in
         do {
-          return try self.repository.contentPersistableState(for: contentId)
+          return try self.repository.contentPersistableState(for: contentID)
         } catch {
           Failure
             .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate persistable state in cache:  \(error)")
@@ -103,7 +103,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       .store(in: &downloadActionSubscriptions)
 
     case .enqueued, .inProgress:
-      downloadAction.cancelDownload(contentId: contentId)
+      downloadAction.cancelDownload(contentID: contentID)
         .receive(on: RunLoop.main)
         .sink(receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
@@ -116,13 +116,13 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       
     case .downloaded:
       return DownloadDeletionConfirmation(
-        contentId: contentId,
+        contentID: contentID,
         title: "Confirm Delete",
         message: "Are you sure you want to delete this download?"
       ) { [weak self] in
         guard let self = self else { return }
         
-        self.downloadAction.deleteDownload(contentId: self.contentId)
+        self.downloadAction.deleteDownload(contentID: self.contentID)
           .receive(on: RunLoop.main)
           .sink(receiveCompletion: { [weak self] completion in
             if case .failure(let error) = completion {
@@ -135,7 +135,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       }
       
     case .notDownloadable:
-      downloadAction.cancelDownload(contentId: contentId)
+      downloadAction.cancelDownload(contentID: contentID)
         .receive(on: RunLoop.main)
         .sink(receiveCompletion: { [weak self] completion in
           if case .failure(let error) = completion {
@@ -157,7 +157,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     
     if bookmarked {
       do {
-        try syncAction.deleteBookmark(for: contentId)
+        try syncAction.deleteBookmark(for: contentID)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
@@ -166,7 +166,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       }
     } else {
       do {
-        try syncAction.createBookmark(for: contentId)
+        try syncAction.createBookmark(for: contentID)
         UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
@@ -183,7 +183,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     
     if case .completed = viewProgress {
       do {
-        try syncAction.removeProgress(for: contentId)
+        try syncAction.removeProgress(for: contentID)
         messageBus.post(message: Message(level: .success, message: .progressRemoved))
       } catch {
         messageBus.post(message: Message(level: .error, message: .progressRemovedError))
@@ -193,7 +193,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       }
     } else {
       do {
-        try syncAction.markContentAsComplete(contentId: contentId)
+        try syncAction.markContentAsComplete(contentID: contentID)
         messageBus.post(message: Message(level: .success, message: .progressMarkedAsComplete))
       } catch {
         messageBus.post(message: Message(level: .error, message: .progressMarkedAsCompleteError))
@@ -208,7 +208,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     let videosService = VideosService(client: apiClient)
     let contentsService = ContentsService(client: apiClient)
     return VideoPlaybackViewModel(
-      contentId: contentId,
+      contentID: contentID,
       repository: repository,
       videosService: videosService,
       contentsService: contentsService,
@@ -225,7 +225,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
 private extension DynamicContentViewModel {
   func configureSubscriptions() {
     repository
-      .contentDynamicState(for: contentId)
+      .contentDynamicState(for: contentID)
       .removeDuplicates()
       .sink(receiveCompletion: { [weak self] completion in
         self?.state = .failed

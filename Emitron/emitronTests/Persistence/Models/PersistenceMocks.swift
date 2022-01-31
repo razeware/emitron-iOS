@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ enum PersistenceMocks {
             cardArtworkURL: URL(string: "https://example.com/card_artwork.png")!,
             technologyTriple: "Some Tech",
             contributors: "HELLO",
-            groupId: nil,
+            groupID: nil,
             ordinal: 0)
   }
   
@@ -54,6 +54,6 @@ enum PersistenceMocks {
     Download(id: UUID(),
              requestedAt: Date(),
              state: .pending,
-             contentId: content.id)
+             contentID: content.id)
   }
 }

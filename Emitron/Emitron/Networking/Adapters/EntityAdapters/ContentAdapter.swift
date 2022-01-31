@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -67,7 +67,7 @@ struct ContentAdapter: EntityAdapter {
         && relationship.to.id == resource.id
         && relationship.to.type == .content
     }
-    let groupId = group?.from.id
+    let groupID = group?.from.id
     
     return Content(id: resource.id,
                    uri: uri,
@@ -84,7 +84,7 @@ struct ContentAdapter: EntityAdapter {
                    cardArtworkURL: cardArtworkURL,
                    technologyTriple: technologyTriple,
                    contributors: contributors,
-                   groupId: groupId,
+                   groupID: groupID,
                    ordinal: resource.attributes["ordinal"] as? Int)
   }
 }

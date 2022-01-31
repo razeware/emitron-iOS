@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,12 +106,12 @@ struct FilterGroupView_Previews: PreviewProvider {
     VStack {
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .difficulties, filters: filters),
-        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager),
+        filters: Filters(settingsManager: App.objects.settingsManager),
         isExpanded: true
       )
       FiltersHeaderView(
         filterGroup: FilterGroup(type: .categories, filters: filters),
-        filters: Filters(settingsManager: EmitronApp.emitronObjects().settingsManager)
+        filters: Filters(settingsManager: App.objects.settingsManager)
       )
     }
     .padding()

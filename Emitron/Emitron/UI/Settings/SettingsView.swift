@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -126,9 +126,9 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
   static var previews: some View {
-    SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
+    SettingsView(settingsManager: App.objects.settingsManager)
       .background(Color.background)
-      .environmentObject(EmitronApp.emitronObjects().sessionController)
+      .environmentObject(App.objects.sessionController)
       .inAllColorSchemes
   }
 }

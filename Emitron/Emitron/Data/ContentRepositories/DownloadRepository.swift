@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,10 +62,10 @@ final class DownloadRepository: ContentRepository {
     configureSubscription()
   }
   
-  override func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
+  override func childContentsViewModel(for contentID: Int) -> ChildContentsViewModel {
     // For downloaded content, we need to tell it to use the DB, not the service
     PersistenceStoreChildContentsViewModel(
-      parentContentId: contentId,
+      parentContentID: contentID,
       downloadAction: downloadService,
       syncAction: syncAction,
       repository: repository,

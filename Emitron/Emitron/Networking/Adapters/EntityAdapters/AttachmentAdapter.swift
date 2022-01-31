@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,16 +32,17 @@ struct AttachmentAdapter: EntityAdapter {
   static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Attachment {
     guard resource.entityType == .attachment else { throw EntityAdapterError.invalidResourceTypeForAdapter }
     
-    guard let urlString = resource.attributes["url"] as? String,
-      let url = URL(string: urlString),
-      let kindString = resource.attributes["kind"] as? String,
-      let kind = Attachment.Kind(from: kindString)
+    guard
+      let url = (resource.attributes["url"] as? String).flatMap(URL.init),
+      let kind = (resource.attributes["kind"] as? String).flatMap(Attachment.Kind.init)
     else {
       throw EntityAdapterError.invalidOrMissingAttributes
     }
     
-    return Attachment(id: resource.id,
-                      kind: kind,
-                      url: url)
+    return Attachment(
+      id: resource.id,
+      kind: kind,
+      url: url
+    )
   }
 }

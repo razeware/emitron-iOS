@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,12 +30,11 @@ import XCTest
 import CoreData
 @testable import Emitron
 
-class DownloadProcessorTest: XCTestCase {
-  
+final class DownloadProcessorTest: XCTestCase {
   private var downloadProcessor: DownloadProcessor!
   
   override func setUp() {
     super.setUp()
-    downloadProcessor = DownloadProcessor(settingsManager: EmitronApp.emitronObjects().settingsManager)
+    downloadProcessor = DownloadProcessor(settingsManager: App.objects.settingsManager)
   }
 }

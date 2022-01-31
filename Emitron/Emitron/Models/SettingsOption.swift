@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -62,10 +62,8 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
 // MARK: - Option Selection
 extension SettingsOption {
   static func getOptions(for canDownload: Bool) -> [SettingsOption] {
-    if canDownload {
-      return SettingsOption.allCases
-    } else {
-      return [.playbackSpeed, .closedCaptionOn]
-    }
+    canDownload
+      ? SettingsOption.allCases
+      : [.playbackSpeed, .closedCaptionOn]
   }
 }

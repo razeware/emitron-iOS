@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ import struct Foundation.URL
 public struct User: Equatable, Codable {
 
   // MARK: - Properties
-  public let externalId: String
+  public let externalID: String
   public let email: String
   public let username: String
   public let avatarURL: URL
@@ -64,7 +64,7 @@ public struct User: Equatable, Codable {
   // MARK: - Initializers
   init?(dictionary: [String: String]) {
     guard
-      let externalId = dictionary["external_id"],
+      let externalID = dictionary["external_id"],
       let email = dictionary["email"],
       let username = dictionary["username"],
       let avatarURLString = dictionary["avatar_url"],
@@ -74,7 +74,7 @@ public struct User: Equatable, Codable {
       else
     { return nil }
 
-    self.externalId = externalId
+    self.externalID = externalID
     self.email = email
     self.username = username
     self.avatarURL = avatarURL
@@ -84,7 +84,7 @@ public struct User: Equatable, Codable {
   }
   
   private init(user: User, permissions: [Permission]) {
-    externalId = user.externalId
+    externalID = user.externalID
     email = user.email
     username = user.username
     avatarURL = user.avatarURL

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +44,7 @@ class DownloadServiceTest: XCTestCase {
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     userModelController = .init(user: .withDownloads)
-    settingsManager = EmitronApp.emitronObjects().settingsManager
+    settingsManager = App.objects.settingsManager
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
@@ -59,7 +59,7 @@ class DownloadServiceTest: XCTestCase {
     super.tearDown()
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
-    EmitronApp.emitronObjects().settingsManager.resetAll()
+    App.objects.settingsManager.resetAll()
   }
   
   func getAllContents() -> [Content] {
@@ -82,7 +82,7 @@ class DownloadServiceTest: XCTestCase {
   
   func sampleDownloadQueueItem() throws -> PersistenceStore.DownloadQueueItem {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
       ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
     }
     .record()
@@ -133,7 +133,7 @@ class DownloadServiceTest: XCTestCase {
   //: requestDownload(content:) Tests
   func testRequestDownloadScreencastAddsContentToLocalStore() throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
       ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
     }
     .record()
@@ -174,7 +174,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(1, getAllContents().count)
     
     // Now execute the download request
-    let recorder = downloadService.requestDownload(contentId: screencast.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.id) { _ in
       ContentPersistableState.persistableState(for: screencast, with: screencastModel.1)
     }
     .record()
@@ -198,18 +198,18 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     
     let episode = fullState.childContents.first!
-    let recorder = downloadService.requestDownload(contentId: episode.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
     let completion = try wait(for: recorder.completion, timeout: 10)
     XCTAssert(completion == .finished)
     
-    let allContentIds = fullState.childContents.map(\.id) + [collection.0.id]
+    let allContentIDs = fullState.childContents.map(\.id) + [collection.0.id]
     
-    XCTAssertEqual(allContentIds.count, getAllContents().count)
-    XCTAssertEqual(allContentIds.sorted(), getAllContents().map { Int($0.id) }.sorted())
+    XCTAssertEqual(allContentIDs.count, getAllContents().count)
+    XCTAssertEqual(allContentIDs.sorted(), getAllContents().map { Int($0.id) }.sorted())
   }
   
   func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
@@ -218,8 +218,8 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
     
     let episode = fullState.childContents.first!
-    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
+    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
     })
       .record()
     
@@ -249,7 +249,7 @@ class DownloadServiceTest: XCTestCase {
     }
     
     // Now execute the download request
-    let anotherRecorder = downloadService.requestDownload(contentId: episode.id) { _ in
+    let anotherRecorder = downloadService.requestDownload(contentID: episode.id) { _ in
       ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
     }
     .record()
@@ -272,8 +272,8 @@ class DownloadServiceTest: XCTestCase {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     
-    let recorder = downloadService.requestDownload(contentId: collection.0.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = downloadService.requestDownload(contentID: collection.0.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -293,8 +293,8 @@ class DownloadServiceTest: XCTestCase {
     
     var episode = fullState.childContents.first!
     
-    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
+    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
     })
       .record()
     
@@ -323,8 +323,8 @@ class DownloadServiceTest: XCTestCase {
     }
     
     // Now execute the download request
-    let recorder2 = downloadService.requestDownload(contentId: collectionModel.0.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collectionModel.1)
+    let recorder2 = downloadService.requestDownload(contentID: collectionModel.0.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
     }
     .record()
     
@@ -347,8 +347,8 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episode = fullState.childContents.first!
     
-    let recorder = downloadService.requestDownload(contentId: episode.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -358,7 +358,7 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(2, getAllDownloads().count)
     
     let download = getAllDownloads().first!
-    XCTAssertEqual(episode.id, download.contentId)
+    XCTAssertEqual(episode.id, download.contentID)
   }
   
   func testRequestAdditionalEpisodesUpdatesTheCollectionDownload() throws {
@@ -366,16 +366,16 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episodes = fullState.childContents
     
-    let recorder1 = downloadService.requestDownload(contentId: episodes[0].id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder1 = downloadService.requestDownload(contentID: episodes[0].id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
-    let recorder2 = downloadService.requestDownload(contentId: episodes[1].id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder2 = downloadService.requestDownload(contentID: episodes[1].id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
-    let recorder3 = downloadService.requestDownload(contentId: episodes[2].id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder3 = downloadService.requestDownload(contentID: episodes[2].id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -388,7 +388,7 @@ class DownloadServiceTest: XCTestCase {
   
   func testRequestDownloadAddsDownloadToScreencasts() throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
       ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
     }
     .record()
@@ -398,14 +398,14 @@ class DownloadServiceTest: XCTestCase {
     
     XCTAssertEqual(1, getAllDownloads().count)
     let download = getAllDownloads().first!
-    XCTAssertEqual(screencast.0.id, download.contentId)
+    XCTAssertEqual(screencast.0.id, download.contentID)
   }
   
   func testRequestDownloadAddsDownloadToCollection() throws {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
-    let recorder = downloadService.requestDownload(contentId: collection.0.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = downloadService.requestDownload(contentID: collection.0.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -416,13 +416,13 @@ class DownloadServiceTest: XCTestCase {
     XCTAssertEqual(fullState.childContents.count + 1, getAllDownloads().count)
     XCTAssertEqual(
       (fullState.childContents.map(\.id) + [collection.0.id]).sorted(),
-      getAllDownloads().map(\.contentId).sorted()
+      getAllDownloads().map(\.contentID).sorted()
     )
   }
   
   func testRequestDownloadAddsDownloadInPendingState() throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
       ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
     }
     .record()
@@ -462,7 +462,7 @@ class DownloadServiceTest: XCTestCase {
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
-                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
+                                      settingsManager: App.objects.settingsManager)
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -487,7 +487,7 @@ class DownloadServiceTest: XCTestCase {
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
-                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
+                                      settingsManager: App.objects.settingsManager)
     
     XCTAssertFalse(fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -520,8 +520,8 @@ class DownloadServiceTest: XCTestCase {
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     let episode = fullState.childContents.first!
     
-    let recorder = downloadService.requestDownload(contentId: episode.id) { contentId in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -549,7 +549,7 @@ class DownloadServiceTest: XCTestCase {
   
   func testRequestDownloadURLDoesNothingForCollection() throws {
     let collection = ContentTest.Mocks.collection
-    let recorder = downloadService.requestDownload(contentId: collection.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: collection.0.id) { _ in
       ContentPersistableState.persistableState(for: collection.0, with: collection.1)
     }
     .record()

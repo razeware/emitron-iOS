@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,7 +32,7 @@ final class PersistenceStoreChildContentsViewModel: ChildContentsViewModel {
 
   override func loadContentDetailsIntoCache() {
     do {
-      try repository.loadDownloadedChildContentsIntoCache(for: parentContentId)
+      try repository.loadDownloadedChildContentsIntoCache(for: parentContentID)
       DispatchQueue.main.async(execute: reload)
     } catch {
       state = .failed
