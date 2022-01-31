@@ -146,6 +146,7 @@ extension ContentListDisplayable {
 protocol ChildContentListDisplayable: Ownable {
   var id: Int { get }
   var name: String { get }
+  var descriptionPlainText: String { get }
   var ordinal: Int? { get }
   var duration: Int { get }
   var groupId: Int? { get }

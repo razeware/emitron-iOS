@@ -40,6 +40,7 @@ struct TextListItemView: View {
   @EnvironmentObject var settingsManager: SettingsManager
   @EnvironmentObject var messageBus: MessageBus
   @State private var deletionConfirmation: DownloadDeletionConfirmation?
+  @State private var descriptionHasLineLimit = true
   
   @ObservedObject var dynamicContentViewModel: DynamicContentViewModel
   var content: ChildContentListDisplayable
@@ -66,9 +67,37 @@ struct TextListItemView: View {
               .foregroundColor(.titleText)
               .fixedSize(horizontal: false, vertical: true)
             
-            Text(content.duration.minuteSecondTimeFromSeconds)
-              .font(.uiFootnote)
+            Text(content.descriptionPlainText)
+              .multilineTextAlignment(.leading)
+              .font(.uiCaption)
+              .fixedSize(horizontal: false, vertical: true)
+              .lineLimit(descriptionHasLineLimit ? 1 : nil)
+              .lineSpacing(3)
               .foregroundColor(.contentText)
+              .padding(.bottom, 5)
+            
+            HStack {
+              Text(content.duration.minuteSecondTimeFromSeconds)
+              
+              Spacer()
+              
+              Button {
+                withAnimation {
+                  descriptionHasLineLimit.toggle()
+                }
+              } label: {
+                let (title, systemName) =
+                  descriptionHasLineLimit
+                  ? ("More", "chevron.down")
+                  : ("Less", "chevron.up")
+                
+                Text(title)
+                Image(systemName: systemName)
+              }
+            }
+            .font(.uiFootnote)
+            .foregroundColor(.contentText)
+            .padding(.trailing)
           }
           
           Spacer()
@@ -78,8 +107,13 @@ struct TextListItemView: View {
               Spacer()
               DownloadIcon(downloadProgress: dynamicContentViewModel.downloadProgress)
                 .onTapGesture {
-                  if wifiOnlyOnCellular() {
-                    messageBus.post(message: Message(level: .error, message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."))
+                  if wifiOnlyOnCellular {
+                    messageBus.post(
+                      message: .init(
+                        level: .error,
+                        message: "To download the episode, either reconnect to a Wifi network or disable 'Downloads (Wifi Only)' in the settings."
+                      )
+                    )
                   } else {
                     download()
                   }
@@ -95,7 +129,7 @@ struct TextListItemView: View {
     }
   }
 
-  private func wifiOnlyOnCellular() -> Bool {
+  private var wifiOnlyOnCellular: Bool {
     guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.raywenderlich.com") else {
       return false
     }
