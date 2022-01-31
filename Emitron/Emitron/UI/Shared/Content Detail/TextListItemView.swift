@@ -60,25 +60,12 @@ struct TextListItemView: View {
       VStack(spacing: 15) {
         HStack {
           VStack(alignment: .leading, spacing: 5) {
-            HStack {
-              Text(content.name)
-                .font(.uiTitle5)
-                .kerning(-0.5)
-                .lineSpacing(3)
-                .foregroundColor(.titleText)
-                .fixedSize(horizontal: false, vertical: true)
-              
-              Spacer()
-              
-              Image(systemName: descriptionHasLineLimit ? "chevron.up" : "chevron.down")
-                .foregroundColor(.contentText)
-                .font(.uiLabelBold)
-                .onTapGesture {
-                  withAnimation {
-                    descriptionHasLineLimit.toggle()
-                  }
-                }
-            }
+            Text(content.name)
+              .font(.uiTitle5)
+              .kerning(-0.5)
+              .lineSpacing(3)
+              .foregroundColor(.titleText)
+              .fixedSize(horizontal: false, vertical: true)
             
             Text(content.descriptionPlainText)
               .multilineTextAlignment(.leading)
@@ -88,10 +75,29 @@ struct TextListItemView: View {
               .lineSpacing(3)
               .foregroundColor(.contentText)
               .padding(.bottom, 5)
+            
+            HStack {
+              Text(content.duration.minuteSecondTimeFromSeconds)
               
-            Text(content.duration.minuteSecondTimeFromSeconds)
-              .font(.uiFootnote)
-              .foregroundColor(.contentText)
+              Spacer()
+              
+              Button {
+                withAnimation {
+                  descriptionHasLineLimit.toggle()
+                }
+              } label: {
+                let (title, systemName) =
+                  descriptionHasLineLimit
+                  ? ("More", "chevron.down")
+                  : ("Less", "chevron.up")
+                
+                Text(title)
+                Image(systemName: systemName)
+              }
+            }
+            .font(.uiFootnote)
+            .foregroundColor(.contentText)
+            .padding(.trailing)
           }
           
           Spacer()
