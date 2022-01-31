@@ -32,27 +32,25 @@ import KeychainSwift
 // MARK: Keychain
 // User + Auth Token (refresh daily)
 
-private let SSOUserKey = "com.razeware.emitron.sso_user"
+private let ssoUserKey = "com.razeware.emitron.sso_user"
 
 extension PersistenceStore {
-  
   @discardableResult
-  func persistUserToKeychain(user: User, encoder: JSONEncoder = JSONEncoder()) -> Bool {
+  func persistUserToKeychain(user: User, encoder: JSONEncoder = .init()) -> Bool {
     guard let encoded = try? encoder.encode(user) else {
       return false
     }
     
-    let keychain = KeychainSwift()
-    return keychain.set(encoded,
-                        forKey: SSOUserKey,
+    return KeychainSwift().set(encoded,
+                        forKey: ssoUserKey,
                         withAccess: .accessibleAfterFirstUnlock)
   }
   
-  func userFromKeychain(_ decoder: JSONDecoder = JSONDecoder()) -> User? {
-    let keychain = KeychainSwift()
-    guard let encoded = keychain.getData(SSOUserKey) else {
+  func userFromKeychain(_ decoder: JSONDecoder = .init()) -> User? {
+    guard let encoded = KeychainSwift().getData(ssoUserKey) else {
       return nil
     }
+    
     do {
       return try decoder.decode(User.self, from: encoded)
     } catch {
@@ -65,7 +63,6 @@ extension PersistenceStore {
   
   @discardableResult
   func removeUserFromKeychain() -> Bool {
-    let keychain = KeychainSwift()
-    return keychain.delete(SSOUserKey)
+    KeychainSwift().delete(ssoUserKey)
   }
 }

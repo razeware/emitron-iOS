@@ -38,7 +38,7 @@ struct SettingsDisclosureRow: View {
         Text(title)
           .font(.uiBodyAppleDefault)
           .foregroundColor(.titleText)
-          .padding([.vertical], SettingsLayout.rowSpacing)
+          .padding(.vertical, SettingsLayout.rowSpacing)
         
         Spacer()
         

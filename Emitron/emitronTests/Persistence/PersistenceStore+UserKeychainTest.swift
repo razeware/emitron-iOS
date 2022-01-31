@@ -30,7 +30,6 @@ import XCTest
 @testable import Emitron
 
 class PersistenceStore_UserKeychainTest: XCTestCase {
-  
   var persistenceStore: PersistenceStore!
   
   private let userDictionary = [

@@ -33,7 +33,6 @@ struct LogoutView: View {
   
   var body: some View {
     VStack {
-      
       Image("logo")
         .padding([.top], 88)
       
@@ -54,14 +53,16 @@ struct LogoutView: View {
       
       Spacer()
       
-      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-        sessionController.logout()
-      }
+      MainButtonView(
+        title: "Sign Out",
+        type: .destructive(withArrow: true),
+        callback: sessionController.logout
+      )
       .padding([.leading, .trailing], 18)
-      .padding([.bottom], 38)
+      .padding(.bottom, 38)
     }
     .background(Color.background)
-    .edgesIgnoringSafeArea([.all])
+    .edgesIgnoringSafeArea(.all)
   }
 }
 

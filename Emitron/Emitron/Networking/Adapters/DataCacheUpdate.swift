@@ -44,7 +44,7 @@ struct DataCacheUpdate {
   
   static func loadFrom(document: JSONAPIDocument) throws -> DataCacheUpdate {
     let data = try DataCacheUpdate(resources: document.data)
-    let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityId, $0.relationships) })
+    let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityID, $0.relationships) })
     return data.merged(with: included)
   }
   
@@ -120,7 +120,7 @@ struct DataCacheUpdate {
       return entityRelationships(from: entityRelationship.jsonRelationships, fromEntity: entityId)
     }
     relationshipsToReturn += resources.flatMap { resource -> [EntityRelationship] in
-      guard let resourceEntityId = resource.entityId else { return [] }
+      guard let resourceEntityId = resource.entityID else { return [] }
       return entityRelationships(from: resource.relationships, fromEntity: resourceEntityId)
     }
     return relationshipsToReturn
@@ -129,7 +129,7 @@ struct DataCacheUpdate {
   private static func entityRelationships(from jsonRelationships: [JSONAPIRelationship], fromEntity: EntityIdentity) -> [EntityRelationship] {
     jsonRelationships.flatMap { relationship in
       relationship.data.compactMap { resource in
-        guard let toEntity = resource.entityId else { return nil }
+        guard let toEntity = resource.entityID else { return nil }
         return EntityRelationship(name: relationship.type,
                                   from: fromEntity,
                                   to: toEntity)

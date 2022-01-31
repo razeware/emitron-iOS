@@ -30,8 +30,7 @@ import XCTest
 import CoreData
 @testable import Emitron
 
-class DownloadProcessorTest: XCTestCase {
-  
+final class DownloadProcessorTest: XCTestCase {
   private var downloadProcessor: DownloadProcessor!
   
   override func setUp() {

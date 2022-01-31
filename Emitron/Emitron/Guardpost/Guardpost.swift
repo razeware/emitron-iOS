@@ -29,30 +29,6 @@
 import AuthenticationServices
 import Combine
 
-public enum LoginError: Error {
-  case unableToCreateLoginURL
-  case errorResponseFromGuardpost(Error?)
-  case unableToDecodeGuardpostResponse
-  case invalidSignature
-  case unableToCreateValidUser
-  
-  public var localizedDescription: String {
-    let prefix = "GuardpostLoginError::"
-    switch self {
-    case .unableToCreateLoginURL:
-      return "\(prefix)UnableToCreateLoginURL"
-    case .errorResponseFromGuardpost(let error):
-      return "\(prefix)GuardpostLoginError:: [Error: \(error?.localizedDescription ?? "UNKNOWN")]"
-    case .unableToDecodeGuardpostResponse:
-      return "\(prefix)UnableToDecodeGuardpostResponse"
-    case .invalidSignature:
-      return "\(prefix)InvalidSignature"
-    case .unableToCreateValidUser:
-      return "\(prefix)UnableToCreateValidUser"
-    }
-  }
-}
-
 public class Guardpost: ObservableObject {
   // MARK: - Properties
   private let baseURL: String
@@ -157,6 +133,32 @@ public class Guardpost: ObservableObject {
                              result: Result<User, LoginError>) {
     DispatchQueue.global(qos: .userInitiated).async {
       callback(result)
+    }
+  }
+}
+
+public extension Guardpost {
+  enum LoginError: Error {
+    case unableToCreateLoginURL
+    case errorResponseFromGuardpost(Error?)
+    case unableToDecodeGuardpostResponse
+    case invalidSignature
+    case unableToCreateValidUser
+    
+    public var localizedDescription: String {
+      let prefix = "GuardpostLoginError::"
+      switch self {
+      case .unableToCreateLoginURL:
+        return "\(prefix)UnableToCreateLoginURL"
+      case .errorResponseFromGuardpost(let error):
+        return "\(prefix)[Error: \(error?.localizedDescription ?? "UNKNOWN")]"
+      case .unableToDecodeGuardpostResponse:
+        return "\(prefix)UnableToDecodeGuardpostResponse"
+      case .invalidSignature:
+        return "\(prefix)InvalidSignature"
+      case .unableToCreateValidUser:
+        return "\(prefix)UnableToCreateValidUser"
+      }
     }
   }
 }

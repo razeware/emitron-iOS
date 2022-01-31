@@ -329,8 +329,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       PersistenceStore.CollectionDownloadSummary(
         totalChildren: episodes.count,
         childrenRequested: episodes.count,
-        childrenCompleted: episodes.count),
-      collectionDownloadSummary)
+        childrenCompleted: episodes.count
+      ),
+      collectionDownloadSummary
+    )
   }
   
   func testCollectionDownloadSummaryThrowsForNonCollection() throws {
@@ -440,7 +442,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let recorder = persistenceStore.downloads(in: .inProgress).record()
     
     let downloads = getAllDownloads().sorted { $0.requestedAt < $1.requestedAt }
-    let episodes = getAllContents().filter({ $0.contentType == .episode })
+    let episodes = getAllContents().filter { $0.contentType == .episode }
     try downloads.forEach { download in
       try persistenceStore.transitionDownload(withId: download.id, to: .inProgress)
     }
@@ -453,7 +455,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let inProgressQueue = try wait(for: recorder.next(episodes.count + 1), timeout: 10)
     
     XCTAssertEqual(0, inProgressQueue.filter { $0?.content.contentType == .collection }.count)
-    XCTAssertEqual(episodes.map(\.id).sorted(), inProgressQueue.compactMap { $0?.content.id }.sorted())
+    XCTAssertEqual(
+      episodes.map(\.id).sorted(),
+      inProgressQueue.compactMap { $0?.content.id }.sorted()
+    )
   }
   
   func testDownloadQueueDoesNotContainCollections() throws {

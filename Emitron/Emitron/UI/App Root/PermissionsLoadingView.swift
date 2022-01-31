@@ -37,13 +37,16 @@ struct PermissionsLoadingView: View {
       .onTapGesture(count: 5) {
         showLogoutAlert.toggle()
       }
-    .alert(isPresented: $showLogoutAlert) {
-      Alert(
-        title: Text("Force Logout?"),
-        primaryButton: .destructive(Text("Logout"), action: sessionController.logout),
-        secondaryButton: .cancel()
-      )
-    }
+      .alert(isPresented: $showLogoutAlert) {
+        Alert(
+          title: Text("Force Logout?"),
+          primaryButton: .destructive(
+            Text("Logout"),
+            action: sessionController.logout
+          ),
+          secondaryButton: .cancel()
+        )
+      }
   }
 }
 

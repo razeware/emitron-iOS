@@ -43,20 +43,21 @@ public class JSONAPIResource {
     EntityType(from: type)
   }
   
-  var entityId: EntityIdentity? {
+  var entityID: EntityIdentity? {
     guard let entityType = entityType else { return nil }
     
     return EntityIdentity(id: id, type: entityType)
   }
 
-  public subscript(key: String) -> Any? {
+  subscript(key: String) -> Any? {
     attributes[key]
   }
 
   // MARK: - Initializers
-  convenience init(_ json: JSON,
-                   parent: JSONAPIDocument?) {
-
+  convenience init(
+    _ json: JSON,
+    parent: JSONAPIDocument?
+  ) {
     self.init()
 
     if let doc = parent {
@@ -65,12 +66,14 @@ public class JSONAPIResource {
 
     id = json["id"].intValue
     type = json["type"].stringValue
-
+    
     for relationship in json["relationships"].dictionaryValue {
       relationships.append(
-        JSONAPIRelationship(relationship.value,
-                            type: relationship.key,
-                            parent: nil)
+        JSONAPIRelationship(
+          relationship.value,
+          type: relationship.key,
+          parent: nil
+        )
       )
     }
 

@@ -31,20 +31,20 @@ import class Foundation.UserDefaults
 extension User {
   static var backdoor: User? {
     guard let backdoorToken = UserDefaults.standard.string(forKey: "userBackdoorToken") else { return nil }
-    
-    let userDict = [
-      "external_id": "BACKDOOR_USER",
-      "email": "emitron@razeware.com",
-      "username": "backdoor",
-      "avatar_url": "https://example.com/",
-      "name": "BACKDOOR+USER",
-      "token": backdoorToken
-    ]
-    
+        
     // Reset all the settings when logging in as a backdoor user.
     // I'd like to move this to the test target, but Xcode won't compile (missing module CSQLite).
     SettingsKey.allCases.forEach(UserDefaults.standard.removeObject)
     
-    return User(dictionary: userDict)
+    return User(
+      dictionary: [
+        "external_id": "BACKDOOR_USER",
+        "email": "emitron@razeware.com",
+        "username": "backdoor",
+        "avatar_url": "https://example.com/",
+        "name": "BACKDOOR+USER",
+        "token": backdoorToken
+      ]
+    )
   }
 }
