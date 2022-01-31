@@ -126,9 +126,9 @@ struct SettingsView: View {
 
 struct SettingsView_Previews: PreviewProvider {
   static var previews: some View {
-    SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
+    SettingsView(settingsManager: App.objects.settingsManager)
       .background(Color.background)
-      .environmentObject(EmitronApp.emitronObjects().sessionController)
+      .environmentObject(App.objects.sessionController)
       .inAllColorSchemes
   }
 }

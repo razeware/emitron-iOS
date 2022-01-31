@@ -36,6 +36,6 @@ class DownloadProcessorTest: XCTestCase {
   
   override func setUp() {
     super.setUp()
-    downloadProcessor = DownloadProcessor(settingsManager: EmitronApp.emitronObjects().settingsManager)
+    downloadProcessor = DownloadProcessor(settingsManager: App.objects.settingsManager)
   }
 }

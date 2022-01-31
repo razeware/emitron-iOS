@@ -44,7 +44,7 @@ class DownloadServiceTest: XCTestCase {
     database = try! EmitronDatabase.testDatabase()
     persistenceStore = PersistenceStore(db: database)
     userModelController = .init(user: .withDownloads)
-    settingsManager = EmitronApp.emitronObjects().settingsManager
+    settingsManager = App.objects.settingsManager
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
@@ -59,7 +59,7 @@ class DownloadServiceTest: XCTestCase {
     super.tearDown()
     videoService.reset()
     deleteSampleFile(fileManager: FileManager.default)
-    EmitronApp.emitronObjects().settingsManager.resetAll()
+    App.objects.settingsManager.resetAll()
   }
   
   func getAllContents() -> [Content] {
@@ -462,7 +462,7 @@ class DownloadServiceTest: XCTestCase {
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
-                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
+                                      settingsManager: App.objects.settingsManager)
     
     XCTAssert(!fileManager.fileExists(atPath: sampleFile.path))
   }
@@ -487,7 +487,7 @@ class DownloadServiceTest: XCTestCase {
     downloadService = DownloadService(persistenceStore: persistenceStore,
                                       userModelController: userModelController,
                                       videosServiceProvider: { _ in self.videoService },
-                                      settingsManager: EmitronApp.emitronObjects().settingsManager)
+                                      settingsManager: App.objects.settingsManager)
     
     XCTAssertFalse(fileManager.fileExists(atPath: sampleFile.path))
   }

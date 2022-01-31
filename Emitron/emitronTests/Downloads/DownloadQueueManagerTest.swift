@@ -54,7 +54,7 @@ class DownloadQueueManagerTest: XCTestCase {
       fatalError("Failed trying to test database")
     }
     persistenceStore = PersistenceStore(db: database)
-    settingsManager = EmitronApp.emitronObjects().settingsManager
+    settingsManager = App.objects.settingsManager
     let userModelController = UserMCMock(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore, userModelController: userModelController, videosServiceProvider: { _ in self.videoService }, settingsManager: settingsManager)
 

@@ -53,7 +53,7 @@ extension SettingsList: View {
 struct SettingsList_Previews: PreviewProvider {
   static var previews: some View {
     SettingsList(
-      settingsManager: .init(initialValue: EmitronApp.emitronObjects().settingsManager),
+      settingsManager: .init(initialValue: App.objects.settingsManager),
       canDownload: true
     )
       .background(Color.background)
