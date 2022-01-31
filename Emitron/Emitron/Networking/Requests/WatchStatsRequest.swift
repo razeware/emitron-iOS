@@ -29,7 +29,7 @@
 import Foundation
 
 protocol WatchStat {
-  var contentId: Int { get }
+  var contentID: Int { get }
   var secondsWatched: Int { get }
   var dateWatched: Date { get }
 }
@@ -46,7 +46,7 @@ struct WatchStatsUpdateRequest: Request {
       [
         "type": "watch_stats",
         "attributes": [
-          "content_id": stat.contentId,
+          "content_id": stat.contentID,
           "seconds": stat.secondsWatched,
           "watched_on": stat.dateWatched.iso8601
         ]

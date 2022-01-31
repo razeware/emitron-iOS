@@ -37,7 +37,7 @@ extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
     static let remoteURL = Column("remoteURL")
     static let progress = Column("progress")
     static let state = Column("state")
-    static let contentId = Column("contentId")
+    static let contentID = Column("contentId")
     static let ordinal = Column("ordinal")
   }
 }

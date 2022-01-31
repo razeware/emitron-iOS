@@ -44,7 +44,7 @@ struct Content: Codable {
   var cardArtworkURL: URL?
   var technologyTriple: String
   var contributors: String
-  var groupId: Int?
+  var groupID: Int?
   var ordinal: Int?
 }
 
@@ -66,7 +66,7 @@ extension Content: Equatable {
       lhs.cardArtworkURL == rhs.cardArtworkURL &&
       lhs.technologyTriple == rhs.technologyTriple &&
       lhs.contributors == rhs.contributors &&
-      lhs.groupId == rhs.groupId
+      lhs.groupID == rhs.groupID
   }
 }
 
@@ -87,7 +87,7 @@ extension Content {
             cardArtworkURL: other.cardArtworkURL,
             technologyTriple: other.technologyTriple,
             contributors: other.contributors,
-            groupId: other.groupId ?? groupId,
+            groupID: other.groupID ?? groupID,
             ordinal: other.ordinal)
   }
 }

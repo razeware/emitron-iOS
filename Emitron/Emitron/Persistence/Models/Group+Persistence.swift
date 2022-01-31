@@ -36,7 +36,7 @@ extension Group {
     static let name = Column("name")
     static let description = Column("description")
     static let ordinal = Column("ordinal")
-    static let contentId = Column("contentId")
+    static let contentID = Column("contentID")
   }
 }
 

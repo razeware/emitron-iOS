@@ -32,7 +32,7 @@ final class PersistenceStoreChildContentsViewModel: ChildContentsViewModel {
 
   override func loadContentDetailsIntoCache() {
     do {
-      try repository.loadDownloadedChildContentsIntoCache(for: parentContentId)
+      try repository.loadDownloadedChildContentsIntoCache(for: parentContentID)
       DispatchQueue.main.async(execute: reload)
     } catch {
       state = .failed

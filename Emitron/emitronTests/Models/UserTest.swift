@@ -50,7 +50,7 @@ class UserTest: XCTestCase {
       return
     }
     
-    XCTAssertEqual(userDictionary["external_id"], user.externalId)
+    XCTAssertEqual(userDictionary["external_id"], user.externalID)
     XCTAssertEqual(userDictionary["email"], user.email)
     XCTAssertEqual(userDictionary["username"], user.username)
     XCTAssertEqual(userDictionary["avatar_url"], user.avatarURL.absoluteString)

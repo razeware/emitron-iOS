@@ -49,7 +49,7 @@ struct Download: Codable {
   var remoteURL: URL?
   var progress: Double = 0
   var state: State
-  var contentId: Int
+  var contentID: Int
   var ordinal: Int = 0 // We copy this from the Content, and it is used to sort the queue
   
   var localURL: URL? {
@@ -82,7 +82,7 @@ extension Download: Equatable {
       lhs.remoteURL == rhs.remoteURL &&
       lhs.progress == rhs.progress &&
       lhs.state == rhs.state &&
-      lhs.contentId == rhs.contentId &&
+      lhs.contentID == rhs.contentID &&
       lhs.ordinal == rhs.ordinal &&
       lhs.requestedAt.equalEnough(to: rhs.requestedAt) &&
       ((lhs.lastValidatedAt == nil && rhs.lastValidatedAt == nil) || lhs.lastValidatedAt!.equalEnough(to: rhs.lastValidatedAt!))
@@ -99,7 +99,7 @@ extension Download {
       remoteURL: nil,
       progress: 0,
       state: .pending,
-      contentId: content.id,
+      contentID: content.id,
       ordinal: content.ordinal ?? 0)
   }
 }

@@ -39,13 +39,13 @@ struct BookmarkAdapter: EntityAdapter {
     }
     
     guard let content = resource.relationships.first(where: { $0.type == "content" }),
-      let contentId = content.data.first?.id
+      let contentID = content.data.first?.id
       else {
         throw EntityAdapterError.invalidOrMissingRelationships
     }
     
     return Bookmark(id: resource.id,
                     createdAt: createdAt,
-                    contentId: contentId)
+                    contentID: contentID)
   }
 }

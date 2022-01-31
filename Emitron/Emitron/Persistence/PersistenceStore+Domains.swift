@@ -40,10 +40,10 @@ extension PersistenceStore {
   }
   
   /// Get all the **Domain** objects with the given keys
-  func domains(with domainIds: [Int]) throws -> [Domain] {
+  func domains(with domainIDs: [Int]) throws -> [Domain] {
     try db.read { db in
       try Domain
-        .fetchAll(db, keys: domainIds)
+        .fetchAll(db, keys: domainIDs)
         .sorted { $0.level.rawValue <= $1.level.rawValue }
     }
   }

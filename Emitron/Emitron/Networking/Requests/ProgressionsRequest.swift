@@ -66,7 +66,7 @@ enum ProgressionUpdateData {
 }
 
 protocol ProgressionUpdate {
-  var contentId: Int { get }
+  var contentID: Int { get }
   var data: ProgressionUpdateData { get }
   var updatedAt: Date { get }
 }
@@ -83,7 +83,7 @@ struct UpdateProgressionsRequest: Request {
       [
         "type": "progressions",
         "attributes": [
-          "content_id": update.contentId,
+          "content_id": update.contentID,
           "updated_at": update.updatedAt.iso8601,
           update.data.jsonAttribute.key: update.data.jsonAttribute.value
         ]

@@ -34,8 +34,8 @@ struct ContentDomainAdapter: EntityAdapter {
     }
     .map {
       ContentDomain(id: nil,
-                    contentId: $0.from.id,
-                    domainId: $0.to.id)
+                    contentID: $0.from.id,
+                    domainID: $0.to.id)
     }
   }
 }

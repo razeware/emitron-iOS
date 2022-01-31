@@ -28,6 +28,6 @@
 
 struct ContentCategory: Equatable, Codable {
   var id: Int64?
-  var contentId: Int
-  var categoryId: Int
+  var contentID: Int
+  var categoryID: Int
 }

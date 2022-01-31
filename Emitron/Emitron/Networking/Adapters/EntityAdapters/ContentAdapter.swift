@@ -67,7 +67,7 @@ struct ContentAdapter: EntityAdapter {
         && relationship.to.id == resource.id
         && relationship.to.type == .content
     }
-    let groupId = group?.from.id
+    let groupID = group?.from.id
     
     return Content(id: resource.id,
                    uri: uri,
@@ -84,7 +84,7 @@ struct ContentAdapter: EntityAdapter {
                    cardArtworkURL: cardArtworkURL,
                    technologyTriple: technologyTriple,
                    contributors: contributors,
-                   groupId: groupId,
+                   groupID: groupID,
                    ordinal: resource.attributes["ordinal"] as? Int)
   }
 }

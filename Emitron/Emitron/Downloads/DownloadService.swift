@@ -140,7 +140,7 @@ final class DownloadService: ObservableObject {
 
 // MARK: - DownloadAction Methods
 extension DownloadService: DownloadAction {  
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError> {
+  func requestDownload(contentID: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError> {
     guard videosService != nil else {
       Failure
         .fetch(from: String(describing: type(of: self)), reason: "User not allowed to request downloads")
@@ -151,7 +151,7 @@ extension DownloadService: DownloadAction {
         .eraseToAnyPublisher()
     }
     
-    guard let contentPersistableState = contentLookup(contentId) else {
+    guard let contentPersistableState = contentLookup(contentID) else {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to locate content to persist")
         .log()
@@ -186,18 +186,18 @@ extension DownloadService: DownloadAction {
     .eraseToAnyPublisher()
   }
   
-  func cancelDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError> {
-    var contentIds = [Int]()
+  func cancelDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError> {
+    var contentIDs = [Int]()
     
     // 0. If there are some children, then let's find their content ids too
-    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map(\.id)
+    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentID) {
+      contentIDs = children.contents.map(\.id)
     }
-    contentIds += [contentId]
+    contentIDs += [contentID]
     
     // 1. Find the downloads.
-    let downloads = contentIds.compactMap {
-      try? persistenceStore.download(forContentId: $0)
+    let downloads = contentIDs.compactMap {
+      try? persistenceStore.download(forContentID: $0)
     }
     // 2. Is it already downloading?
     let currentlyDownloading = downloads.filter { $0.isDownloading }
@@ -218,29 +218,29 @@ extension DownloadService: DownloadAction {
       // Don't have it in the processor, so we just need to
       // delete the download model
       self.persistenceStore
-        .deleteDownloads(withIds: notYetDownloading.map(\.id))
+        .deleteDownloads(withIDs: notYetDownloading.map(\.id))
     }
     .mapError { error in
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentId: \(contentId)): \(error)")
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentID: \(contentID)): \(error)")
         .log()
       return DownloadActionError.unableToCancelDownload
     }
     .eraseToAnyPublisher()
   }
   
-  func deleteDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError> {
-    var contentIds = [Int]()
+  func deleteDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError> {
+    var contentIDs = [Int]()
     
     // 0. If there are some children, the let's find their content ids too
-    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentId) {
-      contentIds = children.contents.map(\.id)
+    if let children = try? persistenceStore.childContentsForDownloadedContent(with: contentID) {
+      contentIDs = children.contents.map(\.id)
     }
-    contentIds += [contentId]
+    contentIDs += [contentID]
     
     // 1. Find the downloads
-    let downloads = contentIds.compactMap {
-      try? persistenceStore.download(forContentId: $0)
+    let downloads = contentIDs.compactMap {
+      try? persistenceStore.download(forContentID: $0)
     }
     
     return Future<Void, Error> { promise in
@@ -257,11 +257,11 @@ extension DownloadService: DownloadAction {
     .flatMap {
       // 3. Delete the persisted record
       self.persistenceStore
-        .deleteDownloads(withIds: downloads.map(\.id))
+        .deleteDownloads(withIDs: downloads.map(\.id))
     }
     .mapError { error in
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the download (contentId: \(contentId)): \(error)")
+        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the download (contentID: \(contentID)): \(error)")
         .log()
       return DownloadActionError.unableToDeleteDownload
     }
@@ -291,19 +291,19 @@ extension DownloadService {
       return
     }
     // Find the video ID
-    guard let videoId = downloadQueueItem.content.videoIdentifier,
-      videoId != 0 else {
+    guard let videoID = downloadQueueItem.content.videoIdentifier,
+      videoID != 0 else {
         Failure
           .downloadService(
             from: "requestDownloadURL",
-            reason: "Unable to locate videoId for download: \(downloadQueueItem.download)"
+            reason: "Unable to locate videoID for download: \(downloadQueueItem.download)"
           )
           .log()
       return
     }
     
     // Use the video service to request the URLs
-    videosService.getVideoStreamDownload(for: videoId) { [weak self] result in
+    videosService.getVideoStreamDownload(for: videoID) { [weak self] result in
       // Ensure we're still around
       guard let self = self else { return }
       var download = downloadQueueItem.download
@@ -350,16 +350,16 @@ extension DownloadService {
       return
     }
     // Find the video ID
-    guard let videoId = downloadQueueItem.content.videoIdentifier else {
+    guard let videoID = downloadQueueItem.content.videoIdentifier else {
       Failure
         .downloadService(from: "enqueue",
-                         reason: "Unable to locate videoId for download: \(downloadQueueItem.download)")
+                         reason: "Unable to locate videoID for download: \(downloadQueueItem.download)")
         .log()
       return
     }
     
     // Generate filename
-    let filename = "\(videoId).m3u8"
+    let filename = "\(videoID).m3u8"
     
     // Save local URL and filename
     var download = downloadQueueItem.download
@@ -459,9 +459,9 @@ extension DownloadService {
 
 // MARK: - DownloadProcesserDelegate Methods
 extension DownloadService: DownloadProcessorDelegate {
-  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel? {
+  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithID downloadID: UUID) -> DownloadProcessorModel? {
     do {
-      return try persistenceStore.download(withId: downloadId)
+      return try persistenceStore.download(withID: downloadID)
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Error finding download: \(error)")
@@ -470,13 +470,13 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .inProgress)
+  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithID downloadID: UUID) {
+    transitionDownload(withID: downloadID, to: .inProgress)
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double) {
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didUpdateProgress progress: Double) {
     do {
-      try persistenceStore.updateDownload(withId: downloadId, withProgress: progress)
+      try persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
     } catch {
       Failure
         .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update progress on download: \(error)")
@@ -484,15 +484,15 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID) {
-    transitionDownload(withID: downloadId, to: .complete)
+  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithID downloadID: UUID) {
+    transitionDownload(withID: downloadID, to: .complete)
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID) {
+  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithID downloadID: UUID) {
     do {
-      if try !persistenceStore.deleteDownload(withId: downloadId) {
+      if try !persistenceStore.deleteDownload(withID: downloadID) {
         Failure
-          .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(downloadId)")
+          .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(downloadID)")
           .log()
       }
     } catch {
@@ -502,8 +502,8 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error) {
-    transitionDownload(withID: downloadId, to: .error)
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didFailWithError error: Error) {
+    transitionDownload(withID: downloadID, to: .error)
     Failure
       .saveToPersistentStore(from: String(describing: type(of: self)), reason: "DownloadDidFailWithError: \(error)")
       .log()
@@ -511,7 +511,7 @@ extension DownloadService: DownloadProcessorDelegate {
   
   private func transitionDownload(withID id: UUID, to state: Download.State) {
     do {
-      try persistenceStore.transitionDownload(withId: id, to: state)
+      try persistenceStore.transitionDownload(withID: id, to: state)
     } catch {
       Failure
         .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to transition download: \(error)")

@@ -62,8 +62,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func populateSampleScreencast() throws -> Content {
     let screencast = ContentTest.Mocks.screencast
     let fullState = ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
-    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
-      ContentPersistableState.persistableState(for: contentId, with: screencast.1)
+    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentID -> (ContentPersistableState?) in
+      ContentPersistableState.persistableState(for: contentID, with: screencast.1)
     }
     .record()
     
@@ -75,8 +75,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
   func populateSampleCollection() throws -> Content {
     let collection = ContentTest.Mocks.collection
     let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
-    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentId -> (ContentPersistableState?) in
-      ContentPersistableState.persistableState(for: contentId, with: collection.1)
+    let recorder = persistenceStore.persistContentGraph(for: fullState) { contentID -> (ContentPersistableState?) in
+      ContentPersistableState.persistableState(for: contentID, with: collection.1)
     }
     .record()
     
@@ -98,7 +98,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try episodeDownload.save(db)
     }
     
-    try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownload.id, to: .inProgress)
     
     let collectionExpectation = XCTestExpectation()
     
@@ -130,8 +130,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try episodeDownload2.save(db)
     }
     
-    try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
+    try persistenceStore.transitionDownload(withID: episodeDownload.id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownload2.id, to: .complete)
     
     let collectionExpectation = XCTestExpectation()
     
@@ -168,7 +168,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     try episodeDownloads.forEach {
-      try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: $0.id, to: .complete)
     }
     
     let collectionExpectation = XCTestExpectation()
@@ -201,8 +201,8 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try episodeDownload2.save(db)
     }
     
-    try persistenceStore.transitionDownload(withId: episodeDownload.id, to: .complete)
-    try persistenceStore.transitionDownload(withId: episodeDownload2.id, to: .complete)
+    try persistenceStore.transitionDownload(withID: episodeDownload.id, to: .complete)
+    try persistenceStore.transitionDownload(withID: episodeDownload2.id, to: .complete)
     
     let collectionExpectation = XCTestExpectation()
     
@@ -236,10 +236,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     try episodeDownloads[0..<5].forEach {
-      try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: $0.id, to: .complete)
     }
     
-    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentId: collection.id)
+    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentID: collection.id)
     
     XCTAssertEqual(
       PersistenceStore.CollectionDownloadSummary(
@@ -264,10 +264,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     try episodeDownloads[0..<5].forEach {
-      try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: $0.id, to: .complete)
     }
 
-    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentId: collection.id)
+    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentID: collection.id)
     
     XCTAssertEqual(
       PersistenceStore.CollectionDownloadSummary(
@@ -292,10 +292,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     try episodeDownloads.forEach {
-      try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: $0.id, to: .complete)
     }
     
-    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentId: collection.id)
+    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentID: collection.id)
     
     XCTAssertEqual(
       PersistenceStore.CollectionDownloadSummary(
@@ -320,10 +320,10 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     }
     
     try episodeDownloads.forEach {
-      try persistenceStore.transitionDownload(withId: $0.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: $0.id, to: .complete)
     }
     
-    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentId: collection.id)
+    let collectionDownloadSummary = try persistenceStore.collectionDownloadSummary(forContentID: collection.id)
     
     XCTAssertEqual(
       PersistenceStore.CollectionDownloadSummary(
@@ -343,7 +343,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try download.save(db)
     }
     
-    XCTAssertThrowsError(try persistenceStore.collectionDownloadSummary(forContentId: screencast.id)) { error in
+    XCTAssertThrowsError(try persistenceStore.collectionDownloadSummary(forContentID: screencast.id)) { error in
       XCTAssertEqual(.argumentError, error as! PersistenceStoreError)
     }
   }
@@ -444,11 +444,11 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let downloads = getAllDownloads().sorted { $0.requestedAt < $1.requestedAt }
     let episodes = getAllContents().filter { $0.contentType == .episode }
     try downloads.forEach { download in
-      try persistenceStore.transitionDownload(withId: download.id, to: .inProgress)
+      try persistenceStore.transitionDownload(withID: download.id, to: .inProgress)
     }
     
     try downloads.forEach { download in
-      try persistenceStore.transitionDownload(withId: download.id, to: .complete)
+      try persistenceStore.transitionDownload(withID: download.id, to: .complete)
     }
     
     // Will start with a nil
@@ -468,13 +468,13 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     
     let episodes = getAllContents().filter({ $0.contentType == .episode })
-    let episodeIds = episodes.map(\.id)
-    let collectionDownload = getAllDownloads().first { !episodeIds.contains($0.contentId) }
-    let episodeDownloads = getAllDownloads().filter { episodeIds.contains($0.contentId) }
+    let episodeIDs = episodes.map(\.id)
+    let collectionDownload = getAllDownloads().first { !episodeIDs.contains($0.contentID) }
+    let episodeDownloads = getAllDownloads().filter { episodeIDs.contains($0.contentID) }
     
-    try persistenceStore.transitionDownload(withId: episodeDownloads[1].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: collectionDownload!.id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[0].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[1].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: collectionDownload!.id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[0].id, to: .inProgress)
     
     let downloadQueue = try wait(for: recorder.next(3), timeout: 10)
     
@@ -491,17 +491,17 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     let recorder = persistenceStore.downloadQueue(withMaxLength: 4).record()
     
     let episodes = getAllContents().filter({ $0.contentType == .episode })
-    let episodeIds = episodes.map(\.id)
-    let collectionDownload = getAllDownloads().first { !episodeIds.contains($0.contentId) }
-    let episodeDownloads = getAllDownloads().filter { episodeIds.contains($0.contentId) }
+    let episodeIDs = episodes.map(\.id)
+    let collectionDownload = getAllDownloads().first { !episodeIDs.contains($0.contentID) }
+    let episodeDownloads = getAllDownloads().filter { episodeIDs.contains($0.contentID) }
     
-    try persistenceStore.transitionDownload(withId: episodeDownloads[1].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: collectionDownload!.id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[0].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[5].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[4].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[3].id, to: .inProgress)
-    try persistenceStore.transitionDownload(withId: episodeDownloads[2].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[1].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: collectionDownload!.id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[0].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[5].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[4].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[3].id, to: .inProgress)
+    try persistenceStore.transitionDownload(withID: episodeDownloads[2].id, to: .inProgress)
     
     let downloadQueue = try wait(for: recorder.next(7), timeout: 10)
     
@@ -515,7 +515,7 @@ class PersistenceStore_DownloadsTest: XCTestCase {
     XCTAssertEqual([0, 1, 2, 3].map { episodeDownloads[$0].id }, downloadQueue[6].map(\.download.id))
   }
   
-  func testDownloadWithIdReturnsCorrectDownload() throws {
+  func testDownloadWithIDReturnsCorrectDownload() throws {
     let screencast = try populateSampleScreencast()
     
     var download = PersistenceMocks.download(for: screencast)
@@ -523,14 +523,14 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try download.save(db)
     }
     
-    XCTAssertEqual(download, try persistenceStore.download(withId: download.id))
+    XCTAssertEqual(download, try persistenceStore.download(withID: download.id))
   }
   
-  func testDownloadWithIdReturnsNilForNoDownload() throws {
-    XCTAssertNil(try persistenceStore.download(withId: UUID()))
+  func testDownloadWithIDReturnsNilForNoDownload() throws {
+    XCTAssertNil(try persistenceStore.download(withID: UUID()))
   }
   
-  func testDownloadForContentIdReturnsCorrectDownload() throws {
+  func testDownloadForContentIDReturnsCorrectDownload() throws {
     let screencast = try populateSampleScreencast()
     
     var download = PersistenceMocks.download(for: screencast)
@@ -538,16 +538,16 @@ class PersistenceStore_DownloadsTest: XCTestCase {
       try download.save(db)
     }
     
-    XCTAssertEqual(download, try persistenceStore.download(forContentId: screencast.id))
+    XCTAssertEqual(download, try persistenceStore.download(forContentID: screencast.id))
   }
   
-  func testDownloadForContentIdReturnsNilForNoDownload() throws {
+  func testDownloadForContentIDReturnsNilForNoDownload() throws {
     let screencast = try populateSampleScreencast()
     
-    XCTAssertNil(try persistenceStore.download(forContentId: screencast.id))
+    XCTAssertNil(try persistenceStore.download(forContentID: screencast.id))
   }
   
-  func testDownloadForContentIdReturnsNilForNoContent() throws {
-    XCTAssertNil(try persistenceStore.download(forContentId: 1234))
+  func testDownloadForContentIDReturnsNilForNoContent() throws {
+    XCTAssertNil(try persistenceStore.download(forContentID: 1234))
   }
 }

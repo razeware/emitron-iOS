@@ -45,9 +45,9 @@ extension Repository {
 }
 
 extension Repository {
-  func contentSummaryState(for contentIds: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
+  func contentSummaryState(for contentIDs: [Int]) -> AnyPublisher<[ContentSummaryState], Error> {
     dataCache
-      .contentSummaryState(for: contentIds)
+      .contentSummaryState(for: contentIDs)
       .map { cachedContentSummaryStates in
         cachedContentSummaryStates.map { cached in
           self.contentSummaryState(cached: cached)
@@ -56,23 +56,23 @@ extension Repository {
       .eraseToAnyPublisher()
   }
   
-  func contentSummaryState(for contentId: Int) -> AnyPublisher<ContentSummaryState, Error> {
+  func contentSummaryState(for contentID: Int) -> AnyPublisher<ContentSummaryState, Error> {
     dataCache
-      .contentSummaryState(for: contentId)
+      .contentSummaryState(for: contentID)
       .map { cachedContentSummaryState in
         self.contentSummaryState(cached: cachedContentSummaryState)
       }
       .eraseToAnyPublisher()
   }
   
-  func childContentsState(for contentId: Int) -> AnyPublisher<ChildContentsState, Error> {
+  func childContentsState(for contentID: Int) -> AnyPublisher<ChildContentsState, Error> {
     dataCache
-      .childContentsState(for: contentId)
+      .childContentsState(for: contentID)
   }
   
-  func contentDynamicState(for contentId: Int) -> AnyPublisher<DynamicContentState, Error> {
-    let fromCache = dataCache.contentDynamicState(for: contentId)
-    let download = persistenceStore.download(for: contentId)
+  func contentDynamicState(for contentID: Int) -> AnyPublisher<DynamicContentState, Error> {
+    let fromCache = dataCache.contentDynamicState(for: contentID)
+    let download = persistenceStore.download(for: contentID)
     
     return fromCache
       .combineLatest(download)
@@ -85,16 +85,16 @@ extension Repository {
       .eraseToAnyPublisher()
   }
   
-  func contentPersistableState(for contentId: Int) throws -> ContentPersistableState? {
-    try dataCache.cachedContentPersistableState(for: contentId)
+  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState? {
+    try dataCache.cachedContentPersistableState(for: contentID)
   }
   
   /// Return an array of states that provide the playlist of what should be played for this item of content
-  /// - Parameter contentId: The id of the `Content` the user has requested to be played back
-  func playlist(for contentId: Int) throws -> [VideoPlaybackState] {
-    let fromCache = try dataCache.videoPlaylist(for: contentId)
+  /// - Parameter contentID: The id of the `Content` the user has requested to be played back
+  func playlist(for contentID: Int) throws -> [VideoPlaybackState] {
+    let fromCache = try dataCache.videoPlaylist(for: contentID)
     return try fromCache.map { cachedState in
-      let download = try persistenceStore.download(forContentId: cachedState.content.id)
+      let download = try persistenceStore.download(forContentID: cachedState.content.id)
       return VideoPlaybackState(
         content: cachedState.content,
         progression: cachedState.progression,
@@ -109,23 +109,23 @@ extension Repository {
   }
   
   /// Attempt to find a progression from the cache for a given item of content
-  /// - Parameter contentId: The `id` of the content item
-  func progression(for contentId: Int) -> Progression? {
-    dataCache.progression(for: contentId)
+  /// - Parameter contentID: The `id` of the content item
+  func progression(for contentID: Int) -> Progression? {
+    dataCache.progression(for: contentID)
   }
   
   /// Attempt to locate a bookmark from the cache for a given item of content
-  /// - Parameter contentId: The `id` of the content item
-  func bookmark(for contentId: Int) -> Bookmark? {
-    dataCache.bookmark(for: contentId)
+  /// - Parameter contentID: The `id` of the content item
+  func bookmark(for contentID: Int) -> Bookmark? {
+    dataCache.bookmark(for: contentID)
   }
   
-  func parentContent(for contentId: Int) -> Content? {
-    dataCache.parentContent(for: contentId)
+  func parentContent(for contentID: Int) -> Content? {
+    dataCache.parentContent(for: contentID)
   }
   
-  func childProgress(for contentId: Int) -> (total: Int, completed: Int)? {
-    dataCache.childProgress(for: contentId)
+  func childProgress(for contentID: Int) -> (total: Int, completed: Int)? {
+    dataCache.childProgress(for: contentID)
   }
   
   func domainList() throws -> [Domain] {
@@ -144,9 +144,9 @@ extension Repository {
     try persistenceStore.sync(categories: categories)
   }
   
-  func loadDownloadedChildContentsIntoCache(for contentId: Int) throws {
-    guard let content = try persistenceStore.downloadedContent(with: contentId),
-      let childContents = try persistenceStore.childContentsForDownloadedContent(with: contentId) else {
+  func loadDownloadedChildContentsIntoCache(for contentID: Int) throws {
+    guard let content = try persistenceStore.downloadedContent(with: contentID),
+      let childContents = try persistenceStore.childContentsForDownloadedContent(with: contentID) else {
       throw PersistenceStoreError.notFound
     }
     let cacheUpdate = DataCacheUpdate(contents: childContents.contents + [content], groups: childContents.groups)
@@ -164,7 +164,7 @@ extension Repository {
   
   private func domains(from contentDomains: [ContentDomain]) -> [Domain] {
     do {
-      return try persistenceStore.domains( with: contentDomains.map(\.domainId) )
+      return try persistenceStore.domains( with: contentDomains.map(\.domainID) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
@@ -175,7 +175,7 @@ extension Repository {
   
   private func categories(from contentCategories: [ContentCategory]) -> [Category] {
     do {
-      return try persistenceStore.categories( with: contentCategories.map(\.categoryId) )
+      return try persistenceStore.categories( with: contentCategories.map(\.categoryID) )
     } catch {
       Failure
         .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")

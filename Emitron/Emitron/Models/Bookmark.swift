@@ -31,13 +31,13 @@ import struct Foundation.Date
 struct Bookmark: Codable {
   var id: Int
   var createdAt: Date
-  var contentId: Int
+  var contentID: Int
 }
 
 extension Bookmark: Equatable {
   static func == (lhs: Bookmark, rhs: Bookmark) -> Bool {
     lhs.id == rhs.id &&
       lhs.createdAt.equalEnough(to: rhs.createdAt) &&
-      lhs.contentId == rhs.contentId
+      lhs.contentID == rhs.contentID
   }
 }

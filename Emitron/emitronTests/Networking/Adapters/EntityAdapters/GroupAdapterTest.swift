@@ -79,7 +79,7 @@ class GroupAdapterTest: XCTestCase {
     XCTAssertEqual(1234, group.id)
     XCTAssertEqual("Sample Group", group.name)
     XCTAssertEqual("Group description", group.description)
-    XCTAssertEqual(12, group.contentId)
+    XCTAssertEqual(12, group.contentID)
     XCTAssertEqual(5, group.ordinal)
   }
   
@@ -133,7 +133,7 @@ class GroupAdapterTest: XCTestCase {
     
     let group = try GroupAdapter.process(resource: resource, relationships: relationships)
     
-    XCTAssertEqual(15, group.contentId)
+    XCTAssertEqual(15, group.contentID)
   }
   
   func testMissingDescriptionIsAcceptable() throws {

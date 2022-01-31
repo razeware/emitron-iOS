@@ -45,7 +45,7 @@ extension Content: FetchableRecord, TableRecord, PersistableRecord {
     static let cardArtworkURL = Column("cardArtworkURL")
     static let technologyTriple = Column("technologyTriple")
     static let contributors = Column("contributors")
-    static let groupId = Column("groupId")
+    static let groupID = Column("groupId")
     static let ordinal = Column("ordinal")
   }
 }

@@ -82,8 +82,8 @@ extension ContentSummaryState: ContentListDisplayable {
     content.contributors
   }
   
-  var groupId: Int? {
-    content.groupId
+  var groupID: Int? {
+    content.groupID
   }
   
   var videoIdentifier: Int? {

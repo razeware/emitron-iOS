@@ -193,7 +193,7 @@ private extension ContentListView {
       let content = contentRepository.contents[index]
       
       downloadAction
-        .deleteDownload(contentId: content.id)
+        .deleteDownload(contentID: content.id)
         .receive(on: RunLoop.main)
         .sink(
           receiveCompletion: { completion in

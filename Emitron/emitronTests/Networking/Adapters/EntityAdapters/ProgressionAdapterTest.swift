@@ -82,7 +82,7 @@ class ProgressionAdapterTest: XCTestCase {
     cmpts.day = 2
     cmpts.hour = 14
     XCTAssertEqual(Calendar.current.date(from: cmpts), progression.updatedAt)
-    XCTAssertEqual(4321, progression.contentId)
+    XCTAssertEqual(4321, progression.contentID)
   }
   
   func testInvalidTypeThrows() throws {

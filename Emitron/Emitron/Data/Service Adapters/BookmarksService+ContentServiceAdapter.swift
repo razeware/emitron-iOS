@@ -31,7 +31,7 @@ extension BookmarksService: ContentServiceAdapter {
     bookmarks(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.bookmarks.map(\.contentId),
+          contentIDs: response.bookmarks.map(\.contentID),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

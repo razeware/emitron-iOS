@@ -196,9 +196,9 @@ class DataCacheTest: XCTestCase {
     XCTAssert(!persistableState.groups.isEmpty)
     XCTAssert(!persistableState.childContents.isEmpty)
     
-    let exampleChildId = persistableState.childContents.first!.id
+    let exampleChildID = persistableState.childContents.first!.id
     
-    let publisher = cache.contentSummaryState(for: [exampleChildId])
+    let publisher = cache.contentSummaryState(for: [exampleChildID])
     let recorder = publisher.record()
     
     let summary = try wait(for: recorder.next(), timeout: 10)

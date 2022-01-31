@@ -27,7 +27,7 @@
 // THE SOFTWARE.
 
 struct DownloadDeletionConfirmation {
-  let contentId: Int
+  let contentID: Int
   let title: String
   let message: String
   let confirm: () -> Void

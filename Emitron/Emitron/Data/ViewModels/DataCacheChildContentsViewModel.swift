@@ -29,7 +29,7 @@
 final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   private let service: ContentsService
 
-  init(parentContentId: Int,
+  init(parentContentID: Int,
        downloadAction: DownloadAction,
        syncAction: SyncAction?,
        repository: Repository,
@@ -38,7 +38,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
        settingsManager: SettingsManager,
        sessionController: SessionController) {
     self.service = service
-    super.init(parentContentId: parentContentId,
+    super.init(parentContentID: parentContentID,
                downloadAction: downloadAction,
                syncAction: syncAction,
                repository: repository,
@@ -49,7 +49,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   
   override func loadContentDetailsIntoCache() {
     state = .loading
-    service.contentDetails(for: parentContentId) { result in
+    service.contentDetails(for: parentContentID) { result in
       switch result {
       case .failure(let error):
         self.state = .failed

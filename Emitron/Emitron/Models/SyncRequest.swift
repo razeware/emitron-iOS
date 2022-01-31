@@ -50,8 +50,8 @@ struct SyncRequest: Equatable, Codable {
   }
   
   var id: Int64?
-  var contentId: Int
-  var associatedRecordId: Int?
+  var contentID: Int
+  var associatedRecordID: Int?
   var category: Category
   var type: Synchronisation
   var date: Date

@@ -40,10 +40,10 @@ extension PersistenceStore {
   }
   
   /// Get all the **Category** objects with the given keys
-  func categories(with categoryIds: [Int]) throws -> [Category] {
+  func categories(with categoryIDs: [Int]) throws -> [Category] {
     try db.read { db in
       try Category
-        .fetchAll(db, keys: categoryIds)
+        .fetchAll(db, keys: categoryIDs)
         .sorted { $0.ordinal <= $1.ordinal }
     }
   }

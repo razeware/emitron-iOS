@@ -34,7 +34,7 @@ struct Progression: Codable {
   var progress: Int
   var createdAt: Date
   var updatedAt: Date
-  var contentId: Int
+  var contentID: Int
 }
 
 extension Progression: Equatable {
@@ -44,7 +44,7 @@ extension Progression: Equatable {
       lhs.progress == rhs.progress &&
       lhs.createdAt.equalEnough(to: rhs.createdAt) &&
       lhs.updatedAt.equalEnough(to: rhs.updatedAt) &&
-      lhs.contentId == rhs.contentId
+      lhs.contentID == rhs.contentID
   }
 }
 
@@ -81,7 +81,7 @@ extension Progression {
       progress: progress,
       createdAt: Date(),
       updatedAt: Date(),
-      contentId: content.id
+      contentID: content.id
     )
   }
 }

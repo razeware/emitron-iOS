@@ -27,12 +27,12 @@
 // THE SOFTWARE.
 
 protocol SyncAction: AnyObject {
-  func createBookmark(for contentId: Int) throws
-  func deleteBookmark(for contentId: Int) throws
+  func createBookmark(for contentID: Int) throws
+  func deleteBookmark(for contentID: Int) throws
   
-  func markContentAsComplete(contentId: Int) throws
-  func removeProgress(for contentId: Int) throws
-  func updateProgress(for contentId: Int, progress: Int) throws
+  func markContentAsComplete(contentID: Int) throws
+  func removeProgress(for contentID: Int) throws
+  func updateProgress(for contentID: Int, progress: Int) throws
   
-  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws
+  func recordWatchStats(for contentID: Int, secondsWatched: Int) throws
 }

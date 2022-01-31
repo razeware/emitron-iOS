@@ -43,12 +43,12 @@ struct GroupAdapter: EntityAdapter {
     }) else {
       throw EntityAdapterError.invalidOrMissingRelationships
     }
-    let contentId = parentContent.from.id
+    let contentID = parentContent.from.id
     
     return Group(id: resource.id,
                  name: name,
                  description: resource.attributes["description"] as? String,
                  ordinal: ordinal,
-                 contentId: contentId)
+                 contentID: contentID)
   }
 }

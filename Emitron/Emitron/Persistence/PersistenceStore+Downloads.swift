@@ -50,10 +50,10 @@ extension PersistenceStore {
 }
 
 extension PersistenceStore {
-  func download(for contentId: Int) -> DatabasePublishers.Value<Download?> {
+  func download(for contentID: Int) -> DatabasePublishers.Value<Download?> {
     ValueObservation.tracking { db -> Download? in
       let request = Download
-        .filter(Download.Columns.contentId == contentId)
+        .filter(Download.Columns.contentID == contentID)
       return try Download.fetchOne(db, request)
     }
     .publisher(in: db)
@@ -72,7 +72,7 @@ extension PersistenceStore {
         .including(all: Content.childContents)
       guard let contents = try ChildContentContainer.fetchOne(db, contentRequest) else { return nil }
       let groups = try Group
-        .filter(Group.Columns.contentId == id)
+        .filter(Group.Columns.contentID == id)
         .fetchAll(db)
       return ChildContentsState(contents: contents.contents, groups: groups)
     }
@@ -131,18 +131,18 @@ extension PersistenceStore {
   
   /// Return a single `Download` from its id
   /// - Parameter id: The UUID of the download to find
-  func download(withId id: UUID) throws -> Download? {
+  func download(withID id: UUID) throws -> Download? {
     try db.read { db in
       try Download.fetchOne(db, key: id)
     }
   }
   
   /// Return a single `Download` from its content id
-  /// - Parameter contentId: The ID of the item of content this download refers to
-  func download(forContentId contentId: Int) throws -> Download? {
+  /// - Parameter contentID: The ID of the item of content this download refers to
+  func download(forContentID contentID: Int) throws -> Download? {
     try db.read { db in
       try Download
-        .filter(Download.Columns.contentId == contentId)
+        .filter(Download.Columns.contentID == contentID)
         .fetchOne(db)
     }
   }
@@ -172,10 +172,10 @@ extension PersistenceStore {
   }
   
   /// Summary download stats for the children of the given collection
-  /// - Parameter contentId: ID representing an item of `Content` with `ContentType` of `.collection`
-  func collectionDownloadSummary(forContentId contentId: Int) throws -> CollectionDownloadSummary {
+  /// - Parameter contentID: ID representing an item of `Content` with `ContentType` of `.collection`
+  func collectionDownloadSummary(forContentID contentID: Int) throws -> CollectionDownloadSummary {
     try db.read { db in
-      guard let content = try Content.fetchOne(db, key: contentId),
+      guard let content = try Content.fetchOne(db, key: contentID),
         content.contentType == .collection else {
           throw PersistenceStoreError.argumentError
       }
@@ -199,7 +199,7 @@ extension PersistenceStore {
   /// - Parameters:
   ///   - id: The UUID of the download to transition
   ///   - state: The new `Download.State` to transition to.
-  func transitionDownload(withId id: UUID, to state: Download.State) throws {
+  func transitionDownload(withID id: UUID, to state: Download.State) throws {
     try db.write { db in
       if var download = try Download.fetchOne(db, key: id) {
         try download.updateChanges(db) {
@@ -252,7 +252,7 @@ extension PersistenceStore {
   /// Update the collection download to match the current status of its children
   /// - Parameter collectionDownload: A `Download` that is associated with a collection `Content`
   private func updateCollectionDownloadState(collectionDownload: Download) throws {
-    let downloadSummary = try collectionDownloadSummary(forContentId: collectionDownload.contentId)
+    let downloadSummary = try collectionDownloadSummary(forContentID: collectionDownload.contentID)
     var download = collectionDownload
     
     _ = try db.write { db in
@@ -271,7 +271,7 @@ extension PersistenceStore {
   /// - Parameters:
   ///   - id: The UUID of the download to update
   ///   - progress: The new value of progress (0–1)
-  func updateDownload(withId id: UUID, withProgress progress: Double) throws {
+  func updateDownload(withID id: UUID, withProgress progress: Double) throws {
     try db.write { db in
       if var download = try Download.fetchOne(db, key: id) {
         try download.updateChanges(db) {
@@ -292,7 +292,7 @@ extension PersistenceStore {
   
   /// Delete a download
   /// - Parameter id: The UUID of the download to delete
-  func deleteDownload(withId id: UUID) throws -> Bool {
+  func deleteDownload(withID id: UUID) throws -> Bool {
     try db.write { db in
       if let download = try Download.fetchOne(db, key: id) {
         let parentDownload = try download.parentDownload.fetchOne(db)
@@ -308,7 +308,7 @@ extension PersistenceStore {
   
   /// Delete the downloads without selected IDs.
   /// - Parameter ids: Array of UUIDs for the downloads to delete
-  func deleteDownloads(withIds ids: [UUID]) -> Future<Void, Error> {
+  func deleteDownloads(withIDs ids: [UUID]) -> Future<Void, Error> {
     Future { promise in
       self.workerQueue.async { [weak self] in
         guard let self = self else { return }
@@ -403,7 +403,7 @@ extension PersistenceStore {
   private func persistContentItem(for contentPersistableState: ContentPersistableState, inDatabase db: Database, withChildren: Bool = false, withParent: Bool = false, contentLookup: ContentLookup? = nil) throws {
     
     // 1. Need to do parent first—we need foreign key
-    //    constraints on the groupId for child content
+    //    constraints on the groupID for child content
     if withParent,
       let parentContent = contentPersistableState.parentContent,
       let contentLookup = contentLookup,

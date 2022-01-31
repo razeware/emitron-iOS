@@ -149,7 +149,7 @@ protocol ChildContentListDisplayable: Ownable {
   var descriptionPlainText: String { get }
   var ordinal: Int? { get }
   var duration: Int { get }
-  var groupId: Int? { get }
+  var groupID: Int? { get }
   var videoIdentifier: Int? { get }
 }
 

@@ -37,16 +37,16 @@ protocol DownloadProcessorModel {
 }
 
 protocol DownloadProcessorDelegate: AnyObject {
-  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithId downloadId: UUID) -> DownloadProcessorModel?
-  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didUpdateProgress progress: Double)
-  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithId downloadId: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithId downloadId: UUID, didFailWithError error: Error)
+  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithID downloadID: UUID) -> DownloadProcessorModel?
+  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithID downloadID: UUID)
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didUpdateProgress progress: Double)
+  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithID downloadID: UUID)
+  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithID downloadID: UUID)
+  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didFailWithError error: Error)
 }
 
 private extension URLSessionDownloadTask {
-  var downloadId: UUID? {
+  var downloadID: UUID? {
     get {
       guard let taskDescription = taskDescription else { return .none }
       return UUID(uuidString: taskDescription)
@@ -58,7 +58,7 @@ private extension URLSessionDownloadTask {
 }
 
 private extension AVAssetDownloadTask {
-  var downloadId: UUID? {
+  var downloadID: UUID? {
     get {
       guard let taskDescription = taskDescription else { return .none }
       return UUID(uuidString: taskDescription)
@@ -113,16 +113,16 @@ extension DownloadProcessor {
     }
     guard let downloadTask = session.makeAssetDownloadTask(asset: hlsAsset, assetTitle: "\(download.id))", assetArtworkData: nil, options: options) else { return }
 
-    downloadTask.downloadId = download.id
+    downloadTask.downloadID = download.id
     downloadTask.resume()
     
     currentDownloads.append(downloadTask)
     
-    delegate.downloadProcessor(self, didStartDownloadWithId: download.id)
+    delegate.downloadProcessor(self, didStartDownloadWithID: download.id)
   }
   
   func cancelDownload(_ download: DownloadProcessorModel) throws {
-    guard let downloadTask = currentDownloads.first(where: { $0.downloadId == download.id }) else { throw DownloadProcessorError.unknownDownload }
+    guard let downloadTask = currentDownloads.first(where: { $0.downloadID == download.id }) else { throw DownloadProcessorError.unknownDownload }
     
     downloadTask.cancel()
   }
@@ -167,7 +167,7 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
 
   func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange) {
 
-    guard let downloadId = assetDownloadTask.downloadId else { return }
+    guard let downloadID = assetDownloadTask.downloadID else { return }
 
     var percentComplete = 0.0
     for value in loadedTimeRanges {
@@ -175,21 +175,21 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
       percentComplete += CMTimeGetSeconds(loadedTimeRange.duration) / CMTimeGetSeconds(timeRangeExpectedToLoad.duration)
     }
     
-    if let lastReportedProgress = throttleList[downloadId],
+    if let lastReportedProgress = throttleList[downloadID],
       abs(percentComplete - lastReportedProgress) < 0.02 {
       // Less than a 2% change—it's a no-op
       return
     }
-    throttleList[downloadId] = percentComplete
-    delegate.downloadProcessor(self, downloadWithId: downloadId, didUpdateProgress: percentComplete)
+    throttleList[downloadID] = percentComplete
+    delegate.downloadProcessor(self, downloadWithID: downloadID, didUpdateProgress: percentComplete)
   }
 
   func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
 
-    guard let downloadId = assetDownloadTask.downloadId,
+    guard let downloadID = assetDownloadTask.downloadID,
       let delegate = delegate else { return }
 
-    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
+    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
 
     let fileManager = FileManager.default
@@ -199,7 +199,7 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
       }
       try fileManager.moveItem(at: location, to: localURL)
     } catch {
-      delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
+      delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
     }
   }
 }
@@ -215,41 +215,41 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   
   // Used to update the progress stats of a download task
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
-    guard let downloadId = downloadTask.downloadId else { return }
+    guard let downloadID = downloadTask.downloadID else { return }
     
     let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
     // We want to call the progress update every 2%
-    if let lastReportedProgress = throttleList[downloadId],
+    if let lastReportedProgress = throttleList[downloadID],
       abs(progress - lastReportedProgress) < 0.02 {
       // Less than a 2% change—it's a no-op
       return
     }
 
     // Update the throttle list and make the delegate call
-    throttleList[downloadId] = progress
-    delegate.downloadProcessor(self, downloadWithId: downloadId, didUpdateProgress: progress)
+    throttleList[downloadID] = progress
+    delegate.downloadProcessor(self, downloadWithID: downloadID, didUpdateProgress: progress)
   }
   
   // Download completed—move the file to the appropriate place and update the DB
   func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-    guard let downloadId = downloadTask.downloadId,
+    guard let downloadID = downloadTask.downloadID,
       let delegate = delegate else { return }
     
-    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithId: downloadId)
+    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
     
     let fileManager = FileManager.default
     do {
       try fileManager.moveItem(at: location, to: localURL)
     } catch {
-      delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
+      delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
     }
   }
   
   // Use this to handle and client-side download errors
   func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
 
-    guard let downloadTask = task as? AVAssetDownloadTask, let downloadId = downloadTask.downloadId else { return }
+    guard let downloadTask = task as? AVAssetDownloadTask, let downloadID = downloadTask.downloadID else { return }
 
     if let error = error as NSError? {
       let cancellationReason = (error.userInfo[NSURLErrorBackgroundTaskCancelledReasonKey] as? NSNumber)?.intValue
@@ -261,18 +261,18 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
         // User-requested cancellation
         currentDownloads.removeAll { $0 == downloadTask }
 
-        delegate.downloadProcessor(self, didCancelDownloadWithId: downloadId)
+        delegate.downloadProcessor(self, didCancelDownloadWithID: downloadID)
       } else {
         // Unknown error
         currentDownloads.removeAll { $0 == downloadTask }
 
-        delegate.downloadProcessor(self, downloadWithId: downloadId, didFailWithError: error)
+        delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
       }
     } else {
       // Success!
       currentDownloads.removeAll { $0 == downloadTask }
 
-      delegate.downloadProcessor(self, didFinishDownloadWithId: downloadId)
+      delegate.downloadProcessor(self, didFinishDownloadWithID: downloadID)
     }
   }
 }

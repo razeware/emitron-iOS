@@ -41,10 +41,10 @@ class ContentDomainAdapterTest: XCTestCase {
     let contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     
     XCTAssertEqual(2, contentDomains.count)
-    XCTAssertEqual(34, contentDomains[0].domainId)
-    XCTAssertEqual(23, contentDomains[0].contentId)
-    XCTAssertEqual(56, contentDomains[1].domainId)
-    XCTAssertEqual(45, contentDomains[1].contentId)
+    XCTAssertEqual(34, contentDomains[0].domainID)
+    XCTAssertEqual(23, contentDomains[0].contentID)
+    XCTAssertEqual(56, contentDomains[1].domainID)
+    XCTAssertEqual(45, contentDomains[1].contentID)
     XCTAssertNil(contentDomains[0].id)
     XCTAssertNil(contentDomains[1].id)
   }

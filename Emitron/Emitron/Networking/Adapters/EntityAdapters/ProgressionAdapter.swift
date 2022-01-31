@@ -47,7 +47,7 @@ struct ProgressionAdapter: EntityAdapter {
     }
     
     guard let content = resource.relationships.first(where: { $0.type == "content" }),
-      let contentId = content.data.first?.id
+      let contentID = content.data.first?.id
       else {
         throw EntityAdapterError.invalidOrMissingRelationships
     }
@@ -57,6 +57,6 @@ struct ProgressionAdapter: EntityAdapter {
                        progress: progress,
                        createdAt: createdAt,
                        updatedAt: updatedAt,
-                       contentId: contentId)
+                       contentID: contentID)
   }
 }

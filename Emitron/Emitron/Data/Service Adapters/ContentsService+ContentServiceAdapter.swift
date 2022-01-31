@@ -31,7 +31,7 @@ extension ContentsService: ContentServiceAdapter {
     allContents(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.contents.map(\.id),
+          contentIDs: response.contents.map(\.id),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

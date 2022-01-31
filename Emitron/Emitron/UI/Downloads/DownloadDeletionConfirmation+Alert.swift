@@ -41,6 +41,6 @@ extension DownloadDeletionConfirmation {
 
 extension DownloadDeletionConfirmation: Identifiable {
   var id: Int {
-    contentId
+    contentID
   }
 }

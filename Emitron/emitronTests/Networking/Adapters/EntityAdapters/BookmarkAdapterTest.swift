@@ -72,7 +72,7 @@ class BookmarkAdapterTest: XCTestCase {
     XCTAssertEqual(1234, bookmark.id)
     let cmpts = DateComponents(timeZone: TimeZone(secondsFromGMT: 0), year: 2020, month: 1, day: 1, hour: 12, minute: 0, second: 0)
     XCTAssertEqual(Calendar.current.date(from: cmpts), bookmark.createdAt)
-    XCTAssertEqual(4321, bookmark.contentId)
+    XCTAssertEqual(4321, bookmark.contentID)
   }
   
   func testInvalidTypeThrows() throws {

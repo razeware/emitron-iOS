@@ -34,8 +34,8 @@ struct ContentCategoryAdapter: EntityAdapter {
     }
     .map {
       ContentCategory(id: nil,
-                      contentId: $0.from.id,
-                      categoryId: $0.to.id)
+                      contentID: $0.from.id,
+                      categoryID: $0.to.id)
     }
   }
 }

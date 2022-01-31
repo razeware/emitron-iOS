@@ -32,11 +32,11 @@ import GRDB
 // MARK: - Synchronisation Request Creation
 extension PersistenceStore {
   @discardableResult
-  func createBookmarkSyncRequest(for contentId: Int) throws -> SyncRequest? {
+  func createBookmarkSyncRequest(for contentID: Int) throws -> SyncRequest? {
     try db.write { db in
       // Do we already have a bookmark request?
       if let syncRequest = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.bookmark.rawValue)
         .fetchOne(db) {
         try syncRequest.delete(db)
@@ -44,7 +44,7 @@ extension PersistenceStore {
       } else {
         // Need to create a new one
         let syncRequest = SyncRequest(
-          contentId: contentId,
+          contentID: contentID,
           category: .bookmark,
           type: .createBookmark,
           date: Date(),
@@ -57,11 +57,11 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  func deleteBookmarkSyncRequest(for contentId: Int, bookmarkId: Int) throws -> SyncRequest? {
+  func deleteBookmarkSyncRequest(for contentID: Int, bookmarkID: Int) throws -> SyncRequest? {
     try db.write { db in
       // Do we already have a bookmark request?
       if let syncRequest = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.bookmark.rawValue)
         .fetchOne(db) {
         try syncRequest.delete(db)
@@ -69,8 +69,8 @@ extension PersistenceStore {
       } else {
         // Need to create a new one
         let syncRequest = SyncRequest(
-          contentId: contentId,
-          associatedRecordId: bookmarkId,
+          contentID: contentID,
+          associatedRecordID: bookmarkID,
           category: .bookmark,
           type: .deleteBookmark,
           date: Date(),
@@ -83,12 +83,12 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  func markContentAsCompleteSyncRequest(for contentId: Int) throws -> SyncRequest {
+  func markContentAsCompleteSyncRequest(for contentID: Int) throws -> SyncRequest {
     try db.write { db in
       // Do we already have a progress request?
       let syncRequest: SyncRequest
       if var request = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.progress.rawValue)
         .fetchOne(db) {
         request.type = .markContentComplete
@@ -97,7 +97,7 @@ extension PersistenceStore {
       } else {
         // Need to create a new one
         syncRequest = SyncRequest(
-          contentId: contentId,
+          contentID: contentID,
           category: .progress,
           type: .markContentComplete,
           date: Date(),
@@ -110,12 +110,12 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  func updateProgressSyncRequest(for contentId: Int, progress: Int) throws -> SyncRequest {
+  func updateProgressSyncRequest(for contentID: Int, progress: Int) throws -> SyncRequest {
     try db.write { db in
       // Do we already have a progress request?
       let syncRequest: SyncRequest
       if var request = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.progress.rawValue)
         .fetchOne(db) {
         request.type = .updateProgress
@@ -125,7 +125,7 @@ extension PersistenceStore {
       } else {
         // Need to create a new one
         syncRequest = SyncRequest(
-          contentId: contentId,
+          contentID: contentID,
           category: .progress,
           type: .updateProgress,
           date: Date(),
@@ -138,23 +138,23 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  func removeProgressSyncRequest(for contentId: Int, progressionId: Int) throws -> SyncRequest {
+  func removeProgressSyncRequest(for contentID: Int, progressionID: Int) throws -> SyncRequest {
     try db.write { db in
       // Do we already have a progress request?
       let syncRequest: SyncRequest
       if var request = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.progress.rawValue)
         .fetchOne(db) {
         request.type = .deleteProgression
-        request.associatedRecordId = progressionId
+        request.associatedRecordID = progressionID
         request.date = Date()
         syncRequest = request
       } else {
         // Need to create a new one
         syncRequest = SyncRequest(
-          contentId: contentId,
-          associatedRecordId: progressionId,
+          contentID: contentID,
+          associatedRecordID: progressionID,
           category: .progress,
           type: .deleteProgression,
           date: Date(),
@@ -167,12 +167,12 @@ extension PersistenceStore {
   }
   
   @discardableResult
-  func watchStatsSyncRequest(for contentId: Int, secondsWatched: Int) throws -> SyncRequest {
+  func watchStatsSyncRequest(for contentID: Int, secondsWatched: Int) throws -> SyncRequest {
     try db.write { db in
       // Do we already have a watch stats request?
       let syncRequest: SyncRequest
       if var request = try SyncRequest
-        .filter(SyncRequest.Columns.contentId == contentId)
+        .filter(SyncRequest.Columns.contentID == contentID)
         .filter(SyncRequest.Columns.category == SyncRequest.Category.watchStat.rawValue)
         .filter(SyncRequest.Columns.date == Date.topOfTheHour)
         .fetchOne(db) {
@@ -188,7 +188,7 @@ extension PersistenceStore {
       } else {
         // Need to create a new one
         syncRequest = SyncRequest(
-          contentId: contentId,
+          contentID: contentID,
           category: .watchStat,
           type: .recordWatchStats,
           date: Date.topOfTheHour,

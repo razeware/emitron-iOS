@@ -130,7 +130,7 @@ class ContentAdapterTest: XCTestCase {
     XCTAssertEqual("Katie Collins & Jessy Catterwaul", content.contributors)
     XCTAssertEqual(13, content.ordinal)
     XCTAssertEqual(.advanced, content.difficulty)
-    XCTAssertEqual(1234, content.groupId)
+    XCTAssertEqual(1234, content.groupID)
     XCTAssertEqual(2546, content.videoIdentifier)
   }
   
@@ -291,7 +291,7 @@ class ContentAdapterTest: XCTestCase {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
     let content = try ContentAdapter.process(resource: resource, relationships: relationships)
-    XCTAssertNil(content.groupId)
+    XCTAssertNil(content.groupID)
   }
   
   func testFirstRelationshipIsChosenToDetermineGroup() throws {
@@ -300,7 +300,7 @@ class ContentAdapterTest: XCTestCase {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
     let content = try ContentAdapter.process(resource: resource, relationships: relationships)
-    XCTAssertEqual(4321, content.groupId)
+    XCTAssertEqual(4321, content.groupID)
   }
   
   func testNullOrdinalIsAcceptable() throws {

@@ -31,5 +31,5 @@ struct Group: Equatable, Codable {
   var name: String
   var description: String?
   var ordinal: Int
-  var contentId: Int
+  var contentID: Int
 }
