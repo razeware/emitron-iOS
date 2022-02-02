@@ -29,11 +29,10 @@
 import struct SwiftUI.Binding
 
 public extension Binding where Value == Bool {
-  prefix static func !(binding: Self) -> Self {
+  prefix static func ! (binding: Self) -> Self {
     .init(
       get: { !binding.wrappedValue },
       set: { binding.wrappedValue = !$0 }
     )
   }
 }
-
