@@ -42,8 +42,8 @@ extension PersistenceStore {
     }
     
     return KeychainSwift().set(encoded,
-                        forKey: ssoUserKey,
-                        withAccess: .accessibleAfterFirstUnlock)
+                               forKey: ssoUserKey,
+                               withAccess: .accessibleAfterFirstUnlock)
   }
   
   func userFromKeychain(_ decoder: JSONDecoder = .init()) -> User? {

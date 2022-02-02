@@ -29,6 +29,7 @@
 import struct SwiftUI.Binding
 
 public extension Binding where Value == Bool {
+  // swiftlint:disable:next operator_whitespace
   prefix static func !(binding: Self) -> Self {
     .init(
       get: { !binding.wrappedValue },
@@ -36,4 +37,3 @@ public extension Binding where Value == Bool {
     )
   }
 }
-
