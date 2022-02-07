@@ -56,6 +56,7 @@ struct SettingsView: View {
         settingsManager: _settingsManager,
         canDownload: sessionController.user?.canDownload ?? false
       ).padding(.horizontal, 20)
+      
       Section(
         header: HStack {
           Text("App Icon")
