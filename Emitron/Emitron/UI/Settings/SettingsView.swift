@@ -68,6 +68,7 @@ struct SettingsView: View {
           .padding(.top, 20)
       ) {
         IconChooserView()
+          .padding(.top, 10)
       }
       .padding(.horizontal, 20)
       
