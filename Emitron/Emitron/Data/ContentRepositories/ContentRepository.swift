@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -53,7 +53,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   // Let's see if we actually need it to be @Published...
   var state: DataState = .initial
   
-  private var contentIds: [Int] = []
+  private var contentIDs: [Int] = []
   private var contentSubscription: AnyCancellable?
   // Provide a value for this in a subclass to subscribe to invalidation notifications
   var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
@@ -94,7 +94,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       return
     }
     
-    guard contentIds.isEmpty || contentIds.count <= totalContentNum else {
+    guard contentIDs.isEmpty || contentIDs.count <= totalContentNum else {
       return
     }
     
@@ -115,8 +115,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
-        self.contentIds += newContentIds
+      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
+        self.contentIDs += newContentIDs
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
@@ -150,8 +150,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
-        self.contentIds = newContentIds
+      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
+        self.contentIDs = newContentIDs
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
@@ -163,7 +163,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   
   private func configureContentSubscription() {
     contentSubscription = repository
-      .contentSummaryState(for: contentIds)
+      .contentSummaryState(for: contentIDs)
       .removeDuplicates()
       .sink(receiveCompletion: { [weak self] error in
         guard let self = self else { return }
@@ -194,9 +194,9 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     }
   }
   
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
+  func dynamicContentViewModel(for contentID: Int) -> DynamicContentViewModel {
     DynamicContentViewModel(
-      contentId: contentId,
+      contentID: contentID,
       repository: repository,
       downloadAction: downloadAction,
       syncAction: syncAction,
@@ -206,10 +206,10 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     )
   }
   
-  func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
+  func childContentsViewModel(for contentID: Int) -> ChildContentsViewModel {
     // Default to using the cached version
     DataCacheChildContentsViewModel(
-      parentContentId: contentId,
+      parentContentID: contentID,
       downloadAction: downloadAction,
       syncAction: syncAction,
       repository: repository,

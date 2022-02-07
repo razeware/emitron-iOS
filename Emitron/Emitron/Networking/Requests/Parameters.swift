@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -74,7 +74,7 @@ enum ParameterFilterValue {
   case domainTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the domains you are interested in.
   case categoryTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numberical IDs of the categories you are interested in.
   case difficulties([ContentDifficulty]) // An array populated with ContentDifficulty options
-  case contentIds(ids: [Int])
+  case contentIDs(ids: [Int])
   case queryString(string: String)
   case completionStatus(status: CompletionStatus)
   case subscriptionPlans(plans: [ContentSubscriptionPlan])
@@ -89,7 +89,7 @@ enum ParameterFilterValue {
       return "category_ids"
     case .difficulties:
       return "difficulties"
-    case .contentIds:
+    case .contentIDs:
       return "content_ids"
     case .queryString:
       return "q"
@@ -119,7 +119,7 @@ enum ParameterFilterValue {
       return types.map { (displayName: $0.name, requestValue: "\($0.id)", ordinal: $0.sortOrdinal) }
     case .difficulties(difficulties: let difficulties):
       return difficulties.map { (displayName: $0.displayString, requestValue: $0.requestValue, ordinal: $0.sortOrdinal) }
-    case .contentIds(ids: let ids):
+    case .contentIDs(ids: let ids):
       return ids.map { (displayName: "\($0)", requestValue: "\($0)", ordinal: 0) }
     case .queryString(string: let str):
       return [(displayName: str, requestValue: str, ordinal: 0)]
@@ -134,7 +134,7 @@ enum ParameterFilterValue {
     switch self {
     case .queryString:
       return true
-    case .contentIds,
+    case .contentIDs,
          .contentTypes,
          .domainTypes,
          .difficulties,
@@ -151,7 +151,7 @@ enum ParameterFilterValue {
       return str
     case .completionStatus(let status):
       return status.rawValue
-    case .contentIds,
+    case .contentIDs,
          .contentTypes,
          .domainTypes,
          .difficulties,

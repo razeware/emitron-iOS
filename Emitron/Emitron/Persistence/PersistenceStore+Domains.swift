@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -40,10 +40,10 @@ extension PersistenceStore {
   }
   
   /// Get all the **Domain** objects with the given keys
-  func domains(with domainIds: [Int]) throws -> [Domain] {
+  func domains(with domainIDs: [Int]) throws -> [Domain] {
     try db.read { db in
       try Domain
-        .fetchAll(db, keys: domainIds)
+        .fetchAll(db, keys: domainIDs)
         .sorted { $0.level.rawValue <= $1.level.rawValue }
     }
   }

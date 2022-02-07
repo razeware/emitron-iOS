@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,12 +39,12 @@ struct DataCacheUpdate {
   let contentDomains: [ContentDomain]
   let relationships: [EntityRelationship]
   
-  let bookmarkDeletionContentIds: [Int]
-  let progressionDeletionContentIds: [Int]
+  let bookmarkDeletionContentIDs: [Int]
+  let progressionDeletionContentIDs: [Int]
   
   static func loadFrom(document: JSONAPIDocument) throws -> DataCacheUpdate {
     let data = try DataCacheUpdate(resources: document.data)
-    let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityId, $0.relationships) })
+    let included = try DataCacheUpdate(resources: document.included, relationships: document.data.map { (entity: $0.entityID, $0.relationships) })
     return data.merged(with: included)
   }
   
@@ -58,8 +58,8 @@ struct DataCacheUpdate {
     contentCategories: [ContentCategory] = [],
     contentDomains: [ContentDomain] = [],
     relationships: [EntityRelationship] = [],
-    bookmarkDeletionContentIds: [Int] = [],
-    progressionDeletionContentIds: [Int] = []
+    bookmarkDeletionContentIDs: [Int] = [],
+    progressionDeletionContentIDs: [Int] = []
   ) {
     self.contents = contents
     self.bookmarks = bookmarks
@@ -70,8 +70,8 @@ struct DataCacheUpdate {
     self.contentCategories = contentCategories
     self.contentDomains = contentDomains
     self.relationships = relationships
-    self.bookmarkDeletionContentIds = bookmarkDeletionContentIds
-    self.progressionDeletionContentIds = progressionDeletionContentIds
+    self.bookmarkDeletionContentIDs = bookmarkDeletionContentIDs
+    self.progressionDeletionContentIDs = progressionDeletionContentIDs
   }
   
   init(resources: [JSONAPIResource], relationships jsonEntityRelationships: [JSONEntityRelationships] = []) throws {
@@ -98,8 +98,8 @@ struct DataCacheUpdate {
     contentDomains = try ContentDomainAdapter.process(relationships: relationships)
     self.relationships = relationships
     
-    bookmarkDeletionContentIds = []
-    progressionDeletionContentIds = []
+    bookmarkDeletionContentIDs = []
+    progressionDeletionContentIDs = []
   }
   
   func merged(with other: DataCacheUpdate) -> DataCacheUpdate {
@@ -116,12 +116,12 @@ struct DataCacheUpdate {
   
   private static func relationships(from resources: [JSONAPIResource], with additionalRelationships: [JSONEntityRelationships]) -> [EntityRelationship] {
     var relationshipsToReturn = additionalRelationships.flatMap { entityRelationship -> [EntityRelationship] in
-      guard let entityId = entityRelationship.entity else { return [] }
-      return entityRelationships(from: entityRelationship.jsonRelationships, fromEntity: entityId)
+      guard let entityID = entityRelationship.entity else { return [] }
+      return entityRelationships(from: entityRelationship.jsonRelationships, fromEntity: entityID)
     }
     relationshipsToReturn += resources.flatMap { resource -> [EntityRelationship] in
-      guard let resourceEntityId = resource.entityId else { return [] }
-      return entityRelationships(from: resource.relationships, fromEntity: resourceEntityId)
+      guard let resourceEntityID = resource.entityID else { return [] }
+      return entityRelationships(from: resource.relationships, fromEntity: resourceEntityID)
     }
     return relationshipsToReturn
   }
@@ -129,7 +129,7 @@ struct DataCacheUpdate {
   private static func entityRelationships(from jsonRelationships: [JSONAPIRelationship], fromEntity: EntityIdentity) -> [EntityRelationship] {
     jsonRelationships.flatMap { relationship in
       relationship.data.compactMap { resource in
-        guard let toEntity = resource.entityId else { return nil }
+        guard let toEntity = resource.entityID else { return nil }
         return EntityRelationship(name: relationship.type,
                                   from: fromEntity,
                                   to: toEntity)

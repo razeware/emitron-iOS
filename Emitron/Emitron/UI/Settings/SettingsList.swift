@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,15 @@ import SwiftUI
 
 struct SettingsList {
   @ObservedObject private var settingsManager: SettingsManager
-  private var canDownload: Bool
+  private let canDownload: Bool
+}
+
+// MARK: - internal
+extension SettingsList {
+  init(settingsManager: ObservedObject<SettingsManager>, canDownload: Bool) {
+    _settingsManager = settingsManager
+    self.canDownload = canDownload
+  }
 }
 
 // MARK: - View
@@ -45,19 +53,11 @@ extension SettingsList: View {
 struct SettingsList_Previews: PreviewProvider {
   static var previews: some View {
     SettingsList(
-      settingsManager: .init(initialValue: EmitronApp.emitronObjects().settingsManager),
+      settingsManager: .init(initialValue: App.objects.settingsManager),
       canDownload: true
     )
       .background(Color.background)
       .inAllColorSchemes
-  }
-}
-
-// MARK: - internal
-extension SettingsList {
-  init(settingsManager: ObservedObject<SettingsManager>, canDownload: Bool) {
-    _settingsManager = settingsManager
-    self.canDownload = canDownload
   }
 }
 
@@ -70,10 +70,10 @@ private extension SettingsList {
         title: option.title,
         isOn: $settingsManager.closedCaptionOn
       )
-    case .wifiOnlyDownloads:
+    case .allowDownloadsOverCellular:
       SettingsToggleRow(
         title: option.title,
-        isOn: $settingsManager.wifiOnlyDownloads
+        isOn: !$settingsManager.wifiOnlyDownloads
       )
     case .downloadQuality:
       NavigationLink(

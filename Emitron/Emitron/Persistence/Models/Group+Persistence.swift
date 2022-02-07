@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ extension Group {
     static let name = Column("name")
     static let description = Column("description")
     static let ordinal = Column("ordinal")
-    static let contentId = Column("contentId")
+    static let contentID = Column("contentID")
   }
 }
 

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@
 import Combine
 
 class ChildContentsViewModel: ObservableObject {
-  let parentContentId: Int
+  let parentContentID: Int
   let downloadAction: DownloadAction
   weak var syncAction: SyncAction?
   let repository: Repository
@@ -43,14 +43,14 @@ class ChildContentsViewModel: ObservableObject {
   
   var subscriptions = Set<AnyCancellable>()
   
-  init(parentContentId: Int,
+  init(parentContentID: Int,
        downloadAction: DownloadAction,
        syncAction: SyncAction?,
        repository: Repository,
        messageBus: MessageBus,
        settingsManager: SettingsManager,
        sessionController: SessionController) {
-    self.parentContentId = parentContentId
+    self.parentContentID = parentContentID
     self.downloadAction = downloadAction
     self.syncAction = syncAction
     self.repository = repository
@@ -75,13 +75,13 @@ class ChildContentsViewModel: ObservableObject {
     configureSubscriptions()
   }
   
-  func contents(for groupId: Int) -> [ChildContentListDisplayable] {
-    contents.filter({ $0.groupId == groupId })
+  func contents(for groupID: Int) -> [ChildContentListDisplayable] {
+    contents.filter({ $0.groupID == groupID })
   }
   
   func configureSubscriptions() {
     repository
-      .childContentsState(for: parentContentId)
+      .childContentsState(for: parentContentID)
       .sink(receiveCompletion: { [weak self] completion in
         guard let self = self else { return }
         if case .failure(let error) = completion, (error as? DataCacheError) == DataCacheError.cacheMiss {
@@ -106,9 +106,9 @@ class ChildContentsViewModel: ObservableObject {
     preconditionFailure("Override in a subclass please.")
   }
   
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
+  func dynamicContentViewModel(for contentID: Int) -> DynamicContentViewModel {
     DynamicContentViewModel(
-      contentId: contentId,
+      contentID: contentID,
       repository: repository,
       downloadAction: downloadAction,
       syncAction: syncAction,

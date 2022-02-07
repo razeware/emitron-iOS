@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,7 @@ enum DownloadActionError: Error {
 }
 
 protocol DownloadAction {
-  func requestDownload(contentId: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError>
-  func cancelDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError>
-  func deleteDownload(contentId: Int) -> AnyPublisher<Void, DownloadActionError>
+  func requestDownload(contentID: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError>
+  func cancelDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError>
+  func deleteDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError>
 }

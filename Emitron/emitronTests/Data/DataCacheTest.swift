@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -196,9 +196,9 @@ class DataCacheTest: XCTestCase {
     XCTAssert(!persistableState.groups.isEmpty)
     XCTAssert(!persistableState.childContents.isEmpty)
     
-    let exampleChildId = persistableState.childContents.first!.id
+    let exampleChildID = persistableState.childContents.first!.id
     
-    let publisher = cache.contentSummaryState(for: [exampleChildId])
+    let publisher = cache.contentSummaryState(for: [exampleChildID])
     let recorder = publisher.record()
     
     let summary = try wait(for: recorder.next(), timeout: 10)

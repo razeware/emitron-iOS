@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,6 +28,6 @@
 
 struct ContentDomain: Equatable, Codable {
   var id: Int64?
-  var contentId: Int
-  var domainId: Int
+  var contentID: Int
+  var domainID: Int
 }

@@ -26,38 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import SwiftUI
-import UIKit
+import struct SwiftUI.Binding
 
-struct CourseHeaderView: View {
-  let name: String
-  
-  var body: some View {
-    VStack(alignment: .leading, spacing: 12) {
-      HStack {
-        Text(name)
-          .font(.uiTitle3)
-          .kerning(-0.5)
-          .foregroundColor(.titleText)
-          .padding(.leading, 20)
-        Spacer()
-      }
-    }
-
-    .frame(minWidth: UIScreen.main.bounds.width)
-    .padding([.bottom], 16)
-  }
-}
-
-struct CourseHeaderView_Previews: PreviewProvider {
-  static var previews: some View {
-    VStack(spacing: 20) {
-      CourseHeaderView(name: "Intro")
-      CourseHeaderView(name: "Middle Part")
-      CourseHeaderView(name: "Conclusion")
-    }
-      .padding()
-      .background(Color.background)
-      .inAllColorSchemes
+public extension Binding where Value == Bool {
+  // swiftlint:disable:next operator_whitespace
+  prefix static func !(binding: Self) -> Self {
+    .init(
+      get: { !binding.wrappedValue },
+      set: { binding.wrappedValue = !$0 }
+    )
   }
 }

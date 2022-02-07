@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -95,14 +95,14 @@ final class ProgressEngine {
     }
   }
   
-  func updateProgress(for contentId: Int, progress: Int) -> Future<Progression, ProgressEngineError> {
-    let progression = updateCacheWithProgress(for: contentId, progress: progress)
+  func updateProgress(for contentID: Int, progress: Int) -> Future<Progression, ProgressEngineError> {
+    let progression = updateCacheWithProgress(for: contentID, progress: progress)
     
     switch mode {
     case .offline:
       do {
-        try syncAction?.updateProgress(for: contentId, progress: progress)
-        try syncAction?.recordWatchStats(for: contentId, secondsWatched: .videoPlaybackProgressTrackingInterval)
+        try syncAction?.updateProgress(for: contentID, progress: progress)
+        try syncAction?.recordWatchStats(for: contentID, secondsWatched: .videoPlaybackProgressTrackingInterval)
         
         return Future { promise in
           promise(.success(progression))
@@ -117,7 +117,7 @@ final class ProgressEngine {
       return Future { promise in
         // Don't bother trying if the playback token is empty.
         guard let playbackToken = self.playbackToken else { return }
-        self.contentsService.reportPlaybackUsage(for: contentId, progress: progress, playbackToken: playbackToken) { [weak self] response in
+        self.contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { [weak self] response in
           guard let self = self else { return promise(.failure(.notImplemented)) }
           switch response {
           case .failure(let error):
@@ -131,7 +131,7 @@ final class ProgressEngine {
             // Update the cache and return the updated progression
             self.repository.apply(update: cacheUpdate)
             // Do we need to update the parent?
-            if let parentContent = self.repository.parentContent(for: contentId),
+            if let parentContent = self.repository.parentContent(for: contentID),
                let childProgressUpdate = self.repository.childProgress(for: parentContent.id),
                var existingProgression = self.repository.progression(for: parentContent.id) {
               existingProgression.progress = childProgressUpdate.completed
@@ -155,11 +155,11 @@ final class ProgressEngine {
     }
   }
   
-  @discardableResult private func updateCacheWithProgress(for contentId: Int, progress: Int, target: Int? = nil) -> Progression {
-    let content = repository.content(for: contentId)
+  @discardableResult private func updateCacheWithProgress(for contentID: Int, progress: Int, target: Int? = nil) -> Progression {
+    let content = repository.content(for: contentID)
     let progression: Progression
     
-    if var existingProgression = repository.progression(for: contentId) {
+    if var existingProgression = repository.progression(for: contentID) {
       existingProgression.progress = progress
       progression = existingProgression
     } else {
@@ -169,7 +169,7 @@ final class ProgressEngine {
         progress: progress,
         createdAt: Date(),
         updatedAt: Date(),
-        contentId: contentId
+        contentID: contentID
       )
     }
     
@@ -178,7 +178,7 @@ final class ProgressEngine {
     
     // See whether we need to update parent content
     if progression.finished,
-      let parentContent = repository.parentContent(for: contentId),
+      let parentContent = repository.parentContent(for: contentID),
       let childProgress = repository.childProgress(for: parentContent.id) {
       updateCacheWithProgress(for: parentContent.id, progress: childProgress.completed, target: childProgress.total)
     }

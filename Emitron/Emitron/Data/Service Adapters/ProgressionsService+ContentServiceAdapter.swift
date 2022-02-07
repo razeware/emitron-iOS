@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,7 +31,7 @@ extension ProgressionsService: ContentServiceAdapter {
     progressions(parameters: parameters) { result in
        completion(result.map { response in
         (
-          contentIds: response.progressions.map(\.contentId),
+          contentIDs: response.progressions.map(\.contentID),
           cacheUpdate: response.cacheUpdate,
           totalResultCount: response.totalNumber
         )

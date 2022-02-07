@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,8 +50,8 @@ struct SyncRequest: Equatable, Codable {
   }
   
   var id: Int64?
-  var contentId: Int
-  var associatedRecordId: Int?
+  var contentID: Int
+  var associatedRecordID: Int?
   var category: Category
   var type: Synchronisation
   var date: Date

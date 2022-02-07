@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,8 +34,8 @@ struct ContentCategoryAdapter: EntityAdapter {
     }
     .map {
       ContentCategory(id: nil,
-                      contentId: $0.from.id,
-                      categoryId: $0.to.id)
+                      contentID: $0.from.id,
+                      categoryID: $0.to.id)
     }
   }
 }

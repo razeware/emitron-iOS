@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -101,7 +101,7 @@ extension String {
 
   // MARK: Settings screens
   static let settingsPlaybackSpeedLabel = "Video Playback Speed"
-  static let settingsWifiOnlyDownloadsLabel = "Downloads (WiFi only)"
+  static let settingsAllowDownloadsOverCellularLabel = "Allow Downloads Over Cellular"
   static let settingsDownloadQualityLabel = "Downloads Quality"
   static let settingsClosedCaptionOnLabel = "Subtitles"
 }

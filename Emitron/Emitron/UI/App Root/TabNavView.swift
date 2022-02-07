@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,19 +44,6 @@ struct TabNavView<
     self.myTutorialsView = myTutorialsView
     self.downloadsView = downloadsView
     self.settingsView = settingsView
-
-    // Without the following, in iOS 15, this ugliness occurs:
-    //
-    // The nav bar renders as a rectangle that does not extend vertically past the safe area.
-    // Scrolling content is visible above it.
-    //
-    // The tab bar renders transparently, on top of other views.
-    if #available(iOS 15.0, *) {
-      let barAppearance = UIBarAppearance()
-      barAppearance.configureWithOpaqueBackground()
-      UITabBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
-      UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
-    }
   }
 
   @EnvironmentObject private var model: TabViewModel

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -41,10 +41,10 @@ class ContentCategoryAdapterTest: XCTestCase {
     let contentCategories = try ContentCategoryAdapter.process(relationships: relationships)
     
     XCTAssertEqual(2, contentCategories.count)
-    XCTAssertEqual(34, contentCategories[0].categoryId)
-    XCTAssertEqual(23, contentCategories[0].contentId)
-    XCTAssertEqual(56, contentCategories[1].categoryId)
-    XCTAssertEqual(45, contentCategories[1].contentId)
+    XCTAssertEqual(34, contentCategories[0].categoryID)
+    XCTAssertEqual(23, contentCategories[0].contentID)
+    XCTAssertEqual(56, contentCategories[1].categoryID)
+    XCTAssertEqual(45, contentCategories[1].contentID)
     XCTAssertNil(contentCategories[0].id)
     XCTAssertNil(contentCategories[1].id)
   }

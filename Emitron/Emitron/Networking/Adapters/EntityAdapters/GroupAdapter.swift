@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,12 +43,12 @@ struct GroupAdapter: EntityAdapter {
     }) else {
       throw EntityAdapterError.invalidOrMissingRelationships
     }
-    let contentId = parentContent.from.id
+    let contentID = parentContent.from.id
     
     return Group(id: resource.id,
                  name: name,
                  description: resource.attributes["description"] as? String,
                  ordinal: ordinal,
-                 contentId: contentId)
+                 contentID: contentID)
   }
 }

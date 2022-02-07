@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,30 +28,6 @@
 
 import AuthenticationServices
 import Combine
-
-public enum LoginError: Error {
-  case unableToCreateLoginURL
-  case errorResponseFromGuardpost(Error?)
-  case unableToDecodeGuardpostResponse
-  case invalidSignature
-  case unableToCreateValidUser
-  
-  public var localizedDescription: String {
-    let prefix = "GuardpostLoginError::"
-    switch self {
-    case .unableToCreateLoginURL:
-      return "\(prefix)UnableToCreateLoginURL"
-    case .errorResponseFromGuardpost(let error):
-      return "\(prefix)GuardpostLoginError:: [Error: \(error?.localizedDescription ?? "UNKNOWN")]"
-    case .unableToDecodeGuardpostResponse:
-      return "\(prefix)UnableToDecodeGuardpostResponse"
-    case .invalidSignature:
-      return "\(prefix)InvalidSignature"
-    case .unableToCreateValidUser:
-      return "\(prefix)UnableToCreateValidUser"
-    }
-  }
-}
 
 public class Guardpost: ObservableObject {
   // MARK: - Properties
@@ -157,6 +133,32 @@ public class Guardpost: ObservableObject {
                              result: Result<User, LoginError>) {
     DispatchQueue.global(qos: .userInitiated).async {
       callback(result)
+    }
+  }
+}
+
+public extension Guardpost {
+  enum LoginError: Error {
+    case unableToCreateLoginURL
+    case errorResponseFromGuardpost(Error?)
+    case unableToDecodeGuardpostResponse
+    case invalidSignature
+    case unableToCreateValidUser
+    
+    public var localizedDescription: String {
+      let prefix = "GuardpostLoginError::"
+      switch self {
+      case .unableToCreateLoginURL:
+        return "\(prefix)UnableToCreateLoginURL"
+      case .errorResponseFromGuardpost(let error):
+        return "\(prefix)[Error: \(error?.localizedDescription ?? "UNKNOWN")]"
+      case .unableToDecodeGuardpostResponse:
+        return "\(prefix)UnableToDecodeGuardpostResponse"
+      case .invalidSignature:
+        return "\(prefix)InvalidSignature"
+      case .unableToCreateValidUser:
+        return "\(prefix)UnableToCreateValidUser"
+      }
     }
   }
 }
