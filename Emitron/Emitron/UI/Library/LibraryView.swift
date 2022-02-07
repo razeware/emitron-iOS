@@ -43,7 +43,7 @@ struct LibraryView: View {
 
   var body: some View {
     contentView
-      .navigationBarTitle(
+      .navigationTitle(
         Text(String.library)
       )
       .sheet(isPresented: $filtersPresented) {

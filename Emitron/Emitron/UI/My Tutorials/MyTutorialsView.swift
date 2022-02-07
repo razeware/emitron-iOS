@@ -105,7 +105,7 @@ struct MyTutorialsView {
 extension MyTutorialsView: View {
   var body: some View {
     contentView
-      .navigationBarTitle(String.myTutorials)
+      .navigationTitle(String.myTutorials)
   }
 }
 

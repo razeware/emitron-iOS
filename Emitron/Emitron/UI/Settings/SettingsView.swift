@@ -119,7 +119,7 @@ struct SettingsView: View {
       }
       .padding([.bottom, .horizontal], 18)
     }
-    .navigationBarTitle(String.settings)
+    .navigationTitle(String.settings)
     .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
