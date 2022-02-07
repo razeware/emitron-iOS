@@ -46,7 +46,7 @@ struct SettingsView: View {
   }
   
   var body: some View {
-    VStack {
+    VStack(spacing: 0) {
       Link(destination: URL(string: "https://accounts.raywenderlich.com")!) {
         SettingsDisclosureRow(title: "My Account", value: "")
       }
