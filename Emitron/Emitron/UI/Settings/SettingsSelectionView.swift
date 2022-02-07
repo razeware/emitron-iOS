@@ -61,13 +61,13 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
       
       Spacer()
     }
-      .navigationTitle(
-        Text(title)
-          .font(.uiTitle5)
-          .foregroundColor(.titleText)
-      )
-      .navigationBarTitleDisplayMode(.inline)
-        .padding(20)
+    .navigationTitle(
+      Text(title)
+        .font(.uiTitle5)
+        .foregroundColor(.titleText)
+    )
+    .navigationBarTitleDisplayMode(.inline)
+    .padding(20)
     .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
