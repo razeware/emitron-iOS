@@ -88,7 +88,8 @@ private extension ContentDetailView {
         }
       }
     }
-    .navigationBarTitle(Text(""), displayMode: .inline)
+    .navigationTitle(Text(""))
+    .navigationBarTitleDisplayMode(.inline)
     .background(Color.background)
     .onReceive(videoCompletedNotification) { _ in
       checkReviewRequest = true

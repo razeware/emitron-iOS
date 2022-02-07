@@ -48,6 +48,6 @@ struct DownloadsView: View {
       downloadAction: downloadService,
       contentScreen: contentScreen
     )
-      .navigationBarTitle(String.downloads)
+      .navigationTitle(String.downloads)
   }
 }

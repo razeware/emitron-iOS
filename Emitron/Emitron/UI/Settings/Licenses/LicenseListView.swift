@@ -45,7 +45,7 @@ struct LicenseListView: View {
               .font(.uiLabel)
               .foregroundColor(.contentText)
           }
-            .navigationBarTitle("Software Licenses")
+            .navigationTitle("Software Licenses")
             .navigationBarItems(trailing: dismissButton)
         }
       }
