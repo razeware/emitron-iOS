@@ -167,8 +167,8 @@ final class ProgressEngine {
         id: -1,
         target: target ?? content?.duration ?? 0,
         progress: progress,
-        createdAt: Date(),
-        updatedAt: Date(),
+        createdAt: .now,
+        updatedAt: .now,
         contentID: contentID
       )
     }

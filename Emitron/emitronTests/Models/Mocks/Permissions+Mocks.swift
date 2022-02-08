@@ -31,10 +31,12 @@ import struct Foundation.Date
 
 extension Permission {
   static var downloadVideos: Permission {
-    Permission(id: 431,
-               name: "Download Videos",
-               tag: .download,
-               createdAt: Date(),
-               updatedAt: Date())
+    .init(
+      id: 431,
+      name: "Download Videos",
+      tag: .download,
+      createdAt: .now,
+      updatedAt: .now
+    )
   }
 }

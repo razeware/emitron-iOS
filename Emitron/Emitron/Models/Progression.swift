@@ -79,8 +79,8 @@ extension Progression {
       id: -1,
       target: content.duration,
       progress: progress,
-      createdAt: Date(),
-      updatedAt: Date(),
+      createdAt: .now,
+      updatedAt: .now,
       contentID: content.id
     )
   }

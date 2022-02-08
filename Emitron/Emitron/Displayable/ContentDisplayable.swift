@@ -131,7 +131,7 @@ protocol ContentListDisplayable: Ownable {
 extension ContentListDisplayable {
   var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+    if Calendar.current.isDate(.now, inSameDayAs: releasedAt) {
       start = .today
     }
     

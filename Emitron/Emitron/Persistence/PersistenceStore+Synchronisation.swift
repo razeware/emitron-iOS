@@ -47,7 +47,7 @@ extension PersistenceStore {
           contentID: contentID,
           category: .bookmark,
           type: .createBookmark,
-          date: Date(),
+          date: .now,
           attributes: []
         )
         try syncRequest.save(db)
@@ -73,7 +73,7 @@ extension PersistenceStore {
           associatedRecordID: bookmarkID,
           category: .bookmark,
           type: .deleteBookmark,
-          date: Date(),
+          date: .now,
           attributes: []
         )
         try syncRequest.save(db)
@@ -92,7 +92,7 @@ extension PersistenceStore {
         .filter(SyncRequest.Columns.category == SyncRequest.Category.progress.rawValue)
         .fetchOne(db) {
         request.type = .markContentComplete
-        request.date = Date()
+        request.date = .now
         syncRequest = request
       } else {
         // Need to create a new one
@@ -100,7 +100,7 @@ extension PersistenceStore {
           contentID: contentID,
           category: .progress,
           type: .markContentComplete,
-          date: Date(),
+          date: .now,
           attributes: []
         )
       }
@@ -119,7 +119,7 @@ extension PersistenceStore {
         .filter(SyncRequest.Columns.category == SyncRequest.Category.progress.rawValue)
         .fetchOne(db) {
         request.type = .updateProgress
-        request.date = Date()
+        request.date = .now
         request.attributes = [.progress(progress)]
         syncRequest = request
       } else {
@@ -128,7 +128,7 @@ extension PersistenceStore {
           contentID: contentID,
           category: .progress,
           type: .updateProgress,
-          date: Date(),
+          date: .now,
           attributes: [.progress(progress)]
         )
       }
@@ -148,7 +148,7 @@ extension PersistenceStore {
         .fetchOne(db) {
         request.type = .deleteProgression
         request.associatedRecordID = progressionID
-        request.date = Date()
+        request.date = .now
         syncRequest = request
       } else {
         // Need to create a new one
@@ -157,7 +157,7 @@ extension PersistenceStore {
           associatedRecordID: progressionID,
           category: .progress,
           type: .deleteProgression,
-          date: Date(),
+          date: .now,
           attributes: []
         )
       }

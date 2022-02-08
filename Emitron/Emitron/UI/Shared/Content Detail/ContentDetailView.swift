@@ -95,15 +95,17 @@ private extension ContentDetailView {
       checkReviewRequest = true
     }
     .onAppear {
-      if checkReviewRequest {
-        guard let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval else { return }
-        let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
-        let currentDate = Date()
-        if case .completed = dynamicContentViewModel.viewProgress {
-          if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
-            NotificationCenter.default.post(name: .requestReview, object: nil)
-            NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
-          }
+      guard
+        checkReviewRequest,
+        let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval
+      else { return }
+
+      let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
+      let currentDate = Date.now
+      if case .completed = dynamicContentViewModel.viewProgress {
+        if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
+          NotificationCenter.default.post(name: .requestReview, object: nil)
+          NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
         }
       }
     }

@@ -93,7 +93,7 @@ extension Download {
   static func create(for content: Content) -> Download {
     Download(
       id: UUID(),
-      requestedAt: Date(),
+      requestedAt: .now,
       lastValidatedAt: nil,
       fileName: nil,
       remoteURL: nil,

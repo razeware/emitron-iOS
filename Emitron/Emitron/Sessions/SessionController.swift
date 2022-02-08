@@ -97,9 +97,11 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   var hasCurrentDownloadPermissions: Bool {
     guard user?.canDownload == true else { return false }
     
-    if case .loaded(let date) = permissionState,
+    if
+      case .loaded(let date) = permissionState,
       let permissionsLastConfirmedDate = date,
-      Date().timeIntervalSince(permissionsLastConfirmedDate) < .videoPlaybackOfflinePermissionsCheckPeriod {
+      Date.now.timeIntervalSince(permissionsLastConfirmedDate) < .videoPlaybackOfflinePermissionsCheckPeriod
+    {
       return true
     }
     return false
