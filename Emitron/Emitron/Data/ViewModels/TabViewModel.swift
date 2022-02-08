@@ -27,14 +27,31 @@
 // THE SOFTWARE.
 
 import Combine
+import SwiftUI
 
-enum MainTab: Hashable {
+enum MainTab {
   case library
   case downloads
   case myTutorials
   case settings
 }
 
+// MARK: - Environment
+extension MainTab: EnvironmentKey {
+  static var defaultValue: Self { .library }
+}
+
+extension EnvironmentValues {
+  var mainTab: MainTab {
+    get { self[MainTab.self] }
+    set { self[MainTab.self] = newValue }
+  }
+}
+
+// MARK: - Hashable
+extension MainTab: Hashable { }
+
+// MARK: -
 final class TabViewModel: ObservableObject {
   @Published var selectedTab: MainTab = .library
 }

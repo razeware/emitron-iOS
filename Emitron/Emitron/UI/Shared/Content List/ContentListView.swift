@@ -49,6 +49,7 @@ struct ContentListView<Header: View> {
 
   @State private var deleteSubscriptions: Set<AnyCancellable> = []
   @EnvironmentObject private var messageBus: MessageBus
+  @Environment(\.mainTab) private var mainTab
 }
 
 // MARK: - View
@@ -125,7 +126,10 @@ private extension ContentListView {
   
   var listView: some View {
     List {
-      Section(header: header) {
+      Section(
+        header: header
+          .id(mainTab) // for scrolling to top
+      ) {
         cardsView
         loadMoreView
       }

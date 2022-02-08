@@ -58,7 +58,22 @@ struct TabView<
 // MARK: - View
 extension TabView: View {
   var body: some View {
-    TabView(selection: $model.selectedTab) {
+    ScrollViewReader { proxy in
+      SwiftUI.TabView(
+        selection: .init(
+          get: { model.selectedTab },
+          set: { selection in
+            switch model.selectedTab {
+            case selection:
+              withAnimation {
+                proxy.scrollTo(selection, anchor: .top)
+              }
+            default:
+              model.selectedTab = selection
+            }
+          }
+        )
+      ) {
         tab(
           content: libraryView,
           text: .library,
@@ -103,7 +118,6 @@ struct TabView_Previews: PreviewProvider {
   }
 }
 
-
 // MARK: - private
 private func tab<Content: View>(
   content: () -> Content,
@@ -117,6 +131,7 @@ private func tab<Content: View>(
       Image(imageName)
     }
     .tag(tab)
+    .environment(\.mainTab, tab) // for scrolling to top
     .navigationViewStyle(.stack)
     .accessibility(label: .init(text))
 }
