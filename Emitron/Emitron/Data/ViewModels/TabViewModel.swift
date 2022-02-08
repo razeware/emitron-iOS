@@ -27,14 +27,44 @@
 // THE SOFTWARE.
 
 import Combine
-
-enum MainTab: Hashable {
-  case library
-  case downloads
-  case myTutorials
-  case settings
-}
+import SwiftUI
 
 final class TabViewModel: ObservableObject {
+  enum MainTab {
+    case library
+    case downloads
+    case myTutorials
+    case settings
+  }
+
+  /// An ID that tells a scroll view proxy what view to scroll to when tapping an already-selected tab.
+  struct ScrollToTopID {
+    let mainTab: MainTab
+    let detail: Bool
+  }
+
   @Published var selectedTab: MainTab = .library
+
+  var showingDetailView = Dictionary(
+    uniqueKeysWithValues: zip(MainTab.allCases, AnyIterator { false })
+  )
 }
+
+// MARK: - CaseIterable
+extension TabViewModel.MainTab: CaseIterable { }
+
+// MARK: - Environment
+extension TabViewModel.MainTab: EnvironmentKey {
+  static var defaultValue: Self { .library }
+}
+
+extension EnvironmentValues {
+  var mainTab: TabViewModel.MainTab {
+    get { self[TabViewModel.MainTab.self] }
+    set { self[TabViewModel.MainTab.self] = newValue }
+  }
+}
+
+// MARK: - Hashable
+extension TabViewModel.ScrollToTopID: Hashable { }
+

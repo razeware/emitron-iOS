@@ -31,7 +31,7 @@ import UIKit
 extension Content {  
   var contentSummaryMetadataString: String {
     var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+    if Calendar.current.isDate(.now, inSameDayAs: releasedAt) {
       start = .today
     }
     

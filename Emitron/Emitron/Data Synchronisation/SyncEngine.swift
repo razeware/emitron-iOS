@@ -309,7 +309,7 @@ extension SyncEngine: SyncAction {
     try persistenceStore.createBookmarkSyncRequest(for: contentID)
     
     // 2. Create cache update and pass to repository
-    let bookmark = Bookmark(id: -1, createdAt: Date(), contentID: contentID)
+    let bookmark = Bookmark(id: -1, createdAt: .now, contentID: contentID)
     let cacheUpdate = DataCacheUpdate(bookmarks: [bookmark])
     repository.apply(update: cacheUpdate)
     

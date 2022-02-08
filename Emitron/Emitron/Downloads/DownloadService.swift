@@ -316,7 +316,7 @@ extension DownloadService {
           .log()
       case .success(let attachment):
         download.remoteURL = attachment.url
-        download.lastValidatedAt = Date()
+        download.lastValidatedAt = .now
         download.state = .readyForDownload
       }
 

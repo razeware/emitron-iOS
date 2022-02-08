@@ -197,7 +197,7 @@ private extension App {
 
   func setupAppReview() {
     if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
-      NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+      NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
     }
   }
 }

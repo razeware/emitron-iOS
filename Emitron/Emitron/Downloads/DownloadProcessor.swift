@@ -47,25 +47,15 @@ protocol DownloadProcessorDelegate: AnyObject {
 
 private extension URLSessionDownloadTask {
   var downloadID: UUID? {
-    get {
-      guard let taskDescription = taskDescription else { return .none }
-      return UUID(uuidString: taskDescription)
-    }
-    set {
-      taskDescription = newValue?.uuidString ?? ""
-    }
+    get { taskDescription.flatMap(UUID.init) }
+    set { taskDescription = newValue?.uuidString ?? "" }
   }
 }
 
 private extension AVAssetDownloadTask {
   var downloadID: UUID? {
-    get {
-      guard let taskDescription = taskDescription else { return .none }
-      return UUID(uuidString: taskDescription)
-    }
-    set {
-      taskDescription = newValue?.uuidString ?? ""
-    }
+    get { taskDescription.flatMap(UUID.init) }
+    set { taskDescription = newValue?.uuidString ?? "" }
   }
 }
 
@@ -185,9 +175,10 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
   }
 
   func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
-
-    guard let downloadID = assetDownloadTask.downloadID,
-      let delegate = delegate else { return }
+    guard
+      let downloadID = assetDownloadTask.downloadID,
+      let delegate = delegate
+    else { return }
 
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }

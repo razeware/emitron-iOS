@@ -76,6 +76,6 @@ enum RefreshableTimeSpan: Int {
   case short = 1
   
   var date: Date {
-    Date().dateByAddingNumberOfDays(-rawValue)
+    .now.dateByAddingNumberOfDays(-rawValue)
   }
 }
