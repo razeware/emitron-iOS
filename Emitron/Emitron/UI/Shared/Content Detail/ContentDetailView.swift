@@ -70,11 +70,7 @@ private extension ContentDetailView {
     GeometryReader { geometry in
       ScrollView {
         VStack {
-          if content.professional && !canStreamPro {
-            headerImageLockedProContent(for: geometry.size.width)
-          } else {
-            headerImagePlayableContent(for: geometry.size.width)
-          }
+          headerImage(width: geometry.size.width)
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)
@@ -142,12 +138,15 @@ private extension ContentDetailView {
     }
   }
 
-  func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
-    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
-    return components.weekOfYear ?? 0 >= 2
+  @ViewBuilder func headerImage(width: Double) -> some View {
+    if content.professional && !canStreamPro {
+      headerImageLockedProContent(for: width)
+    } else {
+      headerImagePlayableContent(for: width)
+    }
   }
 
-  func headerImagePlayableContent(for width: CGFloat) -> some View {
+  func headerImagePlayableContent(for width: Double) -> some View {
     VStack(spacing: 0) {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
@@ -160,11 +159,13 @@ private extension ContentDetailView {
         continueOrPlayButton
       }
       
-      progressBar
+      if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
+        ProgressBarView(progress: progress, isRounded: false)
+      }
     }
   }
   
-  func headerImageLockedProContent(for width: CGFloat) -> some View {
+  func headerImageLockedProContent(for width: Double) -> some View {
     ZStack {
       VerticalFadeImageView(
         imageURL: content.cardArtworkURL,
@@ -176,11 +177,9 @@ private extension ContentDetailView {
       ProContentLockedOverlayView()
     }
   }
-  
-  var progressBar: ProgressBarView? {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
-    else { return nil }
 
-    return .init(progress: progress, isRounded: false)
+  func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+    return components.weekOfYear ?? 0 >= 2
   }
 }
