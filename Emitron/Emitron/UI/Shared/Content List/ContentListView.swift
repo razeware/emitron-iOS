@@ -49,6 +49,7 @@ struct ContentListView<Header: View> {
 
   @State private var deleteSubscriptions: Set<AnyCancellable> = []
   @EnvironmentObject private var messageBus: MessageBus
+  @EnvironmentObject private var tabViewModel: TabViewModel
   @Environment(\.mainTab) private var mainTab
 }
 
@@ -57,6 +58,7 @@ extension ContentListView: View {
   var body: some View {
     contentView
       .onAppear {
+        tabViewModel.showingDetailView[mainTab] = false
         UIApplication.dismissKeyboard()
         reloadIfRequired()
       }
@@ -103,7 +105,9 @@ private extension ContentListView {
             content: partialContent,
             childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
             dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
-          ),
+          ).onAppear {
+            tabViewModel.showingDetailView[mainTab] = true
+          },
           // This EmptyView and the 0 opacity below are used for `label`
           // instead of the CardView, in order to hide navigation chevrons on the right.
           label: EmptyView.init
@@ -128,7 +132,7 @@ private extension ContentListView {
     List {
       Section(
         header: header
-          .id(mainTab) // for scrolling to top
+          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false)) 
       ) {
         cardsView
         loadMoreView

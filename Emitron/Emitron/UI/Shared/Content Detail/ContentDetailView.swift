@@ -46,6 +46,7 @@ struct ContentDetailView {
 
   @EnvironmentObject private var sessionController: SessionController
   @EnvironmentObject private var messageBus: MessageBus
+  @Environment(\.mainTab) private var mainTab
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
@@ -71,6 +72,7 @@ private extension ContentDetailView {
       ScrollView {
         VStack {
           headerImage(width: geometry.size.width)
+            .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: true))
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
             .padding([.leading, .trailing], 20)

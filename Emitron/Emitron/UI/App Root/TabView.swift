@@ -66,7 +66,12 @@ extension TabView: View {
             switch model.selectedTab {
             case selection:
               withAnimation {
-                proxy.scrollTo(selection, anchor: .top)
+                proxy.scrollTo(
+                  TabViewModel.ScrollToTopID(
+                    mainTab: selection, detail: model.showingDetailView[selection]!
+                  ),
+                  anchor: .top
+                )
               }
             default:
               model.selectedTab = selection
@@ -123,7 +128,7 @@ private func tab<Content: View>(
   content: () -> Content,
   text: String,
   imageName: String,
-  tab: MainTab
+  tab: TabViewModel.MainTab
 ) -> some View {
   NavigationView(content: content)
     .tabItem {
@@ -131,7 +136,7 @@ private func tab<Content: View>(
       Image(imageName)
     }
     .tag(tab)
-    .environment(\.mainTab, tab) // for scrolling to top
+    .environment(\.mainTab, tab) // for constructing `ScrollToTopID`s
     .navigationViewStyle(.stack)
     .accessibility(label: .init(text))
 }

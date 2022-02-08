@@ -29,29 +29,42 @@
 import Combine
 import SwiftUI
 
-enum MainTab {
-  case library
-  case downloads
-  case myTutorials
-  case settings
+final class TabViewModel: ObservableObject {
+  enum MainTab {
+    case library
+    case downloads
+    case myTutorials
+    case settings
+  }
+
+  /// An ID that tells a scroll view proxy what view to scroll to when tapping an already-selected tab.
+  struct ScrollToTopID {
+    let mainTab: MainTab
+    let detail: Bool
+  }
+
+  @Published var selectedTab: MainTab = .library
+
+  var showingDetailView = Dictionary(
+    uniqueKeysWithValues: zip(MainTab.allCases, AnyIterator { false })
+  )
 }
 
+// MARK: - CaseIterable
+extension TabViewModel.MainTab: CaseIterable { }
+
 // MARK: - Environment
-extension MainTab: EnvironmentKey {
+extension TabViewModel.MainTab: EnvironmentKey {
   static var defaultValue: Self { .library }
 }
 
 extension EnvironmentValues {
-  var mainTab: MainTab {
-    get { self[MainTab.self] }
-    set { self[MainTab.self] = newValue }
+  var mainTab: TabViewModel.MainTab {
+    get { self[TabViewModel.MainTab.self] }
+    set { self[TabViewModel.MainTab.self] = newValue }
   }
 }
 
 // MARK: - Hashable
-extension MainTab: Hashable { }
+extension TabViewModel.ScrollToTopID: Hashable { }
 
-// MARK: -
-final class TabViewModel: ObservableObject {
-  @Published var selectedTab: MainTab = .library
-}
