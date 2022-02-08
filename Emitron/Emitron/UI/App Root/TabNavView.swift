@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-struct TabNavView<
+struct TabView<
   LibraryView: View,
   DownloadsView: View,
   MyTutorialsView: View,
@@ -56,7 +56,7 @@ struct TabNavView<
 }
 
 // MARK: - View
-extension TabNavView: View {
+extension TabView: View {
   var body: some View {
     TabView(selection: $model.selectedTab) {
       tab(
@@ -107,9 +107,9 @@ private func tab<Content: View>(
     .accessibility(label: .init(text))
 }
 
-struct TabNavView_Previews: PreviewProvider {
+struct TabView_Previews: PreviewProvider {
   static var previews: some View {
-    TabNavView(
+    TabView(
       libraryView: { Text("LIBRARY") },
       myTutorialsView: { Text("MY TUTORIALS") },
       downloadsView: { Text("DOWNLOADS") },

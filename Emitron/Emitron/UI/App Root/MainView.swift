@@ -79,7 +79,7 @@ private extension MainView {
   @ViewBuilder var tabBarView: some View {
     switch sessionController.sessionState {
     case .online :
-      TabNavView(
+      TabView(
         libraryView: {
           LibraryView(
             filters: dataManager.filters,
@@ -100,7 +100,7 @@ private extension MainView {
       )
       .environmentObject(tabViewModel)
     case .offline:
-      TabNavView(
+      TabView(
         libraryView: OfflineView.init,
         myTutorialsView: OfflineView.init,
         downloadsView: downloadsView,
