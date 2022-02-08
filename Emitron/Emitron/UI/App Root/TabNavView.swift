@@ -59,52 +59,37 @@ struct TabView<
 extension TabView: View {
   var body: some View {
     TabView(selection: $model.selectedTab) {
-      tab(
-        content: libraryView,
-        text: .library,
-        imageName: "library",
-        tag: .library
-      )
+        tab(
+          content: libraryView,
+          text: .library,
+          imageName: "library",
+          tab: .library
+        )
 
-      tab(
-        content: downloadsView,
-        text: .downloads,
-        imageName: "downloadTabInactive",
-        tag: .downloads
-      )
+        tab(
+          content: downloadsView,
+          text: .downloads,
+          imageName: "downloadTabInactive",
+          tab: .downloads
+        )
 
-      tab(
-        content: myTutorialsView,
-        text: .myTutorials,
-        imageName: "myTutorials",
-        tag: .myTutorials
-      )
+        tab(
+          content: myTutorialsView,
+          text: .myTutorials,
+          imageName: "myTutorials",
+          tab: .myTutorials
+        )
 
-      tab(
-        content: settingsView,
-        text: .settings,
-        imageName: "settings",
-        tag: .settings
-      )
+        tab(
+          content: settingsView,
+          text: .settings,
+          imageName: "settings",
+          tab: .settings
+        )
+      }
     }
     .accentColor(.accent)
   }
-}
-
-private func tab<Content: View>(
-  content: () -> Content,
-  text: String,
-  imageName: String,
-  tag: MainTab
-) -> some View {
-  NavigationView(content: content)
-    .tabItem {
-      Text(text)
-      Image(imageName)
-    }
-    .tag(tag)
-    .navigationViewStyle(StackNavigationViewStyle())
-    .accessibility(label: .init(text))
 }
 
 struct TabView_Previews: PreviewProvider {
@@ -116,4 +101,22 @@ struct TabView_Previews: PreviewProvider {
       settingsView: { Text("SETTINGS") }
     ).environmentObject(TabViewModel())
   }
+}
+
+
+// MARK: - private
+private func tab<Content: View>(
+  content: () -> Content,
+  text: String,
+  imageName: String,
+  tab: MainTab
+) -> some View {
+  NavigationView(content: content)
+    .tabItem {
+      Text(text)
+      Image(imageName)
+    }
+    .tag(tab)
+    .navigationViewStyle(.stack)
+    .accessibility(label: .init(text))
 }
