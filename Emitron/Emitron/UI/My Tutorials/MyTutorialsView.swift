@@ -82,13 +82,8 @@ struct MyTutorialsView {
     self.domainRepository = domainRepository
   }
 
-  @State private var state: MyTutorialsState
-
-  // We need to pull these in to pass them to the settings view. We don't actually use them here.
-  // I think this is a bug.
-  @EnvironmentObject private var sessionController: SessionController
-  @EnvironmentObject private var tabViewModel: TabViewModel
   @EnvironmentObject private var downloadService: DownloadService
+  @State private var state: MyTutorialsState
   
   private let inProgressRepository: InProgressRepository
   private let completedRepository: CompletedRepository
@@ -159,7 +154,8 @@ private extension MyTutorialsView {
                 reloadCompleted = false
               }
             }
-          })
+          }
+        )
           .padding(.top, .sidePadding)
       }
       .padding(.horizontal, .sidePadding)
