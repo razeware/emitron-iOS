@@ -86,7 +86,7 @@ private extension ContentDetailView {
         }
       }
     }
-    .navigationTitle(Text(""))
+    .navigationTitle("")
     .navigationBarTitleDisplayMode(.inline)
     .background(Color.background)
     .onReceive(videoCompletedNotification) { _ in
@@ -95,17 +95,13 @@ private extension ContentDetailView {
     .onAppear {
       guard
         checkReviewRequest,
-        let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval
+        case .completed = dynamicContentViewModel.viewProgress,
+        let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval,
+        isPastTwoWeeks(.now, from: .init(timeIntervalSince1970: lastPrompted))
       else { return }
 
-      let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
-      let currentDate = Date.now
-      if case .completed = dynamicContentViewModel.viewProgress {
-        if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
-          NotificationCenter.default.post(name: .requestReview, object: nil)
-          NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
-        }
-      }
+      NotificationCenter.default.post(name: .requestReview, object: nil)
+      NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
     }
   }
 
@@ -133,7 +129,7 @@ private extension ContentDetailView {
       } else {
         HStack {
           Spacer()
-          ProgressView().scaleEffect(1.0, anchor: .center)
+          ProgressView().scaleEffect(1, anchor: .center)
           Spacer()
         }
       }
