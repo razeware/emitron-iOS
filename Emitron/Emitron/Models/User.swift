@@ -29,8 +29,6 @@
 import struct Foundation.URL
 
 public struct User: Equatable, Codable {
-
-  // MARK: - Properties
   public let externalID: String
   public let email: String
   public let username: String
@@ -38,30 +36,10 @@ public struct User: Equatable, Codable {
   public let name: String
   public let token: String
   let permissions: [Permission]?
-  
-  public var canStreamPro: Bool {
-    guard let permissions = permissions else { return false }
-    
-    return !permissions.filter { $0.tag == .streamPro }.isEmpty
-  }
-  
-  public var canStream: Bool {
-    guard let permissions = permissions else { return false }
-    
-    return !permissions.filter { $0.tag == .streamBeginner }.isEmpty
-  }
-  
-  public var canDownload: Bool {
-    guard let permissions = permissions else { return false }
-    
-    return !permissions.filter { $0.tag == .download }.isEmpty
-  }
-  
-  public var hasPermissionToUseApp: Bool {
-    canStreamPro || canStream || canDownload
-  }
-  
-  // MARK: - Initializers
+}
+
+// MARK: - internal
+extension User {
   init?(dictionary: [String: String]) {
     guard
       let externalID = dictionary["external_id"],
@@ -71,8 +49,7 @@ public struct User: Equatable, Codable {
       let avatarURL = URL(string: avatarURLString),
       let name = dictionary["name"]?.replacingOccurrences(of: "+", with: " "),
       let token = dictionary["token"]
-      else
-    { return nil }
+    else { return nil }
 
     self.externalID = externalID
     self.email = email
@@ -82,8 +59,26 @@ public struct User: Equatable, Codable {
     self.token = token
     permissions = .none
   }
-  
-  private init(user: User, permissions: [Permission]) {
+
+  func with(permissions: [Permission]) -> User {
+    .init(user: self, permissions: permissions)
+  }
+}
+
+// MARK: public
+public extension User {
+  var canStreamPro: Bool { can(.streamPro) }
+  var canStream: Bool { can(.streamBeginner) }
+  var canDownload: Bool { can(.download) }
+
+  var hasPermissionToUseApp: Bool {
+    canStreamPro || canStream || canDownload
+  }
+}
+
+// MARK: - private
+private extension User {
+  init(user: User, permissions: [Permission]) {
     externalID = user.externalID
     email = user.email
     username = user.username
@@ -92,8 +87,8 @@ public struct User: Equatable, Codable {
     token = user.token
     self.permissions = permissions
   }
-  
-  func with(permissions: [Permission]) -> User {
-    User(user: self, permissions: permissions)
+
+  private func can(_ tag: Permission.Tag) -> Bool {
+    permissions?.lazy.map(\.tag).contains(tag) == true
   }
 }
