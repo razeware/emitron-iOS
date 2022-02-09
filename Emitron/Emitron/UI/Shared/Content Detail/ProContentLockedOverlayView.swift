@@ -43,7 +43,7 @@ struct ProContentLockedOverlayView: View {
         .multilineTextAlignment(.center)
         .font(.uiLabel)
         .foregroundColor(.titleText)
-        .padding([.leading, .trailing], 20)
+        .padding(.horizontal, 20)
         .lineLimit(3)
         .fixedSize(horizontal: false, vertical: true)
     }

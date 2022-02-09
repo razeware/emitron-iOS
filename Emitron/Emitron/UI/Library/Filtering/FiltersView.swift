@@ -79,7 +79,7 @@ struct FiltersView: View {
         // Which ones are currently being applied to the content listing
         applyFiltersButton()
       }
-      .padding([.leading, .trailing, .bottom], 18)
+      .padding([.horizontal, .bottom], 18)
     }
     .background(Color.background)
   }

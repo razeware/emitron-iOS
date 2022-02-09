@@ -49,7 +49,7 @@ struct LogoutView: View {
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 55)
+        .padding(.horizontal, 55)
       
       Spacer()
       
@@ -58,7 +58,7 @@ struct LogoutView: View {
         type: .destructive(withArrow: true),
         callback: sessionController.logout
       )
-      .padding([.leading, .trailing], 18)
+      .padding(.horizontal, 18)
       .padding(.bottom, 38)
     }
     .background(Color.background)

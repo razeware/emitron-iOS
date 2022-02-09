@@ -75,7 +75,7 @@ private extension ContentDetailView {
             .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: true))
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
-            .padding([.leading, .trailing], 20)
+            .padding(.horizontal, 20)
             .background(Color.background)
           
           ChildContentListingView(

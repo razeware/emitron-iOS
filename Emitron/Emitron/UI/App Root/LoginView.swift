@@ -93,7 +93,7 @@ struct LoginView: View {
         MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
           sessionController.login()
         }
-        .padding([.leading, .trailing], 18)
+        .padding(.horizontal, 18)
         .padding([.bottom], 38)
       }
       .background(Color.background)
