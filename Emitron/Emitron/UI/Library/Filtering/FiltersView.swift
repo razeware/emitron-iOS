@@ -64,7 +64,7 @@ struct FiltersView: View {
       .padding(.top, 20)
       
       constructScrollView()
-        .padding([.leading, .trailing, .top], 20)
+        .padding([.horizontal, .top], 20)
       
       HStack {
         
