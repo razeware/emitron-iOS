@@ -26,22 +26,31 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ContentsService: Service {
+final class ContentsService: Service { }
 
-  // MARK: - Internal
-  func allContents(parameters: [Parameter],
-                   completion: @escaping (_ response: Result<ContentsRequest.Response, RWAPIError>) -> Void) {
+// MARK: - internal
+extension ContentsService {
+  func allContents(
+    parameters: [Parameter],
+    completion: @escaping (_ response: Result<ContentsRequest.Response, RWAPIError>) -> Void
+  ) {
     let request = ContentsRequest()
-    makeAndProcessRequest(request: request,
-                          parameters: parameters,
-                          completion: completion)
+    makeAndProcessRequest(
+      request: request,
+      parameters: parameters,
+      completion: completion
+    )
   }
   
-  func contentDetails(for id: Int,
-                      completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void) {
+  func contentDetails(
+    for id: Int,
+    completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void
+  ) {
     let request = ContentDetailsRequest(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+    makeAndProcessRequest(
+      request: request,
+      completion: completion
+    )
   }
   
   func getBeginPlaybackToken(completion: @escaping(_ response: Result<BeginPlaybackTokenRequest.Response, RWAPIError>) -> Void) {

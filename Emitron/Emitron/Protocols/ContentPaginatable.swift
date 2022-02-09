@@ -42,12 +42,8 @@ protocol ContentPaginatable: ObservableObject where ObjectWillChangePublisher ==
 }
 
 extension ContentPaginatable {
-	// All content that currently conforms to this prootocol is 1-indexed
-  var startingPage: Int {
-    1
-  }
+	// All content that currently conforms to this protocol is 1-indexed
+  var startingPage: Int { 1 }
   
-  var defaultPageSize: Int {
-    20
-  }
+  var defaultPageSize: Int { 20 }
 }

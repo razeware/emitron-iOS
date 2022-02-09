@@ -43,9 +43,7 @@ struct LibraryView: View {
 
   var body: some View {
     contentView
-      .navigationTitle(
-        Text(String.library)
-      )
+      .navigationTitle(Text(String.library))
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.background.edgesIgnoringSafeArea(.all))

@@ -35,9 +35,7 @@ struct FiltersView: View {
   
   var body: some View {
     VStack {
-      
       HStack(alignment: .center) {
-        
         Rectangle()
           .frame(width: 27, height: 27, alignment: .center)
           .foregroundColor(.clear)

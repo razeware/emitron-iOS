@@ -187,9 +187,10 @@ private extension ContentListView {
         Spacer()
         ProgressView().scaleEffect(1.0, anchor: .center)
         Spacer()
-      }.padding()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
-        .onAppear(perform: contentRepository.loadMore)
+      }
+      .padding()
+      .background(Color.background.edgesIgnoringSafeArea(.all))
+      .onAppear(perform: contentRepository.loadMore)
     }
   }
 
