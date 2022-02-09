@@ -77,8 +77,11 @@ final class DownloadRepository: ContentRepository {
       sessionController: sessionController
     )
   }
-  
-  private func configureSubscription() {
+}
+
+// MARK: - private
+private extension DownloadRepository {
+  func configureSubscription() {
     contentSubscription =
       downloadService
         .downloadList()

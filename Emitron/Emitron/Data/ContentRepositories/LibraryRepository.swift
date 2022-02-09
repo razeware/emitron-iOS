@@ -60,7 +60,9 @@ final class LibraryRepository: ContentRepository {
       nonPaginationParameters = filters.appliedParameters
     }
   }
-  var currentAppliedFilters: [Filter] {
-    filters.applied
-  }
+}
+
+// MARK: internal
+extension LibraryRepository {
+  var currentAppliedFilters: [Filter] { filters.applied }
 }
