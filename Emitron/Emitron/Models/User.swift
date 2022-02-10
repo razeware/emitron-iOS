@@ -88,7 +88,7 @@ private extension User {
     self.permissions = permissions
   }
 
-  private func can(_ tag: Permission.Tag) -> Bool {
+  func can(_ tag: Permission.Tag) -> Bool {
     permissions?.lazy.map(\.tag).contains(tag) == true
   }
 }

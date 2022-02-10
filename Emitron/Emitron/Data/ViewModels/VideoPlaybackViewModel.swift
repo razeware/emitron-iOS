@@ -113,15 +113,17 @@ final class VideoPlaybackViewModel {
   private var shouldBePlaying = false
   let settingsManager: SettingsManager
   
-  init(contentID: Int,
-       repository: Repository,
-       videosService: VideosService,
-       contentsService: ContentsService,
-       syncAction: SyncAction?,
-       sessionController: SessionController,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       dismissClosure: @escaping () -> Void = { }) {
+  init(
+    contentID: Int,
+    repository: Repository,
+    videosService: VideosService,
+    contentsService: ContentsService,
+    syncAction: SyncAction?,
+    sessionController: SessionController,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    dismissClosure: @escaping () -> Void = { }
+  ) {
     initialContentID = contentID
     self.repository = repository
     self.videosService = videosService

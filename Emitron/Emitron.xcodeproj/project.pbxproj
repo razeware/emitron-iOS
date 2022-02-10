@@ -195,8 +195,7 @@
 		22C3F126241A2655002812CB /* app-icon--default.beta-ipadpro@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */; };
 		22C3F127241A2655002812CB /* app-icon--default.dev-ipad@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */; };
 		22C3F155242795A1002812CB /* PortraitHostingController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F154242795A1002812CB /* PortraitHostingController.swift */; };
-		22C3F15724279692002812CB /* FullScreenVideoPlayerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */; };
-		22C3F159242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */; };
+		22C3F159242796EC002812CB /* FullScreenVideoPlayer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C3F158242796EC002812CB /* FullScreenVideoPlayer.swift */; };
 		22C4EADB23DB8A5A001A3FDA /* WatchStatsService.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */; };
 		22C4EADD23DB8B33001A3FDA /* WatchStatsRequest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */; };
 		22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */; };
@@ -533,8 +532,7 @@
 		22C3F120241A2654002812CB /* app-icon--default.beta-ipadpro@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.beta-ipadpro@2x.png"; sourceTree = "<group>"; };
 		22C3F121241A2655002812CB /* app-icon--default.dev-ipad@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "app-icon--default.dev-ipad@2x.png"; sourceTree = "<group>"; };
 		22C3F154242795A1002812CB /* PortraitHostingController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PortraitHostingController.swift; sourceTree = "<group>"; };
-		22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerViewController.swift; sourceTree = "<group>"; };
-		22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayerRepresentable.swift; sourceTree = "<group>"; };
+		22C3F158242796EC002812CB /* FullScreenVideoPlayer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullScreenVideoPlayer.swift; sourceTree = "<group>"; };
 		22C4EADA23DB8A5A001A3FDA /* WatchStatsService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsService.swift; sourceTree = "<group>"; };
 		22C4EADC23DB8B33001A3FDA /* WatchStatsRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WatchStatsRequest.swift; sourceTree = "<group>"; };
 		22C4EADE23DC4338001A3FDA /* SyncRequest+WatchStat.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SyncRequest+WatchStat.swift"; sourceTree = "<group>"; };
@@ -1030,8 +1028,7 @@
 		229F0AC323BB29230004DD4F /* Video */ = {
 			isa = PBXGroup;
 			children = (
-				22C3F15624279692002812CB /* FullScreenVideoPlayerViewController.swift */,
-				22C3F158242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift */,
+				22C3F158242796EC002812CB /* FullScreenVideoPlayer.swift */,
 			);
 			path = Video;
 			sourceTree = "<group>";
@@ -2023,7 +2020,6 @@
 				B60FF7BE23000ABD00F36B32 /* CardView.swift in Sources */,
 				8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */,
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
-				22C3F15724279692002812CB /* FullScreenVideoPlayerViewController.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* MainView.swift in Sources */,
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
 				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
@@ -2104,7 +2100,7 @@
 				22C4EAEF23DEF91D001A3FDA /* SettingsKey.swift in Sources */,
 				B6DF2FC022CA861C0081A3A3 /* RandomString.swift in Sources */,
 				B629AB4C22E60BD70037F4D8 /* CourseHeaderView.swift in Sources */,
-				22C3F159242796EC002812CB /* FullScreenVideoPlayerRepresentable.swift in Sources */,
+				22C3F159242796EC002812CB /* FullScreenVideoPlayer.swift in Sources */,
 				22BFE75523D9905500495BA9 /* SnackbarView.swift in Sources */,
 				223D77DF23B6515A005BE95D /* ContentRepository.swift in Sources */,
 				2228E40723B999D500E103AA /* CategoryRepository.swift in Sources */,

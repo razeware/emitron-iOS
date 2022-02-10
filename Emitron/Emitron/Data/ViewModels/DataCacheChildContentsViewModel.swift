@@ -29,22 +29,26 @@
 final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   private let service: ContentsService
 
-  init(parentContentID: Int,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction?,
-       repository: Repository,
-       service: ContentsService,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       sessionController: SessionController) {
+  init(
+    parentContentID: Int,
+    downloadAction: DownloadAction,
+    syncAction: SyncAction?,
+    repository: Repository,
+    service: ContentsService,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    sessionController: SessionController
+  ) {
     self.service = service
-    super.init(parentContentID: parentContentID,
-               downloadAction: downloadAction,
-               syncAction: syncAction,
-               repository: repository,
-               messageBus: messageBus,
-               settingsManager: settingsManager,
-               sessionController: sessionController)
+    super.init(
+      parentContentID: parentContentID,
+      downloadAction: downloadAction,
+      syncAction: syncAction,
+      repository: repository,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
+    )
   }
   
   override func loadContentDetailsIntoCache() {

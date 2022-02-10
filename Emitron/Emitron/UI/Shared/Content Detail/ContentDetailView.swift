@@ -55,12 +55,16 @@ struct ContentDetailView {
 // MARK: - View
 extension ContentDetailView: View {
   var body: some View {
-    ZStack {
+    if let model = currentlyDisplayedVideoPlaybackViewModel {
+      try? FullScreenVideoPlayer(
+        model: model,
+        messageBus: messageBus,
+        handleDismissal: {
+          currentlyDisplayedVideoPlaybackViewModel = nil
+        }
+      )
+    } else {
       contentView
-      
-      if currentlyDisplayedVideoPlaybackViewModel != nil {
-        FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel, messageBus: messageBus)
-      }
     }
   }
 }
@@ -75,7 +79,7 @@ private extension ContentDetailView {
             .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: true))
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
-            .padding([.leading, .trailing], 20)
+            .padding(.horizontal, 20)
             .background(Color.background)
           
           ChildContentListingView(
@@ -177,7 +181,7 @@ private extension ContentDetailView {
   }
 
   func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
-    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
-    return components.weekOfYear ?? 0 >= 2
+    Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+      .weekOfYear.map { $0 >= 2 } == true
   }
 }

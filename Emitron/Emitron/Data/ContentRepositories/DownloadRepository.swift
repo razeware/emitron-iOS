@@ -33,23 +33,26 @@ final class DownloadRepository: ContentRepository {
   
   private var contentSubscription: AnyCancellable?
   
-  init(repository: Repository,
-       contentsService: ContentsService,
-       downloadService: DownloadService,
-       syncAction: SyncAction,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       sessionController: SessionController) {
+  init(
+    repository: Repository,
+    contentsService: ContentsService,
+    downloadService: DownloadService,
+    syncAction: SyncAction,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    sessionController: SessionController
+  ) {
     self.downloadService = downloadService
     // Don't need the repository or the service adapter
-    super.init(repository: repository,
-               contentsService: contentsService,
-               downloadAction: downloadService,
-               syncAction: syncAction,
-               serviceAdapter: nil,
-               messageBus: messageBus,
-               settingsManager: settingsManager,
-               sessionController: sessionController)
+    super.init(
+      repository: repository,
+      contentsService: contentsService,
+      downloadAction: downloadService,
+      syncAction: syncAction,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
+    )
   }
   
   override func loadMore() {
@@ -74,21 +77,27 @@ final class DownloadRepository: ContentRepository {
       sessionController: sessionController
     )
   }
-  
-  private func configureSubscription() {
+}
+
+// MARK: - private
+private extension DownloadRepository {
+  func configureSubscription() {
     contentSubscription =
       downloadService
-      .downloadList()
-      .sink(receiveCompletion: { [weak self] error in
-        guard let self = self else { return }
-        self.state = .failed
-        Failure
-          .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
-          .log()
-      }, receiveValue: { [weak self] contentSummaryStates in
-        guard let self = self else { return }
-        self.contents = contentSummaryStates
-        self.state = .hasData
-      })
+        .downloadList()
+        .sink(
+          receiveCompletion: { [weak self] error in
+            guard let self = self else { return }
+            self.state = .failed
+            Failure
+              .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
+              .log()
+          },
+          receiveValue: { [weak self] contentSummaryStates in
+            guard let self = self else { return }
+            self.contents = contentSummaryStates
+            self.state = .hasData
+          }
+        )
   }
 }

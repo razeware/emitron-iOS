@@ -91,7 +91,7 @@ struct FiltersHeaderView: View {
           filter.isOn.toggle()
           filters.update(with: filter)
         })
-          .padding([.leading, .trailing], 14)
+          .padding(.horizontal, 14)
       }
     }
   }

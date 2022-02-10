@@ -116,16 +116,18 @@ private extension ContentListView {
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
-    .listRowInsets(EdgeInsets())
+    .listRowInsets(.init())
     .padding([.horizontal, .top], .sidePadding)
     .background(Color.background)
   }
   
   var allowDelete: Bool {
-    if case .downloads = contentScreen {
+    switch contentScreen {
+    case .downloads:
       return true
+    default:
+      return false
     }
-    return false
   }
   
   var listView: some View {
@@ -137,7 +139,7 @@ private extension ContentListView {
         cardsView
         loadMoreView
       }
-      .listRowInsets(EdgeInsets())
+      .listRowInsets(.init())
       .textCase(nil)
     }
     .if(!allowDelete) {
@@ -185,11 +187,12 @@ private extension ContentListView {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       HStack {
         Spacer()
-        ProgressView().scaleEffect(1.0, anchor: .center)
+        ProgressView().scaleEffect(1, anchor: .center)
         Spacer()
-      }.padding()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
-        .onAppear(perform: contentRepository.loadMore)
+      }
+      .padding()
+      .background(Color.background.edgesIgnoringSafeArea(.all))
+      .onAppear(perform: contentRepository.loadMore)
     }
   }
 
