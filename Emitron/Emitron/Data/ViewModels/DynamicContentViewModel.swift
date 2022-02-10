@@ -95,7 +95,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       }) { [weak self] result in
         switch result {
         case .downloadRequestedSuccessfully:
-          self?.messageBus.post(message: Message(level: .success, message: .downloadRequestedSuccessfully))
+          break
         case .downloadRequestedButQueueInactive:
           self?.messageBus.post(message: Message(level: .warning, message: .downloadRequestedButQueueInactive))
         }
