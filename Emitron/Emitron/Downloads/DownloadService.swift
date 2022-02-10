@@ -200,7 +200,7 @@ extension DownloadService: DownloadAction {
       try? persistenceStore.download(forContentID: $0)
     }
     // 2. Is it already downloading?
-    let currentlyDownloading = downloads.filter { $0.isDownloading }
+    let currentlyDownloading = downloads.filter(\.isDownloading)
     let notYetDownloading = downloads.filter { !$0.isDownloading }
     
     return Future<Void, Error> { promise in
