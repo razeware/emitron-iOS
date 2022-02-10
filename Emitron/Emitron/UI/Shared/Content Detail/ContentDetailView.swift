@@ -55,16 +55,18 @@ struct ContentDetailView {
 // MARK: - View
 extension ContentDetailView: View {
   var body: some View {
-    if let model = currentlyDisplayedVideoPlaybackViewModel {
-      try? FullScreenVideoPlayer(
-        model: model,
-        messageBus: messageBus,
-        handleDismissal: {
-          currentlyDisplayedVideoPlaybackViewModel = nil
-        }
-      )
-    } else {
+    ZStack {
       contentView
+
+      if let model = currentlyDisplayedVideoPlaybackViewModel {
+        try? FullScreenVideoPlayer(
+          model: model,
+          messageBus: messageBus,
+          handleDismissal: {
+            currentlyDisplayedVideoPlaybackViewModel = nil
+          }
+        )
+      }
     }
   }
 }
