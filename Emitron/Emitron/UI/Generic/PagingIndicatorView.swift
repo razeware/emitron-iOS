@@ -34,7 +34,7 @@ struct PagingIndicatorView: View {
   
   var body: some View {
     HStack(spacing: 9) {
-      ForEach(0..<pageCount - 1) { index in
+      ForEach(0..<pageCount - 1, id: \.self) { index in
         Circle()
           .fill(index == currentIndex ? Color.accent : .borderColor)
           .frame(width: 9, height: 9)
