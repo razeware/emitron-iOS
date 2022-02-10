@@ -138,7 +138,6 @@ class ContentRepository: ObservableObject, ContentPaginatable {
 
   // MARK: -
 
-
   var nonPaginationParameters: [Parameter] = [] {
     didSet {
       if state != .initial {
