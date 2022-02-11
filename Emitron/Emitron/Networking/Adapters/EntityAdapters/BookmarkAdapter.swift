@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -39,13 +39,13 @@ struct BookmarkAdapter: EntityAdapter {
     }
     
     guard let content = resource.relationships.first(where: { $0.type == "content" }),
-      let contentId = content.data.first?.id
+      let contentID = content.data.first?.id
       else {
         throw EntityAdapterError.invalidOrMissingRelationships
     }
     
     return Bookmark(id: resource.id,
                     createdAt: createdAt,
-                    contentId: contentId)
+                    contentID: contentID)
   }
 }

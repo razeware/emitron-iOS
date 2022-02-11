@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,17 +30,17 @@ import SwiftUI
 
 enum MyTutorialsState: String {
   case inProgress
-  case completed
   case bookmarked
+  case completed
   
   var displayString: String {
     switch self {
     case .inProgress:
       return "In Progress"
-    case .completed:
-      return "Completed"
     case .bookmarked:
       return "Bookmarks"
+    case .completed:
+      return "Completed"
     }
   }
 }
@@ -61,6 +61,11 @@ extension MyTutorialsState: CaseIterable {
   }
 }
 
+// MARK: - Identifiable
+extension MyTutorialsState: Identifiable {
+  var id: Self { self }
+}
+
 // MARK: -
 struct MyTutorialsView {
   init(
@@ -77,13 +82,8 @@ struct MyTutorialsView {
     self.domainRepository = domainRepository
   }
 
-  @State private var state: MyTutorialsState
-
-  // We need to pull these in to pass them to the settings view. We don't actually use them here.
-  // I think this is a bug.
-  @EnvironmentObject private var sessionController: SessionController
-  @EnvironmentObject private var tabViewModel: TabViewModel
   @EnvironmentObject private var downloadService: DownloadService
+  @State private var state: MyTutorialsState
   
   private let inProgressRepository: InProgressRepository
   private let completedRepository: CompletedRepository
@@ -100,7 +100,7 @@ struct MyTutorialsView {
 extension MyTutorialsView: View {
   var body: some View {
     contentView
-      .navigationBarTitle(String.myTutorials)
+      .navigationTitle(String.myTutorials)
   }
 }
 
@@ -113,15 +113,15 @@ private extension MyTutorialsView {
         contentRepository: inProgressRepository,
         contentScreen: .inProgress
       )
-    case .completed:
-      makeContentListView(
-        contentRepository: completedRepository,
-        contentScreen: .completed
-      )
     case .bookmarked:
       makeContentListView(
         contentRepository: bookmarkRepository,
         contentScreen: .bookmarked
+      )
+    case .completed:
+      makeContentListView(
+        contentRepository: completedRepository,
+        contentScreen: .completed
       )
     }
   }
@@ -143,18 +143,19 @@ private extension MyTutorialsView {
                 inProgressRepository.reload()
                 reloadProgression = false
               }
-            case .completed:
-              if reloadCompleted {
-                completedRepository.reload()
-                reloadCompleted = false
-              }
             case .bookmarked:
               if reloadBookmarks {
                 bookmarkRepository.reload()
                 reloadBookmarks = false
               }
+            case .completed:
+              if reloadCompleted {
+                completedRepository.reload()
+                reloadCompleted = false
+              }
             }
-          })
+          }
+        )
           .padding(.top, .sidePadding)
       }
       .padding(.horizontal, .sidePadding)

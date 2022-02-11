@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,17 @@
 import Foundation
 
 extension Date {
+  @available(
+    iOS, deprecated: 15,
+    message: "Delete this extension now; it was added to Foundation."
+  )
+  static var now: Self { .init() } // swiftlint:disable:this let_var_whitespace
+
+  static var topOfTheHour: Date {
+    let cmpts = Calendar.current.dateComponents([.year, .month, .day, .hour], from: .now)
+    return Calendar.current.date(from: cmpts)!
+  }
+
   var cardString: String {
     let formatter = DateFormatter.cardDateFormatter
     return formatter.string(from: self)
@@ -41,10 +52,5 @@ extension Date {
   
   func equalEnough(to otherDate: Date, epsilon: Double = 0.001) -> Bool {
     abs(timeIntervalSince(otherDate)) < epsilon
-  }
-  
-  static var topOfTheHour: Date {
-    let cmpts = Calendar.current.dateComponents([.year, .month, .day, .hour], from: Date())
-    return Calendar.current.date(from: cmpts)!
   }
 }

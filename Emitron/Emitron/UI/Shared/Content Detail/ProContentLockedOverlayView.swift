@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,7 @@ struct ProContentLockedOverlayView: View {
         .multilineTextAlignment(.center)
         .font(.uiLabel)
         .foregroundColor(.titleText)
-        .padding([.leading, .trailing], 20)
+        .padding(.horizontal, 20)
         .lineLimit(3)
         .fixedSize(horizontal: false, vertical: true)
     }

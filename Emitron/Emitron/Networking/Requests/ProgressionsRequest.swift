@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,7 +66,7 @@ enum ProgressionUpdateData {
 }
 
 protocol ProgressionUpdate {
-  var contentId: Int { get }
+  var contentID: Int { get }
   var data: ProgressionUpdateData { get }
   var updatedAt: Date { get }
 }
@@ -83,7 +83,7 @@ struct UpdateProgressionsRequest: Request {
       [
         "type": "progressions",
         "attributes": [
-          "content_id": update.contentId,
+          "content_id": update.contentID,
           "updated_at": update.updatedAt.iso8601,
           update.data.jsonAttribute.key: update.data.jsonAttribute.value
         ]

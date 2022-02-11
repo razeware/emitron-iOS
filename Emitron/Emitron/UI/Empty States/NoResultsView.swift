@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -63,7 +63,7 @@ extension NoResultsView: View {
           .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
           .padding([.bottom], 20)
-          .padding([.leading, .trailing], 20)
+          .padding(.horizontal, 20)
 
         Text(contentScreen.detailMesage)
           .lineSpacing(5)
@@ -71,7 +71,7 @@ extension NoResultsView: View {
           .foregroundColor(.contentText)
           .multilineTextAlignment(.center)
           .padding([.bottom], 20)
-          .padding([.leading, .trailing], 20)
+          .padding(.horizontal, 20)
 
         Spacer()
 

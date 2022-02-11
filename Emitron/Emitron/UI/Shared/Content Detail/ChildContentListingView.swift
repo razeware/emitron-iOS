@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,11 +29,19 @@
 import SwiftUI
 
 struct ChildContentListingView: View {
-  @ObservedObject var childContentsViewModel: ChildContentsViewModel
-  @Binding var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var messageBus: MessageBus
+  @ObservedObject private var childContentsViewModel: ChildContentsViewModel
+  @Binding private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var messageBus: MessageBus
   
+  init(
+    childContentsViewModel: ChildContentsViewModel,
+    currentlyDisplayedVideoPlaybackViewModel: Binding<VideoPlaybackViewModel?>
+  ) {
+    self.childContentsViewModel = childContentsViewModel
+    _currentlyDisplayedVideoPlaybackViewModel = currentlyDisplayedVideoPlaybackViewModel
+  }
+
   var body: some View {
     childContentsViewModel.initialiseIfRequired()
     return courseDetailsSection
@@ -64,7 +72,7 @@ private extension ChildContentListingView {
               .foregroundColor(.titleText)
               .padding([.top, .bottom])
             Spacer()
-          }.padding([.leading, .trailing], 20)
+          }.padding(.horizontal, 20)
         }
       }
       .listRowBackground(Color.background)
@@ -92,7 +100,7 @@ private extension ChildContentListingView {
       LoadingView()
       Spacer()
     }
-    .listRowInsets(EdgeInsets())
+    .listRowInsets(.init())
     .listRowBackground(Color.background)
     .background(Color.background)
   }
@@ -115,7 +123,7 @@ private extension ChildContentListingView {
     
     return ForEach(onlyContentWithVideoID, id: \.id) { model in
       episodeRow(model: model)
-        .listRowInsets(EdgeInsets())
+        .listRowInsets(.init())
         .listRowBackground(Color.background)
     }
   }

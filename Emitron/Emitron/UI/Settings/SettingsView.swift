@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -35,21 +35,28 @@ enum SettingsLayout {
 }
 
 struct SettingsView: View {
-  @EnvironmentObject var sessionController: SessionController
-  @EnvironmentObject var tabViewModel: TabViewModel
+  @EnvironmentObject private var sessionController: SessionController
+  @EnvironmentObject private var tabViewModel: TabViewModel
   @ObservedObject private var settingsManager: SettingsManager
   @State private var licensesPresented = false
+  @State private var showingSignOutConfirmation = false
   
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
   }
   
   var body: some View {
-    VStack {
+    VStack(spacing: 0) {
+      Link(destination: URL(string: "https://accounts.raywenderlich.com")!) {
+        SettingsDisclosureRow(title: "My Account", value: "")
+      }
+      .padding(.horizontal, 20)
+      
       SettingsList(
         settingsManager: _settingsManager,
         canDownload: sessionController.user?.canDownload ?? false
       ).padding(.horizontal, 20)
+      
       Section(
         header: HStack {
           Text("App Icon")
@@ -61,6 +68,7 @@ struct SettingsView: View {
           .padding(.top, 20)
       ) {
         IconChooserView()
+          .padding(.top, 10)
       }
       .padding(.horizontal, 20)
       
@@ -83,24 +91,51 @@ struct SettingsView: View {
             .foregroundColor(.contentText)
         }
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            sessionController.logout()
-            tabViewModel.selectedTab = .library
+          showingSignOutConfirmation = true
+        }
+        .modifier {
+          let dialogTitle = "Are you sure you want to sign out?"
+          let buttonTitle = "Sign Out"
+          let action = {
+            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+              sessionController.logout()
+              tabViewModel.selectedTab = .library
+            }
+          }
+          
+          if #available(iOS 15, *) {
+            $0.confirmationDialog(
+              dialogTitle,
+              isPresented: $showingSignOutConfirmation,
+              titleVisibility: .visible
+            ) {
+              Button(buttonTitle, role: .destructive, action: action)
+            }
+          } else {
+            $0.actionSheet(isPresented: $showingSignOutConfirmation) {
+              .init(
+                title: .init(dialogTitle),
+                buttons: [
+                  .destructive(.init(buttonTitle), action: action),
+                  .cancel()
+                ]
+              )
+            }
           }
         }
       }
       .padding([.bottom, .horizontal], 18)
     }
-    .navigationBarTitle(String.settings)
+    .navigationTitle(String.settings)
     .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }
 
 struct SettingsView_Previews: PreviewProvider {
   static var previews: some View {
-    SettingsView(settingsManager: EmitronApp.emitronObjects().settingsManager)
+    SettingsView(settingsManager: App.objects.settingsManager)
       .background(Color.background)
-      .environmentObject(EmitronApp.emitronObjects().sessionController)
+      .environmentObject(App.objects.sessionController)
       .inAllColorSchemes
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,18 +29,33 @@
 import Combine
 
 class ContentRepository: ObservableObject, ContentPaginatable {
+  var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
+
   let repository: Repository
-  let contentsService: ContentsService
-  let downloadAction: DownloadAction
-  weak var syncAction: SyncAction?
-  let serviceAdapter: ContentServiceAdapter!
   let messageBus: MessageBus
   let settingsManager: SettingsManager
   let sessionController: SessionController
+  private(set) weak var syncAction: SyncAction?
 
-  private (set) var currentPage: Int = 1
-  private (set) var totalContentNum: Int = 0
-  
+  private let contentsService: ContentsService
+  private let downloadAction: DownloadAction
+  private let serviceAdapter: ContentServiceAdapter!
+
+  private var contentIDs: [Int] = []
+  private var contentSubscription: AnyCancellable?
+  // Provide a value for this in a subclass to subscribe to invalidation notifications
+  private var invalidationSubscription: AnyCancellable?
+
+  // MARK: - ContentPaginatable
+
+  private(set) var currentPage = 1
+
+  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
+  // Let's see if we actually need it to be @Published...
+  var state: DataState = .initial
+
+  private(set) var totalContentNum = 0
+
   // This should be @Published, but it /sometimes/ crashes the app with EXC_BAD_ACCESS
   // when you try and reference it. Which is handy.
   var contents: [ContentListDisplayable] = [] {
@@ -49,52 +64,12 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     }
   }
 
-  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
-  // Let's see if we actually need it to be @Published...
-  var state: DataState = .initial
-  
-  private var contentIds: [Int] = []
-  private var contentSubscription: AnyCancellable?
-  // Provide a value for this in a subclass to subscribe to invalidation notifications
-  var invalidationPublisher: AnyPublisher<Void, Never>? { nil }
-  private var invalidationSubscription: AnyCancellable?
-  
-  var isEmpty: Bool {
-    contents.isEmpty
-  }
-  
-  var nonPaginationParameters = [Parameter]() {
-    didSet {
-      if state != .initial { reload() }
-    }
-  }
-  
-  // Initialiser
-  init(repository: Repository,
-       contentsService: ContentsService,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       serviceAdapter: ContentServiceAdapter?,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       sessionController: SessionController) {
-    self.repository = repository
-    self.contentsService = contentsService
-    self.downloadAction = downloadAction
-    self.syncAction = syncAction
-    self.serviceAdapter = serviceAdapter
-    self.messageBus = messageBus
-    self.settingsManager = settingsManager
-    self.sessionController = sessionController
-    configureInvalidationSubscription()
-  }
-
   func loadMore() {
     if state == .loading || state == .loadingAdditional {
       return
     }
     
-    guard contentIds.isEmpty || contentIds.count <= totalContentNum else {
+    guard contentIDs.isEmpty || contentIDs.count <= totalContentNum else {
       return
     }
     
@@ -115,8 +90,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
-        self.contentIds += newContentIds
+      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
+        self.contentIDs += newContentIDs
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
@@ -127,7 +102,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   }
   
   func reload() {
-    if state == .loading || state == .loadingAdditional {
+    if [.loading, .loadingAdditional].contains(state) {
       return
     }
     
@@ -138,7 +113,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     // Reset current page to 1
     currentPage = startingPage
     
-    serviceAdapter.findContent(parameters: nonPaginationParameters) {  [weak self] result in
+    serviceAdapter.findContent(parameters: nonPaginationParameters) { [weak self] result in
       guard let self = self else {
         return
       }
@@ -150,8 +125,8 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         Failure
           .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIds, cacheUpdate, totalResultCount)):
-        self.contentIds = newContentIds
+      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
+        self.contentIDs = newContentIDs
         self.contentSubscription?.cancel()
         self.repository.apply(update: cacheUpdate)
         self.totalContentNum = totalResultCount
@@ -160,30 +135,78 @@ class ContentRepository: ObservableObject, ContentPaginatable {
       }
     }
   }
-  
-  private func configureContentSubscription() {
-    contentSubscription = repository
-      .contentSummaryState(for: contentIds)
-      .removeDuplicates()
-      .sink(receiveCompletion: { [weak self] error in
-        guard let self = self else { return }
-        
-        Failure
-          .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
-          .log()
-    }, receiveValue: { [weak self] contentSummaryStates in
-      guard let self = self else { return }
-      
-      self.contents = contentSummaryStates
-    })
+
+  // MARK: -
+
+  var nonPaginationParameters: [Parameter] = [] {
+    didSet {
+      if state != .initial {
+        reload()
+      }
+    }
   }
   
-  private func configureInvalidationSubscription() {
+  init(
+    repository: Repository,
+    contentsService: ContentsService,
+    downloadAction: DownloadAction,
+    syncAction: SyncAction,
+    serviceAdapter: ContentServiceAdapter! = nil,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    sessionController: SessionController
+  ) {
+    self.repository = repository
+    self.contentsService = contentsService
+    self.downloadAction = downloadAction
+    self.syncAction = syncAction
+    self.serviceAdapter = serviceAdapter
+    self.messageBus = messageBus
+    self.settingsManager = settingsManager
+    self.sessionController = sessionController
+    configureInvalidationSubscription()
+  }
+  
+  func childContentsViewModel(for contentID: Int) -> ChildContentsViewModel {
+    // Default to using the cached version
+    DataCacheChildContentsViewModel(
+      parentContentID: contentID,
+      downloadAction: downloadAction,
+      syncAction: syncAction,
+      repository: repository,
+      service: contentsService,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
+    )
+  }
+}
+
+// MARK: - internal
+extension ContentRepository {
+  var isEmpty: Bool { contents.isEmpty }
+
+  func dynamicContentViewModel(for contentID: Int) -> DynamicContentViewModel {
+    .init(
+      contentID: contentID,
+      repository: repository,
+      downloadAction: downloadAction,
+      syncAction: syncAction,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
+    )
+  }
+}
+
+// MARK: - private
+private extension ContentRepository {
+  func configureInvalidationSubscription() {
     if let invalidationPublisher = invalidationPublisher {
       invalidationSubscription = invalidationPublisher
         .sink { [weak self] in
           guard let self = self else { return }
-          
+
           // If we're invalidating the cache then we need to set this to initial status again
           self.state = .initial
           // We're not gonna broadcast this change. If you do it'll wreak havoc with the content
@@ -193,30 +216,24 @@ class ContentRepository: ObservableObject, ContentPaginatable {
         }
     }
   }
-  
-  func dynamicContentViewModel(for contentId: Int) -> DynamicContentViewModel {
-    DynamicContentViewModel(
-      contentId: contentId,
-      repository: repository,
-      downloadAction: downloadAction,
-      syncAction: syncAction,
-      messageBus: messageBus,
-      settingsManager: settingsManager,
-      sessionController: sessionController
-    )
-  }
-  
-  func childContentsViewModel(for contentId: Int) -> ChildContentsViewModel {
-    // Default to using the cached version
-    DataCacheChildContentsViewModel(
-      parentContentId: contentId,
-      downloadAction: downloadAction,
-      syncAction: syncAction,
-      repository: repository,
-      service: contentsService,
-      messageBus: messageBus,
-      settingsManager: settingsManager,
-      sessionController: sessionController
-    )
+
+  func configureContentSubscription() {
+    contentSubscription = repository
+      .contentSummaryState(for: contentIDs)
+      .removeDuplicates()
+      .sink(
+        receiveCompletion: { [weak self] error in
+          guard let self = self else { return }
+
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
+            .log()
+        },
+        receiveValue: { [weak self] contentSummaryStates in
+          guard let self = self else { return }
+
+          self.contents = contentSummaryStates
+        }
+      )
   }
 }

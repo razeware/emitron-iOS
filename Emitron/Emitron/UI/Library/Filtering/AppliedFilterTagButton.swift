@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -101,10 +101,6 @@ struct AppliedFilterTagButton: View {
       .background(
         RoundedRectangle(cornerRadius: Layout.cornerRadius)
           .fill(type.backgroundColor)
-          .overlay(
-            RoundedRectangle(cornerRadius: Layout.cornerRadius)
-            .stroke(type.borderColor, lineWidth: 2)
-        )
       )
     }
     .padding(1)

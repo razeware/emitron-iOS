@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -46,6 +46,7 @@ struct ContentDetailView {
 
   @EnvironmentObject private var sessionController: SessionController
   @EnvironmentObject private var messageBus: MessageBus
+  @Environment(\.mainTab) private var mainTab
 
   @State private var currentlyDisplayedVideoPlaybackViewModel: VideoPlaybackViewModel?
   private let videoCompletedNotification = NotificationCenter.default.publisher(for: .AVPlayerItemDidPlayToEndTime)
@@ -56,9 +57,15 @@ extension ContentDetailView: View {
   var body: some View {
     ZStack {
       contentView
-      
-      if currentlyDisplayedVideoPlaybackViewModel != nil {
-        FullScreenVideoPlayerRepresentable(viewModel: $currentlyDisplayedVideoPlaybackViewModel, messageBus: messageBus)
+
+      if let model = currentlyDisplayedVideoPlaybackViewModel {
+        try? FullScreenVideoPlayer(
+          model: model,
+          messageBus: messageBus,
+          handleDismissal: {
+            currentlyDisplayedVideoPlaybackViewModel = nil
+          }
+        )
       }
     }
   }
@@ -70,14 +77,11 @@ private extension ContentDetailView {
     GeometryReader { geometry in
       ScrollView {
         VStack {
-          if content.professional && !canStreamPro {
-            headerImageLockedProContent(for: geometry.size.width)
-          } else {
-            headerImagePlayableContent(for: geometry.size.width)
-          }
+          headerImage(width: geometry.size.width)
+            .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: true))
           
           ContentSummaryView(content: content, dynamicContentViewModel: dynamicContentViewModel)
-            .padding([.leading, .trailing], 20)
+            .padding(.horizontal, 20)
             .background(Color.background)
           
           ChildContentListingView(
@@ -88,23 +92,22 @@ private extension ContentDetailView {
         }
       }
     }
-    .navigationBarTitle(Text(""), displayMode: .inline)
+    .navigationTitle("")
+    .navigationBarTitleDisplayMode(.inline)
     .background(Color.background)
     .onReceive(videoCompletedNotification) { _ in
       checkReviewRequest = true
     }
     .onAppear {
-      if checkReviewRequest {
-        guard let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval else { return }
-        let lastPromptedDate = Date(timeIntervalSince1970: lastPrompted)
-        let currentDate = Date()
-        if case .completed = dynamicContentViewModel.viewProgress {
-          if isPastTwoWeeks(currentDate, from: lastPromptedDate) {
-            NotificationCenter.default.post(name: .requestReview, object: nil)
-            NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
-          }
-        }
-      }
+      guard
+        checkReviewRequest,
+        case .completed = dynamicContentViewModel.viewProgress,
+        let lastPrompted = NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) as? TimeInterval,
+        isPastTwoWeeks(.now, from: .init(timeIntervalSince1970: lastPrompted))
+      else { return }
+
+      NotificationCenter.default.post(name: .requestReview, object: nil)
+      NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
     }
   }
 
@@ -132,19 +135,22 @@ private extension ContentDetailView {
       } else {
         HStack {
           Spacer()
-          ProgressView().scaleEffect(1.0, anchor: .center)
+          ProgressView().scaleEffect(1, anchor: .center)
           Spacer()
         }
       }
     }
   }
 
-  func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
-    let components = Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
-    return components.weekOfYear ?? 0 >= 2
+  @ViewBuilder func headerImage(width: Double) -> some View {
+    if content.professional && !canStreamPro {
+      headerImageLockedProContent(for: width)
+    } else {
+      headerImagePlayableContent(for: width)
+    }
   }
 
-  func headerImagePlayableContent(for width: CGFloat) -> some View {
+  func headerImagePlayableContent(for width: Double) -> some View {
     VStack(spacing: 0) {
       ZStack(alignment: .center) {
         VerticalFadeImageView(
@@ -157,11 +163,13 @@ private extension ContentDetailView {
         continueOrPlayButton
       }
       
-      progressBar
+      if case .inProgress(let progress) = dynamicContentViewModel.viewProgress {
+        ProgressBarView(progress: progress, isRounded: false)
+      }
     }
   }
   
-  func headerImageLockedProContent(for width: CGFloat) -> some View {
+  func headerImageLockedProContent(for width: Double) -> some View {
     ZStack {
       VerticalFadeImageView(
         imageURL: content.cardArtworkURL,
@@ -173,11 +181,9 @@ private extension ContentDetailView {
       ProContentLockedOverlayView()
     }
   }
-  
-  var progressBar: ProgressBarView? {
-    guard case .inProgress(let progress) = dynamicContentViewModel.viewProgress
-    else { return nil }
 
-    return .init(progress: progress, isRounded: false)
+  func isPastTwoWeeks(_ currentWeek: Date, from lastWeek: Date) -> Bool {
+    Calendar.current.dateComponents([.weekOfYear], from: lastWeek, to: currentWeek)
+      .weekOfYear.map { $0 >= 2 } == true
   }
 }

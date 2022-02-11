@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,7 @@ struct LoginView: View {
         MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
           sessionController.login()
         }
-        .padding([.leading, .trailing], 18)
+        .padding(.horizontal, 18)
         .padding([.bottom], 38)
       }
       .background(Color.background)

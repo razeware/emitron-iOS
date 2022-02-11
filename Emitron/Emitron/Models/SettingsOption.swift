@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import Combine
 
 enum SettingsOption: Int, Identifiable, CaseIterable {
   case playbackSpeed
-  case wifiOnlyDownloads
+  case allowDownloadsOverCellular
   case downloadQuality
   case closedCaptionOn
   
@@ -40,8 +40,8 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     switch self {
     case .playbackSpeed:
       return .settingsPlaybackSpeedLabel
-    case .wifiOnlyDownloads:
-      return .settingsWifiOnlyDownloadsLabel
+    case .allowDownloadsOverCellular:
+      return .settingsAllowDownloadsOverCellularLabel
     case .downloadQuality:
       return .settingsDownloadQualityLabel
     case .closedCaptionOn:
@@ -49,35 +49,9 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
     }
   }
   
-  var key: SettingsKey {
-    switch self {
-    case .playbackSpeed:
-      return .playbackSpeed
-    case .wifiOnlyDownloads:
-      return .wifiOnlyDownloads
-    case .downloadQuality:
-      return .downloadQuality
-    case .closedCaptionOn:
-      return .closedCaptionOn
-    }
-  }
-  
-  var detail: [String] {
-    switch self {
-    case .playbackSpeed:
-      return PlaybackSpeed.allCases.map(\.display)
-    case .wifiOnlyDownloads:
-      return [String.yes, String.no]
-    case .downloadQuality:
-      return Attachment.Kind.downloads.map(\.display)
-    case .closedCaptionOn:
-      return [String.yes, String.no]
-    }
-  }
-  
   var isToggle: Bool {
     switch self {
-    case .wifiOnlyDownloads, .closedCaptionOn:
+    case .allowDownloadsOverCellular, .closedCaptionOn:
       return true
     default:
       return false
@@ -88,10 +62,8 @@ enum SettingsOption: Int, Identifiable, CaseIterable {
 // MARK: - Option Selection
 extension SettingsOption {
   static func getOptions(for canDownload: Bool) -> [SettingsOption] {
-    if canDownload {
-      return SettingsOption.allCases
-    } else {
-      return [.playbackSpeed, .closedCaptionOn]
-    }
+    canDownload
+      ? SettingsOption.allCases
+      : [.playbackSpeed, .closedCaptionOn]
   }
 }

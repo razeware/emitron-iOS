@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -66,10 +66,6 @@ struct TagView: View {
       .padding([.vertical], 5)
       .padding([.horizontal], 7)
       .background(backgroundColor)
-      .overlay(
-        RoundedRectangle(cornerRadius: 6)
-          .stroke(borderColor, lineWidth: 4)
-      )
       .cornerRadius(6) // This is a bit hacky.
       .onPreferenceChange(SizeKey.self) { size in
         height = size?.height

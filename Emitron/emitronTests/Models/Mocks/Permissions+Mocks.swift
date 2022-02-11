@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +31,12 @@ import struct Foundation.Date
 
 extension Permission {
   static var downloadVideos: Permission {
-    Permission(id: 431,
-               name: "Download Videos",
-               tag: .download,
-               createdAt: Date(),
-               updatedAt: Date())
+    .init(
+      id: 431,
+      name: "Download Videos",
+      tag: .download,
+      createdAt: .now,
+      updatedAt: .now
+    )
   }
 }

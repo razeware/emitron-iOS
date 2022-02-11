@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -81,14 +81,14 @@ extension ErrorView: View {
           .font(.uiTitle2)
           .foregroundColor(.titleText)
           .multilineTextAlignment(.center)
-          .padding([.leading, .trailing, .bottom], 20)
+          .padding([.horizontal, .bottom], 20)
 
         Text(bodyText)
           .lineSpacing(8)
           .font(.uiLabel)
           .foregroundColor(.contentText)
           .multilineTextAlignment(.center)
-          .padding([.leading, .trailing], 20)
+          .padding(.horizontal, 20)
 
         Spacer()
 

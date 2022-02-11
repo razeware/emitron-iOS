@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ extension Download: TableRecord, FetchableRecord, MutablePersistableRecord {
     static let remoteURL = Column("remoteURL")
     static let progress = Column("progress")
     static let state = Column("state")
-    static let contentId = Column("contentId")
+    static let contentID = Column("contentId")
     static let ordinal = Column("ordinal")
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -150,7 +150,7 @@ extension SyncEngine {
     syncRequests.forEach { syncRequest in
       guard syncRequest.type == .createBookmark else { return }
       
-      bookmarksService.makeBookmark(for: syncRequest.contentId) { [weak self] result in
+      bookmarksService.makeBookmark(for: syncRequest.contentID) { [weak self] result in
         guard let self = self else { return }
         
         switch result {
@@ -178,10 +178,10 @@ extension SyncEngine {
     
     syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteBookmark,
-        let bookmarkId = syncRequest.associatedRecordId
+        let bookmarkID = syncRequest.associatedRecordID
         else { return }
       
-      bookmarksService.destroyBookmark(for: bookmarkId) { [weak self] result in
+      bookmarksService.destroyBookmark(for: bookmarkID) { [weak self] result in
         guard let self = self else { return }
         
         switch result {
@@ -195,7 +195,7 @@ extension SyncEngine {
           }
         case .success:
           // Update the cache
-          let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [syncRequest.contentId])
+          let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIDs: [syncRequest.contentID])
           self.repository.apply(update: cacheUpdate)
           // Remove the sync request—we're done
           self.persistenceStore.complete(syncRequests: [syncRequest])
@@ -275,10 +275,10 @@ extension SyncEngine {
     
     syncRequests.forEach { syncRequest in
       guard syncRequest.type == .deleteProgression,
-        let progressionId = syncRequest.associatedRecordId
+        let progressionID = syncRequest.associatedRecordID
         else { return }
       
-      progressionsService.delete(with: progressionId) { [weak self] result in
+      progressionsService.delete(with: progressionID) { [weak self] result in
         guard let self = self else { return }
         
         switch result {
@@ -293,7 +293,7 @@ extension SyncEngine {
           }
         case .success:
           // Update the cache
-          let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [syncRequest.contentId])
+          let cacheUpdate = DataCacheUpdate(progressionDeletionContentIDs: [syncRequest.contentID])
           self.repository.apply(update: cacheUpdate)
           // Remove the sync request—we're done
           self.persistenceStore.complete(syncRequests: [syncRequest])
@@ -304,12 +304,12 @@ extension SyncEngine {
 }
 
 extension SyncEngine: SyncAction {
-  func createBookmark(for contentId: Int) throws {
+  func createBookmark(for contentID: Int) throws {
     // 1. Create / update sync request
-    try persistenceStore.createBookmarkSyncRequest(for: contentId)
+    try persistenceStore.createBookmarkSyncRequest(for: contentID)
     
     // 2. Create cache update and pass to repository
-    let bookmark = Bookmark(id: -1, createdAt: Date(), contentId: contentId)
+    let bookmark = Bookmark(id: -1, createdAt: .now, contentID: contentID)
     let cacheUpdate = DataCacheUpdate(bookmarks: [bookmark])
     repository.apply(update: cacheUpdate)
     
@@ -317,32 +317,32 @@ extension SyncEngine: SyncAction {
     // TODO: Persist if the content has been persisted
   }
   
-  func deleteBookmark(for contentId: Int) throws {
-    guard let bookmark = repository.bookmark(for: contentId) else { return }
+  func deleteBookmark(for contentID: Int) throws {
+    guard let bookmark = repository.bookmark(for: contentID) else { return }
     
     // 1. Create / update sync request
-    try persistenceStore.deleteBookmarkSyncRequest(for: contentId, bookmarkId: bookmark.id)
+    try persistenceStore.deleteBookmarkSyncRequest(for: contentID, bookmarkID: bookmark.id)
     
     // 2. Create cache update and pass to repository
-    let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIds: [bookmark.contentId])
+    let cacheUpdate = DataCacheUpdate(bookmarkDeletionContentIDs: [bookmark.contentID])
     repository.apply(update: cacheUpdate)
     
     // 3. Delete bookmark if it is persisted
     // TODO: Delete bookmark if it is persisted
   }
   
-  func markContentAsComplete(contentId: Int) throws {
+  func markContentAsComplete(contentID: Int) throws {
     // 1. Create / update sync request
-    try persistenceStore.markContentAsCompleteSyncRequest(for: contentId)
+    try persistenceStore.markContentAsCompleteSyncRequest(for: contentID)
     
     // 2. Create cache update and pass to repository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
-    if var existingProgression = repository.progression(for: contentId) {
+    if var existingProgression = repository.progression(for: contentID) {
       existingProgression.progress = existingProgression.target
       progression = existingProgression
     } else {
-      guard let content = repository.content(for: contentId) else { return }
+      guard let content = repository.content(for: contentID) else { return }
       progression = Progression.completed(for: content)
     }
     cacheUpdate = DataCacheUpdate(progressions: [progression])
@@ -352,7 +352,7 @@ extension SyncEngine: SyncAction {
     // TODO: Update if persisted
     
     // 4. Check whether we need to update a parent
-    if let parentContent = repository.parentContent(for: contentId),
+    if let parentContent = repository.parentContent(for: contentID),
       let childProgressUpdate = repository.childProgress(for: parentContent.id),
       var existingProgression = repository.progression(for: parentContent.id) {
       existingProgression.progress = childProgressUpdate.completed
@@ -361,18 +361,18 @@ extension SyncEngine: SyncAction {
     }
   }
   
-  func updateProgress(for contentId: Int, progress: Int) throws {
+  func updateProgress(for contentID: Int, progress: Int) throws {
     // 1. Create / update sync request
-    try persistenceStore.updateProgressSyncRequest(for: contentId, progress: progress)
+    try persistenceStore.updateProgressSyncRequest(for: contentID, progress: progress)
     
     // 2. Create cache update and pass to repository
     let cacheUpdate: DataCacheUpdate
     let progression: Progression
-    if var existingProgression = repository.progression(for: contentId) {
+    if var existingProgression = repository.progression(for: contentID) {
       existingProgression.progress = progress
       progression = existingProgression
     } else {
-      guard let content = repository.content(for: contentId) else { return }
+      guard let content = repository.content(for: contentID) else { return }
       progression = Progression.withProgress(for: content, progress: progress)
     }
     cacheUpdate = DataCacheUpdate(progressions: [progression])
@@ -382,7 +382,7 @@ extension SyncEngine: SyncAction {
     // TODO: Update if persisted
     
     // 4. Check whether we need to update a parent
-    if let parentContent = repository.parentContent(for: contentId),
+    if let parentContent = repository.parentContent(for: contentID),
       let childProgressUpdate = repository.childProgress(for: parentContent.id),
       var existingProgression = repository.progression(for: parentContent.id) {
       existingProgression.progress = childProgressUpdate.completed
@@ -391,21 +391,21 @@ extension SyncEngine: SyncAction {
     }
   }
   
-  func removeProgress(for contentId: Int) throws {
-    guard let progression = repository.progression(for: contentId) else { return }
+  func removeProgress(for contentID: Int) throws {
+    guard let progression = repository.progression(for: contentID) else { return }
     
     // 1. Create / update sync request
-    try persistenceStore.removeProgressSyncRequest(for: contentId, progressionId: progression.id)
+    try persistenceStore.removeProgressSyncRequest(for: contentID, progressionID: progression.id)
     
     // 2. Create cache update and pass to repository
-    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIds: [contentId])
+    let cacheUpdate = DataCacheUpdate(progressionDeletionContentIDs: [contentID])
     repository.apply(update: cacheUpdate)
     
     // 3. Remove if persisted
     // TODO: Remove if persisted
     
     // 4. Check whether we need to update a parent
-    if let parentContent = repository.parentContent(for: contentId),
+    if let parentContent = repository.parentContent(for: contentID),
       let childProgressUpdate = repository.childProgress(for: parentContent.id),
       var existingProgression = repository.progression(for: parentContent.id) {
       existingProgression.progress = childProgressUpdate.completed
@@ -414,8 +414,8 @@ extension SyncEngine: SyncAction {
     }
   }
   
-  func recordWatchStats(for contentId: Int, secondsWatched: Int) throws {
+  func recordWatchStats(for contentID: Int, secondsWatched: Int) throws {
     // 1. Create / update sync request
-    try persistenceStore.watchStatsSyncRequest(for: contentId, secondsWatched: secondsWatched)
+    try persistenceStore.watchStatsSyncRequest(for: contentID, secondsWatched: secondsWatched)
   }
 }

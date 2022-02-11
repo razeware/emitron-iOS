@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -61,13 +61,13 @@ struct SettingsSelectionView<Setting: SettingsSelectable>: View {
       
       Spacer()
     }
-      .navigationBarTitle(
-        Text(title)
-          .font(.uiTitle5)
-          .foregroundColor(.titleText),
-        displayMode: .inline
-      )
-        .padding(20)
+    .navigationTitle(
+      Text(title)
+        .font(.uiTitle5)
+        .foregroundColor(.titleText)
+    )
+    .navigationBarTitleDisplayMode(.inline)
+    .padding(20)
     .background(Color.background.edgesIgnoringSafeArea(.all))
   }
 }

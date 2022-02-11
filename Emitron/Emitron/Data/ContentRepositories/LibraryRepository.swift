@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,25 +29,28 @@
 import Combine
 
 final class LibraryRepository: ContentRepository {
-
-  init(repository: Repository,
-       contentsService: ContentsService,
-       downloadAction: DownloadAction,
-       syncAction: SyncAction,
-       serviceAdapter: ContentServiceAdapter?,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       sessionController: SessionController,
-       filters: Filters) {
+  init(
+    repository: Repository,
+    contentsService: ContentsService,
+    downloadAction: DownloadAction,
+    syncAction: SyncAction,
+    serviceAdapter: ContentServiceAdapter,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    sessionController: SessionController,
+    filters: Filters
+  ) {
     self.filters = filters
-    super.init(repository: repository,
-               contentsService: contentsService,
-               downloadAction: downloadAction,
-               syncAction: syncAction,
-               serviceAdapter: serviceAdapter,
-               messageBus: messageBus,
-               settingsManager: settingsManager,
-               sessionController: sessionController)
+    super.init(
+      repository: repository,
+      contentsService: contentsService,
+      downloadAction: downloadAction,
+      syncAction: syncAction,
+      serviceAdapter: serviceAdapter,
+      messageBus: messageBus,
+      settingsManager: settingsManager,
+      sessionController: sessionController
+    )
     
     nonPaginationParameters = filters.appliedParameters
   }
@@ -57,7 +60,9 @@ final class LibraryRepository: ContentRepository {
       nonPaginationParameters = filters.appliedParameters
     }
   }
-  var currentAppliedFilters: [Filter] {
-    filters.applied
-  }
+}
+
+// MARK: internal
+extension LibraryRepository {
+  var currentAppliedFilters: [Filter] { filters.applied }
 }

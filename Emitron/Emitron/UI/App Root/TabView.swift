@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,7 +28,7 @@
 
 import SwiftUI
 
-struct TabNavView<
+struct TabView<
   LibraryView: View,
   DownloadsView: View,
   MyTutorialsView: View,
@@ -44,19 +44,6 @@ struct TabNavView<
     self.myTutorialsView = myTutorialsView
     self.downloadsView = downloadsView
     self.settingsView = settingsView
-
-    // Without the following, in iOS 15, this ugliness occurs:
-    //
-    // The nav bar renders as a rectangle that does not extend vertically past the safe area.
-    // Scrolling content is visible above it.
-    //
-    // The tab bar renders transparently, on top of other views.
-    if #available(iOS 15.0, *) {
-      let barAppearance = UIBarAppearance()
-      barAppearance.configureWithOpaqueBackground()
-      UINavigationBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
-      UITabBar.appearance().scrollEdgeAppearance = .init(barAppearance: barAppearance)
-    }
   }
 
   @EnvironmentObject private var model: TabViewModel
@@ -69,64 +56,87 @@ struct TabNavView<
 }
 
 // MARK: - View
-extension TabNavView: View {
+extension TabView: View {
   var body: some View {
-    TabView(selection: $model.selectedTab) {
-      tab(
-        content: libraryView,
-        text: .library,
-        imageName: "library",
-        tag: .library
-      )
+    ScrollViewReader { proxy in
+      SwiftUI.TabView(
+        selection: .init(
+          get: { model.selectedTab },
+          set: { selection in
+            switch model.selectedTab {
+            case selection:
+              withAnimation {
+                proxy.scrollTo(
+                  TabViewModel.ScrollToTopID(
+                    mainTab: selection, detail: model.showingDetailView[selection]!
+                  ),
+                  anchor: .top
+                )
+              }
+            default:
+              model.selectedTab = selection
+            }
+          }
+        )
+      ) {
+        tab(
+          content: libraryView,
+          text: .library,
+          imageName: "library",
+          tab: .library
+        )
 
-      tab(
-        content: downloadsView,
-        text: .downloads,
-        imageName: "downloadTabInactive",
-        tag: .downloads
-      )
+        tab(
+          content: downloadsView,
+          text: .downloads,
+          imageName: "downloadTabInactive",
+          tab: .downloads
+        )
 
-      tab(
-        content: myTutorialsView,
-        text: .myTutorials,
-        imageName: "myTutorials",
-        tag: .myTutorials
-      )
+        tab(
+          content: myTutorialsView,
+          text: .myTutorials,
+          imageName: "myTutorials",
+          tab: .myTutorials
+        )
 
-      tab(
-        content: settingsView,
-        text: .settings,
-        imageName: "settings",
-        tag: .settings
-      )
+        tab(
+          content: settingsView,
+          text: .settings,
+          imageName: "settings",
+          tab: .settings
+        )
+      }
     }
     .accentColor(.accent)
   }
 }
 
-private func tab<Content: View>(
-  content: () -> Content,
-  text: String,
-  imageName: String,
-  tag: MainTab
-) -> some View {
-  NavigationView(content: content)
-    .tabItem {
-      Text(text)
-      Image(imageName)
-    }
-    .tag(tag)
-    .navigationViewStyle(StackNavigationViewStyle())
-    .accessibility(label: .init(text))
-}
-
-struct TabNavView_Previews: PreviewProvider {
+struct TabView_Previews: PreviewProvider {
   static var previews: some View {
-    TabNavView(
+    TabView(
       libraryView: { Text("LIBRARY") },
       myTutorialsView: { Text("MY TUTORIALS") },
       downloadsView: { Text("DOWNLOADS") },
       settingsView: { Text("SETTINGS") }
     ).environmentObject(TabViewModel())
   }
+}
+
+// MARK: - private
+private func tab<Content: View>(
+  content: () -> Content,
+  text: String,
+  imageName: String,
+  tab: TabViewModel.MainTab
+) -> some View {
+  NavigationView(content: content)
+    .tabItem {
+      Text(text)
+      Image(imageName)
+    }
+    .tag(tab)
+    .environment(\.mainTab, tab) // for constructing `ScrollToTopID`s
+    .navigationViewStyle(.stack)
+    .accessibility(label: .init(text))
 }

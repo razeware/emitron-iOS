@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -80,7 +80,7 @@ final class VideoPlaybackViewModel {
   // Allow control of appearance and dismissal of the video view
   var shouldShow = false
   
-  private let initialContentId: Int
+  private let initialContentID: Int
   private let repository: Repository
   private let videosService: VideosService
   private let contentsService: ContentsService
@@ -92,11 +92,11 @@ final class VideoPlaybackViewModel {
   private var contentList = [VideoPlaybackState]()
   // A cache of playback items, and a way of finding the content model for the currently playing item
   private var playerItems = [Int: AVPlayerItem]()
-  private var currentlyPlayingContentId: Int? {
+  private var currentlyPlayingContentID: Int? {
     guard let currentItem = player.currentItem,
-      let contentId = playerItems.first(where: { $1 == currentItem })?.key
+      let contentID = playerItems.first(where: { $1 == currentItem })?.key
       else { return nil }
-    return contentId
+    return contentID
   }
   // Managing the Player queue. We enqueue stuff at the last possible moment.
   private var nextContentToEnqueueIndex = 0
@@ -113,16 +113,18 @@ final class VideoPlaybackViewModel {
   private var shouldBePlaying = false
   let settingsManager: SettingsManager
   
-  init(contentId: Int,
-       repository: Repository,
-       videosService: VideosService,
-       contentsService: ContentsService,
-       syncAction: SyncAction?,
-       sessionController: SessionController,
-       messageBus: MessageBus,
-       settingsManager: SettingsManager,
-       dismissClosure: @escaping () -> Void = { }) {
-    initialContentId = contentId
+  init(
+    contentID: Int,
+    repository: Repository,
+    videosService: VideosService,
+    contentsService: ContentsService,
+    syncAction: SyncAction?,
+    sessionController: SessionController,
+    messageBus: MessageBus,
+    settingsManager: SettingsManager,
+    dismissClosure: @escaping () -> Void = { }
+  ) {
+    initialContentID = contentID
     self.repository = repository
     self.videosService = videosService
     self.contentsService = contentsService
@@ -185,7 +187,7 @@ final class VideoPlaybackViewModel {
     do {
       state = .loading
       progressEngine.start()
-      contentList = try repository.playlist(for: initialContentId)
+      contentList = try repository.playlist(for: initialContentID)
       nextContentToEnqueueIndex = 0
       if let progression = nextContentToEnqueue.progression,
         !progression.finished {
@@ -295,9 +297,9 @@ private extension VideoPlaybackViewModel {
   }
 
   func handleTimeUpdate(time: CMTime) {
-    guard let currentlyPlayingContentId = currentlyPlayingContentId else { return }
+    guard let currentlyPlayingContentID = currentlyPlayingContentID else { return }
     // Update progress
-    progressEngine.updateProgress(for: currentlyPlayingContentId, progress: Int(time.seconds))
+    progressEngine.updateProgress(for: currentlyPlayingContentID, progress: Int(time.seconds))
       .sink(receiveCompletion: { [weak self] completion in
         guard let self = self else { return }
         

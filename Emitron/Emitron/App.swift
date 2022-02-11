@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +31,8 @@ import SwiftUI
 import GRDB
 
 @main
-struct EmitronApp: App {
-  @UIApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
-
-  typealias EmitronObjects = (
+struct App {
+  typealias Objects = (
     persistenceStore: PersistenceStore,
     guardpost: Guardpost,
     sessionController: SessionController,
@@ -43,7 +41,8 @@ struct EmitronApp: App {
     dataManager: DataManager,
     messageBus: MessageBus
   )
-
+  
+  @UIApplicationDelegateAdaptor(AppDelegate.self) private var appDelegate
   private var persistenceStore: PersistenceStore
   private var guardpost: Guardpost
   private var dataManager: DataManager
@@ -54,9 +53,8 @@ struct EmitronApp: App {
   private var iconManager: IconManager
   
   init() {
-
     // setup objects
-    let emitronObjects = EmitronApp.emitronObjects()
+    let emitronObjects = App.objects
     persistenceStore = emitronObjects.persistenceStore
     guardpost = emitronObjects.guardpost
     dataManager = emitronObjects.dataManager
@@ -78,7 +76,10 @@ struct EmitronApp: App {
     // additional setup
     setupAppReview()
   }
+}
 
+// MARK: - SwiftUI.App
+extension App: SwiftUI.App {
   var body: some Scene {
     WindowGroup {
       ZStack {
@@ -97,8 +98,11 @@ struct EmitronApp: App {
       }
     }
   }
+}
 
-  static func emitronObjects() -> EmitronObjects {
+// MARK: - internal
+extension App {
+  static var objects: Objects {
     // Initialise the database
     // swiftlint:disable:next force_try
     let databaseURL = try! FileManager.default
@@ -117,7 +121,7 @@ struct EmitronApp: App {
     let messageBus = MessageBus()
     let dataManager = DataManager(sessionController: sessionController, persistenceStore: persistenceStore, downloadService: downloadService, messageBus: messageBus, settingsManager: settingsManager)
 
-    return EmitronObjects(
+    return Objects(
       persistenceStore: persistenceStore,
       guardpost: guardpost,
       sessionController: sessionController,
@@ -127,8 +131,11 @@ struct EmitronApp: App {
       messageBus: messageBus
     )
   }
+}
 
-  private mutating func startServices() {
+// MARK: - private
+private extension App {
+  mutating func startServices() {
     // guardpost
     guardpost = Guardpost(baseURL: "https://accounts.raywenderlich.com",
                           urlScheme: "com.razeware.emitron://",
@@ -163,7 +170,7 @@ struct EmitronApp: App {
     downloadService.startProcessing()
   }
 
-  private func customizeNavigationBar() {
+  func customizeNavigationBar() {
     UINavigationBar.appearance().backgroundColor = .backgroundColor
 
     UINavigationBar.appearance().largeTitleTextAttributes = [
@@ -176,7 +183,7 @@ struct EmitronApp: App {
     ]
   }
 
-  private func customizeTableView() {
+  func customizeTableView() {
     UITableView.appearance().separatorColor = .clear
     UITableViewCell.appearance().backgroundColor = .backgroundColor
     UITableViewCell.appearance().selectionStyle = .none
@@ -184,13 +191,13 @@ struct EmitronApp: App {
     UITableView.appearance().backgroundColor = .backgroundColor
   }
 
-  private func customizeControls() {
+  func customizeControls() {
     UISwitch.appearance().onTintColor = .accent
   }
 
-  private func setupAppReview() {
+  func setupAppReview() {
     if NSUbiquitousKeyValueStore.default.object(forKey: LookupKey.requestReview) == nil {
-      NSUbiquitousKeyValueStore.default.set(Date().timeIntervalSince1970, forKey: LookupKey.requestReview)
+      NSUbiquitousKeyValueStore.default.set(Date.now.timeIntervalSince1970, forKey: LookupKey.requestReview)
     }
   }
 }

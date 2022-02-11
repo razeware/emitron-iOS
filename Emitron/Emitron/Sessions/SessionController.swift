@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -97,9 +97,11 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   var hasCurrentDownloadPermissions: Bool {
     guard user?.canDownload == true else { return false }
     
-    if case .loaded(let date) = permissionState,
+    if
+      case .loaded(let date) = permissionState,
       let permissionsLastConfirmedDate = date,
-      Date().timeIntervalSince(permissionsLastConfirmedDate) < .videoPlaybackOfflinePermissionsCheckPeriod {
+      Date.now.timeIntervalSince(permissionsLastConfirmedDate) < .videoPlaybackOfflinePermissionsCheckPeriod
+    {
       return true
     }
     return false

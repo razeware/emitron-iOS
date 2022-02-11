@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -49,6 +49,8 @@ struct ContentListView<Header: View> {
 
   @State private var deleteSubscriptions: Set<AnyCancellable> = []
   @EnvironmentObject private var messageBus: MessageBus
+  @EnvironmentObject private var tabViewModel: TabViewModel
+  @Environment(\.mainTab) private var mainTab
 }
 
 // MARK: - View
@@ -56,6 +58,7 @@ extension ContentListView: View {
   var body: some View {
     contentView
       .onAppear {
+        tabViewModel.showingDetailView[mainTab] = false
         UIApplication.dismissKeyboard()
         reloadIfRequired()
       }
@@ -102,7 +105,9 @@ private extension ContentListView {
             content: partialContent,
             childContentsViewModel: contentRepository.childContentsViewModel(for: partialContent.id),
             dynamicContentViewModel: contentRepository.dynamicContentViewModel(for: partialContent.id)
-          ),
+          ).onAppear {
+            tabViewModel.showingDetailView[mainTab] = true
+          },
           // This EmptyView and the 0 opacity below are used for `label`
           // instead of the CardView, in order to hide navigation chevrons on the right.
           label: EmptyView.init
@@ -111,25 +116,30 @@ private extension ContentListView {
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
-    .listRowInsets(EdgeInsets())
+    .listRowInsets(.init())
     .padding([.horizontal, .top], .sidePadding)
     .background(Color.background)
   }
   
   var allowDelete: Bool {
-    if case .downloads = contentScreen {
+    switch contentScreen {
+    case .downloads:
       return true
+    default:
+      return false
     }
-    return false
   }
   
   var listView: some View {
     List {
-      Section(header: header) {
+      Section(
+        header: header
+          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false)) 
+      ) {
         cardsView
         loadMoreView
       }
-      .listRowInsets(EdgeInsets())
+      .listRowInsets(.init())
       .textCase(nil)
     }
     .if(!allowDelete) {
@@ -177,11 +187,12 @@ private extension ContentListView {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       HStack {
         Spacer()
-        ProgressView().scaleEffect(1.0, anchor: .center)
+        ProgressView().scaleEffect(1, anchor: .center)
         Spacer()
-      }.padding()
-        .background(Color.background.edgesIgnoringSafeArea(.all))
-        .onAppear(perform: contentRepository.loadMore)
+      }
+      .padding()
+      .background(Color.background.edgesIgnoringSafeArea(.all))
+      .onAppear(perform: contentRepository.loadMore)
     }
   }
 
@@ -193,7 +204,7 @@ private extension ContentListView {
       let content = contentRepository.contents[index]
       
       downloadAction
-        .deleteDownload(contentId: content.id)
+        .deleteDownload(contentID: content.id)
         .receive(on: RunLoop.main)
         .sink(
           receiveCompletion: { completion in

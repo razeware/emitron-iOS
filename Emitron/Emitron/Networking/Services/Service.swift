@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,12 +44,12 @@ class Service {
   var isAuthenticated: Bool { !networkClient.authToken.isEmpty }
 
   // MARK: - Internal
-  func makeAndProcessRequest<R: Request>(
-    request: R,
+  func makeAndProcessRequest<Request: Emitron.Request>(
+    request: Request,
     parameters: [Parameter]? = nil,
-    completion: @escaping (Result<R.Response, RWAPIError>) -> Void) {
-
-    let handleResponse: (Result<R.Response, RWAPIError>) -> Void = { result in
+    completion: @escaping (Result<Request.Response, RWAPIError>) -> Void
+  ) {
+    let handleResponse = { result in
       DispatchQueue.main.async {
         completion(result)
       }
@@ -60,12 +60,11 @@ class Service {
     }
 
     let task = session.dataTask(with: urlRequest) { data, response, error in
-
-      guard let httpResponse = response as? HTTPURLResponse,
-        200..<300 ~= httpResponse.statusCode else {
-          let statusCode = (response as? HTTPURLResponse)?.statusCode ?? 0
-          handleResponse(.failure(.requestFailed(error, statusCode)))
-          return
+      let statusCode = (response as? HTTPURLResponse)?.statusCode
+      guard statusCode.map((200..<300).contains) == true
+      else {
+        handleResponse(.failure(.requestFailed(error, statusCode ?? 0)))
+        return
       }
 
       do {

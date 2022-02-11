@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -38,14 +38,14 @@ struct OfflineView: View {
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing, .bottom], 20)
+        .padding([.horizontal, .bottom], 20)
       
       Text("Please check internet connection and try again.")
         .font(.uiLabel)
         .lineSpacing(8)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 20)
+        .padding(.horizontal, 20)
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color.background)

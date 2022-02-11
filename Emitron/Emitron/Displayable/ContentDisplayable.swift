@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -131,7 +131,7 @@ protocol ContentListDisplayable: Ownable {
 extension ContentListDisplayable {
   var releasedAtDateTimeString: String {
     var start = releasedAt.cardString
-    if Calendar.current.isDate(Date(), inSameDayAs: releasedAt) {
+    if Calendar.current.isDate(.now, inSameDayAs: releasedAt) {
       start = .today
     }
     
@@ -146,9 +146,10 @@ extension ContentListDisplayable {
 protocol ChildContentListDisplayable: Ownable {
   var id: Int { get }
   var name: String { get }
+  var descriptionPlainText: String { get }
   var ordinal: Int? { get }
   var duration: Int { get }
-  var groupId: Int? { get }
+  var groupID: Int? { get }
   var videoIdentifier: Int? { get }
 }
 

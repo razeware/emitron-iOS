@@ -1,4 +1,4 @@
-// Copyright (c) 2021 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -60,11 +60,7 @@ private extension MainView {
     } else {
       switch sessionController.permissionState {
       case .loaded:
-        if sessionController.hasPermissionToUseApp {
-          tabBarView
-        } else {
-          LogoutView()
-        }
+        tabBarView
       case .notLoaded, .loading:
         PermissionsLoadingView()
       case .error:
@@ -79,7 +75,7 @@ private extension MainView {
   @ViewBuilder var tabBarView: some View {
     switch sessionController.sessionState {
     case .online :
-      TabNavView(
+      TabView(
         libraryView: {
           LibraryView(
             filters: dataManager.filters,
@@ -100,7 +96,7 @@ private extension MainView {
       )
       .environmentObject(tabViewModel)
     case .offline:
-      TabNavView(
+      TabView(
         libraryView: OfflineView.init,
         myTutorialsView: OfflineView.init,
         downloadsView: downloadsView,

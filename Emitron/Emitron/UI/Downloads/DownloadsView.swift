@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,6 +48,6 @@ struct DownloadsView: View {
       downloadAction: downloadService,
       contentScreen: contentScreen
     )
-      .navigationBarTitle(String.downloads)
+      .navigationTitle(String.downloads)
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -54,7 +54,7 @@ class DownloadQueueManagerTest: XCTestCase {
       fatalError("Failed trying to test database")
     }
     persistenceStore = PersistenceStore(db: database)
-    settingsManager = EmitronApp.emitronObjects().settingsManager
+    settingsManager = App.objects.settingsManager
     let userModelController = UserMCMock(user: .withDownloads)
     downloadService = DownloadService(persistenceStore: persistenceStore, userModelController: userModelController, videosServiceProvider: { _ in self.videoService }, settingsManager: settingsManager)
 
@@ -85,24 +85,24 @@ class DownloadQueueManagerTest: XCTestCase {
   func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
     
     var parentContent: Content?
-    if let groupId = content.groupId {
+    if let groupID = content.groupID {
       // There must be parent content
-      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupId }) {
-        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentId }
+      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupID }) {
+        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentID }
       }
     }
     
-    let groups = cacheUpdate.groups.filter { $0.contentId == content.id }
-    let groupIds = groups.map(\.id)
-    let childContent = cacheUpdate.contents.filter { groupIds.contains($0.groupId ?? -1) }
+    let groups = cacheUpdate.groups.filter { $0.contentID == content.id }
+    let groupIDs = groups.map(\.id)
+    let childContent = cacheUpdate.contents.filter { groupIDs.contains($0.groupID ?? -1) }
     
     return ContentPersistableState(
       content: content,
-      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentId == content.id }),
-      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentId == content.id }),
-      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentId == content.id }),
+      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentID == content.id }),
+      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentID == content.id }),
+      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentID == content.id }),
       parentContent: parentContent,
-      progression: cacheUpdate.progressions.first(where: { $0.contentId == content.id }),
+      progression: cacheUpdate.progressions.first(where: { $0.contentID == content.id }),
       groups: groups,
       childContents: childContent
     )
@@ -110,7 +110,7 @@ class DownloadQueueManagerTest: XCTestCase {
   
   func sampleDownload() throws -> Download {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentId: screencast.0.id) { _ in
+    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
       self.persistableState(for: screencast.0, with: screencast.1)
     }
     .record()

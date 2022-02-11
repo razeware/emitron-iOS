@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ struct PagingIndicatorView: View {
   
   var body: some View {
     HStack(spacing: 9) {
-      ForEach(0..<pageCount - 1) { index in
+      ForEach(0..<pageCount - 1, id: \.self) { index in
         Circle()
           .fill(index == currentIndex ? Color.accent : .borderColor)
           .frame(width: 9, height: 9)

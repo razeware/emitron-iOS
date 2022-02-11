@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,7 @@ struct Progression: Codable {
   var progress: Int
   var createdAt: Date
   var updatedAt: Date
-  var contentId: Int
+  var contentID: Int
 }
 
 extension Progression: Equatable {
@@ -44,7 +44,7 @@ extension Progression: Equatable {
       lhs.progress == rhs.progress &&
       lhs.createdAt.equalEnough(to: rhs.createdAt) &&
       lhs.updatedAt.equalEnough(to: rhs.updatedAt) &&
-      lhs.contentId == rhs.contentId
+      lhs.contentID == rhs.contentID
   }
 }
 
@@ -79,9 +79,9 @@ extension Progression {
       id: -1,
       target: content.duration,
       progress: progress,
-      createdAt: Date(),
-      updatedAt: Date(),
-      contentId: content.id
+      createdAt: .now,
+      updatedAt: .now,
+      contentID: content.id
     )
   }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2020 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -27,16 +27,16 @@
 // THE SOFTWARE.
 
 import SwiftUI
+import struct AVKit.VideoPlayer
+import MapKit
 
 struct FullScreenVideoPlayerRepresentable: UIViewControllerRepresentable {
   @Binding var viewModel: VideoPlaybackViewModel?
   let messageBus: MessageBus
 
-  func makeUIViewController(context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) -> FullScreenVideoPlayerViewController {
+  func makeUIViewController(context: Context) -> FullScreenVideoPlayerViewController {
     .init(viewModel: $viewModel, messageBus: messageBus)
   }
-  
-  func updateUIViewController(_ uiViewController: FullScreenVideoPlayerViewController, context: UIViewControllerRepresentableContext<FullScreenVideoPlayerRepresentable>) {
-    // No-op
-  }
+
+  func updateUIViewController(_: UIViewControllerType, context _: Context) { }
 }

@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,31 +28,33 @@
 
 import SwiftUI
 
-private extension CGFloat {
-  static let filterButtonSide: CGFloat = 27
-  static let searchFilterPadding: CGFloat = 15
-  static let filterSpacing: CGFloat = 6
-  static let filtersPaddingTop: CGFloat = 12
-}
-
 struct LibraryView: View {
   @EnvironmentObject private var downloadService: DownloadService
-  @ObservedObject var filters: Filters
-  @ObservedObject var libraryRepository: LibraryRepository
-  @State var filtersPresented = false
+  @ObservedObject private var filters: Filters
+  @ObservedObject private var libraryRepository: LibraryRepository
+  @State private var filtersPresented = false
+
+  init(
+    filters: Filters,
+    libraryRepository: LibraryRepository
+  ) {
+    self.filters = filters
+    self.libraryRepository = libraryRepository
+  }
 
   var body: some View {
     contentView
-      .navigationBarTitle(
-        Text(String.library)
-      )
+      .navigationTitle(Text(String.library))
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.background.edgesIgnoringSafeArea(.all))
       }
   }
+}
 
-  private var contentControlsSection: some View {
+// MARK: - private
+private extension LibraryView {
+  var contentControlsSection: some View {
     VStack {
       searchAndFilterControls
         .padding(.top, 15)
@@ -69,14 +71,14 @@ struct LibraryView: View {
     .background(Color.background)
   }
 
-  private var searchField: some View {
+  var searchField: some View {
     SearchFieldView(searchString: filters.searchStr) { searchString in
       filters.searchStr = searchString
       updateFilters()
     }
   }
 
-  private var searchAndFilterControls: some View {
+  var searchAndFilterControls: some View {
     HStack {
       searchField
       
@@ -94,7 +96,7 @@ struct LibraryView: View {
     }
   }
 
-  private var numberAndSortView: some View {
+  var numberAndSortView: some View {
     HStack {
       Text("\(libraryRepository.totalContentNum) \(String.tutorials.capitalized)")
         .font(.uiLabelBold)
@@ -122,7 +124,7 @@ struct LibraryView: View {
     }
   }
 
-  private var filtersView: some View {
+  var filtersView: some View {
     ScrollView(.horizontal, showsIndicators: false) {
       HStack(alignment: .top, spacing: .filterSpacing) {
         if filters.applied.count > 1 {
@@ -150,17 +152,17 @@ struct LibraryView: View {
     .padding([.horizontal], -.sidePadding)
   }
 
-  private func updateFilters() {
+  func updateFilters() {
     filters.searchQuery = filters.searchStr
     libraryRepository.filters = filters
   }
 
-  private func changeSort() {
+  func changeSort() {
     filters.changeSortFilter()
     libraryRepository.filters = filters
   }
 
-  private var contentView: some View {
+  var contentView: some View {
     ContentListView(
       contentRepository: libraryRepository,
       downloadAction: downloadService,
@@ -168,4 +170,11 @@ struct LibraryView: View {
       header: contentControlsSection
     )
   }
+}
+
+private extension CGFloat {
+  static let filterButtonSide: CGFloat = 27
+  static let searchFilterPadding: CGFloat = 15
+  static let filterSpacing: CGFloat = 6
+  static let filtersPaddingTop: CGFloat = 12
 }

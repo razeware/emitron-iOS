@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ struct LogoutView: View {
   
   var body: some View {
     VStack {
-      
       Image("logo")
         .padding([.top], 88)
       
@@ -50,18 +49,20 @@ struct LogoutView: View {
         .font(.uiLabel)
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
-        .padding([.leading, .trailing], 55)
+        .padding(.horizontal, 55)
       
       Spacer()
       
-      MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
-        sessionController.logout()
-      }
-      .padding([.leading, .trailing], 18)
-      .padding([.bottom], 38)
+      MainButtonView(
+        title: "Sign Out",
+        type: .destructive(withArrow: true),
+        callback: sessionController.logout
+      )
+      .padding(.horizontal, 18)
+      .padding(.bottom, 38)
     }
     .background(Color.background)
-    .edgesIgnoringSafeArea([.all])
+    .edgesIgnoringSafeArea(.all)
   }
 }
 

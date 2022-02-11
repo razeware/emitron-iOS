@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -50,7 +50,7 @@ class UserTest: XCTestCase {
       return
     }
     
-    XCTAssertEqual(userDictionary["external_id"], user.externalId)
+    XCTAssertEqual(userDictionary["external_id"], user.externalID)
     XCTAssertEqual(userDictionary["email"], user.email)
     XCTAssertEqual(userDictionary["username"], user.username)
     XCTAssertEqual(userDictionary["avatar_url"], user.avatarURL.absoluteString)

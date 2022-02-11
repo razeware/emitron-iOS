@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -29,15 +29,21 @@
 import SwiftUI
 
 struct FiltersView: View {
-  @ObservedObject var libraryRepository: LibraryRepository
-  @ObservedObject var filters: Filters
-  @Environment(\.presentationMode) var presentationMode: Binding<PresentationMode>
+  @ObservedObject private var libraryRepository: LibraryRepository
+  @ObservedObject private var filters: Filters
+  @Environment(\.presentationMode) private var presentationMode: Binding<PresentationMode>
+
+  init(
+    libraryRepository: LibraryRepository,
+    filters: Filters
+  ) {
+    self.libraryRepository = libraryRepository
+    self.filters = filters
+  }
   
   var body: some View {
     VStack {
-      
       HStack(alignment: .center) {
-        
         Rectangle()
           .frame(width: 27, height: 27, alignment: .center)
           .foregroundColor(.clear)
@@ -66,7 +72,7 @@ struct FiltersView: View {
       .padding(.top, 20)
       
       constructScrollView()
-        .padding([.leading, .trailing, .top], 20)
+        .padding([.horizontal, .top], 20)
       
       HStack {
         
@@ -81,12 +87,15 @@ struct FiltersView: View {
         // Which ones are currently being applied to the content listing
         applyFiltersButton()
       }
-      .padding([.leading, .trailing, .bottom], 18)
+      .padding([.horizontal, .bottom], 18)
     }
     .background(Color.background)
   }
-  
-  private func constructScrollView() -> some View {
+}
+
+// MARK: - private
+private extension FiltersView {
+  func constructScrollView() -> some View {
     ScrollView(.vertical, showsIndicators: false) {
       VStack(alignment: .leading, spacing: 12) {
         ForEach(filters.filterGroups, id: \.self) { filterGroup in
@@ -97,15 +106,15 @@ struct FiltersView: View {
     }
   }
   
-  private func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
-    FiltersHeaderView(
+  func constructFilterView(filterGroup: FilterGroup) -> FiltersHeaderView {
+    .init(
       filterGroup: filterGroup,
       filters: filters,
       isExpanded: filterGroup.numApplied > 0
     )
   }
   
-  private func applyFiltersButton() -> MainButtonView {
+  func applyFiltersButton() -> MainButtonView {
     let title = "Apply Filters"
     
     let buttonView = MainButtonView(title: title, type: .primary(withArrow: false)) {
@@ -116,7 +125,7 @@ struct FiltersView: View {
     return buttonView
   }
   
-  private func revertBackToPreviousFilters() {
+  func revertBackToPreviousFilters() {
     // Update filters with the currentFilters on contentsMC, to keep them in sync (aka, remove them)
     
     // First, turn all applied off

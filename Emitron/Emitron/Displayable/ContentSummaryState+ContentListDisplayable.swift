@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -28,74 +28,18 @@
 
 import Foundation
 
+// MARK: - internal
+extension ContentSummaryState {
+  var professional: Bool { content.professional }
+  var free: Bool { content.free }
+  var groupID: Int? { content.groupID }
+}
+
+// MARK: - ContentListDisplayable
 extension ContentSummaryState: ContentListDisplayable {
-  // MARK: - Proxied from content
-  var id: Int {
-    content.id
-  }
-  
-  var releasedAt: Date {
-    content.releasedAt
-  }
-  
-  var duration: Int {
-    content.duration
-  }
-  
-  var name: String {
-    content.name
-  }
-  
-  var descriptionPlainText: String {
-    content.descriptionPlainText.replacingOccurrences(of: "\n", with: "")
-  }
-  
-  var professional: Bool {
-    content.professional
-  }
-  
-  var free: Bool {
-    content.free
-  }
-  
-  var cardArtworkURL: URL? {
-    content.cardArtworkURL
-  }
-  
-  var contentType: ContentType {
-    content.contentType
-  }
-  
-  var ordinal: Int? {
-    content.ordinal
-  }
-  
-  var technologyTripleString: String {
-    content.technologyTriple
-  }
-  
-  var contentSummaryMetadataString: String {
-    content.contentSummaryMetadataString
-  }
-  
-  var contributorString: String {
-    content.contributors
-  }
-  
-  var groupId: Int? {
-    content.groupId
-  }
-  
-  var videoIdentifier: Int? {
-    content.videoIdentifier
-  }
-  
-  // MARK: - Proxied from Other Records
-  var parentName: String? {
-    parentContent?.name
-  }
-  
-  // MARK: - Evaluated
+  var id: Int { content.id }
+  var name: String { content.name }
+
   var cardViewSubtitle: String {
     if domains.count == 1 {
       return domains.first!.name
@@ -104,4 +48,21 @@ extension ContentSummaryState: ContentListDisplayable {
     }
     return ""
   }
+
+  var descriptionPlainText: String {
+    content.descriptionPlainText.replacingOccurrences(of: "\n", with: "")
+  }
+
+  var releasedAt: Date { content.releasedAt }
+  var duration: Int { content.duration }
+
+  var parentName: String? { parentContent?.name } // Proxied from Other Records
+
+  var contentType: ContentType { content.contentType }
+  var cardArtworkURL: URL? { content.cardArtworkURL }
+  var ordinal: Int? { content.ordinal }
+  var technologyTripleString: String { content.technologyTriple }
+  var contentSummaryMetadataString: String { content.contentSummaryMetadataString }
+  var contributorString: String { content.contributors }
+  var videoIdentifier: Int? { content.videoIdentifier }
 }

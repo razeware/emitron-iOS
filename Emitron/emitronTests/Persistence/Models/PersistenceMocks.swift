@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,29 +31,33 @@ import Foundation
 
 enum PersistenceMocks {
   static var content: Content {
-    Content(id: 1,
-            uri: "rw://betamax/collections/1",
-            name: "Sample Contents",
-            descriptionHtml: "Description",
-            descriptionPlainText: "Description",
-            releasedAt: Date(),
-            free: false,
-            professional: true,
-            difficulty: .intermediate,
-            contentType: .screencast,
-            duration: 1234,
-            videoIdentifier: nil,
-            cardArtworkURL: URL(string: "https://example.com/card_artwork.png")!,
-            technologyTriple: "Some Tech",
-            contributors: "HELLO",
-            groupId: nil,
-            ordinal: 0)
+    Content(
+      id: 1,
+      uri: "rw://betamax/collections/1",
+      name: "Sample Contents",
+      descriptionHtml: "Description",
+      descriptionPlainText: "Description",
+      releasedAt: Date(),
+      free: false,
+      professional: true,
+      difficulty: .intermediate,
+      contentType: .screencast,
+      duration: 1234,
+      videoIdentifier: nil,
+      cardArtworkURL: URL(string: "https://example.com/card_artwork.png")!,
+      technologyTriple: "Some Tech",
+      contributors: "HELLO",
+      groupID: nil,
+      ordinal: 0
+    )
   }
   
   @discardableResult static func download(for content: Content) -> Download {
-    Download(id: UUID(),
-             requestedAt: Date(),
-             state: .pending,
-             contentId: content.id)
+    Download(
+      id: .init(),
+      requestedAt: .now,
+      state: .pending,
+      contentID: content.id
+    )
   }
 }

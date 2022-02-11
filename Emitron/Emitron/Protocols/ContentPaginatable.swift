@@ -1,4 +1,4 @@
-// Copyright (c) 2019 Razeware LLC
+// Copyright (c) 2022 Razeware LLC
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -42,12 +42,8 @@ protocol ContentPaginatable: ObservableObject where ObjectWillChangePublisher ==
 }
 
 extension ContentPaginatable {
-	// All content that currently conforms to this prootocol is 1-indexed
-  var startingPage: Int {
-    1
-  }
+	// All content that currently conforms to this protocol is 1-indexed
+  var startingPage: Int { 1 }
   
-  var defaultPageSize: Int {
-    20
-  }
+  var defaultPageSize: Int { 20 }
 }
