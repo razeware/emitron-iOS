@@ -102,7 +102,6 @@ struct SettingsView: View {
               tabViewModel.selectedTab = .library
             }
           }
-          
           if #available(iOS 15, *) {
             $0.confirmationDialog(
               dialogTitle,
@@ -111,7 +110,8 @@ struct SettingsView: View {
             ) {
               Button(buttonTitle, role: .destructive, action: action)
             }
-          } else {
+          }
+          if #unavailable(iOS 15) {
             $0.actionSheet(isPresented: $showingSignOutConfirmation) {
               .init(
                 title: .init(dialogTitle),
