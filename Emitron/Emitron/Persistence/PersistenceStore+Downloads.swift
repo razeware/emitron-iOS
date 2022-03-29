@@ -35,7 +35,7 @@ extension PersistenceStore {
   /// List of all downloads
   func downloadList() -> DatabasePublishers.Value<[ContentSummaryState]> {
     ValueObservation.tracking { db -> [ContentSummaryState] in
-      let contentTypes = [ContentType.collection, ContentType.screencast].map(\.rawValue)
+      let contentTypes = [ContentType.collection, .screencast].map(\.rawValue)
       let request = Content
         .filter(contentTypes.contains(Content.Columns.contentType))
         .including(required: Content.download)

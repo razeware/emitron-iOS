@@ -53,22 +53,7 @@ struct Download: Codable {
   var ordinal: Int = 0 // We copy this from the Content, and it is used to sort the queue
   
   var localURL: URL? {
-    guard let fileName = fileName,
-      let downloadDirectory = Download.downloadDirectory else {
-        return nil
-    }
-    
-    return downloadDirectory.appendingPathComponent(fileName)
-  }
-  
-  static var downloadDirectory: URL? {
-    let fileManager = FileManager.default
-    let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-    guard let documentsDirectory = documentsDirectories.first else {
-      return nil
-    }
-    
-    return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
+    fileName.map(URL.downloadsDirectory.appendingPathComponent)
   }
 }
 

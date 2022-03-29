@@ -34,12 +34,12 @@ final class DownloadService: ObservableObject {
   enum Status {
     case active
     case inactive
-    
-    static func status(expensive: Bool, expensiveAllowed: Bool) -> Status {
-      if expensive && !expensiveAllowed {
-        return .inactive
-      }
-      return .active
+
+    init(expensive: Bool, expensiveAllowed: Bool) {
+      self =
+        expensive && !expensiveAllowed
+        ? .inactive
+        : .active
     }
   }
   
@@ -61,15 +61,6 @@ final class DownloadService: ObservableObject {
   private var downloadQuality: Attachment.Kind {
    settingsManager.downloadQuality
   }
-  private lazy var downloadsDirectory: URL = {
-    let fileManager = FileManager.default
-    let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-    guard let documentsDirectory = documentsDirectories.first else {
-      preconditionFailure("Unable to locate the documents directory")
-    }
-    
-    return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
-  }()
   
   var backgroundSessionCompletionHandler: (() -> Void)? {
     get {
@@ -83,7 +74,12 @@ final class DownloadService: ObservableObject {
   let settingsManager: SettingsManager
   
   // MARK: Initialisers
-  init(persistenceStore: PersistenceStore, userModelController: UserModelController, videosServiceProvider: VideosService.Provider? = .none, settingsManager: SettingsManager) {
+  init(
+    persistenceStore: PersistenceStore,
+    userModelController: UserModelController,
+    videosServiceProvider: VideosService.Provider? = .none,
+    settingsManager: SettingsManager
+  ) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
     downloadProcessor = DownloadProcessor(settingsManager: settingsManager)
@@ -104,25 +100,31 @@ final class DownloadService: ObservableObject {
     // Make sure that we can't start multiple processing subscriptions
     stopProcessing()
     queueManager.pendingStream
-      .sink(receiveCompletion: { completion in
-        Failure
-          .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
-          .log()
-      }, receiveValue: { [weak self] downloadQueueItem in
-        guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
-        self.requestDownloadURL(downloadQueueItem)
-      })
+      .sink(
+        receiveCompletion: { completion in
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+            .log()
+        },
+        receiveValue: { [weak self] downloadQueueItem in
+          guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+          self.requestDownloadURL(downloadQueueItem)
+        }
+      )
       .store(in: &processingSubscriptions)
     
     queueManager.readyForDownloadStream
-      .sink(receiveCompletion: { completion in
-        Failure
-          .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
-          .log()
-      }, receiveValue: { [weak self] downloadQueueItem in
-        guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
-        self.enqueue(downloadQueueItem: downloadQueueItem)
-      })
+      .sink(
+        receiveCompletion: { completion in
+          Failure
+            .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+            .log()
+        },
+        receiveValue: { [weak self] downloadQueueItem in
+          guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+          self.enqueue(downloadQueueItem: downloadQueueItem)
+        }
+      )
       .store(in: &processingSubscriptions)
     
     // The download queue subscription is part of the
@@ -367,8 +369,7 @@ extension DownloadService {
     
     // Transition download to correct status
     // If file exists, update the download
-    let fileManager = FileManager.default
-    if let localURL = download.localURL, fileManager.fileExists(atPath: localURL.path) {
+    if let localURL = download.localURL, FileManager.default.fileExists(atPath: localURL.path) {
       download.state = .complete
     } else {
       download.state = .enqueued
@@ -387,14 +388,15 @@ extension DownloadService {
   private func prepareDownloadDirectory() {
     let fileManager = FileManager.default
     do {
-      if !fileManager.fileExists(atPath: downloadsDirectory.path) {
-        try fileManager.createDirectory(at: downloadsDirectory, withIntermediateDirectories: false)
+      if !fileManager.fileExists(atPath: URL.downloadsDirectory.path) {
+        try fileManager.createDirectory(at: .downloadsDirectory, withIntermediateDirectories: false)
       }
       var values = URLResourceValues()
       values.isExcludedFromBackup = true
+      var downloadsDirectory = URL.downloadsDirectory
       try downloadsDirectory.setResourceValues(values)
       #if DEBUG
-      print("Download directory located at: \(downloadsDirectory.path)")
+      print("Download directory located at: \(URL.downloadsDirectory.path)")
       #endif
     } catch {
       preconditionFailure("Unable to prepare downloads directory: \(error)")
@@ -402,11 +404,8 @@ extension DownloadService {
   }
   
   private func deleteExistingDownloads() {
-    let fileManager = FileManager.default
     do {
-      if fileManager.fileExists(atPath: downloadsDirectory.path) {
-        try fileManager.removeItem(at: downloadsDirectory)
-      }
+      try FileManager.removeExistingFile(at: .downloadsDirectory)
       prepareDownloadDirectory()
     } catch {
       preconditionFailure("Unable to delete the contents of the downloads directory: \(error)")
@@ -422,10 +421,7 @@ extension DownloadService {
   
   private func deleteFile(for download: Download) throws {
     guard let localURL = download.localURL else { return }
-    let filemanager = FileManager.default
-    if filemanager.fileExists(atPath: localURL.path) {
-      try filemanager.removeItem(at: localURL)
-    }
+    try FileManager.removeExistingFile(at: localURL)
   }
   
   private func checkPermissions() {
@@ -553,7 +549,7 @@ extension DownloadService {
       
       let expensive = self.networkMonitor.currentPath.isExpensive
       let allowedExpensive = self.settingsManager.wifiOnlyDownloads
-      self.status = Status.status(expensive: expensive, expensiveAllowed: allowedExpensive)
+      self.status = .init(expensive: expensive, expensiveAllowed: allowedExpensive)
       
       switch self.status {
       case .active:

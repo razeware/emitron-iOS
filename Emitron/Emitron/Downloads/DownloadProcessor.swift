@@ -183,12 +183,9 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
 
-    let fileManager = FileManager.default
     do {
-      if fileManager.fileExists(atPath: localURL.path) {
-        try fileManager.removeItem(at: localURL)
-      }
-      try fileManager.moveItem(at: location, to: localURL)
+      try FileManager.removeExistingFile(at: localURL)
+      try FileManager.default.moveItem(at: location, to: localURL)
     } catch {
       delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
     }
@@ -229,9 +226,8 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
     
-    let fileManager = FileManager.default
     do {
-      try fileManager.moveItem(at: location, to: localURL)
+      try FileManager.default.moveItem(at: location, to: localURL)
     } catch {
       delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
     }
