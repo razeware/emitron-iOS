@@ -149,7 +149,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
           case .success(let user):
             self.user = user
             Event
-              .login(from: "SessionController")
+              .login(from: Self.self)
               .log()
             self.fetchPermissions()
           }

@@ -44,23 +44,23 @@ extension Refreshable {
   }
   
   var shouldRefresh: Bool {
-    if let lastRefreshedDate = lastRefreshedDate {
-      if lastRefreshedDate > refreshableCheckTimeSpan.date {
-        Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). No refresh required.")
-          .log()
-        return false
-      } else {
-        Event
-          .refresh(from: String(describing: type(of: self)), action: "Last Updated: \(lastRefreshedDate). Refresh is required.")
-          .log()
-        return true
-      }
+    func logEvent(action: String) {
+      Event
+        .refresh(from: Self.self, action: "Last Updated: \(action)")
+        .log()
     }
-    Event
-      .refresh(from: String(describing: type(of: self)), action: "Last Updated: UNKNOWN. Refresh is required.")
-      .log()
-    return true
+
+    switch lastRefreshedDate {
+    case let lastRefreshedDate? where lastRefreshedDate > refreshableCheckTimeSpan.date:
+      logEvent(action: "\(lastRefreshedDate). No refresh required.")
+      return false
+    case let lastRefreshedDate?:
+      logEvent(action: "\(lastRefreshedDate). Refresh is required.")
+      return true
+    case nil:
+      logEvent(action: "UNKNOWN. Refresh is required.")
+      return true
+    }
   }
 
   var refreshableUserDefaultsKey: String { "UserDefaultsRefreshable\(Self.self)" }

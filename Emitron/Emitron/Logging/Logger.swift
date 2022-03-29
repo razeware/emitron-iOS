@@ -133,35 +133,35 @@ enum Failure: Log {
   }
 }
 
-enum Event: Log {
-  case login(from: String)
-  case refresh(from: String, action: String)
-  case syncEngine(action: String)
-  
-  var object: String {
-    switch self {
-    case .login(from: let from),
-         .refresh(from: let from, action: _):
-      return from
-    case .syncEngine(action: _):
-      return "SyncEngine"
-    }
-  }
-  
-  var action: String {
-    switch self {
-    case .login:
-      return "Login"
-    case .refresh(from: _, action: let action),
-         .syncEngine(action: let action):
-      return action
-    }
+struct Event {
+  static func login<Source>(from source: Source.Type) -> Self {
+    .init(
+      source: "\(Source.self)",
+      action: "Login"
+    )
   }
 
-  func log(additionalParams: [String: String]) {
-    let allParams =
-      ["object": object, "action": action]
-      .merging(additionalParams, uniquingKeysWith: { $1 })
-    print("EVENT:: \(allParams)")
+  static func refresh<Source>(
+    from source: Source.Type,
+    action: String
+  ) -> Self {
+    .init(
+      source: "\(Source.self)",
+      action: "Login"
+    )
+  }
+
+  static func syncEngine(action: String) -> Self {
+    .init(
+      source: "SyncEngine",
+      action: action
+    )
+  }
+  
+  private let source: String
+  private let action: String
+
+  func log() {
+    print("EVENT:: \(["source": source, "action": action])")
   }
 }
