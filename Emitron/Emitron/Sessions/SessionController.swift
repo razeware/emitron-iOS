@@ -179,28 +179,28 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     guard isLoggedIn else { return }
     
     permissionState = .loading
-    permissionsService.permissions { result in
-      DispatchQueue.main.async {
-        switch result {
-        case .failure(let error):
-          enum Permissions {}
-          Failure
-            .fetch(from: Permissions.self, reason: error.localizedDescription)
-            .log()
-          
-          self.permissionState = .error
-        case .success(let permissions):
-          // Check that we have a logged in user. Otherwise this is pointless
-          guard let user = self.user else { return }
-          
-          // Update the date that we retrieved the permissions
-          self.saveOrReplaceRefreshableUpdateDate()
-          
-          // Update the user
-          self.user = user.with(permissions: permissions)
-          // Ensure guardpost is aware, and hence the keychain is updated
-          self.guardpost.updateUser(with: self.user)
-        }
+
+    Task {
+      do {
+        let permissions = try await permissionsService.permissions
+
+        // Check that we have a logged in user. Otherwise this is pointless
+        guard let user = self.user else { return }
+
+        // Update the date that we retrieved the permissions
+        self.saveOrReplaceRefreshableUpdateDate()
+
+        // Update the user
+        self.user = user.with(permissions: permissions)
+        // Ensure guardpost is aware, and hence the keychain is updated
+        self.guardpost.updateUser(with: self.user)
+      } catch {
+        enum Permissions { }
+        Failure
+          .fetch(from: Permissions.self, reason: error.localizedDescription)
+          .log()
+
+        self.permissionState = .error
       }
     }
   }
