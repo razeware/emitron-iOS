@@ -53,16 +53,17 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   
   override func loadContentDetailsIntoCache() {
     state = .loading
-    service.contentDetails(for: parentContentID) { result in
-      switch result {
-      case .failure(let error):
-        self.state = .failed
+    Task {
+      do {
+        repository.apply(
+          update: try await service.contentDetails(for: parentContentID).cacheUpdate
+        )
+        reload()
+      } catch {
+        state = .failed
         Failure
           .fetch(from: Self.self, reason: error.localizedDescription)
           .log()
-      case .success(let (_, cacheUpdate)):
-        self.repository.apply(update: cacheUpdate)
-        self.reload()
       }
     }
   }
