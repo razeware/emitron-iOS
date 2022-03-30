@@ -246,7 +246,7 @@ extension SessionController: Refreshable {
 // MARK: - ASWebAuthenticationPresentationContextProviding
 extension SessionController: ASWebAuthenticationPresentationContextProviding {
   func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    UIApplication.shared.windows.first!
+    .init()
   }
 }
 

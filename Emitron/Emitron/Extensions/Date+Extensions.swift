@@ -29,12 +29,6 @@
 import Foundation
 
 extension Date {
-  @available(
-    iOS, deprecated: 15,
-    message: "Delete this extension now; it was added to Foundation."
-  )
-  static var now: Self { .init() } // swiftlint:disable:this let_var_whitespace
-
   static var topOfTheHour: Date {
     let cmpts = Calendar.current.dateComponents([.year, .month, .day, .hour], from: .now)
     return Calendar.current.date(from: cmpts)!
