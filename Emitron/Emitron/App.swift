@@ -121,7 +121,7 @@ extension App {
     let messageBus = MessageBus()
     let dataManager = DataManager(sessionController: sessionController, persistenceStore: persistenceStore, downloadService: downloadService, messageBus: messageBus, settingsManager: settingsManager)
 
-    return Objects(
+    return (
       persistenceStore: persistenceStore,
       guardpost: guardpost,
       sessionController: sessionController,

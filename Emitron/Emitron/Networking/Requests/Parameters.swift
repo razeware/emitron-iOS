@@ -62,20 +62,22 @@ enum ParameterKey {
   
   var param: Parameter {
     // TODO: This might need to be re-implemented
-    return Parameter(key: strKey,
-                     value: value,
-                     displayName: "",
-                     sortOrdinal: 0)
+    .init(
+      key: strKey,
+      value: value,
+      displayName: "",
+      sortOrdinal: 0
+    )
   }
 }
 
 enum ParameterFilterValue {
-  case contentTypes(types: [ContentType]) // An array containing ContentType strings
-  case domainTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the domains you are interested in.
-  case categoryTypes(types: [(id: Int, name: String, sortOrdinal: Int)]) // An array of numberical IDs of the categories you are interested in.
+  case contentTypes([ContentType]) // An array containing ContentType strings
+  case domainTypes([(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the domains you are interested in.
+  case categoryTypes([(id: Int, name: String, sortOrdinal: Int)]) // An array of numerical IDs of the categories you are interested in.
   case difficulties([ContentDifficulty]) // An array populated with ContentDifficulty options
-  case contentIDs(ids: [Int])
-  case queryString(string: String)
+  case contentIDs([Int])
+  case queryString(String)
   case completionStatus(status: CompletionStatus)
   case subscriptionPlans(plans: [ContentSubscriptionPlan])
   
@@ -147,16 +149,17 @@ enum ParameterFilterValue {
   
   var value: String {
     switch self {
-    case .queryString(let str):
-      return str
+    case .queryString(let string):
+      return string
     case .completionStatus(let status):
       return status.rawValue
-    case .contentIDs,
-         .contentTypes,
-         .domainTypes,
-         .difficulties,
-         .categoryTypes,
-         .subscriptionPlans:
+    case
+        .contentIDs,
+        .contentTypes,
+        .domainTypes,
+        .difficulties,
+        .categoryTypes,
+        .subscriptionPlans:
       return ""
     }
   }
@@ -201,14 +204,16 @@ enum Param {
     
   // Only to be used for the search query filter
   static func filter(for param: ParameterFilterValue) -> Parameter {
-    Parameter(key: "filter[\(param.strKey)]", value: param.value, displayName: param.value, sortOrdinal: 0)
+    .init(key: "filter[\(param.strKey)]", value: param.value, displayName: param.value, sortOrdinal: 0)
   }
   
-  static func sort(for value: ParameterSortValue,
-                   descending: Bool) -> Parameter {
+  static func sort(
+    for value: ParameterSortValue,
+    descending: Bool
+  ) -> Parameter {
     let key = "sort"
     let value = "\(descending ? "-" : "")\(value.rawValue)"
     
-    return Parameter(key: key, value: value, displayName: "Sort", sortOrdinal: 0)
+    return .init(key: key, value: value, displayName: "Sort", sortOrdinal: 0)
   }
 }

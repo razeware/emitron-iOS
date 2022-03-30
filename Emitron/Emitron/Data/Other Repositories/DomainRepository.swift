@@ -28,7 +28,7 @@
 
 import Combine
 
-class DomainRepository: ObservableObject, Refreshable {
+final class DomainRepository: ObservableObject, Refreshable {
   let repository: Repository
   let service: DomainsService
   

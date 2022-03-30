@@ -93,11 +93,12 @@ struct BeginPlaybackTokenRequest: Request {
     let json = try JSON(data: response)
     let doc = JSONAPIDocument(json)
 
-    guard let token = doc.data.first,
+    guard
+      let token = doc.data.first,
       let tokenString = token["video_playback_token"] as? String,
       !tokenString.isEmpty
-      else {
-        throw RWAPIError.processingError(nil)
+    else {
+      throw RWAPIError.processingError(nil)
     }
     
     return tokenString

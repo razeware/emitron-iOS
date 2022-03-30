@@ -72,7 +72,7 @@ extension DataCache {
 
     // swiftlint:disable generic_type_name
     func mergeWithCacheUpdate<contentID: Emitron.contentID>(
-      _ dictionary: inout [ Int: [contentID] ],
+      _ dictionary: inout [Int: [contentID]],
       _ getContentID: (DataCacheUpdate) -> [contentID]
     ) {
       dictionary.merge(
