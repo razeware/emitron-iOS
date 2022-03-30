@@ -31,7 +31,7 @@ import GRDB
 @testable import Emitron
 
 class DownloadServiceTest: XCTestCase {
-  private var database: DatabaseWriter!
+  private var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
@@ -40,7 +40,7 @@ class DownloadServiceTest: XCTestCase {
   
   override func setUpWithError() throws {
     try super.setUpWithError()
-    database = try EmitronDatabase.testDatabase()
+    database = try EmitronDatabase.test
     persistenceStore = PersistenceStore(db: database)
     userModelController = .init(user: .withDownloads)
     settingsManager = App.objects.settingsManager

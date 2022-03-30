@@ -32,7 +32,7 @@ import SwiftyJSON
 @testable import Emitron
 
 extension Emitron.Category {
-  static func loadAndSaveMocks(db: DatabaseWriter) throws {
+  static func loadAndSaveMocks(db: TestDatabase) throws {
     let categories = loadMocksFrom(filename: "Categories")
     try db.write { db in
       try categories.forEach { try $0.save(db) }

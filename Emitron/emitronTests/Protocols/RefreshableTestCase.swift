@@ -34,7 +34,7 @@ final class RefreshableTestCase: XCTestCase {
     XCTAssertEqual(
       DomainRepository(
         repository: .init(
-          persistenceStore: .init( db: try EmitronDatabase.testDatabase() ),
+          persistenceStore: .init(db: try EmitronDatabase.test),
           dataCache: .init()
         ),
         service: .init(

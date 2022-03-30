@@ -32,7 +32,7 @@ import Combine
 @testable import Emitron
 
 class DownloadQueueManagerTest: XCTestCase {
-  private var database: DatabaseWriter!
+  private var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
@@ -40,19 +40,15 @@ class DownloadQueueManagerTest: XCTestCase {
   private var subscriptions = Set<AnyCancellable>()
   private var settingsManager: SettingsManager!
 
-  override func setUp() {
-    super.setUp()
+  override func setUpWithError() throws {
+    try super.setUpWithError()
 
     // There's one already running—let's stop that
     if downloadService != nil {
       downloadService.stopProcessing()
     }
-    // swiftlint:disable:next
-    do {
-      database = try EmitronDatabase.testDatabase()
-    } catch {
-      fatalError("Failed trying to test database")
-    }
+
+    database = try EmitronDatabase.test
     persistenceStore = PersistenceStore(db: database)
     settingsManager = App.objects.settingsManager
     let userModelController = UserMCMock(user: .withDownloads)

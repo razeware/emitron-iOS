@@ -31,18 +31,17 @@ import GRDB
 @testable import Emitron
 
 class PersistenceStore_DownloadsTest: XCTestCase {
-  private var database: DatabaseWriter!
+  private var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   
-  override func setUp() {
-    super.setUp()
-    // swiftlint:disable:next force_try
-    database = try! EmitronDatabase.testDatabase()
+  override func setUpWithError() throws {
+    try super.setUpWithError()
+    database = try EmitronDatabase.test
     persistenceStore = PersistenceStore(db: database)
     
     // Check it's all empty
-    XCTAssertEqual(0, getAllContents().count)
-    XCTAssertEqual(0, getAllDownloads().count)
+    XCTAssert(getAllContents().isEmpty)
+    XCTAssert(getAllDownloads().isEmpty)
   }
   
   func getAllContents() -> [Content] {

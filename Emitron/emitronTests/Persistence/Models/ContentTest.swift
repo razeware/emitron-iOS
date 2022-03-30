@@ -31,12 +31,11 @@ import GRDB
 @testable import Emitron
 
 class ContentTest: XCTestCase {
-  private var database: DatabaseWriter!
+  private var database: TestDatabase!
   
-  override func setUp() {
-    super.setUp()
-    // swiftlint:disable:next force_try
-    database = try! EmitronDatabase.testDatabase()
+  override func setUpWithError() throws {
+    try super.setUpWithError()
+    database = try EmitronDatabase.test
   }
   
   func getAllContents() -> [Content] {

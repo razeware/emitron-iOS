@@ -26,9 +26,9 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Combine
+import protocol Combine.ObservableObject
 import class Foundation.DispatchQueue
-import GRDB
+import protocol GRDB.DatabaseWriter
 
 enum PersistenceStoreError: Error {
   case argumentError
@@ -40,7 +40,7 @@ final class PersistenceStore: ObservableObject {
   let db: DatabaseWriter
   let workerQueue = DispatchQueue(label: "com.razeware.emitron.persistence", qos: .background)
   
-  init(db: DatabaseWriter) {
+  init<DB: DatabaseWriter>(db: DB) {
     self.db = db
   }
 }
