@@ -53,7 +53,7 @@ enum PersistenceMocks {
   }
   
   @discardableResult static func download(for content: Content) -> Download {
-    Download(
+    .init(
       id: .init(),
       requestedAt: .now,
       state: .pending,

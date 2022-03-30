@@ -40,19 +40,17 @@ class ContentTest: XCTestCase, DatabaseTestCase {
   
   func testCanCreateContentWithoutADownload() throws {
     // Start with no content
-    XCTAssertEqual(0, try allContents.count)
+    XCTAssert(try allContents.isEmpty)
     
     // Create contents
     let content = PersistenceMocks.content
-    try database.write { db in
-      try content.save(db)
-    }
+    try database.write(content.save)
     
     // Should have one item of content
     XCTAssertEqual(1, try allContents.count)
     // It should be the right one
     XCTAssertEqual(content.uri, try allContents.first!.uri)
-    XCTAssertEqual(content, try allContents.first!)
+    XCTAssertEqual(content, try allContents.first)
   }
   
   func testCanAssignContentToADownload() throws {
@@ -69,18 +67,16 @@ class ContentTest: XCTestCase, DatabaseTestCase {
     // Should have one item of content
     XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, try allContents.first!)
+    XCTAssertEqual(content, try allContents.first)
     // There should be a single download
     XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, try allDownloads.first!)
+    XCTAssertEqual(download, try allDownloads.first)
   }
   
   func testDeletingTheContentDeletesTheDownload() throws {
     let content = PersistenceMocks.content
-    try database.write { db in
-      try content.save(db)
-    }
+    try database.write(content.save)
       
     var download = PersistenceMocks.download(for: content)
     try database.write { db in
@@ -90,11 +86,11 @@ class ContentTest: XCTestCase, DatabaseTestCase {
     // Should have one item of content
     XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, try allContents.first!)
+    XCTAssertEqual(content, try allContents.first)
     // There should be a single download
     XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, try allDownloads.first!)
+    XCTAssertEqual(download, try allDownloads.first)
     
     _ = try database.write { db in
       try content.delete(db)

@@ -52,20 +52,18 @@ class DownloadTest: XCTestCase, DatabaseTestCase {
     // Should have one item of content
     XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, try allContents.first!)
+    XCTAssertEqual(content, try allContents.first)
     // There should be a single download
     XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, try allDownloads.first!)
+    XCTAssertEqual(download, try allDownloads.first)
     
-    _ = try database.write { db in
-      try download.delete(db)
-    }
+    _ = try database.write(download.delete)
       
     // Check it was deleted
     XCTAssertEqual(0, try allDownloads.count)
     // And that the contents was not deleted
     XCTAssertEqual(1, try allContents.count)
-    XCTAssertEqual(content, try allContents.first!)
+    XCTAssertEqual(content, try allContents.first)
   }
 }
