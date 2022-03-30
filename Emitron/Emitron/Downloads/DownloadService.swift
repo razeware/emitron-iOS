@@ -283,6 +283,7 @@ extension DownloadService {
         .log()
       return
     }
+
     guard
       downloadQueueItem.download.remoteURL == nil,
       downloadQueueItem.download.state == .pending,
@@ -296,6 +297,7 @@ extension DownloadService {
         .log()
       return
     }
+
     // Find the video ID
     guard
       let videoID = downloadQueueItem.content.videoIdentifier,
@@ -311,23 +313,21 @@ extension DownloadService {
     }
     
     // Use the video service to request the URLs
-    videosService.getVideoStreamDownload(for: videoID) { [weak self] result in
-      // Ensure we're still around
-      guard let self = self else { return }
+    Task {
       var download = downloadQueueItem.download
 
-      switch result {
-      case .failure(let error):
+      do {
+        let attachment = try await videosService.videoStreamDownload(for: videoID)
+        download.remoteURL = attachment.url
+        download.lastValidatedAt = .now
+        download.state = .readyForDownload
+      } catch {
         Failure
           .downloadService(
             from: #function,
             reason: "Unable to obtain download URLs: \(error)"
           )
           .log()
-      case .success(let attachment):
-        download.remoteURL = attachment.url
-        download.lastValidatedAt = .now
-        download.state = .readyForDownload
       }
 
       // Update the state if required
@@ -337,7 +337,7 @@ extension DownloadService {
 
       // Commit the changes
       do {
-        try self.persistenceStore.update(download: download)
+        try persistenceStore.update(download: download)
       } catch {
         Failure
           .downloadService(
@@ -345,7 +345,7 @@ extension DownloadService {
             reason: "Unable to save download URL: \(error)"
           )
           .log()
-        self.transitionDownload(withID: download.id, to: .failed)
+        transitionDownload(withID: download.id, to: .failed)
       }
     }
     // Move it on through the state machine

@@ -26,12 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class PermissionsService: Service {
+class PermissionsService: Service { }
 
-  // MARK: - Internal
-  func permissions(completion: @escaping (_ response: Result<PermissionsRequest.Response, RWAPIError>) -> Void) {
-    let request = PermissionsRequest()
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+// MARK: - Internal
+extension PermissionsService {
+  var permissions: PermissionsRequest.Response {
+    get async throws { try await makeRequest(request: PermissionsRequest()) }
   }
 }

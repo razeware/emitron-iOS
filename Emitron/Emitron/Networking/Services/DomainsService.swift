@@ -26,12 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class DomainsService: Service {
+class DomainsService: Service { }
 
-  // MARK: - Internal
-  func allDomains(completion: @escaping (_ response: Result<DomainsRequest.Response, RWAPIError>) -> Void) {
-    let request = DomainsRequest()
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+// MARK: - internal
+extension DomainsService {
+  var allDomains: DomainsRequest.Response {
+    get async throws { try await makeRequest(request: DomainsRequest()) }
   }
 }

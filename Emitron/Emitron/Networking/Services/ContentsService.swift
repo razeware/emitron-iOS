@@ -30,45 +30,29 @@ final class ContentsService: Service { }
 
 // MARK: - internal
 extension ContentsService {
-  func allContents(
-    parameters: [Parameter],
-    completion: @escaping (_ response: Result<ContentsRequest.Response, RWAPIError>) -> Void
-  ) {
-    let request = ContentsRequest()
-    makeAndProcessRequest(
-      request: request,
-      parameters: parameters,
-      completion: completion
-    )
+  func allContents(parameters: [Parameter]) async throws -> ContentsRequest.Response {
+    try await makeRequest(request: ContentsRequest(), parameters: parameters)
   }
   
-  func contentDetails(
+  func contentDetails(for id: Int) async throws -> ContentDetailsRequest.Response {
+    try await makeRequest(request: ContentDetailsRequest(id: id))
+  }
+  
+  var beginPlaybackToken: BeginPlaybackTokenRequest.Response {
+    get async throws { try await makeRequest(request: BeginPlaybackTokenRequest()) }
+  }
+  
+  func reportPlaybackUsage(
     for id: Int,
-    completion: @escaping (_ response: Result<ContentDetailsRequest.Response, RWAPIError>) -> Void
-  ) {
-    let request = ContentDetailsRequest(id: id)
-    makeAndProcessRequest(
-      request: request,
-      completion: completion
+    progress: Int,
+    playbackToken: String
+  ) async throws -> PlaybackUsageRequest.Response {
+    try await makeRequest(
+      request: PlaybackUsageRequest(
+        id: id,
+        progress: progress,
+        token: playbackToken
+      )
     )
-  }
-  
-  func getBeginPlaybackToken(completion: @escaping(_ response: Result<BeginPlaybackTokenRequest.Response, RWAPIError>) -> Void) {
-    let request = BeginPlaybackTokenRequest()
-    makeAndProcessRequest(request: request,
-                          completion: completion)
-  }
-  
-  func reportPlaybackUsage(for id: Int,
-                           progress: Int,
-                           playbackToken: String,
-                           completion: @escaping(_ response: Result<PlaybackUsageRequest.Response, RWAPIError>) -> Void) {
-    let request = PlaybackUsageRequest(
-      id: id,
-      progress: progress,
-      token: playbackToken
-    )
-    makeAndProcessRequest(request: request,
-                          completion: completion)
   }
 }

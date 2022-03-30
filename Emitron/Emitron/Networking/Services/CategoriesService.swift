@@ -26,12 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class CategoriesService: Service {
+class CategoriesService: Service { }
 
-  // MARK: - Internal
-  func allCategories(completion: @escaping (_ response: Result<CategoriesRequest.Response, RWAPIError>) -> Void) {
-    let request = CategoriesRequest()
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+// MARK: - Internal
+extension CategoriesService {
+  var allCategories: CategoriesRequest.Response {
+    get async throws { try await makeRequest(request: CategoriesRequest()) }
   }
 }

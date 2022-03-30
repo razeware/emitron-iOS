@@ -29,7 +29,6 @@
 import Foundation
 
 class Service {
-
   // MARK: - Properties
   let networkClient: RWAPI
   let session: URLSession
@@ -44,68 +43,50 @@ class Service {
   var isAuthenticated: Bool { !networkClient.authToken.isEmpty }
 
   // MARK: - Internal
-  func makeAndProcessRequest<Request: Emitron.Request>(
+  @MainActor func makeRequest<Request: Emitron.Request>(
     request: Request,
-    parameters: [Parameter]? = nil,
-    completion: @escaping (Result<Request.Response, RWAPIError>) -> Void
-  ) {
-    let handleResponse = { result in
-      DispatchQueue.main.async {
-        completion(result)
-      }
-    }
+    parameters: [Parameter] = []
+  ) async throws -> Request.Response {
+    func prepare<Request: Emitron.Request>(
+      request: Request,
+      parameters: [Parameter]
+    ) throws -> URLRequest {
+      let pathURL = networkClient.environment.baseURL.appendingPathComponent(request.path)
 
-    guard let urlRequest = prepare(request: request, parameters: parameters) else {
-      return
-    }
-
-    let task = session.dataTask(with: urlRequest) { data, response, error in
-      let statusCode = (response as? HTTPURLResponse)?.statusCode
-      guard statusCode.map((200..<300).contains) == true
-      else {
-        handleResponse(.failure(.requestFailed(error, statusCode ?? 0)))
-        return
+      guard var components = URLComponents(
+        url: pathURL,
+        resolvingAgainstBaseURL: false
+      ) else {
+        throw URLError(.badURL)
       }
 
-      do {
-        if let data = data {
-          let value = try request.handle(response: data)
-          handleResponse(.success(value))
-        } else {
-          handleResponse(.failure(.noData))
-        }
-      } catch let handleError as NSError {
-        handleResponse(.failure(.processingError(handleError)))
-      }
-    }
-    task.resume()
-  }
+      components.queryItems = parameters.map { .init(name: $0.key, value: $0.value) }
 
-  func prepare<R: Request>(request: R,
-                           parameters: [Parameter]?) -> URLRequest? {
-    let pathURL = networkClient.environment.baseURL.appendingPathComponent(request.path)
-    var components = URLComponents(url: pathURL,
-                                   resolvingAgainstBaseURL: false)
+      guard let url = components.url
+      else { throw URLError(.badURL) }
 
-    if let parameters = parameters {
-      components?.queryItems = parameters.map { URLQueryItem(name: $0.key, value: $0.value) }
+      var urlRequest = URLRequest(url: url)
+      urlRequest.httpMethod = request.method.rawValue
+      // body *needs* to be the last property that we set, because of this bug: https://bugs.swift.org/browse/SR-6687
+      urlRequest.httpBody = request.body
+
+      let authTokenHeader: HTTPHeader = ("Authorization", "Token \(networkClient.authToken)")
+      let headers =
+        [authTokenHeader, networkClient.contentTypeHeader]
+          + [networkClient.additionalHeaders, request.additionalHeaders].joined()
+      headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
+
+      return urlRequest
     }
 
-    guard let url = components?.url else {
-      return nil
-    }
+    let (data, response) = try await session.data(
+      for: try prepare(request: request, parameters: parameters)
+    )
 
-    var urlRequest = URLRequest(url: url)
-    urlRequest.httpMethod = request.method.rawValue
-    // body *needs* to be the last property that we set, because of this bug: https://bugs.swift.org/browse/SR-6687
-    urlRequest.httpBody = request.body
+    let statusCode = (response as? HTTPURLResponse)?.statusCode
+    guard statusCode.map((200..<300).contains) == true
+    else { throw RWAPIError.requestFailed(nil, statusCode ?? 0) }
 
-    let authTokenHeader: HTTPHeader = ("Authorization", "Token \(networkClient.authToken)")
-    let headers =
-      [authTokenHeader, networkClient.contentTypeHeader]
-      + [networkClient.additionalHeaders, request.additionalHeaders].joined()
-    headers.forEach { urlRequest.addValue($0.value, forHTTPHeaderField: $0.key) }
-
-    return urlRequest
+    return try request.handle(response: data)
   }
 }
