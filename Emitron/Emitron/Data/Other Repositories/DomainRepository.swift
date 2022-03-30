@@ -50,8 +50,10 @@ class DomainRepository: ObservableObject, Refreshable {
       fetchDomainsAndUpdatePersistentStore()
     }
   }
-  
-  private func loadFromPersistentStore() {
+}
+
+private extension DomainRepository {
+  func loadFromPersistentStore() {
     do {
       domains = try repository.domainList()
       state = .hasData
@@ -63,7 +65,7 @@ class DomainRepository: ObservableObject, Refreshable {
     }
   }
   
-  private func saveToPersistentStore() {
+  func saveToPersistentStore() {
     do {
       try repository.syncDomainList(domains)
     } catch {
@@ -73,27 +75,24 @@ class DomainRepository: ObservableObject, Refreshable {
     }
   }
   
-  private func fetchDomainsAndUpdatePersistentStore() {
+  func fetchDomainsAndUpdatePersistentStore() {
     if state == .loading || state == .loadingAdditional {
       return
     }
     
     state = .loading
-    
-    service.allDomains { [weak self] result in
-      guard let self = self else { return }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
+
+    Task {
+      do {
+        domains = try await service.allDomains
+        state = .hasData
+        saveToPersistentStore()
+        saveOrReplaceRefreshableUpdateDate()
+      } catch {
+        state = .failed
         Failure
           .fetch(from: Self.self, reason: error.localizedDescription)
-        .log()
-      case .success(let domains):
-        self.domains = domains
-        self.state = .hasData
-        self.saveToPersistentStore()
-        self.saveOrReplaceRefreshableUpdateDate()
+          .log()
       }
     }
   }
