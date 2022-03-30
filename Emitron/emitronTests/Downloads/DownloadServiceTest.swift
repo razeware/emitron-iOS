@@ -30,8 +30,8 @@ import XCTest
 import GRDB
 @testable import Emitron
 
-class DownloadServiceTest: XCTestCase {
-  private var database: TestDatabase!
+class DownloadServiceTest: XCTestCase, DatabaseTestCase {
+  private(set) var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
@@ -596,14 +596,6 @@ class DownloadServiceTest: XCTestCase {
 
 // MARK: - private
 private extension DownloadServiceTest {
-  var allContents: [Content] {
-    get throws { try database.read(Content.fetchAll) }
-  }
-
-  var allDownloads: [Download] {
-    get throws { try database.read(Download.fetchAll) }
-  }
-
   var allDownloadQueueItems: [PersistenceStore.DownloadQueueItem] {
     get throws {
       try database.read { db in

@@ -30,26 +30,12 @@ import XCTest
 import GRDB
 @testable import Emitron
 
-class DownloadTest: XCTestCase {
-  private var database: TestDatabase!
+class DownloadTest: XCTestCase, DatabaseTestCase {
+  private(set) var database: TestDatabase!
   
   override func setUpWithError() throws {
     try super.setUpWithError()
     database = try EmitronDatabase.test
-  }
-  
-  func getAllContents() -> [Content] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Content.fetchAll(db)
-    }
-  }
-  
-  func getAllDownloads() -> [Download] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Download.fetchAll(db)
-    }
   }
   
   func testDeletingDownloadDoesNotDeleteContents() throws {
@@ -64,22 +50,22 @@ class DownloadTest: XCTestCase {
     }
       
     // Should have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, getAllContents().first!)
+    XCTAssertEqual(content, try allContents.first!)
     // There should be a single download
-    XCTAssertEqual(1, getAllDownloads().count)
+    XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, getAllDownloads().first!)
+    XCTAssertEqual(download, try allDownloads.first!)
     
     _ = try database.write { db in
       try download.delete(db)
     }
       
     // Check it was deleted
-    XCTAssertEqual(0, getAllDownloads().count)
+    XCTAssertEqual(0, try allDownloads.count)
     // And that the contents was not deleted
-    XCTAssertEqual(1, getAllContents().count)
-    XCTAssertEqual(content, getAllContents().first!)
+    XCTAssertEqual(1, try allContents.count)
+    XCTAssertEqual(content, try allContents.first!)
   }
 }

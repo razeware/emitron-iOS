@@ -46,3 +46,19 @@ extension EmitronDatabase {
     }
   }
 }
+
+import class XCTest.XCTestCase
+
+protocol DatabaseTestCase: XCTestCase {
+  var database: TestDatabase! { get }
+}
+
+extension DatabaseTestCase {
+  var allContents: [Content] {
+    get throws { try database.read(Content.fetchAll) }
+  }
+
+  var allDownloads: [Download] {
+    get throws { try database.read(Download.fetchAll) }
+  }
+}

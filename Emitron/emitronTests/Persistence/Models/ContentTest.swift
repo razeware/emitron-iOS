@@ -30,31 +30,17 @@ import XCTest
 import GRDB
 @testable import Emitron
 
-class ContentTest: XCTestCase {
-  private var database: TestDatabase!
+class ContentTest: XCTestCase, DatabaseTestCase {
+  private(set) var database: TestDatabase!
   
   override func setUpWithError() throws {
     try super.setUpWithError()
     database = try EmitronDatabase.test
   }
   
-  func getAllContents() -> [Content] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Content.fetchAll(db)
-    }
-  }
-  
-  func getAllDownloads() -> [Download] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Download.fetchAll(db)
-    }
-  }
-  
   func testCanCreateContentWithoutADownload() throws {
     // Start with no content
-    XCTAssertEqual(0, getAllContents().count)
+    XCTAssertEqual(0, try allContents.count)
     
     // Create contents
     let content = PersistenceMocks.content
@@ -63,10 +49,10 @@ class ContentTest: XCTestCase {
     }
     
     // Should have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content.uri, getAllContents().first!.uri)
-    XCTAssertEqual(content, getAllContents().first!)
+    XCTAssertEqual(content.uri, try allContents.first!.uri)
+    XCTAssertEqual(content, try allContents.first!)
   }
   
   func testCanAssignContentToADownload() throws {
@@ -81,13 +67,13 @@ class ContentTest: XCTestCase {
     }
       
     // Should have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, getAllContents().first!)
+    XCTAssertEqual(content, try allContents.first!)
     // There should be a single download
-    XCTAssertEqual(1, getAllDownloads().count)
+    XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, getAllDownloads().first!)
+    XCTAssertEqual(download, try allDownloads.first!)
   }
   
   func testDeletingTheContentDeletesTheDownload() throws {
@@ -102,21 +88,21 @@ class ContentTest: XCTestCase {
     }
       
     // Should have one item of content
-    XCTAssertEqual(1, getAllContents().count)
+    XCTAssertEqual(1, try allContents.count)
     // It should be the right one
-    XCTAssertEqual(content, getAllContents().first!)
+    XCTAssertEqual(content, try allContents.first!)
     // There should be a single download
-    XCTAssertEqual(1, getAllDownloads().count)
+    XCTAssertEqual(1, try allDownloads.count)
     // It too should be the right one
-    XCTAssertEqual(download, getAllDownloads().first!)
+    XCTAssertEqual(download, try allDownloads.first!)
     
     _ = try database.write { db in
       try content.delete(db)
     }
     
     // Check it was deleted
-    XCTAssertEqual(0, getAllContents().count)
+    XCTAssertEqual(0, try allContents.count)
     // And that the download was deleted too
-    XCTAssertEqual(0, getAllDownloads().count)
+    XCTAssertEqual(0, try allDownloads.count)
   }
 }

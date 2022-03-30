@@ -31,8 +31,8 @@ import GRDB
 import Combine
 @testable import Emitron
 
-class DownloadQueueManagerTest: XCTestCase {
-  private var database: TestDatabase!
+class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
+  private(set) var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
@@ -64,22 +64,7 @@ class DownloadQueueManagerTest: XCTestCase {
     subscriptions = []
   }
   
-  func getAllContents() -> [Content] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Content.fetchAll(db)
-    }
-  }
-  
-  func getAllDownloads() -> [Download] {
-    // swiftlint:disable:next force_try
-    try! database.read { db in
-      try Download.fetchAll(db)
-    }
-  }
-  
   func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
-    
     var parentContent: Content?
     if let groupID = content.groupID {
       // There must be parent content
@@ -115,7 +100,7 @@ class DownloadQueueManagerTest: XCTestCase {
     
     XCTAssert(completion == .finished)
     
-    return getAllDownloads().first!
+    return try allDownloads.first!
   }
   
   @discardableResult func samplePersistedDownload(state: Download.State = .pending) throws -> Download {
