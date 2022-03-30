@@ -46,7 +46,7 @@ class IconManager: ObservableObject {
       DispatchQueue.main.async { 
         if let error = error {
           Failure
-            .appIcon(from: String(describing: type(of: self)), reason: error.localizedDescription)
+            .appIcon(from: Self.self, reason: error.localizedDescription)
             .log()
           self.messageBus.post(message: Message(level: .error, message: .appIconUpdateProblem))
         } else {

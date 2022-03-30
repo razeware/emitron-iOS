@@ -89,7 +89,7 @@ class ChildContentsViewModel: ObservableObject {
         } else {
           self.state = .failed
           Failure
-            .repositoryLoad(from: "DataCacheContentDetailsViewModel", reason: "Unable to retrieve download content detail: \(completion)")
+            .repositoryLoad(from: Self.self, reason: "Unable to retrieve download content detail: \(completion)")
             .log()
         }
       }, receiveValue: { [weak self] childContentsState in

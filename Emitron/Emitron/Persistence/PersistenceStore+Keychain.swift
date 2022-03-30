@@ -55,7 +55,7 @@ extension PersistenceStore {
       return try decoder.decode(User.self, from: encoded)
     } catch {
       Failure
-        .loadFromPersistentStore(from: "PersistenceStore_Keychain", reason: error.localizedDescription)
+        .loadFromPersistentStore(from: "\(PersistenceStore.self)_Keychain", reason: error.localizedDescription)
         .log()
       return nil
     }

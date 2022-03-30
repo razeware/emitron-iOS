@@ -58,7 +58,7 @@ class CategoryRepository: Refreshable {
     } catch {
       state = .failed
       Failure
-        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
+        .fetch(from: Self.self, reason: error.localizedDescription)
         .log()
     }
   }
@@ -68,7 +68,7 @@ class CategoryRepository: Refreshable {
       try repository.syncCategoryList(categories)
     } catch {
       Failure
-        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
+        .fetch(from: Self.self, reason: error.localizedDescription)
         .log()
     }
   }
@@ -87,7 +87,7 @@ class CategoryRepository: Refreshable {
       case .failure(let error):
         self.state = .failed
         Failure
-        .fetch(from: "CategoryRepository", reason: error.localizedDescription)
+        .fetch(from: Self.self, reason: error.localizedDescription)
         .log()
       case .success(let categories):
         self.categories = categories

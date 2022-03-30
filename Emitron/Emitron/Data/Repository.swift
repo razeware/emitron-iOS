@@ -167,7 +167,7 @@ extension Repository {
       return try persistenceStore.domains( with: contentDomains.map(\.domainID) )
     } catch {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting domains: \(error)")
         .log()
       return []
     }
@@ -178,7 +178,7 @@ extension Repository {
       return try persistenceStore.categories( with: contentCategories.map(\.categoryID) )
     } catch {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting categories: \(error)")
         .log()
       return []
     }

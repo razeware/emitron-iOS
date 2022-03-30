@@ -197,7 +197,7 @@ final class VideoPlaybackViewModel {
       }
     } catch {
       Failure
-        .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to load playlist: \(error)")
+        .viewModelAction(from: Self.self, reason: "Unable to load playlist: \(error)")
         .log()
     }
   }
@@ -309,7 +309,7 @@ private extension VideoPlaybackViewModel {
             self.player.pause()
           }
           Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Error updating progress: \(error)")
+          .viewModelAction(from: Self.self, reason: "Error updating progress: \(error)")
           .log()
         }
       }) { [weak self] updatedProgression in
@@ -356,7 +356,7 @@ private extension VideoPlaybackViewModel {
         case .failure(let error):
           self.state = .failed
           Failure
-            .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to enqueue next playlist item: \(error))")
+            .viewModelAction(from: Self.self, reason: "Unable to enqueue next playlist item: \(error))")
             .log()
         }
       }) { [weak self] playerItem in

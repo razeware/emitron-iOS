@@ -80,7 +80,7 @@ extension SyncEngine {
       print("SyncEngine Request Stream finished. Didn't really expect it to.")
     case .failure(let error):
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Couldn't load sync requests: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "Couldn't load sync requests: \(error)")
         .log()
     }
     }
@@ -156,7 +156,7 @@ extension SyncEngine {
         switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkCreations:: \(error.localizedDescription)")
+            .fetch(from: Self.self, reason: "syncBookmarkCreations:: \(error.localizedDescription)")
             .log()
         case .success(let bookmark):
           // Update the cache
@@ -187,7 +187,7 @@ extension SyncEngine {
         switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
+            .fetch(from: Self.self, reason: "syncBookmarkDeletions:: \(error.localizedDescription)")
             .log()
           if case .requestFailed(_, 404) = error {
             // Remove the sync request—a 404 means it doesn't exist on the server
@@ -225,7 +225,7 @@ extension SyncEngine {
       switch result {
       case .failure(let error):
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: "syncWatchStats:: \(error.localizedDescription)")
+          .fetch(from: Self.self, reason: "syncWatchStats:: \(error.localizedDescription)")
           .log()
       case .success:
         // Remove the sync requests—we're done
@@ -255,7 +255,7 @@ extension SyncEngine {
       switch result {
       case .failure(let error):
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: "syncProgressionUpdates:: \(error.localizedDescription)")
+          .fetch(from: Self.self, reason: "syncProgressionUpdates:: \(error.localizedDescription)")
           .log()
       case .success( (_, let cacheUpdate) ):
         // Update the cache
@@ -284,7 +284,7 @@ extension SyncEngine {
         switch result {
         case .failure(let error):
           Failure
-            .fetch(from: String(describing: type(of: self)), reason: "syncProgressionDeletions:: \(error.localizedDescription)")
+            .fetch(from: Self.self, reason: "syncProgressionDeletions:: \(error.localizedDescription)")
             .log()
           
           if case .requestFailed(_, 404) = error {

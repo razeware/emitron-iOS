@@ -210,7 +210,7 @@ private extension ContentListView {
           receiveCompletion: { completion in
             if case .failure(let error) = completion {
               Failure
-                .downloadAction(from: String(describing: type(of: self)), reason: "Unable to perform download action: \(error)")
+                .downloadAction(from: Self.self, reason: "Unable to perform download action: \(error)")
                 .log()
               self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
             }

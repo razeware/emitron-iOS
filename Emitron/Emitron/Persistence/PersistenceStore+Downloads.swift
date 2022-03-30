@@ -227,7 +227,7 @@ extension PersistenceStore {
         }
       } catch {
         Failure
-          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update parent.")
           .log()
       }
     }
@@ -243,7 +243,7 @@ extension PersistenceStore {
         try self.updateCollectionDownloadState(collectionDownload: parentDownload)
       } catch {
         Failure
-          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update parent.")
           .log()
       }
     }

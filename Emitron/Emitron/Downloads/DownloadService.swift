@@ -59,7 +59,7 @@ final class DownloadService: ObservableObject {
   private var downloadQueueSubscription: AnyCancellable?
   
   private var downloadQuality: Attachment.Kind {
-   settingsManager.downloadQuality
+    settingsManager.downloadQuality
   }
   
   var backgroundSessionCompletionHandler: (() -> Void)? {
@@ -103,7 +103,7 @@ final class DownloadService: ObservableObject {
       .sink(
         receiveCompletion: { completion in
           Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+            .repositoryLoad(from: Self.self, reason: "Error: \(completion)")
             .log()
         },
         receiveValue: { [weak self] downloadQueueItem in
@@ -117,7 +117,7 @@ final class DownloadService: ObservableObject {
       .sink(
         receiveCompletion: { completion in
           Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Error: \(completion)")
+            .repositoryLoad(from: Self.self, reason: "Error: \(completion)")
             .log()
         },
         receiveValue: { [weak self] downloadQueueItem in
@@ -145,25 +145,25 @@ extension DownloadService: DownloadAction {
   func requestDownload(contentID: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError> {
     guard videosService != nil else {
       Failure
-        .fetch(from: String(describing: type(of: self)), reason: "User not allowed to request downloads")
+        .fetch(from: Self.self, reason: "User not allowed to request downloads")
         .log()
       return Future { promise in
         promise(.failure(.problemRequestingDownload))
       }
-        .eraseToAnyPublisher()
+      .eraseToAnyPublisher()
     }
     
     guard let contentPersistableState = contentLookup(contentID) else {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to locate content to persist")
+        .loadFromPersistentStore(from: Self.self, reason: "Unable to locate content to persist")
         .log()
       return Future { promise in
         promise(.failure(.problemRequestingDownload))
       }
-        .eraseToAnyPublisher()
+      .eraseToAnyPublisher()
     }
     
-      // Let's ensure that all the relevant content is stored locally
+    // Let's ensure that all the relevant content is stored locally
     return persistenceStore.persistContentGraph(
       for: contentPersistableState,
       contentLookup: contentLookup
@@ -181,7 +181,7 @@ extension DownloadService: DownloadAction {
     }
     .mapError { error in
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem requesting the download: \(error)")
+        .saveToPersistentStore(from: Self.self, reason: "There was a problem requesting the download: \(error)")
         .log()
       return DownloadActionError.problemRequestingDownload
     }
@@ -224,7 +224,7 @@ extension DownloadService: DownloadAction {
     }
     .mapError { error in
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem cancelling the download (contentID: \(contentID)): \(error)")
+        .deleteFromPersistentStore(from: Self.self, reason: "There was a problem cancelling the download (contentID: \(contentID)): \(error)")
         .log()
       return DownloadActionError.unableToCancelDownload
     }
@@ -263,7 +263,7 @@ extension DownloadService: DownloadAction {
     }
     .mapError { error in
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem deleting the download (contentID: \(contentID)): \(error)")
+        .deleteFromPersistentStore(from: Self.self, reason: "There was a problem deleting the download (contentID: \(contentID)): \(error)")
         .log()
       return DownloadActionError.unableToDeleteDownload
     }
@@ -277,30 +277,36 @@ extension DownloadService {
     guard let videosService = videosService else {
       Failure
         .downloadService(
-          from: "requestDownloadURL",
+          from: #function,
           reason: "User not allowed to request downloads."
         )
         .log()
       return
     }
-    guard downloadQueueItem.download.remoteURL == nil,
+    guard
+      downloadQueueItem.download.remoteURL == nil,
       downloadQueueItem.download.state == .pending,
-      downloadQueueItem.content.contentType != .collection else {
-        Failure
-          .downloadService(from: "requestDownloadURL",
-                           reason: "Cannot request download URL for: \(downloadQueueItem.download)")
-          .log()
+      downloadQueueItem.content.contentType != .collection
+    else {
+      Failure
+        .downloadService(
+          from: #function,
+          reason: "Cannot request download URL for: \(downloadQueueItem.download)"
+        )
+        .log()
       return
     }
     // Find the video ID
-    guard let videoID = downloadQueueItem.content.videoIdentifier,
-      videoID != 0 else {
-        Failure
-          .downloadService(
-            from: "requestDownloadURL",
-            reason: "Unable to locate videoID for download: \(downloadQueueItem.download)"
-          )
-          .log()
+    guard
+      let videoID = downloadQueueItem.content.videoIdentifier,
+      videoID != 0
+    else {
+      Failure
+        .downloadService(
+          from: #function,
+          reason: "Unable to locate videoID for download: \(downloadQueueItem.download)"
+        )
+        .log()
       return
     }
     
@@ -313,8 +319,10 @@ extension DownloadService {
       switch result {
       case .failure(let error):
         Failure
-          .downloadService(from: "requestDownloadURL",
-                           reason: "Unable to obtain download URLs: \(error)")
+          .downloadService(
+            from: #function,
+            reason: "Unable to obtain download URLs: \(error)"
+          )
           .log()
       case .success(let attachment):
         download.remoteURL = attachment.url
@@ -332,8 +340,10 @@ extension DownloadService {
         try self.persistenceStore.update(download: download)
       } catch {
         Failure
-          .downloadService(from: "requestDownloadURL",
-                           reason: "Unable to save download URL: \(error)")
+          .downloadService(
+            from: #function,
+            reason: "Unable to save download URL: \(error)"
+          )
           .log()
         self.transitionDownload(withID: download.id, to: .failed)
       }
@@ -343,19 +353,25 @@ extension DownloadService {
   }
   
   func enqueue(downloadQueueItem: PersistenceStore.DownloadQueueItem) {
-    guard downloadQueueItem.download.remoteURL != nil,
-      downloadQueueItem.download.state == .readyForDownload else {
-        Failure
-          .downloadService(from: "enqueue",
-                           reason: "Cannot enqueue download: \(downloadQueueItem.download)")
-          .log()
+    guard
+      downloadQueueItem.download.remoteURL != nil,
+      downloadQueueItem.download.state == .readyForDownload
+    else {
+      Failure
+        .downloadService(
+          from: #function,
+          reason: "Cannot enqueue download: \(downloadQueueItem.download)"
+        )
+        .log()
       return
     }
     // Find the video ID
     guard let videoID = downloadQueueItem.content.videoIdentifier else {
       Failure
-        .downloadService(from: "enqueue",
-                         reason: "Unable to locate videoID for download: \(downloadQueueItem.download)")
+        .downloadService(
+          from: #function,
+          reason: "Unable to locate videoID for download: \(downloadQueueItem.download)"
+        )
         .log()
       return
     }
@@ -380,7 +396,7 @@ extension DownloadService {
       try persistenceStore.update(download: download)
     } catch {
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to enqueue download: \(error)")
+        .saveToPersistentStore(from: Self.self, reason: "Unable to enqueue download: \(error)")
         .log()
     }
   }
@@ -396,7 +412,7 @@ extension DownloadService {
       var downloadsDirectory = URL.downloadsDirectory
       try downloadsDirectory.setResourceValues(values)
       #if DEBUG
-      print("Download directory located at: \(URL.downloadsDirectory.path)")
+        print("Download directory located at: \(URL.downloadsDirectory.path)")
       #endif
     } catch {
       preconditionFailure("Unable to prepare downloads directory: \(error)")
@@ -414,7 +430,7 @@ extension DownloadService {
       try persistenceStore.erase()
     } catch {
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to destroy all downloads")
+        .deleteFromPersistentStore(from: Self.self, reason: "Unable to destroy all downloads")
         .log()
     }
   }
@@ -460,7 +476,7 @@ extension DownloadService: DownloadProcessorDelegate {
       return try persistenceStore.download(withID: downloadID)
     } catch {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Error finding download: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "Error finding download: \(error)")
         .log()
       return .none
     }
@@ -475,7 +491,7 @@ extension DownloadService: DownloadProcessorDelegate {
       try persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
     } catch {
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update progress on download: \(error)")
+        .saveToPersistentStore(from: Self.self, reason: "Unable to update progress on download: \(error)")
         .log()
     }
   }
@@ -488,12 +504,12 @@ extension DownloadService: DownloadProcessorDelegate {
     do {
       if try !persistenceStore.deleteDownload(withID: downloadID) {
         Failure
-          .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(downloadID)")
+          .deleteFromPersistentStore(from: Self.self, reason: "Unable to delete download: \(downloadID)")
           .log()
       }
     } catch {
       Failure
-        .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete download: \(error)")
+        .deleteFromPersistentStore(from: Self.self, reason: "Unable to delete download: \(error)")
         .log()
     }
   }
@@ -501,7 +517,7 @@ extension DownloadService: DownloadProcessorDelegate {
   func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didFailWithError error: Error) {
     transitionDownload(withID: downloadID, to: .error)
     Failure
-      .saveToPersistentStore(from: String(describing: type(of: self)), reason: "DownloadDidFailWithError: \(error)")
+      .saveToPersistentStore(from: Self.self, reason: "DownloadDidFailWithError: \(error)")
       .log()
   }
   
@@ -510,7 +526,7 @@ extension DownloadService: DownloadProcessorDelegate {
       try persistenceStore.transitionDownload(withID: id, to: state)
     } catch {
       Failure
-        .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to transition download: \(error)")
+        .saveToPersistentStore(from: Self.self, reason: "Unable to transition download: \(error)")
         .log()
     }
   }
@@ -575,29 +591,32 @@ extension DownloadService {
     
     // Start download queue processing
     downloadQueueSubscription = queueManager.downloadQueue
-      .sink(receiveCompletion: { completion in
-        switch completion {
-        case .finished:
-          print("Should never get here.... \(completion)")
-        case .failure(let error):
-          Failure
-            .downloadService(from: String(describing: type(of: self)), reason: "DownloadQueue: \(error)")
-            .log()
-        }
-      }, receiveValue: { [weak self] downloadQueueItems in
-        guard let self = self else { return }
-        downloadQueueItems.filter { $0.download.state == .enqueued }
-          .forEach { downloadQueueItem in
-            do {
-              try self.downloadProcessor.add(download: downloadQueueItem.download)
-            } catch {
-              Failure
-              .downloadService(from: String(describing: type(of: self)), reason: "Problem adding download: \(error)")
+      .sink(
+        receiveCompletion: { completion in
+          switch completion {
+          case .finished:
+            print("Should never get here.... \(completion)")
+          case .failure(let error):
+            Failure
+              .downloadService(from: Self.self, reason: "DownloadQueue: \(error)")
               .log()
-              self.transitionDownload(withID: downloadQueueItem.download.id, to: .failed)
-            }
           }
-      })
+        },
+        receiveValue: { [weak self] downloadQueueItems in
+          guard let self = self else { return }
+          downloadQueueItems.filter { $0.download.state == .enqueued }
+            .forEach { downloadQueueItem in
+              do {
+                try self.downloadProcessor.add(download: downloadQueueItem.download)
+              } catch {
+                Failure
+                  .downloadService(from: Self.self, reason: "Problem adding download: \(error)")
+                  .log()
+                self.transitionDownload(withID: downloadQueueItem.download.id, to: .failed)
+              }
+            }
+        }
+      )
     
     // Resume all downloads that the processor is already working on
     downloadProcessor.resumeAllDownloads()

@@ -82,17 +82,19 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
           return try self.repository.contentPersistableState(for: contentID)
         } catch {
           Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to locate persistable state in cache:  \(error)")
+            .repositoryLoad(from: Self.self, reason: "Unable to locate persistable state in cache:  \(error)")
             .log()
           return nil
         }
       }
       .receive(on: RunLoop.main)
-      .sink(receiveCompletion: { [weak self] completion in
-        if case .failure(let error) = completion {
-          self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+      .sink(
+        receiveCompletion: { [weak self] completion in
+          if case .failure(let error) = completion {
+            self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+          }
         }
-      }) { [weak self] result in
+      ) { [weak self] result in
         switch result {
         case .downloadRequestedSuccessfully:
           break
@@ -105,11 +107,13 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     case .enqueued, .inProgress:
       downloadAction.cancelDownload(contentID: contentID)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { [weak self] completion in
-          if case .failure(let error) = completion {
-            self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+        .sink(
+          receiveCompletion: { [weak self] completion in
+            if case .failure(let error) = completion {
+              self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+            }
           }
-        }) { [weak self] _ in
+        ) { [weak self] _ in
           self?.messageBus.post(message: Message(level: .success, message: .downloadCancelled))
         }
         .store(in: &downloadActionSubscriptions)
@@ -124,11 +128,13 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
         
         self.downloadAction.deleteDownload(contentID: self.contentID)
           .receive(on: RunLoop.main)
-          .sink(receiveCompletion: { [weak self] completion in
-            if case .failure(let error) = completion {
-              self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+          .sink(
+            receiveCompletion: { [weak self] completion in
+              if case .failure(let error) = completion {
+                self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+              }
             }
-          }) { [weak self] _ in
+          ) { [weak self] _ in
             self?.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
           }
           .store(in: &self.downloadActionSubscriptions)
@@ -137,11 +143,13 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     case .notDownloadable:
       downloadAction.cancelDownload(contentID: contentID)
         .receive(on: RunLoop.main)
-        .sink(receiveCompletion: { [weak self] completion in
-          if case .failure(let error) = completion {
-            self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+        .sink(
+          receiveCompletion: { [weak self] completion in
+            if case .failure(let error) = completion {
+              self?.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+            }
           }
-        }) { [weak self] _ in
+        ) { [weak self] _ in
           self?.messageBus.post(message: Message(level: .warning, message: .downloadReset))
         }
         .store(in: &downloadActionSubscriptions)
@@ -161,7 +169,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete bookmark: \(error)")
+          .viewModelAction(from: Self.self, reason: "Unable to delete bookmark: \(error)")
           .log()
       }
     } else {
@@ -171,7 +179,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
         Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to create bookmark: \(error)")
+          .viewModelAction(from: Self.self, reason: "Unable to create bookmark: \(error)")
           .log()
       }
     }
@@ -188,7 +196,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       } catch {
         messageBus.post(message: Message(level: .error, message: .progressRemovedError))
         Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to delete progress: \(error)")
+          .viewModelAction(from: Self.self, reason: "Unable to delete progress: \(error)")
           .log()
       }
     } else {
@@ -198,7 +206,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
       } catch {
         messageBus.post(message: Message(level: .error, message: .progressMarkedAsCompleteError))
         Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to mark as complete: \(error)")
+          .viewModelAction(from: Self.self, reason: "Unable to mark as complete: \(error)")
           .log()
       }
     }
@@ -227,12 +235,14 @@ private extension DynamicContentViewModel {
     repository
       .contentDynamicState(for: contentID)
       .removeDuplicates()
-      .sink(receiveCompletion: { [weak self] completion in
-        self?.state = .failed
-        Failure
-          .repositoryLoad(from: "DynamicContentViewModel", reason: "Unable to retrieve dynamic download content: \(completion)")
-          .log()
-      }) { [weak self] contentState in
+      .sink(
+        receiveCompletion: { [weak self] completion in
+          self?.state = .failed
+          Failure
+            .repositoryLoad(from: Self.self, reason: "Unable to retrieve dynamic download content: \(completion)")
+            .log()
+        }
+      ) { [weak self] contentState in
         guard let self = self else { return }
         
         self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)

@@ -144,7 +144,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
             self.permissionState = .notLoaded
 
             Failure
-              .login(from: "SessionController", reason: error.localizedDescription)
+              .login(from: Self.self, reason: error.localizedDescription)
               .log()
           case .success(let user):
             self.user = user
@@ -183,8 +183,9 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
       DispatchQueue.main.async {
         switch result {
         case .failure(let error):
+          enum Permissions {}
           Failure
-            .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
+            .fetch(from: Permissions.self, reason: error.localizedDescription)
             .log()
           
           self.permissionState = .error
