@@ -27,15 +27,12 @@
 // THE SOFTWARE.
 
 extension ProgressionsService: ContentServiceAdapter {
-  func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    progressions(parameters: parameters) { result in
-       completion(result.map { response in
-        (
-          contentIDs: response.progressions.map(\.contentID),
-          cacheUpdate: response.cacheUpdate,
-          totalResultCount: response.totalNumber
-        )
-       })
-    }
+  func findContent(parameters: [Parameter]) async throws -> ContentServiceAdapterResponse {
+    let response = try await progressions(parameters: parameters)
+    return (
+      contentIDs: response.progressions.map(\.id),
+      cacheUpdate: response.cacheUpdate,
+      totalResultCount: response.totalNumber
+    )
   }
 }
