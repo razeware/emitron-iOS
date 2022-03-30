@@ -224,14 +224,14 @@ extension PersistenceStore {
             try $0.delete(db)
           } catch {
             Failure
-              .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete sync request: \(error)")
+              .deleteFromPersistentStore(from: Self.self, reason: "Unable to delete sync request: \(error)")
               .log()
           }
         }
       }
     } catch {
       Failure
-      .deleteFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to delete sync requests: \(error)")
+      .deleteFromPersistentStore(from: Self.self, reason: "Unable to delete sync requests: \(error)")
       .log()
     }
   }

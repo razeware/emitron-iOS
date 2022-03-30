@@ -35,7 +35,7 @@ extension PersistenceStore {
   /// List of all downloads
   func downloadList() -> DatabasePublishers.Value<[ContentSummaryState]> {
     ValueObservation.tracking { db -> [ContentSummaryState] in
-      let contentTypes = [ContentType.collection, ContentType.screencast].map(\.rawValue)
+      let contentTypes = [ContentType.collection, .screencast].map(\.rawValue)
       let request = Content
         .filter(contentTypes.contains(Content.Columns.contentType))
         .including(required: Content.download)
@@ -227,7 +227,7 @@ extension PersistenceStore {
         }
       } catch {
         Failure
-          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update parent.")
           .log()
       }
     }
@@ -243,7 +243,7 @@ extension PersistenceStore {
         try self.updateCollectionDownloadState(collectionDownload: parentDownload)
       } catch {
         Failure
-          .saveToPersistentStore(from: String(describing: type(of: self)), reason: "Unable to update parent.")
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update parent.")
           .log()
       }
     }

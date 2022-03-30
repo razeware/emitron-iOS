@@ -90,7 +90,7 @@ private extension DownloadRepository {
             guard let self = self else { return }
             self.state = .failed
             Failure
-              .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
+              .loadFromPersistentStore(from: Self.self, reason: "Unable to retrieve download content summaries: \(error)")
               .log()
           },
           receiveValue: { [weak self] contentSummaryStates in

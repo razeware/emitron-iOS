@@ -27,42 +27,28 @@
 // THE SOFTWARE.
 
 import Foundation
-import KeychainSwift
 
-// MARK: Keychain
-// User + Auth Token (refresh daily)
-
-private let ssoUserKey = "com.razeware.emitron.sso_user"
-
-extension PersistenceStore {
-  @discardableResult
-  func persistUserToKeychain(user: User, encoder: JSONEncoder = .init()) -> Bool {
-    guard let encoded = try? encoder.encode(user) else {
-      return false
-    }
-    
-    return KeychainSwift().set(encoded,
-                               forKey: ssoUserKey,
-                               withAccess: .accessibleAfterFirstUnlock)
+public extension FileManager {
+  /// The document directory for the current user.
+  /// - Throws: `FileManager.Error.
+  static var userDocumentsDirectory: URL {
+    `default`.urls(for: .documentDirectory, in: .userDomainMask).first!
   }
-  
-  func userFromKeychain(_ decoder: JSONDecoder = .init()) -> User? {
-    guard let encoded = KeychainSwift().getData(ssoUserKey) else {
-      return nil
-    }
-    
-    do {
-      return try decoder.decode(User.self, from: encoded)
-    } catch {
-      Failure
-        .loadFromPersistentStore(from: "\(PersistenceStore.self)_Keychain", reason: error.localizedDescription)
-        .log()
-      return nil
+
+  /// Removes the file or directory at the specified URL, if it exists.
+  ///
+  /// - Note: This is a convenience to only call `removeItem` if `fileExists`.
+  /// `removeItem` traps otherwise.
+  static func removeExistingFile(at url: URL) throws {
+    if `default`.fileExists(atPath: url.path) {
+      try `default`.removeItem(at: url)
     }
   }
-  
-  @discardableResult
-  func removeUserFromKeychain() -> Bool {
-    KeychainSwift().delete(ssoUserKey)
+}
+
+// MARK: - Emitron
+extension URL {
+  static var downloadsDirectory: URL {
+    FileManager.userDocumentsDirectory.appendingPathComponent("downloads", isDirectory: true)
   }
 }

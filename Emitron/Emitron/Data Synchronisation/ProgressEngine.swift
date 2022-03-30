@@ -87,7 +87,7 @@ final class ProgressEngine {
       switch result {
       case .failure(let error):
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: "Unable to fetch playback token: \(error)")
+          .fetch(from: Self.self, reason: "Unable to fetch playback token: \(error)")
           .log()
       case .success(let token):
         self.playbackToken = token
