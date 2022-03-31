@@ -29,35 +29,32 @@
 @testable import Emitron
 
 extension ContentPersistableState {
-  static func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
-    persistableState(for: content.id, with: cacheUpdate)
-  }
-  
-  static func persistableState(for contentID: Int, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
-    
-    guard let content = cacheUpdate.contents.first(where: { $0.id == contentID }) else { preconditionFailure("Invalid cache update") }
-    
-    var parentContent: Content?
-    if let groupID = content.groupID {
-      // There must be parent content
-      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupID }) {
-        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentID }
-      }
-    }
-    
+  init(content: Content, cacheUpdate: DataCacheUpdate) {
     let groups = cacheUpdate.groups.filter { $0.contentID == content.id }
-    let groupIDs = groups.map(\.id)
-    let childContent = cacheUpdate.contents.filter { groupIDs.contains($0.groupID ?? -1) }
-    
-    return ContentPersistableState(
+    self.init(
       content: content,
       contentDomains: cacheUpdate.contentDomains.filter({ $0.contentID == content.id }),
       contentCategories: cacheUpdate.contentCategories.filter({ $0.contentID == content.id }),
       bookmark: cacheUpdate.bookmarks.first(where: { $0.contentID == content.id }),
-      parentContent: parentContent,
-      progression: cacheUpdate.progressions.first(where: { $0.contentID == content.id }),
+      parentContent: content.groupID.flatMap { groupID in
+        // There must be parent content
+        cacheUpdate.groups.first { $0.id == groupID }
+          .flatMap { parentGroup in
+            cacheUpdate.contents.first { $0.id == parentGroup.contentID }
+          }
+      },
+      progression: (cacheUpdate.progressions.first { $0.contentID == content.id }),
       groups: groups,
-      childContents: childContent
+      childContents: cacheUpdate.contents.filter {
+        groups.map(\.id).contains($0.groupID ?? -1)
+      }
     )
+  }
+
+  init(contentID: Int, cacheUpdate: DataCacheUpdate) {
+    guard let content = (cacheUpdate.contents.first { $0.id == contentID })
+    else { preconditionFailure("Invalid cache update") }
+
+    self.init(content: content, cacheUpdate: cacheUpdate)
   }
 }

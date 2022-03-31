@@ -72,22 +72,24 @@ extension Content: Equatable {
 
 extension Content {
   func update(from other: Content) -> Content {
-    Content(id: other.id,
-            uri: other.uri,
-            name: other.name,
-            descriptionHtml: other.descriptionHtml,
-            descriptionPlainText: other.descriptionPlainText,
-            releasedAt: other.releasedAt,
-            free: other.free,
-            professional: other.professional,
-            difficulty: other.difficulty,
-            contentType: other.contentType,
-            duration: other.duration,
-            videoIdentifier: other.videoIdentifier,
-            cardArtworkURL: other.cardArtworkURL,
-            technologyTriple: other.technologyTriple,
-            contributors: other.contributors,
-            groupID: other.groupID ?? groupID,
-            ordinal: other.ordinal)
+    Content(
+      id: other.id,
+      uri: other.uri,
+      name: other.name,
+      descriptionHtml: other.descriptionHtml,
+      descriptionPlainText: other.descriptionPlainText,
+      releasedAt: other.releasedAt,
+      free: other.free,
+      professional: other.professional,
+      difficulty: other.difficulty,
+      contentType: other.contentType,
+      duration: other.duration,
+      videoIdentifier: other.videoIdentifier,
+      cardArtworkURL: other.cardArtworkURL,
+      technologyTriple: other.technologyTriple,
+      contributors: other.contributors,
+      groupID: other.groupID ?? groupID,
+      ordinal: other.ordinal
+    )
   }
 }

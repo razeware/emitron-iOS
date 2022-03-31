@@ -196,29 +196,20 @@ private extension ContentListView {
   }
 
   func delete(at offsets: IndexSet) {
-    guard let index = offsets.first else {
+    guard let content = (offsets.first.map { contentRepository.contents[$0] }) else {
       return
     }
-    DispatchQueue.main.async {
-      let content = contentRepository.contents[index]
-      
-      downloadAction
-        .deleteDownload(contentID: content.id)
-        .receive(on: RunLoop.main)
-        .sink(
-          receiveCompletion: { completion in
-            if case .failure(let error) = completion {
-              Failure
-                .downloadAction(from: Self.self, reason: "Unable to perform download action: \(error)")
-                .log()
-              self.messageBus.post(message: Message(level: .error, message: error.localizedDescription))
-            }
-          },
-          receiveValue: {  _ in
-            self.messageBus.post(message: Message(level: .success, message: .downloadDeleted))
-          }
-        )
-        .store(in: &deleteSubscriptions)
+
+    Task { @MainActor in
+      do {
+        try await downloadService.deleteDownload(contentID: content.id)
+        messageBus.post(message: Message(level: .success, message: .downloadDeleted))
+      } catch {
+        Failure
+          .downloadAction(from: Self.self, reason: "Unable to perform download action: \(error)")
+          .log()
+        messageBus.post(message: Message(level: .error, message: error.localizedDescription))
+      }
     }
   }
 }

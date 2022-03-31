@@ -85,7 +85,7 @@ extension Repository {
       .eraseToAnyPublisher()
   }
   
-  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState? {
+  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState {
     try dataCache.cachedContentPersistableState(for: contentID)
   }
   
