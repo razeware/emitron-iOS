@@ -31,7 +31,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
 
   init(
     parentContentID: Int,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction?,
     repository: Repository,
     service: ContentsService,
@@ -42,7 +42,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
     self.service = service
     super.init(
       parentContentID: parentContentID,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       repository: repository,
       messageBus: messageBus,

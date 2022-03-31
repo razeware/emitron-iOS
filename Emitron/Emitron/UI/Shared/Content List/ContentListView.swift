@@ -32,22 +32,21 @@ import Combine
 struct ContentListView<Header: View> {
   init(
     contentRepository: ContentRepository,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     contentScreen: ContentScreen,
     header: Header
   ) {
     self.contentRepository = contentRepository
-    self.downloadAction = downloadAction
+    self.downloadService = downloadService
     self.contentScreen = contentScreen
     self.header = header
   }
 
   @ObservedObject private var contentRepository: ContentRepository
-  private let downloadAction: DownloadAction
+  private let downloadService: DownloadService
   private let contentScreen: ContentScreen
   private let header: Header
 
-  @State private var deleteSubscriptions: Set<AnyCancellable> = []
   @EnvironmentObject private var messageBus: MessageBus
   @EnvironmentObject private var tabViewModel: TabViewModel
   @Environment(\.mainTab) private var mainTab
@@ -227,12 +226,12 @@ private extension ContentListView {
 extension ContentListView where Header == Never? {
   init(
     contentRepository: ContentRepository,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     contentScreen: ContentScreen
   ) {
     self.init(
       contentRepository: contentRepository,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       contentScreen: contentScreen,
       header: nil
     )

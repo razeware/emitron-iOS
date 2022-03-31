@@ -30,7 +30,7 @@ import Combine
 
 class ChildContentsViewModel: ObservableObject {
   let parentContentID: Int
-  let downloadAction: DownloadAction
+  let downloadService: DownloadService
   weak var syncAction: SyncAction?
   let repository: Repository
   let messageBus: MessageBus
@@ -45,7 +45,7 @@ class ChildContentsViewModel: ObservableObject {
 
   init(
     parentContentID: Int,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction?,
     repository: Repository,
     messageBus: MessageBus,
@@ -53,7 +53,7 @@ class ChildContentsViewModel: ObservableObject {
     sessionController: SessionController
   ) {
     self.parentContentID = parentContentID
-    self.downloadAction = downloadAction
+    self.downloadService = downloadService
     self.syncAction = syncAction
     self.repository = repository
     self.messageBus = messageBus
@@ -115,7 +115,7 @@ extension ChildContentsViewModel {
     .init(
       contentID: contentID,
       repository: repository,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       messageBus: messageBus,
       settingsManager: settingsManager,

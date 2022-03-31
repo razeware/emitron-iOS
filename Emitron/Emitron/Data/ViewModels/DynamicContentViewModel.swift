@@ -33,7 +33,7 @@ import class Foundation.RunLoop
 final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable {
   private let contentID: Int
   private let repository: Repository
-  private let downloadAction: DownloadAction
+  private let downloadService: DownloadService
   private weak var syncAction: SyncAction?
   private let messageBus: MessageBus
   private let settingsManager: SettingsManager
@@ -52,7 +52,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
   init(contentID: Int, repository: Repository, downloadAction: DownloadAction, syncAction: SyncAction?, messageBus: MessageBus, settingsManager: SettingsManager, sessionController: SessionController) {
     self.contentID = contentID
     self.repository = repository
-    self.downloadAction = downloadAction
+    self.downloadService = downloadService
     self.syncAction = syncAction
     self.messageBus = messageBus
     self.settingsManager = settingsManager

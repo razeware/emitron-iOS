@@ -32,7 +32,7 @@ final class LibraryRepository: ContentRepository {
   init(
     repository: Repository,
     contentsService: ContentsService,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction,
     serviceAdapter: ContentServiceAdapter,
     messageBus: MessageBus,
@@ -44,7 +44,7 @@ final class LibraryRepository: ContentRepository {
     super.init(
       repository: repository,
       contentsService: contentsService,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       serviceAdapter: serviceAdapter,
       messageBus: messageBus,

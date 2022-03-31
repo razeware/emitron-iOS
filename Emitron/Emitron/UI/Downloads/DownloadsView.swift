@@ -45,7 +45,7 @@ struct DownloadsView: View {
   var body: some View {
     ContentListView(
       contentRepository: downloadRepository,
-      downloadAction: downloadService,
+      downloadService: downloadService,
       contentScreen: contentScreen
     )
       .navigationTitle(String.downloads)

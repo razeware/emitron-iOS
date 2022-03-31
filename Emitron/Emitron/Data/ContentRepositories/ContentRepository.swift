@@ -38,7 +38,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private(set) weak var syncAction: SyncAction?
 
   private let contentsService: ContentsService
-  private let downloadAction: DownloadAction
+  private let downloadService: DownloadService
   private let serviceAdapter: ContentServiceAdapter!
 
   private var contentIDs: [Int] = []
@@ -133,7 +133,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   init(
     repository: Repository,
     contentsService: ContentsService,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction,
     serviceAdapter: ContentServiceAdapter! = nil,
     messageBus: MessageBus,
@@ -142,7 +142,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   ) {
     self.repository = repository
     self.contentsService = contentsService
-    self.downloadAction = downloadAction
+    self.downloadService = downloadService
     self.syncAction = syncAction
     self.serviceAdapter = serviceAdapter
     self.messageBus = messageBus
@@ -155,7 +155,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     // Default to using the cached version
     DataCacheChildContentsViewModel(
       parentContentID: contentID,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       repository: repository,
       service: contentsService,
@@ -174,7 +174,7 @@ extension ContentRepository {
     .init(
       contentID: contentID,
       repository: repository,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       messageBus: messageBus,
       settingsManager: settingsManager,

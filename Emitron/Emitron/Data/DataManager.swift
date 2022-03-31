@@ -109,12 +109,12 @@ final class DataManager: ObservableObject {
       watchStatsService: watchStatsService
     )
     
-    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
   
-    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
-    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
 
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController, filters: filters)
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController, filters: filters)
     
     downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     
