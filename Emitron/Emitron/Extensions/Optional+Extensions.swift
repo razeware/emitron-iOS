@@ -26,30 +26,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import protocol Combine.ObservableObject
-import protocol GRDB.DatabaseWriter
-
-enum PersistenceStoreError: Error {
-  case argumentError
-  case notFound
-}
-
-// The object responsible for managing and accessing cached content
-final class PersistenceStore: ObservableObject {
-  let db: DatabaseWriter
-  
-  init<DB: DatabaseWriter>(db: DB) {
-    self.db = db
+public extension Optional {
+  /// Represents that an `Optional` was `nil`.
+  enum UnwrapError: Error {
+    case `nil`
+    case typeMismatch
   }
-}
 
-// MARK: - internal
-extension PersistenceStore {
-  /// Completely erase the database. Used for logout.
-  func erase() throws {
-    // Empty it
-    try db.erase()
-    // Repopulate the structure
-    try EmitronDatabase.migrator.migrate(db)
+  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError` when `nil`.
+  var unwrapped: Wrapped {
+    get throws {
+      switch self {
+      case let wrapped?:
+        return wrapped
+      case nil:
+        throw UnwrapError.nil
+      }
+    }
+  }
+
+  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError`
+  func unwrap<Wrapped>() throws -> Wrapped {
+    switch self {
+    case let wrapped as Wrapped:
+      return wrapped
+    case .some:
+      throw UnwrapError.typeMismatch
+    case nil:
+      throw UnwrapError.nil
+    }
   }
 }

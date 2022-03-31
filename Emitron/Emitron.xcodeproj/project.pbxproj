@@ -247,6 +247,7 @@
 		492E632627A6B96900CD1F19 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E632527A6B96900CD1F19 /* Binding+Extensions.swift */; };
 		493DA0A127266049006ED195 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 493DA0A027266049006ED195 /* GRDB */; };
 		494A79A82465C8C90097E8F4 /* RefreshableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */; };
+		495E2B1A27F4FE8C003EEE86 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */; };
 		49971FEA27B297DA00FBCCEA /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49971FE927B297DA00FBCCEA /* TabView.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
@@ -587,6 +588,7 @@
 		491E522E27F3A3CA004F80E6 /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		492E632527A6B96900CD1F19 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableTestCase.swift; sourceTree = "<group>"; };
+		495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		49971FE927B297DA00FBCCEA /* TabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
@@ -1423,6 +1425,7 @@
 				22C640F523F604E700CBFDE5 /* View+Extensions.swift */,
 				2278AE4F240A74C400855221 /* UIApplication+DismissKeyboard.swift */,
 				491E522E27F3A3CA004F80E6 /* FileManager+Extensions.swift */,
+				495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -2178,6 +2181,7 @@
 				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
 				22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */,
+				495E2B1A27F4FE8C003EEE86 /* Optional+Extensions.swift in Sources */,
 				22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,
