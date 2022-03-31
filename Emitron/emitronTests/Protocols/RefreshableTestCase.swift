@@ -38,7 +38,7 @@ final class RefreshableTestCase: XCTestCase {
           dataCache: .init()
         ),
         service: .init(
-          client: .init(authToken: .init())
+          networkClient: .init(authToken: .init())
         )
       ).refreshableUserDefaultsKey,
       "UserDefaultsRefreshableDomainRepository"

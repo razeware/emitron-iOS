@@ -48,7 +48,7 @@ final class DownloadService: ObservableObject {
   private let userModelController: UserModelController
   private var userModelControllerSubscription: AnyCancellable?
   private let videosServiceProvider: VideosService.Provider
-  private var videosService: VideosService?
+  private var videosService: VideosServiceProtocol?
   private let queueManager: DownloadQueueManager
   private let downloadProcessor: DownloadProcessor
   private var processingSubscriptions = Set<AnyCancellable>()
@@ -77,14 +77,14 @@ final class DownloadService: ObservableObject {
   init(
     persistenceStore: PersistenceStore,
     userModelController: UserModelController,
-    videosServiceProvider: VideosService.Provider? = .none,
+    videosServiceProvider: VideosService.Provider? = nil,
     settingsManager: SettingsManager
   ) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
     downloadProcessor = DownloadProcessor(settingsManager: settingsManager)
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
-    self.videosServiceProvider = videosServiceProvider ?? { VideosService(client: $0) }
+    self.videosServiceProvider = videosServiceProvider ?? { VideosService(networkClient: $0) }
     self.settingsManager = settingsManager
     userModelControllerSubscription = userModelController.objectDidChange.sink { [weak self] in
       self?.stopProcessing()

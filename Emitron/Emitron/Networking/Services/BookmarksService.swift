@@ -26,7 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class BookmarksService: Service { }
+import class Foundation.URLSession
+
+struct BookmarksService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
 
 // MARK: - internal
 extension BookmarksService {

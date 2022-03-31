@@ -108,14 +108,12 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
+  @MainActor init(guardpost: Guardpost) {
     self.guardpost = guardpost
 
     let user = User.backdoor ?? guardpost.currentUser
     client = RWAPI(authToken: user?.token ?? "")
-    permissionsService = PermissionsService(client: client)
+    permissionsService = .init(networkClient: client)
     super.init()
 
     self.user = user
@@ -217,7 +215,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     $user.sink { [weak self] user in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
-      self.permissionsService = PermissionsService(client: self.client)
+      self.permissionsService = .init(networkClient: self.client)
     }
     .store(in: &subscriptions)
     

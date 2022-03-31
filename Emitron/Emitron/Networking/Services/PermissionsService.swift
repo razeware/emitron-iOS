@@ -26,9 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class PermissionsService: Service { }
+import class Foundation.URLSession
 
-// MARK: - Internal
+struct PermissionsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - internal
 extension PermissionsService {
   var permissions: PermissionsRequest.Response {
     get async throws { try await makeRequest(request: PermissionsRequest()) }

@@ -47,7 +47,7 @@ class DownloadServiceTest: XCTestCase, DatabaseTestCase {
     downloadService = DownloadService(
       persistenceStore: persistenceStore,
       userModelController: userModelController,
-      videosServiceProvider: { _ in self.videoService },
+      videosServiceProvider: { [unowned videoService] _ in videoService },
       settingsManager: settingsManager
     )
     

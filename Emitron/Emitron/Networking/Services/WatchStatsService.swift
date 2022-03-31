@@ -26,7 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-final class WatchStatsService: Service { }
+import class Foundation.URLSession
+
+struct WatchStatsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
 
 // MARK: - internal
 extension WatchStatsService {

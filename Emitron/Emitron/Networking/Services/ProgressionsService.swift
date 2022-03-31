@@ -26,9 +26,14 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ProgressionsService: Service { }
+import class Foundation.URLSession
 
-  // MARK: - Internal
+struct ProgressionsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - internal
 extension ProgressionsService {
   func progressions(parameters: [Parameter] = []) async throws -> ProgressionsRequest.Response {
     try await makeRequest(request: ProgressionsRequest(), parameters: parameters)

@@ -26,7 +26,12 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class DomainsService: Service { }
+import class Foundation.URLSession
+
+struct DomainsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
 
 // MARK: - internal
 extension DomainsService {

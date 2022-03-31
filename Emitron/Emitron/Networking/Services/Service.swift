@@ -28,21 +28,14 @@
 
 import Foundation
 
-class Service {
-  // MARK: - Properties
-  let networkClient: RWAPI
-  let session: URLSession
+protocol Service {
+  var networkClient: RWAPI { get }
+  var session: URLSession { get }
+}
 
-  // MARK: - Initializers
-  init(client: RWAPI) {
-    networkClient = client
-    session = URLSession(configuration: .default)
-  }
-  
-  // MARK: - Utilities
+extension Service {
   var isAuthenticated: Bool { !networkClient.authToken.isEmpty }
 
-  // MARK: - Internal
   @MainActor func makeRequest<Request: Emitron.Request>(
     request: Request,
     parameters: [Parameter] = []
