@@ -59,7 +59,8 @@ struct Download: Codable {
 
 extension Download: DownloadProcessorModel { }
 
-extension Download: Equatable {
+// MARK: - Hashable
+extension Download: Hashable {
   // We override this function because SQLite doesn't store dates to the same accuracy as Date
   static func == (lhs: Download, rhs: Download) -> Bool {
     lhs.id == rhs.id &&
@@ -74,9 +75,10 @@ extension Download: Equatable {
   }
 }
 
+// MARK: - internal
 extension Download {
-  static func create(for content: Content) -> Download {
-    Download(
+  init(content: Content) {
+    self.init(
       id: UUID(),
       requestedAt: .now,
       lastValidatedAt: nil,
@@ -85,11 +87,10 @@ extension Download {
       progress: 0,
       state: .pending,
       contentID: content.id,
-      ordinal: content.ordinal ?? 0)
+      ordinal: content.ordinal ?? 0
+    )
   }
-}
 
-extension Download {
   var isDownloading: Bool {
     [.inProgress, .paused].contains(state) && remoteURL != nil
   }
@@ -98,5 +99,3 @@ extension Download {
     [.complete].contains(state) && remoteURL != nil
   }
 }
-
-extension Download: Hashable { }
