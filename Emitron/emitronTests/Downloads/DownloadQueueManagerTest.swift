@@ -31,13 +31,12 @@ import GRDB
 import Combine
 @testable import Emitron
 
-class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
+final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
   private(set) var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
   private var queueManager: DownloadQueueManager!
-  private var subscriptions = Set<AnyCancellable>()
   private var settingsManager: SettingsManager!
 
   override func setUpWithError() throws {
@@ -61,46 +60,19 @@ class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
   override func tearDown() {
     super.tearDown()
     videoService.reset()
-    subscriptions = []
   }
   
-  func persistableState(for content: Content, with cacheUpdate: DataCacheUpdate) -> ContentPersistableState {
-    var parentContent: Content?
-    if let groupID = content.groupID {
-      // There must be parent content
-      if let parentGroup = cacheUpdate.groups.first(where: { $0.id == groupID }) {
-        parentContent = cacheUpdate.contents.first { $0.id == parentGroup.contentID }
+  var sampleDownload: Download {
+    get async throws {
+      let screencast = ContentTest.Mocks.screencast
+      let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+        .init(content: screencast.0, cacheUpdate: screencast.1)
       }
+
+      XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
+      return try XCTUnwrap(allDownloads.first)
     }
-    
-    let groups = cacheUpdate.groups.filter { $0.contentID == content.id }
-    let groupIDs = groups.map(\.id)
-    let childContent = cacheUpdate.contents.filter { groupIDs.contains($0.groupID ?? -1) }
-    
-    return ContentPersistableState(
-      content: content,
-      contentDomains: cacheUpdate.contentDomains.filter({ $0.contentID == content.id }),
-      contentCategories: cacheUpdate.contentCategories.filter({ $0.contentID == content.id }),
-      bookmark: cacheUpdate.bookmarks.first(where: { $0.contentID == content.id }),
-      parentContent: parentContent,
-      progression: cacheUpdate.progressions.first(where: { $0.contentID == content.id }),
-      groups: groups,
-      childContents: childContent
-    )
-  }
-  
-  func sampleDownload() throws -> Download {
-    let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
-      self.persistableState(for: screencast.0, with: screencast.1)
-    }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    
-    XCTAssert(completion == .finished)
-    
-    return try allDownloads.first!
   }
   
   @discardableResult func samplePersistedDownload(state: Download.State = .pending) throws -> Download {
@@ -116,12 +88,12 @@ class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
     }
   }
   
-  func testPendingStreamSendsNewDownloads() throws {
+  func testPendingStreamSendsNewDownloads() async throws {
     let recorder = queueManager.pendingStream.record()
     
-    var download = try sampleDownload()
-    try database.write { db in
-      try download.save(db)
+    var download = try await sampleDownload
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
     
     let downloads = try wait(for: recorder.next(2), timeout: 10, description: "PendingDownloads")
@@ -129,15 +101,13 @@ class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
     XCTAssertEqual([nil, download], downloads.map { $0?.download })
   }
   
-  func testPendingStreamSendingPreExistingDownloads() throws {
-    var download = try sampleDownload()
-    try database.write { db in
-      try download.save(db)
+  func testPendingStreamSendingPreExistingDownloads() async throws {
+    var download = try await sampleDownload
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
-    
-    let recorder = queueManager.pendingStream.record()
-    let pending = try wait(for: recorder.next(), timeout: 10)
-    
+
+    let pending = try wait(for: queueManager.pendingStream.record().next(), timeout: 10)
     XCTAssertEqual(download, pending!.download)
   }
   
