@@ -30,7 +30,6 @@ import CryptoKit
 import Foundation
 
 struct SingleSignOnRequest {
-
   // MARK: - Properties
   private let callbackURL: String
   let secret: String
@@ -43,9 +42,11 @@ struct SingleSignOnRequest {
   }
 
   // MARK: - Initializers
-  init(endpoint: String,
-       secret: String,
-       callbackURL: String) {
+  init(
+    endpoint: String,
+    secret: String,
+    callbackURL: String
+  ) {
     self.endpoint = endpoint
     self.secret = secret
     self.callbackURL = callbackURL
@@ -53,9 +54,8 @@ struct SingleSignOnRequest {
   }
 }
 
-// MARK: - Private
+// MARK: - private
 private extension SingleSignOnRequest {
-
   var payload: [URLQueryItem]? {
     guard let unsignedPayload = unsignedPayload else {
       return nil
@@ -63,22 +63,24 @@ private extension SingleSignOnRequest {
 
     let contents = unsignedPayload.toBase64()
     let symmetricKey = SymmetricKey(data: Data(secret.utf8))
-    let signature = HMAC<SHA256>.authenticationCode(for: Data(contents.utf8),
-                                                    using: symmetricKey)
+    let signature = HMAC<SHA256>.authenticationCode(
+      for: Data(contents.utf8),
+      using: symmetricKey
+    )
       .description
       .replacingOccurrences(of: String.hmacToRemove, with: "")
 
     return [
-      URLQueryItem(name: "sso", value: contents),
-      URLQueryItem(name: "sig", value: signature)
+      .init(name: "sso", value: contents),
+      .init(name: "sig", value: signature)
     ]
   }
 
   var unsignedPayload: String? {
     var components = URLComponents()
     components.queryItems = [
-      URLQueryItem(name: "callback_url", value: callbackURL),
-      URLQueryItem(name: "nonce", value: nonce)
+      .init(name: "callback_url", value: callbackURL),
+      .init(name: "nonce", value: nonce)
     ]
     return components.query
   }

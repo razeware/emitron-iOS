@@ -91,7 +91,7 @@ struct LoginView: View {
         Spacer()
         
         MainButtonView(title: "Sign In", type: .primary(withArrow: true)) {
-          sessionController.login()
+          Task(priority: .userInitiated) { try await sessionController.login() }
         }
         .padding(.horizontal, 18)
         .padding([.bottom], 38)

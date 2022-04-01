@@ -297,8 +297,8 @@ class PersistenceStore_DownloadsTest: XCTestCase, DatabaseTestCase {
       _ = try await persistenceStore.collectionDownloadSummary(forContentID: screencast.id)
       XCTFail()
     } catch {
-      guard case PersistenceStoreError.argumentError = error
-      else { XCTFail(); return }
+      guard case PersistenceStore.Error.argumentError = error
+      else { return XCTFail() }
     }
   }
   

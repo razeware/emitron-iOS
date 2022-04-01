@@ -73,7 +73,7 @@ extension VideoPlaybackViewModel {
 }
 
 extension Notification.Name {
-  static let requestReview = Notification.Name("requestReview")
+  static let requestReview = Self("requestReview")
 }
 
 final class VideoPlaybackViewModel {
@@ -89,9 +89,9 @@ final class VideoPlaybackViewModel {
   private let dismiss: () -> Void
   
   // These are the content models that this view model is capable of playing. In this order.
-  private var contentList = [VideoPlaybackState]()
+  private var contentList: [VideoPlaybackState] = []
   // A cache of playback items, and a way of finding the content model for the currently playing item
-  private var playerItems = [Int: AVPlayerItem]()
+  private var playerItems: [Int: AVPlayerItem] = [:]
   private var currentlyPlayingContentID: Int? {
     guard let currentItem = player.currentItem,
       let contentID = playerItems.first(where: { $1 == currentItem })?.key
@@ -104,7 +104,6 @@ final class VideoPlaybackViewModel {
     contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
-  private var currentItemStateSubscription: AnyCancellable?
 
   let player = AVQueuePlayer()
   let messageBus: MessageBus
@@ -238,30 +237,26 @@ private extension VideoPlaybackViewModel {
       .sink { [weak self] rate in
         self?.shouldBePlaying = rate == 0
         
-        guard let self = self,
-              ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
-          else { return }
+        guard
+          let self = self,
+          ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
+        else { return }
         
         self.player.rate = self.settingsManager.playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
-    player.publisher(for: \.currentItem)
+    player.publisher(for: \.currentItem?.status)
       .removeDuplicates()
-      .sink { [weak self] item in
-        guard let self = self,
-          let item = item else { return }
-        
-        self.currentItemStateSubscription = item.publisher(for: \.status)
-          .removeDuplicates()
-          .sink { [weak self] status in
-            guard let self = self,
-              status == .readyToPlay,
-              self.shouldBePlaying,
-              self.player.rate == 0 else { return }
-            
-            self.player.play()
-          }
+      .sink { [weak self] status in
+        guard
+          let self = self,
+          case .readyToPlay = status,
+          self.shouldBePlaying,
+          self.player.rate == 0
+        else { return }
+
+        self.player.play()
       }
       .store(in: &subscriptions)
     
@@ -287,8 +282,7 @@ private extension VideoPlaybackViewModel {
       .publisher(for: .AVPlayerItemDidPlayToEndTime)
       .sink { [weak self] _ in
         guard let self = self else { return }
-        
-        if self.player.items().last == self.player.currentItem {
+        if self.player.currentItem == self.player.items().last {
           // We're done. Let's dismiss the player
           self.dismiss()
         }
@@ -454,7 +448,8 @@ private extension VideoPlaybackViewModel {
 
   func update(progression: Progression) {
     // Find appropriate playback state
-    guard let contentIndex = contentList.firstIndex(where: { $0.content.id == progression.id }) else { return }
+    guard let contentIndex = (contentList.firstIndex { $0.content.id == progression.id })
+    else { return }
     
     let currentState = contentList[contentIndex]
     contentList[contentIndex] = VideoPlaybackState(

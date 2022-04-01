@@ -179,7 +179,7 @@ extension PersistenceStore {
         let content = try Content.fetchOne(db, key: contentID),
         content.contentType == .collection
       else {
-        throw PersistenceStoreError.argumentError
+        throw PersistenceStore.Error.argumentError
       }
 
       return .init(

@@ -73,7 +73,7 @@ final class ProgressEngine {
   }
   
   func start() {
-    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+    networkMonitor.start(queue: .global(qos: .utility))
     setupSubscriptions()
   }
   
@@ -81,10 +81,10 @@ final class ProgressEngine {
     // Don't especially care if we're in offline mode
     guard mode == .online else { return }
     playbackToken = nil
-    // Need to refresh the plaback token
+    // Need to refresh the playback token
     Task {
       do {
-        self.playbackToken = try await contentsService.beginPlaybackToken
+        playbackToken = try await contentsService.beginPlaybackToken
       } catch {
         Failure
           .fetch(from: Self.self, reason: "Unable to fetch playback token: \(error)")
@@ -129,7 +129,7 @@ final class ProgressEngine {
   }
   
   private func setupSubscriptions() {
-    if networkMonitor.currentPath.status == .satisfied {
+    if case .satisfied = networkMonitor.currentPath.status {
       mode = .online
     }
     networkMonitor.pathUpdateHandler = { [weak self] path in
@@ -137,7 +137,11 @@ final class ProgressEngine {
     }
   }
   
-  @discardableResult private func updateCacheWithProgress(for contentID: Int, progress: Int, target: Int? = nil) -> Progression {
+  @discardableResult private func updateCacheWithProgress(
+    for contentID: Int,
+    progress: Int,
+    target: Int? = nil
+  ) -> Progression {
     let content = repository.content(for: contentID)
     let progression: Progression
     

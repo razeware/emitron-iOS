@@ -200,7 +200,10 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     }
   }
   
-  func videoPlaybackViewModel(apiClient: RWAPI, dismissClosure: @escaping () -> Void) -> VideoPlaybackViewModel {
+  func videoPlaybackViewModel(
+    apiClient: RWAPI,
+    dismissClosure: @escaping () -> Void
+  ) -> VideoPlaybackViewModel {
     let videosService = VideosService(networkClient: apiClient)
     let contentsService = ContentsService(networkClient: apiClient)
     return .init(
