@@ -126,7 +126,7 @@ extension DownloadService {
     
     // The download queue subscription is part of the
     // network monitoring process.
-    checkQueueStatus()
+    Task { await checkQueueStatus() }
   }
   
   func stopProcessing() {
@@ -525,33 +525,32 @@ extension DownloadService {
   private func configureWifiObservation() {
     // Track the network status
     networkMonitor.pathUpdateHandler = { [weak self] _ in
-      self?.checkQueueStatus()
+      guard let self = self else { return }
+      Task { await self.checkQueueStatus() }
     }
-    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+    networkMonitor.start(queue: .global(qos: .utility))
     
     // Track the status of the wifi downloads setting
     settingsSubscription = settingsManager
       .wifiOnlyDownloadsPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
-        self?.checkQueueStatus()
+        guard let self = self else { return }
+        Task { await self.checkQueueStatus() }
       }
   }
   
-  private func checkQueueStatus() {
-    DispatchQueue.main.async { [weak self] in
-      guard let self = self else { return }
-      
-      let expensive = self.networkMonitor.currentPath.isExpensive
-      let allowedExpensive = self.settingsManager.wifiOnlyDownloads
-      self.status = .init(expensive: expensive, expensiveAllowed: allowedExpensive)
-      
-      switch self.status {
-      case .active:
-        self.resumeQueue()
-      case .inactive:
-        self.pauseQueue()
-      }
+  @MainActor private func checkQueueStatus() {
+    status = .init(
+      expensive: networkMonitor.currentPath.isExpensive,
+      expensiveAllowed: settingsManager.wifiOnlyDownloads
+    )
+
+    switch status {
+    case .active:
+      resumeQueue()
+    case .inactive:
+      pauseQueue()
     }
   }
   
