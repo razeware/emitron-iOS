@@ -121,37 +121,29 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   // MARK: - Internal
-  func login() {
+  @MainActor func login() async throws {
     guard userState != .loggingIn else { return }
     
     userState = .loggingIn
-    guardpost.presentationContextDelegate = self
     
     if isLoggedIn {
       if !hasPermissions {
         fetchPermissions()
       }
     } else {
-      guardpost.login { [weak self] result in
-        DispatchQueue.main.async { [weak self] in
-          guard let self = self else { return }
-          
-          switch result {
-          case .failure(let error):
-            self.userState = .notLoggedIn
-            self.permissionState = .notLoaded
+      do {
+        user = try await guardpost.login()
+        Event
+          .login(from: Self.self)
+          .log()
+        fetchPermissions()
+      } catch {
+        userState = .notLoggedIn
+        permissionState = .notLoaded
 
-            Failure
-              .login(from: Self.self, reason: error.localizedDescription)
-              .log()
-          case .success(let user):
-            self.user = user
-            Event
-              .login(from: Self.self)
-              .log()
-            self.fetchPermissions()
-          }
-        }
+        Failure
+          .login(from: Self.self, reason: error.localizedDescription)
+          .log()
       }
     }
   }
@@ -239,13 +231,6 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
 // MARK: - Refreshable
 extension SessionController: Refreshable {
   var refreshableCheckTimeSpan: RefreshableTimeSpan { .short }
-}
-
-// MARK: - ASWebAuthenticationPresentationContextProviding
-extension SessionController: ASWebAuthenticationPresentationContextProviding {
-  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    .init()
-  }
 }
 
 // MARK: - Content Access Permissions
