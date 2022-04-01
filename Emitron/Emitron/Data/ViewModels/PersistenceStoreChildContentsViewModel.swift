@@ -26,14 +26,11 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import class Foundation.DispatchQueue
-
 final class PersistenceStoreChildContentsViewModel: ChildContentsViewModel {
-
   override func loadContentDetailsIntoCache() {
     do {
       try repository.loadDownloadedChildContentsIntoCache(for: parentContentID)
-      DispatchQueue.main.async(execute: reload)
+      Task { @MainActor in reload() }
     } catch {
       state = .failed
       messageBus.post(message: Message(level: .error, message: .downloadedContentNotFound))
