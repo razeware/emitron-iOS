@@ -33,12 +33,10 @@ struct Icon: Identifiable, Equatable {
   let imageName: String
   let ordinal: Int
   
-  var id: String {
-    imageName
-  }
+  var id: String { imageName }
   
   var uiImage: UIImage {
-    UIImage(named: imageName) ?? .init()
+    .init(named: imageName) ?? .init()
   }
 }
 
