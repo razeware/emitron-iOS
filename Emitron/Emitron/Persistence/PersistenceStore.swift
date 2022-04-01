@@ -29,13 +29,14 @@
 import protocol Combine.ObservableObject
 import protocol GRDB.DatabaseWriter
 
-enum PersistenceStoreError: Error {
-  case argumentError
-  case notFound
-}
-
 // The object responsible for managing and accessing cached content
 final class PersistenceStore: ObservableObject {
+  enum Error: Swift.Error {
+    case argumentError
+    case notFound
+    case keychainFailure
+  }
+  
   let db: DatabaseWriter
   
   init<DB: DatabaseWriter>(db: DB) {

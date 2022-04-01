@@ -138,16 +138,16 @@ public extension Guardpost {
   }
 
   func logout() {
-    persistenceStore.removeUserFromKeychain()
+    try? persistenceStore.removeUserFromKeychain()
     _currentUser = .none
   }
   
   func updateUser(with user: User?) {
     _currentUser = user
     if let user = user {
-      persistenceStore.persistUserToKeychain(user: user)
+      try? persistenceStore.persistUserToKeychain(user: user)
     } else {
-      persistenceStore.removeUserFromKeychain()
+      try? persistenceStore.removeUserFromKeychain()
     }
   }
 }

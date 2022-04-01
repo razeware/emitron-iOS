@@ -149,7 +149,7 @@ extension Repository {
   func loadDownloadedChildContentsIntoCache(for contentID: Int) throws {
     guard let content = try persistenceStore.downloadedContent(with: contentID),
       let childContents = try persistenceStore.childContentsForDownloadedContent(with: contentID) else {
-      throw PersistenceStoreError.notFound
+      throw PersistenceStore.Error.notFound
     }
     let cacheUpdate = DataCacheUpdate(contents: childContents.contents + [content], groups: childContents.groups)
     apply(update: cacheUpdate)

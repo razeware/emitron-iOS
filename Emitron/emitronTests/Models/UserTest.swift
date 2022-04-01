@@ -46,8 +46,7 @@ class UserTest: XCTestCase {
   
   func testUserCorrectlyPopulatesWithDictionary() {
     guard let user = User(dictionary: userDictionary) else {
-      XCTFail("User should be correctly populated")
-      return
+      return XCTFail("User should be correctly populated")
     }
     
     XCTAssertEqual(userDictionary["external_id"], user.externalID)

@@ -72,7 +72,7 @@ class DataCacheTest: XCTestCase {
     
     let completion = try wait(for: recorder.completion, timeout: 10)
     if case .finished = completion {
-        XCTFail("Should not have finished")
+      XCTFail("Should not have finished")
     }
     if case let .failure(error) = completion {
       if error as? DataCacheError != .some(.cacheMiss) {
