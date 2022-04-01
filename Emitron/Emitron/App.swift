@@ -102,24 +102,33 @@ extension App: SwiftUI.App {
 
 // MARK: - internal
 extension App {
+  // Initialise the database
   static var objects: Objects {
-    // Initialise the database
     // swiftlint:disable:next force_try
     let databaseURL = try! FileManager.default
       .url(for: .applicationSupportDirectory, in: .userDomainMask, appropriateFor: nil, create: true)
       .appendingPathComponent("emitron.sqlite")
-    // swiftlint:disable:next force_try
-    let databasePool = try! EmitronDatabase.openDatabase(atPath: databaseURL.path)
-    let persistenceStore = PersistenceStore(db: databasePool)
-    let guardpost = Guardpost(baseURL: "https://accounts.raywenderlich.com",
-                              urlScheme: "com.razeware.emitron",
-                              ssoSecret: Configuration.ssoSecret,
-                              persistenceStore: persistenceStore)
+    let persistenceStore = PersistenceStore(
+      // swiftlint:disable:next force_try
+      db: try! EmitronDatabase.openDatabase(atPath: databaseURL.path)
+    )
+    let guardpost = Guardpost(
+      baseURL: "https://accounts.raywenderlich.com",
+      urlScheme: "com.razeware.emitron",
+      ssoSecret: Configuration.ssoSecret,
+      persistenceStore: persistenceStore
+    )
     let sessionController = SessionController(guardpost: guardpost)
-    let settingsManager = SettingsManager(userDefaults: .standard, userModelController: sessionController)
-    let downloadService = DownloadService(persistenceStore: persistenceStore, userModelController: sessionController, settingsManager: settingsManager)
+    let settingsManager = SettingsManager(
+      userDefaults: .standard,
+      userModelController: sessionController
+    )
+    let downloadService = DownloadService(
+      persistenceStore: persistenceStore,
+      userModelController: sessionController,
+      settingsManager: settingsManager
+    )
     let messageBus = MessageBus()
-    let dataManager = DataManager(sessionController: sessionController, persistenceStore: persistenceStore, downloadService: downloadService, messageBus: messageBus, settingsManager: settingsManager)
 
     return (
       persistenceStore: persistenceStore,
@@ -127,7 +136,13 @@ extension App {
       sessionController: sessionController,
       settingsManager: settingsManager,
       downloadService: downloadService,
-      dataManager: dataManager,
+      dataManager: .init(
+        sessionController: sessionController,
+        persistenceStore: persistenceStore,
+        downloadService: downloadService,
+        messageBus: messageBus,
+        settingsManager: settingsManager
+      ),
       messageBus: messageBus
     )
   }
@@ -137,22 +152,24 @@ extension App {
 private extension App {
   mutating func startServices() {
     // guardpost
-    guardpost = Guardpost(baseURL: "https://accounts.raywenderlich.com",
-                          urlScheme: "com.razeware.emitron://",
-                          ssoSecret: Configuration.ssoSecret,
-                          persistenceStore: persistenceStore)
+    guardpost = .init(
+      baseURL: "https://accounts.raywenderlich.com",
+      urlScheme: "com.razeware.emitron://",
+      ssoSecret: Configuration.ssoSecret,
+      persistenceStore: persistenceStore
+    )
 
     // session controller
     sessionController = SessionController(guardpost: guardpost)
 
     // settings
-    settingsManager = SettingsManager(
+    settingsManager = .init(
       userDefaults: .standard,
       userModelController: sessionController
     )
 
     // download service
-    downloadService = DownloadService(
+    downloadService = .init(
       persistenceStore: persistenceStore,
       userModelController: sessionController,
       settingsManager: settingsManager
@@ -160,7 +177,7 @@ private extension App {
     appDelegate.downloadService = downloadService
 
     // data manager
-    dataManager = DataManager(
+    dataManager = .init(
       sessionController: sessionController,
       persistenceStore: persistenceStore,
       downloadService: downloadService,
