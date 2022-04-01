@@ -45,10 +45,10 @@ struct MessageBarView: View {
           state: messageBus.currentMessage!.snackbarState,
           visible: $messageBus.messageVisible
         )
+        .transition(.moveAndFade)
       }
     }
-    .transition(.moveAndFade)
-    .animation(.default)
+    .animation(.default, value: messageBus.messageVisible)
   }
 }
 
