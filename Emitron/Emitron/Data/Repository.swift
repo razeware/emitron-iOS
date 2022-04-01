@@ -77,15 +77,17 @@ extension Repository {
     return fromCache
       .combineLatest(download)
       .map { cachedState, download in
-        DynamicContentState(download: download,
-                            progression: cachedState.progression,
-                            bookmark: cachedState.bookmark)
+        DynamicContentState(
+          download: download,
+          progression: cachedState.progression,
+          bookmark: cachedState.bookmark
+        )
       }
       .removeDuplicates()
       .eraseToAnyPublisher()
   }
   
-  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState? {
+  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState {
     try dataCache.cachedContentPersistableState(for: contentID)
   }
   
@@ -164,7 +166,7 @@ extension Repository {
   
   private func domains(from contentDomains: [ContentDomain]) -> [Domain] {
     do {
-      return try persistenceStore.domains( with: contentDomains.map(\.domainID) )
+      return try persistenceStore.domains(with: contentDomains.map(\.domainID))
     } catch {
       Failure
         .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting domains: \(error)")
@@ -175,7 +177,7 @@ extension Repository {
   
   private func categories(from contentCategories: [ContentCategory]) -> [Category] {
     do {
-      return try persistenceStore.categories( with: contentCategories.map(\.categoryID) )
+      return try persistenceStore.categories(with: contentCategories.map(\.categoryID))
     } catch {
       Failure
         .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting categories: \(error)")

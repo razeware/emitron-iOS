@@ -27,15 +27,12 @@
 // THE SOFTWARE.
 
 extension ContentsService: ContentServiceAdapter {
-  func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    allContents(parameters: parameters) { result in
-       completion(result.map { response in
-        (
-          contentIDs: response.contents.map(\.id),
-          cacheUpdate: response.cacheUpdate,
-          totalResultCount: response.totalNumber
-        )
-       })
-    }
+  func findContent(parameters: [Parameter]) async throws -> ContentServiceAdapterResponse {
+    let response = try await allContents(parameters: parameters)
+    return (
+      contentIDs: response.contents.map(\.id),
+      cacheUpdate: response.cacheUpdate,
+      totalResultCount: response.totalNumber
+    )
   }
 }

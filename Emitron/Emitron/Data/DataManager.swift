@@ -61,7 +61,7 @@ final class DataManager: ObservableObject {
   private (set) var syncEngine: SyncEngine!
 
   private var domainsSubscriber: AnyCancellable?
-  private var categoriesSubsciber: AnyCancellable?
+  private var categoriesSubscriber: AnyCancellable?
 
   // MARK: - Initializers
   init(sessionController: SessionController,
@@ -93,13 +93,13 @@ final class DataManager: ObservableObject {
     dataCache = DataCache()
     repository = Repository(persistenceStore: persistenceStore, dataCache: dataCache)
     
-    let contentsService = ContentsService(client: sessionController.client)
-    let bookmarksService = BookmarksService(client: sessionController.client)
-    let progressionsService = ProgressionsService(client: sessionController.client)
-    let libraryService = ContentsService(client: sessionController.client)
-    let domainsService = DomainsService(client: sessionController.client)
-    let categoriesService = CategoriesService(client: sessionController.client)
-    let watchStatsService = WatchStatsService(client: sessionController.client)
+    let contentsService = ContentsService(networkClient: sessionController.client)
+    let bookmarksService = BookmarksService(networkClient: sessionController.client)
+    let progressionsService = ProgressionsService(networkClient: sessionController.client)
+    let libraryService = ContentsService(networkClient: sessionController.client)
+    let domainsService = DomainsService(networkClient: sessionController.client)
+    let categoriesService = CategoriesService(networkClient: sessionController.client)
+    let watchStatsService = WatchStatsService(networkClient: sessionController.client)
     
     syncEngine = SyncEngine(
       persistenceStore: persistenceStore,
@@ -109,12 +109,12 @@ final class DataManager: ObservableObject {
       watchStatsService: watchStatsService
     )
     
-    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    bookmarkRepository = BookmarkRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: bookmarksService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
   
-    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
-    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    completedRepository = CompletedRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
+    inProgressRepository = InProgressRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: progressionsService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
 
-    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadAction: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController, filters: filters)
+    libraryRepository = LibraryRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, serviceAdapter: libraryService, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController, filters: filters)
     
     downloadRepository = DownloadRepository(repository: repository, contentsService: contentsService, downloadService: downloadService, syncAction: syncEngine, messageBus: messageBus, settingsManager: settingsManager, sessionController: sessionController)
     
@@ -124,7 +124,7 @@ final class DataManager: ObservableObject {
     }
     
     categoryRepository = CategoryRepository(repository: repository, service: categoriesService)
-    categoriesSubsciber = categoryRepository.$categories.sink { categories in
+    categoriesSubscriber = categoryRepository.$categories.sink { categories in
       self.filters.updateCategoryFilters(for: categories)
     }
   }

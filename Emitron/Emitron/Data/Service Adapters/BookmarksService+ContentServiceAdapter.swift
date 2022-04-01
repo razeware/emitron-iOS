@@ -27,15 +27,12 @@
 // THE SOFTWARE.
 
 extension BookmarksService: ContentServiceAdapter {
-  func findContent(parameters: [Parameter], completion: @escaping (ContentServiceAdapterResponse) -> Void) {
-    bookmarks(parameters: parameters) { result in
-       completion(result.map { response in
-        (
-          contentIDs: response.bookmarks.map(\.contentID),
-          cacheUpdate: response.cacheUpdate,
-          totalResultCount: response.totalNumber
-        )
-       })
-    }
+  func findContent(parameters: [Parameter]) async throws -> ContentServiceAdapterResponse {
+    let response = try await bookmarks(parameters: parameters)
+    return (
+      contentIDs: response.bookmarks.map(\.contentID),
+      cacheUpdate: response.cacheUpdate,
+      totalResultCount: response.totalNumber
+    )
   }
 }

@@ -29,8 +29,8 @@
 import Combine
 
 final class DownloadQueueManager {
-  private let maxSimultaneousDownloads: Int
   private let persistenceStore: PersistenceStore
+  private let maxSimultaneousDownloads: Int
 
   private(set) lazy var pendingStream: AnyPublisher<PersistenceStore.DownloadQueueItem?, Error> =
     persistenceStore
@@ -48,7 +48,7 @@ final class DownloadQueueManager {
       .eraseToAnyPublisher()
   
   init(persistenceStore: PersistenceStore, maxSimultaneousDownloads: Int = 2) {
-    self.maxSimultaneousDownloads = maxSimultaneousDownloads
     self.persistenceStore = persistenceStore
+    self.maxSimultaneousDownloads = maxSimultaneousDownloads
   }
 }

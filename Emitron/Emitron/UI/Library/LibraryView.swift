@@ -165,7 +165,7 @@ private extension LibraryView {
   var contentView: some View {
     ContentListView(
       contentRepository: libraryRepository,
-      downloadAction: downloadService,
+      downloadService: downloadService,
       contentScreen: .library,
       header: contentControlsSection
     )

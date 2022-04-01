@@ -37,4 +37,4 @@ struct ContentPersistableState: Equatable {
   let childContents: [Content]
 }
 
-typealias ContentLookup = (_ contentID: Int) -> ContentPersistableState?
+typealias ContentLookup = (_ contentID: Int) throws -> ContentPersistableState

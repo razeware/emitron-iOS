@@ -137,7 +137,7 @@ extension SettingsManager: EmitronSettings {
   
   var downloadQuality: Attachment.Kind {
     get {
-      guard let downloadQuality = userDefaults[.downloadQuality].flatMap( Attachment.Kind.init(rawValue:) ),
+      guard let downloadQuality = userDefaults[.downloadQuality].flatMap(Attachment.Kind.init(rawValue:)),
         Attachment.Kind.downloads.contains(downloadQuality) else {
         return .hdVideoFile
       }

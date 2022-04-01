@@ -79,21 +79,18 @@ class CategoryRepository: Refreshable {
     }
     
     state = .loading
-    
-    service.allCategories { [weak self] result in
-      guard let self = self else { return }
-      
-      switch result {
-      case .failure(let error):
+
+    Task {
+      do {
+        categories = try await service.allCategories
+        state = .hasData
+        saveToPersistentStore()
+        saveOrReplaceRefreshableUpdateDate()
+      } catch {
         self.state = .failed
         Failure
-        .fetch(from: Self.self, reason: error.localizedDescription)
-        .log()
-      case .success(let categories):
-        self.categories = categories
-        self.state = .hasData
-        self.saveToPersistentStore()
-        self.saveOrReplaceRefreshableUpdateDate()
+          .fetch(from: Self.self, reason: error.localizedDescription)
+          .log()
       }
     }
   }

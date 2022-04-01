@@ -41,11 +41,9 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     "token": "Samaple.Token"
   ]
   
-  override func setUp() {
-    super.setUp()
-    // swiftlint:disable:next force_try
-    let database = try! EmitronDatabase.testDatabase()
-    persistenceStore = PersistenceStore(db: database)
+  override func setUpWithError() throws {
+    try super.setUpWithError()
+    persistenceStore = PersistenceStore(db: try EmitronDatabase.test)
   }
   
   override func tearDown() {

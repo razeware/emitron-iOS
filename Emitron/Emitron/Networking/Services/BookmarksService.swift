@@ -26,26 +26,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class BookmarksService: Service {
+import class Foundation.URLSession
 
-  // MARK: - Internal
-  func bookmarks(parameters: [Parameter]? = nil,
-                 completion: @escaping (_ response: Result<GetBookmarksRequest.Response, RWAPIError>) -> Void) {
-    let request = GetBookmarksRequest()
-    makeAndProcessRequest(request: request,
-                          parameters: parameters,
-                          completion: completion)
+struct BookmarksService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - internal
+extension BookmarksService {
+  func bookmarks(parameters: [Parameter] = []) async throws -> GetBookmarksRequest.Response {
+    try await makeRequest(request: GetBookmarksRequest(), parameters: parameters)
   }
   
-  func makeBookmark(for id: Int, completion: @escaping (_ response: Result<MakeBookmark.Response, RWAPIError>) -> Void) {
-    let request = MakeBookmark(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+  func makeBookmark(for id: Int) async throws -> MakeBookmark.Response {
+    try await makeRequest(request: MakeBookmark(id: id))
   }
   
-  func destroyBookmark(for id: Int, completion: @escaping (_ response: Result<DestroyBookmarkRequest.Response, RWAPIError>) -> Void) {
-    let request = DestroyBookmarkRequest(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+  func destroyBookmark(for id: Int) async throws -> DestroyBookmarkRequest.Response {
+    try await makeRequest(request: DestroyBookmarkRequest(id: id))
   }
 }

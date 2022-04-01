@@ -30,8 +30,8 @@ import XCTest
 import GRDB
 @testable import Emitron
 
-class DownloadServiceTest: XCTestCase {
-  private var database: DatabaseWriter!
+class DownloadServiceTest: XCTestCase, DatabaseTestCase {
+  private(set) var database: TestDatabase!
   private var persistenceStore: PersistenceStore!
   private var videoService = VideosServiceMock()
   private var downloadService: DownloadService!
@@ -40,14 +40,14 @@ class DownloadServiceTest: XCTestCase {
   
   override func setUpWithError() throws {
     try super.setUpWithError()
-    database = try EmitronDatabase.testDatabase()
+    database = try EmitronDatabase.test
     persistenceStore = PersistenceStore(db: database)
     userModelController = .init(user: .withDownloads)
     settingsManager = App.objects.settingsManager
     downloadService = DownloadService(
       persistenceStore: persistenceStore,
       userModelController: userModelController,
-      videosServiceProvider: { _ in self.videoService },
+      videosServiceProvider: { [unowned videoService] _ in videoService },
       settingsManager: settingsManager
     )
     
@@ -66,21 +66,18 @@ class DownloadServiceTest: XCTestCase {
   }
   
   //: requestDownload(content:) Tests
-  func testRequestDownloadScreencastAddsContentToLocalStore() throws {
+  func testRequestDownloadScreencastAddsContentToLocalStore() async throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
-      ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
+    let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+      .init(content: screencast.0, cacheUpdate: screencast.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 3)
-    XCTAssert(completion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
     XCTAssertEqual(1, try allContents.count)
     XCTAssertEqual(screencast.0.id, Int(try allContents.first!.id))
   }
   
-  func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() throws {
+  func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() async throws {
     let screencastModel = ContentTest.Mocks.screencast
     var screencast = screencastModel.0
     try database.write(screencast.save)
@@ -96,71 +93,63 @@ class DownloadServiceTest: XCTestCase {
     // Update the persisted model
     screencast.duration = newDuration
     screencast.descriptionPlainText = newDescription
-    try database.write(screencast.save)
+    screencast = try await database.write { [screencast] db in
+      try screencast.saved(db)
+    }
     
     // Verify the changes persisted
-    try database.read { db in
-      let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
-      XCTAssertEqual(newDuration, updatedScreencast!.duration)
-      XCTAssertEqual(newDescription, updatedScreencast!.descriptionPlainText)
+    try await database.read { [screencast] db in
+      let updatedScreencast = try Content.fetchOne(db, key: screencast.id).unwrapped
+      XCTAssertEqual(newDuration, updatedScreencast.duration)
+      XCTAssertEqual(newDescription, updatedScreencast.descriptionPlainText)
     }
     
     // We only have one item of content
     XCTAssertEqual(1, try allContents.count)
     
     // Now execute the download request
-    let recorder = downloadService.requestDownload(contentID: screencast.id) { _ in
-      ContentPersistableState.persistableState(for: screencast, with: screencastModel.1)
+    let result = try await downloadService.requestDownload(contentID: screencast.id) { _ in
+      .init(content: screencast, cacheUpdate: screencastModel.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
     // No change to the content count
     XCTAssertEqual(1, try allContents.count)
     
     // The values will have reverted to those from the cache
-    try database.read { db in
-      let updatedScreencast = try Content.fetchOne(db, key: screencast.id)
-      XCTAssertEqual(originalDuration, updatedScreencast!.duration)
-      XCTAssertEqual(originalDescription, updatedScreencast!.descriptionPlainText)
+    try await database.read { [key = screencast.id] db in
+      let updatedScreencast = try Content.fetchOne(db, key: key).unwrapped
+      try XCTSkipUnless(originalDuration == updatedScreencast.duration)
+      XCTAssertEqual(originalDescription, updatedScreencast.descriptionPlainText)
     }
   }
   
-  func testRequestDownloadEpisodeAddsEpisodeAndCollectionToLocalStore() throws {
+  func testRequestDownloadEpisodeAddsEpisodeAndCollectionToLocalStore() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
     
     let episode = fullState.childContents.first!
-    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result = try await downloadService.requestDownload(contentID: episode.id) { contentID in
+      ContentPersistableState(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
     let allContentIDs = fullState.childContents.map(\.id) + [collection.0.id]
     
     XCTAssertEqual(allContentIDs.count, try allContents.count)
     XCTAssertEqual(allContentIDs.sorted(), try allContents.map { Int($0.id) }.sorted())
   }
   
-  func testRequestDownloadEpisodeUpdatesLocalDataStore() throws {
+  func testRequestDownloadEpisodeUpdatesLocalDataStore() async throws {
     let collectionModel = ContentTest.Mocks.collection
     var collection = collectionModel.0
-    let fullState = ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
+    let fullState = ContentPersistableState(content: collection, cacheUpdate: collectionModel.1)
     
-    let episode = fullState.childContents.first!
-    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
-    })
-      .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    if case .failure = completion {
-      XCTFail("Failed")
+    let episode = try fullState.childContents.first.unwrapped
+    try await persistenceStore.persistContentGraph(for: fullState) { contentID in
+      .init(contentID: contentID, cacheUpdate: collectionModel.1)
     }
     
     let originalDuration = collection.duration
@@ -174,47 +163,45 @@ class DownloadServiceTest: XCTestCase {
     // Update the CD model
     collection.duration = newDuration
     collection.descriptionPlainText = newDescription
-    try database.write(collection.save)
+    collection = try await database.write { [collection] db in
+      try collection.saved(db)
+    }
     
     // Confirm the change was persisted
-    try database.read { db in
-      let updatedCollection = try Content.fetchOne(db, key: collection.id)
-      XCTAssertEqual(newDuration, updatedCollection!.duration)
-      XCTAssertEqual(newDescription, updatedCollection!.descriptionPlainText)
+    try await database.read { [key = collection.id] db in
+      let updatedCollection = try Content.fetchOne(db, key: key).unwrapped
+      XCTAssertEqual(newDuration, updatedCollection.duration)
+      XCTAssertEqual(newDescription, updatedCollection.descriptionPlainText)
     }
     
     // Now execute the download request
-    let anotherRecorder = downloadService.requestDownload(contentID: episode.id) { _ in
-      ContentPersistableState.persistableState(for: collection, with: collectionModel.1)
+    let result = try await downloadService.requestDownload(contentID: episode.id) { _ in
+      .init(content: collection, cacheUpdate: collectionModel.1)
     }
-    .record()
-    
-    let anotherCompletion = try wait(for: anotherRecorder.completion, timeout: 10)
-    XCTAssert(anotherCompletion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
     // Adds all episodes and the collection to the DB
     XCTAssertEqual(fullState.childContents.count + 1, try allContents.count)
     
     // The values will have been reverted cos of the cache
-    try database.read { db in
-      let updatedCollection = try Content.fetchOne(db, key: collection.id)
-      XCTAssertEqual(originalDuration, updatedCollection!.duration)
-      XCTAssertEqual(originalDescription, updatedCollection!.descriptionPlainText)
+    try await database.read { [key = collection.id] db in
+      let updatedCollection = try Content.fetchOne(db, key: key).unwrapped
+      try XCTSkipUnless(originalDuration == updatedCollection.duration)
+      XCTAssertEqual(originalDescription, updatedCollection.descriptionPlainText)
     }
   }
   
-  func testRequestDownloadCollectionAddsCollectionAndEpisodesToLocalStore() throws {
+  func testRequestDownloadCollectionAddsCollectionAndEpisodesToLocalStore() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
     
-    let recorder = downloadService.requestDownload(contentID: collection.0.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result = try await downloadService.requestDownload(contentID: collection.0.id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
     XCTAssertEqual(fullState.childContents.count + 1, try allContents.count)
     XCTAssertEqual(
       (fullState.childContents.map(\.id) + [collection.0.id]) .sorted(),
@@ -222,18 +209,15 @@ class DownloadServiceTest: XCTestCase {
     )
   }
   
-  func testRequestDownloadCollectionUpdatesLocalDataStore() throws {
+  func testRequestDownloadCollectionUpdatesLocalDataStore() async throws {
     let collectionModel = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collectionModel.0, with: collectionModel.1)
+    let fullState = ContentPersistableState(content: collectionModel.0, cacheUpdate: collectionModel.1)
     
-    var episode = fullState.childContents.first!
+    var episode = try XCTUnwrap(fullState.childContents.first)
     
-    let recorder = persistenceStore.persistContentGraph(for: fullState, contentLookup: { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
-    })
-      .record()
-    
-    _ = try wait(for: recorder.completion, timeout: 10)
+    try await persistenceStore.persistContentGraph(for: fullState) { contentID in
+      .init(contentID: contentID, cacheUpdate: collectionModel.1)
+    }
     
     let originalDuration = episode.duration
     let originalDescription = episode.descriptionPlainText
@@ -246,106 +230,89 @@ class DownloadServiceTest: XCTestCase {
     // Update the persisted model
     episode.duration = newDuration
     episode.descriptionPlainText = newDescription
-    try database.write { db in
-      try episode.save(db)
+    episode = try await database.write { [episode] db in
+      try episode.saved(db)
     }
     
     // Check that the new values were saved
-    try database.read { db in
-      let updatedEpisode = try Content.fetchOne(db, key: episode.id)
-      XCTAssertEqual(newDuration, updatedEpisode!.duration)
-      XCTAssertEqual(newDescription, updatedEpisode!.descriptionPlainText)
+    try await database.read { [key = episode.id] db in
+      let updatedEpisode = try Content.fetchOne(db, key: key).unwrapped
+      XCTAssertEqual(newDuration, updatedEpisode.duration)
+      XCTAssertEqual(newDescription, updatedEpisode.descriptionPlainText)
     }
     
     // Now execute the download request
-    let recorder2 = downloadService.requestDownload(contentID: collectionModel.0.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collectionModel.1)
+    let result = try await downloadService.requestDownload(contentID: collectionModel.0.id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collectionModel.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder2.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
     // Added the correct number of models
     XCTAssertEqual(fullState.childContents.count + 1, try allContents.count)
     
     // The values reverted cos of the data cache
-    try database.read { db in
-      let updatedEpisode = try Content.fetchOne(db, key: episode.id)
-      XCTAssertEqual(originalDuration, updatedEpisode!.duration)
-      XCTAssertEqual(originalDescription, updatedEpisode!.descriptionPlainText)
+    try await database.read { [key = episode.id] db in
+      let updatedEpisode = try Content.fetchOne(db, key: key).unwrapped
+      XCTAssertEqual(originalDuration, updatedEpisode.duration)
+      XCTAssertEqual(originalDescription, updatedEpisode.descriptionPlainText)
     }
   }
   
-  func testRequestDownloadAddsDownloadToEpisodesAndCreatesOneForItsParentCollection() throws {
+  func testRequestDownloadAddsDownloadToEpisodesAndCreatesOneForItsParentCollection() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
     let episode = fullState.childContents.first!
     
-    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result = try await downloadService.requestDownload(contentID: episode.id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
-    XCTAssertEqual(2, try allDownloads.count)
-    
-    let download = try allDownloads.first!
-    XCTAssertEqual(episode.id, download.contentID)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+    XCTAssertEqual(try allDownloads.count, 2)
+    XCTAssertEqual(episode.id, try allDownloads.first?.contentID)
   }
   
-  func testRequestAdditionalEpisodesUpdatesTheCollectionDownload() throws {
+  func testRequestAdditionalEpisodesUpdatesTheCollectionDownload() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
     let episodes = fullState.childContents
     
-    let recorder1 = downloadService.requestDownload(contentID: episodes[0].id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result1 = try await downloadService.requestDownload(contentID: episodes[0].id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    let recorder2 = downloadService.requestDownload(contentID: episodes[1].id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result2 = try await downloadService.requestDownload(contentID: episodes[1].id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    let recorder3 = downloadService.requestDownload(contentID: episodes[2].id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result3 = try await downloadService.requestDownload(contentID: episodes[2].id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    _ = try wait(for: recorder1.completion, timeout: 10)
-    _ = try wait(for: recorder2.completion, timeout: 10)
-    _ = try wait(for: recorder3.completion, timeout: 10)
-    
+
+    XCTAssertEqual(result1, .downloadRequestedButQueueInactive)
+    XCTAssertEqual(result2, .downloadRequestedButQueueInactive)
+    XCTAssertEqual(result3, .downloadRequestedButQueueInactive)
     XCTAssertEqual(4, try allDownloads.count)
   }
   
-  func testRequestDownloadAddsDownloadToScreencasts() throws {
+  func testRequestDownloadAddsDownloadToScreencasts() async throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
-      ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
+    let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+      .init(content: screencast.0, cacheUpdate: screencast.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
-    XCTAssertEqual(1, try allDownloads.count)
-    let download = try allDownloads.first!
-    XCTAssertEqual(screencast.0.id, download.contentID)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+    XCTAssertEqual(try allDownloads.count, 1)
+    XCTAssertEqual(screencast.0.id, try allDownloads.first?.contentID)
   }
   
-  func testRequestDownloadAddsDownloadToCollection() throws {
+  func testRequestDownloadAddsDownloadToCollection() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
-    let recorder = downloadService.requestDownload(contentID: collection.0.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
+    let result = try await downloadService.requestDownload(contentID: collection.0.id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 20)
-    XCTAssert(completion == .finished)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
 
     // Adds downloads to the collection and the individual episodes
     XCTAssertEqual(fullState.childContents.count + 1, try allDownloads.count)
@@ -355,18 +322,14 @@ class DownloadServiceTest: XCTestCase {
     )
   }
   
-  func testRequestDownloadAddsDownloadInPendingState() throws {
+  func testRequestDownloadAddsDownloadInPendingState() async throws {
     let screencast = ContentTest.Mocks.screencast
-    let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
-      ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
+    let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+      .init(content: screencast.0, cacheUpdate: screencast.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
-    let download = try allDownloads.first!
-    XCTAssertEqual(.pending, download.state)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+    XCTAssertEqual(.pending, try allDownloads.first?.state)
   }
   
   //: Download directory
@@ -434,159 +397,145 @@ class DownloadServiceTest: XCTestCase {
   }
   
   //: requestDownloadURL() Tests
-  func testRequestDownloadURLRequestsDownloadURLForEpisode() throws {
+  func testRequestDownloadURLRequestsDownloadURLForEpisode() async throws {
     let collection = ContentTest.Mocks.collection
-    let fullState = ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let fullState = ContentPersistableState(content: collection.0, cacheUpdate: collection.1)
     let episode = fullState.childContents.first!
     
-    let recorder = downloadService.requestDownload(contentID: episode.id) { contentID in
-      ContentPersistableState.persistableState(for: contentID, with: collection.1)
+    let result = try await downloadService.requestDownload(contentID: episode.id) { contentID in
+      .init(contentID: contentID, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(completion == .finished)
-    
-    let downloadQueueItem = try allDownloadQueueItems.first!
-    
-    XCTAssertEqual(0, videoService.getVideoDownloadCount)
-    
-    downloadService.requestDownloadURL(downloadQueueItem)
-    
-    XCTAssertEqual(1, videoService.getVideoDownloadCount)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
+    XCTAssertEqual(videoService.getVideoDownloadCount, 0)
+    await downloadService.requestDownloadURL(try XCTUnwrap(allDownloadQueueItems.first))
+    XCTAssertEqual(videoService.getVideoDownloadCount, 1)
   }
   
-  func testRequestDownloadURLRequestsDownloadsURLForScreencast() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
-    
+  func testRequestDownloadURLRequestsDownloadsURLForScreencast() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
-    
-    downloadService.requestDownloadURL(downloadQueueItem)
-    
-    XCTAssertEqual(1, videoService.getVideoDownloadCount)
+    await downloadService.requestDownloadURL(downloadQueueItem)
+    XCTAssertEqual(videoService.getVideoDownloadCount, 1)
   }
   
-  func testRequestDownloadURLDoesNothingForCollection() throws {
+  func testRequestDownloadURLDoesNothingForCollection() async throws {
     let collection = ContentTest.Mocks.collection
-    let recorder = downloadService.requestDownload(contentID: collection.0.id) { _ in
-      ContentPersistableState.persistableState(for: collection.0, with: collection.1)
+    let result = try await downloadService.requestDownload(contentID: collection.0.id) { _ in
+      .init(content: collection.0, cacheUpdate: collection.1)
     }
-    .record()
-    
-    let completion = try wait(for: recorder.completion, timeout: 10)
-    XCTAssert(.finished == completion)
-    
-    let downloadQueueItem = try allDownloadQueueItems.first { $0.content.contentType == .collection }
-    
-    XCTAssertNotNil(downloadQueueItem)
+
+    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
+    let downloadQueueItem = try allDownloadQueueItems.first { $0.content.contentType == .collection }.unwrapped
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
-    
-    downloadService.enqueue(downloadQueueItem: downloadQueueItem!)
-    
+    await downloadService.enqueue(downloadQueueItem: downloadQueueItem)
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadURLDoesNothingForDownloadInWrongState() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testRequestDownloadURLDoesNothingForDownloadInWrongState() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     var download = downloadQueueItem.download
     
     download.state = .urlRequested
     
-    try database.write { db in
-      try download.save(db)
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
     
     let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
-    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    await downloadService.enqueue(downloadQueueItem: newQueueItem)
     
     XCTAssertEqual(0, videoService.getVideoDownloadCount)
   }
   
-  func testRequestDownloadURLUpdatesDownloadInCallback() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testRequestDownloadURLUpdatesDownloadInCallback() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     
     XCTAssertNil(downloadQueueItem.download.remoteURL)
     XCTAssertNil(downloadQueueItem.download.lastValidatedAt)
     XCTAssertEqual(Download.State.pending, downloadQueueItem.download.state)
     
-    downloadService.requestDownloadURL(downloadQueueItem)
+    await downloadService.requestDownloadURL(downloadQueueItem)
     
-    try database.read { db in
+    try await database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
       XCTAssertNotNil(download.remoteURL)
       XCTAssertNotNil(download.lastValidatedAt)
     }
   }
   
-  func testRequestDownloadUpdatesTheStateCorrectly() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testRequestDownloadUpdatesTheStateCorrectly() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
 
+    await
     downloadService.requestDownloadURL(downloadQueueItem)
     
-    try database.read { db in
+    try await database.read { db in
       let download = try Download.fetchOne(db, key: downloadQueueItem.download.id)!
       XCTAssertEqual(Download.State.urlRequested, download.state)
     }
   }
   
-  func testEnqueueSetsPropertiesCorrectly() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testEnqueueSetsPropertiesCorrectly() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     var download = downloadQueueItem.download
     // Update to include the URL
     download.remoteURL = URL(string: "https://example.com/video.mp4")
     download.state = .readyForDownload
-    try database.write { db in
-      try download.save(db)
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
     
     let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
-    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    await downloadService.enqueue(downloadQueueItem: newQueueItem)
     
-    try database.read { db in
-      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+    try await database.read { [key = download.id] db in
+      let refreshedDownload = try Download.fetchOne(db, key: key).unwrapped
       XCTAssertNotNil(refreshedDownload.localURL)
       XCTAssertNotNil(refreshedDownload.fileName)
       XCTAssertEqual(Download.State.enqueued, refreshedDownload.state)
     }
   }
   
-  func testEnqueueDoesNothingForADownloadWithoutARemoteURL() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testEnqueueDoesNothingForADownloadWithoutARemoteURL() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     var download = downloadQueueItem.download
     download.state = .urlRequested
-    try database.write { db in
-      try download.save(db)
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
     
     let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
     
-    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    await downloadService.enqueue(downloadQueueItem: newQueueItem)
     
-    try database.read { db in
-      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+    try await database.read { [key = download.id] db in
+      let refreshedDownload = try Download.fetchOne(db, key: key).unwrapped
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localURL)
       XCTAssertEqual(Download.State.urlRequested, refreshedDownload.state)
     }
   }
   
-  func testEnqueueDoesNothingForDownloadInTheWrongState() throws {
-    let downloadQueueItem = try sampleDownloadQueueItem
+  func testEnqueueDoesNothingForDownloadInTheWrongState() async throws {
+    let downloadQueueItem = try await sampleDownloadQueueItem
     var download = downloadQueueItem.download
     download.remoteURL = URL(string: "https://example.com/amazing.mp4")
     download.state = .pending
-    try database.write { db in
-      try download.save(db)
+    download = try await database.write { [download] db in
+      try download.saved(db)
     }
     
     let newQueueItem = PersistenceStore.DownloadQueueItem(download: download, content: downloadQueueItem.content)
     
-    downloadService.enqueue(downloadQueueItem: newQueueItem)
+    await downloadService.enqueue(downloadQueueItem: newQueueItem)
     
-    try database.read { db in
-      let refreshedDownload = try Download.fetchOne(db, key: download.id)!
+    try await database.read { [key = download.id] db in
+      let refreshedDownload = try Download.fetchOne(db, key: key).unwrapped
       XCTAssertNil(refreshedDownload.fileName)
       XCTAssertNil(refreshedDownload.localURL)
       XCTAssertEqual(Download.State.pending, refreshedDownload.state)
@@ -596,14 +545,6 @@ class DownloadServiceTest: XCTestCase {
 
 // MARK: - private
 private extension DownloadServiceTest {
-  var allContents: [Content] {
-    get throws { try database.read(Content.fetchAll) }
-  }
-
-  var allDownloads: [Download] {
-    get throws { try database.read(Download.fetchAll) }
-  }
-
   var allDownloadQueueItems: [PersistenceStore.DownloadQueueItem] {
     get throws {
       try database.read { db in
@@ -614,24 +555,23 @@ private extension DownloadServiceTest {
   }
 
   var sampleDownloadQueueItem: PersistenceStore.DownloadQueueItem {
-    get throws {
+    get async throws {
       let screencast = ContentTest.Mocks.screencast
-      let recorder = downloadService.requestDownload(contentID: screencast.0.id) { _ in
-        ContentPersistableState.persistableState(for: screencast.0, with: screencast.1)
+      let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+        .init(content: screencast.0, cacheUpdate: screencast.1)
       }
-        .record()
 
-      let completion = try wait(for: recorder.completion, timeout: 10)
-      XCTAssert(completion == .finished)
+      XCTAssertEqual(result, .downloadRequestedButQueueInactive)
 
-      let download = try allDownloads.first!
-      let content = try allContents.first!
-      return .init(download: download, content: content)
+      return .init(
+        download: try XCTUnwrap(allDownloads.first),
+        content: try XCTUnwrap(allContents.first)
+      )
     }
   }
 
   var sampleDownload: Download {
-    get throws { try sampleDownloadQueueItem.download }
+    get async throws { try await sampleDownloadQueueItem.download }
   }
 
   var sampleFileURL: URL {

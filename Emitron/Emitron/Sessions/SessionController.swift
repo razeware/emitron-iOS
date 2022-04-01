@@ -108,14 +108,12 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
+  @MainActor init(guardpost: Guardpost) {
     self.guardpost = guardpost
 
     let user = User.backdoor ?? guardpost.currentUser
     client = RWAPI(authToken: user?.token ?? "")
-    permissionsService = PermissionsService(client: client)
+    permissionsService = .init(networkClient: client)
     super.init()
 
     self.user = user
@@ -179,28 +177,28 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     guard isLoggedIn else { return }
     
     permissionState = .loading
-    permissionsService.permissions { result in
-      DispatchQueue.main.async {
-        switch result {
-        case .failure(let error):
-          enum Permissions {}
-          Failure
-            .fetch(from: Permissions.self, reason: error.localizedDescription)
-            .log()
-          
-          self.permissionState = .error
-        case .success(let permissions):
-          // Check that we have a logged in user. Otherwise this is pointless
-          guard let user = self.user else { return }
-          
-          // Update the date that we retrieved the permissions
-          self.saveOrReplaceRefreshableUpdateDate()
-          
-          // Update the user
-          self.user = user.with(permissions: permissions)
-          // Ensure guardpost is aware, and hence the keychain is updated
-          self.guardpost.updateUser(with: self.user)
-        }
+
+    Task {
+      do {
+        let permissions = try await permissionsService.permissions
+
+        // Check that we have a logged in user. Otherwise this is pointless
+        guard let user = self.user else { return }
+
+        // Update the date that we retrieved the permissions
+        self.saveOrReplaceRefreshableUpdateDate()
+
+        // Update the user
+        self.user = user.with(permissions: permissions)
+        // Ensure guardpost is aware, and hence the keychain is updated
+        self.guardpost.updateUser(with: self.user)
+      } catch {
+        enum Permissions { }
+        Failure
+          .fetch(from: Permissions.self, reason: error.localizedDescription)
+          .log()
+
+        self.permissionState = .error
       }
     }
   }
@@ -217,7 +215,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     $user.sink { [weak self] user in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
-      self.permissionsService = PermissionsService(client: self.client)
+      self.permissionsService = .init(networkClient: self.client)
     }
     .store(in: &subscriptions)
     

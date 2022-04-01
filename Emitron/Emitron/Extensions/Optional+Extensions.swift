@@ -26,24 +26,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import class Foundation.URLSession
-
-struct ProgressionsService: Service {
-  let networkClient: RWAPI
-  let session = URLSession(configuration: .default)
-}
-
-// MARK: - internal
-extension ProgressionsService {
-  func progressions(parameters: [Parameter] = []) async throws -> ProgressionsRequest.Response {
-    try await makeRequest(request: ProgressionsRequest(), parameters: parameters)
+public extension Optional {
+  /// Represents that an `Optional` was `nil`.
+  enum UnwrapError: Error {
+    case `nil`
+    case typeMismatch
   }
 
-  func update(progressions: [ProgressionUpdate]) async throws -> UpdateProgressionsRequest.Response {
-    try await makeRequest(request: UpdateProgressionsRequest(progressionUpdates: progressions))
+  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError` when `nil`.
+  var unwrapped: Wrapped {
+    get throws {
+      switch self {
+      case let wrapped?:
+        return wrapped
+      case nil:
+        throw UnwrapError.nil
+      }
+    }
   }
 
-  func delete(with id: Int) async throws -> DeleteProgressionRequest.Response {
-    try await makeRequest(request: DeleteProgressionRequest(id: id))
+  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError`
+  func unwrap<Wrapped>() throws -> Wrapped {
+    switch self {
+    case let wrapped as Wrapped:
+      return wrapped
+    case .some:
+      throw UnwrapError.typeMismatch
+    case nil:
+      throw UnwrapError.nil
+    }
   }
 }

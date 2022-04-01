@@ -41,12 +41,14 @@ extension ContentSummaryState: ContentListDisplayable {
   var name: String { content.name }
 
   var cardViewSubtitle: String {
-    if domains.count == 1 {
+    switch domains.count {
+    case 1:
       return domains.first!.name
-    } else if domains.count > 1 {
+    case 2...:
       return "Multi-platform"
+    default:
+      return .init()
     }
-    return ""
   }
 
   var descriptionPlainText: String {

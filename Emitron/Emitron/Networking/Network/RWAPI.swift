@@ -55,7 +55,6 @@ enum RWAPIError: Error {
 }
 
 struct RWAPI {
-
   // MARK: - Properties
   let environment: RWEnvironment
   let session: URLSession

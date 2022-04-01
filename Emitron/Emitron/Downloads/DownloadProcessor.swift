@@ -154,9 +154,13 @@ extension DownloadProcessor {
 }
 
 extension DownloadProcessor: AVAssetDownloadDelegate {
-
-  func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange) {
-
+  func urlSession(
+    _ session: URLSession,
+    assetDownloadTask: AVAssetDownloadTask,
+    didLoad timeRange: CMTimeRange,
+    totalTimeRangesLoaded loadedTimeRanges: [NSValue],
+    timeRangeExpectedToLoad: CMTimeRange
+  ) {
     guard let downloadID = assetDownloadTask.downloadID else { return }
 
     var percentComplete = 0.0
@@ -235,7 +239,6 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   
   // Use this to handle and client-side download errors
   func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-
     guard let downloadTask = task as? AVAssetDownloadTask, let downloadID = downloadTask.downloadID else { return }
 
     if let error = error as NSError? {

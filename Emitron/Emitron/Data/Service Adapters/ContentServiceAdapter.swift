@@ -26,8 +26,8 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-typealias ContentServiceAdapterResponse = Result<(contentIDs: [Int], cacheUpdate: DataCacheUpdate, totalResultCount: Int), RWAPIError>
+typealias ContentServiceAdapterResponse = (contentIDs: [Int], cacheUpdate: DataCacheUpdate, totalResultCount: Int)
 
 protocol ContentServiceAdapter {
-  func findContent(parameters: [Parameter], completion: @escaping(_ response: ContentServiceAdapterResponse) -> Void)
+  func findContent(parameters: [Parameter]) async throws -> ContentServiceAdapterResponse
 }
