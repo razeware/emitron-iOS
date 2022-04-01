@@ -71,7 +71,7 @@ extension SyncEngine {
     networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
   }
   
-  private func completionHandler() -> (Subscribers.Completion<Error>) -> Void {
+  private var completionHandler: (Subscribers.Completion<Error>) -> Void {
     { completion in
       switch completion {
       case .finished:
@@ -100,31 +100,31 @@ extension SyncEngine {
     persistenceStore
       .syncRequestStream(for: [.createBookmark])
       .removeDuplicates()
-      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncBookmarkCreations(syncRequests: $0) }
+      .sink(receiveCompletion: completionHandler) { [weak self] in self?.syncBookmarkCreations(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.deleteBookmark])
       .removeDuplicates()
-      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncBookmarkDeletions(syncRequests: $0) }
+      .sink(receiveCompletion: completionHandler) { [weak self] in self?.syncBookmarkDeletions(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.markContentComplete, .updateProgress])
       .removeDuplicates()
-      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncProgressionUpdates(syncRequests: $0) }
+      .sink(receiveCompletion: completionHandler) { [weak self] in self?.syncProgressionUpdates(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.deleteProgression])
       .removeDuplicates()
-      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncProgressionDeletions(syncRequests: $0) }
+      .sink(receiveCompletion: completionHandler) { [weak self] in self?.syncProgressionDeletions(syncRequests: $0) }
       .store(in: &subscriptions)
     
     persistenceStore
       .syncRequestStream(for: [.recordWatchStats])
       .removeDuplicates()
-      .sink(receiveCompletion: completionHandler()) { [weak self] in self?.syncWatchStats(syncRequests: $0) }
+      .sink(receiveCompletion: completionHandler) { [weak self] in self?.syncWatchStats(syncRequests: $0) }
       .store(in: &subscriptions)
   }
   
