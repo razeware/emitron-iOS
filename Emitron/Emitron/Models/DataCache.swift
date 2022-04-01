@@ -180,13 +180,14 @@ extension DataCache {
 
 extension DataCache {
   private func cachedContentSummaryState(for contentID: Int) throws -> CachedContentSummaryState {
-    guard let content = contents[contentID],
-          let contentDomains = contentDomains[contentID]
+    guard
+      let content = contents[contentID],
+      let contentDomains = contentDomains[contentID]
     else {
       throw DataCacheError.cacheMiss
     }
     
-    let contentCategories = self.contentCategories[contentID] ?? []
+    let contentCategories = contentCategories[contentID] ?? []
     
     return try CachedContentSummaryState(
       content: content,
@@ -227,34 +228,31 @@ extension DataCache {
       throw DataCacheError.cacheMiss
     }
     
-      let contentDomains = self.contentDomains[contentID] ?? []
-      let contentCategories = self.contentCategories[contentID] ?? []
-      
-      if content.contentType != .episode {
-        if contentDomains.isEmpty {
-          throw DataCacheError.cacheMiss
-        }
-      }
-      
-      let bookmark = self.bookmarks[contentID]
-      let progression = self.progressions[contentID]
-      let groups = self.contentIndexedGroups[contentID] ?? []
-      let groupIDs = groups.map(\.id)
-      let childContents = self.contents.values.filter { content in
-        guard let groupID = content.groupID else { return false }
-        return groupIDs.contains(groupID)
-      }
-      
-      return try ContentPersistableState(
-        content: content,
-        contentDomains: contentDomains,
-        contentCategories: contentCategories,
-        bookmark: bookmark,
-        parentContent: parentContent(for: content),
-        progression: progression,
-        groups: groups,
-        childContents: childContents
-      )
+    let contentDomains = self.contentDomains[contentID] ?? []
+    let contentCategories = self.contentCategories[contentID] ?? []
+
+    if content.contentType != .episode, contentDomains.isEmpty {
+      throw DataCacheError.cacheMiss
+    }
+
+    let bookmark = bookmarks[contentID]
+    let progression = progressions[contentID]
+    let groups = contentIndexedGroups[contentID] ?? []
+    let groupIDs = groups.map(\.id)
+    let childContents = contents.values.filter { content in
+      content.groupID.map(groupIDs.contains) == true
+    }
+
+    return try .init(
+      content: content,
+      contentDomains: contentDomains,
+      contentCategories: contentCategories,
+      bookmark: bookmark,
+      parentContent: parentContent(for: content),
+      progression: progression,
+      groups: groups,
+      childContents: childContents
+    )
   }
   
   func videoPlaylist(for contentID: Int) throws -> [CachedVideoPlaybackState] {
@@ -295,7 +293,7 @@ extension DataCache {
   }
   
   private func cachedDynamicContentState(for contentID: Int) -> CachedDynamicContentState {
-    CachedDynamicContentState(
+    .init(
       progression: progressions[contentID],
       bookmark: bookmarks[contentID]
     )
@@ -304,7 +302,7 @@ extension DataCache {
   private func parentContent(for content: Content) throws -> Content? {
     guard let groupID = content.groupID else { return nil }
     guard let group = groupIndexedGroups[groupID]
-      else { throw DataCacheError.cacheMiss }
+    else { throw DataCacheError.cacheMiss }
     
     return contents[group.contentID]
   }
@@ -326,10 +324,7 @@ extension DataCache {
   }
   
   private func siblingContents(for content: Content) throws -> [Content] {
-    guard let parentContent = try parentContent(for: content) else {
-      return []
-    }
-    return try childContents(for: parentContent)
+    try parentContent(for: content).map(childContents) ?? []
   }
   
   private func nextToPlay(for contentList: [Content]) throws -> Content {
@@ -339,10 +334,8 @@ extension DataCache {
     let orderedProgressions = contentList.map { progressions[$0.id] }
     
     // Find the first index where there's a missing or incomplete progression
-    guard let incompleteOrNotStartedIndex = orderedProgressions.firstIndex(where: { progression in
-      guard let progression = progression else { return true }
-      
-      return !progression.finished
+    guard let incompleteOrNotStartedIndex = (orderedProgressions.firstIndex { progression in
+      progression.map { !$0.finished } ?? true
     }) else {
       // If we didn't find one, start at the beginning
       return contentList[0]

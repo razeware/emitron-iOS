@@ -77,9 +77,11 @@ extension Repository {
     return fromCache
       .combineLatest(download)
       .map { cachedState, download in
-        DynamicContentState(download: download,
-                            progression: cachedState.progression,
-                            bookmark: cachedState.bookmark)
+        DynamicContentState(
+          download: download,
+          progression: cachedState.progression,
+          bookmark: cachedState.bookmark
+        )
       }
       .removeDuplicates()
       .eraseToAnyPublisher()

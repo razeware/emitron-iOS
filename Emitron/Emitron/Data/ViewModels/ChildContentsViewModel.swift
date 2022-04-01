@@ -91,9 +91,11 @@ extension ChildContentsViewModel {
       .sink(
         receiveCompletion: { [weak self] completion in
           guard let self = self else { return }
-          if case .failure(let error) = completion, (error as? DataCacheError) == DataCacheError.cacheMiss {
+
+          switch completion {
+          case .failure(let error as DataCacheError) where error == .cacheMiss:
             self.loadContentDetailsIntoCache()
-          } else {
+          default:
             self.state = .failed
             Failure
               .repositoryLoad(from: Self.self, reason: "Unable to retrieve download content detail: \(completion)")
