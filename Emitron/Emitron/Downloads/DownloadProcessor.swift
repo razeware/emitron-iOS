@@ -76,7 +76,7 @@ final class DownloadProcessor: NSObject {
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
     super.init()
-    populateDownloadListFromSession()
+    Task { await populateDownloadListFromSession() }
   }
   
   private lazy var session: AVAssetDownloadURLSession = {
@@ -131,25 +131,9 @@ extension DownloadProcessor {
 }
 
 extension DownloadProcessor {
-  private func getDownloadTasksFromSession() -> [AVAssetDownloadTask] {
-    var tasks = [AVAssetDownloadTask]()
-    // Use a semaphore to make an async call synchronous
-    // --There's no point in trying to complete instantiating this class without this list.
-    let semaphore = DispatchSemaphore(value: 0)
-    session.getAllTasks { downloadTasks in
-
-      let myTasks = downloadTasks as! [AVAssetDownloadTask]
-      tasks = myTasks
-      semaphore.signal()
-    }
-    
-    _ = semaphore.wait(timeout: .distantFuture)
-    
-    return tasks
-  }
-  
-  private func populateDownloadListFromSession() {
-    currentDownloads = getDownloadTasksFromSession()
+  // --There's no point in trying to complete instantiating this class without this list.
+  private func populateDownloadListFromSession() async {
+    currentDownloads = await session.allTasks as! [AVAssetDownloadTask]
   }
 }
 

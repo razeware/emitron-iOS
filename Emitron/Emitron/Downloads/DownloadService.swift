@@ -51,7 +51,7 @@ final class DownloadService: ObservableObject {
   ) {
     self.persistenceStore = persistenceStore
     self.userModelController = userModelController
-    downloadProcessor = DownloadProcessor(settingsManager: settingsManager)
+    downloadProcessor = .init(settingsManager: settingsManager)
     queueManager = DownloadQueueManager(persistenceStore: persistenceStore, maxSimultaneousDownloads: 3)
     self.videosServiceProvider = videosServiceProvider ?? { VideosService(networkClient: $0) }
     self.settingsManager = settingsManager
