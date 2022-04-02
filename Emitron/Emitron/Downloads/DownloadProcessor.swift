@@ -76,7 +76,7 @@ final class DownloadProcessor: NSObject {
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
     super.init()
-    populateDownloadListFromSession()
+    Task { await populateDownloadListFromSession() }
   }
   
   private lazy var session: AVAssetDownloadURLSession = {
@@ -131,25 +131,9 @@ extension DownloadProcessor {
 }
 
 extension DownloadProcessor {
-  private func getDownloadTasksFromSession() -> [AVAssetDownloadTask] {
-    var tasks = [AVAssetDownloadTask]()
-    // Use a semaphore to make an async call synchronous
-    // --There's no point in trying to complete instantiating this class without this list.
-    let semaphore = DispatchSemaphore(value: 0)
-    session.getAllTasks { downloadTasks in
-
-      let myTasks = downloadTasks as! [AVAssetDownloadTask]
-      tasks = myTasks
-      semaphore.signal()
-    }
-    
-    _ = semaphore.wait(timeout: .distantFuture)
-    
-    return tasks
-  }
-  
-  private func populateDownloadListFromSession() {
-    currentDownloads = getDownloadTasksFromSession()
+  // --There's no point in trying to complete instantiating this class without this list.
+  private func populateDownloadListFromSession() async {
+    currentDownloads = await session.allTasks as! [AVAssetDownloadTask]
   }
 }
 
@@ -198,15 +182,21 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
 
 extension DownloadProcessor: URLSessionDownloadDelegate {
   // When the background session has finished sending us events, we can tell the system we're done.
-  func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+  func urlSessionDidFinishEvents(forBackgroundURLSession _: URLSession) {
     guard let backgroundSessionCompletionHandler = backgroundSessionCompletionHandler else { return }
     
     // Need to marshal back to the main queue
-    DispatchQueue.main.async(execute: backgroundSessionCompletionHandler)
+    Task { @MainActor in backgroundSessionCompletionHandler }
   }
   
   // Used to update the progress stats of a download task
-  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+  func urlSession(
+    _: URLSession,
+    downloadTask: URLSessionDownloadTask,
+    didWriteData _: Int64,
+    totalBytesWritten: Int64,
+    totalBytesExpectedToWrite: Int64
+  ) {
     guard let downloadID = downloadTask.downloadID else { return }
     
     let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
@@ -223,9 +213,15 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   }
   
   // Download completed—move the file to the appropriate place and update the DB
-  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-    guard let downloadID = downloadTask.downloadID,
-      let delegate = delegate else { return }
+  func urlSession(
+    _: URLSession,
+    downloadTask: URLSessionDownloadTask,
+    didFinishDownloadingTo location: URL
+  ) {
+    guard
+      let downloadID = downloadTask.downloadID,
+      let delegate = delegate
+    else { return }
     
     let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
@@ -238,7 +234,11 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
   }
   
   // Use this to handle and client-side download errors
-  func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
+  func urlSession(
+    _: URLSession,
+    task: URLSessionTask,
+    didCompleteWithError error: Error?
+  ) {
     guard let downloadTask = task as? AVAssetDownloadTask, let downloadID = downloadTask.downloadID else { return }
 
     if let error = error as NSError? {

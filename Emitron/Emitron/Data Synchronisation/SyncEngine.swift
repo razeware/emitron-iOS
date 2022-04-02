@@ -68,7 +68,7 @@ extension SyncEngine {
         self.stopProcessing()
       }
     }
-    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+    networkMonitor.start(queue: .global(qos: .utility))
   }
   
   private var completionHandler: (Subscribers.Completion<Error>) -> Void {
