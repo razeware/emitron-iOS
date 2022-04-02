@@ -42,7 +42,7 @@ protocol UserModelController {
 }
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-final class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject {
+final class SessionController: UserModelController, ObservablePrePostFactoObject {
   private var subscriptions = Set<AnyCancellable>()
 
   // Managing the state of the current session
@@ -79,9 +79,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   private let connectionMonitor = NWPathMonitor()
   private(set) var permissionsService: PermissionsService
   
-  var isLoggedIn: Bool {
-    userState == .loggedIn
-  }
+  var isLoggedIn: Bool { userState == .loggedIn }
   
   var hasPermissions: Bool {
     if case .loaded = permissionState {
@@ -91,7 +89,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   var hasPermissionToUseApp: Bool {
-    user?.hasPermissionToUseApp ?? false
+    user?.hasPermissionToUseApp == true
   }
   
   var hasCurrentDownloadPermissions: Bool {
@@ -114,14 +112,13 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     let user = User.backdoor ?? guardpost.currentUser
     client = RWAPI(authToken: user?.token ?? "")
     permissionsService = .init(networkClient: client)
-    super.init()
 
     self.user = user
     prepareSubscriptions()
   }
   
   // MARK: - Internal
-  @MainActor func login() async throws {
+  @MainActor func logIn() async throws {
     guard userState != .loggingIn else { return }
     
     userState = .loggingIn
@@ -132,7 +129,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
       }
     } else {
       do {
-        user = try await guardpost.login()
+        user = try await guardpost.logIn()
         Event
           .login(from: Self.self)
           .log()
@@ -195,8 +192,8 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     }
   }
   
-  func logout() {
-    guardpost.logout()
+  func logOut() {
+    guardpost.logOut()
     userState = .notLoggedIn
     permissionState = .notLoaded
 

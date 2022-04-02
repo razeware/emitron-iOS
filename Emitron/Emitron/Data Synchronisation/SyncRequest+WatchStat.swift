@@ -30,16 +30,12 @@ import struct Foundation.Date
 
 extension SyncRequest: WatchStat {
   var secondsWatched: Int {
-    for attribute in attributes {
-      if case .time(let seconds) = attribute {
-        return seconds
-      }
+    for case .time(let seconds) in attributes {
+      return seconds
     }
     
     return 0
   }
   
-  var dateWatched: Date {
-    date
-  }
+  var dateWatched: Date { date }
 }

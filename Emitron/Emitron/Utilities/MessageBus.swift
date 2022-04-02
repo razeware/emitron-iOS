@@ -41,7 +41,7 @@ struct Message {
 
 extension Message {
   var snackbarState: SnackbarState {
-    SnackbarState(status: level.snackbarStatus, message: message)
+    .init(status: level.snackbarStatus, message: message)
   }
 }
 

@@ -67,7 +67,7 @@ public extension Guardpost {
   }
 
   /// - Throws: `LoginError`
-  func login() async throws -> User {
+  func logIn() async throws -> User {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
     let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(
@@ -124,7 +124,7 @@ public extension Guardpost {
     return user
   }
 
-  func logout() {
+  func logOut() {
     try? persistenceStore.removeUserFromKeychain()
     _currentUser = .none
   }

@@ -30,238 +30,238 @@ import SwiftUI
 
 extension Color {
   static var contentText: Color {
-    Color("contentText")
+    .init("contentText")
   }
   
   static var titleText: Color {
-    Color("titleText")
+    .init("titleText")
   }
   
   static var background: Color {
-    Color("backgroundColor")
+    .init("backgroundColor")
   }
   
   static var cardBackground: Color {
-    Color("cardBackground")
+    .init("cardBackground")
   }
   
   static var activeIcon: Color {
-    Color("activeIcon")
+    .init("activeIcon")
   }
   
   static var inactiveIcon: Color {
-    Color("inactiveIcon")
+    .init("inactiveIcon")
   }
   
   static var accentTagBackground: Color {
-    Color("accentTagBackground")
+    .init("accentTagBackground")
   }
   
   static var accentTagForeground: Color {
-    Color("accentTagForeground")
+    .init("accentTagForeground")
   }
   
   static var tagBackground: Color {
-    Color("tagBackground")
+    .init("tagBackground")
   }
   
   static var tagForeground: Color {
-    Color("tagForeground")
+    .init("tagForeground")
   }
   
   static var proTagBackground: Color {
-    Color("proTagBackground")
+    .init("proTagBackground")
   }
   
   static var proTagForeground: Color {
-    Color("proTagForeground")
+    .init("proTagForeground")
   }
   
   static var proTagBorder: Color {
-    Color("proTagBorder")
+    .init("proTagBorder")
   }
   
   static var filterTagBackground: Color {
-    Color("filterTagBackground")
+    .init("filterTagBackground")
   }
   
   static var filterTagBorder: Color {
-    Color("filterTagBorder")
+    .init("filterTagBorder")
   }
   
   static var filterTagIcon: Color {
-    Color("filterTagIcon")
+    .init("filterTagIcon")
   }
   
   static var filterTagText: Color {
-    Color("filterTagText")
+    .init("filterTagText")
   }
   
   static var filterTagDestructiveBackground: Color {
-    Color("filterTagDestructiveBackground")
+    .init("filterTagDestructiveBackground")
   }
   
   static var filterTagDestructiveBorder: Color {
-    Color("filterTagDestructiveBorder")
+    .init("filterTagDestructiveBorder")
   }
   
   static var filterTagDestructiveIcon: Color {
-    Color("filterTagDestructiveIcon")
+    .init("filterTagDestructiveIcon")
   }
   
   static var filterTagDestructiveText: Color {
-    Color("filterTagDestructiveText")
+    .init("filterTagDestructiveText")
   }
   
   static var filterHeaderBackground: Color {
-    Color("filterHeaderBackground")
+    .init("filterHeaderBackground")
   }
   
   static var primaryButtonBackground: Color {
-    Color("primaryButtonBackground")
+    .init("primaryButtonBackground")
   }
   
   static var secondaryButtonBackground: Color {
-    Color("secondaryButtonBackground")
+    .init("secondaryButtonBackground")
   }
   
   static var destructiveButtonBackground: Color {
-    Color("destructiveButtonBackground")
+    .init("destructiveButtonBackground")
   }
   
   static var buttonText: Color {
-    Color("buttonText")
+    .init("buttonText")
   }
   
   static var accent: Color {
-    Color("accent")
+    .init("accent")
   }
   
   static var alarm: Color {
-    Color("alarm")
+    .init("alarm")
   }
   
   static var warning: Color {
-    Color("warning")
+    .init("warning")
   }
   
   static var borderColor: Color {
-    Color("borderColor")
+    .init("borderColor")
   }
   
   static var separator: Color {
-    Color("separator")
+    .init("separator")
   }
   
   static var textButtonText: Color {
-    Color("textButtonText")
+    .init("textButtonText")
   }
   
   static var iconButton: Color {
-    Color("iconButton")
+    .init("iconButton")
   }
   
   static var modalBackground: Color {
-    Color("modalBackgroundColor")
+    .init("modalBackgroundColor")
   }
   
   static var listHeaderBackground: Color {
-    Color("listHeaderBackground")
+    .init("listHeaderBackground")
   }
   
   static var appIconBorder: Color {
-    Color("appIconBorder")
+    .init("appIconBorder")
   }
   
   static var toggleTextSelected: Color {
-    Color("toggleTextSelected")
+    .init("toggleTextSelected")
   }
   
   static var toggleTextDeselected: Color {
-    Color("toggleTextDeselected")
+    .init("toggleTextDeselected")
   }
   
   static var toggleLineSelected: Color {
-    Color("toggleLineSelected")
+    .init("toggleLineSelected")
   }
   
   static var toggleLineDeselected: Color {
-    Color("toggleLineDeselected")
+    .init("toggleLineDeselected")
   }
   
   static var checkmarkBackground: Color {
-    Color("checkmarkBackground")
+    .init("checkmarkBackground")
   }
   
   static var checkmarkBorder: Color {
-    Color("checkmarkBorder")
+    .init("checkmarkBorder")
   }
   
   static var checkmarkColor: Color {
-    Color("checkmarkColor")
+    .init("checkmarkColor")
   }
   
   static var appBlack: Color {
-    Color(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
+    .init(red: 51.0 / 255.0, green: 51.0 / 255.0, blue: 51.0 / 255.0)
   }
   
   static var snackError: Color {
-    Color("error")
+    .init("error")
   }
   
   static var snackWarning: Color {
-    Color("warning")
+    .init("warning")
   }
   
   static var snackSuccess: Color {
-    Color("success")
+    .init("success")
   }
   
   static var snackText: Color {
-    Color("snackText")
+    .init("snackText")
   }
   
   static var snackTabBg: Color {
-    Color("snackTagBg")
+    .init("snackTagBg")
   }
   
   static var searchFieldBackground: Color {
-    Color("searchFieldBackground")
+    .init("searchFieldBackground")
   }
   
   static var searchFieldBorder: Color {
-    Color("searchFieldBorder")
+    .init("searchFieldBorder")
   }
   
   static var searchFieldIcon: Color {
-    Color("searchFieldIcon")
+    .init("searchFieldIcon")
   }
   
   static var searchFieldText: Color {
-    Color("searchFieldText")
+    .init("searchFieldText")
   }
   
   static var searchFieldShadow: Color {
-    Color("searchFieldShadow")
+    .init("searchFieldShadow")
   }
   
   static var downloadButtonDownloaded: Color {
-    Color("downloadButtonDownloaded")
+    .init("downloadButtonDownloaded")
   }
   
   static var downloadButtonDownloadingBackground: Color {
-    Color("downloadButtonDownloadingBackground")
+    .init("downloadButtonDownloadingBackground")
   }
   
   static var downloadButtonDownloadingForeground: Color {
-    Color("downloadButtonDownloadingForeground")
+    .init("downloadButtonDownloadingForeground")
   }
   
   static var downloadButtonNotDownloaded: Color {
-    Color("downloadButtonNotDownloaded")
+    .init("downloadButtonNotDownloaded")
   }
   
   static var downloadButtonWarning: Color {
-    Color("downloadButtonWarning")
+    .init("downloadButtonWarning")
   }
 }

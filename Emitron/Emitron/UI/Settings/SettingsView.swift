@@ -101,7 +101,7 @@ struct SettingsView: View {
           Button("Sign Out", role: .destructive) {
             Task { @MainActor in
               try await Task.sleep(nanoseconds: 100_000_000)
-              sessionController.logout()
+              sessionController.logOut()
               tabViewModel.selectedTab = .library
             }
           }

@@ -133,7 +133,6 @@
 		22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AF2396CDBE000DD276 /* User+Mocks.swift */; };
 		22A265B22396CE82000DD276 /* Permissions+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B12396CE82000DD276 /* Permissions+Mocks.swift */; };
 		22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F4F236F76B30064A406 /* DownloadProcessor.swift */; };
-		22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */; };
 		22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */; };
 		22ADBB452400731D003E8346 /* VideoOverlayButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ADBB442400731D003E8346 /* VideoOverlayButtonView.swift */; };
 		22B8265923AF109800D4BA23 /* EntityAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B8265823AF109800D4BA23 /* EntityAdapter.swift */; };
@@ -289,7 +288,6 @@
 		B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */; };
 		B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */; };
 		B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC2E22C79743006DD325 /* AppDelegate.swift */; };
-		B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC3022C79743006DD325 /* SceneDelegate.swift */; };
 		B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3422C79745006DD325 /* Assets.xcassets */; };
 		B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */; };
 		B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */; };
@@ -475,7 +473,6 @@
 		22A265AF2396CDBE000DD276 /* User+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Mocks.swift"; sourceTree = "<group>"; };
 		22A265B12396CE82000DD276 /* Permissions+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Permissions+Mocks.swift"; sourceTree = "<group>"; };
 		22A36F4F236F76B30064A406 /* DownloadProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessor.swift; sourceTree = "<group>"; };
-		22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessorTest.swift; sourceTree = "<group>"; };
 		22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManager.swift; sourceTree = "<group>"; };
 		22ADBB442400731D003E8346 /* VideoOverlayButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOverlayButtonView.swift; sourceTree = "<group>"; };
 		22B8265823AF109800D4BA23 /* EntityAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityAdapter.swift; sourceTree = "<group>"; };
@@ -635,7 +632,6 @@
 		B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC2B22C79743006DD325 /* raywenderlich.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = raywenderlich.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D7DC2E22C79743006DD325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B6D7DC3022C79743006DD325 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3422C79745006DD325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B6D7DC3A22C79745006DD325 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1068,7 +1064,6 @@
 			isa = PBXGroup;
 			children = (
 				2288EF0C23741B9700514043 /* DownloadServiceTest.swift */,
-				22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */,
 				22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */,
 			);
 			path = Downloads;
@@ -1525,7 +1520,6 @@
 			isa = PBXGroup;
 			children = (
 				22C3F154242795A1002812CB /* PortraitHostingController.swift */,
-				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
 				2213193D23E4E83300F15816 /* Empty States */,
@@ -1956,7 +1950,6 @@
 				222EEF7923CB379D00B025A4 /* ContentPersistableState+Mocks.swift in Sources */,
 				2237AAB223C336FB008E9976 /* PermissionAdapterTest.swift in Sources */,
 				2237AAA223C3368B008E9976 /* AttachmentAdapterTest.swift in Sources */,
-				22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */,
 				2237AAA423C33697008E9976 /* BookmarkAdapterTest.swift in Sources */,
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
 				22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */,
@@ -2028,7 +2021,6 @@
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* MainView.swift in Sources */,
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
-				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				22C640FF23F805F300CBFDE5 /* PagerView.swift in Sources */,
 				223D77E123B84C00005BE95D /* CompletedRepository.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,

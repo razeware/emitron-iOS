@@ -28,7 +28,7 @@
 
 import XCTest
 
-class EmitronScreenshots: XCTestCase {
+final class EmitronScreenshots: XCTestCase {
   func testTakeSnapshots() {
     let app = XCUIApplication()
     setupSnapshot(app)

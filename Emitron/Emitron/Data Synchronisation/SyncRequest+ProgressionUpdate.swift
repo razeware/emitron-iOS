@@ -34,7 +34,7 @@ extension SyncRequest: ProgressionUpdate {
     // doesn't actually represent a progression. But that seems ok
     // we can test that elsewhere.
     
-    if type == .markContentComplete {
+    if case .markContentComplete = type {
       return .finished
     }
 
@@ -47,7 +47,5 @@ extension SyncRequest: ProgressionUpdate {
     )
   }
   
-  var updatedAt: Date {
-    date
-  }
+  var updatedAt: Date { date }
 }

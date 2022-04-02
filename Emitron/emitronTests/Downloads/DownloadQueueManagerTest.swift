@@ -51,9 +51,14 @@ final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
     persistenceStore = PersistenceStore(db: database)
     settingsManager = App.objects.settingsManager
     let userModelController = UserMCMock(user: .withDownloads)
-    downloadService = DownloadService(persistenceStore: persistenceStore, userModelController: userModelController, videosServiceProvider: { _ in self.videoService }, settingsManager: settingsManager)
+    downloadService = .init(
+      persistenceStore: persistenceStore,
+      userModelController: userModelController,
+      videosServiceProvider: { _ in self.videoService },
+      settingsManager: settingsManager
+    )
 
-    queueManager = DownloadQueueManager(persistenceStore: persistenceStore)
+    queueManager = .init(persistenceStore: persistenceStore)
     downloadService.stopProcessing()
   }
   
@@ -65,7 +70,7 @@ final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
   func sampleDownload() async throws -> Download {
     let screencast = ContentTest.Mocks.screencast
     let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
-        .init(content: screencast.0, cacheUpdate: screencast.1)
+      .init(content: screencast.0, cacheUpdate: screencast.1)
     }
 
     XCTAssertEqual(result, .downloadRequestedButQueueInactive)

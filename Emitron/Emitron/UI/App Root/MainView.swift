@@ -67,7 +67,7 @@ private extension MainView {
       case .error:
         ErrorView(
           buttonTitle: "Back to login screen",
-          buttonAction: sessionController.logout
+          buttonAction: sessionController.logOut
         )
       }
     }
