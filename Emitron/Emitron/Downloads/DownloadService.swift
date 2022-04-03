@@ -464,12 +464,14 @@ extension DownloadService: DownloadProcessorDelegate {
   }
   
   func downloadProcessor(downloadWithID downloadID: UUID, didUpdateProgress progress: Double) {
-    do {
-      try persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
-    } catch {
-      Failure
-        .saveToPersistentStore(from: Self.self, reason: "Unable to update progress on download: \(error)")
-        .log()
+    Task {
+      do {
+        try await persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
+      } catch {
+        Failure
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update progress on download: \(error)")
+          .log()
+      }
     }
   }
   

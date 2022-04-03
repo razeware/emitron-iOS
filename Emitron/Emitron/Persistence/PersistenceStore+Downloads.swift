@@ -270,8 +270,8 @@ extension PersistenceStore {
   /// - Parameters:
   ///   - id: The UUID of the download to update
   ///   - progress: The new value of progress (0–1)
-  func updateDownload(withID id: UUID, withProgress progress: Double) throws {
-    try db.write { db in
+  func updateDownload(withID id: UUID, withProgress progress: Double) async throws {
+    try await db.write { db in
       if var download = try Download.fetchOne(db, key: id) {
         try download.updateChanges(db) {
           $0.progress = progress
