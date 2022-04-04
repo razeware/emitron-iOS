@@ -30,9 +30,9 @@ import UIKit
 
 extension UIFont {
   static var uiLargeTitle: UIFont {
-    UIFont(name: "Bitter-Bold", size: 34.0)!
+    .init(name: "Bitter-Bold", size: 34.0)!
   }
   static var uiHeadline: UIFont {
-    UIFont(name: "Bitter-Regular", size: 17.0)!
+    .init(name: "Bitter-Regular", size: 17.0)!
   }
 }

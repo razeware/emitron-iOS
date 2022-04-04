@@ -73,7 +73,7 @@ extension SettingsManager {
 }
 
 // We'll store all these settings inside 
-extension SettingsManager: EmitronSettings {
+extension SettingsManager {
   var filters: Set<Filter> {
     get {
       guard let data: [Data] = userDefaults[.filters] else {

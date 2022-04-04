@@ -444,9 +444,11 @@ extension DownloadService {
   }
 }
 
-// MARK: - DownloadProcesserDelegate Methods
+// MARK: - DownloadProcesserDelegate
 extension DownloadService: DownloadProcessorDelegate {
-  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithID downloadID: UUID) -> DownloadProcessorModel? {
+  func downloadProcessor(
+    downloadModelForDownloadWithID downloadID: UUID
+  ) -> DownloadProcessorModel? {
     do {
       return try persistenceStore.download(withID: downloadID)
     } catch {
@@ -457,25 +459,27 @@ extension DownloadService: DownloadProcessorDelegate {
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithID downloadID: UUID) {
+  func downloadProcessor(didStartDownloadWithID downloadID: UUID) {
     Task { await transitionDownload(withID: downloadID, to: .inProgress) }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didUpdateProgress progress: Double) {
-    do {
-      try persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
-    } catch {
-      Failure
-        .saveToPersistentStore(from: Self.self, reason: "Unable to update progress on download: \(error)")
-        .log()
+  func downloadProcessor(downloadWithID downloadID: UUID, didUpdateProgress progress: Double) {
+    Task {
+      do {
+        try await persistenceStore.updateDownload(withID: downloadID, withProgress: progress)
+      } catch {
+        Failure
+          .saveToPersistentStore(from: Self.self, reason: "Unable to update progress on download: \(error)")
+          .log()
+      }
     }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithID downloadID: UUID) {
+  func downloadProcessor(didFinishDownloadWithID downloadID: UUID) {
     Task { await transitionDownload(withID: downloadID, to: .complete) }
   }
   
-  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithID downloadID: UUID) {
+  func downloadProcessor(didCancelDownloadWithID downloadID: UUID) {
     do {
       if try !persistenceStore.deleteDownload(withID: downloadID) {
         Failure
@@ -490,7 +494,6 @@ extension DownloadService: DownloadProcessorDelegate {
   }
   
   func downloadProcessor(
-    _ processor: DownloadProcessor,
     downloadWithID downloadID: UUID,
     didFailWithError error: Error
   ) {

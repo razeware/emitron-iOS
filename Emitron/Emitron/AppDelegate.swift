@@ -30,22 +30,31 @@ import UIKit
 import AVFoundation
 import GRDB
 
-class AppDelegate: UIResponder, UIApplicationDelegate {
-
+final class AppDelegate: UIResponder, UIApplicationDelegate {
   var downloadService: DownloadService?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]? = nil) -> Bool {
-    let audioSession = AVAudioSession.sharedInstance()
+  func application(
+    _: UIApplication,
+    didFinishLaunchingWithOptions _: [UIApplication.LaunchOptionsKey: Any]? = nil
+  ) -> Bool {
     do {
-      try audioSession.setCategory(AVAudioSession.Category.playback)
+      try AVAudioSession.sharedInstance().setCategory(AVAudioSession.Category.playback)
     } catch {
       print("Setting category to AVAudioSessionCategoryPlayback failed.")
     }
     return true
   }
+
   // For dealing with downloading of videos in the background
-  func application(_ application: UIApplication, handleEventsForBackgroundURLSession identifier: String, completionHandler: @escaping () -> Void) {
-    assert(identifier == DownloadProcessor.sessionIdentifier, "Unknown Background URLSession. Unable to handle these events.")
+  func application(
+    _: UIApplication,
+    handleEventsForBackgroundURLSession identifier: String,
+    completionHandler: @escaping () -> Void
+  ) {
+    assert(
+      identifier == DownloadProcessor.sessionIdentifier,
+      "Unknown Background URLSession. Unable to handle these events."
+    )
     
     downloadService?.backgroundSessionCompletionHandler = completionHandler
   }

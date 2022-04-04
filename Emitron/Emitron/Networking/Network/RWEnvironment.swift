@@ -29,7 +29,6 @@
 import struct Foundation.URL
 
 struct RWEnvironment {
-
   // MARK: - Properties
   var baseURL: URL
 }
