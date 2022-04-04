@@ -68,7 +68,7 @@ final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
   func testPendingStreamSendsNewDownloads() async throws {
     let recorder = queueManager.pendingStream.record()
     
-    var download = try await sampleDownload()
+    var download = try await sampleDownload
     download = try await database.write { [download] db in
       try download.saved(db)
     }
@@ -79,7 +79,7 @@ final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
   }
   
   func testPendingStreamSendingPreExistingDownloads() async throws {
-    var download = try await sampleDownload()
+    var download = try await sampleDownload
     download = try await database.write { [download] db in
       try download.saved(db)
     }
@@ -207,15 +207,17 @@ final class DownloadQueueManagerTest: XCTestCase, DatabaseTestCase {
 
 // MARK: - private
 private extension DownloadQueueManagerTest {
-  func sampleDownload() async throws -> Download {
-    let screencast = ContentTest.Mocks.screencast
-    let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
-      .init(content: screencast.0, cacheUpdate: screencast.1)
+  var sampleDownload: Download {
+    get async throws {
+      let screencast = ContentTest.Mocks.screencast
+      let result = try await downloadService.requestDownload(contentID: screencast.0.id) { _ in
+        .init(content: screencast.0, cacheUpdate: screencast.1)
+      }
+
+      XCTAssertEqual(result, .downloadRequestedButQueueInactive)
+
+      return try XCTUnwrap(allDownloads.first)
     }
-
-    XCTAssertEqual(result, .downloadRequestedButQueueInactive)
-
-    return try XCTUnwrap(allDownloads.first)
   }
 
   @discardableResult func samplePersistedDownload(state: Download.State = .pending) async throws -> Download {
