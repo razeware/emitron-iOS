@@ -37,7 +37,7 @@ final class PersistenceStore: ObservableObject {
     case keychainFailure
   }
   
-  let db: DatabaseWriter
+  let db: any DatabaseWriter
   
   init<DB: DatabaseWriter>(db: DB) {
     self.db = db

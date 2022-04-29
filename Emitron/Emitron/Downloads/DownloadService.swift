@@ -71,7 +71,7 @@ final class DownloadService: ObservableObject {
   private let userModelController: UserModelController
   private var userModelControllerSubscription: AnyCancellable?
   private let videosServiceProvider: VideosService.Provider
-  private var videosService: VideosServiceProtocol?
+  private var videosService: (any VideosServiceProtocol)?
   private let queueManager: DownloadQueueManager
   private let downloadProcessor: DownloadProcessor
   private var processingSubscriptions = Set<AnyCancellable>()

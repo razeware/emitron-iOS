@@ -29,7 +29,7 @@
 import class Foundation.URLSession
 
 protocol VideosServiceProtocol {
-  typealias Provider = (RWAPI) -> VideosServiceProtocol
+  typealias Provider = (RWAPI) -> any VideosServiceProtocol
 
   func videoStream(for id: Int) async throws -> StreamVideoRequest.Response
   func videoStreamDownload(for id: Int) async throws -> StreamVideoRequest.Response
