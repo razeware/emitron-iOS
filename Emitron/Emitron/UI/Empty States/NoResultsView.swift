@@ -65,7 +65,7 @@ extension NoResultsView: View {
           .padding([.bottom], 20)
           .padding(.horizontal, 20)
 
-        Text(contentScreen.detailMesage)
+        Text(contentScreen.detailMessage)
           .lineSpacing(5)
           .font(.uiLabel)
           .foregroundColor(.contentText)

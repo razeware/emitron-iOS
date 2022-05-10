@@ -324,7 +324,7 @@ extension PersistenceStore {
     }
   }
 
-  /// Save the entire graph of models to support this ContentDeailsModel
+  /// Save the entire graph of models to support this ContentDetailsModel
   /// - Parameter contentPersistableState: The model to persist—from the DataCache.
   func persistContentGraph(
     for contentPersistableState: ContentPersistableState,

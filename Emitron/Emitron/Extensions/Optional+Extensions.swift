@@ -33,7 +33,7 @@ public extension Optional {
     case typeMismatch
   }
 
-  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// [An alternative to overloading `??` to throw errors upon `nil`.](
   /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
   /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
   /// - Throws: `UnwrapError` when `nil`.
@@ -48,7 +48,7 @@ public extension Optional {
     }
   }
 
-  /// [An alterative to overloading `??` to throw errors upon `nil`.](
+  /// [An alternative to overloading `??` to throw errors upon `nil`.](
   /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
   /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
   /// - Throws: `UnwrapError`

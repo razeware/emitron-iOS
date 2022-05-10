@@ -231,7 +231,7 @@ class Filters: ObservableObject {
   
   // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well
   // If there are no content filters, it adds the default ones.
-  func appliedParamteresWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
+  func appliedParametersWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
     var filterParameters = filters.map(\.parameter)
     let appliedContentFilters = filters.filter { $0.groupType == .contentTypes && $0.isOn }
     

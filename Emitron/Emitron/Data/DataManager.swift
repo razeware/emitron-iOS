@@ -32,7 +32,7 @@ import Combine
 final class DataManager: ObservableObject {
 
   // MARK: - Properties
-  // Initialiser Arguments
+  // Initializer Arguments
   let persistenceStore: PersistenceStore
   let downloadService: DownloadService
   let sessionController: SessionController

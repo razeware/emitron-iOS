@@ -30,7 +30,7 @@ import GRDB
 
 // swiftlint:disable identifier_name
 
-/// A type responsible for initialising the appliation's database
+/// A type responsible for initialising the application's database
 enum EmitronDatabase {
   /// Creates a fully initialised database
   /// - Parameter path: Path at which to create the database
