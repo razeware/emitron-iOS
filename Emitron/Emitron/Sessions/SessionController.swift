@@ -146,7 +146,7 @@ final class SessionController: UserModelController, ObservablePrePostFactoObject
   }
   
   func fetchPermissionsIfNeeded() {
-    // Request persmission if an app launch has happened or if it's been over 24 hours since the last permission request once the app enters the foreground
+    // Request permission if an app launch has happened or if it's been over 24 hours since the last permission request once the app enters the foreground
     guard shouldRefresh || !hasPermissions else { return }
     
     fetchPermissions()

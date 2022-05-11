@@ -38,7 +38,7 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     "username": "sample_username",
     "avatar_url": "http://example.com/avatar.jpg",
     "name": "Sample Name",
-    "token": "Samaple.Token"
+    "token": "Sample.Token"
   ]
   
   override func setUpWithError() throws {
