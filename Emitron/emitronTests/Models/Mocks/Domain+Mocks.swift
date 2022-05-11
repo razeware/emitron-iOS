@@ -39,7 +39,7 @@ extension Domain {
     }
   }
   
-  private static func loadMocksFrom(filename: String) -> ([Domain]) {
+  private static func loadMocksFrom(filename: String) -> [Domain] {
     do {
       let bundle = Bundle(for: AttachmentTest.self)
       let fileURL = bundle.url(forResource: filename, withExtension: "json")
