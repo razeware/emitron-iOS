@@ -13,12 +13,12 @@
             "type":"contents"
           },
           "links":{
-            "self":"http://api.raywenderlich.com/api/contents/3658341"
+            "self": "https://api.raywenderlich.com/api/contents/3658341"
           }
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/bookmarks/72281"
+        "self": "https://api.raywenderlich.com/api/bookmarks/72281"
       }
     },
     {
@@ -34,12 +34,12 @@
             "type":"contents"
           },
           "links":{
-            "self":"http://api.raywenderlich.com/api/contents/3967613"
+            "self": "https://api.raywenderlich.com/api/contents/3967613"
           }
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/bookmarks/72282"
+        "self": "https://api.raywenderlich.com/api/bookmarks/72282"
       }
     },
     {
@@ -55,12 +55,12 @@
             "type":"contents"
           },
           "links":{
-            "self":"http://api.raywenderlich.com/api/contents/3401119"
+            "self": "https://api.raywenderlich.com/api/contents/3401119"
           }
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/bookmarks/72283"
+        "self": "https://api.raywenderlich.com/api/bookmarks/72283"
       }
     },
     {
@@ -76,12 +76,12 @@
             "type":"contents"
           },
           "links":{
-            "self":"http://api.raywenderlich.com/api/contents/1940773"
+            "self": "https://api.raywenderlich.com/api/contents/1940773"
           }
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/bookmarks/72284"
+        "self": "https://api.raywenderlich.com/api/bookmarks/72284"
       }
     },
     {
@@ -97,12 +97,12 @@
             "type":"contents"
           },
           "links":{
-            "self":"http://api.raywenderlich.com/api/contents/9340"
+            "self": "https://api.raywenderlich.com/api/contents/9340"
           }
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/bookmarks/72510"
+        "self": "https://api.raywenderlich.com/api/bookmarks/72510"
       }
     }
   ],
@@ -151,7 +151,7 @@
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/contents/3658341-picasso-tutorial-for-android-getting-started"
+        "self": "https://api.raywenderlich.com/api/contents/3658341-picasso-tutorial-for-android-getting-started"
       }
     },
     {
@@ -198,7 +198,7 @@
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/contents/3967613-swift-ui-working-with-state"
+        "self": "https://api.raywenderlich.com/api/contents/3967613-swift-ui-working-with-state"
       }
     },
     {
@@ -252,7 +252,7 @@
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/contents/3401119-advanced-swift-unsafe-memory-access-memory-sizing"
+        "self": "https://api.raywenderlich.com/api/contents/3401119-advanced-swift-unsafe-memory-access-memory-sizing"
       }
     },
     {
@@ -306,7 +306,7 @@
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/contents/1940773-advanced-swift-unsafe-memory-access"
+        "self": "https://api.raywenderlich.com/api/contents/1940773-advanced-swift-unsafe-memory-access"
       }
     },
     {
@@ -353,7 +353,7 @@
         }
       },
       "links":{
-        "self":"http://api.raywenderlich.com/api/contents/9340-contacts-searching-contacts"
+        "self": "https://api.raywenderlich.com/api/contents/9340-contacts-searching-contacts"
       }
     }
   ],
