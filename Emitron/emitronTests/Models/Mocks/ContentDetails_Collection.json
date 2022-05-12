@@ -90,7 +90,7 @@
       }
     },
     "links": {
-      "self": "http://api.raywenderlich.com/api/contents/5994-programming-in-swift"
+      "self": "https://api.raywenderlich.com/api/contents/5994-programming-in-swift"
     }
   },
   "included": [
@@ -134,12 +134,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5994"
+            "self": "https://api.raywenderlich.com/api/contents/5994"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16089926"
+        "self": "https://api.raywenderlich.com/api/progressions/16089926"
       }
     },
     {
@@ -237,7 +237,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7039-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7039-programming-in-swift-introduction"
       }
     },
     {
@@ -287,7 +287,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7042-programming-in-swift-swift-playgrounds"
+        "self": "https://api.raywenderlich.com/api/contents/7042-programming-in-swift-swift-playgrounds"
       }
     },
     {
@@ -308,12 +308,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7042"
+            "self": "https://api.raywenderlich.com/api/contents/7042"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16089925"
+        "self": "https://api.raywenderlich.com/api/progressions/16089925"
       }
     },
     {
@@ -360,7 +360,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7043-programming-in-swift-comments"
+        "self": "https://api.raywenderlich.com/api/contents/7043-programming-in-swift-comments"
       }
     },
     {
@@ -407,7 +407,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7044-programming-in-swift-tuples"
+        "self": "https://api.raywenderlich.com/api/contents/7044-programming-in-swift-tuples"
       }
     },
     {
@@ -454,7 +454,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7045-programming-in-swift-challenge-tuples"
+        "self": "https://api.raywenderlich.com/api/contents/7045-programming-in-swift-challenge-tuples"
       }
     },
     {
@@ -501,7 +501,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7046-programming-in-swift-booleans-and-operators"
+        "self": "https://api.raywenderlich.com/api/contents/7046-programming-in-swift-booleans-and-operators"
       }
     },
     {
@@ -551,7 +551,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7047-programming-in-swift-challenge-booleans"
+        "self": "https://api.raywenderlich.com/api/contents/7047-programming-in-swift-challenge-booleans"
       }
     },
     {
@@ -572,12 +572,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7047"
+            "self": "https://api.raywenderlich.com/api/contents/7047"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091245"
+        "self": "https://api.raywenderlich.com/api/progressions/16091245"
       }
     },
     {
@@ -627,7 +627,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7049-programming-in-swift-scope"
+        "self": "https://api.raywenderlich.com/api/contents/7049-programming-in-swift-scope"
       }
     },
     {
@@ -648,12 +648,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7049"
+            "self": "https://api.raywenderlich.com/api/contents/7049"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16090541"
+        "self": "https://api.raywenderlich.com/api/progressions/16090541"
       }
     },
     {
@@ -700,7 +700,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7050-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7050-programming-in-swift-conclusion"
       }
     },
     {
@@ -798,7 +798,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7051-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7051-programming-in-swift-introduction"
       }
     },
     {
@@ -845,7 +845,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7052-programming-in-swift-while-loops"
+        "self": "https://api.raywenderlich.com/api/contents/7052-programming-in-swift-while-loops"
       }
     },
     {
@@ -895,7 +895,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7053-programming-in-swift-challenge-while-loops"
+        "self": "https://api.raywenderlich.com/api/contents/7053-programming-in-swift-challenge-while-loops"
       }
     },
     {
@@ -916,12 +916,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7053"
+            "self": "https://api.raywenderlich.com/api/contents/7053"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091472"
+        "self": "https://api.raywenderlich.com/api/progressions/16091472"
       }
     },
     {
@@ -968,7 +968,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7054-programming-in-swift-for-loops"
+        "self": "https://api.raywenderlich.com/api/contents/7054-programming-in-swift-for-loops"
       }
     },
     {
@@ -1015,7 +1015,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7055-programming-in-swift-challenge-for-loops"
+        "self": "https://api.raywenderlich.com/api/contents/7055-programming-in-swift-challenge-for-loops"
       }
     },
     {
@@ -1062,7 +1062,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7056-programming-in-swift-switch-statements"
+        "self": "https://api.raywenderlich.com/api/contents/7056-programming-in-swift-switch-statements"
       }
     },
     {
@@ -1109,7 +1109,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7057-programming-in-swift-challenge-switch-statements"
+        "self": "https://api.raywenderlich.com/api/contents/7057-programming-in-swift-challenge-switch-statements"
       }
     },
     {
@@ -1159,7 +1159,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7058-programming-in-swift-enumerations"
+        "self": "https://api.raywenderlich.com/api/contents/7058-programming-in-swift-enumerations"
       }
     },
     {
@@ -1180,12 +1180,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7058"
+            "self": "https://api.raywenderlich.com/api/contents/7058"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091738"
+        "self": "https://api.raywenderlich.com/api/progressions/16091738"
       }
     },
     {
@@ -1232,7 +1232,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7059-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7059-programming-in-swift-conclusion"
       }
     },
     {
@@ -1330,7 +1330,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7061-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7061-programming-in-swift-introduction"
       }
     },
     {
@@ -1380,7 +1380,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7062-programming-in-swift-introduction-to-functions"
+        "self": "https://api.raywenderlich.com/api/contents/7062-programming-in-swift-introduction-to-functions"
       }
     },
     {
@@ -1401,12 +1401,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7062"
+            "self": "https://api.raywenderlich.com/api/contents/7062"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16092046"
+        "self": "https://api.raywenderlich.com/api/progressions/16092046"
       }
     },
     {
@@ -1453,7 +1453,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7063-programming-in-swift-challenge-introduction-to-functions"
+        "self": "https://api.raywenderlich.com/api/contents/7063-programming-in-swift-challenge-introduction-to-functions"
       }
     },
     {
@@ -1500,7 +1500,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7064-programming-in-swift-more-functions"
+        "self": "https://api.raywenderlich.com/api/contents/7064-programming-in-swift-more-functions"
       }
     },
     {
@@ -1547,7 +1547,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7065-programming-in-swift-introduction-to-optionals"
+        "self": "https://api.raywenderlich.com/api/contents/7065-programming-in-swift-introduction-to-optionals"
       }
     },
     {
@@ -1594,7 +1594,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7066-programming-in-swift-challenge-introduction-to-optionals"
+        "self": "https://api.raywenderlich.com/api/contents/7066-programming-in-swift-challenge-introduction-to-optionals"
       }
     },
     {
@@ -1641,7 +1641,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7067-programming-in-swift-more-optionals"
+        "self": "https://api.raywenderlich.com/api/contents/7067-programming-in-swift-more-optionals"
       }
     },
     {
@@ -1691,7 +1691,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7068-programming-in-swift-challenge-more-optionals"
+        "self": "https://api.raywenderlich.com/api/contents/7068-programming-in-swift-challenge-more-optionals"
       }
     },
     {
@@ -1712,12 +1712,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7068"
+            "self": "https://api.raywenderlich.com/api/contents/7068"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16092358"
+        "self": "https://api.raywenderlich.com/api/progressions/16092358"
       }
     },
     {
@@ -1764,7 +1764,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7069-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7069-programming-in-swift-conclusion"
       }
     },
     {
@@ -1869,7 +1869,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7070-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7070-programming-in-swift-introduction"
       }
     },
     {
@@ -1890,12 +1890,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7070"
+            "self": "https://api.raywenderlich.com/api/contents/7070"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093019"
+        "self": "https://api.raywenderlich.com/api/progressions/16093019"
       }
     },
     {
@@ -1942,7 +1942,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7071-programming-in-swift-arrays"
+        "self": "https://api.raywenderlich.com/api/contents/7071-programming-in-swift-arrays"
       }
     },
     {
@@ -1989,7 +1989,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7072-programming-in-swift-challenge-arrays"
+        "self": "https://api.raywenderlich.com/api/contents/7072-programming-in-swift-challenge-arrays"
       }
     },
     {
@@ -2036,7 +2036,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7073-programming-in-swift-dictionaries"
+        "self": "https://api.raywenderlich.com/api/contents/7073-programming-in-swift-dictionaries"
       }
     },
     {
@@ -2083,7 +2083,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7074-programming-in-swift-challenge-dictionaries"
+        "self": "https://api.raywenderlich.com/api/contents/7074-programming-in-swift-challenge-dictionaries"
       }
     },
     {
@@ -2133,7 +2133,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7075-programming-in-swift-sets"
+        "self": "https://api.raywenderlich.com/api/contents/7075-programming-in-swift-sets"
       }
     },
     {
@@ -2154,12 +2154,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7075"
+            "self": "https://api.raywenderlich.com/api/contents/7075"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093347"
+        "self": "https://api.raywenderlich.com/api/progressions/16093347"
       }
     },
     {
@@ -2206,7 +2206,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7076-programming-in-swift-closures"
+        "self": "https://api.raywenderlich.com/api/contents/7076-programming-in-swift-closures"
       }
     },
     {
@@ -2253,7 +2253,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7077-programming-in-swift-closures-and-collections"
+        "self": "https://api.raywenderlich.com/api/contents/7077-programming-in-swift-closures-and-collections"
       }
     },
     {
@@ -2300,7 +2300,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7078-programming-in-swift-challenge-closures"
+        "self": "https://api.raywenderlich.com/api/contents/7078-programming-in-swift-challenge-closures"
       }
     },
     {
@@ -2347,7 +2347,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7079-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7079-programming-in-swift-conclusion"
       }
     },
     {
@@ -2445,7 +2445,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7080-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7080-programming-in-swift-introduction"
       }
     },
     {
@@ -2495,7 +2495,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7081-programming-in-swift-structures"
+        "self": "https://api.raywenderlich.com/api/contents/7081-programming-in-swift-structures"
       }
     },
     {
@@ -2516,12 +2516,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7081"
+            "self": "https://api.raywenderlich.com/api/contents/7081"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093900"
+        "self": "https://api.raywenderlich.com/api/progressions/16093900"
       }
     },
     {
@@ -2571,7 +2571,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7082-programming-in-swift-challenge-structures"
+        "self": "https://api.raywenderlich.com/api/contents/7082-programming-in-swift-challenge-structures"
       }
     },
     {
@@ -2592,12 +2592,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7082"
+            "self": "https://api.raywenderlich.com/api/contents/7082"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16094712"
+        "self": "https://api.raywenderlich.com/api/progressions/16094712"
       }
     },
     {
@@ -2647,7 +2647,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7083-programming-in-swift-properties"
+        "self": "https://api.raywenderlich.com/api/contents/7083-programming-in-swift-properties"
       }
     },
     {
@@ -2668,12 +2668,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7083"
+            "self": "https://api.raywenderlich.com/api/contents/7083"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/29999050"
+        "self": "https://api.raywenderlich.com/api/progressions/29999050"
       }
     },
     {
@@ -2723,7 +2723,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7084-programming-in-swift-challenge-properties"
+        "self": "https://api.raywenderlich.com/api/contents/7084-programming-in-swift-challenge-properties"
       }
     },
     {
@@ -2744,12 +2744,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7084"
+            "self": "https://api.raywenderlich.com/api/contents/7084"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/29999042"
+        "self": "https://api.raywenderlich.com/api/progressions/29999042"
       }
     },
     {
@@ -2796,7 +2796,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7085-programming-in-swift-computed-properties-vs-methods"
+        "self": "https://api.raywenderlich.com/api/contents/7085-programming-in-swift-computed-properties-vs-methods"
       }
     },
     {
@@ -2846,7 +2846,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7086-programming-in-swift-methods"
+        "self": "https://api.raywenderlich.com/api/contents/7086-programming-in-swift-methods"
       }
     },
     {
@@ -2867,12 +2867,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7086"
+            "self": "https://api.raywenderlich.com/api/contents/7086"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/30000379"
+        "self": "https://api.raywenderlich.com/api/progressions/30000379"
       }
     },
     {
@@ -2922,7 +2922,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7087-programming-in-swift-challenge-methods"
+        "self": "https://api.raywenderlich.com/api/contents/7087-programming-in-swift-challenge-methods"
       }
     },
     {
@@ -2943,12 +2943,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7087"
+            "self": "https://api.raywenderlich.com/api/contents/7087"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095031"
+        "self": "https://api.raywenderlich.com/api/progressions/16095031"
       }
     },
     {
@@ -2995,7 +2995,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7088-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7088-programming-in-swift-conclusion"
       }
     },
     {
@@ -3097,7 +3097,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7089-programming-in-swift-introduction"
+        "self": "https://api.raywenderlich.com/api/contents/7089-programming-in-swift-introduction"
       }
     },
     {
@@ -3147,7 +3147,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7090-programming-in-swift-classes-vs-structures"
+        "self": "https://api.raywenderlich.com/api/contents/7090-programming-in-swift-classes-vs-structures"
       }
     },
     {
@@ -3168,12 +3168,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7090"
+            "self": "https://api.raywenderlich.com/api/contents/7090"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095318"
+        "self": "https://api.raywenderlich.com/api/progressions/16095318"
       }
     },
     {
@@ -3223,7 +3223,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7091-programming-in-swift-challenge-classes-vs-structures"
+        "self": "https://api.raywenderlich.com/api/contents/7091-programming-in-swift-challenge-classes-vs-structures"
       }
     },
     {
@@ -3244,12 +3244,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7091"
+            "self": "https://api.raywenderlich.com/api/contents/7091"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095396"
+        "self": "https://api.raywenderlich.com/api/progressions/16095396"
       }
     },
     {
@@ -3296,7 +3296,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7092-programming-in-swift-inheritance"
+        "self": "https://api.raywenderlich.com/api/contents/7092-programming-in-swift-inheritance"
       }
     },
     {
@@ -3343,7 +3343,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7093-programming-in-swift-initializers"
+        "self": "https://api.raywenderlich.com/api/contents/7093-programming-in-swift-initializers"
       }
     },
     {
@@ -3393,7 +3393,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7094-programming-in-swift-challenge-initializers"
+        "self": "https://api.raywenderlich.com/api/contents/7094-programming-in-swift-challenge-initializers"
       }
     },
     {
@@ -3414,12 +3414,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7094"
+            "self": "https://api.raywenderlich.com/api/contents/7094"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095719"
+        "self": "https://api.raywenderlich.com/api/progressions/16095719"
       }
     },
     {
@@ -3466,7 +3466,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7095-programming-in-swift-when-should-you-subclass"
+        "self": "https://api.raywenderlich.com/api/contents/7095-programming-in-swift-when-should-you-subclass"
       }
     },
     {
@@ -3513,7 +3513,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7096-programming-in-swift-protocols"
+        "self": "https://api.raywenderlich.com/api/contents/7096-programming-in-swift-protocols"
       }
     },
     {
@@ -3563,7 +3563,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7097-programming-in-swift-memory-management"
+        "self": "https://api.raywenderlich.com/api/contents/7097-programming-in-swift-memory-management"
       }
     },
     {
@@ -3584,12 +3584,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7097"
+            "self": "https://api.raywenderlich.com/api/contents/7097"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16096116"
+        "self": "https://api.raywenderlich.com/api/progressions/16096116"
       }
     },
     {
@@ -3636,7 +3636,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7098-programming-in-swift-conclusion"
+        "self": "https://api.raywenderlich.com/api/contents/7098-programming-in-swift-conclusion"
       }
     },
     {

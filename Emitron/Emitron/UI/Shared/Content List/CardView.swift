@@ -154,7 +154,7 @@ struct MockContentListDisplayable: ContentListDisplayable {
   var ordinal: Int?
   var technologyTripleString: String = "Doesn't matter"
   var contentSummaryMetadataString: String = "Doesn't matter"
-  var contributorString: String = "Deosn't matter"
+  var contributorString: String = "Doesn't matter"
   var videoIdentifier: Int?
 }
 

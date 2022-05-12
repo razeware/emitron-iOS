@@ -50,7 +50,7 @@ extension Progression: Equatable {
 
 extension Progression {
   var finished: Bool {
-    // This is a really nasty hack. And I take full responsbility for it. But
+    // This is a really nasty hack. And I take full responsibility for it. But
     // I'm also incredibly lazy. Basically, collections need to be fully complete
     // before being marked as complete. Whereas videos should only be 90% complete.
     // Since we don't know whether this is a video or a collection, we're gonna

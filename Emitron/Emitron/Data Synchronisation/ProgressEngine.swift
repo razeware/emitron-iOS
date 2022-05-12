@@ -38,7 +38,7 @@ enum ProgressEngineError: Error {
   var localizedDescription: String {
     switch self {
     case .simultaneousStreamsNotAllowed:
-      return "ProgressEngineError::SimulataneousStreamsNotAllowed"
+      return "ProgressEngineError::SimultaneousStreamsNotAllowed"
     case .upstreamError(let error):
       return "ProgressEngineError::UpstreamError:: \(error)"
     case .notImplemented:

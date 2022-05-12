@@ -44,7 +44,7 @@ final class SettingsManager: ObservableObject {
   private let wifiOnlyDownloadsSubject = PassthroughSubject<Bool, Never>()
   private let downloadQualitySubject = PassthroughSubject<Attachment.Kind, Never>()
   
-  // MARK: Initialisers
+  // MARK: Initializers
   init(userDefaults: UserDefaults = .standard, userModelController: UserModelController) {
     self.userDefaults = userDefaults
     self.userModelController = userModelController

@@ -61,9 +61,9 @@
       }
     },
     "links": {
-      "self": "http://api.raywenderlich.com/api/contents/5148647-what-s-new-in-xcode-11-workflow",
-      "video_stream": "http://api.raywenderlich.com/api/videos/3067/stream",
-      "video_download": "http://api.raywenderlich.com/api/videos/3067/download"
+      "self": "https://api.raywenderlich.com/api/contents/5148647-what-s-new-in-xcode-11-workflow",
+      "video_stream": "https://api.raywenderlich.com/api/videos/3067/stream",
+      "video_download": "https://api.raywenderlich.com/api/videos/3067/download"
     }
   },
   "included": [
@@ -96,12 +96,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5148647"
+            "self": "https://api.raywenderlich.com/api/contents/5148647"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/97194622"
+        "self": "https://api.raywenderlich.com/api/progressions/97194622"
       }
     },
     {
@@ -117,12 +117,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5148647"
+            "self": "https://api.raywenderlich.com/api/contents/5148647"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/bookmarks/101222"
+        "self": "https://api.raywenderlich.com/api/bookmarks/101222"
       }
     },
     {

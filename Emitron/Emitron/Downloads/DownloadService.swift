@@ -444,7 +444,7 @@ extension DownloadService {
   }
 }
 
-// MARK: - DownloadProcesserDelegate
+// MARK: - DownloadProcessorDelegate
 extension DownloadService: DownloadProcessorDelegate {
   func downloadProcessor(
     downloadModelForDownloadWithID downloadID: UUID

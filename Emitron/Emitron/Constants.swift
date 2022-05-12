@@ -84,12 +84,12 @@ extension String {
   
   static let videoPlaybackCannotStreamWhenOffline = "Cannot stream video when offline."
   static let videoPlaybackInvalidPermissions = "You don't have the required permissions to view this video."
-  static let videoPlaybackExpiredPermissions = "Download expired. Please reconnect to the internet to reverify."
+  static let videoPlaybackExpiredPermissions = "Download expired. Please reconnect to the internet to re-verify."
   
   static let appIconUpdatedSuccessfully = "You app icon has been updated!"
   static let appIconUpdateProblem = "There was a problem updating the app icon."
 
-  // MARK: Onboarding
+  // MARK: On-boarding
   static let login = "Login"
 
   // MARK: Other

@@ -39,7 +39,7 @@ extension Emitron.Category {
     }
   }
   
-  private static func loadMocksFrom(filename: String) -> ([Emitron.Category]) {
+  private static func loadMocksFrom(filename: String) -> [Emitron.Category] {
     do {
       let bundle = Bundle(for: AttachmentTest.self)
       let fileURL = bundle.url(forResource: filename, withExtension: "json")

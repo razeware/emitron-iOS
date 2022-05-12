@@ -53,9 +53,9 @@
       }
     },
     "links":{
-      "self":"http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
-      "video_stream":"http://api.raywenderlich.com/api/videos/2546/stream",
-      "video_download":"http://api.raywenderlich.com/api/videos/2546/download"
+      "self": "https://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
+      "video_stream": "https://api.raywenderlich.com/api/videos/2546/stream",
+      "video_download": "https://api.raywenderlich.com/api/videos/2546/download"
     }
   },
   "included":[
