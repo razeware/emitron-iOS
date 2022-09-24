@@ -80,7 +80,10 @@ class DownloadServiceTest: XCTestCase, DatabaseTestCase {
   func testRequestDownloadScreencastUpdatesExistingContentInLocalStore() async throws {
     let screencastModel = ContentTest.Mocks.screencast
     var screencast = screencastModel.0
-    try database.write(screencast.save)
+    
+    screencast = try await database.write { [screencast] db in
+      try screencast.saved(db)
+    }
     
     let originalDuration = screencast.duration
     let originalDescription = screencast.descriptionPlainText
