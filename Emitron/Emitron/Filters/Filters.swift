@@ -66,7 +66,7 @@ class Filters: ObservableObject {
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
     
-    if let searchFilter = searchFilter {
+    if let searchFilter {
       appliedParameters.append(searchFilter.parameter)
     }
     
@@ -90,7 +90,7 @@ class Filters: ObservableObject {
     didSet {
       searchStr = searchQuery ?? ""
       // Remove search filter from filters
-      if let searchFilter = searchFilter {
+      if let searchFilter {
         all.remove(searchFilter)
       }
       
@@ -242,7 +242,7 @@ class Filters: ObservableObject {
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
     
-    if let searchFilter = searchFilter {
+    if let searchFilter {
       appliedParameters.append(searchFilter.parameter)
     }
     
@@ -260,7 +260,7 @@ class Filters: ObservableObject {
     
     var appliedParameters = filterParameters + [sortFilter.parameter]
     
-    if let searchFilter = searchFilter {
+    if let searchFilter {
       appliedParameters.append(searchFilter.parameter)
     }
     

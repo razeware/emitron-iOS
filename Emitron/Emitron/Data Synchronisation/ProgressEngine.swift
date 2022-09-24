@@ -104,7 +104,7 @@ final class ProgressEngine {
       return progression
     case .online:
       // Don't bother trying if the playback token is empty.
-      guard let playbackToken = playbackToken else { return progression }
+      guard let playbackToken else { return progression }
 
       let (progression, cacheUpdate) = try await contentsService.reportPlaybackUsage(
         for: contentID,

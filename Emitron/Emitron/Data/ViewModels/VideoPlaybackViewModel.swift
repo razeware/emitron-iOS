@@ -228,7 +228,7 @@ private extension VideoPlaybackViewModel {
       preferredTimescale: 100
     )
     playerTimeObserverToken = player.addPeriodicTimeObserver(forInterval: interval, queue: .main) { [weak self] time in
-      guard let self = self else { return }
+      guard let self else { return }
       self.handleTimeUpdate(time: time)
     }
     
@@ -237,8 +237,7 @@ private extension VideoPlaybackViewModel {
       .sink { [weak self] rate in
         self?.shouldBePlaying = rate == 0
         
-        guard
-          let self = self,
+        guard let self,
           ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
         else { return }
         
@@ -249,8 +248,7 @@ private extension VideoPlaybackViewModel {
     player.publisher(for: \.currentItem?.status)
       .removeDuplicates()
       .sink { [weak self] status in
-        guard
-          let self = self,
+        guard let self,
           case .readyToPlay = status,
           self.shouldBePlaying,
           self.player.rate == 0
@@ -272,7 +270,7 @@ private extension VideoPlaybackViewModel {
       .closedCaptionOnPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
-        guard let self = self else { return }
+        guard let self else { return }
 
         self.player.currentItem.map(self.addClosedCaptions)
       }
@@ -281,7 +279,7 @@ private extension VideoPlaybackViewModel {
     NotificationCenter.default
       .publisher(for: .AVPlayerItemDidPlayToEndTime)
       .sink { [weak self] _ in
-        guard let self = self else { return }
+        guard let self else { return }
         if self.player.currentItem == self.player.items().last {
           // We're done. Let's dismiss the player
           self.dismiss()
@@ -291,7 +289,7 @@ private extension VideoPlaybackViewModel {
   }
 
   func handleTimeUpdate(time: CMTime) {
-    guard let currentlyPlayingContentID = currentlyPlayingContentID else { return }
+    guard let currentlyPlayingContentID else { return }
 
     // Update progress
     Task {
@@ -348,7 +346,7 @@ private extension VideoPlaybackViewModel {
       do {
         let playerItem = try await avItem(for: nextContent)
         // Try to seek if needed
-        if let startTime = startTime {
+        if let startTime {
           await playerItem.seek(to: .init(seconds: startTime, preferredTimescale: 100))
         }
 

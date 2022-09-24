@@ -87,14 +87,14 @@ private extension DownloadRepository {
         .downloadList()
         .sink(
           receiveCompletion: { [weak self] error in
-            guard let self = self else { return }
+            guard let self else { return }
             self.state = .failed
             Failure
               .loadFromPersistentStore(from: Self.self, reason: "Unable to retrieve download content summaries: \(error)")
               .log()
           },
           receiveValue: { [weak self] contentSummaryStates in
-            guard let self = self else { return }
+            guard let self else { return }
             self.contents = contentSummaryStates
             self.state = .hasData
           }

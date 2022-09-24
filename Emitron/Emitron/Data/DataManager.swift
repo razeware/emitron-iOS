@@ -78,7 +78,7 @@ final class DataManager: ObservableObject {
     self.filters = Filters(settingsManager: settingsManager)
     
     sessionControllerSubscription = sessionController.objectWillChange.sink { [weak self] in
-      guard let self = self else { return }
+      guard let self else { return }
       self.rebuildRepositories()
     }
     

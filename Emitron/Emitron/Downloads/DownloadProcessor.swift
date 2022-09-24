@@ -186,7 +186,7 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
 extension DownloadProcessor: URLSessionDownloadDelegate {
   // When the background session has finished sending us events, we can tell the system we're done.
   func urlSessionDidFinishEvents(forBackgroundURLSession _: URLSession) {
-    guard let backgroundSessionCompletionHandler = backgroundSessionCompletionHandler else { return }
+    guard let backgroundSessionCompletionHandler else { return }
     
     // Need to marshal back to the main queue
     Task { @MainActor in backgroundSessionCompletionHandler() }

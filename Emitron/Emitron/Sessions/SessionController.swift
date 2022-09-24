@@ -56,7 +56,7 @@ final class SessionController: UserModelController, ObservablePrePostFactoObject
   // MARK: - ObservablePrePostFactoObject
   @PublishedPrePostFacto var user: User? {
     didSet {
-      if let user = user {
+      if let user {
         userState = .loggedIn
         if user.permissions == nil {
           permissionState = .notLoaded
@@ -202,14 +202,14 @@ final class SessionController: UserModelController, ObservablePrePostFactoObject
 
   private func prepareSubscriptions() {
     $user.sink { [weak self] user in
-      guard let self = self else { return }
+      guard let self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
       self.permissionsService = .init(networkClient: self.client)
     }
     .store(in: &subscriptions)
     
     connectionMonitor.pathUpdateHandler = { [weak self] path in
-      guard let self = self else { return }
+      guard let self else { return }
       
       let newState: SessionState = path.status == .satisfied ? .online : .offline
       
@@ -238,7 +238,7 @@ extension SessionController {
       return true
     }
     // If the content isn't free then we must have a user
-    guard let user = user else { return false }
+    guard let user else { return false }
 
     return content.professional ? user.canStreamPro : user.canStream
   }

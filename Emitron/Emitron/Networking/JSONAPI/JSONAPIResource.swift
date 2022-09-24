@@ -44,7 +44,7 @@ public class JSONAPIResource {
   }
   
   var entityID: EntityIdentity? {
-    guard let entityType = entityType else { return nil }
+    guard let entityType else { return nil }
     
     return EntityIdentity(id: id, type: entityType)
   }

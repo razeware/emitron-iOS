@@ -296,7 +296,7 @@ extension PersistenceStore {
       if let download = try Download.fetchOne(db, key: id) {
         let parentDownload = try download.parentDownload.fetchOne(db)
         let response = try download.delete(db)
-        if let parentDownload = parentDownload {
+        if let parentDownload {
           asyncUpdateDownloadState(forParentDownload: parentDownload)
         }
         return response

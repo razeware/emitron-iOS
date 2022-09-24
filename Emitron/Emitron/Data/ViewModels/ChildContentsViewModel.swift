@@ -90,7 +90,7 @@ extension ChildContentsViewModel {
       .childContentsState(for: parentContentID)
       .sink(
         receiveCompletion: { [weak self] completion in
-          guard let self = self else { return }
+          guard let self else { return }
 
           switch completion {
           case .failure(let error as DataCacheError) where error == .cacheMiss:
@@ -103,7 +103,7 @@ extension ChildContentsViewModel {
           }
         },
         receiveValue: { [weak self] childContentsState in
-          guard let self = self else { return }
+          guard let self else { return }
 
           self.state = .hasData
           self.contents = childContentsState.contents

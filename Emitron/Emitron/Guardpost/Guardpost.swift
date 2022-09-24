@@ -85,7 +85,7 @@ public extension Guardpost {
         url: loginURL,
         callbackURLScheme: urlScheme
       ) { url, error in
-        guard let url = url else {
+        guard let url else {
           continuation.resume(throwing: LoginError.errorResponseFromGuardpost(error))
           return
         }
@@ -131,7 +131,7 @@ public extension Guardpost {
   
   func updateUser(with user: User?) {
     _currentUser = user
-    if let user = user {
+    if let user {
       try? persistenceStore.persistUserToKeychain(user: user)
     } else {
       try? persistenceStore.removeUserFromKeychain()

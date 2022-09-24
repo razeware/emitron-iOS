@@ -66,7 +66,7 @@ extension SingleSignOnResponse {
     if !isValid {
       return nil
     }
-    guard let decodedPayload = decodedPayload else {
+    guard let decodedPayload else {
       return nil
     }
 

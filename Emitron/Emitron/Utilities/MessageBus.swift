@@ -85,7 +85,7 @@ final class MessageBus: ObservableObject {
       .publish(every: .autoDismissTime, on: .main, in: .common)
       .autoconnect()
       .sink { [weak self] _ in
-        guard let self = self else { return }
+        guard let self else { return }
         
         self.messageVisible = false
         self.invalidateTimer()

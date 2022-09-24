@@ -58,7 +58,7 @@ enum DownloadProgressDisplayable: CustomStringConvertible {
   case downloaded
   
   init(download: Download?) {
-    guard let download = download else {
+    guard let download else {
       self = .downloadable
       return
     }

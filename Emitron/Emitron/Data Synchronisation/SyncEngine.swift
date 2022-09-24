@@ -60,7 +60,7 @@ final class SyncEngine {
 extension SyncEngine {
   private func configureNetworkObservation() {
     networkMonitor.pathUpdateHandler = { [weak self] path in
-      guard let self = self else { return }
+      guard let self else { return }
       
       if path.status == .satisfied {
         self.beginProcessing()

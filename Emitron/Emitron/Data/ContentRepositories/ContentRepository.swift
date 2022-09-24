@@ -186,10 +186,10 @@ extension ContentRepository {
 // MARK: - private
 private extension ContentRepository {
   func configureInvalidationSubscription() {
-    if let invalidationPublisher = invalidationPublisher {
+    if let invalidationPublisher {
       invalidationSubscription = invalidationPublisher
         .sink { [weak self] in
-          guard let self = self else { return }
+          guard let self else { return }
 
           // If we're invalidating the cache then we need to set this to initial status again
           self.state = .initial
@@ -212,7 +212,7 @@ private extension ContentRepository {
             .log()
         },
         receiveValue: { [weak self] contentSummaryStates in
-          guard let self = self else { return }
+          guard let self else { return }
 
           self.contents = contentSummaryStates
         }

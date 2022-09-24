@@ -234,7 +234,7 @@ private extension DynamicContentViewModel {
             .log()
         }
       ) { [weak self] contentState in
-        guard let self = self else { return }
+        guard let self else { return }
         
         self.viewProgress = ContentViewProgressDisplayable(progression: contentState.progression)
         self.downloadProgress = DownloadProgressDisplayable(download: contentState.download)

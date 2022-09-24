@@ -57,7 +57,7 @@ struct SingleSignOnRequest {
 // MARK: - private
 private extension SingleSignOnRequest {
   var payload: [URLQueryItem]? {
-    guard let unsignedPayload = unsignedPayload else {
+    guard let unsignedPayload else {
       return nil
     }
 

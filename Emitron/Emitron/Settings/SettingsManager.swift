@@ -61,7 +61,7 @@ final class SettingsManager: ObservableObject {
 extension SettingsManager {
   private func configureSubscriptions() {
     userModelController.objectDidChange.sink { [weak self] _ in
-      guard let self = self else { return }
+      guard let self else { return }
       
       // Reset all settings if the user is blank—i.e. not logged in
       if self.userModelController.user == nil {

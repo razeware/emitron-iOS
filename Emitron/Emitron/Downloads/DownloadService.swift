@@ -104,7 +104,7 @@ extension DownloadService {
             .log()
         },
         receiveValue: { [weak self] downloadQueueItem in
-          guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+          guard let self, let downloadQueueItem = downloadQueueItem else { return }
           Task { await self.requestDownloadURL(downloadQueueItem) }
         }
       )
@@ -118,7 +118,7 @@ extension DownloadService {
             .log()
         },
         receiveValue: { [weak self] downloadQueueItem in
-          guard let self = self, let downloadQueueItem = downloadQueueItem else { return }
+          guard let self, let downloadQueueItem = downloadQueueItem else { return }
           Task { await self.enqueue(downloadQueueItem: downloadQueueItem) }
         }
       )
@@ -250,7 +250,7 @@ extension DownloadService {
   }
 
   func requestDownloadURL(_ downloadQueueItem: PersistenceStore.DownloadQueueItem) async {
-    guard let videosService = videosService else {
+    guard let videosService else {
       Failure
         .downloadService(
           from: #function,
@@ -528,7 +528,7 @@ extension DownloadService {
   private func configureWifiObservation() {
     // Track the network status
     networkMonitor.pathUpdateHandler = { [weak self] _ in
-      guard let self = self else { return }
+      guard let self else { return }
       Task { await self.checkQueueStatus() }
     }
     networkMonitor.start(queue: .global(qos: .utility))
@@ -538,7 +538,7 @@ extension DownloadService {
       .wifiOnlyDownloadsPublisher
       .removeDuplicates()
       .sink { [weak self] _ in
-        guard let self = self else { return }
+        guard let self else { return }
         Task { await self.checkQueueStatus() }
       }
   }
@@ -584,7 +584,7 @@ extension DownloadService {
           }
         },
         receiveValue: { [weak self] downloadQueueItems in
-          guard let self = self else { return }
+          guard let self else { return }
           for downloadQueueItem in downloadQueueItems.filter({ $0.download.state == .enqueued }) {
             do {
               try self.downloadProcessor.add(download: downloadQueueItem.download)
