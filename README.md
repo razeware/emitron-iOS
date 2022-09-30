@@ -15,7 +15,7 @@ There is more info about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 ## Development
 
-__emitron__ runs on iOS 13.3 and greater. It uses SwiftUI and Combine extensively; and since these two technologies were very new at the time of creation, there are plenty of places in the code that could benefit from some refactoring.
+__emitron__ runs on iOS 15.0 and greater. It uses SwiftUI and Combine extensively; and since these two technologies were very new at the time of creation, there are plenty of places in the code that could benefit from some refactoring.
 
 Currently, only people that hold an active raywenderlich.com subscription may use emitron. Non-subscribers will be shown a "no access" page on login. Subscribers have access to streaming videos, and a subset of subscribers (ones with a "Professional" subscription) is allowed to download videos for offline playback.
 
