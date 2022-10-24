@@ -87,9 +87,9 @@ class ContentAdapterTest: XCTestCase {
       ]
     ],
     "links": [
-      "self": "http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
-      "video_stream": "http://api.raywenderlich.com/api/videos/2546/stream",
-      "video_download": "http://api.raywenderlich.com/api/videos/2546/download"
+      "self": "http://api.kodeco.com/api/contents/1320588-machine-learning-in-ios-introduction",
+      "video_stream": "http://api.kodeco.com/api/videos/2546/stream",
+      "video_download": "http://api.kodeco.com/api/videos/2546/download"
     ]
   ]
   
