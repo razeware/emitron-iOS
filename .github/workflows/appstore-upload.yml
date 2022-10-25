@@ -35,6 +35,7 @@ jobs:
         APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
         FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
         FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
+        ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD: true
       run: |
         cd Emitron
         bundle exec fastlane -v
