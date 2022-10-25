@@ -1,6 +1,6 @@
 # emitron (iOS)
 
-__emitron__ is the code name for the raywenderlich.com app. This repo contains the code for the iOS version of the app.
+__emitron__ is the code name for the kodeco.com app. This repo contains the code for the iOS version of the app.
 
 ## Contributing
 
@@ -17,13 +17,13 @@ There is more info about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
 __emitron__ runs on iOS 13.3 and greater. It uses SwiftUI and Combine extensively; and since these two technologies were very new at the time of creation, there are plenty of places in the code that could benefit from some refactoring.
 
-Currently, only people that hold an active raywenderlich.com subscription may use emitron. Non-subscribers will be shown a "no access" page on login. Subscribers have access to streaming videos, and a subset of subscribers (ones with a "Professional" subscription) is allowed to download videos for offline playback.
+Currently, only people that hold an active kodeco.com subscription may use emitron. Non-subscribers will be shown a "no access" page on login. Subscribers have access to streaming videos, and a subset of subscribers (ones with a "Professional" subscription) is allowed to download videos for offline playback.
 
 ### Secrets Management
 
 __emitron__ requires 2 secrets:
 
-- `SSO_SECRET`. This is used to ensure secure communication with `guardpost`, the raywenderlich.com authentication service. Although this is secret, a sample secret is provided inside this repo. This shouldn't be used to create a beta or production build.
+- `SSO_SECRET`. This is used to ensure secure communication with `guardpost`, the kodeco.com authentication service. Although this is secret, a sample secret is provided inside this repo. This shouldn't be used to create a beta or production build.
 - `APP_TOKEN`. Required in order to enable downloads. This is not provided in the repo, and is not generally available.
 
 The secrets are stored in __Emitron/Emitron/Configuration/secrets.*.xcconfig__ files, with one file for each deployment stage. These files have entries in the .gitignore, so they won't appear when you first download the repo.
