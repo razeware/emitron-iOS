@@ -131,7 +131,7 @@ struct TextListItemView: View {
   }
 
   private var wifiOnlyOnCellular: Bool {
-    guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.raywenderlich.com") else {
+    guard let reachability = SCNetworkReachabilityCreateWithName(kCFAllocatorDefault, "www.kodeco.com") else {
       return false
     }
     var flags = SCNetworkReachabilityFlags()

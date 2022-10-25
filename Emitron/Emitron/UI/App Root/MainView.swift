@@ -75,7 +75,7 @@ private extension MainView {
   
   @ViewBuilder var tabBarView: some View {
     switch sessionController.sessionState {
-    case .online :
+    case .online:
       TabView(
         libraryView: {
           LibraryView(

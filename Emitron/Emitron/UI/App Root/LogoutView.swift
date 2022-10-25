@@ -44,7 +44,7 @@ struct LogoutView: View {
         .padding([.bottom], 15)
         .multilineTextAlignment(.center)
       
-      Text("The raywenderlich app is only available to members.")
+      Text("The Kodeco app is only available to members.")
         .lineSpacing(8)
         .font(.uiLabel)
         .foregroundColor(.contentText)

@@ -113,7 +113,7 @@ extension App {
       db: try! EmitronDatabase.openDatabase(atPath: databaseURL.path)
     )
     let guardpost = Guardpost(
-      baseURL: "https://accounts.raywenderlich.com",
+      baseURL: "https://accounts.kodeco.com",
       urlScheme: "com.razeware.emitron",
       ssoSecret: Configuration.ssoSecret,
       persistenceStore: persistenceStore
@@ -153,7 +153,7 @@ private extension App {
   mutating func startServices() {
     // guardpost
     guardpost = .init(
-      baseURL: "https://accounts.raywenderlich.com",
+      baseURL: "https://accounts.kodeco.com",
       urlScheme: "com.razeware.emitron://",
       ssoSecret: Configuration.ssoSecret,
       persistenceStore: persistenceStore
