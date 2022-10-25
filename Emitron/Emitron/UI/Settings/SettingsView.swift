@@ -47,7 +47,7 @@ struct SettingsView: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      Link(destination: URL(string: "https://accounts.raywenderlich.com")!) {
+      Link(destination: URL(string: "https://accounts.kodeco.com")!) {
         SettingsDisclosureRow(title: "My Account", value: "")
       }
       .padding(.horizontal, 20)

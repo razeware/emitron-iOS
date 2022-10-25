@@ -150,7 +150,7 @@ struct MockContentListDisplayable: ContentListDisplayable {
   var duration: Int = 10080
   var parentName: String?
   var contentType: ContentType = .collection
-  var cardArtworkURL: URL? = URL(string: "https://files.betamax.raywenderlich.com/attachments/collections/216/9eb9899d-47d0-429d-96f0-e15ac9542ecc.png")
+  var cardArtworkURL: URL? = URL(string: "https://files.betamax.kodeco.com/attachments/collections/216/9eb9899d-47d0-429d-96f0-e15ac9542ecc.png")
   var ordinal: Int?
   var technologyTripleString: String = "Doesn't matter"
   var contentSummaryMetadataString: String = "Doesn't matter"
