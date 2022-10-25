@@ -44,7 +44,7 @@ final class SettingsManager: ObservableObject {
   private let wifiOnlyDownloadsSubject = PassthroughSubject<Bool, Never>()
   private let downloadQualitySubject = PassthroughSubject<Attachment.Kind, Never>()
   
-  // MARK: Initialisers
+  // MARK: Initializers
   init(userDefaults: UserDefaults = .standard, userModelController: UserModelController) {
     self.userDefaults = userDefaults
     self.userModelController = userModelController
@@ -73,7 +73,7 @@ extension SettingsManager {
 }
 
 // We'll store all these settings inside 
-extension SettingsManager: EmitronSettings {
+extension SettingsManager {
   var filters: Set<Filter> {
     get {
       guard let data: [Data] = userDefaults[.filters] else {
@@ -137,7 +137,7 @@ extension SettingsManager: EmitronSettings {
   
   var downloadQuality: Attachment.Kind {
     get {
-      guard let downloadQuality = userDefaults[.downloadQuality].flatMap( Attachment.Kind.init(rawValue:) ),
+      guard let downloadQuality = userDefaults[.downloadQuality].flatMap(Attachment.Kind.init(rawValue:)),
         Attachment.Kind.downloads.contains(downloadQuality) else {
         return .hdVideoFile
       }

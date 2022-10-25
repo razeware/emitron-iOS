@@ -52,7 +52,7 @@ struct PagerView<Content: View>: View {
         .frame(width: proxy.size.width, alignment: .leading)
         .offset(x: -CGFloat(currentIndex) * proxy.size.width)
         .offset(x: translation)
-        .animation(.interactiveSpring())
+        .animation(.interactiveSpring(), value: currentIndex)
         .gesture(
           DragGesture()
             .updating($translation) { value, state, _ in

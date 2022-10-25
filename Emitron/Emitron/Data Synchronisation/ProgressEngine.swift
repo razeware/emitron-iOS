@@ -38,7 +38,7 @@ enum ProgressEngineError: Error {
   var localizedDescription: String {
     switch self {
     case .simultaneousStreamsNotAllowed:
-      return "ProgressEngineError::SimulataneousStreamsNotAllowed"
+      return "ProgressEngineError::SimultaneousStreamsNotAllowed"
     case .upstreamError(let error):
       return "ProgressEngineError::UpstreamError:: \(error)"
     case .notImplemented:
@@ -73,7 +73,7 @@ final class ProgressEngine {
   }
   
   func start() {
-    networkMonitor.start(queue: DispatchQueue.global(qos: .utility))
+    networkMonitor.start(queue: .global(qos: .utility))
     setupSubscriptions()
   }
   
@@ -81,73 +81,55 @@ final class ProgressEngine {
     // Don't especially care if we're in offline mode
     guard mode == .online else { return }
     playbackToken = nil
-    // Need to refresh the plaback token
-    contentsService.getBeginPlaybackToken { [weak self] result in
-      guard let self = self else { return }
-      switch result {
-      case .failure(let error):
+    // Need to refresh the playback token
+    Task {
+      do {
+        playbackToken = try await contentsService.beginPlaybackToken
+      } catch {
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: "Unable to fetch playback token: \(error)")
+          .fetch(from: Self.self, reason: "Unable to fetch playback token: \(error)")
           .log()
-      case .success(let token):
-        self.playbackToken = token
       }
     }
   }
   
-  func updateProgress(for contentID: Int, progress: Int) -> Future<Progression, ProgressEngineError> {
+  func updateProgress(for contentID: Int, progress: Int) async throws -> Progression {
     let progression = updateCacheWithProgress(for: contentID, progress: progress)
     
     switch mode {
     case .offline:
-      do {
-        try syncAction?.updateProgress(for: contentID, progress: progress)
-        try syncAction?.recordWatchStats(for: contentID, secondsWatched: .videoPlaybackProgressTrackingInterval)
-        
-        return Future { promise in
-          promise(.success(progression))
-        }
-      } catch {
-        return Future { promise in
-          promise(.failure(.upstreamError(error)))
-        }
-      }
-      
+      try syncAction?.updateProgress(for: contentID, progress: progress)
+      try syncAction?.recordWatchStats(for: contentID, secondsWatched: .videoPlaybackProgressTrackingInterval)
+
+      return progression
     case .online:
-      return Future { promise in
-        // Don't bother trying if the playback token is empty.
-        guard let playbackToken = self.playbackToken else { return }
-        self.contentsService.reportPlaybackUsage(for: contentID, progress: progress, playbackToken: playbackToken) { [weak self] response in
-          guard let self = self else { return promise(.failure(.notImplemented)) }
-          switch response {
-          case .failure(let error):
-            if case .requestFailed(_, let statusCode) = error, statusCode == 400 {
-              // This is an invalid token
-              return promise(.failure(.simultaneousStreamsNotAllowed))
-            }
-            // Some other error. Let's just send it back
-            return promise(.failure(.upstreamError(error)))
-          case .success(let (progression, cacheUpdate)):
-            // Update the cache and return the updated progression
-            self.repository.apply(update: cacheUpdate)
-            // Do we need to update the parent?
-            if let parentContent = self.repository.parentContent(for: contentID),
-               let childProgressUpdate = self.repository.childProgress(for: parentContent.id),
-               var existingProgression = self.repository.progression(for: parentContent.id) {
-              existingProgression.progress = childProgressUpdate.completed
-              let parentCacheUpdate = DataCacheUpdate(progressions: [existingProgression])
-              self.repository.apply(update: parentCacheUpdate)
-            }
-            
-            return promise(.success(progression))
-          }
-        }
+      // Don't bother trying if the playback token is empty.
+      guard let playbackToken = playbackToken else { return progression }
+
+      let (progression, cacheUpdate) = try await contentsService.reportPlaybackUsage(
+        for: contentID,
+        progress: progress,
+        playbackToken: playbackToken
+      )
+
+      // Update the cache and return the updated progression
+      repository.apply(update: cacheUpdate)
+      // Do we need to update the parent?
+      if
+        let parentContent = repository.parentContent(for: contentID),
+        let childProgressUpdate = repository.childProgress(for: parentContent.id),
+        var existingProgression = repository.progression(for: parentContent.id)
+      {
+        existingProgression.progress = childProgressUpdate.completed
+        repository.apply(update: .init(progressions: [existingProgression]))
       }
+
+      return progression
     }
   }
   
   private func setupSubscriptions() {
-    if networkMonitor.currentPath.status == .satisfied {
+    if case .satisfied = networkMonitor.currentPath.status {
       mode = .online
     }
     networkMonitor.pathUpdateHandler = { [weak self] path in
@@ -155,7 +137,11 @@ final class ProgressEngine {
     }
   }
   
-  @discardableResult private func updateCacheWithProgress(for contentID: Int, progress: Int, target: Int? = nil) -> Progression {
+  @discardableResult private func updateCacheWithProgress(
+    for contentID: Int,
+    progress: Int,
+    target: Int? = nil
+  ) -> Progression {
     let content = repository.content(for: contentID)
     let progression: Progression
     

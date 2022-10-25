@@ -53,28 +53,14 @@ struct Download: Codable {
   var ordinal: Int = 0 // We copy this from the Content, and it is used to sort the queue
   
   var localURL: URL? {
-    guard let fileName = fileName,
-      let downloadDirectory = Download.downloadDirectory else {
-        return nil
-    }
-    
-    return downloadDirectory.appendingPathComponent(fileName)
-  }
-  
-  static var downloadDirectory: URL? {
-    let fileManager = FileManager.default
-    let documentsDirectories = fileManager.urls(for: .documentDirectory, in: .userDomainMask)
-    guard let documentsDirectory = documentsDirectories.first else {
-      return nil
-    }
-    
-    return documentsDirectory.appendingPathComponent("downloads", isDirectory: true)
+    fileName.map(URL.downloadsDirectory.appendingPathComponent)
   }
 }
 
 extension Download: DownloadProcessorModel { }
 
-extension Download: Equatable {
+// MARK: - Hashable
+extension Download: Hashable {
   // We override this function because SQLite doesn't store dates to the same accuracy as Date
   static func == (lhs: Download, rhs: Download) -> Bool {
     lhs.id == rhs.id &&
@@ -89,9 +75,10 @@ extension Download: Equatable {
   }
 }
 
+// MARK: - internal
 extension Download {
-  static func create(for content: Content) -> Download {
-    Download(
+  init(content: Content) {
+    self.init(
       id: UUID(),
       requestedAt: .now,
       lastValidatedAt: nil,
@@ -100,11 +87,10 @@ extension Download {
       progress: 0,
       state: .pending,
       contentID: content.id,
-      ordinal: content.ordinal ?? 0)
+      ordinal: content.ordinal ?? 0
+    )
   }
-}
 
-extension Download {
   var isDownloading: Bool {
     [.inProgress, .paused].contains(state) && remoteURL != nil
   }
@@ -113,5 +99,3 @@ extension Download {
     [.complete].contains(state) && remoteURL != nil
   }
 }
-
-extension Download: Hashable { }

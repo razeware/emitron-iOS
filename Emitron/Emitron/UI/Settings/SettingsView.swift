@@ -47,7 +47,7 @@ struct SettingsView: View {
   
   var body: some View {
     VStack(spacing: 0) {
-      Link(destination: URL(string: "https://accounts.raywenderlich.com")!) {
+      Link(destination: URL(string: "https://accounts.kodeco.com")!) {
         SettingsDisclosureRow(title: "My Account", value: "")
       }
       .padding(.horizontal, 20)
@@ -93,33 +93,16 @@ struct SettingsView: View {
         MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
           showingSignOutConfirmation = true
         }
-        .modifier {
-          let dialogTitle = "Are you sure you want to sign out?"
-          let buttonTitle = "Sign Out"
-          let action = {
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-              sessionController.logout()
+        .confirmationDialog(
+          "Are you sure you want to sign out?",
+          isPresented: $showingSignOutConfirmation,
+          titleVisibility: .visible
+        ) {
+          Button("Sign Out", role: .destructive) {
+            Task { @MainActor in
+              try await Task.sleep(nanoseconds: 100_000_000)
+              sessionController.logOut()
               tabViewModel.selectedTab = .library
-            }
-          }
-          
-          if #available(iOS 15, *) {
-            $0.confirmationDialog(
-              dialogTitle,
-              isPresented: $showingSignOutConfirmation,
-              titleVisibility: .visible
-            ) {
-              Button(buttonTitle, role: .destructive, action: action)
-            }
-          } else {
-            $0.actionSheet(isPresented: $showingSignOutConfirmation) {
-              .init(
-                title: .init(dialogTitle),
-                buttons: [
-                  .destructive(.init(buttonTitle), action: action),
-                  .cancel()
-                ]
-              )
             }
           }
         }

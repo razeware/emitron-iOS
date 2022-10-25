@@ -77,15 +77,17 @@ extension Repository {
     return fromCache
       .combineLatest(download)
       .map { cachedState, download in
-        DynamicContentState(download: download,
-                            progression: cachedState.progression,
-                            bookmark: cachedState.bookmark)
+        DynamicContentState(
+          download: download,
+          progression: cachedState.progression,
+          bookmark: cachedState.bookmark
+        )
       }
       .removeDuplicates()
       .eraseToAnyPublisher()
   }
   
-  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState? {
+  func contentPersistableState(for contentID: Int) throws -> ContentPersistableState {
     try dataCache.cachedContentPersistableState(for: contentID)
   }
   
@@ -147,7 +149,7 @@ extension Repository {
   func loadDownloadedChildContentsIntoCache(for contentID: Int) throws {
     guard let content = try persistenceStore.downloadedContent(with: contentID),
       let childContents = try persistenceStore.childContentsForDownloadedContent(with: contentID) else {
-      throw PersistenceStoreError.notFound
+      throw PersistenceStore.Error.notFound
     }
     let cacheUpdate = DataCacheUpdate(contents: childContents.contents + [content], groups: childContents.groups)
     apply(update: cacheUpdate)
@@ -164,10 +166,10 @@ extension Repository {
   
   private func domains(from contentDomains: [ContentDomain]) -> [Domain] {
     do {
-      return try persistenceStore.domains( with: contentDomains.map(\.domainID) )
+      return try persistenceStore.domains(with: contentDomains.map(\.domainID))
     } catch {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting domains: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting domains: \(error)")
         .log()
       return []
     }
@@ -175,10 +177,10 @@ extension Repository {
   
   private func categories(from contentCategories: [ContentCategory]) -> [Category] {
     do {
-      return try persistenceStore.categories( with: contentCategories.map(\.categoryID) )
+      return try persistenceStore.categories(with: contentCategories.map(\.categoryID))
     } catch {
       Failure
-        .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "There was a problem getting categories: \(error)")
+        .loadFromPersistentStore(from: Self.self, reason: "There was a problem getting categories: \(error)")
         .log()
       return []
     }

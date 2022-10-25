@@ -28,27 +28,39 @@
 
 @testable import Emitron
 
-class VideosServiceMock: VideosService {
+import class Foundation.URLSession
+
+final class VideosServiceMock: Service {
+  init() {
+    networkClient = .init(authToken: .init())
+  }
+
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+
   private(set) var videoRequestedCount = 0
   private(set) var getVideoStreamCount = 0
   private(set) var getVideoDownloadCount = 0
-  
-  init() {
-    super.init(client: RWAPI(authToken: ""))
-  }
-  
+}
+
+// MARK: - internal
+extension VideosServiceMock {
   func reset() {
     videoRequestedCount = 0
     getVideoStreamCount = 0
     getVideoDownloadCount = 0
   }
-  
-  override func getVideoStream(for id: Int, completion: @escaping (Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
+}
+
+// MARK: - VideosServiceProtocol
+extension VideosServiceMock: VideosServiceProtocol {
+  func videoStream(for id: Int) async throws -> StreamVideoRequest.Response {
     getVideoStreamCount += 1
+    return AttachmentTest.Mocks.stream.0
   }
-  
-  override func getVideoStreamDownload(for id: Int, completion: @escaping (Result<DownloadStreamVideoRequest.Response, RWAPIError>) -> Void) {
+
+  func videoStreamDownload(for id: Int) async throws -> StreamVideoRequest.Response {
     getVideoDownloadCount += 1
-    completion(.success(AttachmentTest.Mocks.download.0))
+    return AttachmentTest.Mocks.download.0
   }
 }

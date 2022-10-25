@@ -29,16 +29,36 @@
 import GRDB
 @testable import Emitron
 
+typealias TestDatabase = DatabaseQueue
+
 extension EmitronDatabase {
-  static func testDatabase() throws -> DatabaseWriter {
-    // In memory database
-    let dbQueue = DatabaseQueue()
-    // And migrate
-    try migrator.migrate(dbQueue)
-    // Load important mocks
-    try Emitron.Category.loadAndSaveMocks(db: dbQueue)
-    try Domain.loadAndSaveMocks(db: dbQueue)
-    
-    return dbQueue
+  static var test: TestDatabase {
+    get throws {
+      // In memory database
+      let dbQueue = DatabaseQueue()
+      // And migrate
+      try migrator.migrate(dbQueue)
+      // Load important mocks
+      try Emitron.Category.loadAndSaveMocks(db: dbQueue)
+      try Domain.loadAndSaveMocks(db: dbQueue)
+
+      return dbQueue
+    }
+  }
+}
+
+import class XCTest.XCTestCase
+
+protocol DatabaseTestCase: XCTestCase {
+  var database: TestDatabase! { get }
+}
+
+extension DatabaseTestCase {
+  var allContents: [Content] {
+    get throws { try database.read(Content.fetchAll) }
+  }
+
+  var allDownloads: [Download] {
+    get throws { try database.read(Download.fetchAll) }
   }
 }

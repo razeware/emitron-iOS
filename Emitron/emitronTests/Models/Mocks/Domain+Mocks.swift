@@ -32,14 +32,14 @@ import GRDB
 @testable import Emitron
 
 extension Domain {
-  static func loadAndSaveMocks(db: DatabaseWriter) throws {
+  static func loadAndSaveMocks(db: TestDatabase) throws {
     let domains = loadMocksFrom(filename: "Domains")
     try db.write { db in
       try domains.forEach { try $0.save(db) }
     }
   }
   
-  private static func loadMocksFrom(filename: String) -> ([Domain]) {
+  private static func loadMocksFrom(filename: String) -> [Domain] {
     do {
       let bundle = Bundle(for: AttachmentTest.self)
       let fileURL = bundle.url(forResource: filename, withExtension: "json")

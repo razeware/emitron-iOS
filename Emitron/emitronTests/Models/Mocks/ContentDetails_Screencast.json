@@ -20,7 +20,7 @@
       "description_plain_text": "Explore how Xcode 11 changes your workflow. Learn how to make the most out of multiple editors and Xcode's source control changes.",
       "video_identifier": 3067,
       "parent_name": null,
-      "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/videos/3067/8a1744a8-5d44-4dd1-addc-ca7e1245db20.png"
+      "card_artwork_url": "https://files.betamax.kodeco.com/attachments/videos/3067/8a1744a8-5d44-4dd1-addc-ca7e1245db20.png"
     },
     "relationships": {
       "domains": {
@@ -61,9 +61,9 @@
       }
     },
     "links": {
-      "self": "http://api.raywenderlich.com/api/contents/5148647-what-s-new-in-xcode-11-workflow",
-      "video_stream": "http://api.raywenderlich.com/api/videos/3067/stream",
-      "video_download": "http://api.raywenderlich.com/api/videos/3067/download"
+      "self": "https://api.kodeco.com/api/contents/5148647-what-s-new-in-xcode-11-workflow",
+      "video_stream": "https://api.kodeco.com/api/videos/3067/stream",
+      "video_download": "https://api.kodeco.com/api/videos/3067/download"
     }
   },
   "included": [
@@ -96,12 +96,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5148647"
+            "self": "https://api.kodeco.com/api/contents/5148647"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/97194622"
+        "self": "https://api.kodeco.com/api/progressions/97194622"
       }
     },
     {
@@ -117,12 +117,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5148647"
+            "self": "https://api.kodeco.com/api/contents/5148647"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/bookmarks/101222"
+        "self": "https://api.kodeco.com/api/bookmarks/101222"
       }
     },
     {

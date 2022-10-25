@@ -32,14 +32,14 @@ import SwiftyJSON
 @testable import Emitron
 
 extension Emitron.Category {
-  static func loadAndSaveMocks(db: DatabaseWriter) throws {
+  static func loadAndSaveMocks(db: TestDatabase) throws {
     let categories = loadMocksFrom(filename: "Categories")
     try db.write { db in
       try categories.forEach { try $0.save(db) }
     }
   }
   
-  private static func loadMocksFrom(filename: String) -> ([Emitron.Category]) {
+  private static func loadMocksFrom(filename: String) -> [Emitron.Category] {
     do {
       let bundle = Bundle(for: AttachmentTest.self)
       let fileURL = bundle.url(forResource: filename, withExtension: "json")

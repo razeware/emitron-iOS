@@ -31,7 +31,7 @@ import Combine
 final class InProgressRepository: ContentRepository {
   override var nonPaginationParameters: [Parameter] {
     get {
-      let filters = Param.filters(for: [.contentTypes(types: [.collection, .screencast])])
+      let filters = Param.filters(for: [.contentTypes([.collection, .screencast])])
       let completionStatus = CompletionStatus.inProgress
       let completionFilter = Param.filter(for: .completionStatus(status: completionStatus))
       let sortOrder = Param.sort(for: .updatedAt, descending: true)

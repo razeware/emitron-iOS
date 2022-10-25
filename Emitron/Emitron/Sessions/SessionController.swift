@@ -42,7 +42,7 @@ protocol UserModelController {
 }
 
 // Conforming to NSObject, so that we can conform to ASWebAuthenticationPresentationContextProviding
-final class SessionController: NSObject, UserModelController, ObservablePrePostFactoObject {
+final class SessionController: UserModelController, ObservablePrePostFactoObject {
   private var subscriptions = Set<AnyCancellable>()
 
   // Managing the state of the current session
@@ -79,9 +79,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   private let connectionMonitor = NWPathMonitor()
   private(set) var permissionsService: PermissionsService
   
-  var isLoggedIn: Bool {
-    userState == .loggedIn
-  }
+  var isLoggedIn: Bool { userState == .loggedIn }
   
   var hasPermissions: Bool {
     if case .loaded = permissionState {
@@ -91,7 +89,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   var hasPermissionToUseApp: Bool {
-    user?.hasPermissionToUseApp ?? false
+    user?.hasPermissionToUseApp == true
   }
   
   var hasCurrentDownloadPermissions: Bool {
@@ -108,58 +106,47 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
   }
   
   // MARK: - Initializers
-  init(guardpost: Guardpost) {
-    dispatchPrecondition(condition: .onQueue(.main))
-    
+  @MainActor init(guardpost: Guardpost) {
     self.guardpost = guardpost
 
     let user = User.backdoor ?? guardpost.currentUser
     client = RWAPI(authToken: user?.token ?? "")
-    permissionsService = PermissionsService(client: client)
-    super.init()
+    permissionsService = .init(networkClient: client)
 
     self.user = user
     prepareSubscriptions()
   }
   
   // MARK: - Internal
-  func login() {
+  @MainActor func logIn() async throws {
     guard userState != .loggingIn else { return }
     
     userState = .loggingIn
-    guardpost.presentationContextDelegate = self
     
     if isLoggedIn {
       if !hasPermissions {
         fetchPermissions()
       }
     } else {
-      guardpost.login { [weak self] result in
-        DispatchQueue.main.async { [weak self] in
-          guard let self = self else { return }
-          
-          switch result {
-          case .failure(let error):
-            self.userState = .notLoggedIn
-            self.permissionState = .notLoaded
+      do {
+        user = try await guardpost.logIn()
+        Event
+          .login(from: Self.self)
+          .log()
+        fetchPermissions()
+      } catch {
+        userState = .notLoggedIn
+        permissionState = .notLoaded
 
-            Failure
-              .login(from: "SessionController", reason: error.localizedDescription)
-              .log()
-          case .success(let user):
-            self.user = user
-            Event
-              .login(from: "SessionController")
-              .log()
-            self.fetchPermissions()
-          }
-        }
+        Failure
+          .login(from: Self.self, reason: error.localizedDescription)
+          .log()
       }
     }
   }
   
   func fetchPermissionsIfNeeded() {
-    // Request persmission if an app launch has happened or if it's been over 24 hours since the last permission request once the app enters the foreground
+    // Request permission if an app launch has happened or if it's been over 24 hours since the last permission request once the app enters the foreground
     guard shouldRefresh || !hasPermissions else { return }
     
     fetchPermissions()
@@ -179,33 +166,34 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     guard isLoggedIn else { return }
     
     permissionState = .loading
-    permissionsService.permissions { result in
-      DispatchQueue.main.async {
-        switch result {
-        case .failure(let error):
-          Failure
-            .fetch(from: "SessionController_Permissions", reason: error.localizedDescription)
-            .log()
-          
-          self.permissionState = .error
-        case .success(let permissions):
-          // Check that we have a logged in user. Otherwise this is pointless
-          guard let user = self.user else { return }
-          
-          // Update the date that we retrieved the permissions
-          self.saveOrReplaceRefreshableUpdateDate()
-          
-          // Update the user
-          self.user = user.with(permissions: permissions)
-          // Ensure guardpost is aware, and hence the keychain is updated
-          self.guardpost.updateUser(with: self.user)
-        }
+
+    Task {
+      do {
+        let permissions = try await permissionsService.permissions
+
+        // Check that we have a logged in user. Otherwise this is pointless
+        guard let user = self.user else { return }
+
+        // Update the date that we retrieved the permissions
+        self.saveOrReplaceRefreshableUpdateDate()
+
+        // Update the user
+        self.user = user.with(permissions: permissions)
+        // Ensure guardpost is aware, and hence the keychain is updated
+        self.guardpost.updateUser(with: self.user)
+      } catch {
+        enum Permissions { }
+        Failure
+          .fetch(from: Permissions.self, reason: error.localizedDescription)
+          .log()
+
+        self.permissionState = .error
       }
     }
   }
   
-  func logout() {
-    guardpost.logout()
+  func logOut() {
+    guardpost.logOut()
     userState = .notLoggedIn
     permissionState = .notLoaded
 
@@ -216,7 +204,7 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
     $user.sink { [weak self] user in
       guard let self = self else { return }
       self.client = RWAPI(authToken: user?.token ?? "")
-      self.permissionsService = PermissionsService(client: self.client)
+      self.permissionsService = .init(networkClient: self.client)
     }
     .store(in: &subscriptions)
     
@@ -240,13 +228,6 @@ final class SessionController: NSObject, UserModelController, ObservablePrePostF
 // MARK: - Refreshable
 extension SessionController: Refreshable {
   var refreshableCheckTimeSpan: RefreshableTimeSpan { .short }
-}
-
-// MARK: - ASWebAuthenticationPresentationContextProviding
-extension SessionController: ASWebAuthenticationPresentationContextProviding {
-  func presentationAnchor(for session: ASWebAuthenticationSession) -> ASPresentationAnchor {
-    UIApplication.shared.windows.first!
-  }
 }
 
 // MARK: - Content Access Permissions

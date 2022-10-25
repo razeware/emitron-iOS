@@ -29,58 +29,64 @@
 import UIKit
 import Combine
 
-class IconManager: ObservableObject {
-  private(set) var icons = [Icon]()
-  let messageBus: MessageBus
-  @Published private(set) var currentIcon: Icon?
-  
+final class IconManager: ObservableObject {
   init(messageBus: MessageBus) {
-    let currentIconName = UIApplication.shared.alternateIconName
-    currentIcon = icons.first { $0.name == currentIconName }
     self.messageBus = messageBus
-    populateIcons()
-  }
-  
-  func set(icon: Icon) {
-    UIApplication.shared.setAlternateIconName(icon.name) { error in
-      DispatchQueue.main.async { 
-        if let error = error {
-          Failure
-            .appIcon(from: String(describing: type(of: self)), reason: error.localizedDescription)
-            .log()
-          self.messageBus.post(message: Message(level: .error, message: .appIconUpdateProblem))
-        } else {
-          self.currentIcon = icon
-          self.messageBus.post(message: Message(level: .success, message: .appIconUpdatedSuccessfully))
-        }
+    let currentIconName = UIApplication.shared.alternateIconName
+
+    let icons: [Icon] = {
+      guard let plistIcons = Bundle.main.object(forInfoDictionaryKey: "CFBundleIcons") as? [String: Any]
+      else { return [] }
+
+      var iconList = [Icon]()
+
+      if
+        let primaryIcon = plistIcons["CFBundlePrimaryIcon"] as? [String: Any],
+        let files = primaryIcon["CFBundleIconFiles"] as? [String],
+        let fileName = files.first
+      {
+        iconList.append(.init(name: nil, imageName: fileName, ordinal: 0))
       }
-    }
+
+      if let alternateIcons = plistIcons["CFBundleAlternateIcons"] as? [String: Any] {
+        iconList += alternateIcons.compactMap { key, value in
+          guard
+            let alternateIcon = value as? [String: Any],
+            let files = alternateIcon["CFBundleIconFiles"] as? [String],
+            let fileName = files.first,
+            let ordinal = alternateIcon["ordinal"] as? Int
+          else { return nil }
+
+          return Icon(name: key, imageName: fileName, ordinal: ordinal)
+        }
+        .sorted()
+      }
+
+      return iconList
+    }()
+
+    self.icons = icons
+    currentIcon = icons.first { $0.name == currentIconName }
   }
 
-  private func populateIcons() {
-    guard let plistIcons = Bundle.main.object(forInfoDictionaryKey: "CFBundleIcons") as? [String: Any] else { return }
-    
-    var iconList = [Icon]()
-    
-    if let primaryIcon = plistIcons["CFBundlePrimaryIcon"] as? [String: Any],
-      let files = primaryIcon["CFBundleIconFiles"] as? [String],
-      let fileName = files.first {
-      iconList.append(Icon(name: nil, imageName: fileName, ordinal: 0))
+  let icons: [Icon]
+  @Published private(set) var currentIcon: Icon?
+  private let messageBus: MessageBus
+}
+
+// MARK: - internal
+extension IconManager {
+  @MainActor func set(icon: Icon) async throws {
+    do {
+      try await UIApplication.shared.setAlternateIconName(icon.name)
+      currentIcon = icon
+      messageBus.post(message: .init(level: .success, message: .appIconUpdatedSuccessfully))
+    } catch {
+      Failure
+        .appIcon(from: Self.self, reason: error.localizedDescription)
+        .log()
+      messageBus.post(message: Message(level: .error, message: .appIconUpdateProblem))
+      throw error
     }
-    
-    if let alternateIcons = plistIcons["CFBundleAlternateIcons"] as? [String: Any] {
-         
-      iconList += alternateIcons.compactMap { key, value in
-        guard let alternateIcon = value as? [String: Any],
-          let files = alternateIcon["CFBundleIconFiles"] as? [String],
-          let fileName = files.first,
-          let ordinal = alternateIcon["ordinal"] as? Int else { return nil }
-        
-        return Icon(name: key, imageName: fileName, ordinal: ordinal)
-      }
-      .sorted()
-    }
-    
-    icons = iconList
   }
 }

@@ -55,9 +55,3 @@ enum DownloadActionError: Error {
     }
   }
 }
-
-protocol DownloadAction {
-  func requestDownload(contentID: Int, contentLookup: @escaping ContentLookup) -> AnyPublisher<RequestDownloadResult, DownloadActionError>
-  func cancelDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError>
-  func deleteDownload(contentID: Int) -> AnyPublisher<Void, DownloadActionError>
-}

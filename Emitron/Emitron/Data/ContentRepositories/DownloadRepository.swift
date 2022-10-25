@@ -47,7 +47,7 @@ final class DownloadRepository: ContentRepository {
     super.init(
       repository: repository,
       contentsService: contentsService,
-      downloadAction: downloadService,
+      downloadService: downloadService,
       syncAction: syncAction,
       messageBus: messageBus,
       settingsManager: settingsManager,
@@ -69,7 +69,7 @@ final class DownloadRepository: ContentRepository {
     // For downloaded content, we need to tell it to use the DB, not the service
     PersistenceStoreChildContentsViewModel(
       parentContentID: contentID,
-      downloadAction: downloadService,
+      downloadService: downloadService,
       syncAction: syncAction,
       repository: repository,
       messageBus: messageBus,
@@ -90,7 +90,7 @@ private extension DownloadRepository {
             guard let self = self else { return }
             self.state = .failed
             Failure
-              .loadFromPersistentStore(from: String(describing: type(of: self)), reason: "Unable to retrieve download content summaries: \(error)")
+              .loadFromPersistentStore(from: Self.self, reason: "Unable to retrieve download content summaries: \(error)")
               .log()
           },
           receiveValue: { [weak self] contentSummaryStates in

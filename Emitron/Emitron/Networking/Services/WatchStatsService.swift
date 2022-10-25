@@ -26,11 +26,16 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class WatchStatsService: Service {
-  func update(watchStats: [WatchStat],
-              completion: @escaping (_ response: Result<WatchStatsUpdateRequest.Response, RWAPIError>) -> Void) {
-    let request = WatchStatsUpdateRequest(watchStats: watchStats)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+import class Foundation.URLSession
+
+struct WatchStatsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - internal
+extension WatchStatsService {
+  func update(watchStats: [WatchStat]) async throws -> WatchStatsUpdateRequest.Response {
+    try await makeRequest(request: WatchStatsUpdateRequest(watchStats: watchStats))
   }
 }

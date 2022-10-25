@@ -164,7 +164,7 @@ private extension MyTutorialsView {
     
     return ContentListView(
       contentRepository: contentRepository,
-      downloadAction: downloadService,
+      downloadService: downloadService,
       contentScreen: contentScreen,
       header: toggleControl
     )

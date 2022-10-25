@@ -31,7 +31,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
 
   init(
     parentContentID: Int,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction?,
     repository: Repository,
     service: ContentsService,
@@ -42,7 +42,7 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
     self.service = service
     super.init(
       parentContentID: parentContentID,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       repository: repository,
       messageBus: messageBus,
@@ -53,16 +53,17 @@ final class DataCacheChildContentsViewModel: ChildContentsViewModel {
   
   override func loadContentDetailsIntoCache() {
     state = .loading
-    service.contentDetails(for: parentContentID) { result in
-      switch result {
-      case .failure(let error):
-        self.state = .failed
+    Task {
+      do {
+        repository.apply(
+          update: try await service.contentDetails(for: parentContentID).cacheUpdate
+        )
+        reload()
+      } catch {
+        state = .failed
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+          .fetch(from: Self.self, reason: error.localizedDescription)
           .log()
-      case .success(let (_, cacheUpdate)):
-        self.repository.apply(update: cacheUpdate)
-        self.reload()
       }
     }
   }

@@ -26,31 +26,40 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Combine
+public extension Optional {
+  /// Represents that an `Optional` was `nil`.
+  enum UnwrapError: Error {
+    case `nil`
+    case typeMismatch
+  }
 
-protocol EmitronSettings {
-  // MARK: - Library
-  // MARK: Filters
-  var filters: Set<Filter> { get set }
-  
-  // MARK: Sorting
-  var sortFilter: SortFilter { get set }
-  
-  // MARK: - Video Playback
-  var playbackToken: String? { get set }
-  
-  // MARK: - User Settings
-  // MARK: Video Playback
-  var playbackSpeed: PlaybackSpeed { get set }
-  var playbackSpeedPublisher: AnyPublisher<PlaybackSpeed, Never> { get }
-  
-  var closedCaptionOn: Bool { get set }
-  var closedCaptionOnPublisher: AnyPublisher<Bool, Never> { get }
-  
-  // MARK: Download Behaviour
-  var downloadQuality: Attachment.Kind { get set }
-  var downloadQualityPublisher: AnyPublisher<Attachment.Kind, Never> { get }
-  
-  var wifiOnlyDownloads: Bool { get set }
-  var wifiOnlyDownloadsPublisher: AnyPublisher<Bool, Never> { get }
+  /// [An alternative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError` when `nil`.
+  var unwrapped: Wrapped {
+    get throws {
+      switch self {
+      case let wrapped?:
+        return wrapped
+      case nil:
+        throw UnwrapError.nil
+      }
+    }
+  }
+
+  /// [An alternative to overloading `??` to throw errors upon `nil`.](
+  /// https://forums.swift.org/t/unwrap-or-throw-make-the-safe-choice-easier/14453/7)
+  /// - Note: Useful for emulating `break`, with `map`, `forEach`, etc.
+  /// - Throws: `UnwrapError`
+  func unwrap<Wrapped>() throws -> Wrapped {
+    switch self {
+    case let wrapped as Wrapped:
+      return wrapped
+    case .some:
+      throw UnwrapError.typeMismatch
+    case nil:
+      throw UnwrapError.nil
+    }
+  }
 }

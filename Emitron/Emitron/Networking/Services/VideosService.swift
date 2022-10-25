@@ -26,21 +26,27 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class VideosService: Service {
-  typealias Provider = (RWAPI) -> VideosService
+import class Foundation.URLSession
 
-  // MARK: - Internal
-  func getVideoStream(for id: Int,
-                      completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
-    let request = StreamVideoRequest(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+protocol VideosServiceProtocol {
+  typealias Provider = (RWAPI) -> any VideosServiceProtocol
+
+  func videoStream(for id: Int) async throws -> StreamVideoRequest.Response
+  func videoStreamDownload(for id: Int) async throws -> StreamVideoRequest.Response
+}
+
+struct VideosService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - VideosServiceProtocol
+extension VideosService: VideosServiceProtocol {
+  func videoStream(for id: Int) async throws -> StreamVideoRequest.Response {
+    try await makeRequest(request: StreamVideoRequest(id: id))
   }
 
-  func getVideoStreamDownload(for id: Int,
-                              completion: @escaping (_ response: Result<StreamVideoRequest.Response, RWAPIError>) -> Void) {
-    let request = DownloadStreamVideoRequest(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+  func videoStreamDownload(for id: Int) async throws -> StreamVideoRequest.Response {
+    try await makeRequest(request: DownloadStreamVideoRequest(id: id))
   }
 }

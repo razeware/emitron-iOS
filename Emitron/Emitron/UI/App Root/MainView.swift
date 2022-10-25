@@ -44,7 +44,8 @@ struct MainView: View {
         .background(Color.background)
         .overlay(MessageBarView(messageBus: messageBus), alignment: .bottom)
         .onReceive(notification) { _ in
-          DispatchQueue.main.asyncAfter(deadline: .now() + 2.0) {
+          Task {
+            try await Task.sleep(nanoseconds: 2_000_000_000)
             makeReviewRequest()
           }
         }
@@ -66,7 +67,7 @@ private extension MainView {
       case .error:
         ErrorView(
           buttonTitle: "Back to login screen",
-          buttonAction: sessionController.logout
+          buttonAction: sessionController.logOut
         )
       }
     }
@@ -74,7 +75,7 @@ private extension MainView {
   
   @ViewBuilder var tabBarView: some View {
     switch sessionController.sessionState {
-    case .online :
+    case .online:
       TabView(
         libraryView: {
           LibraryView(
@@ -120,7 +121,7 @@ private extension MainView {
   }
 
   func makeReviewRequest() {
-   if let scene = UIApplication.shared.connectedScenes.first(where: { $0.activationState == .foregroundActive }) as? UIWindowScene {
+   if let scene = (UIApplication.shared.connectedScenes.first { $0.activationState == .foregroundActive } as? UIWindowScene) {
      SKStoreReviewController.requestReview(in: scene)
    }
  }

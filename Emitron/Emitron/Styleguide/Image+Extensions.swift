@@ -26,38 +26,15 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import SwiftUI
+import struct SwiftUI.Image
 
 extension Image {  
-  static var closeWhite: Image {
-    Image("closeWhite")
-  }
-  
-  static var close: Image {
-    Image("close")
-  }
-  
-  static var padlock: Image {
-    Image("padlock")
-  }
-  
-  static var bookmark: Image {
-    Image("bookmark")
-  }
-  
-  static var download: Image {
-    Image("download")
-  }
-  
-  static var materialIconPlay: Image {
-    Image("materialIconPlay")
-  }
-  
-  static var checkmark: Image {
-    Image("checkmark")
-  }
-  
-  static var artworkDownloadSwitch: Image {
-    Image("artworkDownloadSwitch")
-  }
+  static var closeWhite: Self { .init("closeWhite") }
+  static var close: Self { .init("close") }
+  static var padlock: Self { .init("padlock") }
+  static var bookmark: Self { .init("bookmark") }
+  static var download: Self { .init("download") }
+  static var materialIconPlay: Self { .init("materialIconPlay") }
+  static var checkmark: Self { .init("checkmark") }
+  static var artworkDownloadSwitch: Self { .init("artworkDownloadSwitch") }
 }

@@ -41,13 +41,12 @@ class UserTest: XCTestCase {
     "username": "sample_username",
     "avatar_url": "http://example.com/avatar.jpg",
     "name": "Sample Name",
-    "token": "Samaple.Token"
+    "token": "Sample.Token"
   ]
   
   func testUserCorrectlyPopulatesWithDictionary() {
     guard let user = User(dictionary: userDictionary) else {
-      XCTFail("User should be correctly populated")
-      return
+      return XCTFail("User should be correctly populated")
     }
     
     XCTAssertEqual(userDictionary["external_id"], user.externalID)

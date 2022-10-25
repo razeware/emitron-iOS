@@ -73,7 +73,7 @@ extension VideoPlaybackViewModel {
 }
 
 extension Notification.Name {
-  static let requestReview = Notification.Name("requestReview")
+  static let requestReview = Self("requestReview")
 }
 
 final class VideoPlaybackViewModel {
@@ -89,9 +89,9 @@ final class VideoPlaybackViewModel {
   private let dismiss: () -> Void
   
   // These are the content models that this view model is capable of playing. In this order.
-  private var contentList = [VideoPlaybackState]()
+  private var contentList: [VideoPlaybackState] = []
   // A cache of playback items, and a way of finding the content model for the currently playing item
-  private var playerItems = [Int: AVPlayerItem]()
+  private var playerItems: [Int: AVPlayerItem] = [:]
   private var currentlyPlayingContentID: Int? {
     guard let currentItem = player.currentItem,
       let contentID = playerItems.first(where: { $1 == currentItem })?.key
@@ -104,7 +104,6 @@ final class VideoPlaybackViewModel {
     contentList[nextContentToEnqueueIndex]
   }
   private var subscriptions = Set<AnyCancellable>()
-  private var currentItemStateSubscription: AnyCancellable?
 
   let player = AVQueuePlayer()
   let messageBus: MessageBus
@@ -197,7 +196,7 @@ final class VideoPlaybackViewModel {
       }
     } catch {
       Failure
-        .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to load playlist: \(error)")
+        .viewModelAction(from: Self.self, reason: "Unable to load playlist: \(error)")
         .log()
     }
   }
@@ -238,30 +237,26 @@ private extension VideoPlaybackViewModel {
       .sink { [weak self] rate in
         self?.shouldBePlaying = rate == 0
         
-        guard let self = self,
-              ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
-          else { return }
+        guard
+          let self = self,
+          ![0, self.settingsManager.playbackSpeed.rate].contains(rate)
+        else { return }
         
         self.player.rate = self.settingsManager.playbackSpeed.rate
       }
       .store(in: &subscriptions)
     
-    player.publisher(for: \.currentItem)
+    player.publisher(for: \.currentItem?.status)
       .removeDuplicates()
-      .sink { [weak self] item in
-        guard let self = self,
-          let item = item else { return }
-        
-        self.currentItemStateSubscription = item.publisher(for: \.status)
-          .removeDuplicates()
-          .sink { [weak self] status in
-            guard let self = self,
-              status == .readyToPlay,
-              self.shouldBePlaying,
-              self.player.rate == 0 else { return }
-            
-            self.player.play()
-          }
+      .sink { [weak self] status in
+        guard
+          let self = self,
+          case .readyToPlay = status,
+          self.shouldBePlaying,
+          self.player.rate == 0
+        else { return }
+
+        self.player.play()
       }
       .store(in: &subscriptions)
     
@@ -287,8 +282,7 @@ private extension VideoPlaybackViewModel {
       .publisher(for: .AVPlayerItemDidPlayToEndTime)
       .sink { [weak self] _ in
         guard let self = self else { return }
-        
-        if self.player.items().last == self.player.currentItem {
+        if self.player.currentItem == self.player.items().last {
           // We're done. Let's dismiss the player
           self.dismiss()
         }
@@ -298,25 +292,26 @@ private extension VideoPlaybackViewModel {
 
   func handleTimeUpdate(time: CMTime) {
     guard let currentlyPlayingContentID = currentlyPlayingContentID else { return }
+
     // Update progress
-    progressEngine.updateProgress(for: currentlyPlayingContentID, progress: Int(time.seconds))
-      .sink(receiveCompletion: { [weak self] completion in
-        guard let self = self else { return }
-        
-        if case .failure(let error) = completion {
-          if case .simultaneousStreamsNotAllowed = error {
-            self.messageBus.post(message: Message(level: .error, message: .simultaneousStreamsError))
-            self.player.pause()
-          }
-          Failure
-          .viewModelAction(from: String(describing: type(of: self)), reason: "Error updating progress: \(error)")
-          .log()
+    Task {
+      do {
+        update(
+          progression: try await progressEngine.updateProgress(
+            for: currentlyPlayingContentID,
+            progress: Int(time.seconds)
+          )
+        )
+      } catch {
+        if case ProgressEngineError.simultaneousStreamsNotAllowed = error {
+          messageBus.post(message: .init(level: .error, message: .simultaneousStreamsError))
+          await player.pause()
         }
-      }) { [weak self] updatedProgression in
-        guard let self = self else { return }
-        self.update(progression: updatedProgression)
+        Failure
+          .viewModelAction(from: Self.self, reason: "Error updating progress: \(error)")
+          .log()
       }
-      .store(in: &subscriptions)
+    }
     
     // Check whether we need to enqueue the next one yet
     if state == .loading || state == .loadingAdditional {
@@ -342,85 +337,72 @@ private extension VideoPlaybackViewModel {
   func enqueue(index: Int, startTime: Double? = nil) {
     state = .loadingAdditional
     let nextContent = contentList[index]
+
     guard sessionController.canPlay(content: nextContent.content) else {
       // This user doesn't have permission to play this content. So skip to the next.
       nextContentToEnqueueIndex += 1
       return enqueueNext()
     }
-    avItem(for: nextContent)
-      .sink(receiveCompletion: { [weak self] completion in
-        guard let self = self else { return }
-        switch completion {
-        case .finished:
-          self.state = .hasData
-        case .failure(let error):
-          self.state = .failed
-          Failure
-            .viewModelAction(from: String(describing: type(of: self)), reason: "Unable to enqueue next playlist item: \(error))")
-            .log()
-        }
-      }) { [weak self] playerItem in
-        guard let self = self else { return }
+
+    Task {
+      do {
+        let playerItem = try await avItem(for: nextContent)
         // Try to seek if needed
         if let startTime = startTime {
-          playerItem.seek(to: CMTime(seconds: startTime, preferredTimescale: 100)) { [weak self] _ in
-            guard let self = self else { return }
-            self.player.insert(playerItem, after: nil)
-          }
-        } else {
-          // Append it to the end of the player queue
-          self.player.insert(playerItem, after: nil)
+          await playerItem.seek(to: .init(seconds: startTime, preferredTimescale: 100))
         }
+
+        // Append it to the end of the player queue
+        player.insert(playerItem, after: nil)
+        
         // Move the current content item pointer
-        self.nextContentToEnqueueIndex += 1
+        nextContentToEnqueueIndex += 1
+        state = .hasData
+      } catch {
+        state = .failed
+        Failure
+          .viewModelAction(from: Self.self, reason: "Unable to enqueue next playlist item: \(error))")
+          .log()
       }
-      .store(in: &subscriptions)
+    }
   }
   
-  func avItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Swift.Error> {
+  func avItem(for state: VideoPlaybackState) async throws -> AVPlayerItem {
     // Do we already have it it in cache?
     if let item = playerItems[state.content.id] {
-      return Future { $0(.success(item)) }
+      return item
     }
-    
-    return createAvItem(for: state)
-  }
-  
-  func createAvItem(for state: VideoPlaybackState) -> Future<AVPlayerItem, Swift.Error> {
-    .init { promise in
-      // Is there a completed download?
-      if let download = state.download,
-        download.state == .complete,
-        let localURL = download.localURL {
-        let asset = AVURLAsset(url: localURL)
-        let item = AVPlayerItem(asset: asset)
-        self.addMetadata(from: state, to: item)
-        self.addClosedCaptions(for: item)
-        // Add it to the cache
-        self.playerItems[state.content.id] = item
-        return promise(.success(item))
-      }
-      
-      // We're gonna need to stream it.
-      guard let videoIdentifier = state.content.videoIdentifier else {
-        return promise(.failure(Error.invalidOrMissingAttribute("videoIdentifier")))
-      }
-      
-      self.videosService.getVideoStream(for: videoIdentifier) { result in
-        switch result {
-        case .failure(let error):
-          return promise(.failure(error))
-        case .success(let response):
-          guard response.kind == .stream else { return promise(.failure(Error.invalidOrMissingAttribute("Not A Stream"))) }
-          let item = AVPlayerItem(url: response.url)
-          self.addMetadata(from: state, to: item)
-          self.addClosedCaptions(for: item)
-          // Add it to the cache
-          self.playerItems[state.content.id] = item
-          return promise(.success(item))
-        }
-      }
+
+    // Is there a completed download?
+    if
+      let download = state.download,
+      download.state == .complete,
+      let localURL = download.localURL
+    {
+      let item = AVPlayerItem(asset: AVURLAsset(url: localURL))
+      addMetadata(from: state, to: item)
+      addClosedCaptions(for: item)
+      // Add it to the cache
+      playerItems[state.content.id] = item
+      return item
     }
+      
+    // We're gonna need to stream it.
+    guard let videoIdentifier = state.content.videoIdentifier else {
+      throw Error.invalidOrMissingAttribute("videoIdentifier")
+    }
+
+    let attachment = try await videosService.videoStream(for: videoIdentifier)
+
+    guard attachment.kind == .stream
+    else { throw Error.invalidOrMissingAttribute("Not A Stream") }
+
+    let item = AVPlayerItem(url: attachment.url)
+    self.addMetadata(from: state, to: item)
+    self.addClosedCaptions(for: item)
+    // Add it to the cache
+    self.playerItems[state.content.id] = item
+    return item
   }
   
   func addClosedCaptions(for playerItem: AVPlayerItem) {
@@ -453,15 +435,12 @@ private extension VideoPlaybackViewModel {
         request.respond(error: Error.unableToLoadArtwork)
         return
       }
-      
-      let task = URLSession.shared.dataTask(with: url) { data, _, _ in
-        guard let data = data else {
-          request.respond(error: Error.unableToLoadArtwork)
-          return
-        }
-        request.respond(value: data as NSData)
+
+      Task {
+        request.respond(
+          value: try await URLSession.shared.data(from: url).0 as NSData
+        )
       }
-      task.resume()
     }
     
     playerItem.externalMetadata = [title, description, deferredArtwork]
@@ -469,7 +448,8 @@ private extension VideoPlaybackViewModel {
 
   func update(progression: Progression) {
     // Find appropriate playback state
-    guard let contentIndex = contentList.firstIndex(where: { $0.content.id == progression.id }) else { return }
+    guard let contentIndex = (contentList.firstIndex { $0.content.id == progression.id })
+    else { return }
     
     let currentState = contentList[contentIndex]
     contentList[contentIndex] = VideoPlaybackState(

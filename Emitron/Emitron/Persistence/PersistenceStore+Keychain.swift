@@ -35,15 +35,14 @@ import KeychainSwift
 private let ssoUserKey = "com.razeware.emitron.sso_user"
 
 extension PersistenceStore {
-  @discardableResult
-  func persistUserToKeychain(user: User, encoder: JSONEncoder = .init()) -> Bool {
-    guard let encoded = try? encoder.encode(user) else {
-      return false
+  func persistUserToKeychain(user: User, encoder: JSONEncoder = .init()) throws {
+    guard KeychainSwift().set(
+      try encoder.encode(user),
+      forKey: ssoUserKey,
+      withAccess: .accessibleAfterFirstUnlock
+    ) else {
+      throw Error.keychainFailure
     }
-    
-    return KeychainSwift().set(encoded,
-                               forKey: ssoUserKey,
-                               withAccess: .accessibleAfterFirstUnlock)
   }
   
   func userFromKeychain(_ decoder: JSONDecoder = .init()) -> User? {
@@ -55,14 +54,17 @@ extension PersistenceStore {
       return try decoder.decode(User.self, from: encoded)
     } catch {
       Failure
-        .loadFromPersistentStore(from: "PersistenceStore_Keychain", reason: error.localizedDescription)
+        .loadFromPersistentStore(
+          from: "\(PersistenceStore.self)_Keychain",
+          reason: error.localizedDescription
+        )
         .log()
       return nil
     }
   }
-  
-  @discardableResult
-  func removeUserFromKeychain() -> Bool {
-    KeychainSwift().delete(ssoUserKey)
+
+  func removeUserFromKeychain() throws {
+    guard KeychainSwift().delete(ssoUserKey)
+    else { throw Error.keychainFailure }
   }
 }

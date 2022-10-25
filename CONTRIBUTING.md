@@ -1,6 +1,6 @@
 # Contributing to emitron
 
-👋 Welcome! Thanks for expressing an interest in contributing to the raywenderlich.com app.
+👋 Welcome! Thanks for expressing an interest in contributing to the kodeco.com app.
 
 ## Testing
 
@@ -12,7 +12,7 @@ If you are fixing a single GitHub issue in particular, please add a test named `
 
 ## User Account
 
-In order to use __emitron__, you must currently be a video subscriber to raywenderlich.com. If you are keen to contribute to the project, but are unable to use features of the app due to a lack of a raywenderlich.com subscription, please contact emitron@razeware.com noting which feature or area of the app you are interested in contributing to, and we should be able to set you up with appropriate access.
+In order to use __emitron__, you must currently be a video subscriber to kodeco.com. If you are keen to contribute to the project, but are unable to use features of the app due to a lack of a kodeco.com subscription, please contact emitron@razeware.com noting which feature or area of the app you are interested in contributing to, and we should be able to set you up with appropriate access.
 
 ## Access Tokens
 
@@ -22,7 +22,7 @@ However, it does not contain the token that will allow access to downloads. If y
 
 ## API Documentation
 
-__emitron__ interfaces with the raywenderlich.com API to retrieve data. You can find API documentation here:
+__emitron__ interfaces with the kodeco.com API to retrieve data. You can find API documentation here:
 
 https://raywenderlich.docs.apiary.io
 

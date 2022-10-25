@@ -30,10 +30,9 @@ import XCTest
 import Combine
 @testable import Emitron
 
-class PublishedPostFactoTest: XCTestCase {
-
-  class PrePostObservedObject: ObservablePrePostFactoObject {
-    // This doesn't get syntesized
+final class PublishedPostFactoTest: XCTestCase {
+  final class PrePostObservedObject: ObservablePrePostFactoObject {
+    // This doesn't get synthesized
     let objectDidChange = ObservableObjectPublisher()
     
     @Published var notifiedBeforeChangeCommitted: Int = 0

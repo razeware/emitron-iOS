@@ -133,7 +133,6 @@
 		22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265AF2396CDBE000DD276 /* User+Mocks.swift */; };
 		22A265B22396CE82000DD276 /* Permissions+Mocks.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A265B12396CE82000DD276 /* Permissions+Mocks.swift */; };
 		22A36F50236F76B30064A406 /* DownloadProcessor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F4F236F76B30064A406 /* DownloadProcessor.swift */; };
-		22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */; };
 		22A9CD5B2385A1D3001EAFBF /* DownloadQueueManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */; };
 		22ADBB452400731D003E8346 /* VideoOverlayButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22ADBB442400731D003E8346 /* VideoOverlayButtonView.swift */; };
 		22B8265923AF109800D4BA23 /* EntityAdapter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22B8265823AF109800D4BA23 /* EntityAdapter.swift */; };
@@ -203,7 +202,6 @@
 		22C4EAE423DE0958001A3FDA /* PersistenceStore+Keychain.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */; };
 		22C4EAED23DEF910001A3FDA /* SettingsManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */; };
 		22C4EAEF23DEF91D001A3FDA /* SettingsKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */; };
-		22C4EAF123DEFA76001A3FDA /* EmitronSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */; };
 		22C640F623F604E700CBFDE5 /* View+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C640F523F604E700CBFDE5 /* View+Extensions.swift */; };
 		22C640FA23F609B600CBFDE5 /* SearchFieldView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C640F923F609B600CBFDE5 /* SearchFieldView.swift */; };
 		22C640FC23F75CDD00CBFDE5 /* TabViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22C640FB23F75CDD00CBFDE5 /* TabViewModel.swift */; };
@@ -243,9 +241,11 @@
 		22F2C45F23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */; };
 		22F2C46123EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */; };
 		22FDB2EE23CAC7E6001F883E /* ChildContentListingView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */; };
+		491E522F27F3A3CA004F80E6 /* FileManager+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 491E522E27F3A3CA004F80E6 /* FileManager+Extensions.swift */; };
 		492E632627A6B96900CD1F19 /* Binding+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 492E632527A6B96900CD1F19 /* Binding+Extensions.swift */; };
 		493DA0A127266049006ED195 /* GRDB in Frameworks */ = {isa = PBXBuildFile; productRef = 493DA0A027266049006ED195 /* GRDB */; };
 		494A79A82465C8C90097E8F4 /* RefreshableTestCase.swift in Sources */ = {isa = PBXBuildFile; fileRef = 494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */; };
+		495E2B1A27F4FE8C003EEE86 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */; };
 		49971FEA27B297DA00FBCCEA /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49971FE927B297DA00FBCCEA /* TabView.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
 		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
@@ -287,7 +287,6 @@
 		B6D4529822CAB3F600BFB812 /* DateFormatter+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */; };
 		B6D4529C22CAB67900BFB812 /* Date+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */; };
 		B6D7DC2F22C79743006DD325 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC2E22C79743006DD325 /* AppDelegate.swift */; };
-		B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6D7DC3022C79743006DD325 /* SceneDelegate.swift */; };
 		B6D7DC3522C79745006DD325 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3422C79745006DD325 /* Assets.xcassets */; };
 		B6D7DC3822C79745006DD325 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */; };
 		B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC3922C79745006DD325 /* LaunchScreen.storyboard */; };
@@ -473,7 +472,6 @@
 		22A265AF2396CDBE000DD276 /* User+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "User+Mocks.swift"; sourceTree = "<group>"; };
 		22A265B12396CE82000DD276 /* Permissions+Mocks.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Permissions+Mocks.swift"; sourceTree = "<group>"; };
 		22A36F4F236F76B30064A406 /* DownloadProcessor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessor.swift; sourceTree = "<group>"; };
-		22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadProcessorTest.swift; sourceTree = "<group>"; };
 		22A9CD5A2385A1D3001EAFBF /* DownloadQueueManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DownloadQueueManager.swift; sourceTree = "<group>"; };
 		22ADBB442400731D003E8346 /* VideoOverlayButtonView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = VideoOverlayButtonView.swift; sourceTree = "<group>"; };
 		22B8265823AF109800D4BA23 /* EntityAdapter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EntityAdapter.swift; sourceTree = "<group>"; };
@@ -540,7 +538,6 @@
 		22C4EAE323DE0958001A3FDA /* PersistenceStore+Keychain.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "PersistenceStore+Keychain.swift"; sourceTree = "<group>"; };
 		22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsManager.swift; sourceTree = "<group>"; };
 		22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsKey.swift; sourceTree = "<group>"; };
-		22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EmitronSettings.swift; sourceTree = "<group>"; };
 		22C640F523F604E700CBFDE5 /* View+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "View+Extensions.swift"; sourceTree = "<group>"; };
 		22C640F923F609B600CBFDE5 /* SearchFieldView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SearchFieldView.swift; sourceTree = "<group>"; };
 		22C640FB23F75CDD00CBFDE5 /* TabViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabViewModel.swift; sourceTree = "<group>"; };
@@ -583,8 +580,10 @@
 		22F2C45E23EF79F9007ED4A1 /* ContentSubscriptionPlan.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentSubscriptionPlan.swift; sourceTree = "<group>"; };
 		22F2C46023EF7A27007ED4A1 /* ContentSubscriptionPlan+Request.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ContentSubscriptionPlan+Request.swift"; sourceTree = "<group>"; };
 		22FDB2ED23CAC7E6001F883E /* ChildContentListingView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChildContentListingView.swift; sourceTree = "<group>"; };
+		491E522E27F3A3CA004F80E6 /* FileManager+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "FileManager+Extensions.swift"; sourceTree = "<group>"; };
 		492E632527A6B96900CD1F19 /* Binding+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Binding+Extensions.swift"; sourceTree = "<group>"; };
 		494A79A72465C8C90097E8F4 /* RefreshableTestCase.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RefreshableTestCase.swift; sourceTree = "<group>"; };
+		495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		49971FE927B297DA00FBCCEA /* TabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
 		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
@@ -631,7 +630,6 @@
 		B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC2B22C79743006DD325 /* raywenderlich.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = raywenderlich.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D7DC2E22C79743006DD325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		B6D7DC3022C79743006DD325 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3422C79745006DD325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
 		B6D7DC3A22C79745006DD325 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
@@ -1064,7 +1062,6 @@
 			isa = PBXGroup;
 			children = (
 				2288EF0C23741B9700514043 /* DownloadServiceTest.swift */,
-				22A36F52236F7C890064A406 /* DownloadProcessorTest.swift */,
 				22D382BB2387D9E200FBBEF7 /* DownloadQueueManagerTest.swift */,
 			);
 			path = Downloads;
@@ -1145,7 +1142,6 @@
 			children = (
 				22C4EAEC23DEF910001A3FDA /* SettingsManager.swift */,
 				22C4EAEE23DEF91D001A3FDA /* SettingsKey.swift */,
-				22C4EAF023DEFA76001A3FDA /* EmitronSettings.swift */,
 				229935CF23FE8C6F00D3D16A /* SettingsSelectable.swift */,
 				2278AE4224099EBD00855221 /* IconManager.swift */,
 			);
@@ -1420,6 +1416,8 @@
 				22BE654E23F1F66E00717369 /* Comparable+Clamped.swift */,
 				22C640F523F604E700CBFDE5 /* View+Extensions.swift */,
 				2278AE4F240A74C400855221 /* UIApplication+DismissKeyboard.swift */,
+				491E522E27F3A3CA004F80E6 /* FileManager+Extensions.swift */,
+				495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -1519,7 +1517,6 @@
 			isa = PBXGroup;
 			children = (
 				22C3F154242795A1002812CB /* PortraitHostingController.swift */,
-				B6D7DC3022C79743006DD325 /* SceneDelegate.swift */,
 				B62B9A7C22DF764900122CE8 /* App Root */,
 				B6FC15AA22CB52430078CEDB /* Downloads */,
 				2213193D23E4E83300F15816 /* Empty States */,
@@ -1950,7 +1947,6 @@
 				222EEF7923CB379D00B025A4 /* ContentPersistableState+Mocks.swift in Sources */,
 				2237AAB223C336FB008E9976 /* PermissionAdapterTest.swift in Sources */,
 				2237AAA223C3368B008E9976 /* AttachmentAdapterTest.swift in Sources */,
-				22A36F53236F7C890064A406 /* DownloadProcessorTest.swift in Sources */,
 				2237AAA423C33697008E9976 /* BookmarkAdapterTest.swift in Sources */,
 				2288EF162374299500514043 /* DownloadTest.swift in Sources */,
 				22A265B02396CDBE000DD276 /* User+Mocks.swift in Sources */,
@@ -2022,7 +2018,6 @@
 				B6DF2F9122CA00820081A3A3 /* Request.swift in Sources */,
 				B62B9A8022DF76A500122CE8 /* MainView.swift in Sources */,
 				B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */,
-				B6D7DC3122C79743006DD325 /* SceneDelegate.swift in Sources */,
 				22C640FF23F805F300CBFDE5 /* PagerView.swift in Sources */,
 				223D77E123B84C00005BE95D /* CompletedRepository.swift in Sources */,
 				B6DF2FC822CA862C0081A3A3 /* SingleSignOnResponse.swift in Sources */,
@@ -2078,10 +2073,10 @@
 				22B8265D23AF37FE00D4BA23 /* ProgressionAdapter.swift in Sources */,
 				222C0AB023DF554E00D65EBD /* SettingsOption.swift in Sources */,
 				49971FEA27B297DA00FBCCEA /* TabView.swift in Sources */,
+				491E522F27F3A3CA004F80E6 /* FileManager+Extensions.swift in Sources */,
 				2278AE50240A74C400855221 /* UIApplication+DismissKeyboard.swift in Sources */,
 				B6C0F0DD22D5FA1C00012839 /* ContentDetailModel+Extensions.swift in Sources */,
 				22C0513A23A4FBB0004D1223 /* ContentCategory+Persistence.swift in Sources */,
-				22C4EAF123DEFA76001A3FDA /* EmitronSettings.swift in Sources */,
 				223D77A923B07842005BE95D /* PermissionAdapter.swift in Sources */,
 				B6DF2FC622CA862C0081A3A3 /* SingleSignOnRequest.swift in Sources */,
 				22F2C45223EF2525007ED4A1 /* SortFilter.swift in Sources */,
@@ -2174,6 +2169,7 @@
 				222EEF7223CAE04D00B025A4 /* DownloadIcon.swift in Sources */,
 				223D77D123B0DD3A005BE95D /* Repository.swift in Sources */,
 				22C6410623F893F400CBFDE5 /* SpinningCircleView.swift in Sources */,
+				495E2B1A27F4FE8C003EEE86 /* Optional+Extensions.swift in Sources */,
 				22C4EADF23DC4338001A3FDA /* SyncRequest+WatchStat.swift in Sources */,
 				B6DF2FC122CA861C0081A3A3 /* Data+Hex.swift in Sources */,
 				22C914C423BD8D6400A05E00 /* BookmarksService+ContentServiceAdapter.swift in Sources */,
@@ -2353,7 +2349,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -2375,11 +2371,12 @@
 				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2501,7 +2498,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = INCLUDE_SOURCE;
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
@@ -2557,7 +2554,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
 				GCC_WARN_UNUSED_FUNCTION = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
-				IPHONEOS_DEPLOYMENT_TARGET = 14.1;
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
@@ -2577,14 +2574,15 @@
 				CURRENT_PROJECT_VERSION = UNKNOWN;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_ASSET_PATHS = "Emitron/Preview\\ Content";
-				DEVELOPMENT_TEAM = KFCNEC27GU;
+				DEVELOPMENT_TEAM = "";
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;
@@ -2606,11 +2604,12 @@
 				DEVELOPMENT_TEAM = KFCNEC27GU;
 				ENABLE_PREVIEWS = YES;
 				INFOPLIST_FILE = "Emitron/Support Files/Info.plist";
+				IPHONEOS_DEPLOYMENT_TARGET = 15.0;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.9;
+				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = raywenderlich;

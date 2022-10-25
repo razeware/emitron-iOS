@@ -28,7 +28,7 @@
 
 import Combine
 
-class DomainRepository: ObservableObject, Refreshable {
+final class DomainRepository: ObservableObject, Refreshable {
   let repository: Repository
   let service: DomainsService
   
@@ -50,50 +50,49 @@ class DomainRepository: ObservableObject, Refreshable {
       fetchDomainsAndUpdatePersistentStore()
     }
   }
-  
-  private func loadFromPersistentStore() {
+}
+
+private extension DomainRepository {
+  func loadFromPersistentStore() {
     do {
       domains = try repository.domainList()
       state = .hasData
     } catch {
       state = .failed
       Failure
-        .fetch(from: "DomainRepository", reason: error.localizedDescription)
+        .fetch(from: Self.self, reason: error.localizedDescription)
         .log()
     }
   }
   
-  private func saveToPersistentStore() {
+  func saveToPersistentStore() {
     do {
       try repository.syncDomainList(domains)
     } catch {
       Failure
-        .fetch(from: "DomainRepository", reason: error.localizedDescription)
+        .fetch(from: Self.self, reason: error.localizedDescription)
         .log()
     }
   }
   
-  private func fetchDomainsAndUpdatePersistentStore() {
+  func fetchDomainsAndUpdatePersistentStore() {
     if state == .loading || state == .loadingAdditional {
       return
     }
     
     state = .loading
-    
-    service.allDomains { [weak self] result in
-      guard let self = self else { return }
-      
-      switch result {
-      case .failure(let error):
-        self.state = .failed
+
+    Task {
+      do {
+        domains = try await service.allDomains
+        state = .hasData
+        saveToPersistentStore()
+        saveOrReplaceRefreshableUpdateDate()
+      } catch {
+        state = .failed
         Failure
-        .fetch(from: "DomainRepository", reason: error.localizedDescription)
-        .log()
-      case .success(let domains):
-        self.domains = domains
-        self.state = .hasData
-        self.saveToPersistentStore()
-        self.saveOrReplaceRefreshableUpdateDate()
+          .fetch(from: Self.self, reason: error.localizedDescription)
+          .log()
       }
     }
   }

@@ -44,7 +44,7 @@ struct LogoutView: View {
         .padding([.bottom], 15)
         .multilineTextAlignment(.center)
       
-      Text("The raywenderlich app is only available to members.")
+      Text("The Kodeco app is only available to members.")
         .lineSpacing(8)
         .font(.uiLabel)
         .foregroundColor(.contentText)
@@ -56,7 +56,7 @@ struct LogoutView: View {
       MainButtonView(
         title: "Sign Out",
         type: .destructive(withArrow: true),
-        callback: sessionController.logout
+        callback: sessionController.logOut
       )
       .padding(.horizontal, 18)
       .padding(.bottom, 38)

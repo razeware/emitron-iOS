@@ -26,27 +26,24 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-class ProgressionsService: Service {
+import class Foundation.URLSession
 
-  // MARK: - Internal
-  func progressions(parameters: [Parameter]? = nil,
-                    completion: @escaping (_ response: Result<ProgressionsRequest.Response, RWAPIError>) -> Void) {
-    let request = ProgressionsRequest()
-    makeAndProcessRequest(request: request,
-                          parameters: parameters,
-                          completion: completion)
+struct ProgressionsService: Service {
+  let networkClient: RWAPI
+  let session = URLSession(configuration: .default)
+}
+
+// MARK: - internal
+extension ProgressionsService {
+  func progressions(parameters: [Parameter] = []) async throws -> ProgressionsRequest.Response {
+    try await makeRequest(request: ProgressionsRequest(), parameters: parameters)
   }
-  
-  func update(progressions: [ProgressionUpdate],
-              completion: @escaping (_ response: Result<UpdateProgressionsRequest.Response, RWAPIError>) -> Void) {
-    let request = UpdateProgressionsRequest(progressionUpdates: progressions)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+
+  func update(progressions: [ProgressionUpdate]) async throws -> UpdateProgressionsRequest.Response {
+    try await makeRequest(request: UpdateProgressionsRequest(progressionUpdates: progressions))
   }
-  
-  func delete(with id: Int, completion: @escaping (_ response: Result<DeleteProgressionRequest.Response, RWAPIError>) -> Void) {
-    let request = DeleteProgressionRequest(id: id)
-    makeAndProcessRequest(request: request,
-                          completion: completion)
+
+  func delete(with id: Int) async throws -> DeleteProgressionRequest.Response {
+    try await makeRequest(request: DeleteProgressionRequest(id: id))
   }
 }

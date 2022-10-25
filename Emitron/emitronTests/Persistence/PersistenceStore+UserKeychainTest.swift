@@ -38,28 +38,26 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     "username": "sample_username",
     "avatar_url": "http://example.com/avatar.jpg",
     "name": "Sample Name",
-    "token": "Samaple.Token"
+    "token": "Sample.Token"
   ]
   
-  override func setUp() {
-    super.setUp()
-    // swiftlint:disable:next force_try
-    let database = try! EmitronDatabase.testDatabase()
-    persistenceStore = PersistenceStore(db: database)
+  override func setUpWithError() throws {
+    try super.setUpWithError()
+    persistenceStore = PersistenceStore(db: try EmitronDatabase.test)
   }
   
   override func tearDown() {
     super.tearDown()
     // Put teardown code here. This method is called after the invocation of each test method in the class.
-    persistenceStore.removeUserFromKeychain()
+    try? persistenceStore.removeUserFromKeychain()
   }
   
-  func testPersistenceToKeychain() {
+  func testPersistenceToKeychain() throws {
     guard let user = User(dictionary: userDictionary) else {
       return XCTFail("User not found")
     }
     
-    XCTAssert(persistenceStore.persistUserToKeychain(user: user))
+    try persistenceStore.persistUserToKeychain(user: user)
     
     guard let restoredUser = persistenceStore.userFromKeychain() else {
       return XCTFail("Unable to restore user from Keychain")
@@ -68,18 +66,16 @@ class PersistenceStore_UserKeychainTest: XCTestCase {
     XCTAssertEqual(user, restoredUser)
   }
   
-  func testRemovalOfUserFromKeychain() {
+  func testRemovalOfUserFromKeychain() throws {
     XCTAssertNil(persistenceStore.userFromKeychain())
     
     guard let user = User(dictionary: userDictionary) else {
       return XCTFail("User not found")
     }
     
-    XCTAssert(persistenceStore.persistUserToKeychain(user: user))
+    try persistenceStore.persistUserToKeychain(user: user)
     XCTAssertNotNil(persistenceStore.userFromKeychain())
-    
-    XCTAssert(persistenceStore.removeUserFromKeychain())
-    
+    try persistenceStore.removeUserFromKeychain()
     XCTAssertNil(persistenceStore.userFromKeychain())
   }
 }

@@ -38,7 +38,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   private(set) weak var syncAction: SyncAction?
 
   private let contentsService: ContentsService
-  private let downloadAction: DownloadAction
+  private let downloadService: DownloadService
   private let serviceAdapter: ContentServiceAdapter!
 
   private var contentIDs: [Int] = []
@@ -50,19 +50,11 @@ class ContentRepository: ObservableObject, ContentPaginatable {
 
   private(set) var currentPage = 1
 
-  // This should be @Published too, but it crashes the compiler (Version 11.3 (11C29))
-  // Let's see if we actually need it to be @Published...
-  var state: DataState = .initial
+  @Published var state: DataState = .initial
 
   private(set) var totalContentNum = 0
 
-  // This should be @Published, but it /sometimes/ crashes the app with EXC_BAD_ACCESS
-  // when you try and reference it. Which is handy.
-  var contents: [ContentListDisplayable] = [] {
-    willSet {
-      objectWillChange.send()
-    }
-  }
+  @Published var contents: [ContentListDisplayable] = []
 
   func loadMore() {
     if state == .loading || state == .loadingAdditional {
@@ -78,25 +70,23 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     
     let pageParam = ParameterKey.pageNumber(number: currentPage).param
     let allParams = nonPaginationParameters + [pageParam]
-    
-    serviceAdapter.findContent(parameters: allParams) { [weak self] result in
-      guard let self = self else { return }
-      
-      switch result {
-      case .failure(let error):
-        self.currentPage -= 1
-        self.state = .failed
-        self.objectWillChange.send()
+
+    Task {
+      do {
+        let (newContentIDs, cacheUpdate, totalResultCount)
+          = try await serviceAdapter.findContent(parameters: allParams)
+        contentIDs += newContentIDs
+        contentSubscription?.cancel()
+        repository.apply(update: cacheUpdate)
+        totalContentNum = totalResultCount
+        state = .hasData
+        configureContentSubscription()
+      } catch {
+        currentPage -= 1
+        state = .failed
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+          .fetch(from: Self.self, reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
-        self.contentIDs += newContentIDs
-        self.contentSubscription?.cancel()
-        self.repository.apply(update: cacheUpdate)
-        self.totalContentNum = totalResultCount
-        self.state = .hasData
-        self.configureContentSubscription()
       }
     }
   }
@@ -107,31 +97,25 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     }
     
     state = .loading
-    // `state` can't be @Published, so we have to do this manually
-    objectWillChange.send()
     
     // Reset current page to 1
     currentPage = startingPage
-    
-    serviceAdapter.findContent(parameters: nonPaginationParameters) { [weak self] result in
-      guard let self = self else {
-        return
-      }
-      
-      switch result {
-      case .failure(let error):
+
+    Task {
+      do {
+        let (newContentIDs, cacheUpdate, totalResultCount)
+          = try await serviceAdapter.findContent(parameters: nonPaginationParameters)
+        contentIDs = newContentIDs
+        contentSubscription?.cancel()
+        repository.apply(update: cacheUpdate)
+        totalContentNum = totalResultCount
+        state = .hasData
+        configureContentSubscription()
+      } catch {
         self.state = .failed
-        self.objectWillChange.send()
         Failure
-          .fetch(from: String(describing: type(of: self)), reason: error.localizedDescription)
+          .fetch(from: Self.self, reason: error.localizedDescription)
           .log()
-      case .success(let (newContentIDs, cacheUpdate, totalResultCount)):
-        self.contentIDs = newContentIDs
-        self.contentSubscription?.cancel()
-        self.repository.apply(update: cacheUpdate)
-        self.totalContentNum = totalResultCount
-        self.state = .hasData
-        self.configureContentSubscription()
       }
     }
   }
@@ -149,7 +133,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   init(
     repository: Repository,
     contentsService: ContentsService,
-    downloadAction: DownloadAction,
+    downloadService: DownloadService,
     syncAction: SyncAction,
     serviceAdapter: ContentServiceAdapter! = nil,
     messageBus: MessageBus,
@@ -158,7 +142,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
   ) {
     self.repository = repository
     self.contentsService = contentsService
-    self.downloadAction = downloadAction
+    self.downloadService = downloadService
     self.syncAction = syncAction
     self.serviceAdapter = serviceAdapter
     self.messageBus = messageBus
@@ -171,7 +155,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
     // Default to using the cached version
     DataCacheChildContentsViewModel(
       parentContentID: contentID,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       repository: repository,
       service: contentsService,
@@ -190,7 +174,7 @@ extension ContentRepository {
     .init(
       contentID: contentID,
       repository: repository,
-      downloadAction: downloadAction,
+      downloadService: downloadService,
       syncAction: syncAction,
       messageBus: messageBus,
       settingsManager: settingsManager,
@@ -222,11 +206,9 @@ private extension ContentRepository {
       .contentSummaryState(for: contentIDs)
       .removeDuplicates()
       .sink(
-        receiveCompletion: { [weak self] error in
-          guard let self = self else { return }
-
+        receiveCompletion: { error in
           Failure
-            .repositoryLoad(from: String(describing: type(of: self)), reason: "Unable to receive content summary update: \(error)")
+            .repositoryLoad(from: Self.self, reason: "Unable to receive content summary update: \(error)")
             .log()
         },
         receiveValue: { [weak self] contentSummaryStates in

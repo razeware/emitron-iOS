@@ -43,12 +43,10 @@ opt_in_rules:
   - required_enum_case
   - single_test_class
   - sorted_first_last
-  - strict_fileprivate
   - strong_iboutlet
   - switch_case_on_newline
   - toggle_bool
   - unneeded_parentheses_in_closure_argument
-  - unowned_variable_capture
   - untyped_error_in_catch
   - unused_import
   - vertical_parameter_alignment_on_call
@@ -57,11 +55,13 @@ opt_in_rules:
   - yoda_condition
 
 disabled_rules: # rule identifiers to exclude from running
+  - closure_parameter_position
   - force_cast
   - line_length
   - multiple_closures_with_trailing_closure
   - todo
   - trailing_whitespace
+  - xctfail_message
 
 excluded: # paths to ignore during linting. overridden by `included`
   - Carthage

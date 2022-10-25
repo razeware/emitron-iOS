@@ -13,7 +13,7 @@
       "duration":342,
       "popularity":727.0,
       "bookmarked?":false,
-      "card_artwork_url":"https://files.betamax.raywenderlich.com/attachments/collections/176/e1086f63-bc0f-4710-869a-2fca4e280463.png",
+      "card_artwork_url":"https://files.betamax.kodeco.com/attachments/collections/176/e1086f63-bc0f-4710-869a-2fca4e280463.png",
       "technology_triple_string":"Swift 5, iOS 13.0 Beta, Xcode 11.0 Beta",
       "contributor_string":"Katie Collins \u0026 Jessy Catterwaul",
       "video_identifier":2546
@@ -53,9 +53,9 @@
       }
     },
     "links":{
-      "self":"http://api.raywenderlich.com/api/contents/1320588-machine-learning-in-ios-introduction",
-      "video_stream":"http://api.raywenderlich.com/api/videos/2546/stream",
-      "video_download":"http://api.raywenderlich.com/api/videos/2546/download"
+      "self": "https://api.kodeco.com/api/contents/1320588-machine-learning-in-ios-introduction",
+      "video_stream": "https://api.kodeco.com/api/videos/2546/stream",
+      "video_download": "https://api.kodeco.com/api/videos/2546/download"
     }
   },
   "included":[

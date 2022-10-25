@@ -19,7 +19,7 @@
       "description_plain_text": "Learn about Apple’s open source programming language, Swift, through hands-on examples!  \n\nIf you’ve watched Programming in Swift: Fundamentals, you can skip the following episodes in this course:\n\n\nPart 1 - All Episodes\nPart 2 - Episodes 1-5\nPart 3 - Episodes 1-3, and 5-9\nPart 4 - Episodes 1-6\n\n",
       "video_identifier": null,
       "parent_name": null,
-      "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+      "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
     },
     "relationships": {
       "domains": {
@@ -90,7 +90,7 @@
       }
     },
     "links": {
-      "self": "http://api.raywenderlich.com/api/contents/5994-programming-in-swift"
+      "self": "https://api.kodeco.com/api/contents/5994-programming-in-swift"
     }
   },
   "included": [
@@ -134,12 +134,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/5994"
+            "self": "https://api.kodeco.com/api/contents/5994"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16089926"
+        "self": "https://api.kodeco.com/api/progressions/16089926"
       }
     },
     {
@@ -213,7 +213,7 @@
         "description_plain_text": "Let's take a look at what you'll be learning in this part of the course, and why it's important.\n",
         "video_identifier": 2056,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -237,7 +237,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7039-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7039-programming-in-swift-introduction"
       }
     },
     {
@@ -260,7 +260,7 @@
         "description_plain_text": "Learn how to create your first Swift playground, and see how useful it can be to learn Swift, and use in day-to-day development.\n",
         "video_identifier": 2057,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -287,7 +287,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7042-programming-in-swift-swift-playgrounds"
+        "self": "https://api.kodeco.com/api/contents/7042-programming-in-swift-swift-playgrounds"
       }
     },
     {
@@ -308,12 +308,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7042"
+            "self": "https://api.kodeco.com/api/contents/7042"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16089925"
+        "self": "https://api.kodeco.com/api/progressions/16089925"
       }
     },
     {
@@ -336,7 +336,7 @@
         "description_plain_text": "Learn the various ways to add comments to your Swift code - a useful way to document your work or add notes for future reference.\n",
         "video_identifier": 2058,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -360,7 +360,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7043-programming-in-swift-comments"
+        "self": "https://api.kodeco.com/api/contents/7043-programming-in-swift-comments"
       }
     },
     {
@@ -383,7 +383,7 @@
         "description_plain_text": "Learn the group related data together into a single unit, through the power of a Swift type called Tuples.\n",
         "video_identifier": 2059,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -407,7 +407,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7044-programming-in-swift-tuples"
+        "self": "https://api.kodeco.com/api/contents/7044-programming-in-swift-tuples"
       }
     },
     {
@@ -430,7 +430,7 @@
         "description_plain_text": "Practice using tuples on your own, through a series of hands-on challenges.\n",
         "video_identifier": 2060,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -454,7 +454,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7045-programming-in-swift-challenge-tuples"
+        "self": "https://api.kodeco.com/api/contents/7045-programming-in-swift-challenge-tuples"
       }
     },
     {
@@ -477,7 +477,7 @@
         "description_plain_text": "Learn how to use a Swift type called Booleans, which represent true or false values, and a bunch of new operators.\n",
         "video_identifier": 2061,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -501,7 +501,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7046-programming-in-swift-booleans-and-operators"
+        "self": "https://api.kodeco.com/api/contents/7046-programming-in-swift-booleans-and-operators"
       }
     },
     {
@@ -524,7 +524,7 @@
         "description_plain_text": "Practice using booleans on your own, through a series of hands-on challenges.\n",
         "video_identifier": 2062,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -551,7 +551,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7047-programming-in-swift-challenge-booleans"
+        "self": "https://api.kodeco.com/api/contents/7047-programming-in-swift-challenge-booleans"
       }
     },
     {
@@ -572,12 +572,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7047"
+            "self": "https://api.kodeco.com/api/contents/7047"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091245"
+        "self": "https://api.kodeco.com/api/progressions/16091245"
       }
     },
     {
@@ -600,7 +600,7 @@
         "description_plain_text": "Take another look at the if statement, and learn what the concept of scope means in Swift.\n",
         "video_identifier": 2063,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -627,7 +627,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7049-programming-in-swift-scope"
+        "self": "https://api.kodeco.com/api/contents/7049-programming-in-swift-scope"
       }
     },
     {
@@ -648,12 +648,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7049"
+            "self": "https://api.kodeco.com/api/contents/7049"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16090541"
+        "self": "https://api.kodeco.com/api/progressions/16090541"
       }
     },
     {
@@ -676,7 +676,7 @@
         "description_plain_text": "Let's review where you are with your Swift core concepts, and discuss what's next.\n",
         "video_identifier": 2064,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -700,7 +700,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7050-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7050-programming-in-swift-conclusion"
       }
     },
     {
@@ -774,7 +774,7 @@
         "description_plain_text": "Let's review what you'll be learning in this part of the course, and why control flow is important.\n",
         "video_identifier": 2065,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -798,7 +798,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7051-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7051-programming-in-swift-introduction"
       }
     },
     {
@@ -821,7 +821,7 @@
         "description_plain_text": "Learn how to make Swift repeat your code multiple times with while loops, repeat while loops, and break statements.\n",
         "video_identifier": 2066,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -845,7 +845,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7052-programming-in-swift-while-loops"
+        "self": "https://api.kodeco.com/api/contents/7052-programming-in-swift-while-loops"
       }
     },
     {
@@ -868,7 +868,7 @@
         "description_plain_text": "Practice using while loops on your own, through a hands-on challenge.\n",
         "video_identifier": 2067,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -895,7 +895,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7053-programming-in-swift-challenge-while-loops"
+        "self": "https://api.kodeco.com/api/contents/7053-programming-in-swift-challenge-while-loops"
       }
     },
     {
@@ -916,12 +916,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7053"
+            "self": "https://api.kodeco.com/api/contents/7053"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091472"
+        "self": "https://api.kodeco.com/api/progressions/16091472"
       }
     },
     {
@@ -944,7 +944,7 @@
         "description_plain_text": "Learn how to use for loops in Swift, along with ranges, continue, and labeled statements.\n",
         "video_identifier": 2068,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -968,7 +968,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7054-programming-in-swift-for-loops"
+        "self": "https://api.kodeco.com/api/contents/7054-programming-in-swift-for-loops"
       }
     },
     {
@@ -991,7 +991,7 @@
         "description_plain_text": "Practice using for loops on your own, through a hands-on challenge.\n",
         "video_identifier": 2069,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1015,7 +1015,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7055-programming-in-swift-challenge-for-loops"
+        "self": "https://api.kodeco.com/api/contents/7055-programming-in-swift-challenge-for-loops"
       }
     },
     {
@@ -1038,7 +1038,7 @@
         "description_plain_text": "Learn how to use switch statements in Swift, including some of its more powerful features.\n",
         "video_identifier": 2070,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1062,7 +1062,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7056-programming-in-swift-switch-statements"
+        "self": "https://api.kodeco.com/api/contents/7056-programming-in-swift-switch-statements"
       }
     },
     {
@@ -1085,7 +1085,7 @@
         "description_plain_text": "Practice using switch statements on your own, through a hands-on challenge.\n",
         "video_identifier": 2071,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1109,7 +1109,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7057-programming-in-swift-challenge-switch-statements"
+        "self": "https://api.kodeco.com/api/contents/7057-programming-in-swift-challenge-switch-statements"
       }
     },
     {
@@ -1132,7 +1132,7 @@
         "description_plain_text": "Learn about Enums, a powerful tool in Swift that can help with your switch statements and so much more!\n",
         "video_identifier": 2072,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1159,7 +1159,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7058-programming-in-swift-enumerations"
+        "self": "https://api.kodeco.com/api/contents/7058-programming-in-swift-enumerations"
       }
     },
     {
@@ -1180,12 +1180,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7058"
+            "self": "https://api.kodeco.com/api/contents/7058"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16091738"
+        "self": "https://api.kodeco.com/api/progressions/16091738"
       }
     },
     {
@@ -1208,7 +1208,7 @@
         "description_plain_text": "Let's review what you learned about control flow in this part, and discuss what's next.\n",
         "video_identifier": 2073,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1232,7 +1232,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7059-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7059-programming-in-swift-conclusion"
       }
     },
     {
@@ -1306,7 +1306,7 @@
         "description_plain_text": "Review what you'll be learning in this part of the course about functions and optionals.\n",
         "video_identifier": 2074,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1330,7 +1330,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7061-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7061-programming-in-swift-introduction"
       }
     },
     {
@@ -1353,7 +1353,7 @@
         "description_plain_text": "Learn how to write your own functions in Swift, and see for yourself how Swift makes them easy to use.\n",
         "video_identifier": 2075,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1380,7 +1380,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7062-programming-in-swift-introduction-to-functions"
+        "self": "https://api.kodeco.com/api/contents/7062-programming-in-swift-introduction-to-functions"
       }
     },
     {
@@ -1401,12 +1401,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7062"
+            "self": "https://api.kodeco.com/api/contents/7062"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16092046"
+        "self": "https://api.kodeco.com/api/progressions/16092046"
       }
     },
     {
@@ -1429,7 +1429,7 @@
         "description_plain_text": "Practice writing functions on your own, through a hands-on challenge.\n",
         "video_identifier": 2076,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1453,7 +1453,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7063-programming-in-swift-challenge-introduction-to-functions"
+        "self": "https://api.kodeco.com/api/contents/7063-programming-in-swift-challenge-introduction-to-functions"
       }
     },
     {
@@ -1476,7 +1476,7 @@
         "description_plain_text": "Learn some more advanced features of functions, such as overloading, inout parameters, and functions as variables.\n",
         "video_identifier": 2077,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1500,7 +1500,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7064-programming-in-swift-more-functions"
+        "self": "https://api.kodeco.com/api/contents/7064-programming-in-swift-more-functions"
       }
     },
     {
@@ -1523,7 +1523,7 @@
         "description_plain_text": "Learn about one of the most important aspects of Swift development - optionals - through a fun analogy.\n",
         "video_identifier": 2078,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1547,7 +1547,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7065-programming-in-swift-introduction-to-optionals"
+        "self": "https://api.kodeco.com/api/contents/7065-programming-in-swift-introduction-to-optionals"
       }
     },
     {
@@ -1570,7 +1570,7 @@
         "description_plain_text": "Practice using optionals on your own, through a hands-on challenge.\n",
         "video_identifier": 2079,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1594,7 +1594,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7066-programming-in-swift-challenge-introduction-to-optionals"
+        "self": "https://api.kodeco.com/api/contents/7066-programming-in-swift-challenge-introduction-to-optionals"
       }
     },
     {
@@ -1617,7 +1617,7 @@
         "description_plain_text": "Learn how to unwrap optionals, force unwrap optionals, use optional binding, and use the guard statement.\n",
         "video_identifier": 2080,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1641,7 +1641,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7067-programming-in-swift-more-optionals"
+        "self": "https://api.kodeco.com/api/contents/7067-programming-in-swift-more-optionals"
       }
     },
     {
@@ -1664,7 +1664,7 @@
         "description_plain_text": "Practice unwrapping optionals on your own, through a hands-on challenge.\n",
         "video_identifier": 2081,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1691,7 +1691,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7068-programming-in-swift-challenge-more-optionals"
+        "self": "https://api.kodeco.com/api/contents/7068-programming-in-swift-challenge-more-optionals"
       }
     },
     {
@@ -1712,12 +1712,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7068"
+            "self": "https://api.kodeco.com/api/contents/7068"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16092358"
+        "self": "https://api.kodeco.com/api/progressions/16092358"
       }
     },
     {
@@ -1740,7 +1740,7 @@
         "description_plain_text": "Let's review where you are with your Swift core concepts, and discuss what's next.\n",
         "video_identifier": 2082,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1764,7 +1764,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7069-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7069-programming-in-swift-conclusion"
       }
     },
     {
@@ -1842,7 +1842,7 @@
         "description_plain_text": "Let's review what you'll be learning in this part of the course, and why it's important.\n",
         "video_identifier": 2083,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1869,7 +1869,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7070-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7070-programming-in-swift-introduction"
       }
     },
     {
@@ -1890,12 +1890,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7070"
+            "self": "https://api.kodeco.com/api/contents/7070"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093019"
+        "self": "https://api.kodeco.com/api/progressions/16093019"
       }
     },
     {
@@ -1918,7 +1918,7 @@
         "description_plain_text": "Learn how to use arrays in Swift to store and manipulate an ordered list of values.\n",
         "video_identifier": 2084,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1942,7 +1942,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7071-programming-in-swift-arrays"
+        "self": "https://api.kodeco.com/api/contents/7071-programming-in-swift-arrays"
       }
     },
     {
@@ -1965,7 +1965,7 @@
         "description_plain_text": "Practice using arrays on your own, through a hands-on challenge.\n",
         "video_identifier": 2085,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -1989,7 +1989,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7072-programming-in-swift-challenge-arrays"
+        "self": "https://api.kodeco.com/api/contents/7072-programming-in-swift-challenge-arrays"
       }
     },
     {
@@ -2012,7 +2012,7 @@
         "description_plain_text": "Learn how to use dictionaries in Swift to store an unordered collection of pairs.\n",
         "video_identifier": 2086,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2036,7 +2036,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7073-programming-in-swift-dictionaries"
+        "self": "https://api.kodeco.com/api/contents/7073-programming-in-swift-dictionaries"
       }
     },
     {
@@ -2059,7 +2059,7 @@
         "description_plain_text": "Practice using dictionaries on your own, through a hands-on challenge.\n",
         "video_identifier": 2087,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2083,7 +2083,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7074-programming-in-swift-challenge-dictionaries"
+        "self": "https://api.kodeco.com/api/contents/7074-programming-in-swift-challenge-dictionaries"
       }
     },
     {
@@ -2106,7 +2106,7 @@
         "description_plain_text": "Learn how to use Sets in Swift to store an unordered collection of unique values.\n",
         "video_identifier": 2088,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2133,7 +2133,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7075-programming-in-swift-sets"
+        "self": "https://api.kodeco.com/api/contents/7075-programming-in-swift-sets"
       }
     },
     {
@@ -2154,12 +2154,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7075"
+            "self": "https://api.kodeco.com/api/contents/7075"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093347"
+        "self": "https://api.kodeco.com/api/progressions/16093347"
       }
     },
     {
@@ -2182,7 +2182,7 @@
         "description_plain_text": "Learn how to create closures in Swift - which you can think of as a function without a name.\n",
         "video_identifier": 2089,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2206,7 +2206,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7076-programming-in-swift-closures"
+        "self": "https://api.kodeco.com/api/contents/7076-programming-in-swift-closures"
       }
     },
     {
@@ -2229,7 +2229,7 @@
         "description_plain_text": "Learn how you can use closures to sort collections, filter collections, run calculations on elements within a collection, and more.\n",
         "video_identifier": 2090,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2253,7 +2253,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7077-programming-in-swift-closures-and-collections"
+        "self": "https://api.kodeco.com/api/contents/7077-programming-in-swift-closures-and-collections"
       }
     },
     {
@@ -2276,7 +2276,7 @@
         "description_plain_text": "Practice using closures on your own, through a hands-on challenge.\n",
         "video_identifier": 2091,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2300,7 +2300,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7078-programming-in-swift-challenge-closures"
+        "self": "https://api.kodeco.com/api/contents/7078-programming-in-swift-challenge-closures"
       }
     },
     {
@@ -2323,7 +2323,7 @@
         "description_plain_text": "Let's review what you learned about collections in this part of the course, and discuss what's next.\n",
         "video_identifier": 2092,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2347,7 +2347,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7079-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7079-programming-in-swift-conclusion"
       }
     },
     {
@@ -2421,7 +2421,7 @@
         "description_plain_text": "Let's review what you'll be learning about structures in this part of the course, and why it's important.\n",
         "video_identifier": 2093,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2445,7 +2445,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7080-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7080-programming-in-swift-introduction"
       }
     },
     {
@@ -2468,7 +2468,7 @@
         "description_plain_text": "Learn how to group data and functionality together in Swift, using a value type called structures.\n",
         "video_identifier": 2094,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2495,7 +2495,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7081-programming-in-swift-structures"
+        "self": "https://api.kodeco.com/api/contents/7081-programming-in-swift-structures"
       }
     },
     {
@@ -2516,12 +2516,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7081"
+            "self": "https://api.kodeco.com/api/contents/7081"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16093900"
+        "self": "https://api.kodeco.com/api/progressions/16093900"
       }
     },
     {
@@ -2544,7 +2544,7 @@
         "description_plain_text": "Practice using structures on your own, through a hands-on challenge.\n",
         "video_identifier": 2095,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2571,7 +2571,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7082-programming-in-swift-challenge-structures"
+        "self": "https://api.kodeco.com/api/contents/7082-programming-in-swift-challenge-structures"
       }
     },
     {
@@ -2592,12 +2592,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7082"
+            "self": "https://api.kodeco.com/api/contents/7082"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16094712"
+        "self": "https://api.kodeco.com/api/progressions/16094712"
       }
     },
     {
@@ -2620,7 +2620,7 @@
         "description_plain_text": "Learn how to add two types of properties to your types: stored properties, and computed properties.\n",
         "video_identifier": 2096,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2647,7 +2647,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7083-programming-in-swift-properties"
+        "self": "https://api.kodeco.com/api/contents/7083-programming-in-swift-properties"
       }
     },
     {
@@ -2668,12 +2668,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7083"
+            "self": "https://api.kodeco.com/api/contents/7083"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/29999050"
+        "self": "https://api.kodeco.com/api/progressions/29999050"
       }
     },
     {
@@ -2696,7 +2696,7 @@
         "description_plain_text": "Practice creating properties on your own, through a hands-on challenge.\n",
         "video_identifier": 2097,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2723,7 +2723,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7084-programming-in-swift-challenge-properties"
+        "self": "https://api.kodeco.com/api/contents/7084-programming-in-swift-challenge-properties"
       }
     },
     {
@@ -2744,12 +2744,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7084"
+            "self": "https://api.kodeco.com/api/contents/7084"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/29999042"
+        "self": "https://api.kodeco.com/api/progressions/29999042"
       }
     },
     {
@@ -2772,7 +2772,7 @@
         "description_plain_text": "Learn when it's best to use computed properties, and when it's best to use methods.\n",
         "video_identifier": 2098,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2796,7 +2796,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7085-programming-in-swift-computed-properties-vs-methods"
+        "self": "https://api.kodeco.com/api/contents/7085-programming-in-swift-computed-properties-vs-methods"
       }
     },
     {
@@ -2819,7 +2819,7 @@
         "description_plain_text": "Take a deep dive into methods, including writing initializers, mutating methods, extensions, and more.\n",
         "video_identifier": 2099,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2846,7 +2846,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7086-programming-in-swift-methods"
+        "self": "https://api.kodeco.com/api/contents/7086-programming-in-swift-methods"
       }
     },
     {
@@ -2867,12 +2867,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7086"
+            "self": "https://api.kodeco.com/api/contents/7086"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/30000379"
+        "self": "https://api.kodeco.com/api/progressions/30000379"
       }
     },
     {
@@ -2895,7 +2895,7 @@
         "description_plain_text": "Practice writing methods on your own, through a hands-on challenge.\n",
         "video_identifier": 2100,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2922,7 +2922,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7087-programming-in-swift-challenge-methods"
+        "self": "https://api.kodeco.com/api/contents/7087-programming-in-swift-challenge-methods"
       }
     },
     {
@@ -2943,12 +2943,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7087"
+            "self": "https://api.kodeco.com/api/contents/7087"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095031"
+        "self": "https://api.kodeco.com/api/progressions/16095031"
       }
     },
     {
@@ -2971,7 +2971,7 @@
         "description_plain_text": "Let's review what you learned about structures in this part of the course, and discuss what's next.\n",
         "video_identifier": 2101,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -2995,7 +2995,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7088-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7088-programming-in-swift-conclusion"
       }
     },
     {
@@ -3073,7 +3073,7 @@
         "description_plain_text": "Let's review what you'll be learning about classes in this part of the course, and why it's important.\n",
         "video_identifier": 2102,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3097,7 +3097,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7089-programming-in-swift-introduction"
+        "self": "https://api.kodeco.com/api/contents/7089-programming-in-swift-introduction"
       }
     },
     {
@@ -3120,7 +3120,7 @@
         "description_plain_text": "Learn about the differences between classes and structures in Swift, and when you should use which.\n",
         "video_identifier": 2103,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3147,7 +3147,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7090-programming-in-swift-classes-vs-structures"
+        "self": "https://api.kodeco.com/api/contents/7090-programming-in-swift-classes-vs-structures"
       }
     },
     {
@@ -3168,12 +3168,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7090"
+            "self": "https://api.kodeco.com/api/contents/7090"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095318"
+        "self": "https://api.kodeco.com/api/progressions/16095318"
       }
     },
     {
@@ -3196,7 +3196,7 @@
         "description_plain_text": "Practice working with classes and understanding when to use them vs. structures, through a hands-on challenge.\n",
         "video_identifier": 2104,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3223,7 +3223,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7091-programming-in-swift-challenge-classes-vs-structures"
+        "self": "https://api.kodeco.com/api/contents/7091-programming-in-swift-challenge-classes-vs-structures"
       }
     },
     {
@@ -3244,12 +3244,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7091"
+            "self": "https://api.kodeco.com/api/contents/7091"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095396"
+        "self": "https://api.kodeco.com/api/progressions/16095396"
       }
     },
     {
@@ -3272,7 +3272,7 @@
         "description_plain_text": "Learn how you can inherit functionality from another class in Swift.\n",
         "video_identifier": 2105,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3296,7 +3296,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7092-programming-in-swift-inheritance"
+        "self": "https://api.kodeco.com/api/contents/7092-programming-in-swift-inheritance"
       }
     },
     {
@@ -3319,7 +3319,7 @@
         "description_plain_text": "Learn how to create your own class initializers, including two-phase initialization, and required vs. convenience initializers.\n",
         "video_identifier": 2106,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3343,7 +3343,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7093-programming-in-swift-initializers"
+        "self": "https://api.kodeco.com/api/contents/7093-programming-in-swift-initializers"
       }
     },
     {
@@ -3366,7 +3366,7 @@
         "description_plain_text": "Practice creating your own class initializers, through a hands-on challenge.\n",
         "video_identifier": 2107,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3393,7 +3393,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7094-programming-in-swift-challenge-initializers"
+        "self": "https://api.kodeco.com/api/contents/7094-programming-in-swift-challenge-initializers"
       }
     },
     {
@@ -3414,12 +3414,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7094"
+            "self": "https://api.kodeco.com/api/contents/7094"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16095719"
+        "self": "https://api.kodeco.com/api/progressions/16095719"
       }
     },
     {
@@ -3442,7 +3442,7 @@
         "description_plain_text": "Learn five concepts to help you decide when you should subclass, and when you shouldn't.\n",
         "video_identifier": 2108,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3466,7 +3466,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7095-programming-in-swift-when-should-you-subclass"
+        "self": "https://api.kodeco.com/api/contents/7095-programming-in-swift-when-should-you-subclass"
       }
     },
     {
@@ -3489,7 +3489,7 @@
         "description_plain_text": "Learn how to make your types conform to protocols in Swift, which you can think of as a to-do list for your types.\n",
         "video_identifier": 2109,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3513,7 +3513,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7096-programming-in-swift-protocols"
+        "self": "https://api.kodeco.com/api/contents/7096-programming-in-swift-protocols"
       }
     },
     {
@@ -3536,7 +3536,7 @@
         "description_plain_text": "Learn how Swift manages memory under the hood, how you can tell when an object is deinitialized, and how you can avoid a nasty memory leak in your apps.\n",
         "video_identifier": 2110,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3563,7 +3563,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7097-programming-in-swift-memory-management"
+        "self": "https://api.kodeco.com/api/contents/7097-programming-in-swift-memory-management"
       }
     },
     {
@@ -3584,12 +3584,12 @@
             "type": "contents"
           },
           "links": {
-            "self": "http://api.raywenderlich.com/api/contents/7097"
+            "self": "https://api.kodeco.com/api/contents/7097"
           }
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/progressions/16096116"
+        "self": "https://api.kodeco.com/api/progressions/16096116"
       }
     },
     {
@@ -3612,7 +3612,7 @@
         "description_plain_text": "Let's review where you're at with your Swift core concepts, and give you some advice about where to go next.\n",
         "video_identifier": 2111,
         "parent_name": "Programming in Swift",
-        "card_artwork_url": "https://files.betamax.raywenderlich.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
+        "card_artwork_url": "https://files.betamax.kodeco.com/attachments/collections/142/c4950afd-5ace-470e-8924-4ccce0aadb45.png"
       },
       "relationships": {
         "domains": {
@@ -3636,7 +3636,7 @@
         }
       },
       "links": {
-        "self": "http://api.raywenderlich.com/api/contents/7098-programming-in-swift-conclusion"
+        "self": "https://api.kodeco.com/api/contents/7098-programming-in-swift-conclusion"
       }
     },
     {

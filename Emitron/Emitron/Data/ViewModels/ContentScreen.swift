@@ -59,7 +59,7 @@ enum ContentScreen {
     }
   }
 
-  var detailMesage: String {
+  var detailMessage: String {
     switch self {
     case .library:
       return "Try removing some filters."

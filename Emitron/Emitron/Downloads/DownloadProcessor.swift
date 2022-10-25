@@ -37,12 +37,12 @@ protocol DownloadProcessorModel {
 }
 
 protocol DownloadProcessorDelegate: AnyObject {
-  func downloadProcessor(_ processor: DownloadProcessor, downloadModelForDownloadWithID downloadID: UUID) -> DownloadProcessorModel?
-  func downloadProcessor(_ processor: DownloadProcessor, didStartDownloadWithID downloadID: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didUpdateProgress progress: Double)
-  func downloadProcessor(_ processor: DownloadProcessor, didFinishDownloadWithID downloadID: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, didCancelDownloadWithID downloadID: UUID)
-  func downloadProcessor(_ processor: DownloadProcessor, downloadWithID downloadID: UUID, didFailWithError error: Error)
+  func downloadProcessor(downloadModelForDownloadWithID downloadID: UUID) -> DownloadProcessorModel?
+  func downloadProcessor(didStartDownloadWithID downloadID: UUID)
+  func downloadProcessor(downloadWithID downloadID: UUID, didUpdateProgress progress: Double)
+  func downloadProcessor(didFinishDownloadWithID downloadID: UUID)
+  func downloadProcessor(didCancelDownloadWithID downloadID: UUID)
+  func downloadProcessor(downloadWithID downloadID: UUID, didFailWithError error: Error)
 }
 
 private extension URLSessionDownloadTask {
@@ -76,7 +76,7 @@ final class DownloadProcessor: NSObject {
   init(settingsManager: SettingsManager) {
     self.settingsManager = settingsManager
     super.init()
-    populateDownloadListFromSession()
+    Task { await populateDownloadListFromSession() }
   }
   
   private lazy var session: AVAssetDownloadURLSession = {
@@ -94,7 +94,7 @@ final class DownloadProcessor: NSObject {
 }
 
 extension DownloadProcessor {
-  func add(download: DownloadProcessorModel) throws {
+  func add<Model: DownloadProcessorModel>(download: Model) throws {
     guard let remoteURL = download.remoteURL else { throw DownloadProcessorError.invalidArguments }
     let hlsAsset = AVURLAsset(url: remoteURL)
     var options: [String: Any]?
@@ -108,10 +108,10 @@ extension DownloadProcessor {
     
     currentDownloads.append(downloadTask)
     
-    delegate.downloadProcessor(self, didStartDownloadWithID: download.id)
+    delegate.downloadProcessor(didStartDownloadWithID: download.id)
   }
   
-  func cancelDownload(_ download: DownloadProcessorModel) throws {
+  func cancelDownload<Model: DownloadProcessorModel>(_ download: Model) throws {
     guard let downloadTask = currentDownloads.first(where: { $0.downloadID == download.id }) else { throw DownloadProcessorError.unknownDownload }
     
     downloadTask.cancel()
@@ -130,33 +130,23 @@ extension DownloadProcessor {
   }
 }
 
-extension DownloadProcessor {
-  private func getDownloadTasksFromSession() -> [AVAssetDownloadTask] {
-    var tasks = [AVAssetDownloadTask]()
-    // Use a semaphore to make an async call synchronous
-    // --There's no point in trying to complete instantiating this class without this list.
-    let semaphore = DispatchSemaphore(value: 0)
-    session.getAllTasks { downloadTasks in
-
-      let myTasks = downloadTasks as! [AVAssetDownloadTask]
-      tasks = myTasks
-      semaphore.signal()
-    }
-    
-    _ = semaphore.wait(timeout: .distantFuture)
-    
-    return tasks
-  }
-  
-  private func populateDownloadListFromSession() {
-    currentDownloads = getDownloadTasksFromSession()
+// MARK: - private
+private extension DownloadProcessor {
+  // --There's no point in trying to complete instantiating this class without this list.
+  func populateDownloadListFromSession() async {
+    currentDownloads = await session.allTasks as! [AVAssetDownloadTask]
   }
 }
 
+// MARK: - AVAssetDownloadDelegate
 extension DownloadProcessor: AVAssetDownloadDelegate {
-
-  func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didLoad timeRange: CMTimeRange, totalTimeRangesLoaded loadedTimeRanges: [NSValue], timeRangeExpectedToLoad: CMTimeRange) {
-
+  func urlSession(
+    _: URLSession,
+    assetDownloadTask: AVAssetDownloadTask,
+    didLoad timeRange: CMTimeRange,
+    totalTimeRangesLoaded loadedTimeRanges: [NSValue],
+    timeRangeExpectedToLoad: CMTimeRange
+  ) {
     guard let downloadID = assetDownloadTask.downloadID else { return }
 
     var percentComplete = 0.0
@@ -171,41 +161,45 @@ extension DownloadProcessor: AVAssetDownloadDelegate {
       return
     }
     throttleList[downloadID] = percentComplete
-    delegate.downloadProcessor(self, downloadWithID: downloadID, didUpdateProgress: percentComplete)
+    delegate.downloadProcessor(downloadWithID: downloadID, didUpdateProgress: percentComplete)
   }
 
-  func urlSession(_ session: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
+  func urlSession(_: URLSession, assetDownloadTask: AVAssetDownloadTask, didFinishDownloadingTo location: URL) {
     guard
       let downloadID = assetDownloadTask.downloadID,
       let delegate = delegate
     else { return }
 
-    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
+    let download = delegate.downloadProcessor(downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
 
-    let fileManager = FileManager.default
     do {
-      if fileManager.fileExists(atPath: localURL.path) {
-        try fileManager.removeItem(at: localURL)
-      }
-      try fileManager.moveItem(at: location, to: localURL)
+      try FileManager.removeExistingFile(at: localURL)
+      try FileManager.default.moveItem(at: location, to: localURL)
     } catch {
-      delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
+      delegate.downloadProcessor(downloadWithID: downloadID, didFailWithError: error)
     }
   }
 }
 
+// MARK: - URLSessionDownloadDelegate
 extension DownloadProcessor: URLSessionDownloadDelegate {
   // When the background session has finished sending us events, we can tell the system we're done.
-  func urlSessionDidFinishEvents(forBackgroundURLSession session: URLSession) {
+  func urlSessionDidFinishEvents(forBackgroundURLSession _: URLSession) {
     guard let backgroundSessionCompletionHandler = backgroundSessionCompletionHandler else { return }
     
     // Need to marshal back to the main queue
-    DispatchQueue.main.async(execute: backgroundSessionCompletionHandler)
+    Task { @MainActor in backgroundSessionCompletionHandler() }
   }
   
   // Used to update the progress stats of a download task
-  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
+  func urlSession(
+    _: URLSession,
+    downloadTask: URLSessionDownloadTask,
+    didWriteData _: Int64,
+    totalBytesWritten: Int64,
+    totalBytesExpectedToWrite: Int64
+  ) {
     guard let downloadID = downloadTask.downloadID else { return }
     
     let progress = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
@@ -218,28 +212,36 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
 
     // Update the throttle list and make the delegate call
     throttleList[downloadID] = progress
-    delegate.downloadProcessor(self, downloadWithID: downloadID, didUpdateProgress: progress)
+    delegate.downloadProcessor(downloadWithID: downloadID, didUpdateProgress: progress)
   }
   
   // Download completed—move the file to the appropriate place and update the DB
-  func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didFinishDownloadingTo location: URL) {
-    guard let downloadID = downloadTask.downloadID,
-      let delegate = delegate else { return }
+  func urlSession(
+    _: URLSession,
+    downloadTask: URLSessionDownloadTask,
+    didFinishDownloadingTo location: URL
+  ) {
+    guard
+      let downloadID = downloadTask.downloadID,
+      let delegate = delegate
+    else { return }
     
-    let download = delegate.downloadProcessor(self, downloadModelForDownloadWithID: downloadID)
+    let download = delegate.downloadProcessor(downloadModelForDownloadWithID: downloadID)
     guard let localURL = download?.localURL else { return }
     
-    let fileManager = FileManager.default
     do {
-      try fileManager.moveItem(at: location, to: localURL)
+      try FileManager.default.moveItem(at: location, to: localURL)
     } catch {
-      delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
+      delegate.downloadProcessor(downloadWithID: downloadID, didFailWithError: error)
     }
   }
   
   // Use this to handle and client-side download errors
-  func urlSession(_ session: URLSession, task: URLSessionTask, didCompleteWithError error: Error?) {
-
+  func urlSession(
+    _: URLSession,
+    task: URLSessionTask,
+    didCompleteWithError error: Error?
+  ) {
     guard let downloadTask = task as? AVAssetDownloadTask, let downloadID = downloadTask.downloadID else { return }
 
     if let error = error as NSError? {
@@ -252,18 +254,18 @@ extension DownloadProcessor: URLSessionDownloadDelegate {
         // User-requested cancellation
         currentDownloads.removeAll { $0 == downloadTask }
 
-        delegate.downloadProcessor(self, didCancelDownloadWithID: downloadID)
+        delegate.downloadProcessor(didCancelDownloadWithID: downloadID)
       } else {
         // Unknown error
         currentDownloads.removeAll { $0 == downloadTask }
 
-        delegate.downloadProcessor(self, downloadWithID: downloadID, didFailWithError: error)
+        delegate.downloadProcessor(downloadWithID: downloadID, didFailWithError: error)
       }
     } else {
       // Success!
       currentDownloads.removeAll { $0 == downloadTask }
 
-      delegate.downloadProcessor(self, didFinishDownloadWithID: downloadID)
+      delegate.downloadProcessor(didFinishDownloadWithID: downloadID)
     }
   }
 }

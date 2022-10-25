@@ -26,25 +26,25 @@
 // OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 // THE SOFTWARE.
 
-import Combine
-import class Foundation.DispatchQueue
-import GRDB
-
-enum PersistenceStoreError: Error {
-  case argumentError
-  case notFound
-}
+import protocol Combine.ObservableObject
+import protocol GRDB.DatabaseWriter
 
 // The object responsible for managing and accessing cached content
 final class PersistenceStore: ObservableObject {
-  let db: DatabaseWriter
-  let workerQueue = DispatchQueue(label: "com.razeware.emitron.persistence", qos: .background)
+  enum Error: Swift.Error {
+    case argumentError
+    case notFound
+    case keychainFailure
+  }
   
-  init(db: DatabaseWriter) {
+  let db: any DatabaseWriter
+  
+  init<DB: DatabaseWriter>(db: DB) {
     self.db = db
   }
 }
 
+// MARK: - internal
 extension PersistenceStore {
   /// Completely erase the database. Used for logout.
   func erase() throws {

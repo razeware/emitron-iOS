@@ -29,11 +29,10 @@
 import struct Foundation.URL
 
 struct RWEnvironment {
-
   // MARK: - Properties
   var baseURL: URL
 }
 
 extension RWEnvironment {
-  static let prod = RWEnvironment(baseURL: URL(string: "https://api.raywenderlich.com/api")!)
+  static let prod = RWEnvironment(baseURL: URL(string: "https://api.kodeco.com/api")!)
 }

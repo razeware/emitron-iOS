@@ -82,7 +82,7 @@ class Filters: ObservableObject {
   // They can only select between .collection, .screencast
   var defaultFilters: [Filter] {
     Param
-      .filters(for: [.contentTypes(types: [.collection, .screencast])])
+      .filters(for: [.contentTypes([.collection, .screencast])])
       .map { Filter(groupType: .contentTypes, param: $0, isOn: true) }
   }
   
@@ -98,7 +98,7 @@ class Filters: ObservableObject {
         searchFilter = nil
         return
       }
-      searchFilter = Filter(groupType: .search, param: Param.filter(for: .queryString(string: query)), isOn: !query.isEmpty)
+      searchFilter = Filter(groupType: .search, param: Param.filter(for: .queryString(query)), isOn: !query.isEmpty)
       all.update(with: searchFilter!)
     }
   }
@@ -132,7 +132,7 @@ class Filters: ObservableObject {
     self.settingsManager = settingsManager
     
     let contentFilters = Param
-      .filters(for: [.contentTypes(types: [.collection, .screencast])])
+      .filters(for: [.contentTypes([.collection, .screencast])])
       .map { Filter(groupType: .contentTypes, param: $0, isOn: false ) }
     contentTypes = FilterGroup(type: .contentTypes, filters: contentFilters)
     
@@ -186,7 +186,7 @@ class Filters: ObservableObject {
     let userFacingDomains = domains.filter { $0.level.userFacing }
     let domainTypes = userFacingDomains.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let platformFilters = Param
-      .filters(for: [.domainTypes(types: domainTypes)])
+      .filters(for: [.domainTypes(domainTypes)])
       .map { Filter(groupType: .platforms, param: $0, isOn: false ) }
     platforms.filters = platformFilters
     
@@ -199,7 +199,7 @@ class Filters: ObservableObject {
   func updateCategoryFilters(for newCategories: [Category]) {
     let categoryTypes = newCategories.map { (id: $0.id, name: $0.name, sortOrdinal: $0.ordinal) }
     let categoryFilters = Param
-      .filters(for: [.categoryTypes(types: categoryTypes)])
+      .filters(for: [.categoryTypes(categoryTypes)])
       .map { Filter(groupType: .categories, param: $0, isOn: false ) }
     categories.filters = categoryFilters
     
@@ -231,7 +231,7 @@ class Filters: ObservableObject {
   
   // Returns the applied parameters array from an array of Filters, but applied the current sort and search filters as well
   // If there are no content filters, it adds the default ones.
-  func appliedParamteresWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
+  func appliedParametersWithCurrentSortAndSearch(from filters: [Filter]) -> [Parameter] {
     var filterParameters = filters.map(\.parameter)
     let appliedContentFilters = filters.filter { $0.groupType == .contentTypes && $0.isOn }
     
