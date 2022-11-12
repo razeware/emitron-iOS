@@ -1,7 +1,7 @@
 {
   "images" : [
     {
-      "filename" : "logo-3.png",
+      "filename" : "kodeco-orange-any.svg",
       "idiom" : "universal"
     },
     {
@@ -11,7 +11,7 @@
           "value" : "light"
         }
       ],
-      "filename" : "logo-2.png",
+      "filename" : "kodeco-orange-light.svg",
       "idiom" : "universal"
     },
     {
@@ -21,7 +21,7 @@
           "value" : "dark"
         }
       ],
-      "filename" : "logo-1.png",
+      "filename" : "kodeco-orange-dark.svg",
       "idiom" : "universal"
     }
   ],
