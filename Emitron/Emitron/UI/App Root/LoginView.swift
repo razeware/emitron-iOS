@@ -36,14 +36,14 @@ struct LoginView: View {
       VStack {
         
         Spacer()
-        
-				Image("logo")
-					.resizable()
-					.scaledToFit()
-					.padding([.top], proxy.safeAreaInsets.top)
-					.padding(.horizontal, 92)
 
-				Spacer()
+        Image("logo")
+          .resizable()
+          .scaledToFit()
+          .padding([.top], proxy.safeAreaInsets.top)
+          .padding(.horizontal, 92)
+
+        Spacer()
         
         MainButtonView(title: "Sign In", type: .primary(withArrow: false)) {
           Task(priority: .userInitiated) { try await sessionController.logIn() }

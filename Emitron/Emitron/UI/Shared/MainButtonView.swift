@@ -106,7 +106,7 @@ struct MainButtonView: View {
           .frame(height: height)
           .background(
             RoundedRectangle(cornerRadius: 9)
-							.stroke(Color.white, lineWidth: 1)
+              .stroke(Color.white, lineWidth: 1)
               // Kodeco Reskin skips .fill(type.color)
           )
           .onPreferenceChange(SizeKey.self) { size in
