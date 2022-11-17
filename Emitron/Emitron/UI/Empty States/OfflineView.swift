@@ -31,10 +31,9 @@ import SwiftUI
 struct OfflineView: View {
   var body: some View {
     VStack {
-      Image("emojiCrying")
-        .padding([.bottom], 30)
+      Spacer()
       
-      Text("No Connection")
+      Text("No connection")
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
@@ -46,7 +45,9 @@ struct OfflineView: View {
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding(.horizontal, 20)
-    }
+
+			Spacer()
+		}
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color.background)
     .edgesIgnoringSafeArea(.all)

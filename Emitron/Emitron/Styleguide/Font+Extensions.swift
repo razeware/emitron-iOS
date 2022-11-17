@@ -36,7 +36,7 @@ extension Font {
 		.custom("relative-medium-pro", size: 28.0, relativeTo: .title) // Kodeco font
   }
   static var uiTitle2: Font {
-    .custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
+		.custom("relative-medium-pro", size: 23.0, relativeTo: .title2) // Kodeco font
   }
   static var uiTitle3: Font {
     .custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
