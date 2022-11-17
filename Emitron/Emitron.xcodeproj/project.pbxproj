@@ -331,6 +331,7 @@
 		B6FC15D722CB817C0078CEDB /* BookmarksService.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6FC15D622CB817C0078CEDB /* BookmarksService.swift */; };
 		D31CEF2C26E2C421008083D0 /* FilterGroupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */; };
 		D3D9C5C72645DA9A002FD479 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9C5C62645DA9A002FD479 /* App.swift */; };
+		E9A434AC2925CEC40061D7AC /* relative-medium-pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -679,6 +680,7 @@
 		B6FC15D622CB817C0078CEDB /* BookmarksService.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BookmarksService.swift; sourceTree = "<group>"; };
 		D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterGroupTest.swift; sourceTree = "<group>"; };
 		D3D9C5C62645DA9A002FD479 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
+		E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "relative-medium-pro.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1491,6 +1493,7 @@
 		B6D7DC4422C7AF44006DD325 /* Styleguide */ = {
 			isa = PBXGroup;
 			children = (
+				E9A434AA2925CEA60061D7AC /* Relative */,
 				B6D7DC4722C7AFEC006DD325 /* Bitter */,
 				B6D7DC4222C7ADDC006DD325 /* UIColor+Extensions.swift */,
 				B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */,
@@ -1696,6 +1699,14 @@
 			path = Filters;
 			sourceTree = "<group>";
 		};
+		E9A434AA2925CEA60061D7AC /* Relative */ = {
+			isa = PBXGroup;
+			children = (
+				E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */,
+			);
+			path = Relative;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1882,6 +1893,7 @@
 				22C3F127241A2655002812CB /* app-icon--default.dev-ipad@2x.png in Resources */,
 				22C3F117241A23F4002812CB /* app-icon--black-multi-ipad@2x.png in Resources */,
 				22C3F125241A2655002812CB /* app-icon--default.dev-ipadpro@2x.png in Resources */,
+				E9A434AC2925CEC40061D7AC /* relative-medium-pro.ttf in Resources */,
 				B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */,
 				2278AE4E240A67F600855221 /* app-icon--default@3x.png in Resources */,
 				B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */,

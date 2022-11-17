@@ -165,6 +165,7 @@
 		<string>Bitter-Bold.ttf</string>
 		<string>Bitter-Regular.ttf</string>
 		<string>Bitter-Italic.ttf</string>
+		<string>relative-medium-pro.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>
