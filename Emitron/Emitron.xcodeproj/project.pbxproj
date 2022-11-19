@@ -332,6 +332,7 @@
 		D31CEF2C26E2C421008083D0 /* FilterGroupTest.swift in Sources */ = {isa = PBXBuildFile; fileRef = D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */; };
 		D3D9C5C72645DA9A002FD479 /* App.swift in Sources */ = {isa = PBXBuildFile; fileRef = D3D9C5C62645DA9A002FD479 /* App.swift */; };
 		E9A434AC2925CEC40061D7AC /* relative-medium-pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */; };
+		E9A434AF292866C80061D7AC /* relative-bold-pro.ttf in Resources */ = {isa = PBXBuildFile; fileRef = E9A434AE292866C80061D7AC /* relative-bold-pro.ttf */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -681,6 +682,7 @@
 		D31CEF2B26E2C421008083D0 /* FilterGroupTest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FilterGroupTest.swift; sourceTree = "<group>"; };
 		D3D9C5C62645DA9A002FD479 /* App.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = App.swift; sourceTree = "<group>"; };
 		E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "relative-medium-pro.ttf"; sourceTree = "<group>"; };
+		E9A434AE292866C80061D7AC /* relative-bold-pro.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "relative-bold-pro.ttf"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1703,6 +1705,7 @@
 			isa = PBXGroup;
 			children = (
 				E9A434AB2925CEC40061D7AC /* relative-medium-pro.ttf */,
+				E9A434AE292866C80061D7AC /* relative-bold-pro.ttf */,
 			);
 			path = Relative;
 			sourceTree = "<group>";
@@ -1856,6 +1859,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E9A434AF292866C80061D7AC /* relative-bold-pro.ttf in Resources */,
 				22C3F11B241A23F4002812CB /* app-icon--white-black-ipad@2x.png in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				223DED0124098AEA0017F7CA /* app-icon--black-multi@2x.png in Resources */,
