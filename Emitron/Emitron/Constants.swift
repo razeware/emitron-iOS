@@ -48,7 +48,7 @@ extension String {
   static let myTutorials = "My Tutorials"
   static let newest = "Newest"
   static let popularity = "Popularity"
-  static let resetFilters = "Reset Filters"
+  static let resetFilters = "Clear all"
   static let search = "Search…"
   static let settings = "Settings"
   static let tutorials = "Tutorials"
