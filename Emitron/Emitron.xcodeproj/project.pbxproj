@@ -267,10 +267,6 @@
 		B6419BB322EF5622003AC14E /* Logger.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6419BB222EF5622003AC14E /* Logger.swift */; };
 		B66778AC2305D2D4003EEBAB /* MainButtonView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B66778AB2305D2D4003EEBAB /* MainButtonView.swift */; };
 		B682F8C722EB096300CBF2CC /* Filters.swift in Sources */ = {isa = PBXBuildFile; fileRef = B682F8C622EB096300CBF2CC /* Filters.swift */; };
-		B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */; };
-		B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */; };
-		B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */; };
-		B695033822D4BED700CE0391 /* OFL.txt in Resources */ = {isa = PBXBuildFile; fileRef = B6D7DC4922C7AFEC006DD325 /* OFL.txt */; };
 		B6C0F0D122D5D43B00012839 /* MyTutorialsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D022D5D43B00012839 /* MyTutorialsView.swift */; };
 		B6C0F0D322D5D46D00012839 /* DownloadsView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D222D5D46D00012839 /* DownloadsView.swift */; };
 		B6C0F0D522D5D47600012839 /* LibraryView.swift in Sources */ = {isa = PBXBuildFile; fileRef = B6C0F0D422D5D47600012839 /* LibraryView.swift */; };
@@ -638,10 +634,6 @@
 		B6D7DC3C22C79745006DD325 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B6D7DC4222C7ADDC006DD325 /* UIColor+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC4522C7AF60006DD325 /* UIFont+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIFont+Extensions.swift"; sourceTree = "<group>"; };
-		B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bitter-Bold.ttf"; sourceTree = "<group>"; };
-		B6D7DC4922C7AFEC006DD325 /* OFL.txt */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = OFL.txt; sourceTree = "<group>"; };
-		B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bitter-Regular.ttf"; sourceTree = "<group>"; };
-		B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */ = {isa = PBXFileReference; lastKnownFileType = file; path = "Bitter-Italic.ttf"; sourceTree = "<group>"; };
 		B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Color+Extensions.swift"; sourceTree = "<group>"; };
 		B6D7DC5422C7B408006DD325 /* Font+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Font+Extensions.swift"; sourceTree = "<group>"; };
 		B6D8EB1822CB9FFE00DE29AF /* CategoriesRequest.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CategoriesRequest.swift; sourceTree = "<group>"; };
@@ -1496,7 +1488,6 @@
 			isa = PBXGroup;
 			children = (
 				E9A434AA2925CEA60061D7AC /* Relative */,
-				B6D7DC4722C7AFEC006DD325 /* Bitter */,
 				B6D7DC4222C7ADDC006DD325 /* UIColor+Extensions.swift */,
 				B6D7DC5222C7B3FE006DD325 /* Color+Extensions.swift */,
 				B6D7DC4522C7AF60006DD325 /* UIFont+Extensions.swift */,
@@ -1505,17 +1496,6 @@
 				22C7F00F23FB0BE600F1D27D /* CGFloat+Dimensions.swift */,
 			);
 			path = Styleguide;
-			sourceTree = "<group>";
-		};
-		B6D7DC4722C7AFEC006DD325 /* Bitter */ = {
-			isa = PBXGroup;
-			children = (
-				B6D7DC4922C7AFEC006DD325 /* OFL.txt */,
-				B6D7DC4822C7AFEC006DD325 /* Bitter-Bold.ttf */,
-				B6D7DC4A22C7AFEC006DD325 /* Bitter-Regular.ttf */,
-				B6D7DC4B22C7AFEC006DD325 /* Bitter-Italic.ttf */,
-			);
-			path = Bitter;
 			sourceTree = "<group>";
 		};
 		B6D7DC5622C7B4A0006DD325 /* UI */ = {
@@ -1863,9 +1843,7 @@
 				22C3F11B241A23F4002812CB /* app-icon--white-black-ipad@2x.png in Resources */,
 				B6D7DC3B22C79745006DD325 /* LaunchScreen.storyboard in Resources */,
 				223DED0124098AEA0017F7CA /* app-icon--black-multi@2x.png in Resources */,
-				B695033722D4BE7900CE0391 /* Bitter-Italic.ttf in Resources */,
 				223DECFF24098AEA0017F7CA /* app-icon--white-black@2x.png in Resources */,
-				B695033822D4BED700CE0391 /* OFL.txt in Resources */,
 				223DED1424099C5F0017F7CA /* app-icon--default.beta@2x.png in Resources */,
 				2278AE4D240A67F600855221 /* app-icon--default@2x.png in Resources */,
 				22C3F112241A23F4002812CB /* app-icon--black-white-ipad@2x.png in Resources */,
@@ -1898,9 +1876,7 @@
 				22C3F117241A23F4002812CB /* app-icon--black-multi-ipad@2x.png in Resources */,
 				22C3F125241A2655002812CB /* app-icon--default.dev-ipadpro@2x.png in Resources */,
 				E9A434AC2925CEC40061D7AC /* Relative-Medium.ttf in Resources */,
-				B695033622D4BE7800CE0391 /* Bitter-Regular.ttf in Resources */,
 				2278AE4E240A67F600855221 /* app-icon--default@3x.png in Resources */,
-				B695033522D4BE7600CE0391 /* Bitter-Bold.ttf in Resources */,
 				22C3F114241A23F4002812CB /* app-icon--multi-black-ipadpro@2x.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
