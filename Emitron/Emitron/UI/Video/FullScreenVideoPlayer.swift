@@ -86,7 +86,8 @@ extension FullScreenVideoPlayer: UIViewControllerRepresentable {
     private let model: VideoPlaybackViewModel
     private let handleDismissal: () -> Void
     private var playerIsPresented = false
-
+    private var isDuringPip = false
+    
     @available(*, unavailable) required init?(coder: NSCoder) {
       preconditionFailure("init(coder:) has not been implemented")
     }
@@ -124,6 +125,24 @@ extension FullScreenVideoPlayer.Presenter: AVPlayerViewControllerDelegate {
     willEndFullScreenPresentationWithAnimationCoordinator _: UIViewControllerTransitionCoordinator
   ) {
     model.stop()
+    print(isDuringPip)
+    if !isDuringPip {
+      handleDismissal()
+    }
+  }
+  
+  func playerViewController(_ playerViewController: AVPlayerViewController, restoreUserInterfaceForPictureInPictureStopWithCompletionHandler completionHandler: @escaping (Bool) -> Void) {
+    present(playerViewController, animated: false) {
+      completionHandler(true)
+    }
+  }
+  
+  func playerViewControllerWillStartPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    isDuringPip = true
+  }
+  
+  func playerViewControllerWillStopPictureInPicture(_ playerViewController: AVPlayerViewController) {
+    isDuringPip = false
     handleDismissal()
   }
 }
