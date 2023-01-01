@@ -53,7 +53,7 @@ struct LogoutView: View {
       MainButtonView(
         title: "Sign Out",
         type: .destructive(withArrow: false),
-				callback: sessionController.logOut
+        callback: sessionController.logOut
       )
       .padding(.horizontal, 18)
       .padding(.bottom, 38)
