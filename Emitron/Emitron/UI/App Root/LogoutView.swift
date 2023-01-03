@@ -33,9 +33,6 @@ struct LogoutView: View {
   
   var body: some View {
     VStack {
-      Image("logo")
-        .padding([.top], 88)
-      
       Spacer()
       
       Text("No access")
@@ -55,7 +52,7 @@ struct LogoutView: View {
       
       MainButtonView(
         title: "Sign Out",
-        type: .destructive(withArrow: true),
+        type: .destructive(withArrow: false),
         callback: sessionController.logOut
       )
       .padding(.horizontal, 18)
@@ -69,5 +66,6 @@ struct LogoutView: View {
 struct LogoutView_Previews: PreviewProvider {
   static var previews: some View {
     LogoutView()
+			.preferredColorScheme(.dark) // Current Kodeco scheme
   }
 }

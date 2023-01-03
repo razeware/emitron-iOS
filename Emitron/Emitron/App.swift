@@ -87,6 +87,7 @@ extension App: SwiftUI.App {
           .fill(Color.background)
           .edgesIgnoringSafeArea(.all)
         MainView()
+          .preferredColorScheme(.dark) // Dark mode only for Kodeco
           .environmentObject(sessionController)
           .environmentObject(dataManager)
           .environmentObject(downloadService)

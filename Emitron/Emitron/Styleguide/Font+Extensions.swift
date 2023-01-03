@@ -29,30 +29,30 @@
 import SwiftUI
 
 extension Font {
-  static var uiLargeTitle: Font {
-    .custom("Bitter-Bold", size: 34.0, relativeTo: .largeTitle)
+	static var uiLargeTitle: Font {
+    .custom("Relative-Bold", size: 34.0, relativeTo: .largeTitle)
   }
   static var uiTitle1: Font {
-    .custom("Bitter-Bold", size: 28.0, relativeTo: .title)
+		.custom("Relative-Medium", size: 28.0, relativeTo: .title)
   }
   static var uiTitle2: Font {
-    .custom("Bitter-Bold", size: 23.0, relativeTo: .title2)
+		.custom("Relative-Bold", size: 23.0, relativeTo: .title2)
   }
   static var uiTitle3: Font {
-    .custom("Bitter-Bold", size: 20.0, relativeTo: .title3)
+    .custom("Relative-Bold", size: 20.0, relativeTo: .title3)
   }
   static var uiTitle4: Font {
-    .custom("Bitter-Bold", size: 19.0, relativeTo: .title3)
+    .custom("Relative-Bold", size: 19.0, relativeTo: .title3)
   }
   static var uiTitle5: Font {
-    .custom("Bitter-Regular", size: 17.0, relativeTo: .body)
+    .custom("Relative-Medium", size: 17.0, relativeTo: .body)
   }
   static var uiHeadline: Font {
     .system(size: UIFontMetrics.default.scaledValue(for: 18.0)).weight(.semibold)
   }
   
   static var uiNumberBox: Font {
-    .custom("Bitter-Bold", size: 13.0, relativeTo: .footnote)
+    .custom("Relative-Bold", size: 13.0, relativeTo: .footnote)
   }
 
   static var uiBodyAppleDefault: Font { .body }

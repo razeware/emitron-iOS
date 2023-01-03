@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="18122" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="21507" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" launchScreen="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="01J-lp-oVM">
     <device id="retina6_1" orientation="portrait" appearance="light"/>
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="18093"/>
-        <capability name="Named colors" minToolsVersion="9.0"/>
+        <deployment identifier="iOS"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="21505"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -17,14 +17,14 @@
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleAspectFit" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="logo" translatesAutoresizingMaskIntoConstraints="NO" id="ndi-dn-BBO">
-                                <rect key="frame" x="70" y="428" width="274" height="50"/>
+                                <rect key="frame" x="92" y="415" width="230" height="80"/>
                             </imageView>
                         </subviews>
                         <viewLayoutGuide key="safeArea" id="6Tk-OE-BBY"/>
-                        <color key="backgroundColor" name="backgroundColor"/>
+                        <color key="backgroundColor" red="0.078431372549019607" green="0.086274509803921567" blue="0.11764705882352941" alpha="1" colorSpace="calibratedRGB"/>
                         <constraints>
-                            <constraint firstAttribute="trailing" secondItem="ndi-dn-BBO" secondAttribute="trailing" constant="70" id="2Bk-2q-Poc"/>
-                            <constraint firstItem="ndi-dn-BBO" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="70" id="Ot0-r1-tXG"/>
+                            <constraint firstAttribute="trailing" secondItem="ndi-dn-BBO" secondAttribute="trailing" constant="92" id="2Bk-2q-Poc"/>
+                            <constraint firstItem="ndi-dn-BBO" firstAttribute="leading" secondItem="Ze5-6b-2t3" secondAttribute="leading" constant="92" id="Ot0-r1-tXG"/>
                             <constraint firstItem="ndi-dn-BBO" firstAttribute="centerY" secondItem="6Tk-OE-BBY" secondAttribute="centerY" id="j1t-rx-dou"/>
                             <constraint firstItem="ndi-dn-BBO" firstAttribute="centerX" secondItem="6Tk-OE-BBY" secondAttribute="centerX" id="v6x-C1-10H"/>
                         </constraints>
@@ -36,9 +36,6 @@
         </scene>
     </scenes>
     <resources>
-        <image name="logo" width="238" height="50"/>
-        <namedColor name="backgroundColor">
-            <color red="0.94900000095367432" green="0.9649999737739563" blue="0.98000001907348633" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-        </namedColor>
+        <image name="logo" width="385" height="80"/>
     </resources>
 </document>
