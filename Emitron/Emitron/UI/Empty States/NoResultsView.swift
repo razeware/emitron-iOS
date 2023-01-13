@@ -78,7 +78,7 @@ extension NoResultsView: View {
         if contentScreen.showExploreButton {
           MainButtonView(
             title: "Explore Tutorials",
-            type: .primary(withArrow: true)
+            type: .primary(withArrow: false)
           ) {
             tabViewModel.selectedTab = .library
           }
