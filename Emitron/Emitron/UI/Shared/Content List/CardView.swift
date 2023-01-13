@@ -94,7 +94,7 @@ struct CardView: View {
 		.cornerRadius(6)
     .overlay(
         RoundedRectangle(cornerRadius: 6)
-					.stroke(Color.borderColor, lineWidth: 1)
+					.stroke(Color.borderColor, lineWidth: 2)
     )
     .onAppear {
       dynamicContentViewModel.initialiseIfRequired()
