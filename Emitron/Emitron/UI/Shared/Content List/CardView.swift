@@ -91,10 +91,10 @@ struct CardView: View {
       progressBar
     }
     .background(Color.cardBackground)
-		.cornerRadius(6)
+		.cornerRadius(7)
     .overlay(
         RoundedRectangle(cornerRadius: 6)
-					.stroke(Color.borderColor, lineWidth: 2)
+					.stroke(Color.borderColor, lineWidth: 1)
     )
     .onAppear {
       dynamicContentViewModel.initialiseIfRequired()
