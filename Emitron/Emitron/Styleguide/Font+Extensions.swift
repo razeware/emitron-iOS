@@ -42,7 +42,7 @@ extension Font {
     .custom("RelativePro-Bold", size: 20.0, relativeTo: .title3)
   }
   static var uiTitle4: Font {
-    .custom("RelativePro-Bold", size: 17.0, relativeTo: .title3)
+    .custom("RelativePro-Medium", size: 17.0, relativeTo: .title3)
   }
   static var uiTitle5: Font {
     .custom("RelativePro-Medium", size: 17.0, relativeTo: .body)
