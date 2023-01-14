@@ -84,23 +84,6 @@ enum ContentScreen {
       return false
     }
   }
-
-  var emptyImageName: String {
-    switch self {
-    case .downloads(permitted: true):
-      return "DownloadsEmptyState"
-    case .downloads(permitted: false):
-      return "DownloadsUpgrade"
-    case .bookmarked:
-      return "BookmarksEmptyState"
-    case .inProgress:
-      return "InProgressEmptyState"
-    case .completed:
-      return "CompletedEmptyState"
-    case .library:
-      return "Error"
-    }
-  }
 }
 
 // MARK: CaseIterable

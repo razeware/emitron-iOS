@@ -55,9 +55,6 @@ extension NoResultsView: View {
 
         Spacer()
 
-        Image(contentScreen.emptyImageName)
-          .padding([.bottom], 30)
-
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
           .foregroundColor(.titleText)
