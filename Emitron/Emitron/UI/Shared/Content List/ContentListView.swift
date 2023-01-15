@@ -115,8 +115,8 @@ private extension ContentListView {
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
-    .listRowInsets(.init())
-    .padding([.horizontal, .top], .sidePadding)
+    .padding([.horizontal], .sidePadding)
+		.padding([.top], .topPadding)
     .background(Color.background)
   }
   
@@ -139,6 +139,7 @@ private extension ContentListView {
         loadMoreView
       }
       .listRowInsets(.init())
+			.listRowSeparator(.hidden)
       .textCase(nil)
     }
     .if(!allowDelete) {

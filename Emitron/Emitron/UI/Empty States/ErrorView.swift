@@ -74,9 +74,6 @@ extension ErrorView: View {
         header
         Spacer()
 
-        Image("Error")
-          .padding(.bottom, 30)
-
         Text(titleText)
           .font(.uiTitle2)
           .foregroundColor(.titleText)

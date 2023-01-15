@@ -90,7 +90,7 @@ struct SettingsView: View {
             .font(.uiCaption)
             .foregroundColor(.contentText)
         }
-        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: false)) {
           showingSignOutConfirmation = true
         }
         .confirmationDialog(
