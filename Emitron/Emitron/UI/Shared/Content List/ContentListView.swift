@@ -111,12 +111,12 @@ private extension ContentListView {
           // instead of the CardView, in order to hide navigation chevrons on the right.
           label: EmptyView.init
         )
-          .opacity(0)
+        .opacity(0)
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
     .padding([.horizontal], .sidePadding)
-		.padding([.top], .topPadding)
+    .padding([.top], .topPadding)
     .background(Color.background)
   }
   
@@ -133,13 +133,13 @@ private extension ContentListView {
     List {
       Section(
         header: header
-          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false)) 
+          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false))
       ) {
         cardsView
         loadMoreView
       }
       .listRowInsets(.init())
-			.listRowSeparator(.hidden)
+      .listRowSeparator(.hidden)
       .textCase(nil)
     }
     .if(!allowDelete) {
@@ -164,7 +164,7 @@ private extension ContentListView {
       }
     }
   }
-  
+
   var noResultsView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
@@ -175,14 +175,14 @@ private extension ContentListView {
       )
     }
   }
-  
+
   var reloadView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
       ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
-  
+
   @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       HStack {
