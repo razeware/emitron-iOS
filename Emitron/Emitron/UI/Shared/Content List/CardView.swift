@@ -91,10 +91,10 @@ struct CardView: View {
       progressBar
     }
     .background(Color.cardBackground)
-		.cornerRadius(7)
+    .cornerRadius(7)
     .overlay(
-        RoundedRectangle(cornerRadius: 6)
-					.stroke(Color.borderColor, lineWidth: 1)
+      RoundedRectangle(cornerRadius: 6)
+        .stroke(Color.borderColor, lineWidth: 1)
     )
     .onAppear {
       dynamicContentViewModel.initialiseIfRequired()
@@ -115,7 +115,7 @@ struct CardView: View {
 
     return .init(progress: progress, isRounded: true, backgroundColor: .clear)
   }
-  
+
   @ViewBuilder private var completedTagOrReleasedAt: some View {
     if case .completed = dynamicContentViewModel.viewProgress {
       CompletedTag()
@@ -126,7 +126,7 @@ struct CardView: View {
         .foregroundColor(.contentText)
     }
   }
-  
+
   @ViewBuilder private var bookmarkButton: some View {
     if dynamicContentViewModel.bookmarked {
       Image.bookmark

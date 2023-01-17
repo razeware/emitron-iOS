@@ -46,8 +46,8 @@ struct OfflineView: View {
         .multilineTextAlignment(.center)
         .padding(.horizontal, 20)
 
-			Spacer()
-		}
+      Spacer()
+    }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color.background)
     .edgesIgnoringSafeArea(.all)

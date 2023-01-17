@@ -64,13 +64,13 @@ struct FiltersHeaderView: View {
         .padding([.trailing, .leading], Layout.Padding.textTrailing)
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
-				.overlay(
-						RoundedRectangle(cornerRadius: Layout.cornerRadius)
-							.stroke(Color.borderColor, lineWidth: 1)
-				)
+        .overlay(
+          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+            .stroke(Color.borderColor, lineWidth: 1)
+        )
       }
       .accessibility(label: Text(filterGroup.type.name))
-        
+
       if isExpanded {
         expandedView
       }
@@ -95,7 +95,7 @@ struct FiltersHeaderView: View {
           filter.isOn.toggle()
           filters.update(with: filter)
         })
-          .padding(.horizontal, 14)
+        .padding(.horizontal, 14)
       }
     }
   }
