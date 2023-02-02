@@ -556,7 +556,7 @@
 		B6C4F3DE22E710640087ED10 /* PersistenceStore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PersistenceStore.swift; sourceTree = "<group>"; };
 		B6D4529722CAB3F600BFB812 /* DateFormatter+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "DateFormatter+Extensions.swift"; sourceTree = "<group>"; };
 		B6D4529B22CAB67900BFB812 /* Date+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Date+Extensions.swift"; sourceTree = "<group>"; };
-		B6D7DC2B22C79743006DD325 /* raywenderlich.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = raywenderlich.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		B6D7DC2B22C79743006DD325 /* Kodeco.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = Kodeco.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		B6D7DC2E22C79743006DD325 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		B6D7DC3422C79745006DD325 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		B6D7DC3722C79745006DD325 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
@@ -1313,7 +1313,7 @@
 		B6D7DC2C22C79743006DD325 /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				B6D7DC2B22C79743006DD325 /* raywenderlich.app */,
+				B6D7DC2B22C79743006DD325 /* Kodeco.app */,
 				22D176BD23460A060038333D /* emitronTests.xctest */,
 				225670A7240AFD3100BD05AE /* emitronScreenshots.xctest */,
 			);
@@ -1636,7 +1636,7 @@
 				493DA0A027266049006ED195 /* GRDB */,
 			);
 			productName = Emitron;
-			productReference = B6D7DC2B22C79743006DD325 /* raywenderlich.app */;
+			productReference = B6D7DC2B22C79743006DD325 /* Kodeco.app */;
 			productType = "com.apple.product-type.application";
 		};
 /* End PBXNativeTarget section */
@@ -2216,7 +2216,7 @@
 				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
-				PRODUCT_NAME = raywenderlich;
+				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios.beta_appstore_profile-name)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2239,7 +2239,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/raywenderlich.app/raywenderlich";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kodeco.app/Kodeco";
 			};
 			name = Beta;
 		};
@@ -2259,7 +2259,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/raywenderlich.app/raywenderlich";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kodeco.app/Kodeco";
 			};
 			name = Debug;
 		};
@@ -2279,7 +2279,7 @@
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/raywenderlich.app/raywenderlich";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Kodeco.app/Kodeco";
 			};
 			name = Release;
 		};
@@ -2423,7 +2423,7 @@
 				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
-				PRODUCT_NAME = raywenderlich;
+				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2451,7 +2451,7 @@
 				MARKETING_VERSION = 1.0.10;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
-				PRODUCT_NAME = raywenderlich;
+				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios_appstore_profile-name)";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
