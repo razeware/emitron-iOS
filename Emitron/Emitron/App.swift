@@ -50,7 +50,6 @@ struct App {
   private var downloadService: DownloadService
   private var settingsManager: SettingsManager
   private var messageBus: MessageBus
-  private var iconManager: IconManager
   
   init() {
     // setup objects
@@ -62,7 +61,6 @@ struct App {
     downloadService = emitronObjects.downloadService
     settingsManager = emitronObjects.settingsManager
     messageBus = emitronObjects.messageBus
-    iconManager = IconManager(messageBus: messageBus)
 
     // start service
     appDelegate.downloadService = downloadService
@@ -75,6 +73,11 @@ struct App {
 
     // additional setup
     setupAppReview()
+    
+    // Reset app icon in case an alternate was used.
+    // Note: I think this can be removed in future. It is here to ensure that
+    //       existing installs revert to the new Kodeco icon.
+    UIApplication.shared.setAlternateIconName(nil)
   }
 }
 
@@ -91,7 +94,6 @@ extension App: SwiftUI.App {
           .environmentObject(sessionController)
           .environmentObject(dataManager)
           .environmentObject(downloadService)
-          .environmentObject(iconManager)
           .environmentObject(messageBus)
           .environmentObject(persistenceStore)
           .environmentObject(guardpost)
