@@ -32,6 +32,7 @@ import GRDB
 
 @main
 struct App {
+  // swiftlint:disable:next large_tuple
   typealias Objects = (
     persistenceStore: PersistenceStore,
     guardpost: Guardpost,
@@ -50,7 +51,6 @@ struct App {
   private var downloadService: DownloadService
   private var settingsManager: SettingsManager
   private var messageBus: MessageBus
-  private var iconManager: IconManager
   
   init() {
     // setup objects
@@ -62,7 +62,6 @@ struct App {
     downloadService = emitronObjects.downloadService
     settingsManager = emitronObjects.settingsManager
     messageBus = emitronObjects.messageBus
-    iconManager = IconManager(messageBus: messageBus)
 
     // start service
     appDelegate.downloadService = downloadService
@@ -91,7 +90,6 @@ extension App: SwiftUI.App {
           .environmentObject(sessionController)
           .environmentObject(dataManager)
           .environmentObject(downloadService)
-          .environmentObject(iconManager)
           .environmentObject(messageBus)
           .environmentObject(persistenceStore)
           .environmentObject(guardpost)

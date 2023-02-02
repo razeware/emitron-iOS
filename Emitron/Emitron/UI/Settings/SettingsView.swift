@@ -57,21 +57,6 @@ struct SettingsView: View {
         canDownload: sessionController.user?.canDownload ?? false
       ).padding(.horizontal, 20)
       
-      Section(
-        header: HStack {
-          Text("App Icon")
-            .font(.uiTitle4)
-            .foregroundColor(.titleText)
-          
-          Spacer()
-        }
-          .padding(.top, 20)
-      ) {
-        IconChooserView()
-          .padding(.top, 10)
-      }
-      .padding(.horizontal, 20)
-      
       Spacer()
       
       Button {

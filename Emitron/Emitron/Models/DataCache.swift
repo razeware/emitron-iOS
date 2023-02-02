@@ -102,7 +102,7 @@ extension DataCache {
 }
 
 /// A type with a `contentID` property.
-private protocol contentID {
+private protocol contentID { // swiftlint:disable:this type_name
   var contentID: Int { get }
 }
 
