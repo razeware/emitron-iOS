@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 52;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -1323,33 +1323,33 @@
 		B6D7DC2D22C79743006DD325 /* Emitron */ = {
 			isa = PBXGroup;
 			children = (
-				22EFB80523ECB67B005AD8CD /* FOSS Licenses */,
-				22C4EAEB23DEF87F001A3FDA /* Settings */,
-				22BFE75623D990E600495BA9 /* Utilities */,
+				D3D9C5C62645DA9A002FD479 /* App.swift */,
+				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
+				B62B9A7D22DF769000122CE8 /* Constants.swift */,
+				B6D7DC3422C79745006DD325 /* Assets.xcassets */,
 				2280E52123C7690200F3913D /* Combine */,
+				22D177032350748E0038333D /* Configuration */,
 				22B8265E23AF5B3400D4BA23 /* Data */,
 				22BFE75D23DACEC000495BA9 /* Data Synchronisation */,
-				B6D7DC2E22C79743006DD325 /* AppDelegate.swift */,
-				D3D9C5C62645DA9A002FD479 /* App.swift */,
-				B6D7DC3422C79745006DD325 /* Assets.xcassets */,
-				22D177032350748E0038333D /* Configuration */,
-				B62B9A7D22DF769000122CE8 /* Constants.swift */,
-				22532606240E988500F5FD07 /* Ownable */,
-				22A36F4E236F768A0064A406 /* Downloads */,
 				2253632723AB16CF0013F333 /* Displayable */,
+				22A36F4E236F768A0064A406 /* Downloads */,
 				B6D4529622CAB3E700BFB812 /* Extensions */,
 				B6C4F3D322E6EE200087ED10 /* Filters */,
+				22EFB80523ECB67B005AD8CD /* FOSS Licenses */,
 				B6DF2FAD22CA435A0081A3A3 /* Guardpost */,
 				B6C4F3E022E72CED0087ED10 /* Logging */,
-				B6FC15C822CB5D950078CEDB /* Sessions */,
 				95CD793D22F0C0890080C407 /* Models */,
 				B6DF2F9222CA012C0081A3A3 /* Networking */,
+				22532606240E988500F5FD07 /* Ownable */,
 				9535A4FF22D657B0000DA861 /* Persistence */,
 				B6D7DC3622C79745006DD325 /* Preview Content */,
 				B6E21A2E22F61192006CB22F /* Protocols */,
+				B6FC15C822CB5D950078CEDB /* Sessions */,
+				22C4EAEB23DEF87F001A3FDA /* Settings */,
 				B6D7DC4422C7AF44006DD325 /* Styleguide */,
 				9535A50222D65A44000DA861 /* Support Files */,
 				B6D7DC5622C7B4A0006DD325 /* UI */,
+				22BFE75623D990E600495BA9 /* Utilities */,
 			);
 			path = Emitron;
 			sourceTree = "<group>";
@@ -1733,6 +1733,7 @@
 /* Begin PBXShellScriptBuildPhase section */
 		222DD7F4233B9A9900CF561F /* Set Build Number */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);
@@ -1751,6 +1752,7 @@
 		};
 		958699B722D48F3E00E33625 /* SwiftLint Run Script */ = {
 			isa = PBXShellScriptBuildPhase;
+			alwaysOutOfDate = 1;
 			buildActionMask = 2147483647;
 			files = (
 			);

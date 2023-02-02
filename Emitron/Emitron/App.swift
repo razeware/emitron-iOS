@@ -32,6 +32,7 @@ import GRDB
 
 @main
 struct App {
+  // swiftlint:disable:next large_tuple
   typealias Objects = (
     persistenceStore: PersistenceStore,
     guardpost: Guardpost,
