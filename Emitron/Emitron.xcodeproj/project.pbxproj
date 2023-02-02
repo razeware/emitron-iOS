@@ -2216,11 +2216,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios.beta_appstore_profile-name)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2424,11 +2427,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -2453,11 +2459,14 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				MARKETING_VERSION = 1.0.10;
+				MARKETING_VERSION = 1.1.0;
 				PRODUCT_BUNDLE_IDENTIFIER = "com.razeware.emitron.ios$(BUNDLE_ID_SUFFIX)";
 				PRODUCT_MODULE_NAME = Emitron;
 				PRODUCT_NAME = Kodeco;
 				PROVISIONING_PROFILE_SPECIFIER = "$(sigh_com.razeware.emitron.ios_appstore_profile-name)";
+				SUPPORTED_PLATFORMS = "iphoneos iphonesimulator";
+				SUPPORTS_MACCATALYST = NO;
+				SUPPORTS_MAC_DESIGNED_FOR_IPHONE_IPAD = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
