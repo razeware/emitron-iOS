@@ -73,11 +73,6 @@ struct App {
 
     // additional setup
     setupAppReview()
-    
-    // Reset app icon in case an alternate was used.
-    // Note: I think this can be removed in future. It is here to ensure that
-    //       existing installs revert to the new Kodeco icon.
-    UIApplication.shared.setAlternateIconName(nil)
   }
 }
 
