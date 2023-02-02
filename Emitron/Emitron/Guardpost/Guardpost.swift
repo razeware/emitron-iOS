@@ -68,7 +68,7 @@ public extension Guardpost {
   }
 
   /// - Throws: `LoginError`
-  func logIn() async throws -> User {
+  @MainActor func logIn() async throws -> User {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
     let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(
