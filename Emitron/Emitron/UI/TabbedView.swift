@@ -3,7 +3,7 @@
 //  Emitron
 //
 //  Created by Lea Marolt Sonnenschein on 6/29/19.
-//  Copyright © 2019 Razeware. All rights reserved.
+//  Copyright © 2019 Kodeco Inc. All rights reserved.
 //
 
 import SwiftUI
