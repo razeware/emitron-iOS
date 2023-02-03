@@ -60,7 +60,9 @@ extension ContentListView: View {
       .onAppear {
         tabViewModel.showingDetailView[mainTab] = false
         UIApplication.dismissKeyboard()
-        reloadIfRequired()
+        if contentRepository.state == .dirty {
+          contentRepository.reload()
+        }
       }
   }
 }
@@ -76,7 +78,7 @@ private extension ContentListView {
         loadingView
       case .hasData where contentRepository.isEmpty:
         noResultsView
-      case .hasData, .loadingAdditional:
+      case .hasData, .loadingAdditional, .dirty:
         listView
       case .failed:
         reloadView

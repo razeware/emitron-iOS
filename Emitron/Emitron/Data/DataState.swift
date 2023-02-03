@@ -33,4 +33,5 @@ enum DataState {
   case loadingAdditional
   case hasData
   case failed
+  case dirty
 }

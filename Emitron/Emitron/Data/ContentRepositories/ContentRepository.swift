@@ -51,7 +51,7 @@ class ContentRepository: ObservableObject, ContentPaginatable {
 
   private(set) var currentPage = 1
 
-  @Published var state: DataState = .initial
+  var state: DataState = .initial
 
   private(set) var totalContentNum = 0
 
@@ -193,7 +193,7 @@ private extension ContentRepository {
           guard let self = self else { return }
 
           // If we're invalidating the cache then we need to set this to initial status again
-          self.state = .initial
+          self.state = .dirty
           // We're not gonna broadcast this change. If you do it'll wreak havoc with the content
           // list and nav view—where the nav link for the currently displayed detail view disappears
           // from underneath us. Instead we check the state of this repo each time the content

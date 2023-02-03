@@ -55,7 +55,7 @@ private extension ChildContentListingView {
     switch childContentsViewModel.state {
     case .failed:
       reloadView
-    case .hasData:
+    case .hasData, .dirty:
       coursesSection
     case .loading, .loadingAdditional, .initial:
       loadingView
