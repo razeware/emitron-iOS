@@ -118,7 +118,6 @@ private extension ContentListView {
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
-    .padding([.horizontal], .sidePadding)
     .padding([.top], .topPadding)
     .background(Color.background)
   }
@@ -166,7 +165,7 @@ private extension ContentListView {
         Spacer()
         LoadingView()
         Spacer()
-      }
+      }.padding(.horizontal)
     }
   }
 
