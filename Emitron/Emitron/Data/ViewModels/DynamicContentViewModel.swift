@@ -155,6 +155,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentID)
+        messageBus.post(message: Message(level: .success, message: .bookmarkDeleted))
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
@@ -164,6 +166,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentID)
+        messageBus.post(message: Message(level: .success, message: .bookmarkCreated))
         UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))
