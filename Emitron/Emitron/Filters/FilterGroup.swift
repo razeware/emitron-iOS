@@ -66,7 +66,6 @@ struct FilterGroup: Hashable {
 enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case platforms = "Platforms"
   case categories = "Categories"
-  case subscriptionPlans = "Membership Level"
   case contentTypes = "Content Type"
   case difficulties = "Difficulty"
   case search = "Search"
@@ -76,7 +75,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   
   var allowsMultipleValues: Bool {
     switch self {
-    case .subscriptionPlans, .search, .none:
+    case .search, .none:
       return false
     default:
       return true

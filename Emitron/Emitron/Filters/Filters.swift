@@ -41,7 +41,6 @@ class Filters: ObservableObject {
       categories.filters = sortedFilters[.categories] ?? []
       contentTypes.filters = sortedFilters[.contentTypes] ?? []
       difficulties.filters = sortedFilters[.difficulties] ?? []
-      subscriptionPlans.filters = sortedFilters[.subscriptionPlans] ?? []
     }
   }
   
@@ -49,7 +48,6 @@ class Filters: ObservableObject {
   var filterGroups: [FilterGroup] {
     [
       platforms,
-      subscriptionPlans,
       contentTypes,
       difficulties,
       categories
@@ -109,7 +107,6 @@ class Filters: ObservableObject {
   private(set) var categories: FilterGroup
   private(set) var contentTypes: FilterGroup
   private(set) var difficulties: FilterGroup
-  private(set) var subscriptionPlans: FilterGroup
   private(set) var searchFilter: Filter?
   private var settingsManager: SettingsManager
   
@@ -142,11 +139,6 @@ class Filters: ObservableObject {
       .map { Filter(groupType: .difficulties, param: $0, isOn: false) }
     difficulties = FilterGroup(type: .difficulties, filters: difficultyFilters)
     
-    let subscriptionPlanFilters = Param
-      .filters(for: [.subscriptionPlans(plans: [.beginner, .professional])])
-      .map { Filter(groupType: .subscriptionPlans, param: $0, isOn: false) }
-    subscriptionPlans = FilterGroup(type: .subscriptionPlans, filters: subscriptionPlanFilters)
-    
     // Check if there are filters in the settings manager
     let savedFilters = settingsManager.filters
     if !savedFilters.isEmpty {
@@ -155,7 +147,6 @@ class Filters: ObservableObject {
       categories.updateFilters(from: savedFilters)
       contentTypes.updateFilters(from: savedFilters)
       difficulties.updateFilters(from: savedFilters)
-      subscriptionPlans.updateFilters(from: savedFilters)
     }
     
     let freshFilters =
@@ -163,7 +154,6 @@ class Filters: ObservableObject {
         .union(contentTypes.filters)
         .union(difficulties.filters)
         .union(categories.filters)
-        .union(subscriptionPlans.filters)
     all = freshFilters
     
     // Load the sort from the settings manager
