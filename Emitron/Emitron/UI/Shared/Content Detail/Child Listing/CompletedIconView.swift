@@ -34,7 +34,7 @@ struct CompletedIconView: View {
     ZStack(alignment: .center) {
       Rectangle()
         .frame(width: .childContentButtonSide, height: .childContentButtonSide)
-        .foregroundColor(.accent)
+        .foregroundColor(.accentTagBackground)
         .cornerRadius(6)
       
       Image.checkmark
