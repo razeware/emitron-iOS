@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +31,7 @@ extension ProgressionsService: ContentServiceAdapter {
   func findContent(parameters: [Parameter]) async throws -> ContentServiceAdapterResponse {
     let response = try await progressions(parameters: parameters)
     return (
-      contentIDs: response.progressions.map(\.id),
+      contentIDs: response.progressions.map(\.contentID),
       cacheUpdate: response.cacheUpdate,
       totalResultCount: response.totalNumber
     )

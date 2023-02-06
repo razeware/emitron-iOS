@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -44,7 +45,6 @@ struct LibraryView: View {
 
   var body: some View {
     contentView
-      .navigationTitle(Text(String.library))
       .sheet(isPresented: $filtersPresented) {
         FiltersView(libraryRepository: libraryRepository, filters: filters)
           .background(Color.background.edgesIgnoringSafeArea(.all))

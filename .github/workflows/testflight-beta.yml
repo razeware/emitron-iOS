@@ -10,8 +10,8 @@ jobs:
     runs-on: macos-12
     steps:
     - uses: actions/checkout@v1
-    - name: Switch to Xcode 13.3.1
-      run: sudo xcode-select -s /Applications/Xcode_13.3.1.app
+    - name: Switch to Xcode 14.2
+      run: sudo xcode-select -s /Applications/Xcode_14.2.app
     - name: Update fastlane
       run: |
         cd Emitron
@@ -35,7 +35,6 @@ jobs:
         APP_STORE_CONNECT_API_KEY_KEY_ID: ${{ secrets.APP_STORE_CONNECT_API_KEY_KEY_ID }}
         FASTLANE_XCODEBUILD_SETTINGS_TIMEOUT: 5
         FASTLANE_XCODEBUILD_SETTINGS_RETRIES: 5
-        ITMSTRANSPORTER_FORCE_ITMS_PACKAGE_UPLOAD: true
       run: |
         cd Emitron
         bundle exec fastlane -v

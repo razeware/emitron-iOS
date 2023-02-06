@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -31,10 +32,9 @@ import SwiftUI
 struct OfflineView: View {
   var body: some View {
     VStack {
-      Image("emojiCrying")
-        .padding([.bottom], 30)
+      Spacer()
       
-      Text("No Connection")
+      Text("No connection")
         .font(.uiTitle2)
         .foregroundColor(.titleText)
         .multilineTextAlignment(.center)
@@ -46,6 +46,8 @@ struct OfflineView: View {
         .foregroundColor(.contentText)
         .multilineTextAlignment(.center)
         .padding(.horizontal, 20)
+
+      Spacer()
     }
     .frame(maxWidth: .infinity, maxHeight: .infinity)
     .background(Color.background)

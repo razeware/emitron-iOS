@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -73,9 +74,6 @@ extension ErrorView: View {
       VStack {
         header
         Spacer()
-
-        Image("Error")
-          .padding(.bottom, 30)
 
         Text(titleText)
           .font(.uiTitle2)

@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -32,6 +33,7 @@ import GRDB
 
 @main
 struct App {
+  // swiftlint:disable:next large_tuple
   typealias Objects = (
     persistenceStore: PersistenceStore,
     guardpost: Guardpost,
@@ -50,7 +52,6 @@ struct App {
   private var downloadService: DownloadService
   private var settingsManager: SettingsManager
   private var messageBus: MessageBus
-  private var iconManager: IconManager
   
   init() {
     // setup objects
@@ -62,7 +63,6 @@ struct App {
     downloadService = emitronObjects.downloadService
     settingsManager = emitronObjects.settingsManager
     messageBus = emitronObjects.messageBus
-    iconManager = IconManager(messageBus: messageBus)
 
     // start service
     appDelegate.downloadService = downloadService
@@ -87,10 +87,10 @@ extension App: SwiftUI.App {
           .fill(Color.background)
           .edgesIgnoringSafeArea(.all)
         MainView()
+          .preferredColorScheme(.dark) // Dark mode only for Kodeco
           .environmentObject(sessionController)
           .environmentObject(dataManager)
           .environmentObject(downloadService)
-          .environmentObject(iconManager)
           .environmentObject(messageBus)
           .environmentObject(persistenceStore)
           .environmentObject(guardpost)

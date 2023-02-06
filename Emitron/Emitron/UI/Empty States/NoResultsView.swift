@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -55,9 +56,6 @@ extension NoResultsView: View {
 
         Spacer()
 
-        Image(contentScreen.emptyImageName)
-          .padding([.bottom], 30)
-
         Text(contentScreen.titleMessage)
           .font(.uiTitle2)
           .foregroundColor(.titleText)
@@ -78,7 +76,7 @@ extension NoResultsView: View {
         if contentScreen.showExploreButton {
           MainButtonView(
             title: "Explore Tutorials",
-            type: .primary(withArrow: true)
+            type: .primary(withArrow: false)
           ) {
             tabViewModel.selectedTab = .library
           }

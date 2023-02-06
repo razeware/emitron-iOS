@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -57,21 +58,6 @@ struct SettingsView: View {
         canDownload: sessionController.user?.canDownload ?? false
       ).padding(.horizontal, 20)
       
-      Section(
-        header: HStack {
-          Text("App Icon")
-            .font(.uiTitle4)
-            .foregroundColor(.titleText)
-          
-          Spacer()
-        }
-          .padding(.top, 20)
-      ) {
-        IconChooserView()
-          .padding(.top, 10)
-      }
-      .padding(.horizontal, 20)
-      
       Spacer()
       
       Button {
@@ -90,7 +76,7 @@ struct SettingsView: View {
             .font(.uiCaption)
             .foregroundColor(.contentText)
         }
-        MainButtonView(title: "Sign Out", type: .destructive(withArrow: true)) {
+        MainButtonView(title: "Sign Out", type: .destructive(withArrow: false)) {
           showingSignOutConfirmation = true
         }
         .confirmationDialog(

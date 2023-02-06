@@ -11,7 +11,6 @@ opt_in_rules:
   - empty_count
   - empty_xctest_method
   - explicit_init
-  - explicit_self
   - extension_access_modifier
   - empty_string
   - fallthrough
@@ -48,7 +47,6 @@ opt_in_rules:
   - toggle_bool
   - unneeded_parentheses_in_closure_argument
   - untyped_error_in_catch
-  - unused_import
   - vertical_parameter_alignment_on_call
   - vertical_whitespace_closing_braces
   - xct_specific_matcher
@@ -62,6 +60,10 @@ disabled_rules: # rule identifiers to exclude from running
   - todo
   - trailing_whitespace
   - xctfail_message
+
+analyzer_rules: # only run with the analyze command
+  - explicit_self
+  - unused_import
 
 excluded: # paths to ignore during linting. overridden by `included`
   - Carthage

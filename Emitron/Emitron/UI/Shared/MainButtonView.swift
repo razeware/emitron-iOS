@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -106,7 +107,8 @@ struct MainButtonView: View {
           .frame(height: height)
           .background(
             RoundedRectangle(cornerRadius: 9)
-              .fill(type.color)
+              .stroke(Color.white, lineWidth: 1)
+              // Kodeco Reskin skips .fill(type.color)
           )
           .onPreferenceChange(SizeKey.self) { size in
             height = size?.height

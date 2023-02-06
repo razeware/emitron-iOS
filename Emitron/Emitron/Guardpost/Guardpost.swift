@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -67,7 +68,7 @@ public extension Guardpost {
   }
 
   /// - Throws: `LoginError`
-  func logIn() async throws -> User {
+  @MainActor func logIn() async throws -> User {
     let guardpostLogin = "\(baseURL)/v2/sso/login"
     let returnURL = "\(urlScheme)://sessions/create"
     let ssoRequest = SingleSignOnRequest(

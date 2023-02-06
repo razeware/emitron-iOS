@@ -10,53 +10,6 @@
 	<string>$(EXECUTABLE_NAME)</string>
 	<key>CFBundleIcons</key>
 	<dict>
-		<key>CFBundleAlternateIcons</key>
-		<dict>
-			<key>black-multi</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--black-multi</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>3</integer>
-			</dict>
-			<key>black-white</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--black-white</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>2</integer>
-			</dict>
-			<key>multi-black</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--multi-black</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>4</integer>
-			</dict>
-			<key>white-black</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--white-black</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>1</integer>
-			</dict>
-		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
 			<key>CFBundleIconFiles</key>
@@ -69,57 +22,6 @@
 	</dict>
 	<key>CFBundleIcons~ipad</key>
 	<dict>
-		<key>CFBundleAlternateIcons</key>
-		<dict>
-			<key>black-multi</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--black-multi-ipadpro</string>
-					<string>app-icon--black-multi-ipad</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>3</integer>
-			</dict>
-			<key>black-white</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--black-white-ipadpro</string>
-					<string>app-icon--black-white-ipad</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>2</integer>
-			</dict>
-			<key>multi-black</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--multi-black-ipadpro</string>
-					<string>app-icon--multi-black-ipad</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>4</integer>
-			</dict>
-			<key>white-black</key>
-			<dict>
-				<key>CFBundleIconFiles</key>
-				<array>
-					<string>app-icon--white-black-ipadpro</string>
-					<string>app-icon--white-black-ipad</string>
-				</array>
-				<key>UIPrerenderedIcon</key>
-				<false/>
-				<key>ordinal</key>
-				<integer>1</integer>
-			</dict>
-		</dict>
 		<key>CFBundlePrimaryIcon</key>
 		<dict>
 			<key>CFBundleIconFiles</key>
@@ -162,9 +64,8 @@
 	<string>$(SSO_SECRET)</string>
 	<key>UIAppFonts</key>
 	<array>
-		<string>Bitter-Bold.ttf</string>
-		<string>Bitter-Regular.ttf</string>
-		<string>Bitter-Italic.ttf</string>
+		<string>Relative-Medium.ttf</string>
+		<string>Relative-Bold.ttf</string>
 	</array>
 	<key>UIApplicationSceneManifest</key>
 	<dict>

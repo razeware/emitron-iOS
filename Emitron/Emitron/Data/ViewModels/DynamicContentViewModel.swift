@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -154,6 +155,8 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     if bookmarked {
       do {
         try syncAction.deleteBookmark(for: contentID)
+        messageBus.post(message: Message(level: .success, message: .bookmarkDeleted))
+        UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkDeletedError))
         Failure
@@ -163,6 +166,7 @@ final class DynamicContentViewModel: ObservableObject, DynamicContentDisplayable
     } else {
       do {
         try syncAction.createBookmark(for: contentID)
+        messageBus.post(message: Message(level: .success, message: .bookmarkCreated))
         UINotificationFeedbackGenerator().notificationOccurred(.success)
       } catch {
         messageBus.post(message: Message(level: .error, message: .bookmarkCreatedError))

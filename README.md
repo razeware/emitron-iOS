@@ -8,7 +8,7 @@ To contribute a __feature__ or __idea__ to emitron, create an issue explaining y
 
 If you find a __bug__, please create an issue.
 
-If you find a __security vulnerability__, please contact emitron@razeware.com as soon as possible. See [SECURITY.md](SECURITY.md) for further details.
+If you find a __security vulnerability__, please contact emitron@kodeco.com as soon as possible. See [SECURITY.md](SECURITY.md) for further details.
 
 There is more info about contributing in [CONTRIBUTING.md](CONTRIBUTING.md).
 
@@ -36,9 +36,9 @@ $ scripts/generate_secrets.sh
 
 This will make the required copies of the template file, which includes an SSO secret appropriate for open-source development.
 
-> __NOTE:__ To get the release build secrets, check the emitron S3 bucket, or contact emitron@razeware.com. Developers should never need these, as CI will handle it.
+> __NOTE:__ To get the release build secrets, check the emitron S3 bucket, or contact emitron@kodeco.com. Developers should never need these, as CI will handle it.
 
-If you are working on the download functionality and are having problems without an `APP_TOKEN`, contact emitron@razeware.com and somebody will assist you with your specific needs.
+If you are working on the download functionality and are having problems without an `APP_TOKEN`, contact emitron@kodeco.com and somebody will assist you with your specific needs.
 
 #### Details
 

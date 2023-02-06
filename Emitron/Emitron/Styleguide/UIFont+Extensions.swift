@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -30,9 +31,9 @@ import UIKit
 
 extension UIFont {
   static var uiLargeTitle: UIFont {
-    .init(name: "Bitter-Bold", size: 34.0)!
+    .init(name: "Relative Pro Bold", size: 34.0)!
   }
   static var uiHeadline: UIFont {
-    .init(name: "Bitter-Regular", size: 17.0)!
+    .init(name: "Relative Pro Medium", size: 17.0)!
   }
 }

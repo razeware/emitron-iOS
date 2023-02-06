@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -64,9 +65,13 @@ struct FiltersHeaderView: View {
         .padding([.trailing, .leading], Layout.Padding.textTrailing)
         .background(Color.filterHeaderBackground)
         .cornerRadius(Layout.cornerRadius)
+        .overlay(
+          RoundedRectangle(cornerRadius: Layout.cornerRadius)
+            .stroke(Color.borderColor, lineWidth: 1)
+        )
       }
       .accessibility(label: Text(filterGroup.type.name))
-        
+
       if isExpanded {
         expandedView
       }
@@ -91,7 +96,7 @@ struct FiltersHeaderView: View {
           filter.isOn.toggle()
           filters.update(with: filter)
         })
-          .padding(.horizontal, 14)
+        .padding(.horizontal, 14)
       }
     }
   }

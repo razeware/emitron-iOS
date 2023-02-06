@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -48,7 +49,7 @@ extension String {
   static let myTutorials = "My Tutorials"
   static let newest = "Newest"
   static let popularity = "Popularity"
-  static let resetFilters = "Reset Filters"
+  static let resetFilters = "Clear all"
   static let search = "Search…"
   static let settings = "Settings"
   static let tutorials = "Tutorials"

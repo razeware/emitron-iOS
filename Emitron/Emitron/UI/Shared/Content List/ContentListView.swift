@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -59,7 +60,9 @@ extension ContentListView: View {
       .onAppear {
         tabViewModel.showingDetailView[mainTab] = false
         UIApplication.dismissKeyboard()
-        reloadIfRequired()
+        if contentRepository.state == .dirty {
+          contentRepository.reload()
+        }
       }
   }
 }
@@ -75,7 +78,7 @@ private extension ContentListView {
         loadingView
       case .hasData where contentRepository.isEmpty:
         noResultsView
-      case .hasData, .loadingAdditional:
+      case .hasData, .loadingAdditional, .dirty:
         listView
       case .failed:
         reloadView
@@ -111,12 +114,11 @@ private extension ContentListView {
           // instead of the CardView, in order to hide navigation chevrons on the right.
           label: EmptyView.init
         )
-          .opacity(0)
+        .opacity(0)
       }
     }
     .if(allowDelete) { $0.onDelete(perform: delete) }
-    .listRowInsets(.init())
-    .padding([.horizontal, .top], .sidePadding)
+    .padding([.top], .topPadding)
     .background(Color.background)
   }
   
@@ -133,12 +135,13 @@ private extension ContentListView {
     List {
       Section(
         header: header
-          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false)) 
+          .id(TabViewModel.ScrollToTopID(mainTab: mainTab, detail: false))
       ) {
         cardsView
         loadMoreView
       }
       .listRowInsets(.init())
+      .listRowSeparator(.hidden)
       .textCase(nil)
     }
     .if(!allowDelete) {
@@ -149,6 +152,8 @@ private extension ContentListView {
       )
     }
     .accessibility(identifier: "contentListView")
+    .scrollContentBackground(.hidden)
+    .background(Color.background)
   }
 
   var loadingView: some View {
@@ -160,10 +165,10 @@ private extension ContentListView {
         Spacer()
         LoadingView()
         Spacer()
-      }
+      }.padding(.horizontal)
     }
   }
-  
+
   var noResultsView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
@@ -174,14 +179,14 @@ private extension ContentListView {
       )
     }
   }
-  
+
   var reloadView: some View {
     ZStack {
       Color.background.edgesIgnoringSafeArea(.all)
       ErrorView(header: header, buttonAction: contentRepository.reload)
     }
   }
-  
+
   @ViewBuilder var loadMoreView: some View {
     if contentRepository.totalContentNum > contentRepository.contents.count {
       HStack {

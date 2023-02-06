@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -65,7 +66,6 @@ struct FilterGroup: Hashable {
 enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   case platforms = "Platforms"
   case categories = "Categories"
-  case subscriptionPlans = "Membership Level"
   case contentTypes = "Content Type"
   case difficulties = "Difficulty"
   case search = "Search"
@@ -75,7 +75,7 @@ enum FilterGroupType: String, Hashable, CaseIterable, Codable {
   
   var allowsMultipleValues: Bool {
     switch self {
-    case .subscriptionPlans, .search, .none:
+    case .search, .none:
       return false
     default:
       return true

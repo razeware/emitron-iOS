@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -102,7 +103,7 @@ extension DataCache {
 }
 
 /// A type with a `contentID` property.
-private protocol contentID {
+private protocol contentID { // swiftlint:disable:this type_name
   var contentID: Int { get }
 }
 

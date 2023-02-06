@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -91,7 +92,11 @@ struct CardView: View {
       progressBar
     }
     .background(Color.cardBackground)
-    .cornerRadius(6)
+    .cornerRadius(7)
+    .overlay(
+      RoundedRectangle(cornerRadius: 6)
+        .stroke(Color.borderColor, lineWidth: 1)
+    )
     .onAppear {
       dynamicContentViewModel.initialiseIfRequired()
     }
@@ -111,7 +116,7 @@ struct CardView: View {
 
     return .init(progress: progress, isRounded: true, backgroundColor: .clear)
   }
-  
+
   @ViewBuilder private var completedTagOrReleasedAt: some View {
     if case .completed = dynamicContentViewModel.viewProgress {
       CompletedTag()
@@ -122,7 +127,7 @@ struct CardView: View {
         .foregroundColor(.contentText)
     }
   }
-  
+
   @ViewBuilder private var bookmarkButton: some View {
     if dynamicContentViewModel.bookmarked {
       Image.bookmark

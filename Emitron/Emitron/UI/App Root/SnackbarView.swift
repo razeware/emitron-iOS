@@ -1,4 +1,5 @@
-// Copyright (c) 2022 Razeware LLC
+// Copyright (c) 2022 Kodeco Inc
+
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -76,8 +77,11 @@ struct SnackbarView: View {
       }
       .foregroundColor(.snackText)
     }
-    .padding()
+    .padding(.vertical, 17.0)
+    .padding(.horizontal, 24.0)
     .background(state.status.color)
+    .overlay(Rectangle().frame(width: nil, height: 1, alignment: .top).foregroundColor(Color.white), alignment: .top)
+    .overlay(Rectangle().frame(width: nil, height: 1, alignment: .bottom).foregroundColor(Color.white), alignment: .bottom)
   }
 }
 
