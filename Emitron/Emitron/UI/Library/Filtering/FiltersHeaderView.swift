@@ -1,5 +1,4 @@
 // Copyright (c) 2022 Kodeco Inc
-
 //
 // Permission is hereby granted, free of charge, to any person obtaining a copy
 // of this software and associated documentation files (the "Software"), to deal
@@ -68,6 +67,7 @@ struct FiltersHeaderView: View {
         .overlay(
           RoundedRectangle(cornerRadius: Layout.cornerRadius)
             .stroke(Color.borderColor, lineWidth: 1)
+            .padding(1)
         )
       }
       .accessibility(label: Text(filterGroup.type.name))
