@@ -1,5 +1,7 @@
 # emitron (iOS)
 
+**TEMPORARY BRANCH**
+
 __emitron__ is the code name for the kodeco.com app. This repo contains the code for the iOS version of the app.
 
 ## Contributing
