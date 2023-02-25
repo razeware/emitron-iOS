@@ -152,7 +152,7 @@ private extension ContentListView {
       )
     }
     .accessibility(identifier: "contentListView")
-    .scrollContentBackground(.hidden)
+    // .scrollContentBackground(.hidden)
     .background(Color.background)
   }
 
