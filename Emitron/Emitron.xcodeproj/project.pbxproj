@@ -1647,7 +1647,7 @@
 			attributes = {
 				LastSwiftUpdateCheck = 1130;
 				LastUpgradeCheck = 1200;
-				ORGANIZATIONNAME = Razeware;
+				ORGANIZATIONNAME = "Kodeco Inc";
 				TargetAttributes = {
 					225670A6240AFD3100BD05AE = {
 						CreatedOnToolsVersion = 11.3.1;
@@ -2561,7 +2561,7 @@
 			repositoryURL = "https://github.com/groue/GRDB.swift.git";
 			requirement = {
 				kind = upToNextMajorVersion;
-				minimumVersion = 5.0.0;
+				minimumVersion = 5.26.1;
 			};
 		};
 /* End XCRemoteSwiftPackageReference section */
