@@ -68,6 +68,7 @@ struct FiltersHeaderView: View {
         .overlay(
           RoundedRectangle(cornerRadius: Layout.cornerRadius)
             .stroke(Color.borderColor, lineWidth: 1)
+            .padding(1)
         )
       }
       .accessibility(label: Text(filterGroup.type.name))
