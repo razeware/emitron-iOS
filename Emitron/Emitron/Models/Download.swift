@@ -54,7 +54,7 @@ struct Download: Codable {
   var ordinal: Int = 0 // We copy this from the Content, and it is used to sort the queue
   
   var localURL: URL? {
-    fileName.map(URL.downloadsDirectory.appendingPathComponent)
+    fileName.map(URL.userDownloadsDirectory.appendingPathComponent)
   }
 }
 
