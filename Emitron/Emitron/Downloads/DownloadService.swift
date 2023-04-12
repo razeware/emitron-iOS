@@ -380,15 +380,15 @@ extension DownloadService {
   private func prepareDownloadDirectory() {
     let fileManager = FileManager.default
     do {
-      if !fileManager.fileExists(atPath: URL.downloadsDirectory.path) {
-        try fileManager.createDirectory(at: .downloadsDirectory, withIntermediateDirectories: false)
+      if !fileManager.fileExists(atPath: URL.userDownloadsDirectory.path) {
+        try fileManager.createDirectory(at: .userDownloadsDirectory, withIntermediateDirectories: false)
       }
       var values = URLResourceValues()
       values.isExcludedFromBackup = true
-      var downloadsDirectory = URL.downloadsDirectory
+      var downloadsDirectory = URL.userDownloadsDirectory
       try downloadsDirectory.setResourceValues(values)
       #if DEBUG
-        print("Download directory located at: \(URL.downloadsDirectory.path)")
+        print("Download directory located at: \(URL.userDownloadsDirectory.path)")
       #endif
     } catch {
       preconditionFailure("Unable to prepare downloads directory: \(error)")
@@ -397,7 +397,7 @@ extension DownloadService {
   
   private func deleteExistingDownloads() {
     do {
-      try FileManager.removeExistingFile(at: .downloadsDirectory)
+      try FileManager.removeExistingFile(at: .userDownloadsDirectory)
       prepareDownloadDirectory()
     } catch {
       preconditionFailure("Unable to delete the contents of the downloads directory: \(error)")

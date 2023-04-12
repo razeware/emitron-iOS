@@ -61,7 +61,7 @@ class DownloadServiceTest: XCTestCase, DatabaseTestCase {
     try super.tearDownWithError()
     videoService.reset()
     try FileManager.removeExistingFile(
-      at: .downloadsDirectory.appendingPathComponent("sample_file")
+      at: .userDownloadsDirectory.appendingPathComponent("sample_file")
     )
     App.objects.settingsManager.resetAll()
   }
@@ -336,7 +336,7 @@ class DownloadServiceTest: XCTestCase, DatabaseTestCase {
   //: Download directory
   func testCreatesDownloadDirectory() throws {
     XCTAssert(
-      try URL.downloadsDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true
+      try URL.userDownloadsDirectory.resourceValues(forKeys: [.isExcludedFromBackupKey]).isExcludedFromBackup == true
     )
   }
   
@@ -576,7 +576,7 @@ private extension DownloadServiceTest {
   }
 
   var sampleFileURL: URL {
-    .downloadsDirectory.appendingPathComponent("sample_file")
+    .userDownloadsDirectory.appendingPathComponent("sample_file")
   }
 
   var sampleFileExists: Bool {

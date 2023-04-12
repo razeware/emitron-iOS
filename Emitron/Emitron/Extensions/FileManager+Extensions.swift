@@ -49,7 +49,7 @@ public extension FileManager {
 
 // MARK: - Emitron
 extension URL {
-  static var downloadsDirectory: URL {
+  static var userDownloadsDirectory: URL {
     FileManager.userDocumentsDirectory.appendingPathComponent("downloads", isDirectory: true)
   }
 }
