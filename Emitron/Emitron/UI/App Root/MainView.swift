@@ -35,6 +35,9 @@ struct MainView: View {
   @EnvironmentObject private var dataManager: DataManager
   @EnvironmentObject private var messageBus: MessageBus
   @EnvironmentObject private var settingsManager: SettingsManager
+  
+  // A bit of a hack variable to ensure we can refresh when we want to
+  @State private var refresh = false
 
   private let tabViewModel = TabViewModel()
   private let notification = NotificationCenter.default.publisher(for: .requestReview)
@@ -50,6 +53,15 @@ struct MainView: View {
             makeReviewRequest()
           }
         }
+        .onReceive(sessionController.$permissionState) { state in
+          Task {
+            // This is a bit of a hack. It forces reloading this view, even though
+            // it shouldn't be necessary. However, it appears to maybe work?
+            try await Task.sleep(nanoseconds: 2_000_000_000)
+            print(":::STATE:::: \(state)")
+            refresh.toggle()
+          }
+        }
     }
   }
 }
@@ -59,7 +71,11 @@ private extension MainView {
   @ViewBuilder var contentView: some View {
     if !sessionController.isLoggedIn {
       LoginView()
-    } else {
+      // This conditional is a mess. But it forces this view to be reliant on
+      // the refresh state var, which is triggered whenever the permission state
+      // changes. This is necesary because, sometimes, this view doesn't update
+      // when permission state changes. And I don't know why.
+    } else if refresh || !refresh {
       switch sessionController.permissionState {
       case .loaded:
         tabBarView

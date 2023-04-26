@@ -130,7 +130,7 @@ struct Event {
   ) -> Self {
     .init(
       source: "\(Source.self)",
-      action: "Login"
+      action: "Refresh"
     )
   }
 
