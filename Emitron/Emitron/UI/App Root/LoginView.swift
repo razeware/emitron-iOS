@@ -34,27 +34,30 @@ struct LoginView: View {
   
   var body: some View {
     GeometryReader { proxy in
-      VStack {
-        
+      HStack {
         Spacer()
-
-        Image("logo")
-          .resizable()
-          .scaledToFit()
-          .padding([.top], proxy.safeAreaInsets.top)
-          .padding(.horizontal, 92)
-
+        VStack {
+          
+          Spacer()
+          
+          Image("logo")
+            .resizable()
+            .scaledToFit()
+            .padding([.top], proxy.safeAreaInsets.top)
+            .padding(.horizontal, 92)
+          
+          Spacer()
+          
+          MainButtonView(title: "Sign In", type: .primary(withArrow: false)) {
+            Task(priority: .userInitiated) { try await sessionController.logIn() }
+          }
+          .padding(.horizontal, 18)
+          .padding([.bottom], 38)
+        }.frame(maxWidth: 400)
         Spacer()
-        
-        MainButtonView(title: "Sign In", type: .primary(withArrow: false)) {
-          Task(priority: .userInitiated) { try await sessionController.logIn() }
-        }
-        .padding(.horizontal, 18)
-        .padding([.bottom], 38)
       }
-      .background(Color.background)
       .edgesIgnoringSafeArea([.all])
-    }
+    }.background(Color.background)
   }
 }
 
