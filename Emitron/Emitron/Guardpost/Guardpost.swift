@@ -113,9 +113,7 @@ public extension Guardpost {
 
       // This will prevent sharing cookies with Safari, which means no auto-login
       // However, it also means that you can actually log out, which is good, I guess.
-      #if (!DEBUG)
       authSession.prefersEphemeralWebBrowserSession = true
-      #endif
 
       authSession.start()
     }

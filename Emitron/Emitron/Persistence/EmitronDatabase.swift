@@ -29,6 +29,7 @@
 
 import GRDB
 
+// We use `t` as a variable name rather a lot
 // swiftlint:disable identifier_name
 
 /// A type responsible for initialising the application's database
@@ -170,3 +171,6 @@ enum EmitronDatabase {
     return migrator
   }
 }
+
+// Stop swiftlint complaining
+// swiftlint:enable identifier_name
