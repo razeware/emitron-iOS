@@ -70,18 +70,6 @@ extension Color {
     .init("tagForeground")
   }
   
-  static var proTagBackground: Color {
-    .init("proTagBackground")
-  }
-  
-  static var proTagForeground: Color {
-    .init("proTagForeground")
-  }
-  
-  static var proTagBorder: Color {
-    .init("proTagBorder")
-  }
-  
   static var filterTagBackground: Color {
     .init("filterTagBackground")
   }
