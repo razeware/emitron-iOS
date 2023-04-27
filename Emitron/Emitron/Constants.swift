@@ -55,7 +55,7 @@ extension String {
   static let tutorials = "Tutorials"
 
   // MARK: Detail View
-  static let detailContentLockedCosPro = "Upgrade your account to watch this and other Pro courses"
+  static let detailContentLockedCosPro = "Upgrade your account to watch this and other locked courses"
 
   // MARK: Messaging
   static let bookmarkCreated = "Content bookmarked successfully."

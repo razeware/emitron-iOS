@@ -90,6 +90,14 @@ private extension User {
   }
 
   func can(_ tag: Permission.Tag) -> Bool {
-    permissions?.lazy.map(\.tag).contains(tag) == true
+    // This is a hack, and relies on the fact that personal and team subs can
+    // pretty much stream all pro content. In future we need to add permissions
+    // to the contents API, and then do a comparison between content permissions
+    // and user permissions.
+    if tag == .streamPro {
+      let tags = Set<Permission.Tag>([.streamPersonal, .streamTeam, .streamPro])
+      return !tags.isDisjoint(with: permissions?.lazy.map(\.tag) ?? [])
+    }
+    return permissions?.lazy.map(\.tag).contains(tag) == true
   }
 }
