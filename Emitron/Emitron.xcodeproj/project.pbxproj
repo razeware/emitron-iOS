@@ -213,7 +213,6 @@
 		495E2B1A27F4FE8C003EEE86 /* Optional+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */; };
 		49971FEA27B297DA00FBCCEA /* TabView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 49971FE927B297DA00FBCCEA /* TabView.swift */; };
 		8B283DEF23169A1F001F1B17 /* ProgressBarView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */; };
-		8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DC2357A65F0083DA38 /* ProTag.swift */; };
 		8B7E96DF2357A66A0083DA38 /* CompletedTag.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */; };
 		8BFC74BC23648DF3001979F1 /* ContentPaginatable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74BB23648DF3001979F1 /* ContentPaginatable.swift */; };
 		8BFC74C32364A9BE001979F1 /* ContentScreen.swift in Sources */ = {isa = PBXBuildFile; fileRef = 8BFC74C22364A9BE001979F1 /* ContentScreen.swift */; };
@@ -514,7 +513,6 @@
 		495E2B1927F4FE8C003EEE86 /* Optional+Extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+Extensions.swift"; sourceTree = "<group>"; };
 		49971FE927B297DA00FBCCEA /* TabView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TabView.swift; sourceTree = "<group>"; };
 		8B283DEE23169A1E001F1B17 /* ProgressBarView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ProgressBarView.swift; sourceTree = "<group>"; };
-		8B7E96DC2357A65F0083DA38 /* ProTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProTag.swift; sourceTree = "<group>"; };
 		8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CompletedTag.swift; sourceTree = "<group>"; };
 		8BFC74BB23648DF3001979F1 /* ContentPaginatable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentPaginatable.swift; sourceTree = "<group>"; };
 		8BFC74C22364A9BE001979F1 /* ContentScreen.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContentScreen.swift; sourceTree = "<group>"; };
@@ -1051,7 +1049,6 @@
 			children = (
 				22C6410723FA903F00CBFDE5 /* TagView.swift */,
 				8B7E96DE2357A66A0083DA38 /* CompletedTag.swift */,
-				8B7E96DC2357A65F0083DA38 /* ProTag.swift */,
 			);
 			path = Tags;
 			sourceTree = "<group>";
@@ -1941,7 +1938,6 @@
 				222EEF7B23CDC24500B025A4 /* VideoPlaybackViewModel.swift in Sources */,
 				223D77AB23B0C099005BE95D /* Download.swift in Sources */,
 				22C0514023A4FBCC004D1223 /* Group+Persistence.swift in Sources */,
-				8B7E96DD2357A65F0083DA38 /* ProTag.swift in Sources */,
 				2278AE4A240A565C00855221 /* Icon.swift in Sources */,
 				22DC505B2403EA0600A6E808 /* DownloadWarningView.swift in Sources */,
 				22E2268023CA2D7F00A83601 /* Group+GroupDisplayable.swift in Sources */,

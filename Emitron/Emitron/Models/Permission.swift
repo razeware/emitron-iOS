@@ -29,10 +29,12 @@
 
 import struct Foundation.Date
 
-struct Permission: Equatable, Codable {
+struct Permission: Equatable, Codable, Hashable {
   enum Tag: Int, Codable {
     case streamBeginner
     case streamPro
+    case streamTeam
+    case streamPersonal
     case download
     
     init?(from string: String) {
@@ -43,6 +45,10 @@ struct Permission: Equatable, Codable {
         self = .streamPro
       case "download-videos":
         self = .download
+      case "stream-personal-videos":
+        self = .streamPersonal
+      case "stream-team-videos":
+        self = .streamTeam
       default:
         return nil
       }

@@ -71,8 +71,7 @@ extension DataCache {
     cacheUpdate.progressions.forEach { progressions[$0.contentID] = $0 }
     cacheUpdate.groups.forEach { groupIndexedGroups[$0.id] = $0 }
 
-    // swiftlint:disable generic_type_name
-    func mergeWithCacheUpdate<contentID: Emitron.contentID>(
+    func mergeWithCacheUpdate<contentID: Emitron.contentID>( // swiftlint:disable:this generic_type_name
       _ dictionary: inout [Int: [contentID]],
       _ getContentID: (DataCacheUpdate) -> [contentID]
     ) {

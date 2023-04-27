@@ -54,19 +54,11 @@ extension ContentSummaryView: View {
     dynamicContentViewModel.initialiseIfRequired()
     
     return VStack(alignment: .leading) {
-      HStack {
-        Text(content.technologyTripleString.uppercased())
-          .font(.uiUppercase)
-          .foregroundColor(.contentText)
-          .kerning(0.5)
-        
-        Spacer()
-        
-        if content.professional {
-          ProTag()
-        }
-      }
-      .padding([.top], 20)
+      Text(content.technologyTripleString.uppercased())
+        .font(.uiUppercase)
+        .foregroundColor(.contentText)
+        .kerning(0.5)
+        .padding([.top], 20)
       
       Text(content.name)
         .font(.uiTitle1)

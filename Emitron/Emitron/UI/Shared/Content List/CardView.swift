@@ -73,11 +73,7 @@ struct CardView: View {
           .lineSpacing(3)
           .foregroundColor(.contentText)
         
-        HStack(spacing: 8) {
-          if model.professional {
-            ProTag()
-          }
-          
+        HStack(spacing: 8) {          
           completedTagOrReleasedAt
           
           Spacer()
