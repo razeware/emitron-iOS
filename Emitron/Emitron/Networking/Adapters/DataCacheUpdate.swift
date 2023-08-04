@@ -82,7 +82,7 @@ struct DataCacheUpdate {
     let relationships = DataCacheUpdate.relationships(from: resources, with: jsonEntityRelationships)
     contents = try resources
       .filter({ $0.type == "contents" })
-      .map { try ContentAdapter.process(resource: $0, relationships: relationships) }
+      .compactMap { try ContentAdapter.process(resource: $0, relationships: relationships) }
     bookmarks = try resources
       .filter({ $0.type == "bookmarks" })
       .map { try BookmarkAdapter.process(resource: $0, relationships: relationships) }
