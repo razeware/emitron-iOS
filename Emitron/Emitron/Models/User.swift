@@ -69,7 +69,7 @@ extension User {
 // MARK: public
 public extension User {
   var canStreamPro: Bool { can(.streamPro) }
-  var canStream: Bool { can(.streamBeginner) }
+  var canStream: Bool { can(.streamBeginner) || can(.streamPro) }
   var canDownload: Bool { can(.download) }
 
   var hasPermissionToUseApp: Bool {
