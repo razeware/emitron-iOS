@@ -30,8 +30,12 @@
 import struct Foundation.URL
 
 struct ContentAdapter: EntityAdapter {
-  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Content {
+  static func process(resource: JSONAPIResource, relationships: [EntityRelationship] = []) throws -> Content? {
     guard resource.entityType == .content else { throw EntityAdapterError.invalidResourceTypeForAdapter }
+    
+    guard let contentTypeString = resource.attributes["content_type"] as? String,
+      let contentType = ContentType(string: contentTypeString)
+      else { return nil }
     
     guard let uri = resource.attributes["uri"] as? String,
       let name = resource.attributes["name"] as? String,
@@ -41,8 +45,6 @@ struct ContentAdapter: EntityAdapter {
       let releasedAt = releasedAtString.iso8601,
       let free = resource.attributes["free"] as? Bool,
       let professional = resource.attributes["professional"] as? Bool,
-      let contentTypeString = resource.attributes["content_type"] as? String,
-      let contentType = ContentType(string: contentTypeString),
       let duration = resource.attributes["duration"] as? Int,
       let technologyTriple = resource.attributes["technology_triple_string"] as? String,
       let contributors = resource.attributes["contributor_string"] as? String
