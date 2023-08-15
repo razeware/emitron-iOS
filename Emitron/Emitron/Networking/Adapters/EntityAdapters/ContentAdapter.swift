@@ -35,10 +35,8 @@ struct ContentAdapter: EntityAdapter {
     
     guard let contentTypeString = resource.attributes["content_type"] as? String,
       let contentType = ContentType(string: contentTypeString)
-      else {
-      throw EntityAdapterError.invalidOrMissingAttributes
-    }
-
+      else { return nil }
+    
     guard let uri = resource.attributes["uri"] as? String,
       let name = resource.attributes["name"] as? String,
       let descriptionHtml = resource.attributes["description"] as? String,

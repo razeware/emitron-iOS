@@ -50,9 +50,7 @@ extension ContentTest {
         
         let document = JSONAPIDocument(json)
         let resource = document.data.first!
-        guard let content = try ContentAdapter.process(resource: resource) else {
-           preconditionFailure("Failed to load mock content from JSON")
-        }
+        let content = try ContentAdapter.process(resource: resource)
         let cacheUpdate = try DataCacheUpdate.loadFrom(document: document)
         
         return (content, cacheUpdate)
