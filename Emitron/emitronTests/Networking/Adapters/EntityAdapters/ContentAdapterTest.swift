@@ -113,7 +113,9 @@ class ContentAdapterTest: XCTestCase {
   func testValidResourceProcessedCorrectly() throws {
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("Failed to load content from mock Json")
+    }
     
     XCTAssertEqual(12, content.id)
     XCTAssertEqual("Some kind of content", content.name)
@@ -217,7 +219,7 @@ class ContentAdapterTest: XCTestCase {
     sample["attributes"]["content_type"] = "movie"
     
     let resource = try makeJsonAPIResource(for: sample)
-    
+
     XCTAssertThrowsError(try ContentAdapter.process(resource: resource, relationships: relationships)) { error in
       XCTAssertEqual(EntityAdapterError.invalidOrMissingAttributes, error as! EntityAdapterError)
     }
@@ -262,7 +264,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertEqual(.allLevels, content.difficulty)
   }
   
@@ -283,7 +287,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertNil(content.cardArtworkURL)
   }
   
@@ -291,7 +297,9 @@ class ContentAdapterTest: XCTestCase {
     let relationships = Array(self.relationships.dropLast())
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertNil(content.groupID)
   }
   
@@ -300,7 +308,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sampleResource)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertEqual(4321, content.groupID)
   }
   
@@ -310,7 +320,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertNil(content.ordinal)
   }
   
@@ -320,7 +332,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+  guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+    preconditionFailure("failed to load content")
+  }
     XCTAssertNil(content.ordinal)
   }
   
@@ -330,7 +344,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertNil(content.videoIdentifier)
   }
   
@@ -340,7 +356,9 @@ class ContentAdapterTest: XCTestCase {
     
     let resource = try makeJsonAPIResource(for: sample)
     
-    let content = try ContentAdapter.process(resource: resource, relationships: relationships)
+    guard let content = try ContentAdapter.process(resource: resource, relationships: relationships) else {
+      preconditionFailure("failed to load content")
+    }
     XCTAssertNil(content.videoIdentifier)
   }
 }
